@@ -365,7 +365,18 @@ static void draw_check( GtkStyle* style,
     {
 
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
-        if( !(d.isCellCheck() || Gtk::gtk_parent_treeview( widget ) ) ) options |= Oxygen::Blend;
+        if( !(d.isCellCheck() || Gtk::gtk_parent_treeview( widget ) ) )
+        {
+            // enable blending
+            options |= Oxygen::Blend;
+        }
+
+        if( d.isCellCheck() )
+        {
+            // disable hover and focus in cellcheck because all cells would
+            // get it when view is hovered/focused otherwise
+            options &= ~(Oxygen::Hover|Oxygen::Focus);
+        }
 
         Oxygen::Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
 
