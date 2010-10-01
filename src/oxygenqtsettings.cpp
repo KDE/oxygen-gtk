@@ -107,10 +107,6 @@ namespace Oxygen
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
-        // some dump
-        std::cout << _rc << std::endl;
-
-
     }
 
     //_________________________________________________________
@@ -209,7 +205,6 @@ namespace Oxygen
         const char* applicationName = g_get_prgname();
         if( !applicationName ) return;
 
-        std::cout << "Oxygen::QtSettings::initApplicationName - application name: " << applicationName << std::endl;
         std::string appName( applicationName );
 
         if( appName == "firefox-bin" ) _applicationName = Firefox;
@@ -222,16 +217,17 @@ namespace Oxygen
     //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
-        // set theme names into gtk
-        std::ostringstream themeNameStr;
-        themeNameStr << "gtk-icon-theme-name=\"" << _kdeIconTheme << "\"" << std::endl;
-        themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"" << std::endl;
-        _rc.addToRootSection( themeNameStr.str() );
 
         // load translation table
         GtkIcons icons;
         icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
         icons.generate( _rc, _kdeIconPath );
+
+        // set theme names into gtk
+        std::ostringstream themeNameStr;
+        themeNameStr << "gtk-icon-theme-name=\"" << _kdeIconTheme << "\"" << std::endl;
+        themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
+        _rc.addToHeaderSection( themeNameStr.str() );
 
     }
 
@@ -266,16 +262,11 @@ namespace Oxygen
         _palette.setColor( Palette::Disabled, Palette::TooltipText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Tooltip]", "ForegroundInactive" ) ) );
         _palette.setColor( Palette::Disabled, Palette::Text, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "ForegroundInactive" ) ) );
 
-        std::cout << "Oxygen::QtSettings::loadKdePalette - disabled: " << _palette.color( Palette::Disabled, Palette::ButtonText ) << std::endl;
-        std::cout << "Oxygen::QtSettings::loadKdePalette - normal: " << _palette.color( Palette::Active, Palette::ButtonText ) << std::endl;
-
     }
 
     //_________________________________________________________
     void QtSettings::loadKdeFonts( void )
     {
-
-        std::cout << "Oxygen::QtSettings::loadKdeFonts." << std::endl;
 
         // try load default font
         FontInfo::Map fonts;
@@ -292,7 +283,6 @@ namespace Oxygen
         }
 
         fonts[FontInfo::Default] = defaultFont;
-        std::cout << "Oxygen::QtSettings::loadKdeFonts - default font: " << defaultFont.toGtk() << std::endl;
 
         // load extra fonts
         typedef std::map<FontInfo::FontType, std::string> FontNameMap;
@@ -332,36 +322,43 @@ namespace Oxygen
     void QtSettings::generateGtkColors( void )
     {
 
-        std::ostringstream out;
+
+        // customize gtk palette
+        _palette.setGroup( Palette::Active );
+        _rc.addSection( "oxygen-menu-item", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToRootSection( "widget_class \"*Menu*\" style \"oxygen-menu-item\"" );
+
+        _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
+        _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-spinbutton\"" );
 
         // tooltips
-        out << "# tooltips" << std::endl;
-        out << "style \"oxygen-tooltips\" = \"oxygen-default\"" << std::endl;
-        out << "{" << std::endl;
-        out << "    bg[NORMAL] = \"" << _palette.color( Palette::Tooltip ).toString() << "\"" << std::endl;
-        out << "    fg[NORMAL] = \"" << _palette.color( Palette::TooltipText ).toString() << "\"" << std::endl;
-        out << "    xthickness = 3" << std::endl;
-        out << "    ythickness = 3" << std::endl;
-        out << "}" << std::endl;
+        _rc.addSection( "oxygen-tooltips", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
 
-        out << "class \"GtkTooltip\" style \"oxygen-tooltips\""<< std::endl;
-        out << "class \"GtkTooltips\" style \"oxygen-tooltips\""<< std::endl;
+        // this is a mess.
+        // see if this can be cleaned up
+        _rc.addToRootSection( "class \"GtkTooltip\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "class \"GtkTooltips\" style \"oxygen-tooltips\"" );
 
-        out << "widget \"gtk-tooltips\" style \"oxygen-tooltips\""<< std::endl;
-        out << "widget \"gtk-tooltip\" style \"oxygen-tooltips\""<< std::endl;
-        out << "widget \"gtk-tooltip.*\" style \"oxygen-tooltips\""<< std::endl;
-        out << "widget \"gtk-tooltips\" style \"oxygen-tooltips\""<< std::endl;
-        out << "widget \"gtk-tooltips.*\" style \"oxygen-tooltips\""<< std::endl;
-        out << "widget_class \"*.<GtkTooltip>.*\" style \"oxygen-tooltips\""<< std::endl;
-
-        // pass to gtk
-        gtk_rc_parse_string( out.str().c_str() );
-
-        if( false )
-        {
-            std::cout << "Oxygen::QtSettings::generateGtkColors - tooltips: " << std::endl;
-            std::cout << out.str();
-        }
+        _rc.addToRootSection( "widget \"gtk-tooltips\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "widget \"gtk-tooltip\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "widget \"gtk-tooltip.*\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "widget \"gtk-tooltips\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "widget \"gtk-tooltips.*\" style \"oxygen-tooltips\"" );
+        _rc.addToRootSection( "widget_class \"*.<GtkTooltip>.*\" style \"oxygen-tooltips\"" );
 
     }
 

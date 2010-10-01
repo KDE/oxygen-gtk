@@ -92,7 +92,7 @@ namespace Gtk
             out << std::endl;
             out << "{" << std::endl;
             out << section._content;
-            out << "}";
+            out << "}" << std::endl;
 
         }
 

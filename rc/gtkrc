@@ -6,7 +6,6 @@ style "oxygen-default"
     GtkMenu::horizontal-offset = -7
     GtkMenuBar::shadow-type = GTK_SHADOW_NONE
     GtkRange::slider-width = 23
-#    GtkSpinButton::shadow-type = GTK_SHADOW_NONE
     GtkStatusbar::shadow-type = GTK_SHADOW_NONE
     GtkStatusbar::has-resize-grip = FALSE
     GtkToolbar::shadow-type = GTK_SHADOW_NONE
@@ -40,32 +39,3 @@ style "oxygen-notebook" = "oxygen-default"
 }
 
 class "GtkNotebook" style "oxygen-notebook"
-
-# menu items colors
-# TODO: need clean-up and being set programatically
-# based on kde palette.
-style "oxygen-menu-colors" = "oxygen-default"
-{
-
-  fg[NORMAL] = "#000000"
-  fg[PRELIGHT] = "#000000"
-  fg[SELECTED] = "#000000"
-  fg[ACTIVE] = "#000000"
-
-  text[NORMAL] = "#000000"
-  text[PRELIGHT] = "#000000"
-  text[SELECTED] = "#000000"
-  text[ACTIVE] = "#000000"
-
-}
-
-widget_class "*Menu*" style "oxygen-menu-colors"
-
-# spinbox background
-# TODO: move that to oxygenqtsettings, and use color read from KDE.
-style "oxygen-spinbutton" = "oxygen-default"
-{
- bg[NORMAL] = "#ffffff"
-}
-
-class "GtkSpinButton" style "oxygen-spinbutton"

@@ -74,15 +74,13 @@ namespace Oxygen
 
         }
 
-        std::cout << "Oxygen::GtkIcons::loadTranslations - loaded " << _icons.size() << " translations" << std::endl;
-
     }
 
     //_________________________________________
     void GtkIcons::generate( Gtk::RC& rc, const std::vector<std::string>& pathList ) const
     {
 
-        rc.addSection( "KDE4-icons", "oxygen-default" );
+        rc.addSection( "oxygen-icons", "oxygen-default" );
 
         // generate pixmap path
         // this must be passed to gtk before any icon settings, otherwise
@@ -110,17 +108,17 @@ namespace Oxygen
 
         // add list of not found icons to the bottom of the list
         rc.addToCurrentSection( notFoundOut.str() );
-        rc.addToRootSection( "class \"*\" style \"KDE4-icons\"" );
+        rc.addToRootSection( "class \"*\" style \"oxygen-icons\"" );
 
         // extra settings for entries
         std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
         if( !stock.empty() )
         {
-            rc.addSection( "KDE4-icons-editor", "KDE4-icons" );
+            rc.addSection( "oxygen-icons-editor", "oxygen-icons" );
             rc.addToCurrentSection( stock );
         }
 
-        rc.addToRootSection( "class \"*Entry*\" style \"KDE4-icons-editor\"" );
+        rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
 
         return;
 

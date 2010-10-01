@@ -74,15 +74,16 @@ namespace ColorUtils
         }
 
         // convert to string
-        std::string toString( void ) const
+        operator std::string ( void ) const
         {
             std::ostringstream out;
             out
-                << "#"
+                << "\"#"
                 << std::hex
                 << std::setw( 2 ) << std::setfill( '0' ) << guint32( _red*255 )
                 << std::setw( 2 ) << std::setfill( '0' ) << guint32( _green*255 )
-                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue*255 );
+                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue*255 )
+                << "\"";
             return out.str();
         }
 
