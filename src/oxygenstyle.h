@@ -64,9 +64,6 @@ namespace Oxygen
         //! window background
         void renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
-        //! splitter background
-        void renderSplitterBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-
         //! tooltip background
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
@@ -79,6 +76,9 @@ namespace Oxygen
         //! editors hole
         /*! returns true if window gradient could be rendered */
         bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+
+        //! splitters
+        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //!@name progressbar
         //@{

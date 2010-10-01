@@ -188,15 +188,9 @@ static void draw_box( GtkStyle* style,
         Oxygen::Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
         Oxygen::Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
-    } else if( d.isDefaultButton() || d.isScrollBar() ) {
+    } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() ) {
 
         return;
-
-    } else if( d.isPaned() ) {
-
-        Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
-        if( GTK_IS_VPANED( widget ) ) options |= Oxygen::Vertical;
-        Oxygen::Style::instance().renderSplitterBackground( window, clipRect, x, y, w, h, options );
 
     } else if( d.isMenuItem() ) {
 
@@ -842,10 +836,21 @@ static void draw_handle( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
 
-    oxygen_style_parent_class->draw_handle( style, window, state,
-        shadow, clipRect, widget, detail,
-        x, y, w, h,
-        orientation );
+    Gtk::Detail d( detail );
+    if( d.isPaned() )
+    {
+
+        Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
+        if( GTK_IS_VPANED( widget ) ) options |= Oxygen::Vertical;
+        Oxygen::Style::instance().renderSplitter( window, clipRect, x, y, w, h, options );
+
+    } else {
+        oxygen_style_parent_class->draw_handle( style, window, state,
+            shadow, clipRect, widget, detail,
+            x, y, w, h,
+            orientation );
+    }
+
 }
 
 //___________________________________________________________
