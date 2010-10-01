@@ -1,0 +1,16 @@
+
+[Style]
+AnimationSteps=50
+DrawWidgetRects=false
+MaxCacheSize=512
+MenuAnimationType=ME_FOLLOW_MOUSE
+MenuBarAnimationType=MB_FOLLOW_MOUSE
+OxygenWhatsThisEnabled=true
+ShowMnemonic=false
+ShowMnemonics=false
+StackedWidgetTransitionsDuration=200
+ToolBarAnimationType=TB_FOLLOW_MOUSE
+ToolBarAnimationsDuration=80
+ToolBarDrawItemSeparator=false
+ViewDrawFocusIndicator=false
+WidgetExplorerEnabled=false

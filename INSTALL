@@ -1,0 +1,8 @@
+Basic instructions for compiling:
+
+cd oxygen-gtk
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+make -j2
+sudo make install

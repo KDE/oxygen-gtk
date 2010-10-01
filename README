@@ -1,0 +1,44 @@
+1/ Directories:
+---------------
+
+rc/ contains 'default' configuration files
+src/ contains all the source code.
+
+
+2/ some details on files in src/
+--------------------------------
+
+oxygenrcstyle:
+oxygenstylewrapper: 
+are the core gtk style files. Oxygenstylewrapper wraps all gtk painting calls to oxygenstyle singleton painting class.
+
+oxygenstyle:
+does all the painting, as called by oxygenstylewrapper
+
+oxygenstylehelper: 
+contains some lower level painting classes, that depend on cairo context, and not on gtk windows/widgets any more. It is also responsible for generating the tilesets.
+
+oxygentileset:
+stores 3x3 pixmap array to handle scalable widgets, similar to what kde/plasma does (as well as oxygen-qt)
+they can be cached.
+
+oxygenrgba:
+stores rgba color representation and has some conversion utility functions
+
+oxygencolorutils:
+all color handling, used to shade, mix, blend, etc. It is based on code in oxygen-qt and kde/kdelibs/kdeui kcolorutils and kcolorscheme.
+
+oxygenqtsettings:
+does all the handling of Qt/Kde options, and conversion to gtk options where needed
+
+oxygengtkicons:
+is responsible for mapping/replacing gtk icons by oxygen icons. This is largely inspired from QtCurve-gtk
+
+
+utility files/classes:
+oxygengeometry.h: some low-level geometry classes
+oxygencairocontext: some self-freed wrapper around cairo_context_t;
+oxygencairoutils: some cairo/gdk-cairo utilities 
+oxygengtktypenames: some wrapper around gtk type names (strings) 
+oxygengtkdetail: wrapper around the 'detail' strings passed to painting routines
+oxygengkutils: some widget/window ancestry tree navigation utility functions.
