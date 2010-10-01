@@ -64,6 +64,9 @@ namespace Oxygen
         //! window background
         void renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
+        //! splitter background
+        void renderSplitterBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+
         //! tooltip background
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 

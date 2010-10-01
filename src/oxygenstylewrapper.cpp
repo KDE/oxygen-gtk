@@ -54,7 +54,7 @@ static void draw_flat_box(
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const char* detail,
     gint x,
@@ -76,7 +76,7 @@ static void draw_flat_box(
     if( d.isBase() || d.isEventBox() )
     {
 
-        Oxygen::Style::instance().renderWindowBackground( window, area, x, y, w, h );
+        Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
         return;
 
     } else if( d.isViewportBin() ) {
@@ -84,7 +84,7 @@ static void draw_flat_box(
         GtkShadowType shadow = gtk_viewport_get_shadow_type( GTK_VIEWPORT( widget ) );
         if( shadow == GTK_SHADOW_NONE )
         {
-            Oxygen::Style::instance().renderWindowBackground( window, area, x, y, w, h );
+            Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             accepted = true;
         }
 
@@ -96,7 +96,7 @@ static void draw_flat_box(
     } else if( d.isTooltip() ) {
 
         Oxygen::StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Oxygen::Alpha : Oxygen::None );
-        Oxygen::Style::instance().renderTooltipBackground( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
         return;
 
     } else if(
@@ -117,7 +117,7 @@ static void draw_flat_box(
             else if( !d.isCellMiddle() ) tiles = Oxygen::TileSet::Horizontal;
 
             Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state ) );
-            Oxygen::Style::instance().renderSelection( window, area, x, y, w, h, tiles, options );
+            Oxygen::Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
         }
 
         // TODO: handle non selected alternate background,
@@ -132,7 +132,7 @@ static void draw_flat_box(
 
         // fallback to parent style
         oxygen_style_parent_class->draw_flat_box( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
 
     }
@@ -144,7 +144,7 @@ static void draw_box( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -168,33 +168,39 @@ static void draw_box( GtkStyle* style,
         if( Gtk::gtk_parent_treeview( widget ) )
         {
 
-            Oxygen::Style::instance().renderHeaderBackground( window, area, x, y, w, h );
+            Oxygen::Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
         } else {
 
             Oxygen::StyleOptions options( Oxygen::Blend );
             options |= Oxygen::styleOptions( widget, state, shadow );
-            Oxygen::Style::instance().renderButtonSlab( window, area, x, y, w, h, options );
+            Oxygen::Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 
         }
 
     } else if( d.isMenuBar() ) {
 
-        Oxygen::Style::instance().renderWindowBackground( window, area, x, y, w, h );
+        Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
     } else if( d.isMenu() ) {
 
         Oxygen::StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Oxygen::Alpha : Oxygen::None );
-        Oxygen::Style::instance().renderMenuBackground( window, area, x, y, w, h, options );
-        Oxygen::Style::instance().drawFloatFrame( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
+        Oxygen::Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
-    } else if( d.isDefaultButton() || d.isPaned() || d.isScrollBar() ) {
+    } else if( d.isDefaultButton() || d.isScrollBar() ) {
 
         return;
 
+    } else if( d.isPaned() ) {
+
+        Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
+        if( GTK_IS_VPANED( widget ) ) options |= Oxygen::Vertical;
+        Oxygen::Style::instance().renderSplitterBackground( window, clipRect, x, y, w, h, options );
+
     } else if( d.isMenuItem() ) {
 
-        Oxygen::Style::instance().renderMenuItemRect( window, area, widget, x, y, w, h );
+        Oxygen::Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h );
 
     } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
@@ -204,32 +210,32 @@ static void draw_box( GtkStyle* style,
             if( !Oxygen::Style::instance().settings().applicationName().isFirefox() )
             {
                 /* need to call the base class here, otherwise some uninitialized pixels are present. Not sure why */
-                oxygen_style_parent_class->draw_box( style, window, state, shadow, area, widget, detail, x, y, w, h );
+                oxygen_style_parent_class->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
             }
 
             Oxygen::StyleOptions options( Oxygen::None );
             if( !Gtk::gtk_progress_bar_is_horizontal( widget ) ) options |= Oxygen::Vertical;
-            Oxygen::Style::instance().renderProgressBarHole( window, area, x, y, w, h, options );
+            Oxygen::Style::instance().renderProgressBarHole( window, clipRect, x, y, w, h, options );
 
         } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
             // TODO: handle arrow button configuration
             // TODO: handle arrow button size when calculating rect size
-            Oxygen::Style::instance().renderScrollBarHole( window, area, x, y+15, w-1, h-30, Oxygen::Vertical );
+            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x, y+15, w-1, h-30, Oxygen::Vertical );
 
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
             // TODO: handle arrow button configuration
             // TODO: handle arrow button size when calculating rect size
-            Oxygen::Style::instance().renderScrollBarHole( window, area, x+15, y, w-30, h-1, Oxygen::None );
+            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x+15, y, w-30, h-1, Oxygen::None );
 
         } else if( GTK_IS_VSCALE( widget ) ) {
 
-            Oxygen::Style::instance().renderSliderGroove( window, area, x, y, w, h, Oxygen::Vertical );
+            Oxygen::Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Oxygen::Vertical );
 
         } else if( GTK_IS_HSCALE( widget ) ) {
 
-            Oxygen::Style::instance().renderSliderGroove( window, area, x, y, w, h, Oxygen::None );
+            Oxygen::Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Oxygen::None );
 
         }
 
@@ -239,8 +245,8 @@ static void draw_box( GtkStyle* style,
         options |= Oxygen::styleOptions( widget, state, shadow );
 
         // TODO: make sure the offsets are robust enough
-        Oxygen::Style::instance().renderHoleBackground(window,area, x-5, y-1 ,w+7, h+1 );
-        Oxygen::Style::instance().renderHole(window,area,x-5,y-1,w+7,h+1, options);
+        Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1 ,w+7, h+1 );
+        Oxygen::Style::instance().renderHole(window,clipRect,x-5,y-1,w+7,h+1, options);
 
     } else if( d.isSpinButtonArrow() ) {
 
@@ -248,7 +254,7 @@ static void draw_box( GtkStyle* style,
 
     } else if( d.isBar() && GTK_IS_PROGRESS_BAR( widget ) ) {
 
-        Oxygen::Style::instance().renderProgressBarHandle( window, area, x, y, w, h );
+        Oxygen::Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h );
         return;
 
     } else if( d.isScale() ) {
@@ -256,12 +262,12 @@ static void draw_box( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::Blend );
         options |= Oxygen::styleOptions( widget, state, shadow );
         if( GTK_IS_VSCALE( widget ) ) options |= Oxygen::Vertical;
-        Oxygen::Style::instance().renderSliderHandle( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
 
     } else {
 
         oxygen_style_parent_class->draw_box( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
     }
 
@@ -272,7 +278,7 @@ static void draw_shadow( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -302,8 +308,8 @@ static void draw_shadow( GtkStyle* style,
 
     } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() || d.isFrame() ) && shadow == GTK_SHADOW_IN ) {
 
-        Oxygen::Style::instance().renderHoleBackground( window, area, x-1, y-1, w+2, h+1 );
-        Oxygen::Style::instance().renderHole( window, area, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+        Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+        Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
 
         return;
 
@@ -315,7 +321,7 @@ static void draw_shadow( GtkStyle* style,
 
         oxygen_style_parent_class->draw_shadow(
             style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
     }
 
@@ -326,7 +332,7 @@ static void draw_check( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -352,18 +358,18 @@ static void draw_check( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
         if( !(d.isCellCheck() || Gtk::gtk_parent_treeview( widget ) ) ) options |= Oxygen::Blend;
 
-        Oxygen::Style::instance().renderCheckBox( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
 
     } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
         options |= (Oxygen::Blend|Oxygen::Flat|Oxygen::NoFill );
-        Oxygen::Style::instance().renderCheckBox( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
 
     } else {
 
         oxygen_style_parent_class->draw_check( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
     }
 
@@ -374,7 +380,7 @@ static void draw_option( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -399,12 +405,12 @@ static void draw_option( GtkStyle* style,
 
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
         if( !Gtk::gtk_parent_treeview( widget ) ) options |= Oxygen::Blend;
-        Oxygen::Style::instance().renderRadioButton( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
 
     } else {
 
         oxygen_style_parent_class->draw_option( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
 
     }
@@ -415,7 +421,7 @@ static void draw_hline(
     GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x1,
@@ -430,7 +436,7 @@ static void draw_hline(
         Oxygen::Maps::getState( state ),
         detail );
 
-    Oxygen::Style::instance().drawSeparator( window, area, x1, y, x2-x1, 0, false );
+    Oxygen::Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, false );
 
 }
 
@@ -438,7 +444,7 @@ static void draw_hline(
 static void draw_vline( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint y1,
@@ -455,7 +461,7 @@ static void draw_vline( GtkStyle* style,
 
     // disable vline in buttons (should correspond to comboboxes)
     if( !Gtk::gtk_parent_button( widget ) )
-    { Oxygen::Style::instance().drawSeparator( window, area, x, y1, 0, y2-y1, true ); }
+    { Oxygen::Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, true ); }
 
 }
 
@@ -464,7 +470,7 @@ static void draw_arrow( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     GtkArrowType arrow,
@@ -519,7 +525,7 @@ static void draw_arrow( GtkStyle* style,
     }
 
     // render
-    Oxygen::Style::instance().renderArrow( window, area, arrow, x, y, w, h, arrowSize, options );
+    Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
 
 }
 
@@ -529,7 +535,7 @@ static void draw_expander(
     GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const char* detail,
     gint x,
@@ -554,7 +560,7 @@ static void draw_expander(
     if( !d.isTreeView() ) options |= Oxygen::Contrast;
 
     const Oxygen::Style::ArrowSize arrowSize( d.isTreeView() ? Oxygen::Style::ArrowSmall : Oxygen::Style::ArrowNormal );
-    Oxygen::Style::instance().renderArrow( window, area, arrow, x-16, y-16, 32, 32, arrowSize, options );
+    Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
 
 }
 
@@ -563,7 +569,7 @@ static void draw_diamond( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
      const char* detail,
     gint x,
@@ -581,7 +587,7 @@ static void draw_diamond( GtkStyle* style,
         detail );
 
     oxygen_style_parent_class->draw_diamond( style, window, state,
-        shadow, area, widget, detail,
+        shadow, clipRect, widget, detail,
         x, y, w, h );
 }
 
@@ -590,7 +596,7 @@ static void draw_tab( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
      const char* detail,
     gint x,
@@ -616,13 +622,13 @@ static void draw_tab( GtkStyle* style,
         GtkArrowType arrow = GTK_ARROW_DOWN;
         Oxygen::Style::ArrowSize arrowSize = Oxygen::Style::ArrowNormal;
         Oxygen::StyleOptions options = Oxygen::Contrast;
-        Oxygen::Style::instance().renderArrow( window, area, arrow, x, y, w, h, arrowSize, options );
+        Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
         return;
 
     } else {
 
         oxygen_style_parent_class->draw_tab( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h );
     }
 
@@ -632,7 +638,7 @@ static void draw_shadow_gap( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -654,7 +660,7 @@ static void draw_shadow_gap( GtkStyle* style,
         detail );
 
     oxygen_style_parent_class->draw_shadow_gap( style, window, state,
-        shadow, area, widget, detail,
+        shadow, clipRect, widget, detail,
         x, y, w, h,
         gap_side, gap_x, gap_w );
 }
@@ -664,7 +670,7 @@ static void draw_box_gap( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -689,17 +695,17 @@ static void draw_box_gap( GtkStyle* style,
     if( d.isNotebook() )
     {
 
-        Oxygen::Style::instance().renderWindowBackground( window, area, x, y, w, h );
+        Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
         options &= ~(Oxygen::Hover|Oxygen::Focus);
-        Oxygen::Style::instance().renderSlab( window, area, x, y, w, h, options );
+        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, options );
 
     } else {
 
         oxygen_style_parent_class->draw_box_gap( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h,
             gap_side, gap_x, gap_w );
     }
@@ -711,7 +717,7 @@ static void draw_slider( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -735,16 +741,16 @@ static void draw_slider( GtkStyle* style,
 
         Oxygen::StyleOptions options( Oxygen::Vertical );
         options |= Oxygen::styleOptions( widget, state, shadow );
-        Oxygen::Style::instance().renderScrollBarHandle( window, area, x, y, w-1, h, options );
+        Oxygen::Style::instance().renderScrollBarHandle( window, clipRect, x, y, w-1, h, options );
 
     } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
-        Oxygen::Style::instance().renderScrollBarHandle( window, area, x, y, w, h-1, options );
+        Oxygen::Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options );
 
     } else {
         oxygen_style_parent_class->draw_slider( style, window, state,
-            shadow, area, widget, detail,
+            shadow, clipRect, widget, detail,
             x, y, w, h,
             orientation );
     }
@@ -756,7 +762,7 @@ static void draw_extension( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -777,7 +783,7 @@ static void draw_extension( GtkStyle* style,
         detail );
 
 //     oxygen_style_parent_class->draw_extension( style, window, state,
-//         shadow, area, widget, detail,
+//         shadow, clipRect, widget, detail,
 //         x, y, w, h,
 //         gap_side );
 
@@ -787,7 +793,7 @@ static void draw_extension( GtkStyle* style,
 static void draw_focus( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
      const char* detail,
     gint x,
@@ -806,7 +812,7 @@ static void draw_focus( GtkStyle* style,
         detail );
 
 //     oxygen_style_parent_class->draw_focus( style, window, state,
-//         area, widget, detail,
+//         clipRect, widget, detail,
 //         x, y, w, h );
 
 }
@@ -817,7 +823,7 @@ static void draw_handle( GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GtkShadowType shadow,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
     const gchar* detail,
     gint x,
@@ -837,7 +843,7 @@ static void draw_handle( GtkStyle* style,
         detail );
 
     oxygen_style_parent_class->draw_handle( style, window, state,
-        shadow, area, widget, detail,
+        shadow, clipRect, widget, detail,
         x, y, w, h,
         orientation );
 }
@@ -847,7 +853,7 @@ static void draw_resize_grip(
     GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
-    GdkRectangle* area,
+    GdkRectangle* clipRect,
     GtkWidget* widget,
      const char* detail,
     GdkWindowEdge edge,
@@ -871,7 +877,7 @@ static void draw_resize_grip(
 static void draw_layout(
     GtkStyle *style, GdkWindow *window, GtkStateType state,
     gboolean use_text,
-    GdkRectangle *area,
+    GdkRectangle *clipRect,
     GtkWidget *widget, const gchar *detail,
     gint x, gint y,
     PangoLayout *layout)
@@ -885,7 +891,7 @@ static void draw_layout(
 
     oxygen_style_parent_class->draw_layout(
         style, window, state,
-        use_text, area, widget, detail, x, y, layout );
+        use_text, clipRect, widget, detail, x, y, layout );
 
 }
 

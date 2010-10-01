@@ -163,9 +163,48 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    void Style::renderSplitterBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    {
+        // do nothing if not hovered
+        if( !(options&Hover) ) return;
+
+        // orientation
+        const bool vertical( options&Vertical );
+
+        // colors
+        const ColorUtils::Rgba& base( settings().palette().color( Palette::Window ) );
+        const ColorUtils::Rgba& highlight( ColorUtils::alphaColor( ColorUtils::lightColor( base ), 0.5 ) );
+
+        Cairo::Context context( window, clipRect );
+        Cairo::Pattern gradient;
+        double a(0.1);
+        if( vertical )
+        {
+
+            if( w > 30 ) a = 10.0/w;
+            gradient.set( cairo_pattern_create_linear( x, 0, x+w, 0 ) );
+
+        } else {
+
+            if( h>30 ) a = 10.0/h;
+            gradient.set( cairo_pattern_create_linear( 0, y, 0, y+h ) );
+
+        }
+
+        cairo_pattern_add_color_stop( gradient, 0, ColorUtils::alphaColor( highlight, 0 ) );
+        cairo_pattern_add_color_stop( gradient, a, highlight );
+        cairo_pattern_add_color_stop( gradient, 1.0-a, highlight );
+        cairo_pattern_add_color_stop( gradient, 1.0, ColorUtils::alphaColor( highlight, 0 ) );
+
+        cairo_set_source( context, gradient );
+        cairo_rectangle( context, x, y, w, h );
+        cairo_fill( context );
+
+    }
+
+    //__________________________________________________________________
     void Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
-
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
