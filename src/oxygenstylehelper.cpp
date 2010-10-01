@@ -36,7 +36,7 @@ namespace Oxygen
     const double StyleHelper::_glowBias = 0.6;
 
     //__________________________________________________________________
-    void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical ) const
+    void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical ) const
     {
 
         cairo_save( context );
@@ -55,7 +55,7 @@ namespace Oxygen
 
 
         {
-            ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
+            ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
             Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
             cairo_pattern_add_color_stop( pattern, 0.3, light );
             cairo_pattern_add_color_stop( pattern, 0.7, light );
@@ -79,13 +79,12 @@ namespace Oxygen
         }
 
         {
-            ColorUtils::Rgba dark( ColorUtils::darkColor( color ) );
+            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
             Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
             cairo_pattern_add_color_stop( pattern, 0.3, dark );
             cairo_pattern_add_color_stop( pattern, 0.7, dark );
-            dark.setAlpha( 0 );
-            cairo_pattern_add_color_stop( pattern, 0, dark );
-            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( dark ) );
+            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( dark ) );
             cairo_set_source( context, pattern );
 
             if( vertical )
@@ -105,14 +104,14 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    TileSet StyleHelper::slab(const ColorUtils::Rgba& color, double shade, int size) const
+    TileSet StyleHelper::slab(const ColorUtils::Rgba& base, double shade, int size) const
     {
 
         // create pixbuf and initialize
         const int w( 2*size );
         const int h( 2*size );
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -120,13 +119,13 @@ namespace Oxygen
             Cairo::Context context( pixbuf );
             cairo_scale( context, double(size)/7, double(size)/7 );
             cairo_rectangle( context, 0, 0, 14, 14 );
-            cairo_set_source( context, ColorUtils::alphaColor( color, 0 ) );
+            cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
             cairo_fill( context );
 
-            if( color.isValid() )
+            if( base.isValid() )
             {
-                drawShadow( context, ColorUtils::shadowColor( color ), 14 );
-                drawSlab( context, color, shade );
+                drawShadow( context, ColorUtils::shadowColor( base ), 14 );
+                drawSlab( context, base, shade );
             }
 
             context.updateGdkPixbuf();
@@ -139,26 +138,26 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    TileSet StyleHelper::slabFocused(const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size) const
+    TileSet StyleHelper::slabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size) const
     {
 
         // create pixbuf and initialize
         const int w( 2*size );
         const int h( 2*size );
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
             // create cairo context
             Cairo::Context context( pixbuf );
             cairo_scale( context, double(size)/7, double(size)/7 );
             cairo_rectangle( context, 0, 0, 14, 14 );
-            cairo_set_source( context, ColorUtils::alphaColor( color, 0 ) );
+            cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
             cairo_fill( context );
 
-            if( color.isValid() ) drawShadow( context, ColorUtils::shadowColor( color ), 14 );
+            if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor( base ), 14 );
             if( glow.isValid() ) drawOuterGlow( context, glow, 14 );
-            if( color.isValid() ) drawSlab( context, color, shade );
+            if( base.isValid() ) drawSlab( context, base, shade );
             context.updateGdkPixbuf();
 
         }
@@ -170,7 +169,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    TileSet StyleHelper::slabSunken( const ColorUtils::Rgba& color, double shade, int size ) const
+    TileSet StyleHelper::slabSunken( const ColorUtils::Rgba& base, double shade, int size ) const
     {
 
 
@@ -178,7 +177,7 @@ namespace Oxygen
         const int w( 2*size );
         const int h( 2*size );
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -186,13 +185,13 @@ namespace Oxygen
             Cairo::Context context( pixbuf );
             cairo_scale( context, double(size)/7, double(size)/7 );
             cairo_rectangle( context, 0, 0, 14, 14 );
-            cairo_set_source( context, ColorUtils::alphaColor( color, 0 ) );
+            cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
             cairo_fill( context );
 
-            if( color.isValid() )
+            if( base.isValid() )
             {
-                drawSlab( context, color, shade );
-                drawInverseShadow( context, ColorUtils::shadowColor(color), 3, 8, 0.0);
+                drawSlab( context, base, shade );
+                drawInverseShadow( context, ColorUtils::shadowColor(base), 3, 8, 0.0);
             }
             context.updateGdkPixbuf();
 
@@ -206,13 +205,13 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlab( const ColorUtils::Rgba& color, double shade, int size ) const
+    GdkPixbuf* StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size ) const
     {
 
         const int w( 3*size );
         const int h( 3*size );
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -221,10 +220,10 @@ namespace Oxygen
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
-            if( color.isValid() )
+            if( base.isValid() )
             {
-                drawShadow( context, ColorUtils::shadowColor(color), 21 );
-                drawRoundSlab( context, color, shade );
+                drawShadow( context, ColorUtils::shadowColor(base), 21 );
+                drawRoundSlab( context, base, shade );
             }
 
             context.updateGdkPixbuf();
@@ -235,13 +234,13 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size) const
+    GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size) const
     {
 
         const int w( 3*size );
         const int h( 3*size );
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -250,9 +249,9 @@ namespace Oxygen
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
-            if( color.isValid() ) drawShadow( context, ColorUtils::shadowColor(color), 21 );
+            if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor(base), 21 );
             if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
-            if( color.isValid() ) drawRoundSlab( context, color, shade );
+            if( base.isValid() ) drawRoundSlab( context, base, shade );
 
             context.updateGdkPixbuf();
 
@@ -271,8 +270,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    //TileSet StyleHelper::hole( const ColorUtils::Rgba& color, double shade, int size ) const
-    TileSet StyleHelper::hole( const ColorUtils::Rgba &color, double shade, int size, bool fill ) const
+    TileSet StyleHelper::hole( const ColorUtils::Rgba &base, double shade, int size, bool fill ) const
     {
 
         // create pixbuf and initialize
@@ -281,7 +279,7 @@ namespace Oxygen
         const int h( 2*rsize );
 
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -298,7 +296,7 @@ namespace Oxygen
             }
 
             // shadow
-            drawInverseShadow( context, ColorUtils::shadowColor( color ), 3, 8, 0.0);
+            drawInverseShadow( context, ColorUtils::shadowColor( base ), 3, 8, 0.0);
             context.updateGdkPixbuf();
 
         }
@@ -310,7 +308,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    TileSet StyleHelper::holeFlat( const ColorUtils::Rgba& color, double shade, int size ) const
+    TileSet StyleHelper::holeFlat( const ColorUtils::Rgba& base, double shade, int size ) const
     {
 
         const int rsize( ( int )ceil( double( size ) * 5.0/7.0 ) );
@@ -318,7 +316,7 @@ namespace Oxygen
         const int h( 2*rsize );
 
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -327,10 +325,10 @@ namespace Oxygen
             cairo_scale( context, 10.0/w, 10.0/h );
 
             // hole
-            drawHole( context, color, shade, 7 );
+            drawHole( context, base, shade, 7 );
 
             // hole inside
-            cairo_set_source( context, color );
+            cairo_set_source( context, base );
             cairo_ellipse( context, 3.4, 3.4, 7.2, 7.2 );
             cairo_fill( context );
             context.updateGdkPixbuf();
@@ -345,13 +343,13 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    TileSet StyleHelper::scrollHole( const ColorUtils::Rgba& color, bool vertical ) const
+    TileSet StyleHelper::scrollHole( const ColorUtils::Rgba& base, bool vertical ) const
     {
 
         // define colors
-        const ColorUtils::Rgba& dark( ColorUtils::darkColor( color ) );
-        const ColorUtils::Rgba& light( ColorUtils::lightColor( color ) );
-        const ColorUtils::Rgba& shadow( ColorUtils::shadowColor( color ) );
+        const ColorUtils::Rgba& dark( ColorUtils::darkColor( base ) );
+        const ColorUtils::Rgba& light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba& shadow( ColorUtils::shadowColor( base ) );
 
         // create pixmap
         const int w( 15 );
@@ -379,7 +377,7 @@ namespace Oxygen
                 if( vertical ) pattern.set( cairo_pattern_create_linear( rect.x, 0, rect.x + rect.width, 0 ) );
                 else pattern.set( cairo_pattern_create_linear( 0, rect.y, 0, rect.y + rect.height ) );
                 cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.1 ) );
-                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::alphaColor( shadow, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( shadow ) );
 
                 cairo_set_source( context, pattern );
                 gdk_cairo_rounded_rectangle( context, &rect, 4.5 );
@@ -393,7 +391,7 @@ namespace Oxygen
                 Cairo::Pattern pattern( cairo_pattern_create_linear( rect.x, 0, rect.x + shadowWidth, 0 ) );
                 cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, vertical ? 0.2 : 0.3 ) );
                 cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( shadow, 0.1 ) );
-                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( shadow, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( shadow ) );
 
                 cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, rect.x, rect.y, shadowWidth, rect.height, shadowWidth, CornersLeft );
@@ -403,7 +401,7 @@ namespace Oxygen
             {
                 // right
                 Cairo::Pattern pattern( cairo_pattern_create_linear( rect.x + rect.width - shadowWidth, 0, rect.x + rect.width, 0 ) );
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent() );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( shadow ) );
                 cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( shadow, 0.2 ) );
                 cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( shadow, vertical ? 0.2 : 0.3 ) );
 
@@ -416,7 +414,7 @@ namespace Oxygen
                 // top
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, rect.y, 0, rect.y+3 ) );
                 cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.3 ) );
-                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent() );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( shadow ) );
 
                 cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, rect.x, rect.y, rect.width, 3, 3, CornersTop );
@@ -427,7 +425,7 @@ namespace Oxygen
             // light bottom border
             {
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y + r.height/2 - 1, 0, r.y + r.height ) );
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( light ) );
                 cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.8 ) );
 
                 cairo_set_source( context, pattern );
@@ -445,6 +443,75 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
+    TileSet StyleHelper::dockFrame( const ColorUtils::Rgba &base, int w ) const
+    {
+
+        // width should be odd
+        if( !w&1 ) --w;
+
+        // fixed height
+        const int h( 9 );
+
+        GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+        {
+
+            Cairo::Context context( pixbuf );
+            cairo_save( context );
+            cairo_translate( context, 0.5, 0.5 );
+
+            // local rectangle
+            const int xl(0);
+            const int yl(0);
+            const int wl( w-1 );
+            const int hl( h );
+
+            const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+            {
+                // left and right border
+                Cairo::Pattern gradient( cairo_pattern_create_linear( 0, 0, w, 0 ) );
+                const ColorUtils::Rgba mixed( ColorUtils::alphaColor( light, 0.6 ) );
+                cairo_pattern_add_color_stop( gradient, 0, mixed );
+                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( gradient, 1.0, mixed );
+
+                cairo_set_line_width( context, 1 );
+                cairo_set_source( context, gradient );
+                cairo_rounded_rectangle( context, xl, yl-1, wl, hl, 4.5 );
+                cairo_stroke( context );
+
+                cairo_rounded_rectangle( context, xl+2, yl+1, wl-4, hl-3, 4.5 );
+                cairo_stroke( context );
+            }
+
+            {
+                Cairo::Pattern gradient( cairo_pattern_create_linear( 0, 0, w, 0 ) );
+                cairo_pattern_add_color_stop( gradient, 0, dark );
+                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( gradient, 1.0, dark );
+
+                cairo_set_line_width( context, 1 );
+                cairo_set_source( context, gradient );
+                cairo_rounded_rectangle( context, xl+1, yl, wl-2, hl-2, 4.5 );
+                cairo_stroke( context );
+            }
+
+            cairo_restore( context );
+            drawSeparator( context, base, 0, 0, w, 2, false );
+            drawSeparator( context, base, 0, h-2, w, 2, false );
+            context.updateGdkPixbuf();
+        }
+
+        TileSet out( pixbuf, 4, 4, w-8, h-8 );
+        g_object_unref( pixbuf );
+        return out;
+    }
+
+    //____________________________________________________________________
     GdkPixbuf* StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h ) const
     {
 
@@ -455,7 +522,7 @@ namespace Oxygen
         int hl = h+3;
 
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( base, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -504,8 +571,8 @@ namespace Oxygen
                 const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
                 cairo_pattern_add_color_stop( pattern, 0,  mix );
-                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( mix, 0 ) );
-                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::alphaColor( mix, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, mix );
 
                 Cairo::Context localContext( localbuf );
@@ -541,9 +608,9 @@ namespace Oxygen
                 // bright top edge
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
                 const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( mix, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
                 cairo_pattern_add_color_stop( pattern, 0.5, mix );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( mix, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
                 cairo_set_line_width( context, 1.0 );
                 cairo_set_source( context, pattern );
                 cairo_move_to( context, xl+0.5, yl+0.5 );
@@ -591,14 +658,14 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    TileSet StyleHelper::selection( const ColorUtils::Rgba& color, int h, bool custom ) const
+    TileSet StyleHelper::selection( const ColorUtils::Rgba& base, int h, bool custom ) const
     {
 
         TileSet tileSet;
 
         const int w = 32+16;
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::alphaColor( color, 0 ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
         {
 
@@ -613,17 +680,17 @@ namespace Oxygen
             {
                 // filling
                 const int lightenAmount( custom ? 110 : 130 );
-                const ColorUtils::Rgba light( color.light( lightenAmount ) );
+                const ColorUtils::Rgba light( base.light( lightenAmount ) );
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y, 0, y+h ) );
                 cairo_pattern_add_color_stop( pattern, 0, light );
-                cairo_pattern_add_color_stop( pattern, 1, color );
+                cairo_pattern_add_color_stop( pattern, 1, base );
 
                 cairo_rounded_rectangle( context, x, y, w, h, rounding );
                 cairo_set_source( context, pattern );
                 cairo_fill( context );
 
                 cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, rounding );
-                cairo_set_source( context, color );
+                cairo_set_source( context, base );
                 cairo_stroke( context );
 
             }
@@ -648,12 +715,12 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    void StyleHelper::renderDot( Cairo::Context& context, const ColorUtils::Rgba& color, int x, int y ) const
+    void StyleHelper::renderDot( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y ) const
     {
 
         const double diameter( 1.8 );
-        const ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
-        const ColorUtils::Rgba dark( ColorUtils::darkColor( color ).dark(130).setAlpha( 0.65 ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ).dark(130).setAlpha( 0.65 ) );
 
         cairo_ellipse( context, double(x) + 1.0 - diameter/2, double(y) + 1.0 - diameter/2.0, diameter, diameter );
         cairo_set_source( context, light );
@@ -754,7 +821,7 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________
-    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& color, int size) const
+    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size) const
     {
         //const double m( double(size-1.5)*0.5 );
         const double m( double(size-2)*0.5 );
@@ -774,10 +841,10 @@ namespace Oxygen
             // sinusoidal pattern
             const double k1( (k0 * double(8 - i) + double(i)) * 0.125 );
             const double a( (cos( M_PI * i * 0.125) + 1.0) * 0.30 );
-            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( color, a*_shadowGain ) );
+            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
         }
 
-        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( color, 0 ) );
+        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
         cairo_ellipse_negative( context, ic, ic, is, is );
@@ -786,7 +853,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________
-    void StyleHelper::drawOuterGlow( Cairo::Context& context, const ColorUtils::Rgba& color, int size ) const
+    void StyleHelper::drawOuterGlow( Cairo::Context& context, const ColorUtils::Rgba& base, int size ) const
     {
 
         const double m( double(size)*0.5 );
@@ -813,10 +880,10 @@ namespace Oxygen
             // parabolic pattern
             const double k1( k0 + double(i)*(1.0-k0)/8.0 );
             const double a( 1.0 - sqrt(double(i)/8) );
-            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( color, a*_shadowGain ) );
+            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
         }
 
-        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( color, 0 ) );
+        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
 
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
@@ -827,11 +894,11 @@ namespace Oxygen
 
     //________________________________________________________________________________________________________
     void StyleHelper::drawInverseShadow(
-        Cairo::Context& context, const ColorUtils::Rgba& color,
+        Cairo::Context& context, const ColorUtils::Rgba& base,
         int pad, int size, double fuzz ) const
     {
 
-        Cairo::Pattern pattern( inverseShadowGradient( color, pad, size, fuzz ) );
+        Cairo::Pattern pattern( inverseShadowGradient( base, pad, size, fuzz ) );
 
         cairo_set_source( context, pattern );
         cairo_ellipse( context, pad-fuzz, pad-fuzz, size+fuzz*2.0, size+fuzz*2.0 );
@@ -885,7 +952,7 @@ namespace Oxygen
 
     //________________________________________________________________________________________________________
     cairo_pattern_t* StyleHelper::inverseShadowGradient(
-        const ColorUtils::Rgba& color,
+        const ColorUtils::Rgba& base,
         int pad, int size, double fuzz ) const
     {
 
@@ -902,10 +969,10 @@ namespace Oxygen
             // sinusoidal pattern
             const double k1( (double(8 - i) + k0 * double(i)) * 0.125 );
             const double a( (cos(3.14159 * i * 0.125) + 1.0) * 0.25 );
-            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( color, a*_shadowGain ) );
+            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
         }
 
-        cairo_pattern_add_color_stop( pattern, k0, ColorUtils::alphaColor( color, 0 ) );
+        cairo_pattern_add_color_stop( pattern, k0, ColorUtils::Rgba::transparent( base ) );
         return pattern;
 
     }

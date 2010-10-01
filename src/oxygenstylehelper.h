@@ -74,6 +74,9 @@ namespace Oxygen
 
         //@}
 
+        //! dock frame
+        TileSet dockFrame( const ColorUtils::Rgba&, int size ) const;
+
         //! progressbar indicator
         GdkPixbuf* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h ) const;
 
