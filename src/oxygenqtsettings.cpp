@@ -107,6 +107,8 @@ namespace Oxygen
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
+        // std::cout << _rc << std::endl;
+
     }
 
     //_________________________________________________________
@@ -290,8 +292,6 @@ namespace Oxygen
         optionNames.insert( std::make_pair( FontInfo::Desktop, "desktopFont" ) );
         optionNames.insert( std::make_pair( FontInfo::Fixed, "fixed" ) );
         optionNames.insert( std::make_pair( FontInfo::Menu, "menuFont" ) );
-        optionNames.insert( std::make_pair( FontInfo::Small, "smallestReadableFont" ) );
-        optionNames.insert( std::make_pair( FontInfo::Taskbar, "taskbarFont" ) );
         optionNames.insert( std::make_pair( FontInfo::ToolBar, "toolBarFont" ) );
         for( FontNameMap::const_iterator iter = optionNames.begin(); iter != optionNames.end(); iter++ )
         {
@@ -313,8 +313,20 @@ namespace Oxygen
 
         }
 
-        // assign default font
-        { _rc.addToRootSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default].toGtk() ) ); }
+        // pass fonts to RC
+        _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default] ) );
+
+        _rc.addSection( "oxygen-default-font", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Default] ) );
+        _rc.addToRootSection( "widget_class \"*\" style \"oxygen-default-font\"" );
+
+        _rc.addSection( "oxygen-menu-font", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
+        _rc.addToRootSection( "widget_class \"*.*MenuItem.*\" style \"oxygen-menu-font\"" );
+
+        _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
+        _rc.addToRootSection( "widget_class \"*.*Toolbar.*\" style \"oxygen-toolbar-font\"" );
 
     }
 
@@ -330,11 +342,6 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
-
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::WindowText ) ) );
         _rc.addToRootSection( "widget_class \"*Menu*\" style \"oxygen-menu-item\"" );
 
         _rc.addSection( "oxygen-spinbutton", "oxygen-default" );

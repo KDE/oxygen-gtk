@@ -31,10 +31,12 @@ namespace Oxygen
     const std::string FontInfo::_defaultKdeFontFamily = "Sans Serif";
 
     //_____________________________________________
-    std::string FontInfo::toGtk( void ) const
+    FontInfo::operator std::string ( void ) const
     {
         std::ostringstream out;
-        out << "\"" << family() << " " << weightString() << " " << italicString() << " " << size() << "\"";
+        out << "\"" << family() << " " << weightString() << " ";
+        if( _italic ) out << italicString() << " ";
+        out << size() << "\"";
         return out.str();
     }
 
@@ -42,7 +44,6 @@ namespace Oxygen
     FontInfo FontInfo::fromKdeOption( std::string value )
     {
 
-        // Sans Serif,8,-1,5,50,0,0,0,0,0
         FontInfo out;
         if( value.empty() ) return out;
 
@@ -56,7 +57,7 @@ namespace Oxygen
         }
 
         if( !value.empty() ) values.push_back( value );
-        for( unsigned int index = 0; index < 4 && index < values.size(); index++ )
+        for( unsigned int index = 0; index < values.size(); index++ )
         {
 
             if( index == 0 ) {

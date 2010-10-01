@@ -85,17 +85,13 @@ namespace Oxygen
         { return _family; }
 
         //! convert to gtk string
-        std::string toGtk( void ) const;
+        operator std::string ( void ) const;
 
         //! utilities
         static FontInfo fromKdeOption( std::string );
 
-        protected:
-
         std::string weightString( void ) const;
         std::string italicString( void ) const;
-
-        private:
 
         //! default kde size
         static const double _defaultKdeFontSize;
