@@ -79,48 +79,50 @@ namespace Oxygen
     }
 
     //_________________________________________
-    std::string GtkIcons::generate( const std::vector<std::string>& pathList ) const
+    void GtkIcons::generate( Gtk::RC& rc, const std::vector<std::string>& pathList ) const
     {
 
-        std::ostringstream out;
+        rc.addSection( "KDE4-icons", "oxygen-default" );
 
-        // header
-        out << "style \"KDE4-icons\"" << std::endl;
-        out << "{" << std::endl;
-
-        std::ostringstream notFoundOut;
+        // generate pixmap path
+        // this must be passed to gtk before any icon settings, otherwise
+        // other icons are not recognized
+        std::ostringstream pixmapPathStr;
+        pixmapPathStr << "pixmap_path \"";
+        for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); iter++ )
+        {
+            if( iter != pathList.begin() ) pixmapPathStr << ":";
+            pixmapPathStr << *iter;
+        }
+        pixmapPathStr << "\"";
+        rc.addToHeaderSection( pixmapPathStr.str() );
 
         // loop over icons
+        std::ostringstream notFoundOut;
         for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); iconIter++ )
         {
 
             std::string stock( generate( iconIter->first, iconIter->second, pathList ) );
             if( stock.empty() ) notFoundOut << "#  stock[\"" << iconIter->first << "\"]=<No matching KDE icon>" << std::endl;
-            else out << stock;
+            else rc.addToCurrentSection( stock );
 
         }
 
         // add list of not found icons to the bottom of the list
-        out << notFoundOut.str();
-
-        // trailer
-        out << "}" << std::endl;
-        out << "class \"*\" style \"KDE4-icons\"" << std::endl;
+        rc.addToCurrentSection( notFoundOut.str() );
+        rc.addToRootSection( "class \"*\" style \"KDE4-icons\"" );
 
         // extra settings for entries
         std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
         if( !stock.empty() )
         {
-            out << "style \"KDE4-icons-editor\"" << std::endl;
-            out << "{" << std::endl;
-            out <<  stock;
-            out << "}" << std::endl;
-            out << "class \"*Entry*\" style \"KDE4-icons-editor\"" << std::endl;
+            rc.addSection( "KDE4-icons-editor", "KDE4-icons" );
+            rc.addToCurrentSection( stock );
         }
 
-        std::cout << out.str() << std::endl;
+        rc.addToRootSection( "class \"*Entry*\" style \"KDE4-icons-editor\"" );
 
-        return out.str();
+        return;
 
     }
 

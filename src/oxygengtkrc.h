@@ -22,10 +22,35 @@
 
 #include <iostream>
 #include <list>
+#include <sstream>
 #include <string>
 
 namespace Gtk
 {
+
+    //! convenience class to generate GtkRC option
+    template< typename T>
+    class RCOption
+    {
+        public:
+
+        //! constructor
+        RCOption( std::string name, const T& value )
+        {
+            std::ostringstream stream;
+            stream << name << " = " << value;
+            _value = stream.str();
+        }
+
+        //! cast to cairo_t
+        operator const std::string& (void) const
+        { return _value; }
+
+        private:
+
+        std::string _value;
+
+    };
 
     //! handle gtkrc option generation
     class RC
@@ -34,9 +59,8 @@ namespace Gtk
         public:
 
         //! constructor
-        RC( void ):
-            _currentSection( _rootSectionName )
-        { _sections.push_back( Section( _rootSectionName ) ); }
+        RC( void )
+        { init(); }
 
         //! destructor
         virtual ~RC( void )
@@ -44,9 +68,13 @@ namespace Gtk
 
         //! clear
         void clear( void )
-        { _sections.clear(); }
+        {
+            _sections.clear();
+            init();
+        }
 
-        //! add section
+
+        //! create new section and set as current
         void addSection( const std::string& name, const std::string& parent = std::string() );
 
         //! set current section
@@ -59,12 +87,32 @@ namespace Gtk
         void addToCurrentSection( const std::string& content )
         { addToSection( _currentSection, content ); }
 
+        //! add to header
+        void addToHeaderSection( const std::string& content )
+        { addToSection( _headerSectionName, content ); }
+
         //! add to root
-        void addToRoot( const std::string& content )
+        void addToRootSection( const std::string& content )
         { addToSection( _rootSectionName, content ); }
+
+        //! convert to string
+        std::string toString( void ) const
+        {
+            std::ostringstream out;
+            out << *this << std::endl;
+            return out.str();
+        }
 
         protected:
 
+        //! initialize default sections
+        void init( void )
+        {
+            addSection( _headerSectionName );
+            addSection( _rootSectionName );
+        }
+
+        //! describes each style section in resource list
         class Section
         {
 
@@ -89,7 +137,7 @@ namespace Gtk
 
             //! add to content
             void add( const std::string& content )
-            { _content += content; }
+            { _content += content + "\n"; }
 
             //! equal operator. Based on name only
             bool operator == (const Section& other ) const
@@ -109,6 +157,7 @@ namespace Gtk
         private:
 
         //! root section name
+        static const std::string _headerSectionName;
         static const std::string _rootSectionName;
 
         //! list of sections

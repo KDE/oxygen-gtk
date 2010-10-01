@@ -34,7 +34,7 @@ namespace Oxygen
     std::string FontInfo::toGtk( void ) const
     {
         std::ostringstream out;
-        out << family() << " " << weightString() << " " << italicString() << " " << size();
+        out << "\"" << family() << " " << weightString() << " " << italicString() << " " << size() << "\"";
         return out.str();
     }
 

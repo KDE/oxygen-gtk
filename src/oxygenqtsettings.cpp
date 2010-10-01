@@ -60,6 +60,9 @@ namespace Oxygen
     void QtSettings::init( void )
     {
 
+        // clear RC
+        _rc.clear();
+
         // init application name
         initApplicationName();
 
@@ -95,29 +98,18 @@ namespace Oxygen
         _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
 
         // scrollbar width
-        std::ostringstream str;
-        str << "style \"oxygen-scrollbar\" = \"oxygen-default\"" << std::endl;
-        str << "{" << std::endl;
-        str
-            << "    GtkScrollbar::slider-width = "
-            << _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1
-            <<  std::endl;
-        str << "}" << std::endl;
-        str << "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" << std::endl;
-        gtk_rc_parse_string( str.str().c_str() );
+        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<int>(
+            "  GtkScrollbar::slider-width",
+            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
 
-        // some debugging printout
-        if( false )
-        {
-            std::cout << "Oxygen::QtSettings::init - kde home: " << _kdeHome << std::endl;
-            std::cout << "Oxygen::QtSettings::init - icon prefix: " << _kdeIconPrefix << std::endl;
-            std::cout << "Oxygen::QtSettings::init - icon theme: "<< _kdeIconTheme << std::endl;
-            std::cout << "Oxygen::QtSettings::init - icon theme (fallback): "<< _kdeFallbackIconTheme << std::endl;
+        // pass all resources to gtk
+        gtk_rc_parse_string( _rc.toString().c_str() );
 
-            std::cout << "Oxygen::QtSettings::init - icon path: " << std::endl;
-            for( std::vector<std::string>::const_iterator iter = _kdeIconPath.begin(); iter != _kdeIconPath.end(); iter++ )
-            { std::cout << "Oxygen::QtSettings::init -     " << *iter << std::endl; }
-        }
+        // some dump
+        std::cout << _rc << std::endl;
+
 
     }
 
@@ -228,31 +220,18 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::loadKdeIcons( void ) const
+    void QtSettings::loadKdeIcons( void )
     {
         // set theme names into gtk
         std::ostringstream themeNameStr;
         themeNameStr << "gtk-icon-theme-name=\"" << _kdeIconTheme << "\"" << std::endl;
-        themeNameStr << " gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"" << std::endl;
-
-        gtk_rc_parse_string( themeNameStr.str().c_str() );
-
-        // generate pixmap path
-        std::ostringstream pixmapPathStr;
-        pixmapPathStr << "pixmap_path \"";
-        for( std::vector<std::string>::const_iterator iter = _kdeIconPath.begin(); iter != _kdeIconPath.end(); iter++ )
-        {
-            if( iter != _kdeIconPath.begin() ) pixmapPathStr << ":";
-            pixmapPathStr << *iter;
-        }
-        pixmapPathStr << "\"";
-        gtk_rc_parse_string( pixmapPathStr.str().c_str() );
+        themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"" << std::endl;
+        _rc.addToRootSection( themeNameStr.str() );
 
         // load translation table
         GtkIcons icons;
         icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
-        std::string iconTranslations( icons.generate( _kdeIconPath ) );
-        gtk_rc_parse_string( iconTranslations.c_str() );
+        icons.generate( _rc, _kdeIconPath );
 
     }
 
@@ -345,9 +324,7 @@ namespace Oxygen
         }
 
         // assign default font
-        GtkSettings *settings( gtk_settings_get_default() );
-        if( settings )
-        { g_object_set(settings, "gtk-font-name", fonts[FontInfo::Default].toGtk().c_str(), 0L); }
+        { _rc.addToRootSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default].toGtk() ) ); }
 
     }
 

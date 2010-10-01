@@ -25,6 +25,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygengtkrc.h"
+
 #include <string>
 #include <map>
 #include <vector>
@@ -48,7 +50,7 @@ namespace Oxygen
         void loadTranslations( const std::string& filename );
 
         //! generate rc file
-        std::string generate( const std::vector<std::string>& pathList ) const;
+        void generate( Gtk::RC&, const std::vector<std::string>& pathList ) const;
 
         protected:
 

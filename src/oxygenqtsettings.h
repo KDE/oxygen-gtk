@@ -26,6 +26,7 @@
 */
 
 #include "oxygenapplicationname.h"
+#include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -93,7 +94,7 @@ namespace Oxygen
         void initApplicationName( void );
 
         //! load kde icons
-        void loadKdeIcons( void ) const;
+        void loadKdeIcons( void );
 
         //! load palette from kdeglobals
         void loadKdePalette( void );
@@ -108,17 +109,14 @@ namespace Oxygen
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
 
-        // add gtk option
-        template< typename T> void addGtkOption( const std::string name, T value ) const;
+        // read all options from kdeglobals
+        OptionMap readOptions( const std::string& ) const;
 
         private:
 
         //! application
         /*! this is needed to deal with some application hacks */
         ApplicationName _applicationName;
-
-        // read all options from kdeglobals
-        OptionMap readOptions( const std::string& ) const;
 
         //! kde global options
         OptionMap _kdeGlobals;
@@ -153,17 +151,10 @@ namespace Oxygen
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;
 
-    };
+        //! rc options (passed to gtk at the end of init
+        Gtk::RC _rc;
 
-    //______________________________________________________________________________________
-    template< typename T> void QtSettings::addGtkOption( std::string name, T value ) const
-    {
-        std::ostringstream str;
-        str << "    " << name << " = " << value << std::endl;;
-        gtk_rc_parse_string( str.str().c_str() );
-        std::cout << "Oxygen::QtStettings::addGtkOption: " << str.str() << std::endl;
-        return;
-    }
+    };
 
 }
 
