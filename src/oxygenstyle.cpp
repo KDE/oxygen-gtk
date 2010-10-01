@@ -1069,6 +1069,7 @@ namespace Oxygen
 
         if( Gtk::gtk_parent_menu( widget ) )
         {
+
             if( wh > 0 )
             {
 
@@ -1096,6 +1097,73 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         _helper.holeFlat( base, 0.0 ).render( context, x, y, w, h, TileSet::Full  );
 
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderDockFrame(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, StyleOptions options ) const
+    {
+
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
+            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Button );
+
+        }
+
+        // context
+        Cairo::Context context( window, clipRect );
+        _helper.dockFrame( base, w ).render( context, x, y, w, h );
+    }
+
+
+    //____________________________________________________________________________________
+    void Style::renderDockFrame(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
+    {
+
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
+            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Button );
+
+        }
+
+        // context
+        Cairo::Context context( window, clipRect );
+        GdkRectangle content = {x, y, w, h};
+        GdkRegion *region( gdk_region_rectangle( &content ) );
+
+        GdkRectangle mask = { x+xMask, y, wMask, 4 };
+        gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
+
+        gdk_cairo_region( context, region );
+        cairo_clip( context );
+        gdk_region_destroy( region );
+
+        _helper.dockFrame( base, w ).render( context, x, y, w, h );
     }
 
     //____________________________________________________________________________________

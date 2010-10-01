@@ -115,6 +115,12 @@ namespace Oxygen
         //! menu item
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint ) const;
 
+        //! dock frame
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+
+        //! dock frame
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xmask, gint wmask, StyleOptions ) const;
+
         //! selection
         void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions ) const;
 

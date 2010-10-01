@@ -490,8 +490,8 @@ namespace Oxygen
             {
                 Cairo::Pattern gradient( cairo_pattern_create_linear( 0, 0, w, 0 ) );
                 cairo_pattern_add_color_stop( gradient, 0, dark );
-                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( dark ) );
+                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( dark ) );
                 cairo_pattern_add_color_stop( gradient, 1.0, dark );
 
                 cairo_set_line_width( context, 1 );
@@ -501,8 +501,8 @@ namespace Oxygen
             }
 
             cairo_restore( context );
-            drawSeparator( context, base, 0, 0, w, 2, false );
-            drawSeparator( context, base, 0, h-2, w, 2, false );
+            drawSeparator( context, base, 0, -1, w, 2, false );
+            drawSeparator( context, base, 0, h-3, w, 2, false );
             context.updateGdkPixbuf();
         }
 

@@ -300,10 +300,25 @@ static void draw_shadow( GtkStyle* style,
 
         return;
 
-    } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() || d.isFrame() ) && shadow == GTK_SHADOW_IN ) {
+    } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
         Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
         Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+
+        return;
+
+    } else if( d.isFrame() ) {
+
+        if( shadow == GTK_SHADOW_IN ) {
+
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+
+        } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
+
+            Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Oxygen::Blend );
+
+        }
 
         return;
 
@@ -652,6 +667,25 @@ static void draw_shadow_gap( GtkStyle* style,
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+
+    Gtk::Detail d( detail );
+    if( d.isFrame() ) {
+
+        if( shadow == GTK_SHADOW_IN ) {
+
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+
+        } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
+
+            if( gap_w >= 0 ) Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+2, gap_x, gap_w, Oxygen::Blend );
+            else Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+2, Oxygen::Blend );
+
+        }
+
+        return;
+
+    }
 
     oxygen_style_parent_class->draw_shadow_gap( style, window, state,
         shadow, clipRect, widget, detail,
