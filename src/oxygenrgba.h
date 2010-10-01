@@ -168,7 +168,9 @@ namespace ColorUtils
         //@{
         static Rgba black( void ) { return Rgba( 0, 0, 0, 1 ); }
         static Rgba white( void ) { return Rgba( 1, 1, 1, 1 ); }
-        static Rgba transparent( void ) { return Rgba( 0, 0, 0, 0 ); }
+        static Rgba transparent( const ColorUtils::Rgba& base = black()  )
+        { return Rgba( base._red, base._green, base._blue, 0 ); }
+
         //@}
 
         private:
