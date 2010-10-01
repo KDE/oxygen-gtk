@@ -163,7 +163,7 @@ static void draw_box( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
     const Gtk::Detail d( detail );
-    if( d.isButton() )
+    if( d.isButton() || d.isOptionMenu() )
     {
         if( Gtk::gtk_parent_treeview( widget ) )
         {
@@ -233,15 +233,16 @@ static void draw_box( GtkStyle* style,
 
         }
 
-    } else if( d.isSpinButtonFrame()) {
+    } else if( d.isSpinButton()) {
 
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
-	    Oxygen::Style::instance().renderHoleBackground(window,area, x-5, y-1 ,w+7, h+1 );
 
-	    Oxygen::Style::instance().renderHole(window,area,x-5,y-1,w+7,h+1, options);
+        // TODO: make sure the offsets are robust enough
+        Oxygen::Style::instance().renderHoleBackground(window,area, x-5, y-1 ,w+7, h+1 );
+        Oxygen::Style::instance().renderHole(window,area,x-5,y-1,w+7,h+1, options);
 
-    } else if( d.isSpinButton() ) {
+    } else if( d.isSpinButtonArrow() ) {
 
         return;
 
@@ -503,7 +504,7 @@ static void draw_arrow( GtkStyle* style,
 
     }
 
-    if( d.isSpinButtonFrame() ) {
+    if( d.isSpinButton() ) {
 
         /*
         TODO: this should be made more robust. What one really want is an arrow that is
@@ -607,11 +608,25 @@ static void draw_tab( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
 
-    oxygen_style_parent_class->draw_tab( style, window, state,
-        shadow, area, widget, detail,
-        x, y, w, h );
-}
+    Gtk::Detail d( detail );
+    if( d.isOptionMenuTab() )
+    {
 
+        // render
+        GtkArrowType arrow = GTK_ARROW_DOWN;
+        Oxygen::Style::ArrowSize arrowSize = Oxygen::Style::ArrowNormal;
+        Oxygen::StyleOptions options = Oxygen::Contrast;
+        Oxygen::Style::instance().renderArrow( window, area, arrow, x, y, w, h, arrowSize, options );
+        return;
+
+    } else {
+
+        oxygen_style_parent_class->draw_tab( style, window, state,
+            shadow, area, widget, detail,
+            x, y, w, h );
+    }
+
+}
 //___________________________________________________________
 static void draw_shadow_gap( GtkStyle* style,
     GdkWindow* window,

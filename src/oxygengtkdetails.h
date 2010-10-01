@@ -84,15 +84,18 @@ namespace Gtk
         bool isMenuBar( void ) const { return _value == "menubar"; }
         bool isMenuItem( void ) const { return _value == "menuitem"; }
         bool isNotebook( void ) const { return _value == "notebook"; }
+        bool isOptionMenu( void ) const { return _value == "optionmenu"; }
+        bool isOptionMenuTab( void ) const { return _value == "optionmenutab"; }
         bool isPaned( void ) const { return _value == "paned"; }
         bool isRadioButton( void ) const { return _value == "radiobutton"; }
         bool isScrolledWindow( void ) const { return _value == "scrolled_window"; }
+
         //!@name spinbuttons
         //@{
-        bool isSpinButtonFrame( void ) const { return _value == "spinbutton"; }
+        bool isSpinButton( void ) const { return _value == "spinbutton"; }
         bool isSpinButtonUp( void ) const { return _value=="spinbutton_up"; }
         bool isSpinButtonDown( void ) const { return _value=="spinbutton_down"; }
-        bool isSpinButton( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
+        bool isSpinButtonArrow( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
         //@}
 
         bool isTrough( void ) const { return _value == "trough"; }
