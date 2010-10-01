@@ -289,8 +289,6 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-spinbutton\"" );
 
         // tooltips
-        // this is a mess.
-        // see if this can be cleaned up
         _rc.addSection( "oxygen-tooltips", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
