@@ -99,12 +99,12 @@ namespace Oxygen
         //! load palette from kdeglobals
         void loadKdePalette( void );
 
-        //! load fonts from kdeglobals and pass to gtk
-        void loadKdeFonts( void );
-
         //! update gtk colors
         /*! generates an RC string and pass it to gtk */
         void generateGtkColors( void );
+
+        //! load fonts from kdeglobals and pass to gtk
+        void loadKdeFonts( void );
 
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
