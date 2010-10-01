@@ -107,7 +107,7 @@ namespace Oxygen
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
-        // std::cout << _rc << std::endl;
+        std::cout << _rc << std::endl;
 
     }
 
@@ -268,6 +268,39 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    void QtSettings::generateGtkColors( void )
+    {
+
+
+        // customize gtk palette
+        _palette.setGroup( Palette::Active );
+
+        // menu items
+        _rc.addSection( "oxygen-menu-item", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToRootSection( "widget_class \"*<GtkMenuItem>*\" style \"oxygen-menu-item\"" );
+
+        // spinboxes
+        _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
+        _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-spinbutton\"" );
+
+        // tooltips
+        // this is a mess.
+        // see if this can be cleaned up
+        _rc.addSection( "oxygen-tooltips", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
+        _rc.addToRootSection( "widget \"gtk-tooltip*\" style \"oxygen-tooltips\"" );
+
+    }
+
+    //_________________________________________________________
     void QtSettings::loadKdeFonts( void )
     {
 
@@ -328,45 +361,6 @@ namespace Oxygen
         _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
         _rc.addToRootSection( "widget_class \"*.*Toolbar.*\" style \"oxygen-toolbar-font\"" );
-
-    }
-
-    //_________________________________________________________
-    void QtSettings::generateGtkColors( void )
-    {
-
-
-        // customize gtk palette
-        _palette.setGroup( Palette::Active );
-        _rc.addSection( "oxygen-menu-item", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
-        _rc.addToRootSection( "widget_class \"*Menu*\" style \"oxygen-menu-item\"" );
-
-        _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
-        _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-spinbutton\"" );
-
-        // tooltips
-        _rc.addSection( "oxygen-tooltips", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
-        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
-
-        // this is a mess.
-        // see if this can be cleaned up
-        _rc.addToRootSection( "class \"GtkTooltip\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "class \"GtkTooltips\" style \"oxygen-tooltips\"" );
-
-        _rc.addToRootSection( "widget \"gtk-tooltips\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "widget \"gtk-tooltip\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "widget \"gtk-tooltip.*\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "widget \"gtk-tooltips\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "widget \"gtk-tooltips.*\" style \"oxygen-tooltips\"" );
-        _rc.addToRootSection( "widget_class \"*.<GtkTooltip>.*\" style \"oxygen-tooltips\"" );
 
     }
 
