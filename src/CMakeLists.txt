@@ -8,6 +8,7 @@ set( OXYGEN-GTK-SOURCES
     oxygencolorutils.cpp
     oxygenfontinfo.cpp
     oxygengtkicons.cpp
+    oxygengtkrc.cpp
     oxygengtkutils.cpp
     oxygenmaps.cpp
     oxygenoptionmap.cpp
