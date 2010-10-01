@@ -53,6 +53,9 @@ namespace Gtk
     //! get top level windows dimension
     void gdk_toplevel_get_size( GdkWindow*, gint*, gint* );
 
+    //! get top level windows dimension
+    void gdk_toplevel_get_frame_size( GdkWindow*, gint*, gint* );
+
     //! get position relatve to toplevel
     void gdk_window_get_toplevel_origin( GdkWindow*, gint*, gint* );
 

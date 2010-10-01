@@ -86,33 +86,36 @@ namespace Oxygen
         // get window size and height
         gint ww, wh;
         gint wx, wy;
-        Gtk::gdk_toplevel_get_size( window, &ww, &wh );
+        Gtk::gdk_toplevel_get_frame_size( window, &ww, &wh );
         Gtk::gdk_window_get_toplevel_origin( window, &wx, &wy );
 
         // if window dimensions could not be found,
         if( ww < 0 || wh < 0 ) { return false; }
 
+        // the hard-coded metrics are copied for
+        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
+        // vertical shift to account for window decoration
+        const int yShift = 23;
+        wy += yShift;
+
         // translate to toplevel coordinates
         x+=wx;
         y+=wy;
-
-        GdkRectangle rect = { x, y, w, h };
-
-        // the hard-coded metrics are copied for
-        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
-        const int yShift = 23;
-        const int splitY( std::min(300, 3*wh/4 ) );
 
         // create context and translate to toplevel coordinates
         Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
 
+        // split
+        const int splitY( std::min(300, 3*wh/4 ) );
+
         // upper rect
-        GdkRectangle upperRect = { 0, -yShift, ww, splitY };
+        GdkRectangle rect = { x, y, w, h };
+        GdkRectangle upperRect = { 0, 0, ww, splitY };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
-            Cairo::Pattern pattern( verticalGradient( base, -yShift, splitY-yShift ) );
+            Cairo::Pattern pattern( verticalGradient( base, 0, splitY ) );
 
             gdk_cairo_rectangle( context, &upperRect );
             cairo_set_source( context, pattern );
@@ -121,7 +124,7 @@ namespace Oxygen
         }
 
         // fill lower rect
-        GdkRectangle lowerRect = { 0, splitY - yShift, ww, wh - splitY + yShift };
+        GdkRectangle lowerRect = { 0, splitY, ww, wh - splitY + yShift };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
@@ -148,7 +151,7 @@ namespace Oxygen
             cairo_matrix_t transformation;
             cairo_matrix_init_identity( &transformation );
             cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
-            cairo_matrix_translate( &transformation, -(ww - radialW)/2, yShift );
+            cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
             cairo_pattern_set_matrix( pattern, &transformation );
 
             // fill
@@ -350,11 +353,17 @@ namespace Oxygen
         // get window size and height
         gint ww, wh;
         gint wx, wy;
-        Gtk::gdk_toplevel_get_size( window, &ww, &wh );
+        Gtk::gdk_toplevel_get_frame_size( window, &ww, &wh );
         Gtk::gdk_window_get_toplevel_origin( window, &wx, &wy );
 
         // do nothing if window dimensions could not be found
         if( ww < 0 || wh < 0 ) return false;
+
+        // the hard-coded metrics are copied for
+        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
+        // vertical shift to account for window decoration
+        const int yShift = 23;
+        wy += yShift;
 
         // translate to toplevel coordinates
         x+=wx;
@@ -370,11 +379,10 @@ namespace Oxygen
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
-        const int yShift = 23;
         const int splitY( std::min(300, 3*wh/4 ) );
 
         // upper rect
-        GdkRectangle upperRect = { 0, -yShift, ww, splitY };
+        GdkRectangle upperRect = { 0, 0, ww, splitY };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
@@ -394,7 +402,7 @@ namespace Oxygen
 
 
         // lower rect
-        GdkRectangle lowerRect = { 0, splitY - yShift, ww, wh - splitY + yShift };
+        GdkRectangle lowerRect = { 0, splitY, ww, wh - splitY + yShift };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
@@ -415,7 +423,7 @@ namespace Oxygen
         const int patternHeight = 64;
         const int radialW( std::min(600, ww ) );
 
-        GdkRectangle radialRect = {  (ww - radialW)/2, -yShift, radialW, patternHeight - yShift };
+        GdkRectangle radialRect = {  (ww - radialW)/2, 0, radialW, patternHeight };
         if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
         {
 
@@ -423,13 +431,12 @@ namespace Oxygen
             Cairo::Pattern pattern( radialGradient( base, 64, patternHeight - 64, 64 ) );
 
             // add matrix transformation
+            // TODO: possibly pass that also in ::radialGradient
             cairo_matrix_t transformation;
             cairo_matrix_init_identity( &transformation );
             cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
-            cairo_matrix_translate( &transformation, -(ww - radialW)/2, yShift );
+            cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
             cairo_pattern_set_matrix( pattern, &transformation );
-
-            // fill
 
             cairo_save( context );
             GdkRectangle local = { (ww - radialW)/2, 0, radialW, patternHeight };
@@ -1479,6 +1486,7 @@ namespace Oxygen
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
         cairo_pattern_t* pattern = cairo_pattern_create_linear( 0, y1, 0, y2 );
         cairo_pattern_add_color_stop( pattern, 0, top );
+        cairo_pattern_add_color_stop( pattern, 0.5, base );
         cairo_pattern_add_color_stop( pattern, 1, bottom );
         return pattern;
     }

@@ -119,6 +119,29 @@ namespace Gtk
     }
 
     //________________________________________________________
+    void gdk_toplevel_get_frame_size( GdkWindow* window, gint* w, gint* h )
+    {
+
+        if( !( window && GDK_IS_WINDOW( window ) ) )
+        {
+            if( w ) *w = -1;
+            if( h ) *h = -1;
+            return;
+        }
+
+        if( GdkWindow* topLevel = gdk_window_get_toplevel( window ) )
+        {
+            GdkRectangle rect = {0, 0, -1, -1};
+            gdk_window_get_frame_extents( topLevel, &rect );
+            *w = rect.width;
+            *h = rect.height;
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________
     void gdk_window_get_toplevel_origin( GdkWindow* window, gint* x, gint* y )
     {
         if( !window ) return;
