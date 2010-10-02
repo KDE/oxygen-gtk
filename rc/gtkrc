@@ -1,18 +1,23 @@
 style "oxygen-default"
 {
+    GtkCalendar::inner-border = 0
+    GtkCalendar::horizontal-separation = 0
     GtkCheckButton::indicator-size = 18
     GtkMenu::horizontal-padding = 3
     GtkMenu::vertical-padding = 3
     GtkMenu::horizontal-offset = -7
-    GtkMenuBar::shadow-type = GTK_SHADOW_NONE
     GtkRange::slider-width = 23
-    GtkStatusbar::shadow-type = GTK_SHADOW_NONE
     GtkStatusbar::has-resize-grip = FALSE
-    GtkToolbar::shadow-type = GTK_SHADOW_NONE
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
     GtkEntry::honors-transparent-bg-hint = 1
 #    GtkComboBox::appears-as-list = 1
+
+    # shadow types
+    GtkMenuBar::shadow-type = GTK_SHADOW_NONE
+    GtkStatusbar::shadow-type = GTK_SHADOW_NONE
+    GtkToolbar::shadow-type = GTK_SHADOW_NONE
+
 
     engine "oxygen-gtk"
     {
