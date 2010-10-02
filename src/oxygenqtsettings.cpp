@@ -107,7 +107,7 @@ namespace Oxygen
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
-        std::cout << _rc << std::endl;
+        //std::cout << _rc << std::endl;
 
     }
 
@@ -277,10 +277,16 @@ namespace Oxygen
 
         // menu items
         _rc.addSection( "oxygen-menu-item", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+
         _rc.addToRootSection( "widget_class \"*<GtkMenuItem>*\" style \"oxygen-menu-item\"" );
 
         // spinboxes
