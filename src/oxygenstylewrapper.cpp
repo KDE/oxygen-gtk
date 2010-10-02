@@ -67,7 +67,7 @@ static void draw_flat_box(
 
     #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-        "widget=%s, primitive=falt_box, state=%s, shadow=%s, detail=%s",
+        "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
@@ -182,7 +182,7 @@ static void draw_box( GtkStyle* style,
 
         }
 
-    } else if( d.isMenuBar() || d.isToolbar() ) {
+    } else if( d.isMenuBar() || d.isToolBar() ) {
 
         Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
         return;
@@ -467,9 +467,13 @@ static void draw_hline(
     #endif
 
     Gtk::Detail d( detail );
-    if( !d.isVScale() ) {
+    if( d.isVScale() ) return;
+    else if( d.isToolBar() && !Oxygen::Style::instance().settings().toolBarDrawItemSeparator() ) return;
+    else {
 
-        Oxygen::Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, false );
+        Oxygen::StyleOptions options( Oxygen::None );
+        if( !Gtk::gtk_parent_treeview( widget ) ) options |= Oxygen::Blend;
+        Oxygen::Style::instance().drawSeparator( window, widget, clipRect, x1, y, x2-x1, 0, options );
 
     }
 
@@ -498,8 +502,15 @@ static void draw_vline( GtkStyle* style,
 
     // disable vline in buttons (should correspond to comboboxes)
     Gtk::Detail d( detail );
-    if( !( d.isHScale() || Gtk::gtk_parent_button( widget ) ) )
-    { Oxygen::Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, true ); }
+    if( d.isHScale() || Gtk::gtk_parent_button( widget ) ) return;
+    else if( d.isToolBar() && !Oxygen::Style::instance().settings().toolBarDrawItemSeparator() ) return;
+    else {
+
+        Oxygen::StyleOptions options( Oxygen::Vertical );
+        if( !Gtk::gtk_parent_treeview( widget ) ) options |= Oxygen::Blend;
+        Oxygen::Style::instance().drawSeparator( window, widget, clipRect, x, y1, 0, y2-y1, options );
+
+    }
 
 }
 
