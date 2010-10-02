@@ -57,14 +57,24 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::drawSeparator( GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
         // define colors
-        ColorUtils::Rgba base;
+        ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        if( options & Blend )
+        {
 
-        // TODO: find relevant case where colors need to be blended to background
-        base =  settings().palette().color( Palette::Window );
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+            if( wh > 0 )
+            {
+                if( Gtk::gtk_parent_menu( widget ) ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+                else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            }
+
+        }
+
         Cairo::Context context( window, clipRect );
         _helper.drawSeparator( context, base, x, y, w, h, (options&Vertical) );
 
@@ -1466,8 +1476,8 @@ namespace Oxygen
             w += 2;
             h += 2;
 
-        }        
-        
+        }
+
         // fill
         if( !(options & NoFill))
         {
@@ -1504,10 +1514,10 @@ namespace Oxygen
             else return;
             tile.render( context, x, y, w, h );
 
-        } else if( color.isValid() ) { 
-            
-            _helper.slabSunken( color, 0.0 ).render( context, x, y, w, h ); 
-        
+        } else if( color.isValid() ) {
+
+            _helper.slabSunken( color, 0.0 ).render( context, x, y, w, h );
+
         }
 
     }
