@@ -22,6 +22,7 @@
 
 #include "oxygencairocontext.h"
 #include "oxygengeometry.h"
+#include "oxygengtkgap.h"
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
 #include "oxygenstyleoptions.h"
@@ -108,23 +109,26 @@ namespace Oxygen
 
         //!@name generic slab
         //@{
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xMask, gint wMask, StyleOptions ) const;
+
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
         void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
-        { renderSlab( window, r, x, y, w, h, 0, -1, o ); }
+        { renderSlab( window, r, x, y, w, h, Gtk::Gap(), o ); }
+
         //@}
 
         //!@name hole
         //@{
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xMask, gint wMask, StyleOptions ) const;
+
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
         void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
-        { renderHole( window, r, x, y, w, h, 0, -1, o ); }
+        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
 
         //!@name dock frame
         //@{
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xmask, gint wmask, StyleOptions ) const;
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
         void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
-        { renderDockFrame( window, r, x, y, w, h, 0, -1, o ); }
+        { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
 
         //! menu item
@@ -192,6 +196,9 @@ namespace Oxygen
 
         // center rect
         void centerRect( GdkRectangle*, GdkRectangle* ) const;
+
+        // generate map from gap
+        void generateGapMask( Cairo::Context&, gint, gint, gint, gint, const Gtk::Gap& ) const;
 
         //@}
 

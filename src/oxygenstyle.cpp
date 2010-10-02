@@ -805,7 +805,7 @@ namespace Oxygen
     void Style::renderSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, int xMask, int wMask, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
     {
 
         // define colors
@@ -826,21 +826,7 @@ namespace Oxygen
 
         // create context
         Cairo::Context context( window, clipRect );
-
-        // add mask
-        if( wMask > 0 )
-        {
-            GdkRectangle content = {x, y, w, h};
-            GdkRegion *region( gdk_region_rectangle( &content ) );
-
-            GdkRectangle mask = { x+xMask, y, wMask, 4 };
-            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
-
-            gdk_cairo_region( context, region );
-            cairo_clip( context );
-            gdk_region_destroy( region );
-        }
-
+        generateGapMask( context, x, y, w, h, gap );
         renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
 
     }
@@ -1052,7 +1038,7 @@ namespace Oxygen
     void Style::renderHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
     {
 
         // do nothing if not enough room
@@ -1061,24 +1047,9 @@ namespace Oxygen
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
-        // create context
+        // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
-
-        // add mask
-        if( wMask > 0 )
-        {
-            GdkRectangle content = {x, y, w, h};
-            GdkRegion *region( gdk_region_rectangle( &content ) );
-
-            GdkRectangle mask = { x+xMask, y, wMask, 4 };
-            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
-
-            gdk_cairo_region( context, region );
-            cairo_clip( context );
-            gdk_region_destroy( region );
-        }
-
-        // render hole
+        generateGapMask( context, x, y, w, h, gap );
         _helper.hole( base, 0.0, 7, !(options&NoFill) ).render( context, x, y, w, h, options&NoFill ? TileSet::Ring : TileSet::Full );
 
     }
@@ -1087,7 +1058,7 @@ namespace Oxygen
     void Style::renderDockFrame(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
     {
 
         // define colors
@@ -1106,23 +1077,9 @@ namespace Oxygen
 
         }
 
-        // context
+        // create context, add mask, and render
         Cairo::Context context( window, clipRect );
-
-        // add mask
-        if( wMask > 0 )
-        {
-            GdkRectangle content = {x, y, w, h};
-            GdkRegion *region( gdk_region_rectangle( &content ) );
-
-            GdkRectangle mask = { x+xMask, y, wMask, 4 };
-            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
-
-            gdk_cairo_region( context, region );
-            cairo_clip( context );
-            gdk_region_destroy( region );
-        }
-
+        generateGapMask( context, x, y, w, h, gap );
         _helper.dockFrame( base, w ).render( context, x, y, w, h );
     }
 
@@ -1584,6 +1541,61 @@ namespace Oxygen
         child->x = parent->x + (parent->width - child->width)/2;
         child->y = parent->y + (parent->height - child->height)/2;
         return;
+    }
+
+    //__________________________________________________________________
+    void Style::generateGapMask( Cairo::Context& context, gint x, gint y, gint w, gint h, const Gtk::Gap& gap ) const
+    {
+
+        if( gap.width() <= 0 ) return;
+
+        // store current rect in
+        GdkRectangle r = { x, y, w, h };
+        GdkRegion* region = gdk_region_rectangle( &r );
+
+        GdkRegion* mask = 0L;
+        switch( gap.position() )
+        {
+            case GTK_POS_TOP:
+            {
+                GdkRectangle mask_r = { x+gap.x(), y, gap.width(), gap.height() };
+                mask = gdk_region_rectangle( &mask_r );
+                break;
+            }
+
+            case GTK_POS_BOTTOM:
+            {
+                GdkRectangle mask_r = { x+gap.x(), y+h-gap.height(), gap.width(), gap.height() };
+                mask = gdk_region_rectangle( &mask_r );
+                break;
+            }
+
+            case GTK_POS_LEFT:
+            {
+                GdkRectangle mask_r = { x, y+gap.x(), gap.height(), gap.width() };
+                mask = gdk_region_rectangle( &mask_r );
+                break;
+            }
+
+            case GTK_POS_RIGHT:
+            {
+                GdkRectangle mask_r = { x + w - gap.height(), y+gap.x(), gap.height(), gap.width() };
+                mask = gdk_region_rectangle( &mask_r );
+                break;
+            }
+
+            default: return;
+        }
+
+        gdk_region_subtract( region, mask );
+        gdk_cairo_region( context, region );
+        cairo_clip( context );
+
+        gdk_region_destroy( region );
+        gdk_region_destroy( mask );
+
+        return;
+
     }
 
 }

@@ -688,19 +688,18 @@ static void draw_shadow_gap( GtkStyle* style,
         if( shadow == GTK_SHADOW_IN ) {
 
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap_x, gap_w, Oxygen::NoFill );
-
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Gtk::Gap( gap_x, gap_w, gap_side ), Oxygen::NoFill );
 
         } else if( shadow == GTK_SHADOW_OUT ) {
 
             Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Oxygen::Hover|Oxygen::Focus);
-            Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap_x, gap_w, options );
+            Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, Gtk::Gap( gap_x, gap_w, gap_side ), options );
 
         } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
 
-            Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, gap_x, gap_w, Oxygen::Blend );
+            Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, Gtk::Gap( gap_x, gap_w, gap_side ), Oxygen::Blend );
 
         }
 
@@ -750,7 +749,7 @@ static void draw_box_gap( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
         options &= ~(Oxygen::Hover|Oxygen::Focus);
-        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, gap_x, gap_w, options );
+        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, Gtk::Gap( gap_x, gap_w, gap_side ), options );
 
     } else {
 
