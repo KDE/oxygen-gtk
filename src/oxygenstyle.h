@@ -86,7 +86,7 @@ namespace Oxygen
         //!@name progressbar
         //@{
         void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkProgressBarOrientation ) const;
         //@}
 
         //!@name scrollbar

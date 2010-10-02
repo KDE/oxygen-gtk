@@ -540,7 +540,8 @@ namespace Oxygen
     void Style::renderProgressBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h ) const
+        gint x, gint y, gint w, gint h,
+        GtkProgressBarOrientation orientation ) const
     {
 
         // colors
@@ -554,6 +555,27 @@ namespace Oxygen
         GdkPixbuf* pixbuf( _helper.progressBarIndicator( base, glow, w, h ) );
         cairo_translate( context, -1, -2 );
         cairo_translate( context, x, y );
+        switch( orientation )
+        {
+            case GTK_PROGRESS_TOP_TO_BOTTOM:
+            {
+                cairo_matrix_t transformation;
+                cairo_matrix_init( &transformation, 1,0,0,-1,0,h+4 );
+                cairo_transform( context, &transformation );
+                break;
+            }
+
+            case GTK_PROGRESS_RIGHT_TO_LEFT:
+            {
+                cairo_matrix_t transformation;
+                cairo_matrix_init( &transformation, -1,0,0,1,w+2,0 );
+                cairo_transform( context, &transformation );
+                break;
+            }
+
+            default: break;
+        }
+
         cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
         gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
         cairo_fill( context );

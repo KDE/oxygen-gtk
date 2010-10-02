@@ -255,7 +255,7 @@ static void draw_box( GtkStyle* style,
 
     } else if( d.isBar() && GTK_IS_PROGRESS_BAR( widget ) ) {
 
-        Oxygen::Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h );
+        Oxygen::Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, gtk_progress_bar_get_orientation( GTK_PROGRESS_BAR( widget ) ) );
         return;
 
     } else if( d.isScale() ) {
