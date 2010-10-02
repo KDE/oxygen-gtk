@@ -52,6 +52,7 @@ namespace Oxygen
     //_________________________________________________________
     QtSettings::QtSettings( void ):
         _checkBoxStyle( CS_CHECK ),
+        _toolBarDrawItemSeparator( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" )
     {}
@@ -91,18 +92,8 @@ namespace Oxygen
         // reload fonts
         loadKdeFonts();
 
-        // contrast
-        ColorUtils::setContrast( _kdeGlobals.getOption( "[KDE]", "contrast" ).toVariant<double>( 5 ) / 10 );
-
-        // checkbox style
-        _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
-
-        // scrollbar width
-        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<int>(
-            "  GtkScrollbar::slider-width",
-            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
-        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
+        // oxygen options
+        loadOxygenOptions();
 
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
@@ -381,6 +372,28 @@ namespace Oxygen
         _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
         _rc.addToRootSection( "widget_class \"*.*Toolbar.*\" style \"oxygen-toolbar-font\"" );
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::loadOxygenOptions( void )
+    {
+
+        // contrast
+        ColorUtils::setContrast( _kdeGlobals.getOption( "[KDE]", "contrast" ).toVariant<double>( 5 ) / 10 );
+
+        // checkbox style
+        _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
+
+        // scrollbar width
+        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<int>(
+            "  GtkScrollbar::slider-width",
+            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
+
+        // toolbar separators
+        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<bool>(false);
 
     }
 

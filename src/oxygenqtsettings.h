@@ -65,6 +65,9 @@ namespace Oxygen
         const ApplicationName& applicationName( void ) const
         { return _applicationName; }
 
+        //!@name oxygen style options
+        //@{
+
         //! checkbox style
         enum CheckBoxStyle
         {
@@ -75,6 +78,10 @@ namespace Oxygen
         //! checkbox style
         CheckBoxStyle checkBoxStyle( void ) const
         { return _checkBoxStyle; }
+
+        //! toolbar item separator
+        bool toolBarDrawItemSeparator( void ) const
+        { return _toolBarDrawItemSeparator; }
 
         protected:
 
@@ -105,6 +112,9 @@ namespace Oxygen
 
         //! load fonts from kdeglobals and pass to gtk
         void loadKdeFonts( void );
+
+        //! oxygen options (from oxygenrc)
+        void loadOxygenOptions( void );
 
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
@@ -148,8 +158,16 @@ namespace Oxygen
         //! palette
         Palette _palette;
 
+        //!@name oxygen style options
+        //@{
+
+        //! item separator
+        bool _toolBarDrawItemSeparator;
+
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;
+
+        //@}
 
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;
