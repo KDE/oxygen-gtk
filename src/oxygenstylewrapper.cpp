@@ -189,7 +189,7 @@ static void draw_box( GtkStyle* style,
         Oxygen::Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
         Oxygen::Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
-    } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() ) {
+    } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() || d.isHandleBox() ) {
 
         return;
 
@@ -297,11 +297,7 @@ static void draw_shadow( GtkStyle* style,
         detail );
 
     const Gtk::Detail d( detail );
-    if( d.isDefaultButton() || d.isMenuItem() || d.isPaned() || d.isMenu() || d.isToolbar() ) {
-
-        return;
-
-    } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
+    if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
         Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
         Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );

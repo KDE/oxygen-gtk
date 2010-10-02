@@ -59,8 +59,8 @@ namespace Gtk
 
         //!@name scrollbars
         //@{
-        bool isVScrollBar( void ) const { return _value == "vscrollbar"; }
         bool isHScrollBar( void ) const { return _value == "hscrollbar"; }
+        bool isVScrollBar( void ) const { return _value == "vscrollbar"; }
         bool isScrollBar( void ) const { return isVScrollBar() || isHScrollBar(); }
         //@}
 
@@ -80,6 +80,7 @@ namespace Gtk
         bool isEventBox( void ) const { return _value == "eventbox"; }
         bool isExpander( void ) const { return _value == "expander"; }
         bool isFrame( void ) const { return _value == "frame"; }
+        bool isHandleBox( void ) const { return _value == "handlebox" || _value == "handlebox_bin"; }
         bool isMenu( void ) const { return _value == "menu"; }
         bool isMenuBar( void ) const { return _value == "menubar"; }
         bool isMenuItem( void ) const { return _value == "menuitem"; }
