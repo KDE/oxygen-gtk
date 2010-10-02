@@ -100,26 +100,35 @@ namespace Oxygen
         //! button slab
         void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
-        //! generic slab
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-
         //! checkbox
         void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! radio button
         void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
-        //! hole
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        //!@name generic slab
+        //@{
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xMask, gint wMask, StyleOptions ) const;
+        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
+        { renderSlab( window, r, x, y, w, h, 0, -1, o ); }
+        //@}
+
+        //!@name hole
+        //@{
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xMask, gint wMask, StyleOptions ) const;
+        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
+        { renderHole( window, r, x, y, w, h, 0, -1, o ); }
+        //@}
+
+        //!@name dock frame
+        //@{
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xmask, gint wmask, StyleOptions ) const;
+        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
+        { renderDockFrame( window, r, x, y, w, h, 0, -1, o ); }
+        //@}
 
         //! menu item
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint ) const;
-
-        //! dock frame
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-
-        //! dock frame
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, gint xmask, gint wmask, StyleOptions ) const;
 
         //! selection
         void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions ) const;

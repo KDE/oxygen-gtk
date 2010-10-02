@@ -178,9 +178,10 @@ static void draw_box( GtkStyle* style,
 
         }
 
-    } else if( d.isMenuBar() ) {
+    } else if( d.isMenuBar() || d.isToolbar() ) {
 
         Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+        return;
 
     } else if( d.isMenu() ) {
 
@@ -203,7 +204,11 @@ static void draw_box( GtkStyle* style,
 
             if( !Oxygen::Style::instance().settings().applicationName().isFirefox() )
             {
-                /* need to call the base class here, otherwise some uninitialized pixels are present. Not sure why */
+                /*
+                need to call the parent style implementation here,
+                otherwise some uninitialized pixels are present.
+                Not sure why
+                */
                 oxygen_style_parent_class->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
             }
 
@@ -239,6 +244,7 @@ static void draw_box( GtkStyle* style,
         options |= Oxygen::styleOptions( widget, state, shadow );
 
         // TODO: make sure the offsets are robust enough
+        // Oxygen::Style::instance().outline(window,clipRect, x-5, y-1 ,w+7, h+1 );
         Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1 ,w+7, h+1 );
         Oxygen::Style::instance().renderHole(window,clipRect,x-5,y-1,w+7,h+1, options);
 
@@ -291,12 +297,7 @@ static void draw_shadow( GtkStyle* style,
         detail );
 
     const Gtk::Detail d( detail );
-    if( d.isDefaultButton() || d.isMenuItem() || d.isPaned() )
-    {
-
-        return;
-
-    } else if( d.isMenu() ) {
+    if( d.isDefaultButton() || d.isMenuItem() || d.isPaned() || d.isMenu() || d.isToolbar() ) {
 
         return;
 
@@ -314,7 +315,7 @@ static void draw_shadow( GtkStyle* style,
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
             Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
 
-        } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
+        } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
 
             Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Oxygen::Blend );
 
@@ -456,7 +457,12 @@ static void draw_hline(
         Oxygen::Maps::getState( state ),
         detail );
 
-    Oxygen::Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, false );
+    Gtk::Detail d( detail );
+    if( !d.isVScale() ) {
+
+        Oxygen::Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, false );
+
+    }
 
 }
 
@@ -480,7 +486,8 @@ static void draw_vline( GtkStyle* style,
         detail );
 
     // disable vline in buttons (should correspond to comboboxes)
-    if( !Gtk::gtk_parent_button( widget ) )
+    Gtk::Detail d( detail );
+    if( !( d.isHScale() || Gtk::gtk_parent_button( widget ) ) )
     { Oxygen::Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, true ); }
 
 }
@@ -685,12 +692,19 @@ static void draw_shadow_gap( GtkStyle* style,
         if( shadow == GTK_SHADOW_IN ) {
 
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap_x, gap_w, Oxygen::NoFill );
+
+
+        } else if( shadow == GTK_SHADOW_OUT ) {
+
+            Oxygen::StyleOptions options( Oxygen::NoFill );
+            options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
+            options &= ~(Oxygen::Hover|Oxygen::Focus);
+            Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap_x, gap_w, options );
 
         } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
 
-            if( gap_w >= 0 ) Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+2, gap_x, gap_w, Oxygen::Blend );
-            else Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+2, Oxygen::Blend );
+            Oxygen::Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, gap_x, gap_w, Oxygen::Blend );
 
         }
 
@@ -736,10 +750,11 @@ static void draw_box_gap( GtkStyle* style,
 
         Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
+        // this might move to drawShadowGap
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
         options &= ~(Oxygen::Hover|Oxygen::Focus);
-        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, options );
+        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, gap_x, gap_w, options );
 
     } else {
 

@@ -805,7 +805,7 @@ namespace Oxygen
     void Style::renderSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, int xMask, int wMask, StyleOptions options ) const
     {
 
         // define colors
@@ -826,6 +826,21 @@ namespace Oxygen
 
         // create context
         Cairo::Context context( window, clipRect );
+
+        // add mask
+        if( wMask > 0 )
+        {
+            GdkRectangle content = {x, y, w, h};
+            GdkRegion *region( gdk_region_rectangle( &content ) );
+
+            GdkRectangle mask = { x+xMask, y, wMask, 4 };
+            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
+
+            gdk_cairo_region( context, region );
+            cairo_clip( context );
+            gdk_region_destroy( region );
+        }
+
         renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
 
     }
@@ -1037,7 +1052,7 @@ namespace Oxygen
     void Style::renderHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
     {
 
         // do nothing if not enough room
@@ -1049,9 +1064,66 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
 
+        // add mask
+        if( wMask > 0 )
+        {
+            GdkRectangle content = {x, y, w, h};
+            GdkRegion *region( gdk_region_rectangle( &content ) );
+
+            GdkRectangle mask = { x+xMask, y, wMask, 4 };
+            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
+
+            gdk_cairo_region( context, region );
+            cairo_clip( context );
+            gdk_region_destroy( region );
+        }
+
         // render hole
         _helper.hole( base, 0.0, 7, !(options&NoFill) ).render( context, x, y, w, h, options&NoFill ? TileSet::Ring : TileSet::Full );
 
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderDockFrame(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
+    {
+
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
+            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Button );
+
+        }
+
+        // context
+        Cairo::Context context( window, clipRect );
+
+        // add mask
+        if( wMask > 0 )
+        {
+            GdkRectangle content = {x, y, w, h};
+            GdkRegion *region( gdk_region_rectangle( &content ) );
+
+            GdkRectangle mask = { x+xMask, y, wMask, 4 };
+            gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
+
+            gdk_cairo_region( context, region );
+            cairo_clip( context );
+            gdk_region_destroy( region );
+        }
+
+        _helper.dockFrame( base, w ).render( context, x, y, w, h );
     }
 
     //____________________________________________________________________________________
@@ -1097,73 +1169,6 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         _helper.holeFlat( base, 0.0 ).render( context, x, y, w, h, TileSet::Full  );
 
-    }
-
-    //____________________________________________________________________________________
-    void Style::renderDockFrame(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
-    {
-
-        // define colors
-        ColorUtils::Rgba base;
-        if( options&Blend )
-        {
-
-            gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = settings().palette().color( Palette::Button );
-
-        }
-
-        // context
-        Cairo::Context context( window, clipRect );
-        _helper.dockFrame( base, w ).render( context, x, y, w, h );
-    }
-
-
-    //____________________________________________________________________________________
-    void Style::renderDockFrame(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, gint xMask, gint wMask, StyleOptions options ) const
-    {
-
-        // define colors
-        ColorUtils::Rgba base;
-        if( options&Blend )
-        {
-
-            gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = settings().palette().color( Palette::Button );
-
-        }
-
-        // context
-        Cairo::Context context( window, clipRect );
-        GdkRectangle content = {x, y, w, h};
-        GdkRegion *region( gdk_region_rectangle( &content ) );
-
-        GdkRectangle mask = { x+xMask, y, wMask, 4 };
-        gdk_region_subtract( region, gdk_region_rectangle( &mask ) );
-
-        gdk_cairo_region( context, region );
-        cairo_clip( context );
-        gdk_region_destroy( region );
-
-        _helper.dockFrame( base, w ).render( context, x, y, w, h );
     }
 
     //____________________________________________________________________________________
