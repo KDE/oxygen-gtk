@@ -839,7 +839,8 @@ static void draw_extension( GtkStyle* style,
 }
 
 //___________________________________________________________
-static void draw_focus( GtkStyle* style,
+static void draw_focus(
+    GtkStyle* style,
     GdkWindow* window,
     GtkStateType state,
     GdkRectangle* clipRect,
@@ -899,7 +900,15 @@ static void draw_handle( GtkStyle* style,
         if( GTK_IS_VPANED( widget ) ) options |= Oxygen::Vertical;
         Oxygen::Style::instance().renderSplitter( window, clipRect, x, y, w, h, options );
 
+    } else if( d.isHandleBox() ) {
+
+        Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
+        if( orientation == GTK_ORIENTATION_VERTICAL ) options |= Oxygen::Vertical;
+        Oxygen::Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+        Oxygen::Style::instance().renderToolBarHandle( window, clipRect, x, y, w, h, options );
+
     } else {
+
         oxygen_style_parent_class->draw_handle( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,

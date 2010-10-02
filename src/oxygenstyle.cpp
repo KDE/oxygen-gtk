@@ -686,6 +686,43 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________________________________
+    void Style::renderToolBarHandle(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, StyleOptions options ) const
+    {
+
+        const bool vertical( options & Vertical );
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+
+        Cairo::Context context( window, clipRect );
+        int counter(0);
+        if( vertical )
+        {
+
+            const int xcenter( x+w/2 );
+            for( int ycenter = y+2; ycenter <= y+h-3; ycenter+=3, ++counter )
+            {
+                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter+1, ycenter );
+                else _helper.renderDot( context, base, xcenter-2, ycenter );
+            }
+
+        } else {
+
+            const int ycenter( y + h/2 );
+            for( int xcenter = x+2; xcenter < x+w-3; xcenter+=3, ++counter )
+            {
+                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter, ycenter+1 );
+                else _helper.renderDot( context, base, xcenter, ycenter-2 );
+            }
+
+        }
+
+        return;
+
+    }
+
     //__________________________________________________________________
     void Style::drawFloatFrame( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
@@ -760,7 +797,7 @@ namespace Oxygen
 
             } else if( options&Focus ) {
 
-                ColorUtils::Rgba glow( _settings.palette().color( Palette::Focus) );
+                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
                 _helper.slabFocused( base, glow, 0.0 ).render( context, x, y, w, h );
 
             } else {
