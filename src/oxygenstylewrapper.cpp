@@ -130,7 +130,7 @@ static void draw_flat_box(
     if( !accepted )
     {
 
-        // fallback to parent style
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_flat_box( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -189,7 +189,11 @@ static void draw_box( GtkStyle* style,
         Oxygen::Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
         Oxygen::Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
-    } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() || d.isHandleBox() ) {
+    } else if( d.isMenuScrollArrow() ) {
+
+        return;
+
+    } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() || d.isHandleBox()  ) {
 
         return;
 
@@ -258,15 +262,9 @@ static void draw_box( GtkStyle* style,
         Oxygen::Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, gtk_progress_bar_get_orientation( GTK_PROGRESS_BAR( widget ) ) );
         return;
 
-    } else if( d.isScale() ) {
-
-        Oxygen::StyleOptions options( Oxygen::Blend );
-        options |= Oxygen::styleOptions( widget, state, shadow );
-        if( GTK_IS_VSCALE( widget ) ) options |= Oxygen::Vertical;
-        Oxygen::Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
-
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_box( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -298,7 +296,11 @@ static void draw_shadow( GtkStyle* style,
         detail );
 
     const Gtk::Detail d( detail );
-    if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
+    if( d.isSlider() || d.isRuler() ) {
+
+        return;
+
+    } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
         Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
         Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
@@ -326,6 +328,7 @@ static void draw_shadow( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_shadow(
             style, window, state,
             shadow, clipRect, widget, detail,
@@ -386,6 +389,7 @@ static void draw_check( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_check( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -427,6 +431,7 @@ static void draw_option( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_option( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -610,6 +615,7 @@ static void draw_diamond( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
 
+    std::cout << "Oxygen::Style - unhandled" << std::endl;
     oxygen_style_parent_class->draw_diamond( style, window, state,
         shadow, clipRect, widget, detail,
         x, y, w, h );
@@ -651,6 +657,7 @@ static void draw_tab( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_tab( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -706,12 +713,15 @@ static void draw_shadow_gap( GtkStyle* style,
 
         return;
 
+    } else {
+
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
+        oxygen_style_parent_class->draw_shadow_gap( style, window, state,
+            shadow, clipRect, widget, detail,
+            x, y, w, h,
+            gap_side, gap_x, gap_w );
     }
 
-    oxygen_style_parent_class->draw_shadow_gap( style, window, state,
-        shadow, clipRect, widget, detail,
-        x, y, w, h,
-        gap_side, gap_x, gap_w );
 }
 
 //___________________________________________________________
@@ -754,6 +764,7 @@ static void draw_box_gap( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_box_gap( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -777,7 +788,6 @@ static void draw_slider( GtkStyle* style,
     GtkOrientation orientation )
 {
     g_return_if_fail( style && window );
-
     Oxygen::Style::instance().sanitizeSize( window, w, h );
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=slider, state=%s, shadow=%s, detail=%s",
@@ -786,8 +796,17 @@ static void draw_slider( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
 
-    if( GTK_IS_VSCROLLBAR( widget ) )
+    Gtk::Detail d( detail );
+    if( d.isScale() )
     {
+
+        Oxygen::StyleOptions options( Oxygen::Blend );
+        options |= Oxygen::styleOptions( widget, state, shadow );
+        if( GTK_IS_VSCALE( widget ) ) options |= Oxygen::Vertical;
+        Oxygen::Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
+        return;
+
+    } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
         Oxygen::StyleOptions options( Oxygen::Vertical );
         options |= Oxygen::styleOptions( widget, state, shadow );
@@ -799,6 +818,8 @@ static void draw_slider( GtkStyle* style,
         Oxygen::Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options );
 
     } else {
+
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_slider( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -910,6 +931,7 @@ static void draw_handle( GtkStyle* style,
 
     } else {
 
+        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_handle( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -941,28 +963,6 @@ static void draw_resize_grip(
 
     // no resize grip in oxygen no matter what
     return;
-}
-
-//___________________________________________________________
-static void draw_layout(
-    GtkStyle *style, GdkWindow *window, GtkStateType state,
-    gboolean use_text,
-    GdkRectangle *clipRect,
-    GtkWidget *widget, const gchar *detail,
-    gint x, gint y,
-    PangoLayout *layout)
-{
-
-//     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-//         "widget=%s, primitive=layout, state=%s, detail=%s",
-//         G_OBJECT_TYPE_NAME( widget ),
-//         Oxygen::Maps::getState( state ),
-//         detail );
-
-    oxygen_style_parent_class->draw_layout(
-        style, window, state,
-        use_text, clipRect, widget, detail, x, y, layout );
-
 }
 
 //___________________________________________________________
@@ -999,11 +999,7 @@ static void class_init( OxygenStyleClass* klass )
     style_class->draw_handle = draw_handle;
     style_class->draw_resize_grip = draw_resize_grip;
     style_class->draw_expander = draw_expander;
-    style_class->draw_layout = draw_layout;
-    /*
-    We just leave those to gtk:
-    style_class->draw_polygon = draw_polygon;
-    */
+
 }
 
 //___________________________________________________________
@@ -1017,12 +1013,12 @@ void oxygen_style_register_type( GTypeModule* module )
             sizeof( OxygenStyleClass ),
             0L,
             0L,
-(            GClassInitFunc ) class_init,
+            ( GClassInitFunc ) class_init,
             0L,          /* class_finalize */
             0L,          /* class_data */
             sizeof( OxygenStyle ),
             0,           /* n_preallocs */
-(            GInstanceInitFunc ) instance_init,
+            ( GInstanceInitFunc ) instance_init,
         };
 
         oxygen_style_type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &info, GTypeFlags(0 ) );
