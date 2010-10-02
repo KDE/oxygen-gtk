@@ -41,6 +41,12 @@ namespace Gtk
     //! return parent treeview if any.
     GtkWidget* gtk_parent_treeview( GtkWidget* );
 
+    //! return parent combobox if any.
+    GtkWidget* gtk_parent_combobox( GtkWidget* );
+
+    //! true if object match a given type
+    bool gtk_object_is_a( const GObject*, const gchar* );
+
     //! true if a progressbar is horizontal
     /*! adapted from QtCurve code */
     bool gtk_progress_bar_is_horizontal( GtkWidget* );
@@ -50,6 +56,21 @@ namespace Gtk
     //@!name gdk utilities
     //@{
 
+    //! map widget origin to top level
+    /*!
+    x and y correspond to (0,0) maped to toplevel window;
+    w and h correspond to toplevel window frame size
+    */
+    bool gdk_map_to_toplevel( GdkWindow*, GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
+
+    //! map widget origin to top level
+    /*!
+    x and y correspond to (0,0) maped to toplevel window;
+    w and h correspond to toplevel window frame size
+    */
+    inline bool gdk_map_to_toplevel( GdkWindow* window, gint* x, gint* y, gint* w, gint* h, bool frame = false )
+    { return gdk_map_to_toplevel( window, 0L, x, y, w, h, frame ); }
+
     //! get top level windows dimension
     void gdk_toplevel_get_size( GdkWindow*, gint*, gint* );
 
@@ -58,11 +79,6 @@ namespace Gtk
 
     //! get position relatve to toplevel
     void gdk_window_get_toplevel_origin( GdkWindow*, gint*, gint* );
-
-    //! return parent combobox if any.
-    GtkWidget* gtk_parent_combobox( GtkWidget* );
-
-    bool gtk_object_is_a( const GObject*, const gchar* );
 
     //@}
 

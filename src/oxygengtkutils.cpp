@@ -79,6 +79,29 @@ namespace Gtk
     }
 
     //________________________________________________________
+    GtkWidget* gtk_parent_combobox( GtkWidget* widget )
+    {
+
+        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
+        { if( GTK_IS_COMBO_BOX( widget ) ) return widget; }
+
+        return 0L;
+    }
+
+    //________________________________________________________
+	bool gtk_object_is_a( const GObject* object, const gchar * type_name )
+	{
+
+		if( object )
+		{
+            const GType tmp( g_type_from_name( type_name ) );
+            if( tmp )
+            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
+		}
+
+		return false;
+	}
+    //________________________________________________________
     bool gtk_progress_bar_is_horizontal( GtkWidget* widget )
     {
 
@@ -94,6 +117,42 @@ namespace Gtk
             case GTK_PROGRESS_BOTTOM_TO_TOP:
             case GTK_PROGRESS_TOP_TO_BOTTOM:
             return false;
+        }
+
+    }
+
+    //________________________________________________________
+    bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
+    {
+        if( !( window && GDK_IS_WINDOW( window ) ) )
+        {
+            if( !widget )
+            {
+                if( w ) *w = -1;
+                if( h ) *h = -1;
+                return false;
+            }
+
+            // this is an alternative way to get widget position with respect to top level window
+            // and top level window size. This is used in case the GdkWindow passed as argument is
+            // actually a 'non window' drawable
+            window = gtk_widget_get_parent_window( widget );
+            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
+            else gdk_toplevel_get_size( window, w, h );
+            int xlocal, ylocal;
+            const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
+            if( success && x ) *x=xlocal;
+            if( success && y ) *y=ylocal;
+            return success && ((!w) || *w > 0) && ((!h) || *h>0);
+
+        } else {
+
+            // get window size and height
+            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
+            else gdk_toplevel_get_size( window, w, h );
+            Gtk::gdk_window_get_toplevel_origin( window, x, y );
+            return ((!w) || *w > 0) && ((!h) || *h>0);
+
         }
 
     }
@@ -133,8 +192,8 @@ namespace Gtk
         {
             GdkRectangle rect = {0, 0, -1, -1};
             gdk_window_get_frame_extents( topLevel, &rect );
-            *w = rect.width;
-            *h = rect.height;
+            if( w ) *w = rect.width;
+            if( h ) *h = rect.height;
         }
 
         return;
@@ -162,29 +221,5 @@ namespace Gtk
 
         return;
     }
-
-    //________________________________________________________
-    GtkWidget* gtk_parent_combobox( GtkWidget* widget )
-    {
-
-        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
-        { if( GTK_IS_COMBO_BOX( widget ) ) return widget; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-	bool gtk_object_is_a( const GObject* object, const gchar * type_name )
-	{
-
-		if( object )
-		{
-            const GType tmp( g_type_from_name( type_name ) );
-            if( tmp )
-            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
-		}
-
-		return false;
-	}
 
 }

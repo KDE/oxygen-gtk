@@ -210,6 +210,7 @@ static void draw_box( GtkStyle* style,
                 Not sure why
                 */
                 oxygen_style_parent_class->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
+                Oxygen::Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
             }
 
             Oxygen::StyleOptions options( Oxygen::None );

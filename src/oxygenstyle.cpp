@@ -76,32 +76,12 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+
+        // get window dimension and position
         gint ww, wh;
         gint wx, wy;
-        {
-            GdkWindow* local( window );
-            if( widget && !( local && GTK_IS_WINDOW( window ) ) )
-            {
-
-                // this is an alternative way to get widget position with respect to top level window
-                // and top level window size. This is used in case the GdkWindow passed as argument is
-                // actually a 'non window' drawable
-                local = gtk_widget_get_parent_window( widget );
-                Gtk::gdk_toplevel_get_frame_size( local, &ww, &wh );
-                gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &wx, &wy );
-
-            } else {
-
-                // get window size and height
-                Gtk::gdk_toplevel_get_frame_size( local, &ww, &wh );
-                Gtk::gdk_window_get_toplevel_origin( local, &wx, &wy );
-
-            }
-
-        }
-
-        // if window dimensions could not be found,
-        if( ww < 0 || wh < 0 ) { return false; }
+        if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+        { return false; }
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
@@ -364,8 +344,8 @@ namespace Oxygen
         // get window size and height
         gint ww, wh;
         gint wx, wy;
-        Gtk::gdk_toplevel_get_frame_size( window, &ww, &wh );
-        Gtk::gdk_window_get_toplevel_origin( window, &wx, &wy );
+        if( !Gtk::gdk_map_to_toplevel( window, &wx, &wy, &ww, &wh, true ) )
+        { return false; }
 
         // do nothing if window dimensions could not be found
         if( ww < 0 || wh < 0 ) return false;
@@ -788,8 +768,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
@@ -862,8 +841,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
@@ -900,8 +878,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( role ), wh, y+wy+h/2 );
 
         } else {
@@ -1021,18 +998,12 @@ namespace Oxygen
         y = child.y;
 
         // define colors
-        gint wh, wy;
-        Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-        Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
-
-        // define colors
         ColorUtils::Rgba base;
         if( options&Blend )
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
@@ -1115,8 +1086,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
@@ -1141,9 +1111,7 @@ namespace Oxygen
 
         ColorUtils::Rgba base;
         gint wh, wy;
-        Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-        Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
-
+        Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
         if( Gtk::gtk_parent_menu( widget ) )
         {
 
@@ -1326,8 +1294,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_toplevel_get_size( window, 0L, &wh );
-            Gtk::gdk_window_get_toplevel_origin( window, 0L, &wy );
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
