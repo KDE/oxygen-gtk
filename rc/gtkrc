@@ -43,3 +43,13 @@ style "oxygen-notebook" = "oxygen-default"
 }
 
 class "GtkNotebook" style "oxygen-notebook"
+
+# Workarounds
+style "oxygen-gimp-scale"
+{
+    # this ensures that toolpanels fonts in gimp is identical
+    # to default font (which otherwise is ugly
+    GimpDock::font-scale = 1.01
+}
+
+class "*" style "oxygen-gimp-scale"
