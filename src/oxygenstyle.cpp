@@ -1134,36 +1134,59 @@ namespace Oxygen
         ColorUtils::Rgba base;
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-        if( Gtk::gtk_parent_menu( widget ) )
+        const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
+        if( isInMenu )
         {
 
             if( wh > 0 )
             {
 
-                base = ColorUtils::midColor(
-                    ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
+                base = ColorUtils::midColor( ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
 
             } else {
 
-                base = ColorUtils::alphaColor(
-                    ColorUtils::darkColor( settings().palette().color( Palette::Window ) ), 0.3 );
+                base = ColorUtils::alphaColor( ColorUtils::darkColor( settings().palette().color( Palette::Window ) ), 0.3 );
             }
 
         } else if( wh > 0 ) {
 
-            base = ColorUtils::midColor(
-                ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
+            base = ColorUtils::midColor( ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
 
-       } else {
+        } else {
 
-            base = ColorUtils::midColor(
-                ColorUtils::backgroundTopColor( settings().palette().color( Palette::Window ) ) );
+            base = ColorUtils::midColor( ColorUtils::backgroundTopColor( settings().palette().color( Palette::Window ) ) );
 
-       }
+        }
 
-        Cairo::Context context( window, clipRect );
-        _helper.holeFlat( base, 0.0 ).render( context, x, y, w, h, TileSet::Full  );
+        bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
+        if( hasSubMenu )
+        {
 
+            // draw item rect in a pixbuf
+            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            {
+                Cairo::Context context( pixbuf );
+                _helper.holeFlat( base, 0.0 ).render( context, 0, 0, w, h, TileSet::Full  );
+                context.updateGdkPixbuf();
+            }
+
+            Cairo::Context context( window, clipRect );
+            cairo_translate( context, x, y );
+            gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+
+            // generate linear gradient for masking
+            Cairo::Pattern mask( cairo_pattern_create_linear( w-40, 0, w-4, 0 ) );
+            cairo_pattern_add_color_stop( mask, 0,  ColorUtils::Rgba::black() );
+            cairo_pattern_add_color_stop( mask, 1,  ColorUtils::Rgba::transparent() );
+            cairo_mask( context, mask );
+
+            g_object_unref( pixbuf );
+
+        } else {
+            Cairo::Context context( window, clipRect );
+            _helper.holeFlat( base, 0.0 ).render( context, x, y, w, h, TileSet::Full  );
+        }
     }
 
     //____________________________________________________________________________________
