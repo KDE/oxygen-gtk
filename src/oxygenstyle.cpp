@@ -71,17 +71,34 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderWindowBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    bool Style::renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
 
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
-
-        // get window size and height
         gint ww, wh;
         gint wx, wy;
-        Gtk::gdk_toplevel_get_frame_size( window, &ww, &wh );
-        Gtk::gdk_window_get_toplevel_origin( window, &wx, &wy );
+        {
+            GdkWindow* local( window );
+            if( widget && !( local && GTK_IS_WINDOW( window ) ) )
+            {
+
+                // this is an alternative way to get widget position with respect to top level window
+                // and top level window size. This is used in case the GdkWindow passed as argument is
+                // actually a 'non window' drawable
+                local = gtk_widget_get_parent_window( widget );
+                Gtk::gdk_toplevel_get_frame_size( local, &ww, &wh );
+                gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &wx, &wy );
+
+            } else {
+
+                // get window size and height
+                Gtk::gdk_toplevel_get_frame_size( local, &ww, &wh );
+                Gtk::gdk_window_get_toplevel_origin( local, &wx, &wy );
+
+            }
+
+        }
 
         // if window dimensions could not be found,
         if( ww < 0 || wh < 0 ) { return false; }
