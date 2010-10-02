@@ -52,8 +52,8 @@ namespace Oxygen
         //!@name primitives
         //@{
 
-        //! outline (for debugging)
-        void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, Palette::Role = Palette::Hover ) const;
+        //! fill given rectangle with flat color
+        void fill( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
         //! separators
         void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;

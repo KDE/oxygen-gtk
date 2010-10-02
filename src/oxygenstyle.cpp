@@ -45,19 +45,13 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::outline( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, Palette::Role role ) const
+    void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
         // define colors
-        ColorUtils::Rgba base(settings().palette().color( role ) );
-        ColorUtils::Rgba content( ColorUtils::alphaColor( base, 0.5 ) );
         Cairo::Context context( window, clipRect );
         cairo_rectangle( context, x, y, w, h );
-        //cairo_set_source( context, base );
-        //cairo_stroke( context );
-
-        cairo_rectangle( context, x, y, w, h );
-        cairo_set_source( context, content );
+        cairo_set_source( context, color );
         cairo_fill( context );
 
     }
