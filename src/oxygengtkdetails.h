@@ -84,12 +84,20 @@ namespace Gtk
         bool isMenu( void ) const { return _value == "menu"; }
         bool isMenuBar( void ) const { return _value == "menubar"; }
         bool isMenuItem( void ) const { return _value == "menuitem"; }
+        bool isMenuScrollArrow( void ) const { return _value == "menu_scroll_arrow_down" || _value == "menu_scroll_arrow_up"; }
         bool isNotebook( void ) const { return _value == "notebook"; }
         bool isOptionMenu( void ) const { return _value == "optionmenu"; }
         bool isOptionMenuTab( void ) const { return _value == "optionmenutab"; }
         bool isPaned( void ) const { return _value == "paned"; }
         bool isRadioButton( void ) const { return _value == "radiobutton"; }
+
+        //!@name rulers
+        //@{
+        bool isRuler( void ) const { return _value == "vruler" || _value == "hruler"; }
+        //@}
+
         bool isScrolledWindow( void ) const { return _value == "scrolled_window"; }
+        bool isSlider( void ) const { return _value == "slider"; }
 
         //!@name spinbuttons
         //@{
@@ -105,7 +113,6 @@ namespace Gtk
         bool isTrough( void ) const { return _value == "trough"; }
         bool isViewport( void ) const { return _value == "viewport"; }
         bool isViewportBin( void ) const { return _value == "viewportbin"; }
-
 
 
         private:
