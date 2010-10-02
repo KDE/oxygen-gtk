@@ -667,6 +667,7 @@ namespace Oxygen
             cairo_fill( context );
         }
 
+
         // slider pattern
         {
 
@@ -685,6 +686,33 @@ namespace Oxygen
 
                 cairo_pattern_add_color_stop( pattern, 0, color );
                 cairo_pattern_add_color_stop( pattern, 1, mid );
+
+            }
+
+            cairo_set_source( context, pattern );
+            cairo_rounded_rectangle( context, xf, yf, wf, hf, 2 );
+            cairo_fill( context );
+
+        }
+
+        // pattern
+        if( settings().scrollBarBevel() )
+        {
+
+            Cairo::Pattern pattern;
+            if( vertical ) pattern.set( cairo_pattern_create_linear( 0, 0, 0, 30 ) );
+            else pattern.set( cairo_pattern_create_linear( 0, 0, 30, 0 ) );
+            cairo_pattern_set_extend( pattern, CAIRO_EXTEND_REFLECT );
+            if( settings().scrollBarColored() )
+            {
+
+                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( shadow, 0.15 ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.15 ) );
+
+            } else {
+
+                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( shadow, 0.1 ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.1 ) );
 
             }
 

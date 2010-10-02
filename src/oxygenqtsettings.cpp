@@ -401,7 +401,7 @@ namespace Oxygen
         _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
 
         // colored scrollbars
-        _scrollBarBevel = _oxygen.getOption( "[Style]", "ScrollBevel" ).toVariant<std::string>("false") == "true";
+        _scrollBarBevel = _oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("false") == "true";
     }
 
     //_________________________________________________________
