@@ -64,12 +64,15 @@ static void draw_flat_box(
 {
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-        "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
+        "widget=%s, primitive=falt_box, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     const Gtk::Detail d( detail );
     bool accepted( false );
@@ -130,7 +133,6 @@ static void draw_flat_box(
     if( !accepted )
     {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_flat_box( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -154,12 +156,14 @@ static void draw_box( GtkStyle* style,
 {
     g_return_if_fail( style && window );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
     const Gtk::Detail d( detail );
@@ -264,7 +268,6 @@ static void draw_box( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_box( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -288,12 +291,14 @@ static void draw_shadow( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=shadow, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     const Gtk::Detail d( detail );
     if( d.isSlider() || d.isRuler() ) {
@@ -328,7 +333,6 @@ static void draw_shadow( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_shadow(
             style, window, state,
             shadow, clipRect, widget, detail,
@@ -354,12 +358,14 @@ static void draw_check( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=check, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     const Gtk::Detail d( detail );
     if( d.isCheckButton() || d.isCellCheck() )
@@ -389,7 +395,6 @@ static void draw_check( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_check( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -414,13 +419,14 @@ static void draw_option( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=option, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     if( Gtk::Detail( detail ).isRadioButton() )
     {
@@ -431,7 +437,6 @@ static void draw_option( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_option( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -453,11 +458,13 @@ static void draw_hline(
 {
     g_return_if_fail( style && window );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=hline, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         detail );
+    #endif
 
     Gtk::Detail d( detail );
     if( !d.isVScale() ) {
@@ -481,11 +488,13 @@ static void draw_vline( GtkStyle* style,
 {
     g_return_if_fail( style && window );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=vline, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         detail );
+    #endif
 
     // disable vline in buttons (should correspond to comboboxes)
     Gtk::Detail d( detail );
@@ -513,6 +522,7 @@ static void draw_arrow( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=arrow, state=%s, shadow=%s, detail=%s, arrow=%s, fill=%d",
         G_OBJECT_TYPE_NAME( widget ),
@@ -521,6 +531,7 @@ static void draw_arrow( GtkStyle* style,
         detail,
         Oxygen::Maps::getArrow( arrow ),
         fill );
+    #endif
 
     const Gtk::Detail d( detail );
 
@@ -572,12 +583,14 @@ static void draw_expander(
     GtkExpanderStyle expander_style )
 {
     g_return_if_fail( style && window );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=expander, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         detail );
-
+    #endif
 
     const GtkArrowType arrow( ( expander_style == GTK_EXPANDER_COLLAPSED || expander_style == GTK_EXPANDER_SEMI_COLLAPSED ) ?
         GTK_ARROW_RIGHT : GTK_ARROW_DOWN );
@@ -608,14 +621,16 @@ static void draw_diamond( GtkStyle* style,
 {
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=diamond, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
-    std::cout << "Oxygen::Style - unhandled" << std::endl;
     oxygen_style_parent_class->draw_diamond( style, window, state,
         shadow, clipRect, widget, detail,
         x, y, w, h );
@@ -637,12 +652,15 @@ static void draw_tab( GtkStyle* style,
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=tab, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     Gtk::Detail d( detail );
     if( d.isOptionMenuTab() )
@@ -657,7 +675,6 @@ static void draw_tab( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_tab( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
@@ -683,12 +700,15 @@ static void draw_shadow_gap( GtkStyle* style,
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=shadow_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     Gtk::Detail d( detail );
     if( d.isFrame() ) {
@@ -715,7 +735,6 @@ static void draw_shadow_gap( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_shadow_gap( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -743,12 +762,15 @@ static void draw_box_gap( GtkStyle* style,
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     const Gtk::Detail d( detail );
     if( d.isNotebook() )
@@ -764,7 +786,6 @@ static void draw_box_gap( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_box_gap( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -789,12 +810,15 @@ static void draw_slider( GtkStyle* style,
 {
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=slider, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     Gtk::Detail d( detail );
     if( d.isScale() )
@@ -819,7 +843,6 @@ static void draw_slider( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_slider( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -846,17 +869,15 @@ static void draw_extension( GtkStyle* style,
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
-
-//     oxygen_style_parent_class->draw_extension( style, window, state,
-//         shadow, clipRect, widget, detail,
-//         x, y, w, h,
-//         gap_side );
+    #endif
 
 }
 
@@ -877,15 +898,14 @@ static void draw_focus(
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=focus, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         detail );
-
-//     oxygen_style_parent_class->draw_focus( style, window, state,
-//         clipRect, widget, detail,
-//         x, y, w, h );
+    #endif
 
 }
 
@@ -907,12 +927,15 @@ static void draw_handle( GtkStyle* style,
     g_return_if_fail( style && window );
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=handle, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     Gtk::Detail d( detail );
     if( d.isPaned() )
@@ -931,7 +954,6 @@ static void draw_handle( GtkStyle* style,
 
     } else {
 
-        std::cout << "Oxygen::Style - unhandled" << std::endl;
         oxygen_style_parent_class->draw_handle( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h,
@@ -955,11 +977,14 @@ static void draw_resize_grip(
     gint h )
 {
     g_return_if_fail( style && window );
+
+    #ifdef OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=resize_grip, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         detail );
+    #endif
 
     // no resize grip in oxygen no matter what
     return;
