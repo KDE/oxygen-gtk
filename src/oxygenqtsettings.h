@@ -87,6 +87,12 @@ namespace Oxygen
         bool scrollBarColored( void ) const
         { return _scrollBarColored; }
 
+        //! true if hovered scrollbars must be colored
+        bool scrollBarBevel( void ) const
+        { return _scrollBarBevel; }
+
+        //@}
+
         protected:
 
         // get home directory
@@ -170,6 +176,9 @@ namespace Oxygen
 
         //! colored scrollbar (on hover)
         bool _scrollBarColored;
+
+        //! scrollbar bevel
+        bool _scrollBarBevel;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;
