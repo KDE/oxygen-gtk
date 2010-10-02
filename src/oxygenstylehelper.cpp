@@ -558,6 +558,7 @@ namespace Oxygen
 
             // create pattern pixbuf
             wl--;
+            if( wl > 0 )
             {
                 GdkPixbuf* localbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
                 gdk_pixbuf_fill( localbuf, ColorUtils::Rgba::transparent().toInt() );
