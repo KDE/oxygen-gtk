@@ -83,6 +83,10 @@ namespace Oxygen
         bool toolBarDrawItemSeparator( void ) const
         { return _toolBarDrawItemSeparator; }
 
+        //! true if hovered scrollbars must be colored
+        bool scrollBarColored( void ) const
+        { return _scrollBarColored; }
+
         protected:
 
         // get home directory
@@ -163,6 +167,9 @@ namespace Oxygen
 
         //! item separator
         bool _toolBarDrawItemSeparator;
+
+        //! colored scrollbar (on hover)
+        bool _scrollBarColored;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;

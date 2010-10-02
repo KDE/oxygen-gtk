@@ -53,6 +53,7 @@ namespace Oxygen
     QtSettings::QtSettings( void ):
         _checkBoxStyle( CS_CHECK ),
         _toolBarDrawItemSeparator( false ),
+        _scrollBarColored( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" )
     {}
@@ -394,6 +395,9 @@ namespace Oxygen
 
         // toolbar separators
         _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<bool>(false);
+
+        // colored scrollbars
+        _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<bool>(false);
 
     }
 
