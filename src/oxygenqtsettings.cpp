@@ -275,6 +275,16 @@ namespace Oxygen
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
+        // default colors
+        _rc.addSection( "oxygen-colors", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[NORMAL]", _palette.color( Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
+        _rc.addToRootSection( "widget_class \"*\" style \"oxygen-colors\"" );
+
         // menu items
         _rc.addSection( "oxygen-menu-item", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::WindowText ) ) );
@@ -289,10 +299,16 @@ namespace Oxygen
 
         _rc.addToRootSection( "widget_class \"*<GtkMenuItem>*\" style \"oxygen-menu-item\"" );
 
+        // buttons
+        _rc.addSection( "oxygen-buttons", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToRootSection( "widget_class \"*<GtkButton>*\" style \"oxygen-buttons\"" );
+
         // spinboxes
         _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
-        _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-spinbutton\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkSpinButton>*\" style \"oxygen-spinbutton\"" );
 
         // tooltips
         _rc.addSection( "oxygen-tooltips", "oxygen-default" );
