@@ -98,9 +98,10 @@ namespace Gtk
         bool isSpinButtonArrow( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
         //@}
 
-        bool isTrough( void ) const { return _value == "trough"; }
+        bool isToolbar( void ) const { return _value == "toolbar"; }
         bool isTooltip( void ) const { return _value == "tooltip"; }
         bool isTreeView( void ) const { return _value == "treeview"; }
+        bool isTrough( void ) const { return _value == "trough"; }
         bool isViewport( void ) const { return _value == "viewport"; }
         bool isViewportBin( void ) const { return _value == "viewportbin"; }
 
