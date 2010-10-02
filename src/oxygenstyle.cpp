@@ -1466,17 +1466,8 @@ namespace Oxygen
             w += 2;
             h += 2;
 
-        } else {
-
-            // calculate proper glow color based on current settings and opacity
-            TileSet tile;
-            ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = _helper.slabFocused( color, glow , 0.0);
-            else if( color.isValid() ) tile = _helper.slab(color, 0.0);
-            else return;
-            tile.render( context, x, y, w, h );
-        }
-
+        }        
+        
         // fill
         if( !(options & NoFill))
         {
@@ -1503,9 +1494,21 @@ namespace Oxygen
 
         }
 
-        // for sunken slabs, the borders are painted after filling
-        if( (options & Sunken) && color.isValid() )
-        { _helper.slabSunken( color, 0.0 ).render( context, x, y, w, h ); }
+        if( !(options&Sunken) ) {
+
+            // calculate glow color
+            TileSet tile;
+            ColorUtils::Rgba glow( slabShadowColor( options ) );
+            if( glow.isValid() ) tile = _helper.slabFocused( color, glow , 0.0);
+            else if( color.isValid() ) tile = _helper.slab(color, 0.0);
+            else return;
+            tile.render( context, x, y, w, h );
+
+        } else if( color.isValid() ) { 
+            
+            _helper.slabSunken( color, 0.0 ).render( context, x, y, w, h ); 
+        
+        }
 
     }
 

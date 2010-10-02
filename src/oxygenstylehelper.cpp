@@ -263,8 +263,8 @@ namespace Oxygen
     //__________________________________________________________________
     void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h ) const
     {
-        const double s( 3.6 + (0.5 * _slabThickness) );
-        const double r( s/2 );
+        const double s( 3.3 + (0.5 * _slabThickness) );
+        const double r( 3.0 );
         cairo_rounded_rectangle( context, x+s, y+s, w-2*s, h-2*s, r );
         cairo_fill( context );
     }
