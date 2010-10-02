@@ -52,7 +52,7 @@ namespace Oxygen
     //_________________________________________________________
     QtSettings::QtSettings( void ):
         _checkBoxStyle( CS_CHECK ),
-        _toolBarDrawItemSeparator( false ),
+        _toolBarDrawItemSeparator( true ),
         _scrollBarColored( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" )
@@ -394,11 +394,10 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
 
         // toolbar separators
-        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<bool>(false);
+        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
 
         // colored scrollbars
-        _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<bool>(false);
-
+        _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
     }
 
     //_________________________________________________________

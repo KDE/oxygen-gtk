@@ -471,15 +471,15 @@ namespace Oxygen
 
             {
                 // left and right border
-                Cairo::Pattern gradient( cairo_pattern_create_linear( 0, 0, w, 0 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, w, 0 ) );
                 const ColorUtils::Rgba mixed( ColorUtils::alphaColor( light, 0.6 ) );
-                cairo_pattern_add_color_stop( gradient, 0, mixed );
-                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( gradient, 1.0, mixed );
+                cairo_pattern_add_color_stop( pattern, 0, mixed );
+                cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, mixed );
 
                 cairo_set_line_width( context, 1 );
-                cairo_set_source( context, gradient );
+                cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, xl, yl-1, wl, hl, 4.5 );
                 cairo_stroke( context );
 
@@ -488,14 +488,14 @@ namespace Oxygen
             }
 
             {
-                Cairo::Pattern gradient( cairo_pattern_create_linear( 0, 0, w, 0 ) );
-                cairo_pattern_add_color_stop( gradient, 0, dark );
-                cairo_pattern_add_color_stop( gradient, 0.1, ColorUtils::Rgba::transparent( dark ) );
-                cairo_pattern_add_color_stop( gradient, 0.9, ColorUtils::Rgba::transparent( dark ) );
-                cairo_pattern_add_color_stop( gradient, 1.0, dark );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, w, 0 ) );
+                cairo_pattern_add_color_stop( pattern, 0, dark );
+                cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::Rgba::transparent( dark ) );
+                cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( dark ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, dark );
 
                 cairo_set_line_width( context, 1 );
-                cairo_set_source( context, gradient );
+                cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, xl+1, yl, wl-2, hl-2, 4.5 );
                 cairo_stroke( context );
             }
