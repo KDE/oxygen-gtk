@@ -124,14 +124,16 @@ namespace Gtk
     //________________________________________________________
     bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
     {
+
+        // always initialize arguments (to invalid values)
+        if( x ) *x=0;
+        if( y ) *y=0;
+        if( w ) *w = -1;
+        if( h ) *h = -1;
+
         if( !( window && GDK_IS_WINDOW( window ) ) )
         {
-            if( !widget )
-            {
-                if( w ) *w = -1;
-                if( h ) *h = -1;
-                return false;
-            }
+            if( !widget ) return false;
 
             // this is an alternative way to get widget position with respect to top level window
             // and top level window size. This is used in case the GdkWindow passed as argument is
@@ -141,8 +143,14 @@ namespace Gtk
             else gdk_toplevel_get_size( window, w, h );
             int xlocal, ylocal;
             const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
-            if( success && x ) *x=xlocal;
-            if( success && y ) *y=ylocal;
+            if( success )
+            {
+
+                if( x ) *x=xlocal;
+                if( y ) *y=ylocal;
+
+            }
+
             return success && ((!w) || *w > 0) && ((!h) || *h>0);
 
         } else {
@@ -203,9 +211,9 @@ namespace Gtk
     //________________________________________________________
     void gdk_window_get_toplevel_origin( GdkWindow* window, gint* x, gint* y )
     {
-        if( !window ) return;
         if( x ) *x = 0;
         if( y ) *y = 0;
+        if( !window ) return;
         while( window && GDK_IS_WINDOW( window ) &&
             gdk_window_get_window_type( window ) != GDK_WINDOW_TOPLEVEL &&
             gdk_window_get_window_type( window ) != GDK_WINDOW_TEMP
