@@ -40,9 +40,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     Style::Style( void )
-    {
-        _settings.init();
-    }
+    { _settings.init(); }
 
     //__________________________________________________________________
     void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
@@ -1354,22 +1352,11 @@ namespace Oxygen
 
         if( vertical ) h-=30;
         else w-=30;
-        GdkRectangle child = { 0, 0, vertical ? 4:w, vertical ? h:4 };
+        GdkRectangle child = { 0, 0, vertical ? 5:w, vertical ? h:5 };
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
-        if( vertical )
-        {
-
-            _helper.groove( base, 0.0 ).render( context, child.x, child.y, child.width, child.height, TileSet::Top|TileSet::Bottom|TileSet::Left );
-            _helper.groove( base, 0.0 ).render( context, child.x+1, child.y, child.width, child.height, TileSet::Top|TileSet::Bottom|TileSet::Right );
-
-        } else {
-
-            _helper.groove( base, 0.0 ).render( context, child.x, child.y, child.width, child.height, TileSet::Top|TileSet::Left|TileSet::Right );
-            _helper.groove( base, 0.0 ).render( context, child.x, child.y+1, child.width, child.height, TileSet::Bottom|TileSet::Left|TileSet::Right );
-
-        }
+        _helper.groove( base, 0.0 ).render( context, child.x, child.y, child.width, child.height );
 
     }
 
@@ -1382,7 +1369,7 @@ namespace Oxygen
 
         // sclider dimension
         int SliderThickness = 23;
-        int SliderLength = 14;
+        int SliderLength = 13;
 
         const bool vertical( options&Vertical );
         GdkRectangle parent = { x, y, w, h };
