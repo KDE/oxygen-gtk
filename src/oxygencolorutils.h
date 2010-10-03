@@ -62,11 +62,11 @@ namespace ColorUtils
 
     //! returns background color matching position in a top level widget of given height
     inline Rgba backgroundColor(const Rgba &color, int height, int y)
-    { return backgroundColor( color, std::min( 1.0 , double( y )/std::min( 300, 3*height/4 ) ) ); }
+    { return (height > 0) ? backgroundColor( color, std::min( 1.0 , double( y )/std::min( 300, 3*height/4 ) ) ) : color; }
 
     //! returns menu background color matching position in a top level widget of given height
     inline Rgba menuBackgroundColor(const Rgba &color, int height, int y)
-    { return backgroundColor( color, std::min( 1.0, double( y )/std::min( 200, 3*height/4 ) ) ); }
+    { return (height > 0) ? backgroundColor( color, std::min( 1.0, double( y )/std::min( 200, 3*height/4 ) ) ) : color; }
 
     //@}
 
