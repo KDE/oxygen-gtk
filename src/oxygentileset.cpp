@@ -176,14 +176,14 @@ namespace Oxygen
         if( w > 0 )
         {
             if( t & Top ) copyPixmap( context, x1, y0, _pixmaps.at(1), 0, 0, w, hTop, CAIRO_EXTEND_REPEAT );
-            if( t & Bottom ) copyPixmap( context, x1, y2, _pixmaps.at(7), 0, 0, w, hBottom, CAIRO_EXTEND_REPEAT );
+            if( t & Bottom ) copyPixmap( context, x1, y2, _pixmaps.at(7), 0, _h3-hBottom, w, hBottom, CAIRO_EXTEND_REPEAT );
         }
 
         // left and right
         if( h > 0 )
         {
             if( t & Left ) copyPixmap( context, x0, y1, _pixmaps.at(3), 0, 0, wLeft, h, CAIRO_EXTEND_REPEAT );
-            if( t & Right ) copyPixmap( context, x2, y1, _pixmaps.at(5), 0, 0, wRight, h, CAIRO_EXTEND_REPEAT );
+            if( t & Right ) copyPixmap( context, x2, y1, _pixmaps.at(5), _w3-wRight, 0, wRight, h, CAIRO_EXTEND_REPEAT );
         }
 
         // center
@@ -207,7 +207,7 @@ namespace Oxygen
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, sw, sh );
 
-        gdk_cairo_set_source_pixbuf( context, pixbuf, sx, sy );
+        gdk_cairo_set_source_pixbuf( context, pixbuf, -sx, -sy );
         cairo_pattern_set_extend( cairo_get_source( context ), extend );
         cairo_fill( context );
         cairo_restore( context );
