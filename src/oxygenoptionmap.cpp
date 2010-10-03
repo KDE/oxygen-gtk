@@ -24,6 +24,7 @@
 */
 
 #include "oxygenoptionmap.h"
+#include "config.h"
 
 #include <iostream>
 
@@ -78,15 +79,23 @@ namespace Oxygen
         const_iterator iter( find( section ) );
         if( iter == end() )
         {
+            #if OXYGEN_DEBUG
             std::cout << "Oxygen::OptionMap::getOption - could not find section " << section << std::endl;
+            #endif
+
             return Option();
+
         }
 
         Option::Set::const_iterator option_iter( iter->second.find( tag ) );
         if( option_iter == iter->second.end() )
         {
+            #if OXYGEN_DEBUG
             std::cout << "Oxygen::OptionMap::getOption - could not find tag " << tag << std::endl;
+            #endif
+
             return Option();
+
         } else {
 
             return *option_iter;
