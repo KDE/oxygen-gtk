@@ -21,9 +21,7 @@
 * MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 #include <iostream>
@@ -65,7 +63,7 @@ static void draw_flat_box(
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -156,7 +154,7 @@ static void draw_box( GtkStyle* style,
 {
     g_return_if_fail( style && window );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -229,13 +227,17 @@ static void draw_box( GtkStyle* style,
 
             // TODO: handle arrow button configuration
             // TODO: handle arrow button size when calculating rect size
-            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x, y+15, w-1, h-30, Oxygen::Vertical );
+            const int buttonSize( 14 );
+            const int subLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarSubLineButtons() );
+            const int addLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarAddLineButtons() );
+            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x, y+1+subLineOffset, w-1, h-1-subLineOffset-addLineOffset, Oxygen::Vertical );
 
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
-            // TODO: handle arrow button configuration
-            // TODO: handle arrow button size when calculating rect size
-            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x+15, y, w-30, h-1, Oxygen::None );
+            const int buttonSize( 14 );
+            const int subLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarSubLineButtons() );
+            const int addLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarAddLineButtons() );
+            Oxygen::Style::instance().renderScrollBarHole( window, clipRect, x+1+subLineOffset, y, w-2-subLineOffset-addLineOffset, h-1, Oxygen::None );
 
         } else if( GTK_IS_VSCALE( widget ) ) {
 
@@ -252,8 +254,6 @@ static void draw_box( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
 
-        // TODO: make sure the offsets are robust enough
-        // Oxygen::Style::instance().outline(window,clipRect, x-5, y-1 ,w+7, h+1 );
         Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1 ,w+7, h+1 );
         Oxygen::Style::instance().renderHole(window,clipRect,x-5,y-1,w+7,h+1, options);
 
@@ -291,7 +291,7 @@ static void draw_shadow( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=shadow, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -358,7 +358,7 @@ static void draw_check( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=check, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -419,7 +419,7 @@ static void draw_option( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=option, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -458,7 +458,7 @@ static void draw_hline(
 {
     g_return_if_fail( style && window );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=hline, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -492,7 +492,7 @@ static void draw_vline( GtkStyle* style,
 {
     g_return_if_fail( style && window );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=vline, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -533,7 +533,7 @@ static void draw_arrow( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=arrow, state=%s, shadow=%s, detail=%s, arrow=%s, fill=%d",
         G_OBJECT_TYPE_NAME( widget ),
@@ -595,7 +595,7 @@ static void draw_expander(
 {
     g_return_if_fail( style && window );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=expander, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -633,7 +633,7 @@ static void draw_diamond( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=diamond, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -664,7 +664,7 @@ static void draw_tab( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=tab, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -712,7 +712,7 @@ static void draw_shadow_gap( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=shadow_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -774,7 +774,7 @@ static void draw_box_gap( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -822,7 +822,7 @@ static void draw_slider( GtkStyle* style,
     g_return_if_fail( style && window );
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=slider, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -881,7 +881,7 @@ static void draw_extension( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -910,7 +910,7 @@ static void draw_focus(
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=focus, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -939,7 +939,7 @@ static void draw_handle( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=handle, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
@@ -989,7 +989,7 @@ static void draw_resize_grip(
 {
     g_return_if_fail( style && window );
 
-    #ifdef OXYGEN_DEBUG
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=resize_grip, state=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),

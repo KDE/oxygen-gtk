@@ -55,6 +55,8 @@ namespace Oxygen
         _toolBarDrawItemSeparator( true ),
         _scrollBarColored( false ),
         _scrollBarBevel( false ),
+        _scrollBarAddLineButtons( 2 ),
+        _scrollBarSubLineButtons( 1 ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" )
     {}
@@ -100,7 +102,9 @@ namespace Oxygen
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
-        //std::cout << _rc << std::endl;
+        #if OXYGEN_DEBUG
+        std::cout << _rc << std::endl;
+        #endif
 
     }
 
@@ -402,6 +406,20 @@ namespace Oxygen
 
         // colored scrollbars
         _scrollBarBevel = _oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("false") == "true";
+
+        // scrollbar buttons
+        _scrollBarAddLineButtons = _oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );
+        _scrollBarSubLineButtons = _oxygen.getOption( "[Style]", "ScrollBarSubLineButtons" ).toVariant<int>( 1 );
+
+        // copy to gtk
+        _rc.setCurrentSection( "oxygen-scrollbar" );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
+
+        // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+
     }
 
     //_________________________________________________________

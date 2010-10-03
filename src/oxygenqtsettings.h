@@ -91,7 +91,15 @@ namespace Oxygen
         bool scrollBarBevel( void ) const
         { return _scrollBarBevel; }
 
-        //@}
+        //! 'add-line' buttons
+        /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
+        int scrollBarAddLineButtons( void ) const
+        { return _scrollBarAddLineButtons; }
+
+        //! 'sub-line' buttons
+        /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
+        int scrollBarSubLineButtons( void ) const
+        { return _scrollBarSubLineButtons; }
 
         protected:
 
@@ -179,6 +187,14 @@ namespace Oxygen
 
         //! scrollbar bevel
         bool _scrollBarBevel;
+
+        //! 'add-line' buttons
+        /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
+        int _scrollBarAddLineButtons;
+
+        //! 'sub-line' buttons
+        /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
+        int _scrollBarSubLineButtons;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;
