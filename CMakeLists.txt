@@ -20,9 +20,11 @@ set( OXYGEN_DEBUG 0 )
 
 # Find GTK
 pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
+
 if( not GTK_INCLUDE_DIR )
 	message( FATAL_ERROR "GTK was not found.  Ensure you have the GTK development libraries installed, and GTK's pkgconfig files are in your pkgconfig search path." )
 endif( NOT GTK_INCLUDE_DIR )
+
 message( STATUS "Found GTK include dir: ${GTK_INCLUDE_DIR}" )
 message( STATUS "Found GTK library dir: ${GTK_LIB_DIR}" )
 
@@ -31,6 +33,7 @@ exec_program(
 	${PKGCONFIG_EXECUTABLE}
 	ARGS --variable=gtk_binary_version gtk+-2.0
 	OUTPUT_VARIABLE GTK_VERSION )
+
 set( INSTALL_PATH_GTK_ENGINES "${GTK_LIB_DIR}/gtk-2.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 message( STATUS "Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
 
@@ -45,7 +48,6 @@ exec_program(
 set( INSTALL_PATH_GTK_THEMES "${GTK_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 message( STATUS "Installing the GTK theme engine data to: ${INSTALL_PATH_GTK_THEMES}" )
-
 message( STATUS "gtk_lib_dir ${GTK_LIB_DIR}" )
 
 # Setup definitions and directories to be used in all subdirectories
