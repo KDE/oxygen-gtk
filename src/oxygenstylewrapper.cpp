@@ -5,6 +5,9 @@
 * based on the Null Theme Engine for Gtk+.
 * Copyright( C ) 2008 Robert Staudinger
 *
+* Icon rendering code from Walmis
+* <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
+*
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
@@ -1002,8 +1005,88 @@ static void draw_resize_grip(
 }
 
 //___________________________________________________________
+static GdkPixbuf* render_icon(
+    GtkStyle* style,
+    const GtkIconSource* source,
+    GtkTextDirection,
+    GtkStateType state,
+    GtkIconSize size,
+    GtkWidget* widget,
+    const char* )
+{
+
+    GdkPixbuf* base_pixbuf = gtk_icon_source_get_pixbuf (source);
+    g_return_val_if_fail (base_pixbuf != 0L, 0L);
+
+    // retrieve screen and settings
+    GdkScreen *screen( 0L );
+    GtkSettings *settings( 0L );
+    if( widget && gtk_widget_has_screen( widget ) )
+    {
+
+        screen = gtk_widget_get_screen( widget );
+        settings = gtk_settings_get_for_screen( screen );
+
+    } else if (style->colormap) {
+
+        screen = gdk_colormap_get_screen( style->colormap );
+        settings = gtk_settings_get_for_screen( screen );
+
+    } else {
+
+        settings = gtk_settings_get_default();
+
+    }
+
+    int width = 1;
+    int height = 1;
+    if( size != (GtkIconSize)-1 && !gtk_icon_size_lookup_for_settings( settings, size, &width, &height ) )
+    {
+        g_warning (G_STRLOC ": invalid icon size '%d'", size);
+        return 0L;
+    }
+
+    /* If the size was wildcarded, and we're allowed to scale, then scale; otherwise,
+    * leave it alone. */
+    GdkPixbuf *scaled(0L);
+    if( size != (GtkIconSize)-1 && gtk_icon_source_get_size_wildcarded( source ) )
+    {
+
+        scaled = Gtk::gdk_pixbuf_resize( base_pixbuf, width, height );
+
+    } else {
+
+        scaled = static_cast<GdkPixbuf*>( g_object_ref( base_pixbuf ) );
+
+    }
+
+    /* If the state was wildcarded, then generate a state. */
+    GdkPixbuf *stated( scaled );
+    if( gtk_icon_source_get_state_wildcarded( source ) )
+    {
+
+        if( state == GTK_STATE_INSENSITIVE )
+        {
+
+            stated = Gtk::gdk_pixbuf_set_alpha(scaled, 0.3);
+            gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
+            g_object_unref (scaled);
+
+        } else if (state == GTK_STATE_PRELIGHT) {
+
+            stated = gdk_pixbuf_copy( scaled );
+            gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
+            g_object_unref( scaled );
+
+        }
+    }
+
+    return stated;
+}
+
+//___________________________________________________________
 extern "C"
-void instance_init( OxygenStyle* self )
+    void instance_init( OxygenStyle* self )
 {}
 
 //___________________________________________________________
@@ -1035,6 +1118,9 @@ static void class_init( OxygenStyleClass* klass )
     style_class->draw_handle = draw_handle;
     style_class->draw_resize_grip = draw_resize_grip;
     style_class->draw_expander = draw_expander;
+
+    // icon rendering
+    style_class->render_icon = render_icon;
 
 }
 

@@ -2,6 +2,9 @@
 * this file is part of the oxygen gtk engine
 * Copyright( c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
+* GdkPixbuf modification code from Walmis
+* <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
+*
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
@@ -228,6 +231,55 @@ namespace Gtk
         }
 
         return;
+    }
+
+    //___________________________________________________________
+    GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf *pixbuf, double alpha )
+    {
+
+        g_return_val_if_fail( pixbuf != 0L, 0L);
+        g_return_val_if_fail( GDK_IS_PIXBUF( pixbuf ), 0L );
+
+        /* Returns a copy of pixbuf with it's non-completely-transparent pixels to
+        have an alpha level "alpha" of their original value. */
+        GdkPixbuf* target( gdk_pixbuf_add_alpha( pixbuf, false, 0, 0, 0 ) );
+        if( alpha >= 1.0 ) return target;
+        if( alpha < 0 ) alpha = 0;
+
+        const int width( gdk_pixbuf_get_width( target ) );
+        const int height( gdk_pixbuf_get_height( target ) );
+        const int rowstride( gdk_pixbuf_get_rowstride( target ) );
+        unsigned char* data = gdk_pixbuf_get_pixels( target );
+
+        for( int y = 0; y < height; ++y )
+        {
+
+            for( int x = 0; x < width; ++x )
+            {
+                /* The "4" is the number of chars per pixel, in this case, RGBA,
+                the 3 means "skip to the alpha" */
+                unsigned char* current = data + ( y*rowstride ) + ( x*4 ) + 3;
+                *(current) = (unsigned char) ( *( current )*alpha );
+            }
+        }
+
+        return target;
+    }
+
+    //___________________________________________________________
+    GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height )
+    {
+        if( width == gdk_pixbuf_get_width( src ) &&  height == gdk_pixbuf_get_height( src ) )
+        {
+
+            return static_cast<GdkPixbuf*>(g_object_ref (src));
+
+        } else {
+
+            return gdk_pixbuf_scale_simple( src, width, height, GDK_INTERP_BILINEAR );
+
+        }
+
     }
 
 }

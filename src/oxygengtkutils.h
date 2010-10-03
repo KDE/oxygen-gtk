@@ -4,6 +4,9 @@
 * this file is part of the oxygen gtk engine
 * Copyright( c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
+* GdkPixbuf modification code from Walmis
+* <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
+*
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
@@ -79,6 +82,12 @@ namespace Gtk
 
     //! get position relatve to toplevel
     void gdk_window_get_toplevel_origin( GdkWindow*, gint*, gint* );
+
+    //! add alpha channel to pixbuf
+    GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf*, double );
+
+    //! resize pixbuf
+    GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
 
     //@}
 
