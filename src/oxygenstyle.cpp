@@ -219,8 +219,6 @@ namespace Oxygen
     void Style::renderTooltipBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
-        //TODO: should get relevant options from oxygenrc
-
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Tooltip ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
