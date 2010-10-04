@@ -26,6 +26,8 @@
 #include <gdk/gdktypes.h>
 #include <gtk/gtkstyle.h>
 
+#include "oxygenrgba.h"
+
 namespace Gtk
 {
 
@@ -61,6 +63,15 @@ namespace Gtk
 
     //@!name gdk utilities
     //@{
+
+    //! returns OxygenRgba color from GdkColor
+    inline ColorUtils::Rgba gdk_get_color( const GdkColor& color )
+    {
+        return ColorUtils::Rgba(
+            double(color.red)/0xffff,
+            double(color.green)/0xffff,
+            double(color.blue)/0xffff );
+    }
 
     //! map widget origin to top level
     /*!
