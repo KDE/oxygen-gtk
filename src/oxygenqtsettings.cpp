@@ -87,8 +87,9 @@ namespace Oxygen
         _kdeGlobals.merge( readOptions( sanitizePath( _kdeHome + "/share/config/kdeglobals" ) ) );
 
         // reload oxygen options
-        std::string oxygen = sanitizePath( _kdeHome + "/share/config/oxygenrc" );
-        _oxygen = readOptions( oxygen );
+        _oxygen.clear();
+        _oxygen.merge( readOptions( std::string( GTK_THEME_DIR ) + "/oxygenrc" ) );
+        _oxygen.merge( readOptions( sanitizePath( _kdeHome + "/share/config/oxygenrc" ) ) );
 
         // reload palette
         _palette.clear();
