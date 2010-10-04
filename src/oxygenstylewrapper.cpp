@@ -36,6 +36,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
+#include "oxygenwidgetset.h"
 
 //______________________________________________________________________
 struct _OxygenStyle
@@ -199,9 +200,7 @@ static void draw_box( GtkStyle* style,
 
             Oxygen::Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
-        } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
-
-            if( parent ) {};
+        } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
 
             /*
             editable combobox button get a hole (with left corner hidden), and a background
@@ -233,7 +232,13 @@ static void draw_box( GtkStyle* style,
 
             Oxygen::StyleOptions options( Oxygen::Blend );
             options |= Oxygen::styleOptions( widget, state, shadow );
-            if( Gtk::gtk_button_is_flat( widget ) ) options |= Oxygen::Flat;
+
+            if( widget )
+            {
+                // register button if state is not prelight, otherwise detect whether button should be flat
+                if( state == GTK_STATE_NORMAL ) Oxygen::Style::instance().buttons().insert( widget );
+                else if( !Oxygen::Style::instance().buttons().contains( widget ) ) options |= Oxygen::Flat;
+            }
 
             Oxygen::Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 

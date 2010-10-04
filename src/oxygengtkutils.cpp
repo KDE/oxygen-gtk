@@ -106,44 +106,19 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_button_is_flat( GtkWidget* widget )
+    bool gtk_object_is_a( const GObject* object, const gchar * type_name )
     {
-        if( !GTK_IS_BUTTON( widget ) ) return false;
 
-        /*
-        this is ugly. One should try find a way to automatically
-        detect flat buttons:
-        These are buttons that are drawn 'PRELIGHT' but never have been drawn 'NORMAL'
-        */
-        GObject* object( G_OBJECT( widget ) );
-        if( object && gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
-
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        if( object )
         {
-            if(
-                GTK_IS_TOOLBAR( parent ) ||
-                gtk_object_is_a( G_OBJECT( parent ), "GimpToolbox" ) )
-            { return true; }
-
+            const GType tmp( g_type_from_name( type_name ) );
+            if( tmp )
+            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
         }
 
         return false;
     }
 
-        //________________________________________________________
-	bool gtk_object_is_a( const GObject* object, const gchar * type_name )
-	{
-
-		if( object )
-		{
-            const GType tmp( g_type_from_name( type_name ) );
-            if( tmp )
-            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
-		}
-
-		return false;
-	}
     //________________________________________________________
     bool gtk_progress_bar_is_horizontal( GtkWidget* widget )
     {

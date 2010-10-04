@@ -32,6 +32,9 @@
 namespace Oxygen
 {
 
+    //! forward declaration
+    class WidgetSet;
+
     //! handle all plainting
     class Style
     {
@@ -167,6 +170,10 @@ namespace Oxygen
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 
+        //! normal buttons set
+        WidgetSet& buttons( void ) const
+        { return *_buttons; }
+
         protected:
 
         //! constructor
@@ -225,6 +232,9 @@ namespace Oxygen
 
         // helper
         StyleHelper _helper;
+
+        // registered 'normal' buttons
+        WidgetSet* _buttons;
 
     };
 

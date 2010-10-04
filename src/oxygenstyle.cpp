@@ -23,6 +23,7 @@
 #include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
 #include "oxygengtkutils.h"
+#include "oxygenwidgetset.h"
 
 #include <algorithm>
 #include <cmath>
@@ -39,7 +40,8 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    Style::Style( void )
+    Style::Style( void ):
+        _buttons( WidgetSetFactory::instance().create() )
     { _settings.init(); }
 
     //__________________________________________________________________

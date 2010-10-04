@@ -20,6 +20,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenstylewrapper.cpp
     oxygentheme.c
     oxygentileset.cpp
+    oxygenwidgetset.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
