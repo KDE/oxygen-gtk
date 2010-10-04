@@ -50,7 +50,7 @@ namespace Oxygen
     {
         StyleOptions options( None );
         if( state == GTK_STATE_INSENSITIVE ) options |= Disabled;
-        else if( state == GTK_STATE_PRELIGHT || state == GTK_STATE_ACTIVE ) options |= Hover;
+        else if( state == GTK_STATE_PRELIGHT ) options |= Hover;
         else if( state == GTK_STATE_SELECTED ) options |= Selected;
 
         if( shadow == GTK_SHADOW_IN ) options |= Sunken;
