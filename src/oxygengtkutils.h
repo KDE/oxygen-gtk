@@ -59,6 +59,9 @@ namespace Gtk
     /*! adapted from QtCurve code */
     bool gtk_progress_bar_is_horizontal( GtkWidget* );
 
+    //! true for 'flat' buttons (e.g. toolbuttons)
+    bool gtk_button_is_flat( GtkWidget* );
+
     //@}
 
     //@!name gdk utilities

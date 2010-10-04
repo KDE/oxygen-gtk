@@ -94,7 +94,8 @@ namespace Gtk
 
         return 0L;
     }
-   //________________________________________________________
+
+    //________________________________________________________
     GtkWidget* gtk_parent_combobox_entry( GtkWidget* widget )
     {
 
@@ -103,6 +104,25 @@ namespace Gtk
         { if( GTK_IS_COMBO_BOX_ENTRY( parent ) ) return parent; }
 
         return 0L;
+    }
+
+
+    //________________________________________________________
+    bool gtk_button_is_flat( GtkWidget* widget )
+    {
+        if( !GTK_IS_BUTTON( widget ) ) return false;
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        {
+            if(
+                GTK_IS_TOOLBAR( parent ) ||
+                gtk_object_is_a( G_OBJECT( parent ), "GimpToolbox" ) )
+            { return true; }
+
+        }
+
+        return false;
     }
 
     //________________________________________________________

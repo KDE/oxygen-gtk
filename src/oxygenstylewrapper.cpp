@@ -238,7 +238,9 @@ static void draw_box( GtkStyle* style,
             {
                 // register button if state is not prelight, otherwise detect whether button should be flat
                 if( state == GTK_STATE_NORMAL ) Oxygen::Style::instance().buttons().insert( widget );
-                else if( options&(Oxygen::Hover|Oxygen::Sunken) && !Oxygen::Style::instance().buttons().contains( widget ) ) options |= Oxygen::Flat;
+                else if( (options&Oxygen::Hover && !Oxygen::Style::instance().buttons().contains( widget ) )  || Gtk::gtk_button_is_flat( widget ) )
+                { options |= Oxygen::Flat; }
+
             }
 
             Oxygen::Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
