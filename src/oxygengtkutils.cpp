@@ -55,8 +55,9 @@ namespace Gtk
     GtkWidget* gtk_parent_button( GtkWidget* widget )
     {
 
-        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
-        { if( GTK_IS_BUTTON( widget ) ) return widget; }
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_BUTTON( parent ) ) return parent; }
 
         return 0L;
     }
@@ -65,8 +66,9 @@ namespace Gtk
     GtkWidget* gtk_parent_menu( GtkWidget* widget )
     {
 
-        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
-        { if( GTK_IS_MENU( widget ) ) return widget; }
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_MENU( parent ) ) return parent; }
 
         return 0L;
     }
@@ -75,8 +77,9 @@ namespace Gtk
     GtkWidget* gtk_parent_treeview( GtkWidget* widget )
     {
 
-        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
-        { if( GTK_IS_TREE_VIEW( widget ) ) return widget; }
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_TREE_VIEW( parent ) ) return parent; }
 
         return 0L;
     }
@@ -85,13 +88,35 @@ namespace Gtk
     GtkWidget* gtk_parent_combobox( GtkWidget* widget )
     {
 
-        while( widget && (widget = gtk_widget_get_parent( widget ) ) )
-        { if( GTK_IS_COMBO_BOX( widget ) ) return widget; }
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_COMBO_BOX( parent ) ) return parent; }
 
         return 0L;
     }
 
     //________________________________________________________
+    bool gtk_button_is_flat( GtkWidget* widget )
+    {
+        if( !GTK_IS_BUTTON( widget ) ) return false;
+
+        GObject* object( G_OBJECT( widget ) );
+        if( object && gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        {
+            if(
+                GTK_IS_TOOLBAR( parent ) ||
+                gtk_object_is_a( G_OBJECT( parent ), "GimpToolbox" ) )
+            { return true; }
+
+        }
+
+        return false;
+    }
+
+        //________________________________________________________
 	bool gtk_object_is_a( const GObject* object, const gchar * type_name )
 	{
 
