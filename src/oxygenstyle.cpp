@@ -234,8 +234,8 @@ namespace Oxygen
         const bool hasAlpha( options&Alpha );
         if( hasAlpha )
         {
-            top.setAlpha( 220.0/255 );
-            bottom.setAlpha( 220.0/255 );
+            top.setAlpha( 220/255 );
+            bottom.setAlpha( 220/255 );
             cairo_rectangle( context, 0, 0, w, h );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
@@ -479,12 +479,12 @@ namespace Oxygen
             if( vertical )
             {
 
-                if( w > 30 ) a = 10.0/w;
+                if( w > 30 ) a = 10/w;
                 pattern.set( cairo_pattern_create_linear( x, 0, x+w, 0 ) );
 
             } else {
 
-                if( h>30 ) a = 10.0/h;
+                if( h>30 ) a = 10/h;
                 pattern.set( cairo_pattern_create_linear( 0, y, 0, y+h ) );
 
             }
@@ -676,7 +676,7 @@ namespace Oxygen
             if( settings().scrollBarColored() )
             {
 
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.6 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.6 ) );
                 cairo_pattern_add_color_stop( pattern, 0.3, ColorUtils::alphaColor( dark, 0.3 ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.8 ) );
 
@@ -704,12 +704,12 @@ namespace Oxygen
             if( settings().scrollBarColored() )
             {
 
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( shadow, 0.15 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.15 ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.15 ) );
 
             } else {
 
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( shadow, 0.1 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.1 ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.1 ) );
 
             }
@@ -727,7 +727,7 @@ namespace Oxygen
             if( vertical ) pattern.set( cairo_pattern_create_linear( 0, yf, 0, yf+hf ) );
             else pattern.set( cairo_pattern_create_linear( xf, 0, xf+wf, 0 ) );
 
-            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0 ) );
+            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0 ) );
             cairo_pattern_add_color_stop( pattern, 0.5, light );
             cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0 ) );
             cairo_set_source( context, pattern );
@@ -814,7 +814,7 @@ namespace Oxygen
         const bool hasAlpha( options & Alpha );
         if( hasAlpha )
         {
-            cairo_pattern_add_color_stop( pattern, std::max( 0.8, 1.0 - 10.0/h), light );
+            cairo_pattern_add_color_stop( pattern, std::max( 0.8, 1.0 - 10/h), light );
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0 ) );
             cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 3.5 );
         } else {
@@ -834,6 +834,35 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
+
+        // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
+        if( options & Flat )
+        {
+            if( options & Sunken )
+            {
+
+                Cairo::Context context( window, clipRect );
+                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+
+                if( options & Hover )
+                {
+
+                    const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+                    _helper.holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
+
+                } else _helper.hole( base, 0, 7, false ).render( context, x, y, w, h );
+
+            } else if( options&Hover ) {
+
+                const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
+                Cairo::Context context( window, clipRect );
+                _helper.slitFocused( glow ).render( context, x, y, w, h );
+
+            }
+
+            return;
+
+        }
 
         // do nothing if not enough room
         if( w < 14 ) return;
@@ -865,16 +894,16 @@ namespace Oxygen
             {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                _helper.slabFocused( base, glow, 0.0 ).render( context, x, y, w, h );
+                _helper.slabFocused( base, glow, 0 ).render( context, x, y, w, h );
 
             } else if( options&Focus ) {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                _helper.slabFocused( base, glow, 0.0 ).render( context, x, y, w, h );
+                _helper.slabFocused( base, glow, 0 ).render( context, x, y, w, h );
 
             } else {
 
-                _helper.slab( base, 0.0 ).render( context, x, y, w, h );
+                _helper.slab( base, 0 ).render( context, x, y, w, h );
 
             }
         }
@@ -900,7 +929,7 @@ namespace Oxygen
         _helper.fillSlab( context, x, y, w, h );
 
         if( options&Sunken )
-        { _helper.slabSunken( base, 0.0 ).render( context, x, y, w, h ); }
+        { _helper.slabSunken( base, 0 ).render( context, x, y, w, h ); }
 
     }
 
@@ -1091,7 +1120,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options ) );
 
         // get the pixmap
-        GdkPixbuf* pixbuf( glow.isValid() ? _helper.roundSlabFocused( base, glow, 0.0 ):_helper.roundSlab( base, 0.0 ) );
+        GdkPixbuf* pixbuf( glow.isValid() ? _helper.roundSlabFocused( base, glow, 0 ):_helper.roundSlab( base, 0 ) );
 
         // create context
         Cairo::Context context( window, clipRect );
@@ -1141,11 +1170,29 @@ namespace Oxygen
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        const bool fill( !( options&NoFill ) );
+        const Oxygen::TileSet::Tiles tiles( fill ? TileSet::Full : TileSet::Ring );
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-        _helper.hole( base, 0.0, 7, !(options&NoFill) ).render( context, x, y, w, h, options&NoFill ? TileSet::Ring : TileSet::Full );
+
+        if( options & Focus )
+        {
+
+            const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
+            _helper.holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+
+        } else if( options & Hover ) {
+
+            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+            _helper.holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+
+        } else {
+
+            _helper.hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
+
+        }
 
     }
 
@@ -1221,7 +1268,7 @@ namespace Oxygen
             gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
             {
                 Cairo::Context context( pixbuf );
-                _helper.holeFlat( base, 0.0 ).render( context, 0, 0, w, h, TileSet::Full  );
+                _helper.holeFlat( base, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
                 context.updateGdkPixbuf();
             }
 
@@ -1239,7 +1286,7 @@ namespace Oxygen
 
         } else {
             Cairo::Context context( window, clipRect );
-            _helper.holeFlat( base, 0.0 ).render( context, x, y, w, h, TileSet::Full  );
+            _helper.holeFlat( base, 0 ).render( context, x, y, w, h, TileSet::Full  );
         }
     }
 
@@ -1356,7 +1403,7 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
-        _helper.groove( base, 0.0 ).render( context, child.x, child.y, child.width, child.height );
+        _helper.groove( base, 0 ).render( context, child.x, child.y, child.width, child.height );
 
     }
 
@@ -1521,13 +1568,13 @@ namespace Oxygen
             {
 
                 pattern.set( cairo_pattern_create_linear( 0, y, 0, y+2*h ) );
-                cairo_pattern_add_color_stop( pattern, 0.0, color );
+                cairo_pattern_add_color_stop( pattern, 0, color );
                 cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::lightColor( color ) );
 
             } else {
 
                 pattern.set( cairo_pattern_create_linear( 0, y-h, 0, y+h ) );
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::lightColor( color ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::lightColor( color ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, color );
 
             }
@@ -1542,14 +1589,14 @@ namespace Oxygen
             // calculate glow color
             TileSet tile;
             ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = _helper.slabFocused( color, glow , 0.0);
-            else if( color.isValid() ) tile = _helper.slab(color, 0.0);
+            if( glow.isValid() ) tile = _helper.slabFocused( color, glow , 0);
+            else if( color.isValid() ) tile = _helper.slab(color, 0);
             else return;
             tile.render( context, x, y, w, h );
 
         } else if( color.isValid() ) {
 
-            _helper.slabSunken( color, 0.0 ).render( context, x, y, w, h );
+            _helper.slabSunken( color, 0 ).render( context, x, y, w, h );
 
         }
 
