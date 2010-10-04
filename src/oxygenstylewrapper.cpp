@@ -131,7 +131,7 @@ static void draw_flat_box(
 
     } else if(
         d.isEntryBg() &&
-        !Gtk::gtk_parent_combobox( widget ) &&
+        !Gtk::gtk_parent_combobox_entry( widget ) &&
         !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
 
         oxygen_style_parent_class->draw_flat_box( style, window, state,
@@ -217,11 +217,12 @@ static void draw_box( GtkStyle* style,
             // for now, disable hover, because it is not supported in the entry
             options &= ~Oxygen::Hover;
 
-            // add focus when button is active
-            if( state == GTK_STATE_ACTIVE ) options |= Oxygen::Focus;
+            // also disable focus, because it is not synchronized (yet) with the text entry
+            options &= ~Oxygen::Focus;
 
-            Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options );
+            // render
+            Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options );
             return;
 
         } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
@@ -376,8 +377,11 @@ static void draw_shadow( GtkStyle* style,
         if( Gtk::gtk_parent_combobox_entry( widget ) )
         {
 
-            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+7, h+1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+7, h+2, options );
+            // disable focus, because it is not synchronized (yet) with the text entry
+            options &= ~Oxygen::Focus;
+
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options );
 
         } else {
 
