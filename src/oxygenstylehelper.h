@@ -70,6 +70,7 @@ namespace Oxygen
 
         TileSet hole( const ColorUtils::Rgba&, double shade, int size = 7, bool fill = false ) const;
         TileSet holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 ) const;
+        TileSet holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba &glowColor, double shade, int size = 7, bool fill = false ) const;
         TileSet scrollHole( const ColorUtils::Rgba&, bool vertical ) const;
 
         //@}
@@ -108,6 +109,9 @@ namespace Oxygen
 
         //! inverse shadow (for sunken slabs)
         void drawInverseShadow( Cairo::Context&, const ColorUtils::Rgba&, int pad, int size, double fuzz ) const;
+
+        //! inverse glow (for sunken slabs)
+        void drawInverseGlow( Cairo::Context&, const ColorUtils::Rgba&, int pad, int size, int rsize ) const;
 
         //! round slab
         void drawRoundSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
