@@ -112,6 +112,9 @@ namespace Gtk
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
 
+        GObject* object( G_OBJECT( widget ) );
+        if( gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
+
         GtkWidget *parent( widget );
         while( parent && (parent = gtk_widget_get_parent( parent ) ) )
         {

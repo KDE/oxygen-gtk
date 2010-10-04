@@ -40,8 +40,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    Style::Style( void ):
-        _buttons( WidgetSetFactory::instance().createWidgetSet() )
+    Style::Style( void )
     { _settings.init(); }
 
     //__________________________________________________________________
