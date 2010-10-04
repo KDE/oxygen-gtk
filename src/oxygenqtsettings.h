@@ -79,10 +79,6 @@ namespace Oxygen
         CheckBoxStyle checkBoxStyle( void ) const
         { return _checkBoxStyle; }
 
-        //! toolbar item separator
-        bool toolBarDrawItemSeparator( void ) const
-        { return _toolBarDrawItemSeparator; }
-
         //! true if hovered scrollbars must be colored
         bool scrollBarColored( void ) const
         { return _scrollBarColored; }
@@ -100,6 +96,20 @@ namespace Oxygen
         /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
         int scrollBarSubLineButtons( void ) const
         { return _scrollBarSubLineButtons; }
+
+        //! toolbar item separator
+        bool toolBarDrawItemSeparator( void ) const
+        { return _toolBarDrawItemSeparator; }
+
+        //! transparent tooltips
+        bool tooltipTransparent( void ) const
+        { return _tooltipTransparent; }
+
+        //! styled frames in tooltips
+        bool tooltipDrawStyledFrames( void ) const
+        { return _tooltipDrawStyledFrames; }
+
+        //@}
 
         protected:
 
@@ -179,8 +189,8 @@ namespace Oxygen
         //!@name oxygen style options
         //@{
 
-        //! item separator
-        bool _toolBarDrawItemSeparator;
+        //! checkbox style
+        CheckBoxStyle _checkBoxStyle;
 
         //! colored scrollbar (on hover)
         bool _scrollBarColored;
@@ -196,8 +206,14 @@ namespace Oxygen
         /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
         int _scrollBarSubLineButtons;
 
-        //! checkbox style
-        CheckBoxStyle _checkBoxStyle;
+        //! item separator
+        bool _toolBarDrawItemSeparator;
+
+        //! transparent tooltips
+        bool _tooltipTransparent;
+
+        //! framed tooltips
+        bool _tooltipDrawStyledFrames;
 
         //@}
 

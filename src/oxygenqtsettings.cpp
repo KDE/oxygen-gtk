@@ -52,11 +52,13 @@ namespace Oxygen
     //_________________________________________________________
     QtSettings::QtSettings( void ):
         _checkBoxStyle( CS_CHECK ),
-        _toolBarDrawItemSeparator( true ),
         _scrollBarColored( false ),
         _scrollBarBevel( false ),
         _scrollBarAddLineButtons( 2 ),
         _scrollBarSubLineButtons( 1 ),
+        _toolBarDrawItemSeparator( true ),
+        _tooltipTransparent( true ),
+        _tooltipDrawStyledFrames( true ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" )
     {}
@@ -391,16 +393,6 @@ namespace Oxygen
         // checkbox style
         _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
 
-        // scrollbar width
-        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<int>(
-            "  GtkScrollbar::slider-width",
-            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
-        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
-
-        // toolbar separators
-        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
-
         // colored scrollbars
         _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
 
@@ -411,7 +403,21 @@ namespace Oxygen
         _scrollBarAddLineButtons = _oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );
         _scrollBarSubLineButtons = _oxygen.getOption( "[Style]", "ScrollBarSubLineButtons" ).toVariant<int>( 1 );
 
-        // copy to gtk
+        // toolbar separators
+        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
+
+        // tooltips
+        _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
+        _tooltipDrawStyledFrames = _oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
+
+        // copy relevant options to to gtk
+        // scrollbar width
+        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<int>(
+            "  GtkScrollbar::slider-width",
+            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
+
         _rc.setCurrentSection( "oxygen-scrollbar" );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
