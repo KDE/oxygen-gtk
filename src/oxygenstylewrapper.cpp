@@ -241,6 +241,13 @@ static void draw_box( GtkStyle* style,
             Oxygen::StyleOptions options( Oxygen::Blend );
             options |= Oxygen::styleOptions( widget, state, shadow );
 
+	    if(GTK_IS_BUTTON(widget) && !GTK_IS_TOGGLE_BUTTON(widget))
+	    {
+		    if(state == GTK_STATE_ACTIVE)
+			    options |= Oxygen::Hover;
+	    }
+	    // TODO: add glow to toggle button when it is depressed but mouse button is still pressed
+
             if( widget )
             {
                 // register button if state is not prelight, otherwise detect whether button should be flat
