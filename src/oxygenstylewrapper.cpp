@@ -175,10 +175,16 @@ static void draw_box( GtkStyle* style,
 
             Oxygen::Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
+        } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
+
+            return;
+
         } else {
 
             Oxygen::StyleOptions options( Oxygen::Blend );
             options |= Oxygen::styleOptions( widget, state, shadow );
+            if( Gtk::gtk_button_is_flat( widget ) ) options |= Oxygen::Flat;
+
             Oxygen::Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 
         }
@@ -311,7 +317,10 @@ static void draw_shadow( GtkStyle* style,
     } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
         Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-        Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+
+        Oxygen::StyleOptions options( Oxygen::NoFill );
+        options |= Oxygen::styleOptions( widget, state, shadow );
+        Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
 
         return;
 
