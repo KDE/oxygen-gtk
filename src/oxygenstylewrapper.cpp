@@ -258,8 +258,6 @@ static void draw_box( GtkStyle* style,
 
         } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
-            // TODO: handle arrow button configuration
-            // TODO: handle arrow button size when calculating rect size
             const int buttonSize( 14 );
             const int subLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarSubLineButtons() );
             const int addLineOffset( buttonSize*Oxygen::Style::instance().settings().scrollBarAddLineButtons() );
@@ -286,6 +284,13 @@ static void draw_box( GtkStyle* style,
 
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
+
+        // for disabled spinboxes one has to handle the background manually
+        if( style && gtk_widget_get_state( widget ) == GTK_STATE_INSENSITIVE )
+        {
+            ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[ GTK_STATE_INSENSITIVE] ) );
+            Oxygen::Style::instance().fill( window, clipRect, x, y, w, h, background );
+        }
 
         Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
         Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options );
