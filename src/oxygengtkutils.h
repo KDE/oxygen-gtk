@@ -49,6 +49,9 @@ namespace Gtk
     //! return parent combobox if any.
     GtkWidget* gtk_parent_combobox( GtkWidget* );
 
+    //! return parent combobox if any.
+    GtkWidget* gtk_parent_combobox_entry( GtkWidget* );
+
     //! true if object match a given type
     bool gtk_object_is_a( const GObject*, const gchar* );
 

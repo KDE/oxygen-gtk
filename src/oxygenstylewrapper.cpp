@@ -199,6 +199,31 @@ static void draw_box( GtkStyle* style,
 
             Oxygen::Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
+        } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+            if( parent ) {};
+
+            /*
+            editable combobox button get a hole (with left corner hidden), and a background
+            that match the corresponding text entry background.
+            */
+
+            ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
+            Oxygen::Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+            Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
+            options |= Oxygen::styleOptions( widget, state, shadow );
+
+            // for now, disable hover, because it is not supported in the entry
+            options &= ~Oxygen::Hover;
+
+            // add focus when button is active
+            if( state == GTK_STATE_ACTIVE ) options |= Oxygen::Focus;
+
+            Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options );
+            return;
+
         } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
             return;
@@ -285,9 +310,9 @@ static void draw_box( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
 
-        // for disabled spinboxes one has to handle the background manually
         if( style && gtk_widget_get_state( widget ) == GTK_STATE_INSENSITIVE )
         {
+            // for disabled spinboxes one has to handle the background manually
             ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[ GTK_STATE_INSENSITIVE] ) );
             Oxygen::Style::instance().fill( window, clipRect, x, y, w, h, background );
         }
@@ -345,11 +370,21 @@ static void draw_shadow( GtkStyle* style,
 
     } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
-        Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
-        Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+        if( Gtk::gtk_parent_combobox_entry( widget ) )
+        {
+
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+7, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+7, h+2, options );
+
+        } else {
+
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+        }
 
         return;
 
@@ -595,10 +630,12 @@ static void draw_arrow( GtkStyle* style,
     options |= Oxygen::styleOptions( widget, state );
 
     // disable highlight in menus and buttons, for consistancy with oxygen qt style
-    if( d.isMenuItem() || (Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_treeview( widget ) ) )
+    if( d.isMenuItem() && !Gtk::gtk_parent_treeview( widget ) )
     {
 
-        options &= ~( Oxygen::Focus|Oxygen::Hover );
+        GtkWidget* parent(Gtk::gtk_parent_button( widget ));
+        if( parent && !GTK_IS_COMBO_BOX_ENTRY( parent ) )
+        { options &= ~( Oxygen::Focus|Oxygen::Hover ); }
 
     }
 
