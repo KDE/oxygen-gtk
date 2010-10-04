@@ -31,47 +31,27 @@
 namespace Oxygen
 {
 
-    class WidgetSet;
-
-    //! stores all widget set
-    class WidgetSetFactory
+    class WidgetContainer
     {
+
         public:
 
-        //! singleton
-        static WidgetSetFactory& instance( void );
+        //! constructor
+        explicit WidgetContainer( void )
+        {}
 
         //! destructor
-        virtual ~WidgetSetFactory( void )
+        virtual ~WidgetContainer( void )
         {}
 
-        //! create new widget set
-        WidgetSet* create( void );
-
-        //! register new widget
-        void registerWidget( GtkWidget* );
-
-        //! register new widget
-        void unregisterWidget( GtkWidget* );
-
-        private:
-
-        //! constructor is private
-        WidgetSetFactory( void )
-        {}
-
-        //! list of registered widget sets
-        typedef std::vector<WidgetSet> WidgetSetList;
-        WidgetSetList _widgetSets;
-
-        //! keep track of all registered widgets
-        std::set< GtkWidget* > _allWidgets;
+        //! erase widget from container
+        virtual void erase( GtkWidget* ) = 0;
 
     };
 
     //! stores widgets into a std::set
     /*! stores widgets into a std::set. Automatically remove them from the set when they are destroyed */
-    class WidgetSet
+    class WidgetSet: public WidgetContainer
     {
 
         public:
@@ -101,6 +81,45 @@ namespace Oxygen
         std::set<GtkWidget*> _widgets;
 
         friend class WidgetSetFactory;
+
+    };
+
+    //! stores all widget set
+    class WidgetSetFactory
+    {
+        public:
+
+        //! singleton
+        static WidgetSetFactory& instance( void );
+
+        //! destructor
+        virtual ~WidgetSetFactory( void )
+        {
+            for( ContainerList::iterator iter = _containers.begin(); iter != _containers.end(); iter++ )
+            { delete *iter; }
+        }
+
+        //! create new widget set
+        WidgetSet* createWidgetSet( void );
+
+        //! register new widget
+        void registerWidget( GtkWidget* );
+
+        //! register new widget
+        void unregisterWidget( GtkWidget* );
+
+        private:
+
+        //! constructor is private
+        WidgetSetFactory( void )
+        {}
+
+        //! list of registered widget sets
+        typedef std::vector< WidgetContainer* > ContainerList;
+        ContainerList _containers;
+
+        //! keep track of all registered widgets
+        std::set< GtkWidget* > _allWidgets;
 
     };
 

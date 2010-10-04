@@ -40,10 +40,11 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    WidgetSet* WidgetSetFactory::create( void )
+    WidgetSet* WidgetSetFactory::createWidgetSet( void )
     {
-        _widgetSets.push_back( WidgetSet() );
-        return &_widgetSets.back();
+        WidgetSet* out = new WidgetSet();
+        _containers.push_back( out );
+        return out;
 
     }
 
@@ -61,8 +62,8 @@ namespace Oxygen
     {
 
         _allWidgets.erase( widget );
-        for( WidgetSetList::iterator iter = _widgetSets.begin(); iter != _widgetSets.end(); iter++ )
-        { iter->erase( widget ); }
+        for( ContainerList::iterator iter = _containers.begin(); iter != _containers.end(); iter++ )
+        { (*iter)->erase( widget ); }
 
     }
 
