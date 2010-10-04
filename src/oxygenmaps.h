@@ -81,8 +81,8 @@ namespace Oxygen
 
             //! constructor
             Finder( ValueList values, unsigned int size ):
-                _values( values ),
-                _size( size )
+                _size( size ),
+                _values( values )
             {}
 
             //! return gtk value matching css

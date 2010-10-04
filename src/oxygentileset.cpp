@@ -82,11 +82,11 @@ namespace Oxygen
 
     //______________________________________________________________
     TileSet::TileSet( const TileSet& other ):
+        _pixmaps( other._pixmaps ),
         _w1( other._w1 ),
         _h1( other._h1 ),
         _w3( other._w3 ),
-        _h3( other._h3 ),
-        _pixmaps( other._pixmaps )
+        _h3( other._h3 )
     {
 
         // increase ref counter

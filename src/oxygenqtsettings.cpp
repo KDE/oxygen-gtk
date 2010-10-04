@@ -51,6 +51,8 @@ namespace Oxygen
 
     //_________________________________________________________
     QtSettings::QtSettings( void ):
+        _kdeIconTheme( "oxygen" ),
+        _kdeFallbackIconTheme( "hicolor" ),
         _checkBoxStyle( CS_CHECK ),
         _scrollBarColored( false ),
         _scrollBarBevel( false ),
@@ -58,9 +60,7 @@ namespace Oxygen
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
         _tooltipTransparent( true ),
-        _tooltipDrawStyledFrames( true ),
-        _kdeIconTheme( "oxygen" ),
-        _kdeFallbackIconTheme( "hicolor" )
+        _tooltipDrawStyledFrames( true )
     {}
 
     //_________________________________________________________

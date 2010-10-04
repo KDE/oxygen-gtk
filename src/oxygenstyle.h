@@ -64,7 +64,7 @@ namespace Oxygen
         /*! returns true if window gradient could be rendered */
         bool renderWindowBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint ) const;
         bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h ) const
-        { renderWindowBackground( window, 0L, r, x, y, w, h ); }
+        { return renderWindowBackground( window, 0L, r, x, y, w, h ); }
 
         //! window background
         void renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
