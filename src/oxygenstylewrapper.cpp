@@ -129,6 +129,30 @@ static void draw_flat_box(
 
         return;
 
+    } else if(
+        d.isEntryBg() &&
+        !Gtk::gtk_parent_combobox( widget ) &&
+        !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
+
+        oxygen_style_parent_class->draw_flat_box( style, window, state,
+            shadow, clipRect, widget, detail,
+            x, y, w, h );
+
+        Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
+        options |= Oxygen::styleOptions( widget, state, shadow );
+
+        if( GTK_IS_SPIN_BUTTON( widget ) )
+        {
+
+            Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options );
+
+        } else {
+
+            Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
+
+        }
+        accepted = true;
+
     }
 
     if( !accepted )
@@ -263,8 +287,8 @@ static void draw_box( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
 
-        Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1 ,w+7, h+1 );
-        Oxygen::Style::instance().renderHole(window,clipRect,x-5,y-1,w+7,h+1, options);
+        Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
+        Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options );
 
     } else if( d.isSpinButtonArrow() ) {
 
@@ -581,6 +605,7 @@ static void draw_arrow( GtkStyle* style,
         */
         if( arrow == GTK_ARROW_UP ) y += 1;
         if( arrow == GTK_ARROW_DOWN ) y -= 1;
+        x-=1;
 
         // disable contrast
         options &= ~Oxygen::Contrast;
