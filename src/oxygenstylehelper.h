@@ -74,6 +74,9 @@ namespace Oxygen
 
         //@}
 
+        //! 'slit' (for hovered/focused flat buttons )
+        TileSet slitFocused( const ColorUtils::Rgba& ) const;
+
         //! dock frame
         TileSet dockFrame( const ColorUtils::Rgba&, int size ) const;
 

@@ -442,6 +442,35 @@ namespace Oxygen
         return out;
     }
 
+    //________________________________________________________________________________________________________
+    TileSet StyleHelper::slitFocused( const ColorUtils::Rgba& glow ) const
+    {
+        // create pixmap
+        const int w( 9 );
+        const int h( 9 );
+        GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+        {
+            Cairo::Context context( pixbuf );
+            cairo_pattern_t* pattern( cairo_pattern_create_radial( 4.5, 4.5, 4.5 ) );
+
+            ColorUtils::Rgba tmp( ColorUtils::alphaColor( glow, 180.0/255 ) );
+            cairo_pattern_add_color_stop( pattern, 0.75, tmp );
+
+            tmp.setAlpha( 0 );
+            cairo_pattern_add_color_stop( pattern,  0.90, tmp );
+            cairo_pattern_add_color_stop( pattern,  0.4, tmp );
+
+            cairo_set_source( context, pattern );
+            cairo_ellipse( context, 0, 0, 9, 9 ) ;
+            context.updateGdkPixbuf();
+        }
+
+        TileSet out( pixbuf, 4, 4, 1, 1 );
+        g_object_unref( pixbuf );
+        return out;
+    }
+
     //____________________________________________________________________
     TileSet StyleHelper::dockFrame( const ColorUtils::Rgba &base, int w ) const
     {
