@@ -38,6 +38,8 @@
 #include "oxygenstylewrapper.h"
 #include "oxygenwidgetset.h"
 
+#include "oxygen_hack_menu.h"
+
 //______________________________________________________________________
 struct _OxygenStyle
 { GtkStyle parent; };
@@ -181,6 +183,9 @@ static void draw_box( GtkStyle* style,
     gint h )
 {
     g_return_if_fail( style && window );
+
+    if(GTK_IS_MENU_SHELL(widget))
+	    oxygen_hack_menu_shell_setup_signals(widget);
 
     #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
