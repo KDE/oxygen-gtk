@@ -231,7 +231,7 @@ namespace Oxygen
         cairo_translate( context, x, y );
 
         // paint translucent first
-        const bool hasAlpha( options&Alpha );
+        const bool hasAlpha( options&Alpha && settings().tooltipTransparent() );
         if( hasAlpha )
         {
             top.setAlpha( 0.86 );

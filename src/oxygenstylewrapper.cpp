@@ -97,7 +97,7 @@ static void draw_flat_box(
         if( GTK_IS_PROGRESS_BAR( widget ) )
         { return; }
 
-    } else if( d.isTooltip() ) {
+    } else if( d.isTooltip() && Oxygen::Style::instance().settings().tooltipDrawStyledFrames() ) {
 
         Oxygen::StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Oxygen::Alpha : Oxygen::None );
         Oxygen::Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
