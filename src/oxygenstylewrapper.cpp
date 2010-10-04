@@ -441,11 +441,15 @@ static void draw_shadow( GtkStyle* style,
         return;
 
     } else {
+		// we don't want the default square shadows in Oxygen
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
 
-        oxygen_style_parent_class->draw_shadow(
+/*        oxygen_style_parent_class->draw_shadow(
             style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
+*/
     }
 
 }
