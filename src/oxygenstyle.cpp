@@ -234,8 +234,8 @@ namespace Oxygen
         const bool hasAlpha( options&Alpha );
         if( hasAlpha )
         {
-            top.setAlpha( 220/255 );
-            bottom.setAlpha( 220/255 );
+            top.setAlpha( 0.86 );
+            bottom.setAlpha( 0.86 );
             cairo_rectangle( context, 0, 0, w, h );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
