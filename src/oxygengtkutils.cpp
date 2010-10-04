@@ -100,6 +100,11 @@ namespace Gtk
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
 
+        /*
+        this is ugly. One should try find a way to automatically
+        detect flat buttons:
+        These are buttons that are drawn 'PRELIGHT' but never have been drawn 'NORMAL'
+        */
         GObject* object( G_OBJECT( widget ) );
         if( object && gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
 
