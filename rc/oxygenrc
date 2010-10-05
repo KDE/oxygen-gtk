@@ -8,6 +8,7 @@ ToolTipTransparent=true
 ToolTipDrawStyledFrames=true
 ToolBarDrawItemSeparator=true
 ViewDrawTriangularExpander=true
+ViewTriangularExpanderSize=TS_SMALL
 ViewDrawFocusIndicator=true
 ViewDrawTreeBranchLines=true
 ScrollBarWidth=15
