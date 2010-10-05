@@ -21,7 +21,7 @@ set( OXYGEN_DEBUG 0 )
 # Find GTK
 pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
 
-if( not GTK_INCLUDE_DIR )
+if( NOT GTK_INCLUDE_DIR )
 	message( FATAL_ERROR "GTK was not found.  Ensure you have the GTK development libraries installed, and GTK's pkgconfig files are in your pkgconfig search path." )
 endif( NOT GTK_INCLUDE_DIR )
 
