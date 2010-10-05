@@ -45,7 +45,6 @@ namespace Oxygen
         WidgetSet* out = new WidgetSet();
         _containers.push_back( out );
         return out;
-
     }
 
     //____________________________________________________________________________________________

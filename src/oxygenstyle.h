@@ -21,19 +21,18 @@
 */
 
 #include "oxygencairocontext.h"
+#include "oxygencomboboxdata.h"
 #include "oxygengeometry.h"
 #include "oxygengtkgap.h"
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
 #include "oxygenstyleoptions.h"
+#include "oxygenwidgetset.h"
 
 #include <gdk/gdktypes.h>
 
 namespace Oxygen
 {
-
-    //! forward declaration
-    class WidgetSet;
 
     //! handle all plainting
     class Style
@@ -170,6 +169,10 @@ namespace Oxygen
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 
+        //! return map of registered comboboxes
+        WidgetMap<ComboBoxData>& comboBoxes( void ) const
+        { return *_comboBoxes; }
+
         protected:
 
         //! constructor
@@ -228,6 +231,9 @@ namespace Oxygen
 
         // helper
         StyleHelper _helper;
+
+        //! combobox data
+        WidgetMap<ComboBoxData>* _comboBoxes;
 
     };
 

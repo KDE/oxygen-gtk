@@ -25,6 +25,7 @@
 
 #include <cassert>
 #include <set>
+#include <map>
 #include <vector>
 #include <gtk/gtk.h>
 
@@ -64,7 +65,7 @@ namespace Oxygen
         void insert( GtkWidget* );
 
         //! true if widget is in list
-        bool contains( GtkWidget* widget )
+        bool contains( GtkWidget* widget ) const
         { return _widgets.find( widget ) != _widgets.end(); }
 
         //! erase
@@ -84,6 +85,47 @@ namespace Oxygen
 
     };
 
+
+    //! stores map of pointer to widget and user data
+    template< typename T>
+    class WidgetMap: public WidgetContainer
+    {
+
+        public:
+
+
+        //! insert new widget
+        inline void insert( GtkWidget* widget, const T& value = T());
+
+        //! true if widget is in list
+        bool contains( GtkWidget* widget ) const
+        { return _widgets.find( widget ) != _widgets.end(); }
+
+        //! return value
+        T& value( GtkWidget* widget )
+        {
+            typename std::map<GtkWidget*, T>::iterator iter( _widgets.find( widget ) );
+            assert( iter != _widgets.end() );
+            return iter->second;
+        }
+
+        //! erase
+        void erase( GtkWidget* widget )
+        { _widgets.erase( widget ); }
+
+        private:
+
+        //! constructor
+        WidgetMap( void )
+        {}
+
+        //! map
+        std::map<GtkWidget*, T> _widgets;
+
+        friend class WidgetSetFactory;
+
+
+    };
     //! stores all widget set
     class WidgetSetFactory
     {
@@ -101,6 +143,10 @@ namespace Oxygen
 
         //! create new widget set
         WidgetSet* createWidgetSet( void );
+
+        //! create new map
+        template<typename T>
+        WidgetMap<T>* createWidgetMap( void );
 
         //! register new widget
         void registerWidget( GtkWidget* );
@@ -122,6 +168,22 @@ namespace Oxygen
         std::set< GtkWidget* > _allWidgets;
 
     };
+
+    //___________________________________________________
+    template< typename T> void WidgetMap<T>::insert( GtkWidget* widget, const T& value )
+    {
+        _widgets.insert( std::make_pair( widget, value ) );
+        WidgetSetFactory::instance().registerWidget( widget );
+    }
+
+    //___________________________________________________
+    template<typename T>
+        WidgetMap<T>* WidgetSetFactory::createWidgetMap( void )
+    {
+        WidgetMap<T>* out = new WidgetMap<T>();
+        _containers.push_back( out );
+        return out;
+    }
 
 }
 

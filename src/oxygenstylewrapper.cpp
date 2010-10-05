@@ -200,7 +200,9 @@ static void draw_box( GtkStyle* style,
 
             Oxygen::Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
-        } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
+        } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+
 
             /*
             editable combobox button get a hole (with left corner hidden), and a background
@@ -216,7 +218,19 @@ static void draw_box( GtkStyle* style,
             // for now, disable hover, because it is not supported in the entry
             options &= ~Oxygen::Hover;
 
-            // also disable focus, because it is not synchronized (yet) with the text entry
+//             // check if parent is in style combobox map,
+//             if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
+//             { Oxygen::Style::instance().comboBoxes().insert( parent ); }
+//
+//             // update focus
+//             Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
+//             data.setButtonFocus( options & Oxygen::Focus );
+//
+//             // update option accordingly
+//             if( data.hasFocus() ) options |= Oxygen::Focus;
+//             else options &= ~Oxygen::Focus;
+
+            // disable focus (for now)
             options &= ~Oxygen::Focus;
 
             // render
@@ -376,10 +390,20 @@ static void draw_shadow( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
 
-        if( Gtk::gtk_parent_combobox_entry( widget ) )
+        if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
         {
 
-            // disable focus, because it is not synchronized (yet) with the text entry
+//             // check if parent is in style map
+//             if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
+//             { Oxygen::Style::instance().comboBoxes().insert( parent ); }
+//
+//             Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
+//             data.setEntryFocus( options & Oxygen::Focus );
+//
+//             if( data.hasFocus() ) options |= Oxygen::Focus;
+//             else options &= ~Oxygen::Focus;
+
+            // disable focus (for now)
             options &= ~Oxygen::Focus;
 
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
