@@ -257,12 +257,11 @@ namespace Oxygen
 
         // contrast pixel
         {
-            GdkRectangle rect = { 0.5, 0.5, w-1, h-1 };
             Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, h ) );
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, hasAlpha ? CornersAll:CornersNone );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w, h, 4, hasAlpha ? CornersAll:CornersNone );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
 
@@ -1011,8 +1010,8 @@ namespace Oxygen
         }
 
         // draw mark
-        x = double(child.x + child.width/2) - 3.5;
-        y = double(child.y + child.height/2) - 2.5;
+        x = int( double(child.x + child.width/2) - 3.5 );
+        y = int( double(child.y + child.height/2) - 2.5 );
 
         if( options&Sunken )
         {
