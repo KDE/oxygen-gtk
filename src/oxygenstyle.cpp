@@ -1540,6 +1540,7 @@ namespace Oxygen
 
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        //const ColorUtils::Rgba base( 1, 0, 0 );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
@@ -1660,6 +1661,13 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
             cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( dark ) );
 
+        }
+
+        if( isCurrentTab && settings().applicationName().isFirefox() )
+        {
+            cairo_set_source( context, base );
+            cairo_rectangle( context, rect.x, rect.y, rect.width, rect.height );
+            cairo_fill( context );
         }
 
         cairo_set_source( context, pattern );

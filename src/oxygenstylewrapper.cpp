@@ -886,14 +886,12 @@ static void draw_box_gap( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
-    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
-    #endif
 
     const Gtk::Detail d( detail );
     if( d.isNotebook() )
@@ -905,8 +903,20 @@ static void draw_box_gap( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
         options &= ~(Oxygen::Hover|Oxygen::Focus);
-        //Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, Gtk::Gap( gap_x, gap_w, gap_side ), options );
-        Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+
+        if( Oxygen::Style::instance().settings().applicationName().isFirefox() )
+        {
+
+            if( h>12 )
+            {
+                Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+            }
+
+        } else {
+
+            Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+
+        }
 
     } else {
 
