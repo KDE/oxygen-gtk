@@ -145,7 +145,7 @@ static void draw_flat_box(
         if( GTK_IS_SPIN_BUTTON( widget ) )
         {
 
-            Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options, Oxygen::TileSet::Ring & (~Oxygen::TileSet::Right) );
 
         } else {
 
@@ -335,7 +335,7 @@ static void draw_box( GtkStyle* style,
         }
 
         Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
-        Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options );
+        Oxygen::Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, Oxygen::TileSet::Ring & (~Oxygen::TileSet::Left) );
 
     } else if( d.isSpinButtonArrow() ) {
 
@@ -409,8 +409,11 @@ static void draw_shadow( GtkStyle* style,
             else options &= ~Oxygen::Focus;
 
             // render
-            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options );
+            if( !GTK_IS_SPIN_BUTTON( widget ) )
+            {
+                Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
+                Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options );
+            }
 
         } else {
 
@@ -886,12 +889,14 @@ static void draw_box_gap( GtkStyle* style,
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
 
+    #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
         G_OBJECT_TYPE_NAME( widget ),
         Oxygen::Maps::getState( state ),
         Oxygen::Maps::getShadow( shadow ),
         detail );
+    #endif
 
     const Gtk::Detail d( detail );
     if( d.isNotebook() )

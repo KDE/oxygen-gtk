@@ -28,6 +28,7 @@
 #include "oxygenstylehelper.h"
 #include "oxygenstyleoptions.h"
 #include "oxygentaboptions.h"
+#include "oxygentileset.h"
 #include "oxygenwidgetset.h"
 
 #include <gdk/gdktypes.h>
@@ -127,9 +128,10 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
-        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
-        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o ); }
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions, TileSet::Tiles = TileSet::Ring ) const;
+        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o, TileSet::Tiles tiles = TileSet::Ring ) const
+        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, tiles ); }
+
         //@}
 
         //!@name dock frame

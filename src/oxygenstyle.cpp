@@ -1166,7 +1166,8 @@ namespace Oxygen
     void Style::renderHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options,
+        TileSet::Tiles tiles ) const
     {
 
         // do nothing if not enough room
@@ -1175,7 +1176,7 @@ namespace Oxygen
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
         const bool fill( !( options&NoFill ) );
-        const Oxygen::TileSet::Tiles tiles( fill ? TileSet::Full : TileSet::Ring );
+        if( fill ) tiles |= TileSet::Center;
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
