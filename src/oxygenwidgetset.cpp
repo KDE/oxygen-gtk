@@ -40,19 +40,11 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    WidgetSet* WidgetSetFactory::createWidgetSet( void )
-    {
-        WidgetSet* out = new WidgetSet();
-        _containers.push_back( out );
-        return out;
-    }
-
-    //____________________________________________________________________________________________
     void WidgetSetFactory::registerWidget( GtkWidget* widget )
     {
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
-        _allWidgets.insert( widget );
-        g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        int signal_id = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        _allWidgets.insert( std::make_pair( widget, signal_id ) );
 
     }
 
@@ -60,7 +52,17 @@ namespace Oxygen
     void WidgetSetFactory::unregisterWidget( GtkWidget* widget )
     {
 
+        // find in map
+        SignalIdMap::iterator iter( _allWidgets.find( widget ) );
+        assert( iter != _allWidgets.end() );
+
+        // disconnect signal
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second );
+
+        // erase from map
         _allWidgets.erase( widget );
+
+        // erase from all maps
         for( ContainerList::iterator iter = _containers.begin(); iter != _containers.end(); iter++ )
         { (*iter)->erase( widget ); }
 

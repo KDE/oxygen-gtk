@@ -239,7 +239,8 @@ namespace Oxygen
         StyleHelper _helper;
 
         //! combobox data
-        WidgetMap<ComboBoxData>* _comboBoxes;
+        typedef WidgetMap<ComboBoxData> ComboBoxDataMap;
+        ComboBoxDataMap* _comboBoxes;
 
     };
 

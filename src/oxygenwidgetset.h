@@ -141,12 +141,16 @@ namespace Oxygen
             { delete *iter; }
         }
 
-        //! create new widget set
-        WidgetSet* createWidgetSet( void );
-
-        //! create new map
-        template<typename T>
-        WidgetMap<T>* createWidgetMap( void );
+        //! create new set of type T and insert in map
+        /*! T must derive from the WidgetContainer class, and have an empty constructor */
+        template< typename T >
+        T* createNew( void );
+//         //! create new widget set
+//         WidgetSet* createWidgetSet( void );
+//
+//         //! create new map
+//         template<typename T>
+//         WidgetMap<T>* createWidgetMap( void );
 
         //! register new widget
         void registerWidget( GtkWidget* );
@@ -164,8 +168,9 @@ namespace Oxygen
         typedef std::vector< WidgetContainer* > ContainerList;
         ContainerList _containers;
 
-        //! keep track of all registered widgets
-        std::set< GtkWidget* > _allWidgets;
+        //! keep track of all registered widgets, and associated destroy callback
+        typedef std::map< GtkWidget*, int > SignalIdMap;
+        SignalIdMap _allWidgets;
 
     };
 
@@ -176,11 +181,20 @@ namespace Oxygen
         WidgetSetFactory::instance().registerWidget( widget );
     }
 
+//     //___________________________________________________
+//     template<typename T>
+//         WidgetMap<T>* WidgetSetFactory::createWidgetMap( void )
+//     {
+//         WidgetMap<T>* out = new WidgetMap<T>();
+//         _containers.push_back( out );
+//         return out;
+//     }
+
     //___________________________________________________
     template<typename T>
-        WidgetMap<T>* WidgetSetFactory::createWidgetMap( void )
+        T* WidgetSetFactory::createNew( void )
     {
-        WidgetMap<T>* out = new WidgetMap<T>();
+        T* out = new T();
         _containers.push_back( out );
         return out;
     }
