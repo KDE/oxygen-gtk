@@ -1007,7 +1007,8 @@ static void draw_extension( GtkStyle* style,
     if( d.isTab() )
     {
         Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
-        Oxygen::Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options );
+        Oxygen::TabOptions tabOptions( Oxygen::tabOptions( widget, state, x, y ) );
+        Oxygen::Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options, tabOptions );
     }
 
 }

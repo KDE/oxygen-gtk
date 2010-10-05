@@ -18,6 +18,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenstyle.cpp
     oxygenstylehelper.cpp
     oxygenstylewrapper.cpp
+    oxygentaboptions.cpp
     oxygentheme.c
     oxygentileset.cpp
     oxygenwidgetset.cpp

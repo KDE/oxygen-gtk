@@ -27,6 +27,7 @@
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
 #include "oxygenstyleoptions.h"
+#include "oxygentaboptions.h"
 #include "oxygenwidgetset.h"
 
 #include <gdk/gdktypes.h>
@@ -165,7 +166,7 @@ namespace Oxygen
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
         //! tab
-        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions ) const;
+        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
 
         //@}
 

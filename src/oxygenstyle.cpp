@@ -1530,10 +1530,13 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
-        GtkPositionType side, StyleOptions options ) const
+        GtkPositionType side,
+        StyleOptions options,
+        TabOptions tabOptions
+        ) const
     {
 
-        const bool isCurrentTab( !(options & Active) );
+        const bool isCurrentTab( tabOptions & CurrentTab );
 
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
