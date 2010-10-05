@@ -184,9 +184,6 @@ static void draw_box( GtkStyle* style,
 {
     g_return_if_fail( style && window );
 
-    if(GTK_IS_MENU_SHELL(widget))
-	    oxygen_hack_menu_shell_setup_signals(widget);
-
     #if OXYGEN_DEBUG
     g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
         "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
@@ -195,6 +192,9 @@ static void draw_box( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
     #endif
+
+    if(GTK_IS_MENU_SHELL(widget))
+    { oxygen_hack_menu_shell_setup_signals(widget); }
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
     const Gtk::Detail d( detail );
@@ -446,15 +446,11 @@ static void draw_shadow( GtkStyle* style,
         return;
 
     } else {
-		// we don't want the default square shadows in Oxygen
-            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
 
-/*        oxygen_style_parent_class->draw_shadow(
-            style, window, state,
-            shadow, clipRect, widget, detail,
-            x, y, w, h );
-*/
+        // we don't want the default square shadows in Oxygen
+        Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+        Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Oxygen::NoFill );
+
     }
 
 }
@@ -676,7 +672,7 @@ static void draw_arrow( GtkStyle* style,
     {
 
         GtkWidget* parent(Gtk::gtk_parent_button( widget ));
-        if( parent && !GTK_IS_COMBO_BOX_ENTRY( parent ) )
+        if( !( parent && GTK_IS_COMBO_BOX_ENTRY( parent ) ) )
         { options &= ~( Oxygen::Focus|Oxygen::Hover ); }
 
     }
