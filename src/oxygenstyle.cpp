@@ -231,11 +231,15 @@ namespace Oxygen
         cairo_translate( context, x, y );
 
         // paint translucent first
-        const bool hasAlpha( options&Alpha && settings().tooltipTransparent() );
+        const bool hasAlpha( (options&Alpha) );
         if( hasAlpha )
         {
-            top.setAlpha( 0.86 );
-            bottom.setAlpha( 0.86 );
+            if( settings().tooltipTransparent() )
+            {
+                top.setAlpha( 0.86 );
+                bottom.setAlpha( 0.86 );
+            }
+
             cairo_rectangle( context, 0, 0, w, h );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
@@ -261,10 +265,10 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w, h, 4, hasAlpha ? CornersAll:CornersNone );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, hasAlpha ? CornersAll:CornersNone );
+            cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
-
         }
 
         return;
