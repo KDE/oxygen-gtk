@@ -905,7 +905,8 @@ static void draw_box_gap( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, GTK_STATE_NORMAL, shadow );
         options &= ~(Oxygen::Hover|Oxygen::Focus);
-        Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+        //Oxygen::Style::instance().renderSlab( window, clipRect, x, y, w, h, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+        Oxygen::Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, Gtk::Gap( gap_x, gap_w, gap_side ), options );
 
     } else {
 
@@ -1001,6 +1002,13 @@ static void draw_extension( GtkStyle* style,
         Oxygen::Maps::getShadow( shadow ),
         detail );
     #endif
+
+    Gtk::Detail d( detail );
+    if( d.isTab() )
+    {
+        Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state, shadow ) );
+        Oxygen::Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options );
+    }
 
 }
 

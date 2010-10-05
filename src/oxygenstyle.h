@@ -164,6 +164,9 @@ namespace Oxygen
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
+        //! tab
+        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions ) const;
+
         //@}
 
         //! sanitize size

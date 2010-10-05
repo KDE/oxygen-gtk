@@ -1525,6 +1525,178 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________________________________
+    void Style::renderTab(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        GtkPositionType side, StyleOptions options ) const
+    {
+
+        const bool isCurrentTab( !(options & Active) );
+
+        // get color
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+        // create context
+        Cairo::Context context( window, clipRect );
+
+        GdkRectangle rect;
+        Oxygen::TileSet::Tiles tiles;
+
+        int offset = 2;
+
+        // borders
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            {
+                //GdkRectangle local = {x, y-offset, w, h+10 + offset };
+                GdkRectangle local = {x-1, y-offset+1, w+2, h+10 + offset - 2 };
+                rect = local;
+                tiles = TileSet::Ring&(~TileSet::Bottom );
+                break;
+            }
+
+            case GTK_POS_TOP:
+            {
+                //GdkRectangle local = { x, y-10, w, h+10+offset };
+                GdkRectangle local = { x-1, y-10+1, w+2, h+10+offset - 2 };
+                rect = local;
+                tiles = TileSet::Ring&(~TileSet::Top );
+                break;
+            }
+
+            case GTK_POS_RIGHT:
+            {
+                //GdkRectangle local = { x-offset, y, w+10+offset, h };
+                GdkRectangle local = { x-offset+1, y-1, w+10+offset-2, h+2 };
+                rect = local;
+                tiles = TileSet::Ring&(~TileSet::Right );
+                break;
+            }
+
+
+            case GTK_POS_LEFT:
+            {
+                //GdkRectangle local = { x-10, y, w+10+offset, h };
+                GdkRectangle local = { x-10+1, y-1, w+10+offset-2, h+2 };
+                rect = local;
+                tiles = TileSet::Ring&(~TileSet::Left );
+                break;
+            }
+
+            default: return;
+        }
+
+        // render tab
+        if( (options&Hover) && !isCurrentTab )
+        {
+
+            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+            _helper.slabFocused( base, glow, 0 ).render( context, rect.x, rect.y, rect.width, rect.height, tiles );
+
+        } else {
+
+            _helper.slab( base, 0 ).render( context, rect.x, rect.y, rect.width, rect.height, tiles );
+
+        }
+
+        // adjust rect
+        rect.x += 4;
+        rect.y += 4;
+        rect.width -= 8;
+        rect.height -= 8;
+
+        // fill
+        Cairo::Pattern pattern;
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            rect.height -= 2;
+            pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
+            break;
+
+            case GTK_POS_TOP:
+            rect.y += 2;
+            rect.height -= 2;
+            pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
+            break;
+
+            case GTK_POS_RIGHT:
+            rect.width -= 2;
+            pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
+            break;
+
+            case GTK_POS_LEFT:
+            rect.x += 2;
+            rect.width -= 2;
+            pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
+            break;
+
+            default: return;
+
+        }
+
+        if( isCurrentTab )
+        {
+
+            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.5 ) );
+            cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::alphaColor( light, 0.5 ) );
+            cairo_pattern_add_color_stop( pattern, 0.25, ColorUtils::alphaColor( light, 0.3 ) );
+            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.2 ) );
+            cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( light, 0.1 ) );
+            cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
+
+        } else {
+
+            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.1 ) );
+            cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::alphaColor( dark, 0.5 ) );
+            cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
+            cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( dark ) );
+
+        }
+
+        cairo_set_source( context, pattern );
+
+        if( isCurrentTab )  cairo_rectangle( context, rect.x, rect.y, rect.width, rect.height );
+        else cairo_rounded_rectangle( context, rect.x, rect.y, rect.width, rect.height, 3 );
+
+        cairo_fill( context );
+
+        // connections
+        if( !isCurrentTab )
+        {
+            switch( side )
+            {
+                case GTK_POS_BOTTOM:
+                //_helper.slab(base, 0).render( context, x-4, y+h, w+8, 10, TileSet::Top );
+                _helper.slab(base, 0).render( context, x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                break;
+
+                case GTK_POS_TOP:
+                //_helper.slab(base, 0).render( context, x-4, y-10, w+8, 10, TileSet::Bottom );
+                _helper.slab(base, 0).render( context, x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
+                break;
+
+                case GTK_POS_RIGHT:
+                //_helper.slab(base, 0).render( context, x+w, y-4, 10, h+8, TileSet::Left );
+                _helper.slab(base, 0).render( context, x+w-1, y-4-1, 10, h+8+2, TileSet::Left );
+                break;
+
+                case GTK_POS_LEFT:
+                //_helper.slab(base, 0).render( context, x-10, y-4, 10, h+8, TileSet::Right );
+                _helper.slab(base, 0).render( context, x-10+1, y-4-1, 10, h+8+2, TileSet::Right );
+                break;
+
+                default: return;
+            }
+        }
+
+    }
+
     //__________________________________________________________________
     void Style::sanitizeSize( GdkWindow* window, gint& w, gint& h ) const
     {
@@ -1545,7 +1717,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, StyleOptions options, TileSet::Tiles tiles ) const
+    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, StyleOptions options, TileSet::Tiles tiles ) const
     {
 
         // check rect
@@ -1567,19 +1739,19 @@ namespace Oxygen
         {
 
             Cairo::Pattern pattern;
-            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( color ) );
-            if( shadow.value() > color.value() && (options & Sunken) )
+            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
+            if( shadow.value() > base.value() && (options & Sunken) )
             {
 
                 pattern.set( cairo_pattern_create_linear( 0, y, 0, y+2*h ) );
-                cairo_pattern_add_color_stop( pattern, 0, color );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::lightColor( color ) );
+                cairo_pattern_add_color_stop( pattern, 0, base );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::lightColor( base ) );
 
             } else {
 
                 pattern.set( cairo_pattern_create_linear( 0, y-h, 0, y+h ) );
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::lightColor( color ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, color );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::lightColor( base ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, base );
 
             }
 
@@ -1593,25 +1765,25 @@ namespace Oxygen
             // calculate glow color
             TileSet tile;
             ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = _helper.slabFocused( color, glow , 0);
-            else if( color.isValid() ) tile = _helper.slab(color, 0);
+            if( glow.isValid() ) tile = _helper.slabFocused( base, glow , 0);
+            else if( base.isValid() ) tile = _helper.slab( base, 0 );
             else return;
             tile.render( context, x, y, w, h );
 
-        } else if( color.isValid() ) {
+        } else if( base.isValid() ) {
 
-            _helper.slabSunken( color, 0 ).render( context, x, y, w, h );
+            _helper.slabSunken( base, 0 ).render( context, x, y, w, h );
 
         }
 
     }
 
     //__________________________________________________________________
-    void Style::renderScrollBarHole( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool vertical, TileSet::Tiles tiles ) const
+    void Style::renderScrollBarHole( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool vertical, TileSet::Tiles tiles ) const
     {
 
         // use tileset from helper
-        _helper.scrollHole( color, vertical ).render( context, x, y, w, h, tiles );
+        _helper.scrollHole( base, vertical ).render( context, x, y, w, h, tiles );
 
     }
 

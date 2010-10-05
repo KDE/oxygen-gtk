@@ -39,8 +39,9 @@ namespace Oxygen
         Vertical = 1<<6,
         Alpha = 1<<7,
         Contrast = 1<<8,
-        Selected = 1<<9,
-        Disabled = 1<<10
+        Active = 1<<9,
+        Selected = 1<<10,
+        Disabled = 1<<11
     };
 
     typedef unsigned long StyleOptions;
@@ -52,6 +53,7 @@ namespace Oxygen
         if( state == GTK_STATE_INSENSITIVE ) options |= Disabled;
         else if( state == GTK_STATE_PRELIGHT ) options |= Hover;
         else if( state == GTK_STATE_SELECTED ) options |= Selected;
+        else if( state == GTK_STATE_ACTIVE ) options |= Active;
 
         if( shadow == GTK_SHADOW_IN ) options |= Sunken;
         if( GTK_WIDGET_HAS_FOCUS(widget) ) options|=Oxygen::Focus;
