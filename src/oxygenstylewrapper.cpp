@@ -202,8 +202,6 @@ static void draw_box( GtkStyle* style,
 
         } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
-
-
             /*
             editable combobox button get a hole (with left corner hidden), and a background
             that match the corresponding text entry background.
@@ -218,24 +216,26 @@ static void draw_box( GtkStyle* style,
             // for now, disable hover, because it is not supported in the entry
             options &= ~Oxygen::Hover;
 
-//             // check if parent is in style combobox map,
-//             if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
-//             { Oxygen::Style::instance().comboBoxes().insert( parent ); }
-//
-//             // update focus
-//             Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
-//             data.setButtonFocus( options & Oxygen::Focus );
-//
-//             // update option accordingly
-//             if( data.hasFocus() ) options |= Oxygen::Focus;
-//             else options &= ~Oxygen::Focus;
+            // check if parent is in style combobox map,
+            if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
+            { Oxygen::Style::instance().comboBoxes().insert( parent ); }
 
-            // disable focus (for now)
-            options &= ~Oxygen::Focus;
+            // update focus
+            Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
+            data.setButton( widget );
+
+            // schedule redraw of entry if button focus state has changed
+            if( data.setButtonFocus( options & Oxygen::Focus ) && data.entry() )
+            { gtk_widget_queue_draw( data.entry() ); }
+
+            // update option accordingly
+            if( data.hasFocus() ) options |= Oxygen::Focus;
+            else options &= ~Oxygen::Focus;
 
             // render
             Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
             Oxygen::Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options );
+
             return;
 
         } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
@@ -393,19 +393,22 @@ static void draw_shadow( GtkStyle* style,
         if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
         {
 
-//             // check if parent is in style map
-//             if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
-//             { Oxygen::Style::instance().comboBoxes().insert( parent ); }
-//
-//             Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
-//             data.setEntryFocus( options & Oxygen::Focus );
-//
-//             if( data.hasFocus() ) options |= Oxygen::Focus;
-//             else options &= ~Oxygen::Focus;
+            // check if parent is in style map
+            if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
+            { Oxygen::Style::instance().comboBoxes().insert( parent ); }
 
-            // disable focus (for now)
-            options &= ~Oxygen::Focus;
+            Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
+            data.setEntry( widget );
 
+            // schedule redraw of button if entry focus state has changed
+            if( data.setEntryFocus( options & Oxygen::Focus ) && data.button() )
+            { gtk_widget_queue_draw( data.button() ); }
+
+            // update option accordingly
+            if( data.hasFocus() ) options |= Oxygen::Focus;
+            else options &= ~Oxygen::Focus;
+
+            // render
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
             Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options );
 

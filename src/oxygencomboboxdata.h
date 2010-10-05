@@ -23,6 +23,8 @@
 * MA 02110-1301, USA.
 */
 
+#include <gtk/gtkwidget.h>
+
 namespace Oxygen
 {
     class ComboBoxData
@@ -31,15 +33,42 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxData( bool buttonFocus = false, bool entryFocus = false ):
-            _buttonFocus( buttonFocus ),
-            _entryFocus( entryFocus )
+        ComboBoxData( GtkWidget* button = 0L, GtkWidget* entry = 0L ):
+            _button( button ),
+            _entry( entry ),
+            _buttonFocus( false ),
+            _entryFocus( false )
         {}
+
+        //!@name accessors
+        //@{
+
+        GtkWidget* button( void ) const { return _button; }
+        GtkWidget* entry( void ) const { return _entry; }
+        bool buttonFocus( void ) const { return _buttonFocus; }
+        bool entryFocus( void ) const { return _entryFocus; }
+
+        //@}
 
         //!@name modifiers
         //@{
-        void setButtonFocus( bool value ) { _buttonFocus = value; }
-        void setEntryFocus( bool value ) { _entryFocus = value; }
+        void setButton( GtkWidget* value ) { _button = value; }
+        void setEntry( GtkWidget* value ) { _entry = value; }
+
+        bool setButtonFocus( bool value )
+        {
+            if( _buttonFocus == value ) return false;
+            _buttonFocus = value;
+            return true;
+        }
+
+        bool setEntryFocus( bool value )
+        {
+            if( _entryFocus == value ) return false;
+            _entryFocus = value;
+            return true;
+        }
+
         //@}
 
         //! true if either button or entry has focus
@@ -48,6 +77,8 @@ namespace Oxygen
 
         private:
 
+        GtkWidget* _button;
+        GtkWidget* _entry;
         bool _buttonFocus;
         bool _entryFocus;
 
