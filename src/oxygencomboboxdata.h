@@ -33,39 +33,35 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxData( GtkWidget* button = 0L, GtkWidget* entry = 0L ):
-            _button( button ),
-            _entry( entry ),
-            _buttonFocus( false ),
-            _entryFocus( false )
+        ComboBoxData()
         {}
 
         //!@name accessors
         //@{
 
-        GtkWidget* button( void ) const { return _button; }
-        GtkWidget* entry( void ) const { return _entry; }
-        bool buttonFocus( void ) const { return _buttonFocus; }
-        bool entryFocus( void ) const { return _entryFocus; }
+        GtkWidget* button( void ) const { return _button._widget; }
+        GtkWidget* entry( void ) const { return _entry._widget; }
+        bool buttonFocus( void ) const { return _button._focus; }
+        bool entryFocus( void ) const { return _entry._focus; }
 
         //@}
 
         //!@name modifiers
         //@{
-        void setButton( GtkWidget* value ) { _button = value; }
-        void setEntry( GtkWidget* value ) { _entry = value; }
+        void setButton( GtkWidget* value ) { _button._widget = value; }
+        void setEntry( GtkWidget* value ) { _entry._widget = value; }
 
         bool setButtonFocus( bool value )
         {
-            if( _buttonFocus == value ) return false;
-            _buttonFocus = value;
+            if( _button._focus == value ) return false;
+            _button._focus = value;
             return true;
         }
 
         bool setEntryFocus( bool value )
         {
-            if( _entryFocus == value ) return false;
-            _entryFocus = value;
+            if( _entry._focus == value ) return false;
+            _entry._focus = value;
             return true;
         }
 
@@ -73,14 +69,29 @@ namespace Oxygen
 
         //! true if either button or entry has focus
         bool hasFocus( void ) const
-        { return _buttonFocus || _entryFocus; }
+        { return _button._focus || _entry._focus; }
 
         private:
 
-        GtkWidget* _button;
-        GtkWidget* _entry;
-        bool _buttonFocus;
-        bool _entryFocus;
+        class Data
+        {
+
+            public:
+
+            //! constructor
+            Data( void ):
+                _widget( 0L ),
+                _focus( false )
+            {}
+
+
+            GtkWidget* _widget;
+            bool _focus;
+
+        };
+
+        Data _button;
+        Data _entry;
 
 
     };
