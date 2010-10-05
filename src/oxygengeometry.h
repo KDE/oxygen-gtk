@@ -72,6 +72,96 @@ namespace Oxygen
 
     };
 
+    //! rectangle
+    class Rectangle
+    {
+
+
+        public:
+
+        //! empty constructor
+        Rectangle( void ):
+            _x(0),
+            _y(0),
+            _width(-1),
+            _height(-1)
+        {}
+
+        //! constructor
+        Rectangle( double x, double y, double width, double height ):
+            _x( x ),
+            _y( y ),
+            _width( width ),
+            _height( height )
+        {}
+
+        //! validity
+        bool isValid( void )
+        { return _width >= 0 && _height >= 0; }
+
+        //! empty
+        bool isEmpty( void )
+        { return _width == 0 || _height == 0; }
+
+        //!@name accessors
+        //@{
+        void setX( double value ) { _x = value; }
+        void setY( double value ) { _y = value; }
+        void setWidth( double value ) { _width = value; }
+        void setHeight( double value ) { _height = value; }
+        //@}
+
+        //!@name modifiers
+        //@{
+        double x( void ) const { return _x; }
+        double y( void ) const { return _y; }
+        double width( void ) const { return _width; }
+        double height( void ) const { return _height; }
+        //@}
+
+        //!@name corners
+        //@{
+        Point topLeft( void ) const
+        { return Point( _x, _y ); }
+
+        Point bottomLeft( void ) const
+        { return Point( _x, _y + _height ); }
+
+        Point topRight( void ) const
+        { return Point( _x + _width, _y ); }
+
+        Point bottomRight( void ) const
+        { return Point( _x + _width, _y + _height ); }
+        //@}
+
+        //! true if rectangle intersects argument
+        bool intersects( const Rectangle& other ) const
+        {
+            return
+                ( !( ( _x+_width < other._x ) || (_x > other._x + other._width ) ) ) &&
+                ( !( ( _y+_height < other._y ) || (_y > other._y + other._height ) ) );
+        }
+
+        //! return intersection between two rectangles
+        Rectangle intersected( const Rectangle& other ) const
+        {
+
+            double xMin = std::max( _x, other._x );
+            double xMax = std::min( _x+_width, other._x + other._width );
+            double yMin = std::max( _y, other._y );
+            double yMax = std::min( _y+_height, other._y + other._height );
+            return Rectangle( xMin, yMin, xMax-xMin, yMax-yMin );
+        }
+
+        private:
+
+        double _x;
+        double _y;
+        double _width;
+        double _height;
+
+    };
+
 }
 
 #endif
