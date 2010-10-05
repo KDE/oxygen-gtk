@@ -234,7 +234,7 @@ static void draw_box( GtkStyle* style,
 
             // render
             Oxygen::Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
-            Oxygen::Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, Oxygen::TileSet::Ring&(~Oxygen::TileSet::Left) );
 
             return;
 
@@ -409,11 +409,8 @@ static void draw_shadow( GtkStyle* style,
             else options &= ~Oxygen::Focus;
 
             // render
-            if( !GTK_IS_SPIN_BUTTON( widget ) )
-            {
-                Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
-                Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options );
-            }
+            Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
+            Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, Oxygen::TileSet::Ring&(~Oxygen::TileSet::Right) );
 
         } else {
 
