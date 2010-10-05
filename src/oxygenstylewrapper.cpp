@@ -667,12 +667,17 @@ static void draw_arrow( GtkStyle* style,
     Oxygen::StyleOptions options( Oxygen::Contrast );
     options |= Oxygen::styleOptions( widget, state );
 
-    // disable highlight in menus and buttons, for consistancy with oxygen qt style
     if( d.isMenuItem() && !Gtk::gtk_parent_treeview( widget ) )
     {
 
+        // disable highlight in menus, for consistancy with oxygen qt style
+        options &= ~( Oxygen::Focus|Oxygen::Hover );
+
+    } else {
+
+        // disable highlight in buttons except for editable comboboxes
         GtkWidget* parent(Gtk::gtk_parent_button( widget ));
-        if( !( parent && GTK_IS_COMBO_BOX_ENTRY( parent ) ) )
+        if( parent && !GTK_IS_COMBO_BOX_ENTRY( parent ) )
         { options &= ~( Oxygen::Focus|Oxygen::Hover ); }
 
     }
