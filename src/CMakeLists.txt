@@ -22,6 +22,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentheme.c
     oxygentileset.cpp
     oxygenwidgetset.cpp
+    oxygen_hack_menu.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
