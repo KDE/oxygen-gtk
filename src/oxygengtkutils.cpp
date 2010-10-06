@@ -111,19 +111,14 @@ namespace Gtk
     bool gtk_button_is_flat( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
+        if( GTK_IS_COMBO_BOX( widget ) ) return false;
 
         GObject* object( G_OBJECT( widget ) );
         if( gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
 
         GtkWidget *parent( widget );
         while( parent && (parent = gtk_widget_get_parent( parent ) ) )
-        {
-            if(
-                GTK_IS_TOOLBAR( parent ) ||
-                gtk_object_is_a( G_OBJECT( parent ), "GimpToolbox" ) )
-            { return true; }
-
-        }
+        { if( GTK_IS_TOOLBAR( parent ) ) return true; }
 
         return false;
     }
