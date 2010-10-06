@@ -16,7 +16,7 @@ include( CPack )
 find_package( X11 REQUIRED )
 
 # Debugging information
-set( OXYGEN_DEBUG 1 )
+set( OXYGEN_DEBUG 0 )
 
 # Find GTK
 pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
