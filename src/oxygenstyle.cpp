@@ -1569,48 +1569,79 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
 
-        GdkRectangle rect;
-        Oxygen::TileSet::Tiles tiles;
-
+        // borders and connections to tabs
         int offset = 2;
-
-        // borders
+        SlabRect tabSlab;
+        SlabRect::List slabs;
         switch( side )
         {
             case GTK_POS_BOTTOM:
             {
-                GdkRectangle local = {x, y-offset, w, h+10 + offset };
-                if( isFirstTab ) { local.x-=1; local.width+=1; }
-                rect = local;
-                tiles = TileSet::Ring&(~TileSet::Bottom );
+                // main slab
+                tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
+                if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
+
+                // connections to frame
+                if( isCurrentTab )
+                {
+
+                    if( isFirstTab ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
+                    else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
+                    slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
+
+                } else if( isFirstTab ) {
+
+                    slabs.push_back( SlabRect( x-1, y+h-1, w+4+2, 12, TileSet::Top|TileSet::Left ) );
+                    slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+
+                } else {
+
+                    slabs.push_back( SlabRect( x-4-1, y+h-1, w+8+2, 10, TileSet::Top ) );
+
+                }
+
                 break;
             }
 
             case GTK_POS_TOP:
             {
-                GdkRectangle local = { x, y-10, w, h+10+offset };
-                if( isFirstTab ) { local.x-=1; local.width+=1; }
-                rect = local;
-                tiles = TileSet::Ring&(~TileSet::Top );
+                // main slab
+                tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
+                if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
+
+                // connections to frame
+                if( isCurrentTab )
+                {
+
+                    if( isFirstTab ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
+                    else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
+                    slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
+
+                } else if( isFirstTab ) {
+
+                    slabs.push_back( SlabRect( x-1, y-10+1, w+4+2, 10, TileSet::Bottom|TileSet::Left ) );
+
+                } else {
+
+                    slabs.push_back( SlabRect( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom ) );
+
+                }
+
                 break;
             }
 
             case GTK_POS_RIGHT:
             {
-                GdkRectangle local = { x-offset, y, w+10+offset, h };
-                if( isFirstTab ) { local.y-=1; local.height+=1; }
-                rect = local;
-                tiles = TileSet::Ring&(~TileSet::Right );
+                tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
+                if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
                 break;
             }
 
 
             case GTK_POS_LEFT:
             {
-                GdkRectangle local = { x-10, y, w+10+offset, h };
-                if( isFirstTab ) { local.y-=1; local.height+=1; }
-                rect = local;
-                tiles = TileSet::Ring&(~TileSet::Left );
+                tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
+                if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
                 break;
             }
 
@@ -1622,43 +1653,61 @@ namespace Oxygen
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            _helper.slabFocused( base, glow, 0 ).render( context, rect.x, rect.y, rect.width, rect.height, tiles );
+            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         } else {
 
-            _helper.slab( base, 0 ).render( context, rect.x, rect.y, rect.width, rect.height, tiles );
+            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         }
 
         // adjust rect
-        rect.x += 4;
-        rect.y += 4;
-        rect.width -= 8;
-        rect.height -= 8;
+        tabSlab._x += 4;
+        tabSlab._y += 4;
+        tabSlab._w -= 8;
+        tabSlab._h -= 8;
 
         // fill
         Cairo::Pattern pattern;
         switch( side )
         {
             case GTK_POS_BOTTOM:
-            rect.height -= 2;
+            if( isCurrentTab ) tabSlab._h -= 2;
+            else tabSlab._h -= 4;
             pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
             break;
 
             case GTK_POS_TOP:
-            rect.y += 2;
-            rect.height -= 2;
+            if( isCurrentTab )
+            {
+
+                tabSlab._y += 2;
+                tabSlab._h -= 2;
+
+            } else {
+
+                tabSlab._y += 4;
+                tabSlab._h -= 4;
+
+            }
             pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
             break;
 
             case GTK_POS_RIGHT:
-            rect.width -= 2;
+            if( isCurrentTab ) tabSlab._w -= 2;
+            else tabSlab._w -= 4;
             pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
             break;
 
             case GTK_POS_LEFT:
-            rect.x += 2;
-            rect.width -= 2;
+            if( isCurrentTab )
+            {
+                tabSlab._x += 2;
+                tabSlab._w -= 2;
+            } else {
+                tabSlab._x += 4;
+                tabSlab._w -= 4;
+            }
             pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
             break;
 
@@ -1688,41 +1737,22 @@ namespace Oxygen
         if( isCurrentTab && settings().applicationName().isFirefox() )
         {
             cairo_set_source( context, base );
-            cairo_rectangle( context, rect.x, rect.y, rect.width, rect.height );
+            cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
             cairo_fill( context );
         }
 
         cairo_set_source( context, pattern );
 
-        if( isCurrentTab )  cairo_rectangle( context, rect.x, rect.y, rect.width, rect.height );
-        else cairo_rounded_rectangle( context, rect.x, rect.y, rect.width, rect.height, 3 );
+        if( isCurrentTab ) cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
+        else cairo_rounded_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, 3 );
 
         cairo_fill( context );
 
         // connections
-        SlabRect::List slabs;
         if( !isCurrentTab )
         {
             switch( side )
             {
-                case GTK_POS_BOTTOM:
-                if( isFirstTab )
-                {
-
-                    slabs.push_back( SlabRect( x-1, y+h-1, w+4+2, 12, TileSet::Top|TileSet::Left ) );
-                    slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
-
-                } else {
-
-                    slabs.push_back( SlabRect( x-4-1, y+h-1, w+8+2, 10, TileSet::Top ) );
-
-                }
-
-                break;
-
-                case GTK_POS_TOP:
-                slabs.push_back( SlabRect( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom ) );
-                break;
 
                 case GTK_POS_RIGHT:
                 slabs.push_back( SlabRect( x+w-1, y-4-1, 10, h+8+2, TileSet::Left ) );
@@ -1740,9 +1770,6 @@ namespace Oxygen
             switch( side )
             {
                 case GTK_POS_BOTTOM:
-                if( isFirstTab ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
-                else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
-                slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
                 break;
 
                 default: break;
