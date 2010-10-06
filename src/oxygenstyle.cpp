@@ -1570,6 +1570,8 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
 
         // borders and connections to tabs
+        // this is quite painfull and slipery code.
+        // the same is true with oxygen-qt
         int offset = 2;
         SlabRect tabSlab;
         SlabRect::List slabs;
@@ -1605,6 +1607,7 @@ namespace Oxygen
 
             case GTK_POS_TOP:
             {
+
                 // main slab
                 tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
                 if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
@@ -1620,6 +1623,7 @@ namespace Oxygen
                 } else if( isFirstTab ) {
 
                     slabs.push_back( SlabRect( x-1, y-10+1, w+4+2, 10, TileSet::Bottom|TileSet::Left ) );
+                    // slabs.push_back( SlabRect( x-1, y-10+1 + offset-5, 8, 16, TileSet::Left ) );
 
                 } else {
 
@@ -1632,17 +1636,61 @@ namespace Oxygen
 
             case GTK_POS_RIGHT:
             {
+
+                // main slab
                 tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
+
+                // connections to frame
+                if( isCurrentTab )
+                {
+
+                    if( isFirstTab ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
+                    slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
+
+                } else if( isFirstTab ) {
+
+                    slabs.push_back( SlabRect( x+w-1, y-1, 12, h+4+3, TileSet::Top|TileSet::Left ) );
+                    slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
+
+                } else {
+
+                    slabs.push_back( SlabRect( x+w-1, y-4-1, 10, h+8+3, TileSet::Left ) );
+
+                }
                 break;
             }
 
 
             case GTK_POS_LEFT:
             {
+
+                // main slab
                 tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
+
+                // connections to frame
+                if( isCurrentTab )
+                {
+
+                    if( isFirstTab ) slabs.push_back( SlabRect( x-7-7, y-1, 18, 8, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
+                    slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
+
+                } else if( isFirstTab ) {
+
+                    slabs.push_back( SlabRect( x-10+1, y-1, 10, h+4+3, TileSet::Top|TileSet::Right ) );
+                    slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
+
+                } else {
+
+                    slabs.push_back( SlabRect( x-10+1, y-4-1, 10, h+8+3, TileSet::Right ) );
+
+                }
+
                 break;
+
             }
 
             default: return;
@@ -1734,6 +1782,7 @@ namespace Oxygen
 
         }
 
+        // in firefox a solid background must be filled
         if( isCurrentTab && settings().applicationName().isFirefox() )
         {
             cairo_set_source( context, base );
@@ -1741,57 +1790,15 @@ namespace Oxygen
             cairo_fill( context );
         }
 
+        // draw pattern
         cairo_set_source( context, pattern );
-
         if( isCurrentTab ) cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
         else cairo_rounded_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, 3 );
-
         cairo_fill( context );
 
-        // connections
-        if( !isCurrentTab )
-        {
-            switch( side )
-            {
-
-                case GTK_POS_RIGHT:
-                slabs.push_back( SlabRect( x+w-1, y-4-1, 10, h+8+2, TileSet::Left ) );
-                break;
-
-                case GTK_POS_LEFT:
-                slabs.push_back( SlabRect( x-10+1, y-4-1, 10, h+8+2, TileSet::Right ) );
-                break;
-
-                default: break;
-            }
-
-        } else {
-
-            switch( side )
-            {
-                case GTK_POS_BOTTOM:
-                break;
-
-                default: break;
-            }
-
-        }
-
-        // render all stored slabs
+        // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
-        {
-            if( false )
-            {
-
-                // for debugging, draw a translucent rect behind the tab
-                cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.2 ) );
-                cairo_rectangle( context, iter->_x, iter->_y, iter->_w, iter->_h );
-                cairo_fill( context );
-
-            }
-
-            if( true ) _helper.slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
-        }
+        { _helper.slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
     }
 
