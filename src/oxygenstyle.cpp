@@ -1232,7 +1232,7 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         GtkWidget* widget,
-        gint x, gint y, gint w, gint h ) const
+        gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
         ColorUtils::Rgba base;
@@ -1242,25 +1242,34 @@ namespace Oxygen
         if( isInMenu )
         {
 
-            if( wh > 0 )
-            {
-
-                base = ColorUtils::midColor( ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
-
-            } else {
-
-                base = ColorUtils::alphaColor( ColorUtils::darkColor( settings().palette().color( Palette::Window ) ), 0.3 );
-            }
+            if( wh > 0 ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            else base = ColorUtils::alphaColor( ColorUtils::darkColor( settings().palette().color( Palette::Window ) ), 0.3 );
 
         } else if( wh > 0 ) {
 
-            base = ColorUtils::midColor( ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ) );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
 
-            base = ColorUtils::midColor( ColorUtils::backgroundTopColor( settings().palette().color( Palette::Window ) ) );
+            base = ColorUtils::backgroundTopColor( settings().palette().color( Palette::Window ) );
 
         }
+
+        // more color customization, based on menuHighlight mode
+        ColorUtils::Rgba color( base );
+        if( settings().menuHighlightMode() == QtSettings::MM_STRONG )
+        {
+
+            if( (options & Sunken) || isInMenu ) color = settings().palette().color( Palette::Focus );
+            else color = ColorUtils::tint( color, settings().palette().color( Palette::Hover ) );
+
+        } else if( settings().menuHighlightMode() == QtSettings::MM_SUBTLE ) {
+
+            if( (options & Sunken) || isInMenu ) color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Focus ), 0.6 ) );
+            else color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Hover ), 0.6 ) );
+
+        } else if( !( isInMenu && wh<= 0 ) ) color = ColorUtils::midColor( color );
+
 
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )
@@ -1268,10 +1277,10 @@ namespace Oxygen
 
             // draw item rect in a pixbuf
             GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( color ).toInt() );
             {
                 Cairo::Context context( pixbuf );
-                _helper.holeFlat( base, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
+                _helper.holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
                 context.updateGdkPixbuf();
             }
 
@@ -1288,8 +1297,9 @@ namespace Oxygen
             g_object_unref( pixbuf );
 
         } else {
+
             Cairo::Context context( window, clipRect );
-            _helper.holeFlat( base, 0 ).render( context, x, y, w, h, TileSet::Full  );
+            _helper.holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
         }
     }
 

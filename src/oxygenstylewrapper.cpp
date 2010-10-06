@@ -277,7 +277,8 @@ static void draw_box( GtkStyle* style,
 
     } else if( d.isMenuItem() ) {
 
-        Oxygen::Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h );
+        Oxygen::StyleOptions options = Oxygen::styleOptions( widget, state, shadow );
+        Oxygen::Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
 
     } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
