@@ -109,6 +109,18 @@ namespace Oxygen
         bool tooltipDrawStyledFrames( void ) const
         { return _tooltipDrawStyledFrames; }
 
+        //! arrow size
+        enum ArrowSize
+        {
+            ArrowNormal,
+            ArrowSmall,
+            ArrowTiny
+        };
+
+        //! checkbox style
+        ArrowSize viewTriangularExpanderSize( void ) const
+        { return _viewTriangularExpanderSize; }
+
         //@}
 
         protected:
@@ -214,6 +226,9 @@ namespace Oxygen
 
         //! framed tooltips
         bool _tooltipDrawStyledFrames;
+
+        //! triangular expander size
+        ArrowSize _viewTriangularExpanderSize;
 
         //@}
 

@@ -60,7 +60,8 @@ namespace Oxygen
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
         _tooltipTransparent( true ),
-        _tooltipDrawStyledFrames( true )
+        _tooltipDrawStyledFrames( true ),
+        _viewTriangularExpanderSize( ArrowSmall )
     {}
 
     //_________________________________________________________
@@ -412,6 +413,12 @@ namespace Oxygen
         // tooltips
         _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
         _tooltipDrawStyledFrames = _oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
+
+        // triangular expander size
+        std::string expanderSize( _oxygen.getOption( "[Style]", "ViewTriangularExpanderSize" ).toVariant<std::string>("TE_SMALL") );
+        if( expanderSize == "TE_NORMAL" ) _viewTriangularExpanderSize = ArrowNormal;
+        else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;
+        else _viewTriangularExpanderSize = ArrowSmall;
 
         // copy relevant options to to gtk
         // scrollbar width

@@ -146,16 +146,8 @@ namespace Oxygen
         //! selection
         void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions ) const;
 
-        //! arrow size
-        enum ArrowSize
-        {
-            ArrowNormal,
-            ArrowSmall,
-            ArrowTiny
-        };
-
         //! arrow
-        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, ArrowSize = ArrowNormal, StyleOptions = Contrast ) const;
+        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize = QtSettings::ArrowNormal, StyleOptions = Contrast ) const;
 
         //! slider groove
         void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
@@ -193,7 +185,7 @@ namespace Oxygen
         void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full ) const;
 
         //! returns point position for generic arrows
-        Polygon genericArrow( GtkArrowType, ArrowSize = ArrowNormal ) const;
+        Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
 
         //! vertical window background gradient
         cairo_pattern_t* verticalGradient( const ColorUtils::Rgba&, int, int ) const;

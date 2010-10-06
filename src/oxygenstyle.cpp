@@ -1322,7 +1322,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         GtkArrowType orientation,
         gint x, gint y, gint w, gint h,
-        ArrowSize arrowSize, StyleOptions options ) const
+        QtSettings::ArrowSize arrowSize, StyleOptions options ) const
     {
 
         // get polygon
@@ -1353,7 +1353,7 @@ namespace Oxygen
 
             case GTK_ARROW_LEFT:
             case GTK_ARROW_RIGHT:
-            if( arrowSize == ArrowSmall )
+            if( arrowSize == QtSettings::ArrowSmall )
             { cairo_translate( context, 0.5, 0 ); }
             break;
 
@@ -1798,7 +1798,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    Polygon Style::genericArrow( GtkArrowType orientation, ArrowSize size ) const
+    Polygon Style::genericArrow( GtkArrowType orientation, QtSettings::ArrowSize size ) const
     {
 
         Polygon a;
@@ -1807,32 +1807,32 @@ namespace Oxygen
 
             case GTK_ARROW_UP:
             {
-                if( size == ArrowTiny ) a << Point( -1.75, 1.125 ) << Point( 0.5, -1.125 ) << Point( 2.75, 1.125 );
-                else if( size == ArrowSmall ) a << Point( -2,1.5 ) << Point( 0.5, -1.5 ) << Point( 3,1.5 );
+                if( size == QtSettings::ArrowTiny ) a << Point( -1.75, 1.125 ) << Point( 0.5, -1.125 ) << Point( 2.75, 1.125 );
+                else if( size == QtSettings::ArrowSmall ) a << Point( -2,1.5 ) << Point( 0.5, -1.5 ) << Point( 3,1.5 );
                 else a << Point( -3,2.5 ) << Point( 0.5, -1.5 ) << Point( 4,2.5 );
                 break;
             }
 
             case GTK_ARROW_DOWN:
             {
-                if( size == ArrowTiny ) a << Point( -1.75, -1.125 ) << Point( 0.5, 1.125 ) << Point( 2.75, -1.125 );
-                else if( size == ArrowSmall ) a << Point( -2,-1.5 ) << Point( 0.5, 1.5 ) << Point( 3,-1.5 );
+                if( size == QtSettings::ArrowTiny ) a << Point( -1.75, -1.125 ) << Point( 0.5, 1.125 ) << Point( 2.75, -1.125 );
+                else if( size == QtSettings::ArrowSmall ) a << Point( -2,-1.5 ) << Point( 0.5, 1.5 ) << Point( 3,-1.5 );
                 else a << Point( -3,-1.5 ) << Point( 0.5, 2.5 ) << Point( 4,-1.5 );
                 break;
             }
 
             case GTK_ARROW_LEFT:
             {
-                if( size == ArrowTiny ) a << Point( 1.125, -1.75 ) << Point( -1.125, 0.5 ) << Point( 1.125, 2.75 );
-                else if( size == ArrowSmall ) a << Point( 1.5,-2 ) << Point( -1.5, 0.5 ) << Point( 1.5,3 );
+                if( size == QtSettings::ArrowTiny ) a << Point( 1.125, -1.75 ) << Point( -1.125, 0.5 ) << Point( 1.125, 2.75 );
+                else if( size == QtSettings::ArrowSmall ) a << Point( 1.5,-2 ) << Point( -1.5, 0.5 ) << Point( 1.5,3 );
                 else a << Point( 2.5,-3 ) << Point( -1.5, 0.5 ) << Point( 2.5,4 );
                 break;
             }
 
             case GTK_ARROW_RIGHT:
             {
-                if( size == ArrowTiny ) a << Point( -1.125, -1.75 ) << Point( 1.125, 0.5 ) << Point( -1.125, 2.75 );
-                else if( size == ArrowSmall ) a << Point( -1.5,-2 ) << Point( 1.5, 0.5 ) << Point( -1.5,3 );
+                if( size == QtSettings::ArrowTiny ) a << Point( -1.125, -1.75 ) << Point( 1.125, 0.5 ) << Point( -1.125, 2.75 );
+                else if( size == QtSettings::ArrowSmall ) a << Point( -1.5,-2 ) << Point( 1.5, 0.5 ) << Point( -1.5,3 );
                 else a << Point( -1.5,-3 ) << Point( 2.5, 0.5 ) << Point( -1.5,4 );
                 break;
             }

@@ -649,9 +649,9 @@ static void draw_arrow( GtkStyle* style,
 
     const Gtk::Detail d( detail );
 
-    Oxygen::Style::ArrowSize arrowSize( Oxygen::Style::ArrowNormal );
+    Oxygen::QtSettings::ArrowSize arrowSize( Oxygen::QtSettings::ArrowNormal );
     if( d.isMenuItem() && Oxygen::Style::instance().settings().applicationName().isFirefox() )
-    { arrowSize = Oxygen::Style::ArrowTiny; }
+    { arrowSize = Oxygen::QtSettings::ArrowTiny; }
 
     Oxygen::StyleOptions options( Oxygen::Contrast );
     options |= Oxygen::styleOptions( widget, state );
@@ -720,7 +720,10 @@ static void draw_expander(
     const Gtk::Detail d( detail );
     if( !d.isTreeView() ) options |= Oxygen::Contrast;
 
-    const Oxygen::Style::ArrowSize arrowSize( d.isTreeView() ? Oxygen::Style::ArrowSmall : Oxygen::Style::ArrowNormal );
+    const Oxygen::QtSettings::ArrowSize arrowSize( d.isTreeView() ?
+        Oxygen::Style::instance().settings().viewTriangularExpanderSize():
+        Oxygen::QtSettings::ArrowNormal );
+
     Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
 
 }
@@ -787,7 +790,7 @@ static void draw_tab( GtkStyle* style,
 
         // render
         GtkArrowType arrow = GTK_ARROW_DOWN;
-        Oxygen::Style::ArrowSize arrowSize = Oxygen::Style::ArrowNormal;
+        Oxygen::QtSettings::ArrowSize arrowSize = Oxygen::QtSettings::ArrowNormal;
         Oxygen::StyleOptions options = Oxygen::Contrast;
         Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
         return;
