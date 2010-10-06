@@ -125,6 +125,17 @@ namespace Oxygen
         ArrowSize viewTriangularExpanderSize( void ) const
         { return _viewTriangularExpanderSize; }
 
+        //! menu highlight mode
+        enum MenuHighlightMode
+        {
+            MM_DARK,
+            MM_SUBTLE,
+            MM_STRONG
+        };
+
+        MenuHighlightMode menuHighlightMode( void ) const
+        { return _menuHighlightMode; }
+
         //@}
 
         protected:
@@ -236,6 +247,9 @@ namespace Oxygen
 
         //! triangular expander size
         ArrowSize _viewTriangularExpanderSize;
+
+        //! menu highlight mode
+        MenuHighlightMode _menuHighlightMode;
 
         //@}
 

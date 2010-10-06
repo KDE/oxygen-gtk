@@ -62,7 +62,8 @@ namespace Oxygen
         _tooltipTransparent( true ),
         _tooltipDrawStyledFrames( true ),
         _viewDrawTriangularExpander( true ),
-        _viewTriangularExpanderSize( ArrowSmall )
+        _viewTriangularExpanderSize( ArrowSmall ),
+        _menuHighlightMode( MM_DARK )
     {}
 
     //_________________________________________________________
@@ -423,6 +424,13 @@ namespace Oxygen
         if( expanderSize == "TE_NORMAL" ) _viewTriangularExpanderSize = ArrowNormal;
         else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;
         else _viewTriangularExpanderSize = ArrowSmall;
+
+
+        // menu highlight mode
+        std::string highlightMode( _oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
+        if( highlightMode == "MM_SUBTLE" ) _menuHighlightMode = MM_SUBTLE;
+        else if( highlightMode == "MM_STRONG" ) _menuHighlightMode = MM_STRONG;
+        else _menuHighlightMode = MM_DARK;
 
         // copy relevant options to to gtk
         // scrollbar width
