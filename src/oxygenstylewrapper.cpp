@@ -1,9 +1,9 @@
 /*
 * this file is part of the oxygen gtk engine
-* Copyright( c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
 * based on the Null Theme Engine for Gtk+.
-* Copyright( C ) 2008 Robert Staudinger
+* Copyright (c) 2008 Robert Staudinger
 *
 * Icon rendering code from Walmis
 * <http://gnome-look.org/content/show.php?content=77783&forumpage=3>

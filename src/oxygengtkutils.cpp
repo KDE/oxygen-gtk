@@ -1,6 +1,6 @@
 /*
 * this file is part of the oxygen gtk engine
-* Copyright( c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
 * GdkPixbuf modification code from Walmis
 * <http://gnome-look.org/content/show.php?content=77783&forumpage=3>

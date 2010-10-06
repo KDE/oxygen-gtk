@@ -2,10 +2,10 @@
 #define oxygenmenushelldata_h
 /*
 * this file is part of the oxygen gtk engine
-* Copyright(c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
 * based on the Null Theme Engine for Gtk+.
-* Copyright(C ) 2008 Robert Staudinger
+* Copyright (c) 2008 Robert Staudinger
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -39,7 +39,13 @@ namespace Oxygen
         {}
 
         //! constructor
-        MenuShellData( GtkWidget* );
+        MenuShellData( void );
+
+        //! setup connections
+        void connect( GtkWidget* );
+
+        //! disconnect
+        void disconnect( GtkWidget* );
 
         //!@name accessors
         //@{
@@ -48,6 +54,12 @@ namespace Oxygen
         int leaveId( void ) const { return _leaveId; }
 
         //@}
+
+        protected:
+
+        //!@name static callbacks
+        static gboolean menuShellMotion( GtkWidget*, GdkEventMotion*, gpointer);
+        static gboolean menuShellLeave( GtkWidget*, GdkEventCrossing*, gpointer);
 
         private:
 
