@@ -941,6 +941,7 @@ namespace Oxygen
             options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Hover|Focus);
 
+            Gtk::Gap gap( gap_x, gap_w, gap_side );
             if( Style::instance().settings().applicationName().isFirefox() )
             {
 
@@ -949,11 +950,10 @@ namespace Oxygen
                 the second call must be discarded somehow
                 */
                 if( h>12 )
-                { Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, Gtk::Gap( gap_x, gap_w, gap_side ), options ); }
+                { Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, gap, options ); }
 
             } else {
 
-                Gtk::Gap gap( gap_x, gap_w, gap_side );
                 gap.setHeight( 8 );
                 Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 
