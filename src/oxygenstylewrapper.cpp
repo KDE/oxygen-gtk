@@ -48,7 +48,6 @@ struct _OxygenStyleClass
 {  GtkStyleClass parent; };
 
 //___________________________________________________________
-static GType oxygen_style_type = 0;
 static GtkStyleClass* oxygen_style_parent_class = 0L;
 
 namespace Oxygen
@@ -1266,9 +1265,40 @@ namespace Oxygen
             detail );
         #endif
 
-        // for now we just call the parent style implementation
-        oxygen_style_parent_class->draw_layout( style, window, state, use_text,
-            clipRect, widget, detail, x, y, layout );
+        if( state == GTK_STATE_INSENSITIVE )
+        {
+
+            // for inactive text, we do the painting ourselves
+            // to prevent 'emboss' inactive text rendering from gtk
+            Cairo::Context context( window, clipRect );
+            gdk_cairo_set_source_color( context, use_text ? &style->text[state] : &style->fg[state] );
+            const PangoMatrix* matrix( pango_context_get_matrix( pango_layout_get_context( layout ) ) );
+            if( matrix )
+            {
+                cairo_matrix_t cairo_matrix;
+                PangoRectangle rect;
+
+                cairo_matrix_init( &cairo_matrix, matrix->xx, matrix->yx, matrix->xy, matrix->yy, matrix->x0, matrix->y0 );
+                pango_layout_get_extents( layout, 0L, &rect );
+                pango_matrix_transform_rectangle( matrix, &rect );
+                pango_extents_to_pixels( &rect, 0L );
+
+                cairo_matrix.x0 += x - rect.x;
+                cairo_matrix.y0 += y - rect.y;
+
+                cairo_set_matrix( context, &cairo_matrix );
+            } else cairo_translate( context, x, y );
+
+            pango_cairo_show_layout( context, layout );
+
+        } else {
+
+            // in all other cases, fallback on default rendering, for now
+            oxygen_style_parent_class->draw_layout(
+                style, window, state, use_text,
+                clipRect, widget, detail, x, y, layout );
+
+        }
     }
 }
 
@@ -1317,6 +1347,7 @@ static void class_init( OxygenStyleClass* klass )
 }
 
 //___________________________________________________________
+static GType oxygen_style_type = 0;
 void oxygen_style_register_type( GTypeModule* module )
 {
     if( !oxygen_style_type )
