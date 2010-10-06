@@ -30,13 +30,13 @@
 #include <iostream>
 
 #include "oxygen.h"
+#include "oxygenanimations.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtkutils.h"
 #include "oxygenmaps.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
-#include "oxygenwidgetset.h"
 
 #include "oxygen_hack_menu.h"
 
@@ -221,20 +221,13 @@ static void draw_box( GtkStyle* style,
             // for now, disable hover, because it is not supported in the entry
             options &= ~Oxygen::Hover;
 
-            // check if parent is in style combobox map,
-            if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
-            { Oxygen::Style::instance().comboBoxes().insert( parent ); }
-
-            // update focus
-            Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
-            data.setButton( widget );
-
-            // schedule redraw of entry if button focus state has changed
-            if( data.setButtonFocus( options & Oxygen::Focus ) && data.entry() )
-            { gtk_widget_queue_draw( data.entry() ); }
+            // focus handling
+            Oxygen::Animations::instance().comboBoxEngine().registerWidget( parent );
+            Oxygen::Animations::instance().comboBoxEngine().setButton( parent, widget );
+            Oxygen::Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Oxygen::Focus );
 
             // update option accordingly
-            if( data.hasFocus() ) options |= Oxygen::Focus;
+            if( Oxygen::Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Oxygen::Focus;
             else options &= ~Oxygen::Focus;
 
             // render
@@ -399,18 +392,11 @@ static void draw_shadow( GtkStyle* style,
         {
 
             // check if parent is in style map
-            if( !Oxygen::Style::instance().comboBoxes().contains( parent ) )
-            { Oxygen::Style::instance().comboBoxes().insert( parent ); }
+            Oxygen::Animations::instance().comboBoxEngine().registerWidget( parent );
+            Oxygen::Animations::instance().comboBoxEngine().setEntry( parent, widget );
+            Oxygen::Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Oxygen::Focus );
 
-            Oxygen::ComboBoxData& data( Oxygen::Style::instance().comboBoxes().value( parent ) );
-            data.setEntry( widget );
-
-            // schedule redraw of button if entry focus state has changed
-            if( data.setEntryFocus( options & Oxygen::Focus ) && data.button() )
-            { gtk_widget_queue_draw( data.button() ); }
-
-            // update option accordingly
-            if( data.hasFocus() ) options |= Oxygen::Focus;
+            if( Oxygen::Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Oxygen::Focus;
             else options &= ~Oxygen::Focus;
 
             // render

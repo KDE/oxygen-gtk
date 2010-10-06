@@ -29,7 +29,6 @@
 #include "oxygenstyleoptions.h"
 #include "oxygentaboptions.h"
 #include "oxygentileset.h"
-#include "oxygenwidgetset.h"
 
 #include <gdk/gdktypes.h>
 
@@ -175,10 +174,6 @@ namespace Oxygen
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 
-        //! return map of registered comboboxes
-        WidgetMap<ComboBoxData>& comboBoxes( void ) const
-        { return *_comboBoxes; }
-
         protected:
 
         //! constructor
@@ -237,10 +232,6 @@ namespace Oxygen
 
         // helper
         StyleHelper _helper;
-
-        //! combobox data
-        typedef WidgetMap<ComboBoxData> ComboBoxDataMap;
-        ComboBoxDataMap* _comboBoxes;
 
     };
 

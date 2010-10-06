@@ -21,30 +21,38 @@
 * MA 02110-1301, USA.
 */
 
-#include <iostream>
-#include "oxygenwidgetset.h"
+#include "oxygenanimations.h"
+
+#include <cassert>
 
 //! unregister widget on destruction
 extern "C" void destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
-{ Oxygen::WidgetSetFactory::instance().unregisterWidget( widget ); }
+{ Oxygen::Animations::instance().unregisterWidget( widget ); }
 
 namespace Oxygen
 {
 
-
     //____________________________________________________________________________________________
-    WidgetSetFactory& WidgetSetFactory::instance( void )
+    Animations& Animations::instance( void )
     {
-        static WidgetSetFactory singleton;
+        static Animations singleton;
         return singleton;
     }
 
+    //_________________________________________
+    Animations::~Animations( void )
+    {
+
+        delete _comboBoxEngine;
+
+    }
+
     //____________________________________________________________________________________________
-    void WidgetSetFactory::registerWidget( GtkWidget* widget )
+    void Animations::registerWidget( GtkWidget* widget )
     {
 
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
-        SignalData data;
+        WidgetData data;
         data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
         data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), 0L );
         _allWidgets.insert( std::make_pair( widget, data ) );
@@ -52,11 +60,11 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void WidgetSetFactory::unregisterWidget( GtkWidget* widget )
+    void Animations::unregisterWidget( GtkWidget* widget )
     {
 
         // find in map
-        SignalIdMap::iterator iter( _allWidgets.find( widget ) );
+        WidgetMap::iterator iter( _allWidgets.find( widget ) );
         assert( iter != _allWidgets.end() );
 
         // disconnect signal
@@ -67,9 +75,21 @@ namespace Oxygen
         _allWidgets.erase( widget );
 
         // erase from all maps
-        for( ContainerList::iterator iter = _containers.begin(); iter != _containers.end(); iter++ )
-        { (*iter)->erase( widget ); }
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); iter++ )
+        { (*iter)->unregisterWidget( widget ); }
 
     }
+
+    //_________________________________________
+    Animations::Animations( void )
+    {
+
+        // create engines
+        registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
+
+    }
+
+
+
 
 }

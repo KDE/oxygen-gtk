@@ -24,6 +24,7 @@
 */
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
@@ -40,33 +41,32 @@ namespace Oxygen
         virtual ~ComboBoxData( void )
         {}
 
-        //!@name accessors
-        //@{
-
-        GtkWidget* button( void ) const { return _button._widget; }
-        GtkWidget* entry( void ) const { return _entry._widget; }
-        bool buttonFocus( void ) const { return _button._focus; }
-        bool entryFocus( void ) const { return _entry._focus; }
-
-        //@}
-
         //!@name modifiers
         //@{
         void setButton( GtkWidget* value ) { _button._widget = value; }
         void setEntry( GtkWidget* value ) { _entry._widget = value; }
 
-        bool setButtonFocus( bool value )
+        //! button focus
+        void setButtonFocus( bool value )
         {
-            if( _button._focus == value ) return false;
+            if( _button._focus == value ) return;
             _button._focus = value;
-            return true;
+
+            // trigger entry update
+            if( _entry._widget ) gtk_widget_queue_draw( _entry._widget );
+
+            return;
         }
 
-        bool setEntryFocus( bool value )
+        //! entry focus
+        void setEntryFocus( bool value )
         {
-            if( _entry._focus == value ) return false;
+            if( _entry._focus == value ) return;
             _entry._focus = value;
-            return true;
+
+            // trigger button update
+            if( _button._widget ) gtk_widget_queue_draw( _button._widget );
+
         }
 
         //@}

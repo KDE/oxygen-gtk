@@ -40,8 +40,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    Style::Style( void ):
-        _comboBoxes( WidgetSetFactory::instance().createNew<ComboBoxDataMap>() )
+    Style::Style( void )
     { _settings.init(); }
 
     //__________________________________________________________________
