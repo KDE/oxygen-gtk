@@ -25,8 +25,17 @@ if( NOT GTK_INCLUDE_DIR )
 	message( FATAL_ERROR "GTK was not found.  Ensure you have the GTK development libraries installed, and GTK's pkgconfig files are in your pkgconfig search path." )
 endif( NOT GTK_INCLUDE_DIR )
 
-message( STATUS "Found GTK include dir: ${GTK_INCLUDE_DIR}" )
-message( STATUS "Found GTK library dir: ${GTK_LIB_DIR}" )
+message( STATUS "Found gtk include dir: ${GTK_INCLUDE_DIR}" )
+message( STATUS "Found gtk library dir: ${GTK_LIB_DIR}" )
+
+# Find cairo
+pkgconfig( cairo CAIRO_INCLUDE_DIR CAIRO_LIB_DIR CAIRO_LINK_FLAGS CAIRO_CFLAGS )
+if( NOT CAIRO_INCLUDE_DIR )
+	message( FATAL_ERROR "Cairo was not found.  Ensure you have the Cairo development libraries installed, and Cairo's pkgconfig files are in your pkgconfig search path." )
+endif( NOT CAIRO_INCLUDE_DIR )
+
+message( STATUS "Found cairo include dir: ${CAIRO_INCLUDE_DIR}" )
+message( STATUS "Found cairo library dir: ${CAIRO_LIB_DIR}" )
 
 # Work out where to install stuff
 exec_program(
