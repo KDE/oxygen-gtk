@@ -61,6 +61,9 @@ namespace Oxygen
         void registerEngine( BaseEngine* engine )
         { _engines.push_back( engine ); }
 
+        //! destruction callback
+        static void destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data );
+
         private:
 
         //! constructor

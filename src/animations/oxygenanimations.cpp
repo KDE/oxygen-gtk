@@ -25,12 +25,13 @@
 
 #include <cassert>
 
-//! unregister widget on destruction
-extern "C" void destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
-{ Oxygen::Animations::instance().unregisterWidget( widget ); }
-
 namespace Oxygen
 {
+
+    //! unregister widget on destruction
+    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
+    { Oxygen::Animations::instance().unregisterWidget( widget ); }
+
 
     //____________________________________________________________________________________________
     Animations& Animations::instance( void )
@@ -52,6 +53,7 @@ namespace Oxygen
     {
 
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
+
         WidgetData data;
         data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
         data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), 0L );
