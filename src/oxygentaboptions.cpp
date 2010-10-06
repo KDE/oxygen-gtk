@@ -26,6 +26,7 @@
 namespace Oxygen
 {
 
+    //______________________________________________________________________
     TabOptions tabOptions( GtkWidget* widget, GtkStateType state, int x, int y )
     {
 
