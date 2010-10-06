@@ -253,9 +253,13 @@ static void draw_box( GtkStyle* style,
 
         } else {
 
-
             Oxygen::StyleOptions options( Oxygen::Blend );
             options |= Oxygen::styleOptions( widget, state, shadow );
+
+            if( GTK_IS_BUTTON(widget) && !GTK_IS_TOGGLE_BUTTON( widget ) )
+            {
+                if(state == GTK_STATE_ACTIVE) options |= Oxygen::Hover;
+            }
 
             if( widget && Gtk::gtk_button_is_flat( widget ) )
             { options |= Oxygen::Flat; }
