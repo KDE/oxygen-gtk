@@ -26,6 +26,7 @@
 
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxengine.h"
+#include "oxygenlineeditengine.h"
 #include "oxygenmenushellengine.h"
 
 #include <gtk/gtkwidget.h>
@@ -60,6 +61,10 @@ namespace Oxygen
         MenuShellEngine& menuShellEngine( void ) const
         { return *_menuShellEngine; }
 
+        //! lineedit engine
+        LineEditEngine& lineEditEngine( void ) const
+        { return *_lineEditEngine; }
+
         protected:
 
         //! register new engine
@@ -82,6 +87,9 @@ namespace Oxygen
 
         //! menushell engine
         MenuShellEngine* _menuShellEngine;
+
+        //! lineedit engine
+        LineEditEngine* _lineEditEngine;
 
         //! keep track of destruction and style change signals
         /*!

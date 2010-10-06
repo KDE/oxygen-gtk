@@ -67,16 +67,16 @@ namespace Oxygen
             if( Gtk::gdk_rectangle_contains( &allocation, pointer_x, pointer_y ) )
             {
 
-                gtk_widget_set_state (GTK_WIDGET(child->data), GTK_STATE_PRELIGHT);
+                gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_PRELIGHT );
 
             } else {
 
-                gtk_widget_set_state (GTK_WIDGET(child->data), GTK_STATE_NORMAL);
+                gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_NORMAL );
 
             }
         }
 
-        if( children ) g_list_free(children);
+        if( children ) g_list_free( children );
 
         return FALSE;
 
@@ -94,15 +94,15 @@ namespace Oxygen
             if( gtk_widget_get_state( GTK_WIDGET( child->data ) ) == GTK_STATE_INSENSITIVE ) continue;
 
             // this is terrible code. I hate gtk. (hugo)
-            if ((!GTK_IS_MENU(GTK_MENU_ITEM(child->data)->submenu)) ||
+            if( (!GTK_IS_MENU(GTK_MENU_ITEM(child->data)->submenu)) ||
                 (!(GTK_WIDGET_REALIZED(GTK_MENU_ITEM(child->data)->submenu) &&
                 GTK_WIDGET_VISIBLE(GTK_MENU_ITEM(child->data)->submenu) &&
                 GTK_WIDGET_REALIZED(GTK_MENU(GTK_MENU_ITEM(child->data)->submenu)->toplevel) &&
                 GTK_WIDGET_VISIBLE(GTK_MENU(GTK_MENU_ITEM(child->data)->submenu)->toplevel))))
-            { gtk_widget_set_state (GTK_WIDGET(child->data), GTK_STATE_NORMAL); }
+            { gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_NORMAL ); }
         }
 
-        if (children) g_list_free(children);
+        if( children ) g_list_free( children );
 
         return FALSE;
     }

@@ -76,6 +76,9 @@ static void draw_flat_box(
         detail );
     #endif
 
+    if( GTK_IS_ENTRY( widget ) )
+    { Oxygen::Animations::instance().lineEditEngine().registerWidget( widget ); }
+
     const Gtk::Detail d( detail );
     bool accepted( false );
     if( d.isBase() || d.isEventBox() )
@@ -141,6 +144,11 @@ static void draw_flat_box(
 
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
+
+        if(
+            Oxygen::Animations::instance().lineEditEngine().contains( widget ) &&
+            Oxygen::Animations::instance().lineEditEngine().hovered( widget ) )
+        { options |= Oxygen::Hover; }
 
         if( GTK_IS_SPIN_BUTTON( widget ) )
         {
@@ -329,6 +337,11 @@ static void draw_box( GtkStyle* style,
         Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
         options |= Oxygen::styleOptions( widget, state, shadow );
 
+        if(
+            Oxygen::Animations::instance().lineEditEngine().contains( widget ) &&
+            Oxygen::Animations::instance().lineEditEngine().hovered( widget ) )
+        { options |= Oxygen::Hover; }
+
         if( style && gtk_widget_get_state( widget ) == GTK_STATE_INSENSITIVE )
         {
             // for disabled spinboxes one has to handle the background manually
@@ -382,6 +395,9 @@ static void draw_shadow( GtkStyle* style,
         detail );
     #endif
 
+    if( GTK_IS_ENTRY( widget ) )
+    { Oxygen::Animations::instance().lineEditEngine().registerWidget( widget ); }
+
     const Gtk::Detail d( detail );
     if( d.isSlider() || d.isRuler() ) {
 
@@ -408,6 +424,11 @@ static void draw_shadow( GtkStyle* style,
             Oxygen::Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, Oxygen::TileSet::Ring&(~Oxygen::TileSet::Right) );
 
         } else {
+
+            if(
+                Oxygen::Animations::instance().lineEditEngine().contains( widget ) &&
+                Oxygen::Animations::instance().lineEditEngine().hovered( widget ) )
+            { options |= Oxygen::Hover; }
 
             Oxygen::Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
             Oxygen::Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );

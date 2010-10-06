@@ -24,6 +24,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentileset.cpp
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
+    animations/oxygenlineeditdata.cpp
     animations/oxygenmenushelldata.cpp
  )
 
