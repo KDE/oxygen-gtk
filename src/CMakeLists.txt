@@ -1,4 +1,5 @@
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} )
+include_directories( animations )
 
 # Sources
 set( OXYGEN-GTK-SOURCES
@@ -21,8 +22,8 @@ set( OXYGEN-GTK-SOURCES
     oxygentaboptions.cpp
     oxygentheme.c
     oxygentileset.cpp
-    oxygenwidgetset.cpp
-    oxygen_hack_menu.cpp
+    animations/oxygenwidgetset.cpp
+    animations/oxygen_hack_menu.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
