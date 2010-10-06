@@ -695,6 +695,21 @@ namespace Oxygen
 
         const Gtk::Detail d( detail );
 
+        if( state==GTK_STATE_INSENSITIVE && GTK_IS_SCROLLBAR(widget) && gtk_widget_is_sensitive(widget))
+        {
+            int X,Y;
+            // FIXME: is this coordinate magic correct?
+            // Yes, constants are obtained empirically :)
+            gdk_window_get_pointer(widget->window,&X,&Y,NULL);
+            printf("X,Y: %d,%d; x,y,w,h: %d,%d,%d,%d\n",X,Y,x,y,w,h);
+            if(X>x-2 && Y>y-4 &&
+                    X < x+w+4 &&
+                    Y < y+h+4)
+                state=GTK_STATE_PRELIGHT;
+            else
+                state=GTK_STATE_NORMAL;
+        }
+
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
         if( d.isMenuItem() && Style::instance().settings().applicationName().isFirefox() )
         { arrowSize = QtSettings::ArrowTiny; }
