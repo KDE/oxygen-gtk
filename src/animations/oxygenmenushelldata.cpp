@@ -1,9 +1,13 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
-* based on the Null Theme Engine for Gtk+.
-* Copyright (c) 2008 Robert Staudinger
+* MenuShell prelight effect is based on
+* Redmond95 - a cairo based GTK+ engine
+* Copyright (C) 2001 Red Hat, Inc.
+* Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
+* Copyright (C) 2006-2007 Benjamin Berg <benjamin@sipsolutions.net>
 *
 * the menushell data code is largely inspired from the gtk redmond engine
 *
