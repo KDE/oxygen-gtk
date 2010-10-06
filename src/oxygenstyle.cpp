@@ -1579,8 +1579,8 @@ namespace Oxygen
         {
             case GTK_POS_BOTTOM:
             {
-                //GdkRectangle local = {x, y-offset, w, h+10 + offset };
-                GdkRectangle local = {x-1, y-offset+1, w+2, h+10 + offset - 2 };
+                GdkRectangle local = {x, y-offset, w, h+10 + offset };
+                if( tabOptions & FirstTab ) { local.x-=1; local.width+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Bottom );
                 break;
@@ -1588,8 +1588,8 @@ namespace Oxygen
 
             case GTK_POS_TOP:
             {
-                //GdkRectangle local = { x, y-10, w, h+10+offset };
-                GdkRectangle local = { x-1, y-10+1, w+2, h+10+offset - 2 };
+                GdkRectangle local = { x, y-10, w, h+10+offset };
+                if( tabOptions & FirstTab ) { local.x-=1; local.width+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Top );
                 break;
@@ -1597,8 +1597,8 @@ namespace Oxygen
 
             case GTK_POS_RIGHT:
             {
-                //GdkRectangle local = { x-offset, y, w+10+offset, h };
-                GdkRectangle local = { x-offset+1, y-1, w+10+offset-2, h+2 };
+                GdkRectangle local = { x-offset, y, w+10+offset, h };
+                if( tabOptions & FirstTab ) { local.y-=1; local.height+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Right );
                 break;
@@ -1607,8 +1607,8 @@ namespace Oxygen
 
             case GTK_POS_LEFT:
             {
-                //GdkRectangle local = { x-10, y, w+10+offset, h };
-                GdkRectangle local = { x-10+1, y-1, w+10+offset-2, h+2 };
+                GdkRectangle local = { x-10, y, w+10+offset, h };
+                if( tabOptions & FirstTab ) { local.y-=1; local.height+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Left );
                 break;
