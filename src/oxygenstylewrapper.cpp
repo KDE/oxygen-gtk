@@ -711,20 +711,25 @@ static void draw_expander(
         detail );
     #endif
 
-    const GtkArrowType arrow( ( expander_style == GTK_EXPANDER_COLLAPSED || expander_style == GTK_EXPANDER_SEMI_COLLAPSED ) ?
-        GTK_ARROW_RIGHT : GTK_ARROW_DOWN );
-
-    // TODO: actually read arrow size from options
     Oxygen::StyleOptions options( Oxygen::styleOptions( widget, state ) );
+    if( Oxygen::Style::instance().settings().viewDrawTriangularExpander() )
+    {
 
-    const Gtk::Detail d( detail );
-    if( !d.isTreeView() ) options |= Oxygen::Contrast;
+        const GtkArrowType arrow( ( expander_style == GTK_EXPANDER_COLLAPSED || expander_style == GTK_EXPANDER_SEMI_COLLAPSED ) ?
+            GTK_ARROW_RIGHT : GTK_ARROW_DOWN );
 
-    const Oxygen::QtSettings::ArrowSize arrowSize( d.isTreeView() ?
-        Oxygen::Style::instance().settings().viewTriangularExpanderSize():
-        Oxygen::QtSettings::ArrowNormal );
+        const Gtk::Detail d( detail );
+        Oxygen::QtSettings::ArrowSize arrowSize = Oxygen::QtSettings::ArrowNormal;
+        if( d.isTreeView() ) arrowSize = Oxygen::Style::instance().settings().viewTriangularExpanderSize();
+        else options |= Oxygen::Contrast;
 
-    Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
+        Oxygen::Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
+
+    } else {
+
+        Oxygen::Style::instance().renderTreeExpander( window, clipRect, x-16, y-16, 32, 32, expander_style, options );
+
+    }
 
 }
 

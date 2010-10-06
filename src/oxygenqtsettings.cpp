@@ -61,6 +61,7 @@ namespace Oxygen
         _toolBarDrawItemSeparator( true ),
         _tooltipTransparent( true ),
         _tooltipDrawStyledFrames( true ),
+        _viewDrawTriangularExpander( true ),
         _viewTriangularExpanderSize( ArrowSmall )
     {}
 
@@ -414,7 +415,10 @@ namespace Oxygen
         _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
         _tooltipDrawStyledFrames = _oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
 
-        // triangular expander size
+        // triangular expanders
+        _viewDrawTriangularExpander = _oxygen.getOption( "[Style]", "ViewDrawTriangularExpander" ).toVariant<std::string>("true") == "true";
+
+        // triangular expander (arrow) size
         std::string expanderSize( _oxygen.getOption( "[Style]", "ViewTriangularExpanderSize" ).toVariant<std::string>("TE_SMALL") );
         if( expanderSize == "TE_NORMAL" ) _viewTriangularExpanderSize = ArrowNormal;
         else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;

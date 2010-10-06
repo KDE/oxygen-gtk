@@ -118,6 +118,10 @@ namespace Oxygen
         };
 
         //! checkbox style
+        bool viewDrawTriangularExpander( void ) const
+        { return _viewDrawTriangularExpander; }
+
+        //! checkbox style
         ArrowSize viewTriangularExpanderSize( void ) const
         { return _viewTriangularExpanderSize; }
 
@@ -226,6 +230,9 @@ namespace Oxygen
 
         //! framed tooltips
         bool _tooltipDrawStyledFrames;
+
+        //! true if arrows are used for expanders
+        bool _viewDrawTriangularExpander;
 
         //! triangular expander size
         ArrowSize _viewTriangularExpanderSize;
