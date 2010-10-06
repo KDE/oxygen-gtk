@@ -1442,11 +1442,12 @@ namespace Oxygen
 
         // sclider dimension
         int SliderThickness = 23;
-        int SliderLength = 13;
+        int SliderLength = 15;
 
         const bool vertical( options&Vertical );
         GdkRectangle parent = { x, y, w, h };
         GdkRectangle child = { 0, 0, vertical ? SliderThickness:SliderLength, vertical ? SliderLength:SliderThickness };
+
         centerRect( &parent, &child );
 
         // define colors
