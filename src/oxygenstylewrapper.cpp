@@ -944,14 +944,18 @@ namespace Oxygen
             if( Style::instance().settings().applicationName().isFirefox() )
             {
 
+                /*
+                firefox calls gap_box twice. Once for the main frame, once for the actual gap
+                the second call must be discarded somehow
+                */
                 if( h>12 )
-                {
-                    Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, Gtk::Gap( gap_x, gap_w, gap_side ), options );
-                }
+                { Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, Gtk::Gap( gap_x, gap_w, gap_side ), options ); }
 
             } else {
 
-                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+                Gtk::Gap gap( gap_x, gap_w, gap_side );
+                gap.setHeight( 8 );
+                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 
             }
 
