@@ -10,6 +10,7 @@ style "oxygen-default"
     GtkStatusbar::has-resize-grip = FALSE
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
+    GtkTreeView::enable-tree-lines = TRUE
     GtkEntry::honors-transparent-bg-hint = 1
 #    GtkComboBox::appears-as-list = 1
 
@@ -40,11 +41,9 @@ style "oxygen-notebook" = "oxygen-default"
 {
     xthickness = 4
     ythickness = 4
-    #    GtkNotebook::tab-curvature = 4
 }
 
 class "GtkNotebook" style "oxygen-notebook"
-#widget_class "*<GtkNotebook>*" style "oxygen-notebook"
 
 # Workarounds
 style "oxygen-gimp-scale"
