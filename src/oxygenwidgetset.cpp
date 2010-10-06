@@ -42,9 +42,12 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void WidgetSetFactory::registerWidget( GtkWidget* widget )
     {
+
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
-        int signal_id = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
-        _allWidgets.insert( std::make_pair( widget, signal_id ) );
+        SignalData data;
+        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        _allWidgets.insert( std::make_pair( widget, data ) );
 
     }
 
@@ -57,7 +60,8 @@ namespace Oxygen
         assert( iter != _allWidgets.end() );
 
         // disconnect signal
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second );
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._destroyId );
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._styleChangeId );
 
         // erase from map
         _allWidgets.erase( widget );
@@ -66,17 +70,6 @@ namespace Oxygen
         for( ContainerList::iterator iter = _containers.begin(); iter != _containers.end(); iter++ )
         { (*iter)->erase( widget ); }
 
-    }
-
-    //____________________________________________________________________________________________
-    void WidgetSet::insert( GtkWidget* widget )
-    {
-
-        // insert in set and register to factory if new
-        if( _widgets.insert( widget ).second )
-        { WidgetSetFactory::instance().registerWidget( widget ); }
-
-        return;
     }
 
 }

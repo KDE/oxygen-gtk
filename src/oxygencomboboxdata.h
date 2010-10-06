@@ -33,7 +33,11 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxData()
+        ComboBoxData( void )
+        {}
+
+        //! destructor
+        virtual ~ComboBoxData( void )
         {}
 
         //!@name accessors

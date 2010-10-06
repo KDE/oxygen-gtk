@@ -50,42 +50,6 @@ namespace Oxygen
 
     };
 
-    //! stores widgets into a std::set
-    /*! stores widgets into a std::set. Automatically remove them from the set when they are destroyed */
-    class WidgetSet: public WidgetContainer
-    {
-
-        public:
-
-        //! destructor
-        virtual ~WidgetSet( void )
-        {}
-
-        //! insert new widget
-        void insert( GtkWidget* );
-
-        //! true if widget is in list
-        bool contains( GtkWidget* widget ) const
-        { return _widgets.find( widget ) != _widgets.end(); }
-
-        //! erase
-        void erase( GtkWidget* widget )
-        { _widgets.erase( widget ); }
-
-        private:
-
-        //! constructor is private
-        WidgetSet( void )
-        {}
-
-        //! registered widgets
-        std::set<GtkWidget*> _widgets;
-
-        friend class WidgetSetFactory;
-
-    };
-
-
     //! stores map of pointer to widget and user data
     template< typename T>
     class WidgetMap: public WidgetContainer
@@ -95,14 +59,14 @@ namespace Oxygen
 
 
         //! insert new widget
-        inline void insert( GtkWidget* widget, const T& value = T());
+        inline virtual void insert( GtkWidget* widget, const T& value = T());
 
         //! true if widget is in list
-        bool contains( GtkWidget* widget ) const
+        virtual bool contains( GtkWidget* widget ) const
         { return _widgets.find( widget ) != _widgets.end(); }
 
         //! return value
-        T& value( GtkWidget* widget )
+        virtual T& value( GtkWidget* widget )
         {
             typename std::map<GtkWidget*, T>::iterator iter( _widgets.find( widget ) );
             assert( iter != _widgets.end() );
@@ -110,14 +74,16 @@ namespace Oxygen
         }
 
         //! erase
-        void erase( GtkWidget* widget )
+        virtual void erase( GtkWidget* widget )
         { _widgets.erase( widget ); }
 
-        private:
+        protected:
 
         //! constructor
         WidgetMap( void )
         {}
+
+        private:
 
         //! map
         std::map<GtkWidget*, T> _widgets;
@@ -126,7 +92,12 @@ namespace Oxygen
 
 
     };
+
     //! stores all widget set
+    /*!
+    This class allow one to associate any type of data to any widget, and make sure proper deletion
+    is performed when widget is destroyed and/or style is changed
+    */
     class WidgetSetFactory
     {
         public:
@@ -144,13 +115,7 @@ namespace Oxygen
         //! create new set of type T and insert in map
         /*! T must derive from the WidgetContainer class, and have an empty constructor */
         template< typename T >
-        T* createNew( void );
-//         //! create new widget set
-//         WidgetSet* createWidgetSet( void );
-//
-//         //! create new map
-//         template<typename T>
-//         WidgetMap<T>* createWidgetMap( void );
+            T* createNew( void );
 
         //! register new widget
         void registerWidget( GtkWidget* );
@@ -168,8 +133,28 @@ namespace Oxygen
         typedef std::vector< WidgetContainer* > ContainerList;
         ContainerList _containers;
 
+        //! keep track of destruction and style change signals
+        /*!
+        this is needed so that signals are disconnected when either
+        the style change or the widget is destroyed
+        */
+        class SignalData
+        {
+
+            public:
+
+            //! constructor
+            SignalData( void ):
+                _destroyId(-1),
+                _styleChangeId(-1)
+            {}
+
+            int _destroyId;
+            int _styleChangeId;
+        };
+
         //! keep track of all registered widgets, and associated destroy callback
-        typedef std::map< GtkWidget*, int > SignalIdMap;
+        typedef std::map< GtkWidget*, SignalData > SignalIdMap;
         SignalIdMap _allWidgets;
 
     };
@@ -180,15 +165,6 @@ namespace Oxygen
         _widgets.insert( std::make_pair( widget, value ) );
         WidgetSetFactory::instance().registerWidget( widget );
     }
-
-//     //___________________________________________________
-//     template<typename T>
-//         WidgetMap<T>* WidgetSetFactory::createWidgetMap( void )
-//     {
-//         WidgetMap<T>* out = new WidgetMap<T>();
-//         _containers.push_back( out );
-//         return out;
-//     }
 
     //___________________________________________________
     template<typename T>
