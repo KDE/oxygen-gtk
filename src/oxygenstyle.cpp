@@ -23,7 +23,6 @@
 #include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
 #include "oxygengtkutils.h"
-#include "oxygenwidgetset.h"
 
 #include <algorithm>
 #include <cmath>
