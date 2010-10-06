@@ -328,16 +328,19 @@ namespace Oxygen
                 const int subLineOffset( buttonSize*Style::instance().settings().scrollBarSubLineButtons() );
                 const int addLineOffset( buttonSize*Style::instance().settings().scrollBarAddLineButtons() );
                 Style::instance().renderScrollBarHole( window, clipRect, x+1+subLineOffset, y, w-2-subLineOffset-addLineOffset, h-1, None );
-
-            } else if( GTK_IS_VSCALE( widget ) ) {
-
-                Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Vertical );
-
-            } else if( GTK_IS_HSCALE( widget ) ) {
-
-                Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, None );
-
             }
+
+        } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
+
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Vertical );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h+16, Vertical );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y-16, w, h+16, Vertical );
+
+        } else if( d.isTroughAny() && GTK_IS_HSCALE( widget ) ) {
+
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, None );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w+16, h, None );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x-16, y, w+16, h, None );
 
         } else if( d.isSpinButton()) {
 

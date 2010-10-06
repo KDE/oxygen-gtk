@@ -111,7 +111,15 @@ namespace Gtk
         bool isToolBar( void ) const { return _value == "toolbar"; }
         bool isTooltip( void ) const { return _value == "tooltip"; }
         bool isTreeView( void ) const { return _value == "treeview"; }
+
+        //!@name through
+        //@{
+        bool isTroughLower( void ) const { return _value == "trough-lower"; }
+        bool isTroughUpper( void ) const { return _value == "trough-upper"; }
         bool isTrough( void ) const { return _value == "trough"; }
+        bool isTroughAny( void ) const { return isTrough()||isTroughLower()||isTroughUpper(); }
+        //@}
+
         bool isViewport( void ) const { return _value == "viewport"; }
         bool isViewportBin( void ) const { return _value == "viewportbin"; }
 
