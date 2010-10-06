@@ -33,13 +33,14 @@ namespace Oxygen
         public:
 
         //! constructor
-        MenuShellData():
+        MenuShellData( void ):
             _motionId(-1),
             _leaveId(-1)
         {}
 
-        //! constructor
-        MenuShellData( void );
+        //! destructor
+        virtual ~MenuShellData( void )
+        {}
 
         //! setup connections
         void connect( GtkWidget* );
@@ -47,27 +48,19 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
-        //!@name accessors
-        //@{
-
-        int motionId( void ) const { return _motionId; }
-        int leaveId( void ) const { return _leaveId; }
-
-        //@}
-
         protected:
 
         //!@name static callbacks
-        static gboolean menuShellMotion( GtkWidget*, GdkEventMotion*, gpointer);
-        static gboolean menuShellLeave( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
 
         private:
 
         //! motion signal id
-        int _motion_id;
+        int _motionId;
 
         //! leave signal id
-        int _leave_id;
+        int _leaveId;
 
     };
 

@@ -24,7 +24,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentileset.cpp
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
-    animations/oxygen_hack_menu.cpp
+    animations/oxygenmenushelldata.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )

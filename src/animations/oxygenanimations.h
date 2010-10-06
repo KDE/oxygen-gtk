@@ -26,6 +26,7 @@
 
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxengine.h"
+#include "oxygenmenushellengine.h"
 
 #include <gtk/gtkwidget.h>
 #include <vector>
@@ -55,6 +56,10 @@ namespace Oxygen
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
 
+        //! menushell engine
+        MenuShellEngine& menuShellEngine( void ) const
+        { return *_menuShellEngine; }
+
         protected:
 
         //! register new engine
@@ -74,6 +79,9 @@ namespace Oxygen
 
         //! combobox engine
         ComboBoxEngine* _comboBoxEngine;
+
+        //! menushell engine
+        MenuShellEngine* _menuShellEngine;
 
         //! keep track of destruction and style change signals
         /*!

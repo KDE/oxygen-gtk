@@ -38,8 +38,6 @@
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
 
-#include "oxygen_hack_menu.h"
-
 //______________________________________________________________________
 struct _OxygenStyle
 { GtkStyle parent; };
@@ -193,8 +191,13 @@ static void draw_box( GtkStyle* style,
         detail );
     #endif
 
-    if(GTK_IS_MENU_SHELL(widget))
-    { oxygen_hack_menu_shell_setup_signals(widget); }
+    if(GTK_IS_MENU_BAR(widget))
+    {
+
+        // register menubar to engine, to handle hover effect
+        Oxygen::Animations::instance().menuShellEngine().registerWidget(widget);
+
+    }
 
     Oxygen::Style::instance().sanitizeSize( window, w, h );
     const Gtk::Detail d( detail );
