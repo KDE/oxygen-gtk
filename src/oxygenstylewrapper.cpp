@@ -701,7 +701,6 @@ namespace Oxygen
             // FIXME: is this coordinate magic correct?
             // Yes, constants are obtained empirically :)
             gdk_window_get_pointer(widget->window,&X,&Y,NULL);
-            printf("X,Y: %d,%d; x,y,w,h: %d,%d,%d,%d\n",X,Y,x,y,w,h);
             if(X>x-2 && Y>y-4 &&
                     X < x+w+4 &&
                     Y < y+h+4)
