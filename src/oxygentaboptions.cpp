@@ -51,7 +51,7 @@ namespace Oxygen
                 GtkAllocation allocation;
                 gtk_widget_get_allocation( tabLabel, &allocation );
 
-                int distance = std::abs( allocation.x - x ) + std::abs( allocation.y - y );
+                int distance = std::abs<int>( allocation.x - x ) + std::abs<int>( allocation.y - y );
                 if( minDistance < 0 || distance < minDistance )
                 {
                     minDistance = distance;
