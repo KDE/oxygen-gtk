@@ -36,7 +36,7 @@ namespace Oxygen
     //________________________________________________________________________________
     void LineEditData::connect( GtkWidget* widget )
     {
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, 0L);
+        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, 0L );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, 0L );
     }
 
@@ -54,7 +54,6 @@ namespace Oxygen
         if( Animations::instance().lineEditEngine().setHovered( widget, true ) )
         { gtk_widget_queue_draw( widget ); }
         return FALSE;
-
     }
 
     //________________________________________________________________________________
