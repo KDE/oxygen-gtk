@@ -56,6 +56,15 @@ namespace Gtk
 
         //@}
 
+        //!@name modifiers
+        //@{
+
+        void setX( gint value ) { _x = value; }
+        void setWidth( gint value) { _w = value; }
+        void setHeight( gint value ) { _h = value; }
+
+        //@}
+
         private:
 
         enum { DefaultGapHeight = 4 };
