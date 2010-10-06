@@ -1,6 +1,7 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * GdkPixbuf modification code from Walmis
 * <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
@@ -111,16 +112,7 @@ namespace Gtk
     bool gtk_button_is_flat( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
-        if( GTK_IS_COMBO_BOX( widget ) ) return false;
-
-        GObject* object( G_OBJECT( widget ) );
-        if( gtk_object_is_a( object, "ccm+Utils+PrettyButton" ) ) return true;
-
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
-        { if( GTK_IS_TOOLBAR( parent ) ) return true; }
-
-        return false;
+        return ( gtk_button_get_relief( GTK_BUTTON( widget ) ) == GTK_RELIEF_NONE );
     }
 
     //________________________________________________________
