@@ -76,7 +76,7 @@ static void draw_flat_box(
         detail );
     #endif
 
-    if( GTK_IS_ENTRY( widget ) )
+    if( GTK_IS_ENTRY( widget ) && !GTK_IS_SPIN_BUTTON( widget ) )
     { Oxygen::Animations::instance().lineEditEngine().registerWidget( widget ); }
 
     const Gtk::Detail d( detail );
@@ -395,7 +395,7 @@ static void draw_shadow( GtkStyle* style,
         detail );
     #endif
 
-    if( GTK_IS_ENTRY( widget ) )
+    if( GTK_IS_ENTRY( widget ) && !GTK_IS_SPIN_BUTTON( widget ) )
     { Oxygen::Animations::instance().lineEditEngine().registerWidget( widget ); }
 
     const Gtk::Detail d( detail );
@@ -703,6 +703,8 @@ static void draw_arrow( GtkStyle* style,
         // disable contrast
         options &= ~Oxygen::Contrast;
 
+        if( (options & Oxygen::Hover) && Oxygen::Animations::instance().lineEditEngine().contains( widget ) )
+        { Oxygen::Animations::instance().lineEditEngine().setHovered( widget, true ); }
     }
 
     // render
