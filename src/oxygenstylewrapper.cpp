@@ -259,9 +259,26 @@ namespace Oxygen
                 StyleOptions options( Blend );
                 options |= styleOptions( widget, state, shadow );
 
-                if( GTK_IS_BUTTON(widget) && !GTK_IS_TOGGLE_BUTTON( widget ) )
+                // prelight flat button if it's pressed but mouse button is still not released
+                if(state==GTK_STATE_ACTIVE)
                 {
-                    if(state == GTK_STATE_ACTIVE) options |= Hover;
+                    int x,y;
+                    // FIXME: is this coordinate magic correct?
+                    gdk_window_get_pointer(widget->window,&x,&y,NULL);
+                    if(x>widget->allocation.x && y>widget->allocation.y &&
+                            x < widget->allocation.width + widget->allocation.x &&
+                            y < widget-> allocation.height + widget->allocation.y)
+                        options|=Oxygen::Hover;
+                }
+
+                if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+                {
+                    // make pressed togglebutton look like flat pressed togglebutton when hovered
+                    x+=2;
+                    y+=2;
+                    w-=4;
+                    h-=4;
+                    options |= Oxygen::Flat | Oxygen::Hover;
                 }
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
