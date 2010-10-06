@@ -1559,10 +1559,10 @@ namespace Oxygen
     {
 
         const bool isCurrentTab( tabOptions & CurrentTab );
+        const bool isFirstTab( tabOptions & FirstTab );
 
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        //const ColorUtils::Rgba base( 1, 0, 0 );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
@@ -1580,7 +1580,7 @@ namespace Oxygen
             case GTK_POS_BOTTOM:
             {
                 GdkRectangle local = {x, y-offset, w, h+10 + offset };
-                if( tabOptions & FirstTab ) { local.x-=1; local.width+=1; }
+                if( isFirstTab ) { local.x-=1; local.width+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Bottom );
                 break;
@@ -1589,7 +1589,7 @@ namespace Oxygen
             case GTK_POS_TOP:
             {
                 GdkRectangle local = { x, y-10, w, h+10+offset };
-                if( tabOptions & FirstTab ) { local.x-=1; local.width+=1; }
+                if( isFirstTab ) { local.x-=1; local.width+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Top );
                 break;
@@ -1598,7 +1598,7 @@ namespace Oxygen
             case GTK_POS_RIGHT:
             {
                 GdkRectangle local = { x-offset, y, w+10+offset, h };
-                if( tabOptions & FirstTab ) { local.y-=1; local.height+=1; }
+                if( isFirstTab ) { local.y-=1; local.height+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Right );
                 break;
@@ -1608,7 +1608,7 @@ namespace Oxygen
             case GTK_POS_LEFT:
             {
                 GdkRectangle local = { x-10, y, w+10+offset, h };
-                if( tabOptions & FirstTab ) { local.y-=1; local.height+=1; }
+                if( isFirstTab ) { local.y-=1; local.height+=1; }
                 rect = local;
                 tiles = TileSet::Ring&(~TileSet::Left );
                 break;
@@ -1700,32 +1700,70 @@ namespace Oxygen
         cairo_fill( context );
 
         // connections
+        SlabRect::List slabs;
         if( !isCurrentTab )
         {
             switch( side )
             {
                 case GTK_POS_BOTTOM:
-                //_helper.slab(base, 0).render( context, x-4, y+h, w+8, 10, TileSet::Top );
-                _helper.slab(base, 0).render( context, x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                if( isFirstTab )
+                {
+
+                    slabs.push_back( SlabRect( x-1, y+h-1, w+4+2, 12, TileSet::Top|TileSet::Left ) );
+                    slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+
+                } else {
+
+                    slabs.push_back( SlabRect( x-4-1, y+h-1, w+8+2, 10, TileSet::Top ) );
+
+                }
+
                 break;
 
                 case GTK_POS_TOP:
-                //_helper.slab(base, 0).render( context, x-4, y-10, w+8, 10, TileSet::Bottom );
-                _helper.slab(base, 0).render( context, x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
+                slabs.push_back( SlabRect( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom ) );
                 break;
 
                 case GTK_POS_RIGHT:
-                //_helper.slab(base, 0).render( context, x+w, y-4, 10, h+8, TileSet::Left );
-                _helper.slab(base, 0).render( context, x+w-1, y-4-1, 10, h+8+2, TileSet::Left );
+                slabs.push_back( SlabRect( x+w-1, y-4-1, 10, h+8+2, TileSet::Left ) );
                 break;
 
                 case GTK_POS_LEFT:
-                //_helper.slab(base, 0).render( context, x-10, y-4, 10, h+8, TileSet::Right );
-                _helper.slab(base, 0).render( context, x-10+1, y-4-1, 10, h+8+2, TileSet::Right );
+                slabs.push_back( SlabRect( x-10+1, y-4-1, 10, h+8+2, TileSet::Right ) );
                 break;
 
-                default: return;
+                default: break;
             }
+
+        } else {
+
+            switch( side )
+            {
+                case GTK_POS_BOTTOM:
+                if( isFirstTab ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
+                else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
+                slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
+                break;
+
+                default: break;
+            }
+
+        }
+
+        // render all stored slabs
+        for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
+        {
+            if( false )
+            {
+
+                // for debugging, draw a translucent rect behind the tab
+                cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.2 ) );
+                cairo_rectangle( context, iter->_x, iter->_y, iter->_w, iter->_h );
+                cairo_fill( context );
+
+            }
+
+            if( true ) _helper.slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
         }
 
     }

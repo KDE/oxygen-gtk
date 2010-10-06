@@ -209,6 +209,40 @@ namespace Oxygen
 
         //@}
 
+        //! used to store slab characteristics
+        class SlabRect
+        {
+            public:
+
+            //! constructor
+            SlabRect(void):
+                _x(0),
+                _y(0),
+                _w(-1),
+                _h(-1),
+                _tiles( TileSet::Ring )
+            {}
+
+            //! constructor
+            SlabRect( int x, int y, int w, int h, const int& tiles ):
+                _x(x),
+                _y(y),
+                _w(w),
+                _h(h),
+                _tiles( TileSet::Tiles( tiles ) )
+            {}
+
+            int _x;
+            int _y;
+            int _w;
+            int _h;
+            TileSet::Tiles _tiles;
+
+            typedef std::vector<SlabRect> List;
+
+        };
+
+
         private:
 
         //! metrics
