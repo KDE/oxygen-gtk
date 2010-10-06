@@ -1287,6 +1287,7 @@ namespace Oxygen
                 cairo_matrix.y0 += y - rect.y;
 
                 cairo_set_matrix( context, &cairo_matrix );
+
             } else cairo_translate( context, x, y );
 
             pango_cairo_show_layout( context, layout );
