@@ -1348,7 +1348,8 @@ namespace Oxygen
             break;
 
             case GTK_ARROW_DOWN:
-            cairo_translate( context, 0., 1.0 );
+            if( arrowSize == QtSettings::ArrowSmall ) cairo_translate( context, 0, 0.5 );
+            else cairo_translate( context, 0, 1 );
             break;
 
             case GTK_ARROW_LEFT:
@@ -1361,7 +1362,19 @@ namespace Oxygen
             break;
         }
 
-        cairo_set_line_width( context, 1.6 );
+        switch( arrowSize )
+        {
+            case QtSettings::ArrowTiny:
+            case QtSettings::ArrowSmall:
+            cairo_set_line_width( context, 1.2 );
+            break;
+
+            default:
+            case QtSettings::ArrowNormal:
+            cairo_set_line_width( context, 1.6 );
+            break;
+        }
+
         cairo_set_line_cap( context, CAIRO_LINE_CAP_ROUND );
         cairo_set_line_join( context, CAIRO_LINE_JOIN_ROUND );
 
