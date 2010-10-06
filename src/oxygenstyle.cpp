@@ -1623,7 +1623,6 @@ namespace Oxygen
                 } else if( isFirstTab ) {
 
                     slabs.push_back( SlabRect( x-1, y-10+1, w+4+2, 10, TileSet::Bottom|TileSet::Left ) );
-                    // slabs.push_back( SlabRect( x-1, y-10+1 + offset-5, 8, 16, TileSet::Left ) );
 
                 } else {
 
@@ -1721,7 +1720,7 @@ namespace Oxygen
         {
             case GTK_POS_BOTTOM:
             if( isCurrentTab ) tabSlab._h -= 2;
-            else tabSlab._h -= 4;
+            else tabSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
             break;
 
@@ -1734,8 +1733,8 @@ namespace Oxygen
 
             } else {
 
-                tabSlab._y += 4;
-                tabSlab._h -= 4;
+                tabSlab._y += 3;
+                tabSlab._h -= 3;
 
             }
             pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
@@ -1743,7 +1742,7 @@ namespace Oxygen
 
             case GTK_POS_RIGHT:
             if( isCurrentTab ) tabSlab._w -= 2;
-            else tabSlab._w -= 4;
+            else tabSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
             break;
 
@@ -1753,8 +1752,8 @@ namespace Oxygen
                 tabSlab._x += 2;
                 tabSlab._w -= 2;
             } else {
-                tabSlab._x += 4;
-                tabSlab._w -= 4;
+                tabSlab._x += 3;
+                tabSlab._w -= 3;
             }
             pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
             break;
