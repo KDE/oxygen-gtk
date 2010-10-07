@@ -658,8 +658,13 @@ namespace Oxygen
         else if( d.isToolBar() && !Style::instance().settings().toolBarDrawItemSeparator() ) return;
         else {
 
-            StyleOptions options( styleOptions( widget, state, GTK_SHADOW_NONE ) );
-            if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
+            StyleOptions options( None );
+            if( !Gtk::gtk_parent_treeview( widget ) )
+            {
+                options |= Blend;
+                if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
+            }
+
             Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, options );
 
         }
@@ -694,7 +699,11 @@ namespace Oxygen
         else {
 
             StyleOptions options( Vertical );
-            if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
+            if( !Gtk::gtk_parent_treeview( widget ) )
+            {
+                options |= Blend;
+                if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
+            }
             Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, options );
 
         }
