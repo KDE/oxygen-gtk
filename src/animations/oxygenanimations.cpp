@@ -22,8 +22,10 @@
 */
 
 #include "oxygenanimations.h"
+#include "../config.h"
 
 #include <cassert>
+#include <iostream>
 
 namespace Oxygen
 {
@@ -45,6 +47,8 @@ namespace Oxygen
     {
 
         delete _comboBoxEngine;
+        delete _menuShellEngine;
+        delete _lineEditEngine;
 
     }
 
@@ -53,6 +57,10 @@ namespace Oxygen
     {
 
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
+
+        #ifdef OXYGEN_DEBUG
+        std::cout << "Oxygen::Animations::registerWidget - " << widget << std::endl;
+        #endif
 
         WidgetData data;
         data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
@@ -64,6 +72,10 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void Animations::unregisterWidget( GtkWidget* widget )
     {
+
+        #ifdef OXYGEN_DEBUG
+        std::cout << "Oxygen::Animations::unregisterWidget - " << widget << std::endl;
+        #endif
 
         // find in map
         WidgetMap::iterator iter( _allWidgets.find( widget ) );
