@@ -157,16 +157,38 @@ namespace Oxygen
 
             } else {
 
-                /*
-                compare widget width to painting width to decide which borders must be painted
-                a too small width usually corresponds to a partial area of the editor (for which, e.g. icons are added),
-                and for which only the top and button parts must be painted, otherwise vertical artifacts are present
-                ideally, one would rather detect the side to be painted depending on the actual position of the painting rect
-                */
+                // initialize sides to be drawn
+                TileSet::Tiles tiles = TileSet::Ring;
 
-                int widgetWidth( widget->allocation.width );
-                if( widgetWidth - w <= 4 ) Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
-                else Oxygen::Style::instance().renderHole( window, clipRect, x-10, y-3, w+20, h+6, options, TileSet::Top|TileSet::Bottom );
+                // compare painting rect to widget rect, to decide if some sides are to be masked
+                if( window != widget->window && widget->window == gdk_window_get_parent( window )  )
+                {
+
+                    const int widgetWindowWidth( widget->allocation.width );
+                    int localWindowX( 0 );
+                    int localWindowWidth( 0 );
+                    gdk_window_get_position( window, &localWindowX, 0L );
+                    gdk_window_get_size( window, &localWindowWidth, 0L );
+
+                    // remove left border if needed
+                    if( localWindowX > 2 )
+                    {
+                        tiles &= ~TileSet::Left;
+                        x -= 7;
+                        w += 7;
+                    }
+
+                    // remove right border if needed
+                    if( localWindowX + localWindowWidth < widgetWindowWidth - 2 )
+                    {
+                        tiles &= ~TileSet::Right;
+                        w += 7;
+                    }
+
+                }
+
+                // render hole
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options, tiles );
 
             }
 
