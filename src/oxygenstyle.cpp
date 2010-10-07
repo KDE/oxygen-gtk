@@ -118,9 +118,10 @@ namespace Oxygen
         if( clipRect )
         {
 
-            clipRect->x += wx;
-            clipRect->y += wy;
-            gdk_rectangle_intersect( &rect, clipRect, &rect );
+            GdkRectangle localClip( *clipRect );
+            localClip.x += wx;
+            localClip.y += wy;
+            gdk_rectangle_intersect( &rect, &localClip, &rect );
 
         }
 
