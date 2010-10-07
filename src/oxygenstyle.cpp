@@ -111,18 +111,18 @@ namespace Oxygen
         // store rectangle
         GdkRectangle rect = { x, y, w, h };
 
-//         /*
-//         if there is a valid clipRect,
-//         intersects it with painting Rect, for performances
-//         */
-//         if( clipRect )
-//         {
-//
-//             clipRect->x += wx;
-//             clipRect->y += wy;
-//             gdk_rectangle_intersect( &rect, clipRect, &rect );
-//
-//         }
+        /*
+        if there is a valid clipRect,
+        intersects it with painting Rect, for performances
+        */
+        if( clipRect )
+        {
+
+            clipRect->x += wx;
+            clipRect->y += wy;
+            gdk_rectangle_intersect( &rect, clipRect, &rect );
+
+        }
 
         // upper rect
         GdkRectangle upperRect = { 0, 0, ww, splitY };

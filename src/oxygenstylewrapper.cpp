@@ -1020,8 +1020,6 @@ namespace Oxygen
         if( d.isNotebook() )
         {
 
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
-
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
             options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
