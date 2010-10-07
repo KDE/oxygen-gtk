@@ -55,9 +55,9 @@ namespace Oxygen
     {
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
 
-        gint pointer_x, pointer_y;
-        GdkModifierType pointer_mask;
-        gdk_window_get_pointer(widget->window, &pointer_x, &pointer_y, &pointer_mask);
+        // get pointer position
+        gint xPointer, yPointer;
+        gdk_window_get_pointer(widget->window, &xPointer, &yPointer, 0L );
 
         GList *children( gtk_container_get_children( GTK_CONTAINER(widget) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
@@ -68,13 +68,15 @@ namespace Oxygen
 
             GtkAllocation allocation;
             gtk_widget_get_allocation( GTK_WIDGET( child->data ), &allocation );
-            if( Gtk::gdk_rectangle_contains( &allocation, pointer_x, pointer_y ) )
+            if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
+                // this triggers widget update
                 gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_PRELIGHT );
 
             } else {
 
+                // this triggers widget update
                 gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_NORMAL );
 
             }

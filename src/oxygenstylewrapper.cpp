@@ -234,12 +234,11 @@ namespace Oxygen
                 if(state==GTK_STATE_ACTIVE)
                 {
 
-                    int x(0);
-                    int y(0);
-
                     // FIXME: is this coordinate magic correct?
-                    gdk_window_get_pointer(widget->window,&x,&y,NULL);
-                    if( Gtk::gdk_rectangle_contains( &widget->allocation, x, y ) )
+                    int xPointer(0);
+                    int yPointer(0);
+                    gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
+                    if( Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) )
                     { options|=Oxygen::Hover; }
 
                 }
@@ -673,16 +672,22 @@ namespace Oxygen
 
         if( state==GTK_STATE_INSENSITIVE && GTK_IS_SCROLLBAR(widget) && gtk_widget_is_sensitive(widget))
         {
-            int X,Y;
+
             // FIXME: is this coordinate magic correct?
             // Yes, constants are obtained empirically :)
-            gdk_window_get_pointer(widget->window,&X,&Y,NULL);
-            if(X>x-2 && Y>y-4 &&
-                    X < x+w+4 &&
-                    Y < y+h+4)
+            int xPointer,yPointer;
+            gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
+            if( xPointer > x-2 && yPointer > y-4 && xPointer < x+w+4 && xPointer < y+h+4)
+            {
+
                 state=GTK_STATE_PRELIGHT;
-            else
+
+            } else {
+
                 state=GTK_STATE_NORMAL;
+
+            }
+
         }
 
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
