@@ -701,10 +701,12 @@ namespace Oxygen
         {
 
             // FIXME: is this coordinate magic correct?
-            // Yes, constants are obtained empirically :)
+            // Yes, constants are obtained empirically
+            // However, it does not always work because scrollbar arrows are not _always_ repainted on hover
             int xPointer,yPointer;
             gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
-            if( xPointer > x-2 && yPointer > y-4 && xPointer < x+w+4 && xPointer < y+h+4)
+            GdkRectangle rect = { x-2, y-4, w+6, h+8 };
+            if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
             {
 
                 state=GTK_STATE_PRELIGHT;
