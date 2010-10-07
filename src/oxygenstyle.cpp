@@ -108,8 +108,21 @@ namespace Oxygen
         // split
         const int splitY( std::min(300, 3*wh/4 ) );
 
-        // upper rect
+        /*
+        if there is a valid clipRect,
+        intersects it with painting Rect, for performances
+        */
         GdkRectangle rect = { x, y, w, h };
+        if( clipRect )
+        {
+
+            clipRect->x += wx;
+            clipRect->y += wy;
+            gdk_rectangle_intersect( &rect, clipRect, &rect );
+
+        }
+
+        // upper rect
         GdkRectangle upperRect = { 0, 0, ww, splitY };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
