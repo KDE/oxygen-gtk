@@ -67,7 +67,7 @@ namespace Oxygen
         { _data.erase( widget ); }
 
         //! true if widget is included
-        bool contains( GtkWidget* widget ) const
+        bool contains( GtkWidget* widget )
         { return _data.contains( widget ); }
 
         //!@name modifiers
@@ -92,7 +92,7 @@ namespace Oxygen
         //@}
 
         //! true if either button or entry has focus
-        bool hasFocus( GtkWidget* widget ) const
+        bool hasFocus( GtkWidget* widget )
         { return _data.value( widget ).hasFocus(); }
 
         //! update mouseoverstate
@@ -100,7 +100,7 @@ namespace Oxygen
         { _data.value( widget ).updateMouseOver( widget ); }
 
         //! true if comboBox is hovered
-        bool hovered( GtkWidget* widget ) const
+        bool hovered( GtkWidget* widget )
         { return _data.value( widget ).hovered(); }
 
         private:

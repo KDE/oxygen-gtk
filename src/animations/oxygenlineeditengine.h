@@ -73,7 +73,7 @@ namespace Oxygen
         }
 
         //! true if widget is included
-        bool contains( GtkWidget* widget ) const
+        bool contains( GtkWidget* widget )
         { return _data.contains( widget ); }
 
         //! set widget as hovered
