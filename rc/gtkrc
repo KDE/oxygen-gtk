@@ -91,6 +91,7 @@ widget_class "*.GtkComboBoxEntry.*Button" style "oxygen-combobox-entry"
 #############
 # Workarounds
 
+# gimp
 style "oxygen-gimp-scale"
 {
     # this ensures that toolpanels fonts in gimp is identical
@@ -100,6 +101,7 @@ style "oxygen-gimp-scale"
 
 class "*" style "oxygen-gimp-scale"
 
+# 2pixels thickness.
 style "oxygen-w2" = "oxygen-default"
 {
     xthickness = 2
