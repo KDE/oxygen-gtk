@@ -447,7 +447,6 @@ namespace Oxygen
         else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;
         else _viewTriangularExpanderSize = ArrowSmall;
 
-
         // menu highlight mode
         std::string highlightMode( _oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
         if( highlightMode == "MM_SUBTLE" ) _menuHighlightMode = MM_SUBTLE;
