@@ -611,7 +611,8 @@ namespace Oxygen
 
             {
                 // shadow
-                cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2 );
+                //cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2 );
+                cairo_rounded_rectangle( context, double(xl)+1.0, double(yl), wl-1, hl+1, 2 );
                 cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
                 cairo_set_line_width( context, 0.6 );
                 cairo_stroke( context );
@@ -661,6 +662,7 @@ namespace Oxygen
 
             }
 
+            cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
             {
                 // bevel
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
