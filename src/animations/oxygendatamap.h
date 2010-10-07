@@ -31,44 +31,61 @@ namespace Oxygen
 {
 
     template <typename T>
-    class DataMap: public std::map<GtkWidget*, T>
+    class DataMap
     {
 
         public:
 
+        //! constructor
+        DataMap( void )
+        {}
+
         //! insert new widget
         inline virtual void insert( GtkWidget* widget, const T& value = T())
-        { Map::insert( std::make_pair( widget, value ) ); }
+        { _map.insert( std::make_pair( widget, value ) ); }
 
         //! true if widget is in list
         virtual bool contains( GtkWidget* widget ) const
-        { return Map::find( widget ) != Map::end(); }
+        { return _map.find( widget ) != _map.end(); }
 
         //! return value
         virtual const T& value( GtkWidget* widget ) const
         {
-            typename Map::const_iterator iter( Map::find( widget ) );
-            assert( iter != Map::end() );
+            typename Map::const_iterator iter( _map.find( widget ) );
+            assert( iter != _map.end() );
             return iter->second;
         }
 
         //! return value
         virtual T& value( GtkWidget* widget )
         {
-            typename Map::iterator iter(  Map::find( widget ) );
-            assert( iter != Map::end() );
+            typename Map::iterator iter(  _map.find( widget ) );
+            assert( iter != _map.end() );
             return iter->second;
         }
 
         //! erase
         virtual void erase( GtkWidget* widget )
-        { Map::erase( widget ); }
+        { _map.erase( widget ); }
+
+        protected:
+
+        //! copy constructor is private
+        DataMap( const DataMap& )
+        { assert( false ); }
+
+        //! assignment operator
+        DataMap& operator = ( const DataMap& )
+        {
+            assert( false );
+            return *this;
+        }
 
         private:
 
         //! shortcut
         typedef std::map<GtkWidget*, T> Map;
-
+        Map _map;
 
     };
 
