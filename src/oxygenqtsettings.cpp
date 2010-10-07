@@ -463,12 +463,12 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
 
         _rc.setCurrentSection( "oxygen-scrollbar" );
-        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
-        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
 
         // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
-        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
-        _rc.addToCurrentSection( Gtk::RCOption<bool>("GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
 
     }
 
