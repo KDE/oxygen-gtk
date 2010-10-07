@@ -1742,15 +1742,18 @@ namespace Oxygen
 
         // fill
         Cairo::Pattern pattern;
+        int dimension = 0;
         switch( side )
         {
             case GTK_POS_BOTTOM:
+            dimension = tabSlab._h;
             if( isCurrentTab ) tabSlab._h -= 2;
             else tabSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
             break;
 
             case GTK_POS_TOP:
+            dimension = tabSlab._h;
             if( isCurrentTab )
             {
 
@@ -1767,12 +1770,14 @@ namespace Oxygen
             break;
 
             case GTK_POS_RIGHT:
+            dimension = tabSlab._w;
             if( isCurrentTab ) tabSlab._w -= 2;
             else tabSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
             break;
 
             case GTK_POS_LEFT:
+            dimension = tabSlab._w;
             if( isCurrentTab )
             {
                 tabSlab._x += 2;
@@ -1802,8 +1807,8 @@ namespace Oxygen
 
             cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.1 ) );
             cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::alphaColor( dark, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
-            cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( dark ) );
+            cairo_pattern_add_color_stop( pattern, std::max( 0.8, 1.0 - 10.0/dimension ), ColorUtils::alphaColor( dark, 0.4 ) );
+            cairo_pattern_add_color_stop( pattern, std::max( 0.9, 1.0 - 5.0/dimension ), ColorUtils::Rgba::transparent( dark ) );
 
         }
 
@@ -1817,8 +1822,7 @@ namespace Oxygen
 
         // draw pattern
         cairo_set_source( context, pattern );
-        if( isCurrentTab ) cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
-        else cairo_rounded_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, 3 );
+        cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
         cairo_fill( context );
 
         // render connections to frame
