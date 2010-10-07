@@ -30,6 +30,13 @@
 namespace Oxygen
 {
 
+    //! generic class to map data to widgets
+    /*
+    Note: I'm not sure about memory management. At some point one might need to allocate the registered
+    data on the heap rather than on the stack, to be able to safely pass the data pointer around via callbacks.
+    The current implementation should make that possible without external code change, provided that the map
+    content is properly deleted (as opposed to erased) in destructor and 'unregister' method.
+    */
     template <typename T>
     class DataMap
     {
