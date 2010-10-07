@@ -141,11 +141,13 @@ namespace Oxygen
             !Gtk::gtk_parent_combobox_entry( widget ) &&
             !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
 
+            // TODO: not sure whether this is necessary or not.
+            // probably not.
             oxygen_style_parent_class->draw_flat_box( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
 
-            Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
+            Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, state, shadow );
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
@@ -155,7 +157,16 @@ namespace Oxygen
 
             } else {
 
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
+                /*
+                compare widget width to painting width to decide which borders must be painted
+                a too small width usually corresponds to a partial area of the editor (for which, e.g. icons are added),
+                and for which only the top and button parts must be painted, otherwise vertical artifacts are present
+                ideally, one would rather detect the side to be painted depending on the actual position of the painting rect
+                */
+
+                int widgetWidth( widget->allocation.width );
+                if( widgetWidth - w <= 4 ) Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
+                else Oxygen::Style::instance().renderHole( window, clipRect, x-10, y-3, w+20, h+6, options, TileSet::Top|TileSet::Bottom );
 
             }
 
