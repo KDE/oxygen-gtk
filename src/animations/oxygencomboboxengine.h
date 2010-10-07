@@ -66,6 +66,10 @@ namespace Oxygen
         void unregisterWidget( GtkWidget* widget )
         { _data.erase( widget ); }
 
+        //! true if widget is included
+        bool contains( GtkWidget* widget ) const
+        { return _data.contains( widget ); }
+
         //!@name modifiers
         //@{
 
