@@ -271,7 +271,7 @@ namespace Oxygen
                         options|=Oxygen::Hover;
                 }
 
-                if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+                if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
                 {
                     // make pressed togglebutton look like flat pressed togglebutton when hovered
                     x+=2;
