@@ -149,6 +149,11 @@ namespace Oxygen
 
             } else {
 
+                if(
+                    Animations::instance().lineEditEngine().contains( widget ) &&
+                    Animations::instance().lineEditEngine().hovered( widget ) )
+                { options |= Hover; }
+
                 // compare painting rect to widget rect, to decide if some sides are to be masked
                 TileSet::Tiles tiles = TileSet::Ring;
                 if( widget && window != widget->window && widget->window == gdk_window_get_parent( window )  )
