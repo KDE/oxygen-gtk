@@ -55,7 +55,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
         // define colors
@@ -67,7 +67,7 @@ namespace Oxygen
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
             if( wh > 0 )
             {
-                if( Gtk::gtk_parent_menu( widget ) ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+                if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
                 else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
             }
 
@@ -1124,7 +1124,9 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+
+            if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
 
         } else {
 

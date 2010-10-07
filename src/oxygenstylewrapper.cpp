@@ -603,11 +603,23 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
-        if( d.isRadioButton() || d.isOption() )
+        if( d.isRadioButton() )
         {
 
             StyleOptions options( styleOptions( widget, state, shadow ) );
             if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
+            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
+
+        } else if( d.isOption() ) {
+
+            // load options and disable hove
+            StyleOptions options( styleOptions( widget, state, shadow ) );
+            if( !Gtk::gtk_parent_treeview( widget ) )
+            {
+                options |= Blend;
+                if( Gtk::gtk_parent_menu( widget ) ) options|=Menu;
+            }
+            options &= ~Hover;
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
 
         } else {
@@ -646,9 +658,9 @@ namespace Oxygen
         else if( d.isToolBar() && !Style::instance().settings().toolBarDrawItemSeparator() ) return;
         else {
 
-            StyleOptions options( None );
+            StyleOptions options( styleOptions( widget, state, GTK_SHADOW_NONE ) );
             if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
-            Style::instance().drawSeparator( window, widget, clipRect, x1, y, x2-x1, 0, options );
+            Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, options );
 
         }
 
@@ -683,7 +695,7 @@ namespace Oxygen
 
             StyleOptions options( Vertical );
             if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
-            Style::instance().drawSeparator( window, widget, clipRect, x, y1, 0, y2-y1, options );
+            Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, options );
 
         }
 

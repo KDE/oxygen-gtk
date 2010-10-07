@@ -21,8 +21,9 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtk.h>
+#include "oxygengtkutils.h"
 
+#include <gtk/gtk.h>
 namespace Oxygen
 {
 
@@ -40,7 +41,8 @@ namespace Oxygen
         Alpha = 1<<7,
         Contrast = 1<<8,
         Selected = 1<<9,
-        Disabled = 1<<10
+        Disabled = 1<<10,
+        Menu = 1<<11
     };
 
     typedef unsigned long StyleOptions;
@@ -54,7 +56,8 @@ namespace Oxygen
         else if( state == GTK_STATE_SELECTED ) options |= Selected;
 
         if( shadow == GTK_SHADOW_IN ) options |= Sunken;
-        if( GTK_WIDGET_HAS_FOCUS(widget) ) options|=Oxygen::Focus;
+        if( GTK_WIDGET_HAS_FOCUS(widget) ) options|=Focus;
+
         return options;
     }
 
