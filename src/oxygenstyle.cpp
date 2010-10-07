@@ -1286,6 +1286,13 @@ namespace Oxygen
         } else if( !( isInMenu && wh<= 0 ) ) color = ColorUtils::midColor( color );
 
 
+        // adjust vertical extent of the rect in menus
+        if( isInMenu )
+        {
+            y+=1;
+            h-=2;
+        }
+
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )
         {

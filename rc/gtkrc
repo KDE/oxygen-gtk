@@ -53,14 +53,22 @@ style "oxygen-default"
 class "*" style "oxygen-default"
 
 # menuitems padding
-# TODO: this needs serous clean-up.
 style "oxygen-menuitem" = "oxygen-default"
 {
     xthickness = 1
-    ythickness = 3
+    ythickness = 5
 }
 
-class "*MenuItem" style "oxygen-menuitem"
+widget_class "*.GtkMenu.*MenuItem" style "oxygen-menuitem"
+
+# menuitems padding, for separators
+style "oxygen-separator-menuitem" = "oxygen-default"
+{
+    xthickness = 1
+    ythickness = 1
+}
+
+widget_class "*.GtkMenu.*SeparatorMenuItem" style "oxygen-separator-menuitem"
 
 # notebook settings
 style "oxygen-notebook" = "oxygen-default"
