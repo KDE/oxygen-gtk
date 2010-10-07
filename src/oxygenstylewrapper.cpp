@@ -136,32 +136,22 @@ namespace Oxygen
 
             return;
 
-        } else if(
-            d.isEntryBg() &&
-            !Gtk::gtk_parent_combobox_entry( widget ) &&
-            !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
-
-            // TODO: not sure whether this is necessary or not.
-            // probably not.
-            oxygen_style_parent_class->draw_flat_box( style, window, state,
-                shadow, clipRect, widget, detail,
-                x, y, w, h );
+        } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
 
             Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, state, shadow );
 
-            if( GTK_IS_SPIN_BUTTON( widget ) )
+            if( GTK_IS_SPIN_BUTTON( widget ) || Gtk::gtk_parent_combobox_entry( widget ) )
             {
 
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options );
+                // partial highlight for comboboxes and spinboxes
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else {
 
-                // initialize sides to be drawn
-                TileSet::Tiles tiles = TileSet::Ring;
-
                 // compare painting rect to widget rect, to decide if some sides are to be masked
-                if( window != widget->window && widget->window == gdk_window_get_parent( window )  )
+                TileSet::Tiles tiles = TileSet::Ring;
+                if( widget && window != widget->window && widget->window == gdk_window_get_parent( window )  )
                 {
 
                     const int widgetWindowWidth( widget->allocation.width );
