@@ -136,35 +136,6 @@ namespace Oxygen
 
             return;
 
-        } else if(
-            d.isEntryBg() &&
-            !Gtk::gtk_parent_combobox_entry( widget ) &&
-            !Style::instance().settings().applicationName().isFirefox() ) {
-
-            oxygen_style_parent_class->draw_flat_box( style, window, state,
-                shadow, clipRect, widget, detail,
-                x, y, w, h );
-
-            StyleOptions options( Blend | NoFill );
-            options |= styleOptions( widget, state, shadow );
-
-            if(
-                Animations::instance().lineEditEngine().contains( widget ) &&
-                Animations::instance().lineEditEngine().hovered( widget ) )
-            { options |= Hover; }
-
-            if( GTK_IS_SPIN_BUTTON( widget ) )
-            {
-
-                Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options, TileSet::Ring & (~TileSet::Right) );
-
-            } else {
-
-                Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
-
-            }
-            accepted = true;
-
         }
 
         if( !accepted )
@@ -262,13 +233,15 @@ namespace Oxygen
                 // prelight flat button if it's pressed but mouse button is still not released
                 if(state==GTK_STATE_ACTIVE)
                 {
-                    int x,y;
+
+                    int x(0);
+                    int y(0);
+
                     // FIXME: is this coordinate magic correct?
                     gdk_window_get_pointer(widget->window,&x,&y,NULL);
-                    if(x>widget->allocation.x && y>widget->allocation.y &&
-                            x < widget->allocation.width + widget->allocation.x &&
-                            y < widget-> allocation.height + widget->allocation.y)
-                        options|=Oxygen::Hover;
+                    if( Gtk::gdk_rectangle_contains( &widget->allocation, x, y ) )
+                    { options|=Oxygen::Hover; }
+
                 }
 
                 if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
@@ -278,7 +251,7 @@ namespace Oxygen
                     y+=2;
                     w-=4;
                     h-=4;
-                    options |= Oxygen::Flat | Oxygen::Hover;
+                    options |= (Oxygen::Flat | Oxygen::Hover);
                 }
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
@@ -311,6 +284,18 @@ namespace Oxygen
 
             StyleOptions options = styleOptions( widget, state, shadow );
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
+
+        } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
+
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Vertical );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h+16, Vertical );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y-16, w, h+16, Vertical );
+
+        } else if( d.isTroughAny() && GTK_IS_HSCALE( widget ) ) {
+
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, None );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w+16, h, None );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x-16, y, w+16, h, None );
 
         } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
@@ -346,18 +331,6 @@ namespace Oxygen
                 const int addLineOffset( buttonSize*Style::instance().settings().scrollBarAddLineButtons() );
                 Style::instance().renderScrollBarHole( window, clipRect, x+1+subLineOffset, y, w-2-subLineOffset-addLineOffset, h-1, None );
             }
-
-        } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
-
-            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Vertical );
-            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h+16, Vertical );
-            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y-16, w, h+16, Vertical );
-
-        } else if( d.isTroughAny() && GTK_IS_HSCALE( widget ) ) {
-
-            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, None );
-            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w+16, h, None );
-            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x-16, y, w+16, h, None );
 
         } else if( d.isSpinButton()) {
 
