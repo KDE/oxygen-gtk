@@ -28,6 +28,18 @@
 
 #include "oxygenrgba.h"
 
+namespace Oxygen
+{
+
+    //! gdkRectangle streamer
+    inline std::ostream& operator << (std::ostream& out, const GdkRectangle& rect )
+    {
+        out << "( " << rect.x << "," << rect.y << "," << rect.width << "," << rect.height << ")";
+        return out;
+    }
+
+}
+
 namespace Gtk
 {
 
