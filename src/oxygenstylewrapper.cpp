@@ -79,7 +79,7 @@ namespace Oxygen
             detail );
         #endif
 
-        if( GTK_IS_ENTRY( widget ) && !GTK_IS_SPIN_BUTTON( widget ) )
+        if( GTK_IS_ENTRY( widget ) )
         { Animations::instance().lineEditEngine().registerWidget( widget ); }
 
         const Gtk::Detail d( detail );
@@ -458,7 +458,7 @@ namespace Oxygen
             detail );
         #endif
 
-        if( GTK_IS_ENTRY( widget ) && !GTK_IS_SPIN_BUTTON( widget ) )
+        if( GTK_IS_ENTRY( widget ) )
         { Animations::instance().lineEditEngine().registerWidget( widget ); }
 
         const Gtk::Detail d( detail );
@@ -814,8 +814,11 @@ namespace Oxygen
             // disable contrast
             options &= ~Contrast;
 
-            if( (options & Hover) && Animations::instance().lineEditEngine().contains( widget ) )
-            { Animations::instance().lineEditEngine().setHovered( widget, true ); }
+            if(
+                (options & Hover) &&
+                Animations::instance().lineEditEngine().contains( widget ) &&
+                Animations::instance().lineEditEngine().setHovered( widget, true ) )
+            { gtk_widget_queue_draw( widget ); }
         }
 
         // render
