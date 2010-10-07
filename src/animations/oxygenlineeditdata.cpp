@@ -24,7 +24,6 @@
 */
 
 #include "oxygenlineeditdata.h"
-#include "oxygenanimations.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -36,8 +35,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void LineEditData::connect( GtkWidget* widget )
     {
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, 0L );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, 0L );
+        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
+        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
     }
 
     //________________________________________________________________________________
@@ -49,17 +48,17 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::motionNotifyEvent(GtkWidget *widget, GdkEventMotion *event, gpointer )
+    gboolean LineEditData::motionNotifyEvent(GtkWidget *widget, GdkEventMotion *event, gpointer data )
     {
-        if( Animations::instance().lineEditEngine().setHovered( widget, true ) )
+        if( static_cast<LineEditData*>( data )->setHovered( true ) )
         { gtk_widget_queue_draw( widget ); }
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer )
+    gboolean LineEditData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer data )
     {
-        if( Animations::instance().lineEditEngine().setHovered( widget, false ) )
+        if( static_cast<LineEditData*>( data )->setHovered( false ) )
         { gtk_widget_queue_draw( widget ); }
         return FALSE;
     }
