@@ -259,9 +259,26 @@ namespace Oxygen
                 StyleOptions options( Blend );
                 options |= styleOptions( widget, state, shadow );
 
-                if( GTK_IS_BUTTON(widget) && !GTK_IS_TOGGLE_BUTTON( widget ) )
+                // prelight flat button if it's pressed but mouse button is still not released
+                if(state==GTK_STATE_ACTIVE)
                 {
-                    if(state == GTK_STATE_ACTIVE) options |= Hover;
+                    int x,y;
+                    // FIXME: is this coordinate magic correct?
+                    gdk_window_get_pointer(widget->window,&x,&y,NULL);
+                    if(x>widget->allocation.x && y>widget->allocation.y &&
+                            x < widget->allocation.width + widget->allocation.x &&
+                            y < widget-> allocation.height + widget->allocation.y)
+                        options|=Oxygen::Hover;
+                }
+
+                if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
+                {
+                    // make pressed togglebutton look like flat pressed togglebutton when hovered
+                    x+=2;
+                    y+=2;
+                    w-=4;
+                    h-=4;
+                    options |= Oxygen::Flat | Oxygen::Hover;
                 }
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
@@ -680,6 +697,20 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
+
+        if( state==GTK_STATE_INSENSITIVE && GTK_IS_SCROLLBAR(widget) && gtk_widget_is_sensitive(widget))
+        {
+            int X,Y;
+            // FIXME: is this coordinate magic correct?
+            // Yes, constants are obtained empirically :)
+            gdk_window_get_pointer(widget->window,&X,&Y,NULL);
+            if(X>x-2 && Y>y-4 &&
+                    X < x+w+4 &&
+                    Y < y+h+4)
+                state=GTK_STATE_PRELIGHT;
+            else
+                state=GTK_STATE_NORMAL;
+        }
 
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
         if( d.isMenuItem() && Style::instance().settings().applicationName().isFirefox() )
