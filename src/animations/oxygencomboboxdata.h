@@ -34,7 +34,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxData( void )
+        ComboBoxData( void ):
+            _hovered( false )
         {}
 
         //! destructor
@@ -75,6 +76,15 @@ namespace Oxygen
         bool hasFocus( void ) const
         { return _button._focus || _entry._focus; }
 
+        //!@name  hover
+        //@{
+
+        void updateMouseOver( GtkWidget* );
+        bool hovered( void ) const
+        { return _hovered; }
+
+        //@}
+
         private:
 
         class Data
@@ -94,8 +104,14 @@ namespace Oxygen
 
         };
 
+        //! button data
         Data _button;
+
+        //! entry data
         Data _entry;
+
+        //! hover
+        bool _hovered;
 
 
     };

@@ -46,8 +46,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxEngine( Animations* parent ):
-            BaseEngine( parent )
+        ComboBoxEngine( Animations* widget ):
+            BaseEngine( widget )
             {}
 
         //! destructor
@@ -73,28 +73,35 @@ namespace Oxygen
         //!@name modifiers
         //@{
 
-        //! assign button to data matching parent
-        void setButton( GtkWidget* parent, GtkWidget* value )
-        { _data.value( parent ).setButton( value ); }
+        //! assign button to data matching widget
+        void setButton( GtkWidget* widget, GtkWidget* value )
+        { _data.value( widget ).setButton( value ); }
 
-        //! assign entry to data matching parent
-        void setEntry( GtkWidget* parent, GtkWidget* value )
-        { _data.value( parent ).setEntry( value ); }
+        //! assign entry to data matching widget
+        void setEntry( GtkWidget* widget, GtkWidget* value )
+        { _data.value( widget ).setEntry( value ); }
 
         //! button focus
-        void setButtonFocus( GtkWidget* parent, bool value )
-        { _data.value( parent ).setButtonFocus( value ); }
+        void setButtonFocus( GtkWidget* widget, bool value )
+        { _data.value( widget ).setButtonFocus( value ); }
 
         //! entry focus
-        void setEntryFocus( GtkWidget* parent, bool value )
-        { _data.value( parent ).setEntryFocus( value ); }
+        void setEntryFocus( GtkWidget* widget, bool value )
+        { _data.value( widget ).setEntryFocus( value ); }
 
         //@}
 
         //! true if either button or entry has focus
-        bool hasFocus( GtkWidget* parent ) const
-        { return _data.value( parent ).hasFocus(); }
+        bool hasFocus( GtkWidget* widget ) const
+        { return _data.value( widget ).hasFocus(); }
 
+        //! update mouseoverstate
+        void updateMouseOver( GtkWidget* widget )
+        { _data.value( widget ).updateMouseOver( widget ); }
+
+        //! true if comboBox is hovered
+        bool hovered( GtkWidget* widget ) const
+        { return _data.value( widget ).hovered(); }
 
         private:
 

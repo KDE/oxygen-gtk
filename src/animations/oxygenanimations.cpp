@@ -58,7 +58,7 @@ namespace Oxygen
 
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
 
-        #ifdef OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cout << "Oxygen::Animations::registerWidget - " << widget << std::endl;
         #endif
 
@@ -73,7 +73,7 @@ namespace Oxygen
     void Animations::unregisterWidget( GtkWidget* widget )
     {
 
-        #ifdef OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cout << "Oxygen::Animations::unregisterWidget - " << widget << std::endl;
         #endif
 

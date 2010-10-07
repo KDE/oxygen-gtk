@@ -141,10 +141,27 @@ namespace Oxygen
             Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, state, shadow );
 
-            if( GTK_IS_SPIN_BUTTON( widget ) || Gtk::gtk_parent_combobox_entry( widget ) )
+            if( GTK_IS_SPIN_BUTTON( widget ) )
             {
 
-                // partial highlight for comboboxes and spinboxes
+                // partial highlight
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
+
+            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+                // check if parent is in style map
+                Animations::instance().comboBoxEngine().registerWidget( parent );
+                Animations::instance().comboBoxEngine().setEntry( parent, widget );
+                Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEngine().updateMouseOver( parent );
+
+                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                else options &= ~Focus;
+
+                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                else options &= ~Hover;
+
+                // partial highlight
                 Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else {
@@ -257,16 +274,20 @@ namespace Oxygen
                 options |= styleOptions( widget, state, shadow );
 
                 // for now, disable hover, because it is not supported in the entry
-                options &= ~Hover;
+                // options &= ~Hover;
 
                 // focus handling
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setButton( parent, widget );
                 Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
+                Animations::instance().comboBoxEngine().updateMouseOver( parent );
 
                 // update option accordingly
                 if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
+
+                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                else options &= ~Hover;
 
                 // render
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
@@ -295,18 +316,6 @@ namespace Oxygen
                     { options|=Oxygen::Hover; }
 
                 }
-
-//                 // this is incorrect (because the button background is different for flat and non-flat buttons,
-//                 // and because I believe it contradicts oxygen policy. Commenting it out for now
-//                 if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
-//                 {
-//                     // make pressed togglebutton look like flat pressed togglebutton when hovered
-//                     x+=2;
-//                     y+=2;
-//                     w-=4;
-//                     h-=4;
-//                     options |= (Oxygen::Flat | Oxygen::Hover);
-//                 }
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
@@ -469,9 +478,13 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setEntry( parent, widget );
                 Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEngine().updateMouseOver( parent );
 
                 if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
+
+                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                else options &= ~Hover;
 
                 // render
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
