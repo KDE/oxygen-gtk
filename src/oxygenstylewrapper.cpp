@@ -243,15 +243,17 @@ namespace Oxygen
 
                 }
 
-                if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
-                {
-                    // make pressed togglebutton look like flat pressed togglebutton when hovered
-                    x+=2;
-                    y+=2;
-                    w-=4;
-                    h-=4;
-                    options |= (Oxygen::Flat | Oxygen::Hover);
-                }
+//                 // this is incorrect (because the button background is different for flat and non-flat buttons,
+//                 // and because I believe it contradicts oxygen policy. Commenting it out for now
+//                 if(GTK_IS_TOGGLE_BUTTON(widget) && state==GTK_STATE_PRELIGHT && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)) && !Gtk::gtk_button_is_flat(widget))
+//                 {
+//                     // make pressed togglebutton look like flat pressed togglebutton when hovered
+//                     x+=2;
+//                     y+=2;
+//                     w-=4;
+//                     h-=4;
+//                     options |= (Oxygen::Flat | Oxygen::Hover);
+//                 }
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
