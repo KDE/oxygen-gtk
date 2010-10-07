@@ -80,7 +80,6 @@ namespace Oxygen
         virtual T& value( GtkWidget* widget )
         {
 
-
             // check against last widget
             if( widget == _lastWidget ) return *_lastData;
 
@@ -97,7 +96,19 @@ namespace Oxygen
 
         //! erase
         virtual void erase( GtkWidget* widget )
-        { _map.erase( widget ); }
+        {
+
+            // clear last widget and data, if match
+            if( _lastWidget == widget )
+            {
+                _lastWidget = 0L;
+                _lastData = 0L;
+            }
+
+            // erase from map
+            _map.erase( widget );
+
+        }
 
         protected:
 
