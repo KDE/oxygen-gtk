@@ -290,7 +290,7 @@ namespace Oxygen
                     // FIXME: is this coordinate magic correct?
                     int xPointer(0);
                     int yPointer(0);
-                    gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
+                    gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
                     if( Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) )
                     { options|=Oxygen::Hover; }
 
@@ -754,7 +754,7 @@ namespace Oxygen
             // Yes, constants are obtained empirically
             // However, it does not always work because scrollbar arrows are not _always_ repainted on hover
             int xPointer,yPointer;
-            gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
+            gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
             GdkRectangle rect = { x-2, y-4, w+6, h+8 };
             if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
             {
@@ -1306,7 +1306,7 @@ namespace Oxygen
 
         /* If the size was wildcarded, and we're allowed to scale, then scale; otherwise,
         * leave it alone. */
-        GdkPixbuf *scaled(0L);
+        GdkPixbuf *scaled( 0L);
         if( size != (GtkIconSize)-1 && gtk_icon_source_get_size_wildcarded( source ) )
         {
 
