@@ -77,8 +77,8 @@ namespace Oxygen
         { return _data.contains( widget ); }
 
         //! set widget as hovered
-        bool setHovered( GtkWidget* widget, bool value )
-        { return _data.value( widget ).setHovered( value ); }
+        void setHovered( GtkWidget* widget, bool value )
+        { _data.value( widget ).setHovered( widget, value ); }
 
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )

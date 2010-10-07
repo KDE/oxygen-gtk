@@ -145,6 +145,10 @@ namespace Oxygen
             {
 
                 // partial highlight
+                if(
+                    Animations::instance().lineEditEngine().contains( widget ) &&
+                    Animations::instance().lineEditEngine().hovered( widget ) )
+                { options |= Hover; }
                 Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -816,9 +820,9 @@ namespace Oxygen
 
             if(
                 (options & Hover) &&
-                Animations::instance().lineEditEngine().contains( widget ) &&
-                Animations::instance().lineEditEngine().setHovered( widget, true ) )
-            { gtk_widget_queue_draw( widget ); }
+                Animations::instance().lineEditEngine().contains( widget ) )
+            { Animations::instance().lineEditEngine().setHovered( widget, true ); }
+
         }
 
         // render

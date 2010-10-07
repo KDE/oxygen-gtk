@@ -50,11 +50,14 @@ namespace Oxygen
         void disconnect( GtkWidget* );
 
         //! true if hovered
-        bool setHovered( bool value )
+        void setHovered( GtkWidget* widget, bool value )
         {
-            if( _hovered == value ) return false;
-            _hovered = value;
-            return true;
+            if( _hovered != value )
+            {
+                _hovered = value;
+                gtk_widget_queue_draw( widget );
+            }
+            return;
         }
 
         //! true if hovered
