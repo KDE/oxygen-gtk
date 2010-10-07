@@ -602,7 +602,8 @@ namespace Oxygen
             detail );
         #endif
 
-        if( Gtk::Detail( detail ).isRadioButton() )
+        Gtk::Detail d( detail );
+        if( d.isRadioButton() || d.isOption() )
         {
 
             StyleOptions options( styleOptions( widget, state, shadow ) );

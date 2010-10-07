@@ -86,11 +86,11 @@ namespace Gtk
         bool isMenuItem( void ) const { return _value == "menuitem"; }
         bool isMenuScrollArrow( void ) const { return _value == "menu_scroll_arrow_down" || _value == "menu_scroll_arrow_up"; }
         bool isNotebook( void ) const { return _value == "notebook"; }
+        bool isOption( void ) const { return _value == "option"; }
         bool isOptionMenu( void ) const { return _value == "optionmenu"; }
         bool isOptionMenuTab( void ) const { return _value == "optionmenutab"; }
         bool isPaned( void ) const { return _value == "paned"; }
         bool isRadioButton( void ) const { return _value == "radiobutton"; }
-
         //!@name rulers
         //@{
         bool isRuler( void ) const { return _value == "vruler" || _value == "hruler"; }
@@ -108,6 +108,7 @@ namespace Gtk
         //@}
 
         bool isTab( void ) const { return _value == "tab"; }
+        bool isTearOffMenuItem( void ) const { return _value == "tearoffmenuitem"; }
         bool isToolBar( void ) const { return _value == "toolbar"; }
         bool isTooltip( void ) const { return _value == "tooltip"; }
         bool isTreeView( void ) const { return _value == "treeview"; }
