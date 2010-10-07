@@ -136,6 +136,31 @@ namespace Oxygen
 
             return;
 
+        } else if(
+            d.isEntryBg() &&
+            !Gtk::gtk_parent_combobox_entry( widget ) &&
+            !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
+
+            oxygen_style_parent_class->draw_flat_box( style, window, state,
+                shadow, clipRect, widget, detail,
+                x, y, w, h );
+
+            Oxygen::StyleOptions options( Oxygen::Blend | Oxygen::NoFill );
+            options |= Oxygen::styleOptions( widget, state, shadow );
+
+            if( GTK_IS_SPIN_BUTTON( widget ) )
+            {
+
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+10, h+6, options );
+
+            } else {
+
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options );
+
+            }
+
+            accepted = true;
+
         }
 
         if( !accepted )
