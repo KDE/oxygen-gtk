@@ -41,8 +41,8 @@ namespace Oxygen
         {}
 
         //! insert new widget
-        inline virtual void insert( GtkWidget* widget, const T& value = T())
-        { _map.insert( std::make_pair( widget, value ) ); }
+        inline T& registerWidget( GtkWidget* widget )
+        { return _map.insert( std::make_pair( widget, T() ) ).first->second; }
 
         //! true if widget is in list
         virtual bool contains( GtkWidget* widget ) const

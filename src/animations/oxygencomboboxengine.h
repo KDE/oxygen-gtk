@@ -23,6 +23,7 @@
 * MA 02110-1301, USA.
 */
 
+
 #include "oxygenbaseengine.h"
 #include "oxygendatamap.h"
 #include "oxygencomboboxdata.h"
@@ -57,7 +58,7 @@ namespace Oxygen
         void registerWidget( GtkWidget* widget )
         {
             if( _data.contains( widget ) ) return;
-            _data.insert( widget, ComboBoxData() );
+            _data.registerWidget( widget );
             BaseEngine::registerWidget( widget );
         }
 

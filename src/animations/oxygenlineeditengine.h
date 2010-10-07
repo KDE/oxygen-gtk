@@ -58,9 +58,8 @@ namespace Oxygen
         {
 
             if( _data.contains( widget ) ) return;
-            LineEditData data;
+            LineEditData& data( _data.registerWidget( widget ) );
             data.connect( widget );
-            _data.insert( widget, data );
             BaseEngine::registerWidget( widget );
 
         }
