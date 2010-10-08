@@ -79,13 +79,13 @@ namespace Oxygen
             detail );
         #endif
 
-        if( GTK_IS_ENTRY( widget ) )
-        { Animations::instance().lineEditEngine().registerWidget( widget ); }
-
         const Gtk::Detail d( detail );
         bool accepted( false );
         if( d.isBase() || d.isEventBox() )
         {
+
+            if( GTK_IS_WINDOW( widget ) )
+            { Animations::instance().mainWindowEngine().registerWidget( widget ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
@@ -459,15 +459,15 @@ namespace Oxygen
             detail );
         #endif
 
-        if( GTK_IS_ENTRY( widget ) )
-        { Animations::instance().lineEditEngine().registerWidget( widget ); }
-
         const Gtk::Detail d( detail );
         if( d.isSlider() || d.isRuler() ) {
 
             return;
 
         } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
+
+            if( GTK_IS_ENTRY( widget ) )
+            { Animations::instance().lineEditEngine().registerWidget( widget ); }
 
             StyleOptions options( NoFill );
             options |= styleOptions( widget, state, shadow );

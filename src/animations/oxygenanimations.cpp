@@ -42,6 +42,7 @@ namespace Oxygen
     {
 
         delete _comboBoxEngine;
+        delete _mainWindowEngine;
         delete _menuShellEngine;
         delete _lineEditEngine;
         delete _spinBoxEngine;
@@ -101,6 +102,7 @@ namespace Oxygen
 
         // create engines
         registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
+        registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
         registerEngine( _spinBoxEngine = new SpinBoxEngine( this ) );

@@ -27,6 +27,7 @@
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxengine.h"
 #include "oxygenlineeditengine.h"
+#include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
 #include "oxygenspinboxengine.h"
 #include "oxygentabwidgetengine.h"
@@ -58,6 +59,10 @@ namespace Oxygen
         //! combobox engine
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
+
+        //! main window engine
+        MainWindowEngine& mainWindowEngine( void ) const
+        { return *_mainWindowEngine; }
 
         //! menushell engine
         MenuShellEngine& menuShellEngine( void ) const
@@ -94,6 +99,9 @@ namespace Oxygen
 
         //! combobox engine
         ComboBoxEngine* _comboBoxEngine;
+
+        //! main window engine
+        MainWindowEngine* _mainWindowEngine;
 
         //! menushell engine
         MenuShellEngine* _menuShellEngine;
