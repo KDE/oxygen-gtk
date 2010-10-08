@@ -143,12 +143,10 @@ namespace Oxygen
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
+                Animations::instance().spinBoxEngine().registerWidget( widget );
+                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
+                else options &= ~Hover;
 
-                // partial highlight
-                if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
-                { options |= Hover; }
                 Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -157,7 +155,6 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setEntry( parent, widget );
                 Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
-                Animations::instance().comboBoxEngine().updateMouseOver( parent );
 
                 if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
@@ -404,17 +401,17 @@ namespace Oxygen
             StyleOptions options( Blend | NoFill );
             options |= styleOptions( widget, state, shadow );
 
-            if(
-                Animations::instance().lineEditEngine().contains( widget ) &&
-                Animations::instance().lineEditEngine().hovered( widget ) )
-            { options |= Hover; }
-
             if( style && gtk_widget_get_state( widget ) == GTK_STATE_INSENSITIVE )
             {
                 // for disabled spinboxes one has to handle the background manually
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[ GTK_STATE_INSENSITIVE] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
             }
+
+            Animations::instance().spinBoxEngine().registerWidget( widget );
+            Animations::instance().spinBoxEngine().updateMouseOver( widget );
+            if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
+            else options &= ~Hover;
 
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, TileSet::Ring & (~TileSet::Left) );
@@ -493,6 +490,16 @@ namespace Oxygen
                 // render
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, TileSet::Ring&(~TileSet::Right) );
+
+            } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
+
+                Animations::instance().spinBoxEngine().registerWidget( widget );
+                Animations::instance().spinBoxEngine().updateMouseOver( widget );
+                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
+                else options &= ~Hover;
+
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2+7, h+2, options, TileSet::Ring & (~TileSet::Right) );
 
             } else {
 
@@ -817,11 +824,6 @@ namespace Oxygen
 
             // disable contrast
             options &= ~Contrast;
-
-            if(
-                (options & Hover) &&
-                Animations::instance().lineEditEngine().contains( widget ) )
-            { Animations::instance().lineEditEngine().setHovered( widget, true ); }
 
         }
 

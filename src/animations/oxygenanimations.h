@@ -28,6 +28,7 @@
 #include "oxygencomboboxengine.h"
 #include "oxygenlineeditengine.h"
 #include "oxygenmenushellengine.h"
+#include "oxygenspinboxengine.h"
 
 #include <gtk/gtkwidget.h>
 #include <vector>
@@ -65,6 +66,10 @@ namespace Oxygen
         LineEditEngine& lineEditEngine( void ) const
         { return *_lineEditEngine; }
 
+        //! spinbox engine
+        SpinBoxEngine& spinBoxEngine( void ) const
+        { return *_spinBoxEngine; }
+
         protected:
 
         //! register new engine
@@ -90,6 +95,9 @@ namespace Oxygen
 
         //! lineedit engine
         LineEditEngine* _lineEditEngine;
+
+        //! spinbox engine
+        SpinBoxEngine* _spinBoxEngine;
 
         //! keep track of destruction and style change signals
         /*!
