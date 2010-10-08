@@ -1451,8 +1451,10 @@ namespace Oxygen
         const bool vertical( options & Vertical );
         GdkRectangle parent = { x, y, w, h };
 
-        if( vertical ) h-=30;
-        else w-=30;
+        // adjust groove dimension
+        if( vertical ) h -= ( Slider_Thickness + 5 );
+        else w -= ( Slider_Thickness + 5 );
+
         GdkRectangle child = { 0, 0, vertical ? 5:w, vertical ? h:5 };
         centerRect( &parent, &child );
 
@@ -1468,13 +1470,9 @@ namespace Oxygen
         gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
-        // sclider dimension
-        int SliderThickness = 23;
-        int SliderLength = 15;
-
         const bool vertical( options&Vertical );
         GdkRectangle parent = { x, y, w, h };
-        GdkRectangle child = { 0, 0, vertical ? SliderThickness:SliderLength, vertical ? SliderLength:SliderThickness };
+        GdkRectangle child = { 0, 0, vertical ? Slider_Thickness:Slider_Length, vertical ? Slider_Length:Slider_Thickness };
 
         centerRect( &parent, &child );
 

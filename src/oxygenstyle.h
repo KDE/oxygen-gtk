@@ -250,7 +250,11 @@ namespace Oxygen
 
             // checkbox. Do not change, unless
             // changing the actual cached pixmap size
-            CheckBox_Size = 21
+            CheckBox_Size = 21,
+
+            // slider dimension
+            Slider_Thickness = 23,
+            Slider_Length = 15
 
         };
 
