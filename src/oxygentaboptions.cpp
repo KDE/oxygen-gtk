@@ -34,34 +34,30 @@ namespace Oxygen
         if( state != GTK_STATE_ACTIVE ) out |= CurrentTab;
 
         // try detect if tab is first or last
-        if( GTK_IS_NOTEBOOK( widget ) )
+        if( !GTK_IS_NOTEBOOK( widget ) ) return out;
+        GtkNotebook* notebook = GTK_NOTEBOOK( widget );
+
+        int tabIndex;
+        int minDistance( -1 );
+        for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
         {
 
-            GtkNotebook* notebook = GTK_NOTEBOOK( widget );
+            // retrieve page and tab label
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
 
-            int tabIndex;
-            int minDistance( -1 );
-            for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
+            // get allocted size
+            const GtkAllocation& allocation( tabLabel->allocation );
+            int distance = std::abs( double(allocation.x - x) ) + std::abs( double(allocation.y - y) );
+            if( minDistance < 0 || distance < minDistance )
             {
-
-                // retrieve page and tab label
-                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
-
-                // get allocted size
-                const GtkAllocation& allocation( tabLabel->allocation );
-                int distance = std::abs( double(allocation.x - x) ) + std::abs( double(allocation.y - y) );
-                if( minDistance < 0 || distance < minDistance )
-                {
-                    minDistance = distance;
-                    tabIndex = i;
-                }
+                minDistance = distance;
+                tabIndex = i;
             }
-
-            if( tabIndex == 0 ) out |= FirstTab;
-            else if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) out |= LastTab;
-
         }
+
+        if( tabIndex == 0 ) out |= FirstTab;
+        else if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) out |= LastTab;
 
         return out;
     }
