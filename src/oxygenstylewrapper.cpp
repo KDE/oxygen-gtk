@@ -1067,7 +1067,7 @@ namespace Oxygen
             } else {
 
                 // need adjustment depending on gap side
-                const int adjust = 3;
+                const int adjust = 2;
                 switch( gap_side )
                 {
 

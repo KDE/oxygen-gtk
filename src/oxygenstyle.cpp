@@ -1599,7 +1599,7 @@ namespace Oxygen
         // this is quite painfull and slipery code.
         // the same is true with oxygen-qt
         int offset = 2;
-        int adjust = settings().applicationName().isFirefox() ? 0:3;
+        int adjust = settings().applicationName().isFirefox() ? 0:2;
 
         SlabRect tabSlab;
         SlabRect::List slabs;
