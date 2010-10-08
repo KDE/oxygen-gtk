@@ -84,7 +84,7 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox() )
         {
 
-            if( GTK_IS_WINDOW( widget ) )
+            if( GTK_IS_WINDOW( widget ) && !Style::instance().settings().applicationName().isFirefox() )
             { Animations::instance().mainWindowEngine().registerWidget( widget ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
