@@ -38,11 +38,19 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void MainWindowData::connect( GtkWidget* widget )
-    { _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", (GCallback)configureNotifyEvent, this); }
+    {
+        _target = widget;
+        _timeOutCount = 0;
+        _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", (GCallback)configureNotifyEvent, this);
+    }
 
     //________________________________________________________________________________
     void MainWindowData::disconnect( GtkWidget* widget )
-    { g_signal_handler_disconnect(G_OBJECT(widget), _configureId ); }
+    {
+        _target = 0L;
+        _timeOutCount = 0;
+        g_signal_handler_disconnect(G_OBJECT(widget), _configureId );
+    }
 
     //________________________________________________________________________________
     void MainWindowData::updateSize( GtkWidget* widget, int width, int height )
@@ -52,9 +60,9 @@ namespace Oxygen
         _width = width;
         _height = height;
 
-        // std::cout << "Oxygen::MainWindowData::updateSize - (" << _width << "," << _height << ")" << std::endl;
-
-        // trigger update
+        // schedule delayed timeOut
+        ++_timeOutCount;
+        g_timeout_add( 200, (GSourceFunc)delayedUpdate, this );
 
     }
 
@@ -63,6 +71,30 @@ namespace Oxygen
     {
 
         static_cast<MainWindowData*>(data)->updateSize( widget, event->width, event->height );
+        return FALSE;
+    }
+
+    //________________________________________________________________________________
+    gboolean MainWindowData::delayedUpdate( gpointer pointer )
+    {
+
+        MainWindowData& data( *static_cast<MainWindowData*>(pointer) );
+        g_mutex_lock( data._mutex );
+        if( !data._target )
+        {
+            // if target is invalid, reset timeOut counts and return
+            data._timeOutCount = 0;
+
+        } else if( data._timeOutCount > 0 ) {
+
+            // decrement time out, and schedule update if it reaches 0
+            --data._timeOutCount;
+            if( !data._timeOutCount )
+            { gtk_widget_queue_draw( data._target ); }
+
+        }
+
+        g_mutex_unlock( data._mutex );
         return FALSE;
     }
 
