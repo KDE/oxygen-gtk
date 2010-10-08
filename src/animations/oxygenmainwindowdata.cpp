@@ -60,15 +60,10 @@ namespace Oxygen
         _height = height;
 
         // schedule delayed timeOut
-        #ifdef G_THREADS_ENABLED
-        g_mutex_lock( _mutex );
         ++_timeOutCount;
+        g_mutex_lock( _mutex );
         g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
         g_mutex_unlock( _mutex );
-        #else // G_THREADS_ENABLED
-        ++_timeOutCount;
-        g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
-        #endif // G_THREADS_ENABLED
 
     }
 
@@ -85,11 +80,13 @@ namespace Oxygen
     {
 
         MainWindowData& data( *static_cast<MainWindowData*>(pointer) );
-        #ifdef G_THREADS_ENABLED
         g_mutex_lock( data._mutex );
-        if( !data._target ) data._timeOutCount = 0;
-        else if( data._timeOutCount > 0 )
+        if( !data._target )
         {
+            // if target is invalid, reset timeOut counts and return
+            data._timeOutCount = 0;
+
+        } else if( data._timeOutCount > 0 ) {
 
             // decrement time out, and schedule update if it reaches 0
             --data._timeOutCount;
@@ -98,18 +95,6 @@ namespace Oxygen
 
         }
         g_mutex_unlock( data._mutex );
-        #else // G_THREADS_ENABLED
-        if( !data._target ) data._timeOutCount = 0;
-        else if( data._timeOutCount > 0 )
-        {
-
-            // decrement time out, and schedule update if it reaches 0
-            --data._timeOutCount;
-            if( !data._timeOutCount )
-            { gtk_widget_queue_draw( data._target ); }
-
-        }
-        #endif // G_THREADS_ENABLED
 
         return FALSE;
     }
