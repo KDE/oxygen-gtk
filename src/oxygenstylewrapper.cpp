@@ -268,7 +268,7 @@ namespace Oxygen
                 that match the corresponding text entry background.
                 */
 
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
 
                 StyleOptions options( Blend | NoFill );
