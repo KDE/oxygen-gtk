@@ -61,8 +61,10 @@ namespace Oxygen
         _height = height;
 
         // schedule delayed timeOut
+        g_mutex_lock( _mutex );
         ++_timeOutCount;
-        g_timeout_add( 200, (GSourceFunc)delayedUpdate, this );
+        g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
+        g_mutex_unlock( _mutex );
 
     }
 
