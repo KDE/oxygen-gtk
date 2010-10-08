@@ -58,6 +58,7 @@ namespace Oxygen
         gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
 
         // loop over tabs and check matching
+        const int adjust = 4;
         for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
         {
 
@@ -68,10 +69,10 @@ namespace Oxygen
             // get allocted rect and adjust
             GtkAllocation rect;
             gtk_widget_get_allocation( tabLabel, &rect );
-            rect.x-=4;
-            rect.y-=4;
-            rect.width += 8;
-            rect.height += 8;
+            rect.x -= adjust;
+            rect.y -= adjust;
+            rect.width += 2*adjust;
+            rect.height += 2*adjust;
 
             // check point against rectangle
             if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
