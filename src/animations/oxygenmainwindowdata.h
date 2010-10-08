@@ -37,30 +37,57 @@ namespace Oxygen
 
         public:
 
+        #ifdef G_THREADS_ENABLED
+        //! constructor
+        MainWindowData( void ):
+            _mutex( g_mutex_new() ),
+            _target(0L),
+            _timeOutCount(0),
+            _configureId(-1),
+            _width(-1),
+            _height(-1)
+        {}
+
+        //! copy constructor
+        /*! needed so that a new mutex is created everytime */
+        MainWindowData( const MainWindowData& other ):
+            _mutex( g_mutex_new() ),
+            _target( other._target ),
+            _timeOutCount( other._timeOutCount ),
+            _configureId( other._configureId ),
+            _width( other._width ),
+            _height( other._height )
+        {}
+
+        //! destructor
+        virtual ~MainWindowData( void )
+        { g_mutex_free( _mutex ); }
+
+        private:
+
+        //! mutex
+        /*! needed to block concurent access to timeOutCount in delayedUpdate */
+        GMutex* _mutex;
+
+        #else // G_THREADS_ENABLED
+
         //! constructor
         MainWindowData( void ):
             _target(0L),
             _timeOutCount(0),
             _configureId(-1),
             _width(-1),
-            _height(-1),
-            _mutex( g_mutex_new() )
+            _height(-1)
         {}
 
-        //! copy constructor
-        /*! needed so that a new mutex is created everytime */
-        MainWindowData( const MainWindowData& other ):
-            _target( other._target ),
-            _timeOutCount( other._timeOutCount ),
-            _configureId( other._configureId ),
-            _width( other._width ),
-            _height( other._height ),
-            _mutex( g_mutex_new() )
-        {}
 
         //! destructor
         virtual ~MainWindowData( void )
-        { g_mutex_free( _mutex ); }
+        {}
+
+        #endif // G_THREADS_ENABLED
+
+        public:
 
         //! setup connections
         void connect( GtkWidget* );
@@ -95,11 +122,6 @@ namespace Oxygen
 
         //! old height
         int _height;
-
-        //! mutex
-        /*! needed to block concurent access to timeOutCount in delayedUpdate */
-        GMutex* _mutex;
-
 
     };
 
