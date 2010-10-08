@@ -1721,24 +1721,12 @@ namespace Oxygen
             default: return;
         }
 
-        // render tab
-        if( (options&Hover) && !isCurrentTab )
-        {
-
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        } else {
-
-            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        }
-
-        // adjust rect
-        tabSlab._x += 4;
-        tabSlab._y += 4;
-        tabSlab._w -= 8;
-        tabSlab._h -= 8;
+        // adjust rect for filling
+        SlabRect fillSlab( tabSlab );
+        fillSlab._x += 4;
+        fillSlab._y += 4;
+        fillSlab._w -= 8;
+        fillSlab._h -= 8;
 
         // fill
         Cairo::Pattern pattern;
@@ -1746,45 +1734,45 @@ namespace Oxygen
         switch( side )
         {
             case GTK_POS_BOTTOM:
-            dimension = tabSlab._h;
-            if( isCurrentTab ) tabSlab._h -= 2;
-            else tabSlab._h -= 3;
+            dimension = fillSlab._h;
+            if( isCurrentTab ) fillSlab._h -= 2;
+            else fillSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
             break;
 
             case GTK_POS_TOP:
-            dimension = tabSlab._h;
+            dimension = fillSlab._h;
             if( isCurrentTab )
             {
 
-                tabSlab._y += 2;
-                tabSlab._h -= 2;
+                fillSlab._y += 2;
+                fillSlab._h -= 2;
 
             } else {
 
-                tabSlab._y += 3;
-                tabSlab._h -= 3;
+                fillSlab._y += 3;
+                fillSlab._h -= 3;
 
             }
             pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
             break;
 
             case GTK_POS_RIGHT:
-            dimension = tabSlab._w;
-            if( isCurrentTab ) tabSlab._w -= 2;
-            else tabSlab._w -= 3;
+            dimension = fillSlab._w;
+            if( isCurrentTab ) fillSlab._w -= 2;
+            else fillSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
             break;
 
             case GTK_POS_LEFT:
-            dimension = tabSlab._w;
+            dimension = fillSlab._w;
             if( isCurrentTab )
             {
-                tabSlab._x += 2;
-                tabSlab._w -= 2;
+                fillSlab._x += 2;
+                fillSlab._w -= 2;
             } else {
-                tabSlab._x += 3;
-                tabSlab._w -= 3;
+                fillSlab._x += 3;
+                fillSlab._w -= 3;
             }
             pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
             break;
@@ -1816,14 +1804,27 @@ namespace Oxygen
         if( isCurrentTab && settings().applicationName().isFirefox() )
         {
             cairo_set_source( context, base );
-            cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
+            cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
             cairo_fill( context );
         }
 
         // draw pattern
         cairo_set_source( context, pattern );
-        cairo_rectangle( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h );
+        cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
         cairo_fill( context );
+
+        // render tab
+        if( (options&Hover) && !isCurrentTab )
+        {
+
+            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+
+        } else {
+
+            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+
+        }
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
