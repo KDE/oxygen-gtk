@@ -31,7 +31,6 @@
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
-#include <iostream>
 
 namespace Oxygen
 {
@@ -41,7 +40,6 @@ namespace Oxygen
     {
         _target = widget;
         _timeOutCount = 0;
-        std::cout << "Oxygen::MainWindow::connect - this: " << this << std::endl;
         _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", (GCallback)configureNotifyEvent, this);
     }
 
