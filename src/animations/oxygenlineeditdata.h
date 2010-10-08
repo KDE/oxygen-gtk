@@ -67,8 +67,10 @@ namespace Oxygen
         protected:
 
         //!@name static callbacks
+        //@{
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        //@}
 
         private:
 
