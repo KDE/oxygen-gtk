@@ -1452,8 +1452,8 @@ namespace Oxygen
         GdkRectangle parent = { x, y, w, h };
 
         // adjust groove dimension
-        if( vertical ) h -= ( Slider_Thickness + 5 );
-        else w -= ( Slider_Thickness + 5 );
+        if( vertical ) h -= 28;
+        else w -= 28;
 
         GdkRectangle child = { 0, 0, vertical ? 5:w, vertical ? h:5 };
         centerRect( &parent, &child );

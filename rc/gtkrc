@@ -28,18 +28,19 @@ style "oxygen-default"
     GtkCalendar::inner-border = 0
     GtkCalendar::horizontal-separation = 0
     GtkCheckButton::indicator-size = 18
+    GtkComboBoxEntry::appears-as-list = 1
+    GtkEntry::honors-transparent-bg-hint = 1
     GtkMenu::horizontal-padding = 3
     GtkMenu::vertical-padding = 3
     GtkMenu::horizontal-offset = -7
     GtkRange::slider-width = 23
+    GtkRange::slider-length = 15
     GtkScrollbar::trough-under-steppers=0
+    GtkScrolledWindow::scrollbar-spacing=3
     GtkStatusbar::has-resize-grip = FALSE
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
     GtkTreeView::enable-tree-lines = TRUE
-    GtkEntry::honors-transparent-bg-hint = 1
-    GtkScrolledWindow::scrollbar-spacing=3
-    GtkComboBoxEntry::appears-as-list = 1
 
     # shadow types
     GtkMenuBar::shadow-type = GTK_SHADOW_NONE
