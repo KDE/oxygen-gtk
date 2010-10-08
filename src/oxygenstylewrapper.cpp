@@ -268,8 +268,11 @@ namespace Oxygen
                 that match the corresponding text entry background.
                 */
 
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+                if( style )
+                {
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                }
 
                 StyleOptions options( Blend | NoFill );
                 options |= styleOptions( widget, state, shadow );
@@ -396,10 +399,10 @@ namespace Oxygen
             StyleOptions options( Blend | NoFill );
             options |= styleOptions( widget, state, shadow );
 
-            if( style && gtk_widget_get_state( widget ) == GTK_STATE_INSENSITIVE )
+            if( style )
             {
                 // for disabled spinboxes one has to handle the background manually
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[ GTK_STATE_INSENSITIVE] ) );
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
             }
 
