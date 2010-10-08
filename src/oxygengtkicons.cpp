@@ -65,10 +65,7 @@ namespace Oxygen
             std::istringstream stream( line );
             stream >> iconPair.first >> iconPair.second;
             if( ( stream.rdstate() & std::ios::failbit ) != 0 )
-            {
-                std::cout << "Oxygen::GtkIcons::loadTranslations - could not parse line " << line << std::endl;
-                continue;
-            }
+            { continue; }
 
             _icons.insert( iconPair );
 
