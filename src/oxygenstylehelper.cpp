@@ -590,7 +590,7 @@ namespace Oxygen
         int hl = h+3;
 
         GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( ColorUtils::Rgba::white() ).toInt() );
 
         {
 
@@ -609,15 +609,16 @@ namespace Oxygen
             const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
             const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
 
+            if( true )
             {
                 // shadow
-                //cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2 );
-                cairo_rounded_rectangle( context, double(xl)+1.0, double(yl), wl-1, hl+1, 2 );
+                cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
                 cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
                 cairo_set_line_width( context, 0.6 );
                 cairo_stroke( context );
             }
 
+            if( true )
             {
                 // filling
                 cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
@@ -627,7 +628,7 @@ namespace Oxygen
 
             // create pattern pixbuf
             wl--;
-            if( wl > 0 )
+            if( true && wl > 0 )
             {
                 GdkPixbuf* localbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
                 gdk_pixbuf_fill( localbuf, ColorUtils::Rgba::transparent().toInt() );
@@ -663,6 +664,7 @@ namespace Oxygen
             }
 
             cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
+            if( true )
             {
                 // bevel
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
@@ -675,6 +677,7 @@ namespace Oxygen
                 cairo_stroke( context );
             }
 
+            if( true )
             {
                 // bright top edge
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
