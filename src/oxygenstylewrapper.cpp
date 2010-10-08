@@ -84,8 +84,8 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox() )
         {
 
-            if( GTK_IS_WINDOW( widget ) )
-            { Animations::instance().mainWindowEngine().registerWidget( widget ); }
+            //if( GTK_IS_WINDOW( widget ) )
+            //{ Animations::instance().mainWindowEngine().registerWidget( widget ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
@@ -174,7 +174,7 @@ namespace Oxygen
 
                 // compare painting rect to widget rect, to decide if some sides are to be masked
                 TileSet::Tiles tiles = TileSet::Ring;
-                if( widget && window != widget->window && widget->window == gdk_window_get_parent( window )  )
+                if( widget && window != widget->window && GTK_IS_WINDOW( window ) && widget->window == gdk_window_get_parent( window )  )
                 {
 
                     const int widgetWindowWidth( widget->allocation.width );
@@ -984,21 +984,22 @@ namespace Oxygen
         Gtk::Detail d( detail );
         if( d.isFrame() ) {
 
+            const Gtk::Gap gap( gap_x, gap_w, gap_side );
             if( shadow == GTK_SHADOW_IN ) {
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, Gtk::Gap( gap_x, gap_w, gap_side ), NoFill );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
 
                 StyleOptions options( NoFill );
                 options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
                 options &= ~(Hover|Focus);
-                Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, Gtk::Gap( gap_x, gap_w, gap_side ), options );
+                Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap, options );
 
             } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
 
-                Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, Gtk::Gap( gap_x, gap_w, gap_side ), Blend );
+                Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, gap, Blend );
 
             }
 
@@ -1057,7 +1058,7 @@ namespace Oxygen
             {
 
                 /*
-                firefox calls gap_box twice. Once for the main frame, once for the actual gap
+                firefox calls box_gap twice. Once for the main frame, once for the actual gap
                 the second call must be discarded somehow
                 */
                 if( h>12 )
