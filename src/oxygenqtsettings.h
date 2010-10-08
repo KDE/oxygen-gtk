@@ -168,6 +168,9 @@ namespace Oxygen
         //! load fonts from kdeglobals and pass to gtk
         void loadKdeFonts( void );
 
+        //! extra kde globals options
+        void loadKdeGlobalsOptions( void );
+
         //! oxygen options (from oxygenrc)
         void loadOxygenOptions( void );
 

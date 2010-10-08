@@ -101,6 +101,9 @@ namespace Oxygen
         // reload fonts
         loadKdeFonts();
 
+        // kde globals options
+        loadKdeGlobalsOptions();
+
         // oxygen options
         loadOxygenOptions();
 
@@ -125,7 +128,6 @@ namespace Oxygen
         iconThemes.push_back( _kdeFallbackIconTheme );
         for( std::vector<std::string>::const_iterator iter = iconThemes.begin(); iter != iconThemes.end(); iter++ )
         {
-
             out.push_back( sanitizePath( _kdeHome + "/share/config/icons/" + *iter ) );
             out.push_back( sanitizePath( _kdeIconPrefix + *iter ) );
         }
@@ -408,6 +410,19 @@ namespace Oxygen
         _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
         _rc.addToRootSection( "widget_class \"*.*Toolbar.*\" style \"oxygen-toolbar-font\"" );
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::loadKdeGlobalsOptions( void )
+    {
+
+        // toolbar style
+        std::string toolbarTextPosition( _kdeGlobals.getOption( "[Toolbar style]", "ToolButtonStyle" ).toVariant<std::string>( "TextBelowIcon" ) );
+        if( toolbarTextPosition == "TextOnly" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_TEXT" ) );
+        else if( toolbarTextPosition == "TextBesideIcon" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH_HORIZ" ) );
+        else if( toolbarTextPosition == "NoText" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_ICONS" ) );
+        else _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH" ) );
 
     }
 
