@@ -75,7 +75,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean ComboBoxData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer )
+    gboolean ComboBoxData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer )
     {
         // simply triggers repaint
         gtk_widget_queue_draw( widget );

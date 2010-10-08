@@ -51,7 +51,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::motionNotifyEvent(GtkWidget *widget, GdkEventMotion *event, gpointer )
+    gboolean MenuShellData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer )
     {
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
 
@@ -88,7 +88,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer )
+    gboolean MenuShellData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer )
     {
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
         GList* children( gtk_container_get_children( GTK_CONTAINER( widget ) ) );

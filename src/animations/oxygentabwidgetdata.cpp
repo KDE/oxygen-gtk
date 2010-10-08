@@ -47,7 +47,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean TabWidgetData::motionNotifyEvent(GtkWidget *widget, GdkEventMotion *event, gpointer data )
+    gboolean TabWidgetData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
     {
 
         if( !GTK_IS_NOTEBOOK( widget ) ) return FALSE;
@@ -87,7 +87,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean TabWidgetData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer data )
+    gboolean TabWidgetData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         // reset hovered tab
         static_cast<TabWidgetData*>( data )->setHoveredTab( widget, -1 );

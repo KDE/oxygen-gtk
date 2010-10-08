@@ -92,7 +92,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
+    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent*, gpointer )
     { instance().unregisterWidget( widget ); }
 
     //_________________________________________

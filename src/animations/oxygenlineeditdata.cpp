@@ -47,14 +47,14 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::motionNotifyEvent(GtkWidget *widget, GdkEventMotion *event, gpointer data )
+    gboolean LineEditData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
     {
         static_cast<LineEditData*>( data )->setHovered( widget, true );
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer data )
+    gboolean LineEditData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         static_cast<LineEditData*>( data )->setHovered( widget, false );
         return FALSE;
