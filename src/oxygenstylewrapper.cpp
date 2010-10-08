@@ -84,8 +84,8 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox() )
         {
 
-            //if( GTK_IS_WINDOW( widget ) )
-            //{ Animations::instance().mainWindowEngine().registerWidget( widget ); }
+            if( GTK_IS_WINDOW( widget ) )
+            { Animations::instance().mainWindowEngine().registerWidget( widget ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;

@@ -41,6 +41,7 @@ namespace Oxygen
     {
         _target = widget;
         _timeOutCount = 0;
+        std::cout << "Oxygen::MainWindow::connect - this: " << this << std::endl;
         _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", (GCallback)configureNotifyEvent, this);
     }
 
@@ -61,10 +62,8 @@ namespace Oxygen
         _height = height;
 
         // schedule delayed timeOut
-        g_mutex_lock( _mutex );
         ++_timeOutCount;
         g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
-        g_mutex_unlock( _mutex );
 
     }
 
@@ -81,7 +80,6 @@ namespace Oxygen
     {
 
         MainWindowData& data( *static_cast<MainWindowData*>(pointer) );
-        g_mutex_lock( data._mutex );
         if( !data._target )
         {
             // if target is invalid, reset timeOut counts and return
@@ -96,7 +94,6 @@ namespace Oxygen
 
         }
 
-        g_mutex_unlock( data._mutex );
         return FALSE;
     }
 
