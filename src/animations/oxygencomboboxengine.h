@@ -58,13 +58,21 @@ namespace Oxygen
         void registerWidget( GtkWidget* widget )
         {
             if( _data.contains( widget ) ) return;
-            _data.registerWidget( widget );
+            ComboBoxData& data = _data.registerWidget( widget );
+            data.connect( widget );
+
             BaseEngine::registerWidget( widget );
         }
 
         //! unregister widget
         void unregisterWidget( GtkWidget* widget )
-        { _data.erase( widget ); }
+        {
+
+            if( !_data.contains( widget ) ) return;
+            _data.value( widget ).disconnect( widget );
+            _data.erase( widget );
+
+        }
 
         //! true if widget is included
         bool contains( GtkWidget* widget )

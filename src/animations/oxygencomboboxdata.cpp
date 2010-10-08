@@ -28,9 +28,36 @@
 
 #include <gtk/gtk.h>
 #include <iostream>
+#include <cassert>
 
 namespace Oxygen
 {
+
+    //________________________________________________________________________________
+    void ComboBoxData::disconnect( GtkWidget* )
+    {
+        // disconnect signal
+        if( _entry._widget ) g_signal_handler_disconnect(G_OBJECT(_entry._widget), _entry._leaveId );
+        if( _button._widget ) g_signal_handler_disconnect(G_OBJECT(_button._widget), _button._leaveId );
+    }
+
+    //________________________________________________________________________________
+    void ComboBoxData::setButton( GtkWidget* value )
+    {
+        if( _button._widget == value ) return;
+        assert( !_button._widget );
+        _button._widget = value;
+        _button._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+    }
+
+    //________________________________________________________________________________
+    void ComboBoxData::setEntry( GtkWidget* value )
+    {
+        if( _entry._widget == value ) return;
+        assert( !_entry._widget );
+        _entry._widget = value;
+        _entry._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+    }
 
     //________________________________________________________________________________
     void ComboBoxData::updateMouseOver( GtkWidget* widget )
@@ -46,6 +73,14 @@ namespace Oxygen
         gtk_widget_queue_draw( widget );
 
         return;
+    }
+
+    //________________________________________________________________________________
+    gboolean ComboBoxData::leaveNotifyEvent( GtkWidget *widget, GdkEventCrossing *event, gpointer )
+    {
+        // simply triggers repaint
+        gtk_widget_queue_draw( widget );
+        return FALSE;
     }
 
 }

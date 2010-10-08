@@ -42,10 +42,22 @@ namespace Oxygen
         virtual ~ComboBoxData( void )
         {}
 
+        //! setup connections
+        /*! does nothing. Only kept here for consistency with other data */
+        void connect( GtkWidget* )
+        {}
+
+        //! disconnect
+        void disconnect( GtkWidget* );
+
         //!@name modifiers
         //@{
-        void setButton( GtkWidget* value ) { _button._widget = value; }
-        void setEntry( GtkWidget* value ) { _entry._widget = value; }
+
+        //! assign button
+        void setButton( GtkWidget* value );
+
+        //! assign entry
+        void setEntry( GtkWidget* value );
 
         //! button focus
         void setButtonFocus( bool value )
@@ -54,7 +66,8 @@ namespace Oxygen
             _button._focus = value;
 
             // trigger entry update
-            if( _entry._widget ) gtk_widget_queue_draw( _entry._widget );
+            if( _entry._widget )
+            { gtk_widget_queue_draw( _entry._widget ); }
 
             return;
         }
@@ -66,7 +79,8 @@ namespace Oxygen
             _entry._focus = value;
 
             // trigger button update
-            if( _button._widget ) gtk_widget_queue_draw( _button._widget );
+            if( _button._widget )
+            { gtk_widget_queue_draw( _button._widget ); }
 
         }
 
@@ -85,6 +99,10 @@ namespace Oxygen
 
         //@}
 
+        protected:
+
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
         private:
 
         class Data
@@ -95,12 +113,13 @@ namespace Oxygen
             //! constructor
             Data( void ):
                 _widget( 0L ),
-                _focus( false )
+                _focus( false ),
+                _leaveId(-1)
             {}
-
 
             GtkWidget* _widget;
             bool _focus;
+            int _leaveId;
 
         };
 
@@ -112,7 +131,6 @@ namespace Oxygen
 
         //! hover
         bool _hovered;
-
 
     };
 
