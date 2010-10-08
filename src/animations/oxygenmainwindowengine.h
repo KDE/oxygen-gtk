@@ -48,7 +48,13 @@ namespace Oxygen
         //! constructor
         MainWindowEngine( Animations* widget ):
             GenericEngine<MainWindowData>( widget )
-            {}
+        {
+            /*
+            need to make sure threads are initialized here
+            because MainWindowData uses g_mutex
+            */
+            g_thread_init( 0L );
+        }
 
         //! destructor
         virtual ~MainWindowEngine( void )
