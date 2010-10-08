@@ -23,7 +23,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygenmenushelldata.h"
 
@@ -39,43 +39,19 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class MenuShellEngine: public BaseEngine
+    class MenuShellEngine: public GenericEngine<MenuShellData>
     {
 
         public:
 
         //! constructor
         MenuShellEngine( Animations* parent ):
-            BaseEngine( parent )
+            GenericEngine<MenuShellData>( parent )
             {}
 
         //! destructor
         virtual ~MenuShellEngine( void )
         {}
-
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-
-            if( _data.contains( widget ) ) return;
-            MenuShellData& data( _data.registerWidget( widget ) );
-            data.connect( widget );
-            BaseEngine::registerWidget( widget );
-
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        {
-            if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
-            _data.erase( widget );
-        }
-
-        private:
-
-        //! map widgets to MenuShellData
-        DataMap<MenuShellData> _data;
 
     };
 

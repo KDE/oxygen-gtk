@@ -24,7 +24,7 @@
 */
 
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygenmainwindowdata.h"
 
@@ -40,48 +40,19 @@ namespace Oxygen
     ensures that the text entry and the button of editable mainwindowes
     gets hovered and focus flags at the same time
     */
-    class MainWindowEngine: public BaseEngine
+    class MainWindowEngine: public GenericEngine<MainWindowData>
     {
 
         public:
 
         //! constructor
         MainWindowEngine( Animations* widget ):
-            BaseEngine( widget )
+            GenericEngine<MainWindowData>( widget )
             {}
 
         //! destructor
         virtual ~MainWindowEngine( void )
         {}
-
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-            if( _data.contains( widget ) ) return;
-            MainWindowData& data = _data.registerWidget( widget );
-            data.connect( widget );
-
-            BaseEngine::registerWidget( widget );
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        {
-
-            if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
-            _data.erase( widget );
-
-        }
-
-        //! true if widget is included
-        bool contains( GtkWidget* widget )
-        { return _data.contains( widget ); }
-
-        private:
-
-        //! map widgets to MainWindowData
-        DataMap<MainWindowData> _data;
 
     };
 

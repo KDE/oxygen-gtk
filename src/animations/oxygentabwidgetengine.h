@@ -24,7 +24,7 @@
 */
 
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygentabwidgetdata.h"
 
@@ -40,52 +40,23 @@ namespace Oxygen
     ensures that the text entry and the button of editable tabwidgetes
     gets hovered and focus flags at the same time
     */
-    class TabWidgetEngine: public BaseEngine
+    class TabWidgetEngine: public GenericEngine<TabWidgetData>
     {
 
         public:
 
         //! constructor
         TabWidgetEngine( Animations* widget ):
-            BaseEngine( widget )
+            GenericEngine<TabWidgetData>( widget )
             {}
 
         //! destructor
         virtual ~TabWidgetEngine( void )
         {}
 
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-            if( _data.contains( widget ) ) return;
-            TabWidgetData& data = _data.registerWidget( widget );
-            data.connect( widget );
-
-            BaseEngine::registerWidget( widget );
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        {
-
-            if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
-            _data.erase( widget );
-
-        }
-
-        //! true if widget is included
-        bool contains( GtkWidget* widget )
-        { return _data.contains( widget ); }
-
         //! returns hovered tab, if any
         int hoveredTab( GtkWidget* widget )
-        { return _data.value( widget ).hoveredTab(); }
-
-        private:
-
-        //! map widgets to TabWidgetData
-        DataMap<TabWidgetData> _data;
+        { return data().value( widget ).hoveredTab(); }
 
     };
 

@@ -24,7 +24,7 @@
 */
 
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygencomboboxdata.h"
 
@@ -40,81 +40,52 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class ComboBoxEngine: public BaseEngine
+    class ComboBoxEngine: public GenericEngine<ComboBoxData>
     {
 
         public:
 
         //! constructor
         ComboBoxEngine( Animations* widget ):
-            BaseEngine( widget )
+            GenericEngine<ComboBoxData>( widget )
             {}
 
         //! destructor
         virtual ~ComboBoxEngine( void )
         {}
 
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-            if( _data.contains( widget ) ) return;
-            ComboBoxData& data = _data.registerWidget( widget );
-            data.connect( widget );
-
-            BaseEngine::registerWidget( widget );
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        {
-
-            if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
-            _data.erase( widget );
-
-        }
-
-        //! true if widget is included
-        bool contains( GtkWidget* widget )
-        { return _data.contains( widget ); }
-
         //!@name modifiers
         //@{
 
         //! assign button to data matching widget
         void setButton( GtkWidget* widget, GtkWidget* value )
-        { _data.value( widget ).setButton( value ); }
+        { data().value( widget ).setButton( value ); }
 
         //! assign entry to data matching widget
         void setEntry( GtkWidget* widget, GtkWidget* value )
-        { _data.value( widget ).setEntry( value ); }
+        { data().value( widget ).setEntry( value ); }
 
         //! button focus
         void setButtonFocus( GtkWidget* widget, bool value )
-        { _data.value( widget ).setButtonFocus( value ); }
+        { data().value( widget ).setButtonFocus( value ); }
 
         //! entry focus
         void setEntryFocus( GtkWidget* widget, bool value )
-        { _data.value( widget ).setEntryFocus( value ); }
+        { data().value( widget ).setEntryFocus( value ); }
 
         //@}
 
         //! true if either button or entry has focus
         bool hasFocus( GtkWidget* widget )
-        { return _data.value( widget ).hasFocus(); }
+        { return data().value( widget ).hasFocus(); }
 
         //! update mouseoverstate
         void updateMouseOver( GtkWidget* widget )
-        { _data.value( widget ).updateMouseOver( widget ); }
+        { data().value( widget ).updateMouseOver( widget ); }
 
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
-        { return _data.value( widget ).hovered(); }
-
-        private:
-
-        //! map widgets to ComboBoxData
-        DataMap<ComboBoxData> _data;
+        { return data().value( widget ).hovered(); }
 
     };
 

@@ -23,7 +23,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygenlineeditdata.h"
 
@@ -39,51 +39,23 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class LineEditEngine: public BaseEngine
+    class LineEditEngine: public GenericEngine<LineEditData>
     {
 
         public:
 
         //! constructor
         LineEditEngine( Animations* parent ):
-            BaseEngine( parent )
+            GenericEngine<LineEditData>( parent )
             {}
 
         //! destructor
         virtual ~LineEditEngine( void )
         {}
 
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-
-            if( _data.contains( widget ) ) return;
-            LineEditData& data( _data.registerWidget( widget ) );
-            data.connect( widget );
-            BaseEngine::registerWidget( widget );
-
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        {
-            if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
-            _data.erase( widget );
-        }
-
-        //! true if widget is included
-        bool contains( GtkWidget* widget )
-        { return _data.contains( widget ); }
-
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )
-        { return _data.value( widget ).hovered(); }
-
-        private:
-
-        //! map widgets to LineEditData
-        DataMap<LineEditData> _data;
+        { return data().value( widget ).hovered(); }
 
     };
 

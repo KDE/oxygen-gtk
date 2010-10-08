@@ -51,6 +51,12 @@ namespace Oxygen
 
         //@}
 
+        //!@name do nothing, but needed for GenericEngine implementation
+        //@{
+        void connect( GtkWidget* ) {}
+        void disconnect( GtkWidget* ) {}
+        //@}
+
         private:
 
         //! hover

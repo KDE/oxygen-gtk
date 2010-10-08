@@ -24,7 +24,7 @@
 */
 
 
-#include "oxygenbaseengine.h"
+#include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygenspinboxdata.h"
 
@@ -40,48 +40,27 @@ namespace Oxygen
     ensures that the text entry and the button of editable spinboxes
     gets hovered and focus flags at the same time
     */
-    class SpinBoxEngine: public BaseEngine
+    class SpinBoxEngine: public GenericEngine<SpinBoxData>
     {
 
         public:
 
         //! constructor
         SpinBoxEngine( Animations* widget ):
-            BaseEngine( widget )
+            GenericEngine<SpinBoxData>( widget )
             {}
 
         //! destructor
         virtual ~SpinBoxEngine( void )
         {}
 
-        //! register widget
-        void registerWidget( GtkWidget* widget )
-        {
-            if( _data.contains( widget ) ) return;
-            _data.registerWidget( widget );
-            BaseEngine::registerWidget( widget );
-        }
-
-        //! unregister widget
-        void unregisterWidget( GtkWidget* widget )
-        { _data.erase( widget ); }
-
-        //! true if widget is included
-        bool contains( GtkWidget* widget )
-        { return _data.contains( widget ); }
-
         //! update mouseoverstate
         void updateMouseOver( GtkWidget* widget )
-        { _data.value( widget ).updateMouseOver( widget ); }
+        { data().value( widget ).updateMouseOver( widget ); }
 
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
-        { return _data.value( widget ).hovered(); }
-
-        private:
-
-        //! map widgets to SpinBoxData
-        DataMap<SpinBoxData> _data;
+        { return data().value( widget ).hovered(); }
 
     };
 
