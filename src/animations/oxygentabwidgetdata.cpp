@@ -58,7 +58,7 @@ namespace Oxygen
         gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
 
         // loop over tabs and check matching
-        const int adjust = 4;
+        const int adjust = 5;
         for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
         {
 
