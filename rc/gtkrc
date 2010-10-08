@@ -32,6 +32,7 @@ style "oxygen-default"
     GtkMenu::vertical-padding = 3
     GtkMenu::horizontal-offset = -7
     GtkRange::slider-width = 23
+    GtkScrollbar::trough-under-steppers=0
     GtkStatusbar::has-resize-grip = FALSE
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1

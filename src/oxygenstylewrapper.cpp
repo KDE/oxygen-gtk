@@ -383,17 +383,12 @@ namespace Oxygen
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
-                const int buttonSize( 14 );
-                const int subLineOffset( buttonSize*Style::instance().settings().scrollBarSubLineButtons() );
-                const int addLineOffset( buttonSize*Style::instance().settings().scrollBarAddLineButtons() );
-                Style::instance().renderScrollBarHole( window, clipRect, x, y+1+subLineOffset, w-1, h-1-subLineOffset-addLineOffset, Vertical );
+                Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
 
             } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
-                const int buttonSize( 14 );
-                const int subLineOffset( buttonSize*Style::instance().settings().scrollBarSubLineButtons() );
-                const int addLineOffset( buttonSize*Style::instance().settings().scrollBarAddLineButtons() );
-                Style::instance().renderScrollBarHole( window, clipRect, x+1+subLineOffset, y, w-2-subLineOffset-addLineOffset, h-1, None );
+                Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, None );
+
             }
 
         } else if( d.isSpinButton()) {
@@ -1459,9 +1454,8 @@ namespace Oxygen
 }
 
 //___________________________________________________________
-extern "C"
-    void instance_init( OxygenStyle* self )
-{}
+extern "C" void instance_init( OxygenStyle* self )
+{ Oxygen::Style::instance(); }
 
 //___________________________________________________________
 static void class_init( OxygenStyleClass* klass )
