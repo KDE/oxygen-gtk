@@ -29,6 +29,7 @@
 #include "oxygenlineeditengine.h"
 #include "oxygenmenushellengine.h"
 #include "oxygenspinboxengine.h"
+#include "oxygentabwidgetengine.h"
 
 #include <gtk/gtkwidget.h>
 #include <vector>
@@ -70,6 +71,10 @@ namespace Oxygen
         SpinBoxEngine& spinBoxEngine( void ) const
         { return *_spinBoxEngine; }
 
+        //! tab widget engine
+        TabWidgetEngine& tabWidgetEngine( void ) const
+        { return *_tabWidgetEngine; }
+
         protected:
 
         //! register new engine
@@ -77,7 +82,7 @@ namespace Oxygen
         { _engines.push_back( engine ); }
 
         //! destruction callback
-        static void destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data );
+        static void destroyRegisteredWidget( GtkWidget*, GdkEvent*, gpointer );
 
         private:
 
@@ -98,6 +103,9 @@ namespace Oxygen
 
         //! spinbox engine
         SpinBoxEngine* _spinBoxEngine;
+
+        //! tab widget engine
+        TabWidgetEngine* _tabWidgetEngine;
 
         //! keep track of destruction and style change signals
         /*!

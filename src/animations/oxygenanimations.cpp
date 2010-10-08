@@ -30,11 +30,6 @@
 namespace Oxygen
 {
 
-    //! unregister widget on destruction
-    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
-    { Oxygen::Animations::instance().unregisterWidget( widget ); }
-
-
     //____________________________________________________________________________________________
     Animations& Animations::instance( void )
     {
@@ -50,6 +45,7 @@ namespace Oxygen
         delete _menuShellEngine;
         delete _lineEditEngine;
         delete _spinBoxEngine;
+        delete _tabWidgetEngine;
 
     }
 
@@ -64,8 +60,8 @@ namespace Oxygen
         #endif
 
         WidgetData data;
-        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
-        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), this );
+        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), this );
         _allWidgets.insert( std::make_pair( widget, data ) );
 
     }
@@ -95,6 +91,10 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________________________________________
+    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent* event, gpointer data )
+    { static_cast<Animations*>(data)->unregisterWidget( widget ); }
+
     //_________________________________________
     Animations::Animations( void )
     {
@@ -104,6 +104,7 @@ namespace Oxygen
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
         registerEngine( _spinBoxEngine = new SpinBoxEngine( this ) );
+        registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
 
     }
 

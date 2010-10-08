@@ -28,6 +28,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygenlineeditdata.cpp
     animations/oxygenmenushelldata.cpp
     animations/oxygenspinboxdata.cpp
+    animations/oxygentabwidgetdata.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )

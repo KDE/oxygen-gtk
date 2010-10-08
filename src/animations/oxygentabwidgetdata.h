@@ -1,5 +1,5 @@
-#ifndef oxygenlineeditdata_h
-#define oxygenlineeditdata_h
+#ifndef oxygentabwidgetdata_h
+#define oxygentabwidgetdata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -24,23 +24,24 @@
 */
 
 #include <gtk/gtkwidget.h>
+#include <iostream>
 
 namespace Oxygen
 {
-    class LineEditData
+    class TabWidgetData
     {
 
         public:
 
         //! constructor
-        LineEditData( void ):
+        TabWidgetData( void ):
             _motionId(-1),
             _leaveId(-1),
-            _hovered( false )
+            _hoveredTab( -1 )
         {}
 
         //! destructor
-        virtual ~LineEditData( void )
+        virtual ~TabWidgetData( void )
         {}
 
         //! setup connections
@@ -50,17 +51,19 @@ namespace Oxygen
         void disconnect( GtkWidget* );
 
         //! true if hovered
-        bool hovered( void ) const
-        { return _hovered; }
+        int hoveredTab( void ) const
+        { return _hoveredTab; }
 
         protected:
 
-        //! set mouse over state
-        void setHovered( GtkWidget* widget, bool value )
+        //! set current tab
+        void setHoveredTab( GtkWidget* widget, int value )
         {
-            if( _hovered == value ) return;
-            _hovered = value;
+            if( _hoveredTab == value ) return;
+            _hoveredTab = value;
+            std::cout << "Oxygen::TabWidget::setHoveredTab - hovered: " << value << std::endl;
             gtk_widget_queue_draw( widget );
+            return;
         }
 
         //!@name static callbacks
@@ -77,8 +80,8 @@ namespace Oxygen
         //! leave signal id
         int _leaveId;
 
-        //! true if hovered
-        bool _hovered;
+        //! index of hovered tab, if any
+        int _hoveredTab;
 
     };
 

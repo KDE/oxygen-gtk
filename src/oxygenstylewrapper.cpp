@@ -1168,6 +1168,9 @@ namespace Oxygen
         Gtk::Detail d( detail );
         if( d.isTab() )
         {
+            if( GTK_IS_NOTEBOOK( widget ) )
+            { Animations::instance().tabWidgetEngine().registerWidget( widget ); }
+
             StyleOptions options( styleOptions( widget, state, shadow ) );
             TabOptions tabOptions( Oxygen::tabOptions( widget, state, x, y ) );
             Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options, tabOptions );
