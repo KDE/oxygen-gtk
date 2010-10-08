@@ -1066,6 +1066,33 @@ namespace Oxygen
 
             } else {
 
+                // need adjustment depending on gap side
+                const int adjust = 3;
+                switch( gap_side )
+                {
+
+                    case GTK_POS_TOP:
+                    y -= adjust;
+                    h += adjust;
+                    break;
+
+                    case GTK_POS_BOTTOM:
+                    h += adjust;
+                    break;
+
+                    case GTK_POS_LEFT:
+                    x -= adjust;
+                    w +=  adjust;
+                    break;
+
+                    case GTK_POS_RIGHT:
+                    w += adjust;
+                    break;
+
+                    default: return;
+
+                }
+
                 gap.setHeight( 8 );
                 Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 

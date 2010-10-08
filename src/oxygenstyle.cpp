@@ -1599,6 +1599,8 @@ namespace Oxygen
         // this is quite painfull and slipery code.
         // the same is true with oxygen-qt
         int offset = 2;
+        int adjust = settings().applicationName().isFirefox() ? 0:3;
+
         SlabRect tabSlab;
         SlabRect::List slabs;
         switch( side )
@@ -1606,6 +1608,7 @@ namespace Oxygen
             case GTK_POS_BOTTOM:
             {
                 // main slab
+                y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
                 if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
 
@@ -1635,6 +1638,7 @@ namespace Oxygen
             {
 
                 // main slab
+                y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
                 if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
 
@@ -1663,6 +1667,7 @@ namespace Oxygen
             {
 
                 // main slab
+                x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
 
@@ -1692,6 +1697,7 @@ namespace Oxygen
             {
 
                 // main slab
+                x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
 
