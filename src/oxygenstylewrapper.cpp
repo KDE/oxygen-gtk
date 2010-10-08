@@ -174,7 +174,7 @@ namespace Oxygen
 
                 // compare painting rect to widget rect, to decide if some sides are to be masked
                 TileSet::Tiles tiles = TileSet::Ring;
-                if( widget && window != widget->window && GTK_IS_WINDOW( window ) && widget->window == gdk_window_get_parent( window )  )
+                if( widget && window != widget->window && GDK_IS_WINDOW( window ) && widget->window == gdk_window_get_parent( window )  )
                 {
 
                     const int widgetWindowWidth( widget->allocation.width );
