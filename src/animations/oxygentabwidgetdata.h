@@ -24,10 +24,11 @@
 */
 
 #include <gtk/gtkwidget.h>
-#include <iostream>
 
 namespace Oxygen
 {
+
+    //! detects and stores tab widget hovered tab
     class TabWidgetData
     {
 
@@ -61,7 +62,6 @@ namespace Oxygen
         {
             if( _hoveredTab == value ) return;
             _hoveredTab = value;
-            std::cout << "Oxygen::TabWidget::setHoveredTab - hovered: " << value << std::endl;
             gtk_widget_queue_draw( widget );
             return;
         }

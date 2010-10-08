@@ -65,9 +65,16 @@ namespace Oxygen
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
             GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
 
-            // get allocted size
-            const GtkAllocation& allocation( tabLabel->allocation );
-            if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
+            // get allocted rect and adjust
+            GtkAllocation rect;
+            gtk_widget_get_allocation( tabLabel, &rect );
+            rect.x-=4;
+            rect.y-=4;
+            rect.width += 8;
+            rect.height += 8;
+
+            // check point against rectangle
+            if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
             {
                 static_cast<TabWidgetData*>( data )->setHoveredTab( widget, i );
                 return FALSE;
