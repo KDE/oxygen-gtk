@@ -74,6 +74,9 @@ namespace Gtk
     //! true for 'flat' buttons (e.g. toolbuttons)
     bool gtk_button_is_flat( GtkWidget* );
 
+    //! returns true if position is in hovered tab
+    bool gtk_notebook_tab_contains( GtkWidget*, int tab, int x, int y );
+
     //@}
 
     //@!name gdk utilities
