@@ -66,8 +66,7 @@ namespace Oxygen
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
             if( gtk_widget_get_state( GTK_WIDGET( child->data ) ) == GTK_STATE_INSENSITIVE ) continue;
 
-            GtkAllocation allocation;
-            gtk_widget_get_allocation( GTK_WIDGET( child->data ), &allocation );
+            const GtkAllocation& allocation( GTK_WIDGET( child->data )->allocation );
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 

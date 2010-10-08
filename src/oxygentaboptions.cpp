@@ -49,9 +49,7 @@ namespace Oxygen
                 GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
 
                 // get allocted size
-                GtkAllocation allocation;
-                gtk_widget_get_allocation( tabLabel, &allocation );
-
+                const GtkAllocation& allocation( tabLabel->allocation );
                 int distance = std::abs( double(allocation.x - x) ) + std::abs( double(allocation.y - y) );
                 if( minDistance < 0 || distance < minDistance )
                 {

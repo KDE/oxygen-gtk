@@ -119,7 +119,7 @@ namespace Gtk
     GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
 
     //! returns true if given rectangle contains point
-    inline bool gdk_rectangle_contains( GdkRectangle* rect, int x, int y )
+    inline bool gdk_rectangle_contains( const GdkRectangle* rect, int x, int y )
     {
         return
             rect &&
