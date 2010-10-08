@@ -41,13 +41,6 @@ namespace Oxygen
         GdkRectangle rect = { 0, 0, widget->allocation.width, widget->allocation.height };
         bool hovered( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) );
 
-//         std::cout
-//             << "Oxygen::SpinBoxData::updateMouseOver -"
-//             << " (" << xPointer << "," << yPointer << ")"
-//             << " " << widget->allocation
-//             << " hovered: " << hovered
-//             << std::endl;
-
         if( hovered == _hovered ) return;
 
         // update flag and trigger repaint
