@@ -1369,6 +1369,9 @@ namespace Oxygen
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
         else base = settings().palette().color( Palette::Active, Palette::ButtonText );
 
+        // need odd width and height
+        if( !(w%2) ) w--;
+        if( !(h%2) ) h--;
         const int xcenter = x + w/2;
         const int ycenter = y + h/2;
 
