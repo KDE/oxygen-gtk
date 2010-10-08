@@ -36,7 +36,6 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::disconnect( GtkWidget* )
     {
-        // disconnect signal
         if( _entry._widget ) g_signal_handler_disconnect(G_OBJECT(_entry._widget), _entry._leaveId );
         if( _button._widget ) g_signal_handler_disconnect(G_OBJECT(_button._widget), _button._leaveId );
     }
@@ -47,7 +46,7 @@ namespace Oxygen
         if( _button._widget == value ) return;
         assert( !_button._widget );
         _button._widget = value;
-        _button._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+        _button._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, 0L );
     }
 
     //________________________________________________________________________________
@@ -56,7 +55,7 @@ namespace Oxygen
         if( _entry._widget == value ) return;
         assert( !_entry._widget );
         _entry._widget = value;
-        _entry._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+        _entry._leaveId = g_signal_connect( G_OBJECT(value), "leave-notify-event", (GCallback)leaveNotifyEvent, 0L );
     }
 
     //________________________________________________________________________________
