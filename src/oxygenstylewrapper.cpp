@@ -1168,12 +1168,21 @@ namespace Oxygen
         Gtk::Detail d( detail );
         if( d.isTab() )
         {
-            if( GTK_IS_NOTEBOOK( widget ) )
-            { Animations::instance().tabWidgetEngine().registerWidget( widget ); }
 
             StyleOptions options( styleOptions( widget, state, shadow ) );
             TabOptions tabOptions( Oxygen::tabOptions( widget, state, x, y ) );
+
+            if( GTK_IS_NOTEBOOK( widget ) )
+            {
+                // see if tab is hovered
+                Animations::instance().tabWidgetEngine().registerWidget( widget );
+                if( Gtk::gtk_notebook_tab_contains( widget, Animations::instance().tabWidgetEngine().hoveredTab( widget ), x+w/2, y+h/2 ) )
+                { options |= Hover; }
+            }
+
+            // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options, tabOptions );
+
         }
 
     }
