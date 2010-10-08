@@ -61,9 +61,7 @@ namespace Oxygen
 
         // schedule delayed timeOut
         ++_timeOutCount;
-        g_mutex_lock( _mutex );
         g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
-        g_mutex_unlock( _mutex );
 
     }
 
@@ -80,7 +78,6 @@ namespace Oxygen
     {
 
         MainWindowData& data( *static_cast<MainWindowData*>(pointer) );
-        g_mutex_lock( data._mutex );
         if( !data._target )
         {
             // if target is invalid, reset timeOut counts and return
@@ -94,7 +91,6 @@ namespace Oxygen
             { gtk_widget_queue_draw( data._target ); }
 
         }
-        g_mutex_unlock( data._mutex );
 
         return FALSE;
     }

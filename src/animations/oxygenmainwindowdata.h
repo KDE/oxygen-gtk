@@ -43,24 +43,12 @@ namespace Oxygen
             _timeOutCount(0),
             _configureId(-1),
             _width(-1),
-            _height(-1),
-            _mutex( g_mutex_new() )
-        {}
-
-        //! copy constructor
-        /*! needed so that a new mutex is created everytime */
-        MainWindowData( const MainWindowData& other ):
-            _target( other._target ),
-            _timeOutCount( other._timeOutCount ),
-            _configureId( other._configureId ),
-            _width( other._width ),
-            _height( other._height ),
-            _mutex( g_mutex_new() )
+            _height(-1)
         {}
 
         //! destructor
         virtual ~MainWindowData( void )
-        { g_mutex_free( _mutex ); }
+        {}
 
         //! setup connections
         void connect( GtkWidget* );
@@ -95,10 +83,6 @@ namespace Oxygen
 
         //! old height
         int _height;
-
-        //! mutex
-        /*! needed to block concurent access to timeOutCount in delayedUpdate */
-        GMutex* _mutex;
 
 
     };
