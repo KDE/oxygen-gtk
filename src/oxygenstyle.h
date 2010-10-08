@@ -46,7 +46,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~Style( void )
-        {}
+        { _instance = 0L; }
 
         //! settings
         const QtSettings& settings( void ) const
@@ -263,6 +263,9 @@ namespace Oxygen
 
         // helper
         StyleHelper _helper;
+
+        //! singleton
+        static Style* _instance;
 
     };
 

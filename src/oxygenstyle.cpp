@@ -32,10 +32,11 @@ namespace Oxygen
 {
 
     //__________________________________________________________________
+    Style* Style::_instance = 0;
     Style& Style::instance( void )
     {
-        static Style singleton;
-        return singleton;
+        if( !_instance ) _instance = new Style();
+        return *_instance;
     }
 
     //__________________________________________________________________
