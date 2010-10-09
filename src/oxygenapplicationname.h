@@ -64,6 +64,7 @@ namespace Oxygen
 
         bool isFirefox( void ) const { return _name == Firefox; }
         bool isThunderbird( void ) const { return _name == Thunderbird; }
+        bool isMozilla( void ) const { return isFirefox() || isThunderbird(); }
         bool isGimp( void ) const { return _name == Gimp; }
         bool isUnknown( void ) const { return _name == Unknown; }
 

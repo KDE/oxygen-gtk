@@ -144,7 +144,7 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isFirefox() ) {
+        } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isMozilla() ) {
 
             Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, state, shadow );
@@ -377,7 +377,7 @@ namespace Oxygen
             if( GTK_IS_PROGRESS_BAR( widget ) )
             {
 
-                if( !Style::instance().settings().applicationName().isFirefox() )
+                if( !Style::instance().settings().applicationName().isMozilla() )
                 {
                     /*
                     need to call the parent style implementation here,
@@ -802,7 +802,7 @@ namespace Oxygen
 //         }
 
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
-        if( d.isMenuItem() && Style::instance().settings().applicationName().isFirefox() )
+        if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla() )
         { arrowSize = QtSettings::ArrowTiny; }
 
         StyleOptions options( Contrast );
@@ -1075,7 +1075,7 @@ namespace Oxygen
             options &= ~(Hover|Focus);
 
             Gtk::Gap gap( gap_x, gap_w, position );
-            if( Style::instance().settings().applicationName().isFirefox() )
+            if( Style::instance().settings().applicationName().isMozilla() )
             {
 
                 /*
