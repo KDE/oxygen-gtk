@@ -71,9 +71,6 @@ namespace Oxygen
 
         private:
 
-        //! motion signal id
-        // int _motionId;
-
         //! enter signal id
         int _enterId;
 
