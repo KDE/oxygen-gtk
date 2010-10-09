@@ -167,9 +167,9 @@ namespace Gtk
             const GtkAllocation& allocation( tabLabel->allocation );
 
             // get manhattan length
-            const int distance =
+            const int distance = int(
                 std::abs( double( allocation.x + allocation.width/2 - x ) ) +
-                std::abs( double( allocation.y + allocation.height/2 - y ) );
+                std::abs( double( allocation.y + allocation.height/2 - y ) ) );
             if( minDistance < 0 || distance < minDistance )
             {
                 tab = i;

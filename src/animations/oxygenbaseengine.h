@@ -43,6 +43,8 @@ namespace Oxygen
             _parent( parent )
         {}
 
+        virtual ~BaseEngine(){}
+
         //! register widget
         virtual void registerWidget( GtkWidget* widget );
 

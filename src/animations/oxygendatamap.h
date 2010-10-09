@@ -49,6 +49,8 @@ namespace Oxygen
             _lastData( 0L )
         {}
 
+        virtual ~DataMap(){}
+
         //! insert new widget
         inline T& registerWidget( GtkWidget* widget )
         {
