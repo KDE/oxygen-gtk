@@ -1591,8 +1591,10 @@ namespace Oxygen
         ) const
     {
 
+        // convenience flags
         const bool isCurrentTab( tabOptions & CurrentTab );
         const bool isFirstTab( tabOptions & FirstTab );
+        const bool isLastTab( tabOptions & LastTab );
 
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
@@ -1618,6 +1620,7 @@ namespace Oxygen
                 y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
                 if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
+                if( isLastTab ) { tabSlab._w+=1; }
 
                 // connections to frame
                 if( isCurrentTab )
@@ -1625,16 +1628,26 @@ namespace Oxygen
 
                     if( isFirstTab ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
                     else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
-                    slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
 
-                } else if( isFirstTab ) {
-
-                    slabs.push_back( SlabRect( x-1, y+h-1, w+4+2, 12, TileSet::Top|TileSet::Left ) );
-                    slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+                    if( isLastTab ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
+                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
 
                 } else {
 
-                    slabs.push_back( SlabRect( x-4-1, y+h-1, w+8+2, 10, TileSet::Top ) );
+                    SlabRect baseSlab( x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                    if( isFirstTab )
+                    {
+                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
+                        slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+                    }
+
+                    if( isLastTab )
+                    {
+                        baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
+                        slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
+                    }
+
+                    slabs.push_back( baseSlab );
 
                 }
 
@@ -1648,6 +1661,7 @@ namespace Oxygen
                 y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
                 if( isFirstTab ) { tabSlab._x-=1; tabSlab._w+=1; }
+                if( isLastTab ) { tabSlab._w-=1; }
 
                 // connections to frame
                 if( isCurrentTab )
@@ -1655,17 +1669,19 @@ namespace Oxygen
 
                     if( isFirstTab ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
                     else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
-                    slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
 
-                } else if( isFirstTab ) {
-
-                    slabs.push_back( SlabRect( x-1, y-10+1, w+4+2, 10, TileSet::Bottom|TileSet::Left ) );
+                    if( isLastTab ) slabs.push_back( SlabRect( x+w-7, y-7-7, 8, 18, TileSet::Right ) );
+                    else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
 
                 } else {
 
-                    slabs.push_back( SlabRect( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom ) );
+                    SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
+                    if( isFirstTab ) { baseSlab._x -= 4; baseSlab._w += 4; baseSlab._tiles |= TileSet::Left; }
+                    if( isLastTab ) { baseSlab._w +=4; baseSlab._tiles |= TileSet::Right; }
+                    slabs.push_back( baseSlab );
 
                 }
+
 
                 break;
             }
@@ -1677,6 +1693,7 @@ namespace Oxygen
                 x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
+                if( isLastTab ) { tabSlab._h+=1; }
 
                 // connections to frame
                 if( isCurrentTab )
@@ -1684,18 +1701,29 @@ namespace Oxygen
 
                     if( isFirstTab ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
-                    slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
 
-                } else if( isFirstTab ) {
-
-                    slabs.push_back( SlabRect( x+w-1, y-1, 12, h+4+3, TileSet::Top|TileSet::Left ) );
-                    slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
+                    if( isLastTab ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
 
                 } else {
 
-                    slabs.push_back( SlabRect( x+w-1, y-4-1, 10, h+8+3, TileSet::Left ) );
+                    SlabRect baseSlab( x+w-1, y-4-1, 10, h+8+3, TileSet::Left );
+                    if( isFirstTab )
+                    {
+                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
+                        slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
+                    }
+
+                    if( isLastTab )
+                    {
+                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
+                        slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 16, 8, TileSet::Top ) );
+                    }
+
+                    slabs.push_back( baseSlab );
 
                 }
+
                 break;
             }
 
@@ -1707,6 +1735,7 @@ namespace Oxygen
                 x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
                 if( isFirstTab ) { tabSlab._y-=1; tabSlab._h+=1; }
+                if( isLastTab ) { tabSlab._h+=1; }
 
                 // connections to frame
                 if( isCurrentTab )
@@ -1714,16 +1743,26 @@ namespace Oxygen
 
                     if( isFirstTab ) slabs.push_back( SlabRect( x-7-7, y-1, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
-                    slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
 
-                } else if( isFirstTab ) {
-
-                    slabs.push_back( SlabRect( x-10+1, y-1, 10, h+4+3, TileSet::Top|TileSet::Right ) );
-                    slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
+                    if( isLastTab )  slabs.push_back( SlabRect( x-7-7, y+h-7, 18, 8, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
 
                 } else {
 
-                    slabs.push_back( SlabRect( x-10+1, y-4-1, 10, h+8+3, TileSet::Right ) );
+                    SlabRect baseSlab( x-10+1, y-4-1, 10, h+8+3, TileSet::Right );
+                    if( isFirstTab )
+                    {
+                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
+                        slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
+                    }
+
+                    if( isLastTab )
+                    {
+                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
+                        slabs.push_back( SlabRect( x-10+1 + offset-5, y+h-7, 16, 8, TileSet::Top ) );
+                    }
+
+                    slabs.push_back( baseSlab );
 
                 }
 
