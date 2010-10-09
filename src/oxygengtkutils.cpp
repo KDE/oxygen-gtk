@@ -26,7 +26,7 @@
 
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <iostream>
+#include <cmath>
 
 namespace Gtk
 {
@@ -143,6 +143,41 @@ namespace Gtk
         // get allocted size and compare to position
         const GtkAllocation& allocation( tabLabel->allocation );
         return Gtk::gdk_rectangle_contains( &allocation, x, y );
+
+    }
+
+     //________________________________________________________
+    int gtk_notebook_find_tab( GtkWidget* widget, int x, int y )
+    {
+
+        if( !GTK_IS_NOTEBOOK( widget ) ) return -1;
+
+        // cast to notebook and check against number of pages
+        GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+        int tab(-1);
+        int minDistance( -1 );
+        for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+        {
+
+            // retrieve page and tab label
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+
+            // get allocted size and compare to position
+            const GtkAllocation& allocation( tabLabel->allocation );
+
+            // get manhattan length
+            const int distance =
+                std::abs( double( allocation.x + allocation.width/2 - x ) ) +
+                std::abs( double( allocation.y + allocation.height/2 - y ) );
+            if( minDistance < 0 || distance < minDistance )
+            {
+                tab = i;
+                minDistance = distance;
+            }
+        }
+
+        return tab;
 
     }
 
