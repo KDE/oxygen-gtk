@@ -112,18 +112,4 @@ style "oxygen-w2" = "oxygen-default"
 class "*GtkScrolledWindow" style "oxygen-w2"
 class "*GtkViewport" style "oxygen-w2"
 class "*GtkFrame" style "oxygen-w2"
-# class "*GtkNotebook" style "oxygen-w2"
-
-# style "oxygen-entry" = "oxygen-default"
-# {
-#   xthickness = 4
-#   ythickness = 4
-#   GtkWidget::interior-focus = 0
-#   GtkWidget::focus-line-width = 0
-#   GtkEntry::inner-border = { 0, 0, 0, 0}
-# }
-# class "*GtkEntry" style "oxygen-entry"
-# widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
-# widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
-# class "*GtkSpinButton" style "oxygen-entry"
 
