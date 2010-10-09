@@ -34,7 +34,7 @@ namespace Oxygen
 
         //! constructor
         LineEditData( void ):
-            _motionId(-1),
+            _enterId(-1),
             _leaveId(-1),
             _hovered( false )
         {}
@@ -65,14 +65,17 @@ namespace Oxygen
 
         //!@name static callbacks
         //@{
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         //@}
 
         private:
 
         //! motion signal id
-        int _motionId;
+        // int _motionId;
+
+        //! enter signal id
+        int _enterId;
 
         //! leave signal id
         int _leaveId;

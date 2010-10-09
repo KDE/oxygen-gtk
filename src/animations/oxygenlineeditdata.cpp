@@ -35,19 +35,19 @@ namespace Oxygen
     //________________________________________________________________________________
     void LineEditData::connect( GtkWidget* widget )
     {
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
+        _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
     }
 
     //________________________________________________________________________________
     void LineEditData::disconnect( GtkWidget* widget )
     {
-        g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
+    gboolean LineEditData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         static_cast<LineEditData*>( data )->setHovered( widget, true );
         return FALSE;
