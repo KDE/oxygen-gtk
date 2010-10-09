@@ -99,7 +99,7 @@ namespace Oxygen
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
-        registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
+        registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _spinBoxEngine = new SpinBoxEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
 

@@ -1,5 +1,5 @@
-#ifndef oxygenscrolledwindowengine_h
-#define oxygenscrolledwindowengine_h
+#ifndef oxygenscrollbarengine_h
+#define oxygenscrollbarengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -26,35 +26,54 @@
 
 #include "oxygengenericengine.h"
 #include "oxygendatamap.h"
-#include "oxygenscrolledwindowdata.h"
+#include "oxygenscrollbardata.h"
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtkscrolledwindow.h>
 
 namespace Oxygen
 {
     //! forward declaration
     class Animations;
 
-    //! stores data associated to editable scrolledwindowes
+    //! stores data associated to editable scrollbares
     /*!
-    ensures that the text entry and the button of editable scrolledwindowes
+    ensures that the text entry and the button of editable scrollbares
     gets hovered and focus flags at the same time
     */
-    class ScrolledWindowEngine: public GenericEngine<ScrolledWindowData>
+    class ScrollBarEngine: public GenericEngine<ScrollBarData>
     {
 
         public:
 
         //! constructor
-        ScrolledWindowEngine( Animations* widget ):
-            GenericEngine<ScrolledWindowData>( widget )
+        ScrollBarEngine( Animations* widget ):
+            GenericEngine<ScrollBarData>( widget )
             {}
 
         //! destructor
-        virtual ~ScrolledWindowEngine( void )
+        virtual ~ScrollBarEngine( void )
         {}
 
+        //! register scrollbar from scrolled window
+        inline void registerScrolledWindow( GtkWidget* );
+
     };
+
+    //________________________________________________________________
+    void ScrollBarEngine::registerScrolledWindow( GtkWidget* widget )
+    {
+        if( !GTK_IS_SCROLLED_WINDOW( widget ) ) return;
+        GtkScrolledWindow* scrolledWindow( GTK_SCROLLED_WINDOW( widget ) );
+
+        if( GtkWidget* hScrollBar = gtk_scrolled_window_get_hscrollbar( scrolledWindow ) )
+        { registerWidget( hScrollBar ); }
+
+        if( GtkWidget* vScrollBar = gtk_scrolled_window_get_vscrollbar( scrolledWindow ) )
+        { registerWidget( vScrollBar ); }
+
+        return;
+    }
 
 }
 

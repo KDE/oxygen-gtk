@@ -1,11 +1,11 @@
-#ifndef oxygenscrolledwindowdata_h
-#define oxygenscrolledwindowdata_h
+#ifndef oxygenscrollbardata_h
+#define oxygenscrollbardata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 * Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
-* ScrolledWindow prelight effect is based on
+* ScrollBar prelight effect is based on
 * Redmond95 - a cairo based GTK+ engine
 * Copyright (C) 2001 Red Hat, Inc.
 * Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
@@ -27,7 +27,7 @@
 * MA 02110-1301, USA.
 */
 
-/* TODO: right now this code is quite dangerous. It installs connections on ScrolledWindow scrollbars,
+/* TODO: right now this code is quite dangerous. It installs connections on ScrollBar scrollbars,
 only if the later are found (which is not good), and does not track the scrollbar destruction.
 (which is not good either). One would rather add the relevant ScrollBarData, instead */
 
@@ -36,20 +36,19 @@ only if the later are found (which is not good), and does not track the scrollba
 
 namespace Oxygen
 {
-    // track main window resize events
-    class ScrolledWindowData
+    // track scrollbars
+    class ScrollBarData
     {
 
         public:
 
         //! constructor
-        ScrolledWindowData( void ):
-            _verticalId(-1),
-            _horizontalId(-1)
+        ScrollBarData( void ):
+            _valueChangedId(-1)
         {}
 
         //! destructor
-        virtual ~ScrolledWindowData( void )
+        virtual ~ScrollBarData( void )
         {}
 
         //! setup connections
@@ -60,12 +59,11 @@ namespace Oxygen
 
         protected:
 
-        static void scrolled( GtkRange*, gpointer );
+        static void valueChanged( GtkRange*, gpointer );
 
         private:
 
-        int _verticalId;
-        int _horizontalId;
+        int _valueChangedId;
 
     };
 
