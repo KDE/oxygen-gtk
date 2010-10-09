@@ -168,6 +168,9 @@ namespace Oxygen
 
         //@}
 
+        // adjust scrollbar hole, depending on orientation and buttons settings
+        void adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions ) const;
+
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 

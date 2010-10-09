@@ -394,9 +394,19 @@ namespace Oxygen
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
+                // need to adjust scrollbar hole for mozilla applications, because the
+                // GtkScrollbar::trough-under-steppers=0 option is ignored
+                if( Style::instance().settings().applicationName().isMozilla() )
+                { Style::instance().adjustScrollBarHole( x, y, w, h, Vertical ); }
+
                 Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
 
             } else if( GTK_IS_HSCROLLBAR( widget ) ) {
+
+                // need to adjust scrollbar hole for mozilla applications, because the
+                // GtkScrollbar::trough-under-steppers=0 option is ignored
+                if( Style::instance().settings().applicationName().isMozilla() )
+                { Style::instance().adjustScrollBarHole( x, y, w, h, None ); }
 
                 Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, None );
 

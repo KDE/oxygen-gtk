@@ -2095,6 +2095,30 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions options ) const
+    {
+
+        const int buttonSize( 14 );
+        const int subLineOffset( buttonSize*settings().scrollBarSubLineButtons() );
+        const int addLineOffset( buttonSize*settings().scrollBarAddLineButtons() );
+        if( options&Vertical )
+        {
+
+            y += subLineOffset;
+            h -= (subLineOffset+addLineOffset);
+
+        } else {
+
+            x += subLineOffset;
+            w -= (subLineOffset+addLineOffset);
+
+        }
+
+        return;
+
+    }
+
+    //__________________________________________________________________
     void Style::centerRect( GdkRectangle* parent, GdkRectangle* child ) const
     {
         if( !( parent && child ) ) return;
