@@ -29,6 +29,7 @@
 #include "oxygenlineeditengine.h"
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
+#include "oxygenscrolledwindowengine.h"
 #include "oxygenspinboxengine.h"
 #include "oxygentabwidgetengine.h"
 
@@ -72,6 +73,10 @@ namespace Oxygen
         LineEditEngine& lineEditEngine( void ) const
         { return *_lineEditEngine; }
 
+        //! scrolled window engine
+        ScrolledWindowEngine& scrolledWindowEngine( void ) const
+        { return *_scrolledWindowEngine; }
+
         //! spinbox engine
         SpinBoxEngine& spinBoxEngine( void ) const
         { return *_spinBoxEngine; }
@@ -108,6 +113,9 @@ namespace Oxygen
 
         //! lineedit engine
         LineEditEngine* _lineEditEngine;
+
+        //! scrolled window engine
+        ScrolledWindowEngine* _scrolledWindowEngine;
 
         //! spinbox engine
         SpinBoxEngine* _spinBoxEngine;

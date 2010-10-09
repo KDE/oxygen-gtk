@@ -107,6 +107,17 @@ namespace Gtk
         return 0L;
     }
 
+    //________________________________________________________
+    GtkWidget* gtk_parent_scrolled_window( GtkWidget* widget )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_SCROLLED_WINDOW( parent ) ) return parent; }
+
+        return 0L;
+    }
+
 
     //________________________________________________________
     bool gtk_button_is_flat( GtkWidget* widget )

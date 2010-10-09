@@ -40,14 +40,8 @@ namespace Oxygen
     //_________________________________________
     Animations::~Animations( void )
     {
-
-        delete _comboBoxEngine;
-        delete _mainWindowEngine;
-        delete _menuShellEngine;
-        delete _lineEditEngine;
-        delete _spinBoxEngine;
-        delete _tabWidgetEngine;
-
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); iter++ )
+        { delete *iter; }
     }
 
     //____________________________________________________________________________________________
@@ -105,6 +99,7 @@ namespace Oxygen
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
+        registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
         registerEngine( _spinBoxEngine = new SpinBoxEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
 

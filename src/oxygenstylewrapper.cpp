@@ -85,7 +85,15 @@ namespace Oxygen
         {
 
             if( GTK_IS_WINDOW( widget ) )
-            { Animations::instance().mainWindowEngine().registerWidget( widget ); }
+            {
+
+                Animations::instance().mainWindowEngine().registerWidget( widget );
+
+            } else if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) ) {
+
+                Animations::instance().scrolledWindowEngine().registerWidget( parent );
+
+            }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
