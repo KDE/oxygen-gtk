@@ -972,7 +972,7 @@ namespace Oxygen
         gint y,
         gint w,
         gint h,
-        GtkPositionType gap_side,
+        GtkPositionType position,
         gint gap_x,
         gint gap_w )
     {
@@ -992,7 +992,7 @@ namespace Oxygen
         Gtk::Detail d( detail );
         if( d.isFrame() ) {
 
-            const Gtk::Gap gap( gap_x, gap_w, gap_side );
+            const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
@@ -1018,7 +1018,7 @@ namespace Oxygen
             oxygen_style_parent_class->draw_shadow_gap( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
-                gap_side, gap_x, gap_w );
+                position, gap_x, gap_w );
         }
 
     }
@@ -1035,7 +1035,7 @@ namespace Oxygen
         gint y,
         gint w,
         gint h,
-        GtkPositionType gap_side,
+        GtkPositionType position,
         gint gap_x,
         gint gap_w )
     {
@@ -1061,7 +1061,7 @@ namespace Oxygen
             options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Hover|Focus);
 
-            Gtk::Gap gap( gap_x, gap_w, gap_side );
+            Gtk::Gap gap( gap_x, gap_w, position );
             if( Style::instance().settings().applicationName().isFirefox() )
             {
 
@@ -1076,7 +1076,7 @@ namespace Oxygen
 
                 // need adjustment depending on gap side
                 const int adjust = 2;
-                switch( gap_side )
+                switch( position )
                 {
 
                     case GTK_POS_TOP:
@@ -1111,7 +1111,7 @@ namespace Oxygen
             oxygen_style_parent_class->draw_box_gap( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
-                gap_side, gap_x, gap_w );
+                position, gap_x, gap_w );
         }
 
     }
@@ -1185,7 +1185,7 @@ namespace Oxygen
         gint y,
         gint w,
         gint h,
-        GtkPositionType gap_side )
+        GtkPositionType position )
     {
 
         g_return_if_fail( style && window );
@@ -1206,7 +1206,7 @@ namespace Oxygen
         {
 
             StyleOptions options( styleOptions( widget, state, shadow ) );
-            TabOptions tabOptions( Oxygen::tabOptions( widget, state, x+w/2, y+h/2 ) );
+            TabOptions tabOptions( Oxygen::tabOptions( widget, state, position, x, y, w, h ) );
 
             if( GTK_IS_NOTEBOOK( widget ) )
             {
@@ -1217,7 +1217,7 @@ namespace Oxygen
             }
 
             // render
-            Style::instance().renderTab( window, clipRect, x, y, w, h, gap_side, options, tabOptions );
+            Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
         }
 

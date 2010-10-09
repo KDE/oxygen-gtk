@@ -36,8 +36,8 @@ namespace Oxygen
 
     typedef unsigned long TabOptions;
 
-    //! generate tab options from widget
-    TabOptions tabOptions( GtkWidget*, GtkStateType state, int x, int y );
+    //! generate options from widget
+    TabOptions tabOptions( GtkWidget*, GtkStateType, GtkPositionType, int x, int y, int w, int h );
 
 }
 

@@ -20,6 +20,7 @@
 
 #include "oxygentaboptions.h"
 #include "oxygenstyleoptions.h"
+#include "oxygengtkutils.h"
 
 #include <gtk/gtk.h>
 #include <cmath>
@@ -27,41 +28,37 @@ namespace Oxygen
 {
 
     //______________________________________________________________________
-    TabOptions tabOptions( GtkWidget* widget, GtkStateType state, int x, int y )
+    TabOptions tabOptions( GtkWidget* widget, GtkStateType state, GtkPositionType position, int x, int y, int w, int h )
     {
 
         TabOptions out( None );
+
+        // strange: all tabs but the current one are painted with the active flag
         if( state != GTK_STATE_ACTIVE ) out |= CurrentTab;
 
-        // try detect if tab is first or last
-        if( !GTK_IS_NOTEBOOK( widget ) ) return out;
-        GtkNotebook* notebook = GTK_NOTEBOOK( widget );
+        // get allocated size
+        const GtkAllocation& allocation( widget->allocation );
 
-        int tabIndex;
-        int minDistance( -1 );
-        for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
+        // this simple comparison seems robust enough and much simpler
+        // than any other implementation
+        switch( position )
         {
+            default:
+            case GTK_POS_TOP:
+            case GTK_POS_BOTTOM:
+            if( x == allocation.x ) out |= FirstTab;
+            if( x+w == allocation.x + allocation.width ) out |= LastTab;
+            break;
 
-            // retrieve page and tab label
-            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
-
-            // get allocted size
-            const GtkAllocation& allocation( tabLabel->allocation );
-            int distance = std::abs( double(allocation.x - x) ) + std::abs( double(allocation.y - y) );
-            if( minDistance < 0 || distance < minDistance )
-            {
-                minDistance = distance;
-                tabIndex = i;
-            }
+            case GTK_POS_LEFT:
+            case GTK_POS_RIGHT:
+            if( y == allocation.y ) out |= FirstTab;
+            if( y+h == allocation.y + allocation.height ) out |= LastTab;
+            break;
         }
-
-        if( tabIndex == 0 ) out |= FirstTab;
-        else if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) out |= LastTab;
 
         return out;
     }
-
 
 }
 
