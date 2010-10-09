@@ -69,7 +69,6 @@ namespace Oxygen
             return *this;
         }
 
-
     };
 
 }
