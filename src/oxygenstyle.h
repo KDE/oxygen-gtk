@@ -48,6 +48,10 @@ namespace Oxygen
         virtual ~Style( void )
         { _instance = 0L; }
 
+        //! initialize
+        void initialize( void )
+        { _settings.initialize(); }
+
         //! settings
         const QtSettings& settings( void ) const
         { return _settings; }

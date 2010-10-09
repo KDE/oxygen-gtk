@@ -35,13 +35,18 @@ namespace Oxygen
     Style* Style::_instance = 0;
     Style& Style::instance( void )
     {
-        if( !_instance ) _instance = new Style();
+        if( !_instance )
+        {
+            _instance = new Style();
+            _instance->initialize();
+        }
+
         return *_instance;
     }
 
     //__________________________________________________________________
     Style::Style( void )
-    { _settings.init(); }
+    {}
 
     //__________________________________________________________________
     void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const

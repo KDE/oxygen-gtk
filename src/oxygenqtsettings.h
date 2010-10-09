@@ -55,7 +55,7 @@ namespace Oxygen
         {}
 
         //! initialize
-        void init( void );
+        void initialize( void );
 
         //! palette
         const Palette& palette( void ) const

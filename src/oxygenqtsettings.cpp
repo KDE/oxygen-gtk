@@ -67,7 +67,7 @@ namespace Oxygen
     {}
 
     //_________________________________________________________
-    void QtSettings::init( void )
+    void QtSettings::initialize( void )
     {
 
         // clear RC
