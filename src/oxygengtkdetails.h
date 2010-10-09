@@ -42,13 +42,14 @@ namespace Gtk
         //!@name treeview cells
         //@{
 
-        bool isCellEven( void ) const { return _value == "cell_even"; }
         bool isCellEvenSorted( void ) const { return _value == "cell_even_sorted"; }
         bool isCellEvenRuled( void ) const { return _value == "cell_even_ruled"; }
-        bool isCellOdd( void ) const { return _value == "cell_odd"; }
         bool isCellOddSorted( void ) const { return _value == "cell_odd_sorted"; }
         bool isCellOddRuled( void ) const { return _value == "cell_odd_ruled"; }
         bool isCell( void ) const { return _value.find( "cell_" ) == 0; }
+
+        bool isCellOdd( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
+        bool isCellEven( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
 
         bool isCellRuled( void ) const { return isCell() && _value.find( "_ruled" ) != std::string::npos; }
         bool isCellStart( void ) const { return isCell() && _value.find( "_start" ) != std::string::npos; }

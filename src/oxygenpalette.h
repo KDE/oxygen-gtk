@@ -38,6 +38,7 @@ namespace Oxygen
         enum Role
         {
             Base,
+            BaseAlternate,
             Button,
             Selected,
             Window,

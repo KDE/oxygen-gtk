@@ -127,6 +127,29 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
+            StyleOptions options( styleOptions( widget, state ) );
+
+            // select palete colorgroup for cell background
+            Palette::Group group( Palette::Active );
+            if( options & Disabled ) group = Palette::Disabled;
+            else if( !(options&Focus) ) group = Palette::Inactive;
+
+            /*
+            This does not really work with the last entry.
+            The background extends below, in the empty area,
+            which is bad when the row is odd
+            */
+            if( d.isCellEven() )
+            {
+
+                Style::instance().fill( window, clipRect, x, y, w, h, Style::instance().settings().palette().color( group, Palette::Base ) );
+
+            } else {
+
+                Style::instance().fill( window, clipRect, x, y, w, h, Style::instance().settings().palette().color( group, Palette::BaseAlternate ) );
+
+            }
+
             if( state == GTK_STATE_SELECTED  || state == GTK_STATE_PRELIGHT )
             {
 
@@ -135,7 +158,6 @@ namespace Oxygen
                 else if( d.isCellEnd() ) tiles |= TileSet::Right;
                 else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
 
-                StyleOptions options( styleOptions( widget, state ) );
                 Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
             }
 
@@ -420,7 +442,8 @@ namespace Oxygen
             if( style )
             {
                 // for disabled spinboxes one has to handle the background manually
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
+                const bool enabled( gtk_widget_is_sensitive( widget ) );
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[enabled ? GTK_STATE_NORMAL:GTK_STATE_INSENSITIVE] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
             }
 

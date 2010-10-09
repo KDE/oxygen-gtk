@@ -56,7 +56,7 @@ namespace Oxygen
         else if( state == GTK_STATE_SELECTED ) options |= Selected;
 
         if( shadow == GTK_SHADOW_IN ) options |= Sunken;
-        if( GTK_WIDGET_HAS_FOCUS(widget) ) options|=Focus;
+        if( gtk_widget_has_focus(widget) ) options|=Focus;
 
         return options;
     }
