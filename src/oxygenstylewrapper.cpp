@@ -1206,7 +1206,7 @@ namespace Oxygen
         {
 
             StyleOptions options( styleOptions( widget, state, shadow ) );
-            TabOptions tabOptions( Oxygen::tabOptions( widget, state, x, y ) );
+            TabOptions tabOptions( Oxygen::tabOptions( widget, state, x+w/2, y+h/2 ) );
 
             if( GTK_IS_NOTEBOOK( widget ) )
             {

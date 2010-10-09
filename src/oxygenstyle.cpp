@@ -1729,6 +1729,19 @@ namespace Oxygen
             default: return;
         }
 
+        // render tab
+        if( (options&Hover) && !isCurrentTab )
+        {
+
+            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+
+        } else {
+
+            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+
+        }
+
         // adjust rect for filling
         SlabRect fillSlab( tabSlab );
         fillSlab._x += 4;
@@ -1820,19 +1833,6 @@ namespace Oxygen
         cairo_set_source( context, pattern );
         cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
         cairo_fill( context );
-
-        // render tab
-        if( (options&Hover) && !isCurrentTab )
-        {
-
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        } else {
-
-            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        }
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
