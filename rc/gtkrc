@@ -47,6 +47,9 @@ style "oxygen-default"
     GtkStatusbar::shadow-type = GTK_SHADOW_NONE
     GtkToolbar::shadow-type = GTK_SHADOW_NONE
 
+    # make spinbuttons' background white
+    base[NORMAL] = "#ffffff"
+
     engine "oxygen-gtk"
     {
     }
