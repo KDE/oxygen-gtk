@@ -814,13 +814,7 @@ namespace Oxygen
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
 
-        } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_combobox_entry( widget ) ) {
-
-            options &= ~( Focus|Hover );
-
-        }
-
-        if( d.isSpinButton() ) {
+        } else if( d.isSpinButton() ) {
 
             /*
             TODO: this should be made more robust. What one really want is an arrow that is
@@ -832,6 +826,25 @@ namespace Oxygen
 
             // disable contrast
             options &= ~Contrast;
+
+        } else if( d.isNotebook() ) {
+
+            if( GTK_IS_NOTEBOOK( widget ) )
+            {
+                const int offset = 6;
+                switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( widget ) ) )
+                {
+                    default:
+                    case GTK_POS_TOP: h += offset; break;
+                    case GTK_POS_LEFT: w += offset; break;
+                    case GTK_POS_BOTTOM: y-=offset; h+=offset; break;
+                    case GTK_POS_RIGHT: x -= offset; w += offset; break;
+                }
+            }
+
+        } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+            options &= ~( Focus|Hover );
 
         }
 
