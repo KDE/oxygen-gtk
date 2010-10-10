@@ -82,7 +82,7 @@ namespace Oxygen
 
         const Gtk::Detail d( detail );
         bool accepted( false );
-        if( d.isBase() || d.isEventBox() )
+        if( d.isBase() || d.isEventBox() || d.isViewportBin() )
         {
 
             if( GTK_IS_WINDOW( widget ) )
