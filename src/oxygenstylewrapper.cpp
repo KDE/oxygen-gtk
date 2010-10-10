@@ -134,21 +134,11 @@ namespace Oxygen
             if( options & Disabled ) group = Palette::Disabled;
             else if( !(options&Focus) ) group = Palette::Inactive;
 
-            /*
-            This does not really work with the last entry.
-            The background extends below, in the empty area,
-            which is bad when the row is odd
-            */
-            if( d.isCellEven() )
-            {
-
-                Style::instance().fill( window, clipRect, x, y, w, h, Style::instance().settings().palette().color( group, Palette::Base ) );
-
-            } else {
-
-                Style::instance().fill( window, clipRect, x, y, w, h, Style::instance().settings().palette().color( group, Palette::BaseAlternate ) );
-
-            }
+            // render background
+            ColorUtils::Rgba background;
+            if( d.isCellEven() ) background = Style::instance().settings().palette().color( group, Palette::Base );
+            else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
+            if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
             if( state == GTK_STATE_SELECTED  || state == GTK_STATE_PRELIGHT )
             {

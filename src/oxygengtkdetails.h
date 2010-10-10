@@ -49,7 +49,7 @@ namespace Gtk
         bool isCell( void ) const { return _value.find( "cell_" ) == 0; }
 
         bool isCellOdd( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
-        bool isCellEven( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
+        bool isCellEven( void ) const { return isCell() && _value.find( "_even" ) != std::string::npos; }
 
         bool isCellRuled( void ) const { return isCell() && _value.find( "_ruled" ) != std::string::npos; }
         bool isCellStart( void ) const { return isCell() && _value.find( "_start" ) != std::string::npos; }
