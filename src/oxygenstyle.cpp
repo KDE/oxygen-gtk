@@ -1493,12 +1493,6 @@ namespace Oxygen
         gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
-        const bool vertical( options&Vertical );
-        GdkRectangle parent = { x, y, w, h };
-        GdkRectangle child = { 0, 0, vertical ? Slider_Thickness:Slider_Length, vertical ? Slider_Length:Slider_Thickness };
-
-        centerRect( &parent, &child );
-
         // define colors
         ColorUtils::Rgba base;
         if( options&Blend )
@@ -1517,7 +1511,7 @@ namespace Oxygen
         // render slab
         options &= ~Sunken;
         Cairo::Context context( window, clipRect );
-        renderSlab( context, child.x, child.y, child.width, child.height, base, options );
+        renderSlab( context, x, y, w, h, base, options );
 
     }
 
