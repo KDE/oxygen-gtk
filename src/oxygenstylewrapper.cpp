@@ -436,9 +436,8 @@ namespace Oxygen
 
             if( style )
             {
-                // for disabled spinboxes one has to handle the background manually
-                const bool enabled( gtk_widget_is_sensitive( widget ) );
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[enabled ? GTK_STATE_NORMAL:GTK_STATE_INSENSITIVE] ) );
+                // get background color from widget state
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
 
                 if( Style::instance().settings().applicationName().isMozilla() )
                 {
@@ -453,6 +452,7 @@ namespace Oxygen
                     cairo_fill( context );
 
                 } else Style::instance().fill( window, clipRect, x, y, w, h, background );
+
             }
 
             Animations::instance().spinBoxEngine().registerWidget( widget );
