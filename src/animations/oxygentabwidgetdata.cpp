@@ -27,7 +27,6 @@
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
-#include <cassert>
 #include <iostream>
 
 namespace Oxygen
@@ -48,48 +47,44 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void TabWidgetData::updateHoveredTab(GtkWidget* widget )
+    gboolean TabWidgetData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
     {
+
+        if( !GTK_IS_NOTEBOOK( widget ) ) return FALSE;
+        GtkNotebook* notebook = GTK_NOTEBOOK( widget );
 
         // get pointer position
         int xPointer,yPointer;
         gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
 
         // loop over tabs and check matching
-        for( unsigned int i = 0; i < _tabRects.size(); i++ )
+        const int adjust = 5;
+        for( int i = 0; i < gtk_notebook_get_n_pages( notebook ); i++ )
         {
-            if( Gtk::gdk_rectangle_contains( &_tabRects[i], xPointer, yPointer ) )
-            { setHoveredTab( widget, i ); return; }
+
+            // retrieve page and tab label
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+
+            // get allocted rect and adjust
+            GtkAllocation rect;
+            gtk_widget_get_allocation( tabLabel, &rect );
+            rect.x -= adjust;
+            rect.y -= adjust;
+            rect.width += 2*adjust;
+            rect.height += 2*adjust;
+
+            // check point against rectangle
+            if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
+            {
+                static_cast<TabWidgetData*>( data )->setHoveredTab( widget, i );
+                return FALSE;
+            }
         }
 
         // reset hovered tab
-        setHoveredTab( widget, -1 );
-
-    }
-
-    //________________________________________________________________________________
-    void TabWidgetData::updateTabRect( GtkWidget* widget, int index, const GdkRectangle& r )
-    {
-        // make sure the vector has the right size
-        if( !GTK_IS_NOTEBOOK( widget ) ) return;
-        GtkNotebook* notebook = GTK_NOTEBOOK( widget );
-        _tabRects.resize( gtk_notebook_get_n_pages( notebook ), defaultRect() );
-
-        // check index against number of tabs
-        if( index < 0 || index >= (int)_tabRects.size() )
-        { return; }
-
-        // store rectangle
-        _tabRects[index]=r;
-    }
-
-    //________________________________________________________________________________
-    gboolean TabWidgetData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
-    {
-
-        static_cast<TabWidgetData*>( data )->updateHoveredTab( widget );
+        static_cast<TabWidgetData*>( data )->setHoveredTab( widget, -1 );
         return FALSE;
-
     }
 
     //________________________________________________________________________________

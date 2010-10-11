@@ -24,7 +24,6 @@
 */
 
 #include <gtk/gtkwidget.h>
-#include <vector>
 
 namespace Oxygen
 {
@@ -52,13 +51,6 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
-        //! update tab rectangle
-        /* this is used to decide when a tab is hovered or not */
-        void updateTabRect( GtkWidget*, int, const GdkRectangle& );
-
-        //! update hovered tab
-        void updateHoveredTab( GtkWidget* );
-
         //! true if hovered
         int hoveredTab( void ) const
         { return _hoveredTab; }
@@ -82,13 +74,6 @@ namespace Oxygen
 
         private:
 
-        //! default tabRect size
-        GdkRectangle defaultRect( void ) const
-        {
-            GdkRectangle out = {0, 0, -1, -1};
-            return out;
-        }
-
         //! motion signal id
         int _motionId;
 
@@ -97,9 +82,6 @@ namespace Oxygen
 
         //! index of hovered tab, if any
         int _hoveredTab;
-
-        //! store rectangles matching tabs
-        std::vector<GdkRectangle> _tabRects;
 
     };
 

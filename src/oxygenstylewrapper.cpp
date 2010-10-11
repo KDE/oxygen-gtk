@@ -1260,12 +1260,9 @@ namespace Oxygen
 
             if( GTK_IS_NOTEBOOK( widget ) )
             {
-
                 // see if tab is hovered
                 Animations::instance().tabWidgetEngine().registerWidget( widget );
-                const int tabIndex( Gtk::gtk_notebook_find_tab( widget, x+w/2, y+h/2 ) );
-                Animations::instance().tabWidgetEngine().updateTabRect( widget, tabIndex, x, y, w, h );
-                if( tabIndex == Animations::instance().tabWidgetEngine().hoveredTab( widget ) )
+                if( Gtk::gtk_notebook_tab_contains( widget, Animations::instance().tabWidgetEngine().hoveredTab( widget ), x+w/2, y+h/2 ) )
                 { options |= Hover; }
             }
 

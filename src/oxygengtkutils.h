@@ -77,6 +77,10 @@ namespace Gtk
     //! true for 'flat' buttons (e.g. toolbuttons)
     bool gtk_button_is_flat( GtkWidget* );
 
+    //! returns true if position is in hovered tab
+    //* this should move to OxygenTabWidgetData
+    bool gtk_notebook_tab_contains( GtkWidget*, int tab, int x, int y );
+
     //! returns tab matching position or -1 if none
     int gtk_notebook_find_tab( GtkWidget*, int x, int y );
 
