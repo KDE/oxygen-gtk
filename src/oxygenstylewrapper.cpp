@@ -32,6 +32,7 @@
 
 #include "oxygen.h"
 #include "oxygenanimations.h"
+#include "oxygencairoutils.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtkutils.h"
 #include "oxygenmaps.h"
@@ -167,7 +168,7 @@ namespace Oxygen
                 if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
                 else options &= ~Hover;
 
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
+                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+5, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -434,7 +435,20 @@ namespace Oxygen
                 // for disabled spinboxes one has to handle the background manually
                 const bool enabled( gtk_widget_is_sensitive( widget ) );
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[enabled ? GTK_STATE_NORMAL:GTK_STATE_INSENSITIVE] ) );
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+                if( Style::instance().settings().applicationName().isMozilla() )
+                {
+
+                    /*
+                    for firefox on has to mask out the corners manually,
+                    because renderholebackground fails
+                    */
+                    Cairo::Context context( window, clipRect );
+                    cairo_rounded_rectangle( context, x-1, y+2, w-1, h-4, 2, CornersRight );
+                    cairo_set_source( context, background );
+                    cairo_fill( context );
+
+                } else Style::instance().fill( window, clipRect, x, y, w, h, background );
             }
 
             Animations::instance().spinBoxEngine().registerWidget( widget );
@@ -528,7 +542,7 @@ namespace Oxygen
                 else options &= ~Hover;
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2+7, h+2, options, TileSet::Ring & (~TileSet::Right) );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, TileSet::Ring & (~TileSet::Right) );
 
             } else {
 
