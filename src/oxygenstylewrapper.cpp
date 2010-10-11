@@ -82,7 +82,7 @@ namespace Oxygen
 
         const Gtk::Detail d( detail );
         bool accepted( false );
-        if( d.isBase() || d.isEventBox() || d.isViewportBin() )
+        if( d.isBase() || d.isEventBox())
         {
 
             if( GTK_IS_WINDOW( widget ) )
@@ -101,8 +101,14 @@ namespace Oxygen
 
         } else if( d.isViewportBin() ) {
 
-            GtkShadowType shadow = gtk_viewport_get_shadow_type( GTK_VIEWPORT( widget ) );
-            if( shadow == GTK_SHADOW_NONE )
+            GdkColor bg=style->bg[state];
+            GdkColor defbg=gtk_widget_get_default_style()->bg[state];
+            // This dirty hack with 10000 makes GIMP bottom element viewportbin have correct window color
+            // while ccsm options list will remain white. Hope this will work as intended for other apps
+            // FIXME: why default style bg isn't the same as unchanged(?) bg in GIMP? If it were, no hack would be needed
+            if(bg.red/10000==defbg.red/10000 &&
+                    bg.green/10000==defbg.green/10000 &&
+                    bg.blue/10000==defbg.blue/10000)
             {
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
                 accepted = true;
