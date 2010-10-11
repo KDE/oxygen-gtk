@@ -127,26 +127,6 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_notebook_tab_contains( GtkWidget* widget, int tab, int x, int y )
-    {
-
-        if( !( tab >= 0 && GTK_IS_NOTEBOOK( widget ) ) ) return false;
-
-        // cast to notebook and check against number of pages
-        GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
-        if( tab >= gtk_notebook_get_n_pages( notebook ) ) return false;
-
-        // retrieve page and tab label
-        GtkWidget* page( gtk_notebook_get_nth_page( notebook, tab ) );
-        GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
-
-        // get allocted size and compare to position
-        const GtkAllocation& allocation( tabLabel->allocation );
-        return Gtk::gdk_rectangle_contains( &allocation, x, y );
-
-    }
-
-     //________________________________________________________
     int gtk_notebook_find_tab( GtkWidget* widget, int x, int y )
     {
 
