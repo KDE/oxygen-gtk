@@ -1258,12 +1258,22 @@ namespace Oxygen
             StyleOptions options( styleOptions( widget, state, shadow ) );
             TabOptions tabOptions( Oxygen::tabOptions( widget, state, position, x, y, w, h ) );
 
-            if( GTK_IS_NOTEBOOK( widget ) )
+            /*
+            see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
+            app, because the latter do not pass the actual tab rect as argument
+            */
+            if( GTK_IS_NOTEBOOK( widget ) && !Style::instance().settings().applicationName().isMozilla() )
             {
-                // see if tab is hovered
+
+                // make sure widget is registered
                 Animations::instance().tabWidgetEngine().registerWidget( widget );
-                if( Gtk::gtk_notebook_tab_contains( widget, Animations::instance().tabWidgetEngine().hoveredTab( widget ), x+w/2, y+h/2 ) )
+
+                // get current tab, update tabRect and see if current tab is hovered
+                const int tabIndex( Gtk::gtk_notebook_find_tab( widget, x+w/2, y+h/2 ) );
+                Animations::instance().tabWidgetEngine().updateTabRect( widget, tabIndex, x, y, w, h );
+                if( tabIndex == Animations::instance().tabWidgetEngine().hoveredTab( widget ) )
                 { options |= Hover; }
+
             }
 
             // render
