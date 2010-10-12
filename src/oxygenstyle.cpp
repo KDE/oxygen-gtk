@@ -196,13 +196,12 @@ namespace Oxygen
 
         // create context and translate
         Cairo::Context context( window, clipRect );
-        cairo_translate( context, x, y );
         const bool hasAlpha( options&Alpha );
 
         // paint translucent first
         if( hasAlpha )
         {
-            cairo_rectangle( context, 0, 0, w, h );
+            cairo_rectangle( context, x, y, w, h );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
             cairo_fill( context );
@@ -212,8 +211,8 @@ namespace Oxygen
 
         {
             // upper rect
-            GdkRectangle upperRect = { 0, 0, w, splitY };
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, splitY ) );
+            GdkRectangle upperRect = { x, y, w, splitY };
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y, 0, y+splitY ) );
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
@@ -226,7 +225,7 @@ namespace Oxygen
         {
 
             // lower part
-            GdkRectangle lowerRect = { 0, splitY, w, h-splitY };
+            GdkRectangle lowerRect = { 0, y+splitY, w, y+h-splitY };
             gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, hasAlpha ? CornersBottom:CornersNone );
             cairo_set_source( context, bottom );
             cairo_fill( context );
