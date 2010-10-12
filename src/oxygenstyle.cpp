@@ -831,23 +831,23 @@ namespace Oxygen
 
         // create context and translate
         Cairo::Context context( window, clipRect );
-        cairo_translate( context, x, y );
-        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0.5, 0, h-1 ) );
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
         cairo_pattern_add_color_stop( pattern, 0, light );
 
         const bool hasAlpha( options & Alpha );
         if( hasAlpha )
         {
-            cairo_pattern_add_color_stop( pattern, std::max( 0.8, 1.0 - 10/h), light );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0 ) );
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 3.5 );
+            if( h > 20.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 1.0 - 12.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
+            else if( h > 8.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 3.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
+            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
+            cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, 3.5 );
         } else {
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
-            cairo_rectangle( context, 0.5, 0.5, w-1, h-1 );
+            cairo_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1 );
         }
 
         cairo_set_source( context, pattern );
-        cairo_set_line_width( context, 1.0 );
+        cairo_set_line_width( context, 0.8 );
         cairo_stroke( context );
 
     }
