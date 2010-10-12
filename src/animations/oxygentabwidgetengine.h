@@ -58,6 +58,21 @@ namespace Oxygen
         int hoveredTab( GtkWidget* widget )
         { return data().value( widget ).hoveredTab(); }
 
+        //! returns hovered tab, if any
+        void updateTabRect( GtkWidget* widget, int index, int x, int y, int w, int h )
+        {
+            GdkRectangle local = { x, y, w, h };
+            return data().value( widget ).updateTabRect( widget, index, local );
+        }
+
+        //! returns hovered tab, if any
+        void updateTabRect( GtkWidget* widget, int index, const GdkRectangle& r )
+        { return data().value( widget ).updateTabRect( widget, index, r ); }
+
+        //! returns hovered tab, if any
+        void updateHoveredTab( GtkWidget* widget )
+        { return data().value( widget ).updateHoveredTab( widget ); }
+
     };
 
 }
