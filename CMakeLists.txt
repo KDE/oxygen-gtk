@@ -1,6 +1,8 @@
 project( oxygen-gtk )
 include( UsePkgConfig )
 
+cmake_minimum_required(VERSION 2.4)
+
 # Define package generation
 set( CPACK_PACKAGE_NAME "oxygen-gtk" )
 set( CPACK_SOURCE_PACKAGE_NAME "oxygen-gtk" )
@@ -18,6 +20,20 @@ set( OXYGEN_DEBUG 0 )
 
 # X11
 find_package( X11 REQUIRED )
+
+# install prefix
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+    exec_program(
+        ${PKGCONFIG_EXECUTABLE}
+        ARGS --variable=prefix gtk+-2.0
+        OUTPUT_VARIABLE GTK_PREFIX )
+
+    set(CMAKE_INSTALL_PREFIX
+        ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
+        )
+
+endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 # Find GTK
 pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
