@@ -758,7 +758,17 @@ namespace Oxygen
             }
 
             // separators
-            Style::instance().drawSeparator( window, clipRect, x1, y+2, x2-x1, 0, None );
+            bool accepted( true );
+            if( widget )
+            {
+                // do not draw side hlines because they conflict with selection rect
+                const GtkAllocation& allocation( widget->allocation );
+                if( x1 <= allocation.x + 5 || x2 >= allocation.x + allocation.width - 5 )
+                { accepted = false; }
+            }
+
+            if( accepted )
+            { Style::instance().drawSeparator( window, clipRect, x1, y+1, x2-x1, 0, None ); }
 
         } else {
 
