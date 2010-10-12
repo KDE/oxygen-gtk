@@ -69,6 +69,9 @@ ForegroundNormal=27,25,24
 ForegroundPositive=0,110,40
 ForegroundVisited=100,74,155
 
+[KDE]
+contrast=7
+
 [General]
 desktopFont=Sans Serif,8,-1,5,50,0,0,0,0,0
 fixed=Monospace,8,-1,5,50,0,0,0,0,0
