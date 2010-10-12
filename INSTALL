@@ -3,6 +3,7 @@ Basic instructions for compiling:
 cd oxygen-gtk
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+cmake -DCMAKE_INSTALL_PREFIX=`pkg-config --variable=prefix gtk+-2.0` ../
 make -j2
 sudo make install
+
