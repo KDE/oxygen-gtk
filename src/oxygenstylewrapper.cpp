@@ -265,13 +265,8 @@ namespace Oxygen
             detail );
         #endif
 
-        if(GTK_IS_MENU_BAR(widget))
-        {
-
-            // register menubar to engine, to handle hover effect
-            Animations::instance().menuShellEngine().registerWidget(widget);
-
-        }
+        if(GTK_IS_MENU_SHELL( widget ) )
+        { Animations::instance().menuShellEngine().registerWidget(widget); }
 
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
@@ -356,9 +351,18 @@ namespace Oxygen
 
         } else if( d.isMenu() ) {
 
-            StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
-            Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
-            Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
+            if( GTK_IS_MENU( widget ) && GTK_MENU( widget )->torn_off )
+            {
+
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
+            } else {
+
+                StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
+                Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
+                Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
+
+            }
 
         } else if( d.isMenuScrollArrow() ) {
 
@@ -726,9 +730,37 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
-        if( d.isVScale() ) return;
-        else if( d.isToolBar() && !Style::instance().settings().toolBarDrawItemSeparator() ) return;
-        else {
+        if( d.isVScale() )
+        {
+
+            return;
+
+        } else if( d.isToolBar() && !Style::instance().settings().toolBarDrawItemSeparator() ) {
+
+            return;
+
+        } else if( d.isTearOffMenuItem() ) {
+
+            if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT )
+            {
+                // render background, this is needed to prevent a plain rect to be rendered (by gtk) where the item is
+                // rectangle is adjusted manually so that it matches
+                if( widget && GTK_IS_MENU( widget->parent ) && GTK_MENU( widget->parent )->torn_off )
+                {
+
+                    Style::instance().renderWindowBackground( window, clipRect, x1-4, y-7, x2-x1+10, 20 );
+
+                } else {
+
+                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, None );
+                }
+
+            }
+
+            // separators
+            Style::instance().drawSeparator( window, clipRect, x1, y+2, x2-x1, 0, None );
+
+        } else {
 
             StyleOptions options( None );
             if( !Gtk::gtk_parent_treeview( widget ) )
@@ -845,8 +877,19 @@ namespace Oxygen
         StyleOptions options( Contrast );
         options |= styleOptions( widget, state );
 
-        if( d.isMenuItem() && !Gtk::gtk_parent_treeview( widget ) )
+        if( d.isTearOffMenuItem() )
         {
+            if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( widget->parent ) && GTK_MENU( widget->parent )->torn_off )
+            {
+
+                Style::instance().renderWindowBackground( window, clipRect, x-8, y-8, w+16, h+16);
+
+            }
+
+            // disable highlight in menus, for consistancy with oxygen qt style
+            options &= ~( Focus|Hover );
+
+        } else if( d.isMenuItem() && !Gtk::gtk_parent_treeview( widget ) ) {
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );

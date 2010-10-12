@@ -194,25 +194,41 @@ namespace Oxygen
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
 
+        // get window dimension and position
+        gint ww, wh;
+        gint wx, wy;
+        //if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+        if( !Gtk::gdk_map_to_toplevel( window, 0L, &wx, &wy, &ww, &wh, true ) )
+        { return; }
+
+        // translate to toplevel coordinates
+        x+=wx;
+        y+=wy;
+
         // create context and translate
         Cairo::Context context( window, clipRect );
+        cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
+
+
+        GdkRectangle rect = { x, y, w, h };
 
         // paint translucent first
         if( hasAlpha )
         {
-            cairo_rectangle( context, x, y, w, h );
+            cairo_rectangle( context, 0, 0, ww, wh );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
             cairo_fill( context );
         }
 
-        const int splitY( std::min(200, 3*h/4 ) );
+        const int splitY( std::min(200, 3*wh/4 ) );
 
+        GdkRectangle upperRect = { 0, 0, ww, splitY };
+        if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
             // upper rect
-            GdkRectangle upperRect = { x, y, w, splitY };
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y, 0, y+splitY ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, splitY ) );
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
@@ -222,10 +238,12 @@ namespace Oxygen
 
         }
 
+        GdkRectangle lowerRect = { 0, splitY, w, wh-splitY };
+        if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
             // lower part
-            GdkRectangle lowerRect = { 0, y+splitY, w, y+h-splitY };
+            GdkRectangle lowerRect = { 0, splitY, w, wh-splitY };
             gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, hasAlpha ? CornersBottom:CornersNone );
             cairo_set_source( context, bottom );
             cairo_fill( context );
