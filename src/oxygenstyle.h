@@ -56,6 +56,10 @@ namespace Oxygen
         const QtSettings& settings( void ) const
         { return _settings; }
 
+        //! helper
+        const StyleHelper& helper( void ) const
+        { return _helper; }
+
         //!@name primitives
         //@{
 

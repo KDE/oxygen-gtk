@@ -81,7 +81,7 @@ namespace Oxygen
         }
 
         Cairo::Context context( window, clipRect );
-        _helper.drawSeparator( context, base, x, y, w, h, (options&Vertical) );
+        helper().drawSeparator( context, base, x, y, w, h, (options&Vertical) );
 
     }
 
@@ -338,9 +338,9 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         int yCenter( y + h/2 );
         int xDots( x + w - 1 );
-        _helper.renderDot( context, base, xDots, yCenter - 3 );
-        _helper.renderDot( context, base, xDots, yCenter );
-        _helper.renderDot( context, base, xDots, yCenter + 3 );
+        helper().renderDot( context, base, xDots, yCenter - 3 );
+        helper().renderDot( context, base, xDots, yCenter );
+        helper().renderDot( context, base, xDots, yCenter + 3 );
 
     }
 
@@ -551,9 +551,9 @@ namespace Oxygen
             int center = ( w-( ngroups-1 )*250 )/2 + x;
             for( int k = 0; k < ngroups; k++, center += 250 )
             {
-                _helper.renderDot( context, base, center-3, y-1 );
-                _helper.renderDot( context, base, center, y-1 );
-                _helper.renderDot( context, base, center+3, y-1 );
+                helper().renderDot( context, base, center-3, y-1 );
+                helper().renderDot( context, base, center, y-1 );
+                helper().renderDot( context, base, center+3, y-1 );
             }
 
         } else {
@@ -563,9 +563,9 @@ namespace Oxygen
             int center = ( h-( ngroups-1 )*250 )/2 + y;
             for( int k = 0; k < ngroups; k++, center += 250 )
             {
-                _helper.renderDot( context, base, x, center-3 );
-                _helper.renderDot( context, base, x, center );
-                _helper.renderDot( context, base, x, center+3 );
+                helper().renderDot( context, base, x, center-3 );
+                helper().renderDot( context, base, x, center );
+                helper().renderDot( context, base, x, center+3 );
             }
 
         }
@@ -603,7 +603,7 @@ namespace Oxygen
         Cairo::Context context( window );
 
         // get pixbug
-        GdkPixbuf* pixbuf( _helper.progressBarIndicator( base, glow, w, h ) );
+        GdkPixbuf* pixbuf( helper().progressBarIndicator( base, glow, w, h ) );
         cairo_translate( context, -1, -2 );
         cairo_translate( context, x, y );
         switch( orientation )
@@ -820,8 +820,8 @@ namespace Oxygen
             const int xcenter( x+w/2 );
             for( int ycenter = y+2; ycenter <= y+h-3; ycenter+=3, ++counter )
             {
-                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter+1, ycenter );
-                else _helper.renderDot( context, base, xcenter-2, ycenter );
+                if( counter%2 == 0 ) helper().renderDot( context, base, xcenter+1, ycenter );
+                else helper().renderDot( context, base, xcenter-2, ycenter );
             }
 
         } else {
@@ -829,8 +829,8 @@ namespace Oxygen
             const int ycenter( y + h/2 );
             for( int xcenter = x+2; xcenter < x+w-3; xcenter+=3, ++counter )
             {
-                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter, ycenter+1 );
-                else _helper.renderDot( context, base, xcenter, ycenter-2 );
+                if( counter%2 == 0 ) helper().renderDot( context, base, xcenter, ycenter+1 );
+                else helper().renderDot( context, base, xcenter, ycenter-2 );
             }
 
         }
@@ -942,15 +942,15 @@ namespace Oxygen
                 {
 
                     const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                    _helper.holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
+                    helper().holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
 
-                } else _helper.hole( base, 0, 7, false ).render( context, x, y, w, h );
+                } else helper().hole( base, 0, 7, false ).render( context, x, y, w, h );
 
             } else if( options&Hover ) {
 
                 const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
                 Cairo::Context context( window, clipRect );
-                _helper.slitFocused( glow ).render( context, x, y, w, h );
+                helper().slitFocused( glow ).render( context, x, y, w, h );
 
             }
 
@@ -988,16 +988,16 @@ namespace Oxygen
             {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                _helper.slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
 
             } else if( options&Focus ) {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                _helper.slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
 
             } else {
 
-                _helper.slab( base, 0 ).render( context, x, y, w, h );
+                helper().slab( base, 0 ).render( context, x, y, w, h );
 
             }
         }
@@ -1020,10 +1020,10 @@ namespace Oxygen
         }
 
         cairo_set_source( context, pattern );
-        _helper.fillSlab( context, x, y, w, h );
+        helper().fillSlab( context, x, y, w, h );
 
         if( options&Sunken )
-        { _helper.slabSunken( base, 0 ).render( context, x, y, w, h ); }
+        { helper().slabSunken( base, 0 ).render( context, x, y, w, h ); }
 
     }
 
@@ -1092,7 +1092,7 @@ namespace Oxygen
         if( options & Flat )
         {
 
-            _helper.holeFlat( base, 0 ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
+            helper().holeFlat( base, 0 ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
             cairo_translate( context, 0, -2 );
 
         } else {
@@ -1216,7 +1216,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options ) );
 
         // get the pixmap
-        GdkPixbuf* pixbuf( glow.isValid() ? _helper.roundSlabFocused( base, glow, 0 ):_helper.roundSlab( base, 0 ) );
+        GdkPixbuf* pixbuf( glow.isValid() ? helper().roundSlabFocused( base, glow, 0 ):helper().roundSlab( base, 0 ) );
 
         // create context
         Cairo::Context context( window, clipRect );
@@ -1278,16 +1278,16 @@ namespace Oxygen
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            _helper.holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         } else if( options & Hover ) {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            _helper.holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            _helper.hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -1318,7 +1318,7 @@ namespace Oxygen
         // create context, add mask, and render
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-        _helper.dockFrame( base, w ).render( context, x, y, w, h );
+        helper().dockFrame( base, w ).render( context, x, y, w, h );
     }
 
     //____________________________________________________________________________________
@@ -1381,7 +1381,7 @@ namespace Oxygen
             gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( color ).toInt() );
             {
                 Cairo::Context context( pixbuf );
-                _helper.holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
+                helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
                 context.updateGdkPixbuf();
             }
 
@@ -1400,7 +1400,7 @@ namespace Oxygen
         } else {
 
             Cairo::Context context( window, clipRect );
-            _helper.holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
+            helper().holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
         }
     }
 
@@ -1423,7 +1423,7 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         if( !(tiles&TileSet::Left) ) { x -= 8; w+=8; }
         if( !(tiles&TileSet::Right) ) { w += 8; }
-        _helper.selection( base, h, false ).render( context, x, y, w, h, tiles );
+        helper().selection( base, h, false ).render( context, x, y, w, h, tiles );
 
     }
 
@@ -1535,7 +1535,7 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
-        _helper.groove( base, 0 ).render( context, child.x, child.y, child.width, child.height );
+        helper().groove( base, 0 ).render( context, child.x, child.y, child.width, child.height );
 
     }
 
@@ -1842,11 +1842,11 @@ namespace Oxygen
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            _helper.slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+            helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         } else {
 
-            _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+            helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         }
 
@@ -1944,7 +1944,7 @@ namespace Oxygen
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
-        { _helper.slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
     }
 
@@ -2051,7 +2051,7 @@ namespace Oxygen
             }
 
             cairo_set_source( context, pattern );
-            _helper.fillSlab( context, x, y, w, h );
+            helper().fillSlab( context, x, y, w, h );
 
         }
 
@@ -2060,14 +2060,14 @@ namespace Oxygen
             // calculate glow color
             TileSet tile;
             ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = _helper.slabFocused( base, glow , 0);
-            else if( base.isValid() ) tile = _helper.slab( base, 0 );
+            if( glow.isValid() ) tile = helper().slabFocused( base, glow , 0);
+            else if( base.isValid() ) tile = helper().slab( base, 0 );
             else return;
             tile.render( context, x, y, w, h );
 
         } else if( base.isValid() ) {
 
-            _helper.slabSunken( base, 0 ).render( context, x, y, w, h );
+            helper().slabSunken( base, 0 ).render( context, x, y, w, h );
 
         }
 
@@ -2078,7 +2078,7 @@ namespace Oxygen
     {
 
         // use tileset from helper
-        _helper.scrollHole( base, vertical ).render( context, x, y, w, h, tiles );
+        helper().scrollHole( base, vertical ).render( context, x, y, w, h, tiles );
 
     }
 
