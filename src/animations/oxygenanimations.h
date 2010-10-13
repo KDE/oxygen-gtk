@@ -92,7 +92,10 @@ namespace Oxygen
         { _engines.push_back( engine ); }
 
         //! destruction callback
-        static void destroyRegisteredWidget( GtkWidget*, GdkEvent*, gpointer );
+        static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
+
+        //! destruction callback
+        static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
 
         private:
 

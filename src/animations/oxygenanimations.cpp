@@ -55,8 +55,8 @@ namespace Oxygen
         #endif
 
         WidgetData data;
-        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyRegisteredWidget ), 0L );
-        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( destroyRegisteredWidget ), 0L );
+        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyNotifyEvent ), this );
+        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( styleChangeNotifyEvent ), this );
         _allWidgets.insert( std::make_pair( widget, data ) );
 
     }
@@ -87,8 +87,15 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void Animations::destroyRegisteredWidget( GtkWidget* widget, GdkEvent*, gpointer )
-    { instance().unregisterWidget( widget ); }
+    gboolean Animations::destroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        static_cast<Animations*>(data)->unregisterWidget( widget );
+        return FALSE;
+    }
+
+    //____________________________________________________________________________________________
+    void Animations::styleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
+    { static_cast<Animations*>(data)->unregisterWidget( widget ); }
 
     //_________________________________________
     Animations::Animations( void )
