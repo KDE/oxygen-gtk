@@ -25,6 +25,7 @@
 
 #include <gtk/gtkwidget.h>
 #include <vector>
+#include <map>
 
 namespace Oxygen
 {
@@ -80,6 +81,17 @@ namespace Oxygen
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         //@}
 
+        //! child registration and callback
+        //@{
+
+        void registerChild( GtkWidget* );
+        void unregisterChild( GtkWidget* );
+
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static gboolean childCrossingNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        //@}
+
         private:
 
         //! default tabRect size
@@ -100,6 +112,36 @@ namespace Oxygen
 
         //! store rectangles matching tabs
         std::vector<GdkRectangle> _tabRects;
+
+        //! child data
+        /*!
+        one must keep track of the tab widgets children enter/leave event
+        to properly update tab hover because some tabs have embedded children.
+        This is notably the case for gimp, nautilus (in tabbed mode), etc.
+        */
+
+        class ChildData
+        {
+            public:
+
+            //! constructor
+            ChildData( void ):
+                _destroyId( -1 ),
+                _styleChangeId( -1 ),
+                _enterId( -1 ),
+                _leaveId( -1 )
+            {}
+
+            int _destroyId;
+            int _styleChangeId;
+            int _enterId;
+            int _leaveId;
+        };
+
+        //! map registered children and corresponding data
+        typedef std::map<GtkWidget*, ChildData> ChildDataMap;
+        ChildDataMap _childrenData;
+
 
     };
 

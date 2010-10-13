@@ -25,6 +25,7 @@
 
 #include "oxygentabwidgetdata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 #include <cassert>
@@ -98,6 +99,70 @@ namespace Oxygen
         // reset hovered tab
         static_cast<TabWidgetData*>( data )->setHoveredTab( widget, -1 );
         return FALSE;
+    }
+
+    //________________________________________________________________________________
+    void TabWidgetData::registerChild( GtkWidget* widget )
+    {
+        // make sure widget is not already in map
+        if( _childrenData.find( widget ) != _childrenData.end() ) return;
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
+        #endif
+
+        // allocate new ChildData
+        ChildData data;
+        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
+        data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
+
+        // and insert in map
+        _childrenData.insert( std::make_pair( widget, data ) );
+
+    }
+
+    //________________________________________________________________________________
+    void TabWidgetData::unregisterChild( GtkWidget* widget )
+    {
+        ChildDataMap::iterator iter( _childrenData.find( widget ) );
+        if( iter == _childrenData.end() ) return;
+
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
+        #endif
+
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._destroyId );
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._styleChangeId );
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._enterId );
+        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._leaveId );
+        _childrenData.erase( iter );
+    }
+
+    //____________________________________________________________________________________________
+    gboolean TabWidgetData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        static_cast<TabWidgetData*>(data)->unregisterChild( widget );
+        return FALSE;
+    }
+
+    //____________________________________________________________________________________________
+    void TabWidgetData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
+    { static_cast<TabWidgetData*>(data)->unregisterChild( widget ); }
+
+    //____________________________________________________________________________________________
+    gboolean TabWidgetData::childCrossingNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    {
+
+        // retrieve widget's parent and check type
+        GtkWidget* parent( gtk_widget_get_parent( widget ) );
+        if( !( parent && GTK_IS_NOTEBOOK( parent ) ) ) return FALSE;
+
+        static_cast<TabWidgetData*>(data)->updateHoveredTab( parent );
+        return FALSE;
+
     }
 
 }
