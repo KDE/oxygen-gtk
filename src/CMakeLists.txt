@@ -20,7 +20,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenstylehelper.cpp
     oxygenstylewrapper.cpp
     oxygentaboptions.cpp
-    oxygentheme.c
+    oxygentheme.cpp
     oxygentileset.cpp
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
