@@ -36,6 +36,20 @@ namespace Oxygen
     {
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+
+        // cast to notebook and check against number of pages
+        if( GTK_IS_NOTEBOOK( widget ) )
+        {
+            GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+            for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+            {
+
+                // retrieve page and tab label
+                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+                registerChild( gtk_notebook_get_tab_label( notebook, page ) );
+            }
+        }
+
     }
 
     //________________________________________________________________________________
@@ -43,6 +57,11 @@ namespace Oxygen
     {
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+
+        // disconnect all children
+        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
+        { unregisterChild( iter->first ); }
+
     }
 
     //________________________________________________________________________________
@@ -126,7 +145,6 @@ namespace Oxygen
         ChildDataMap::iterator iter( _childrenData.find( widget ) );
         if( iter == _childrenData.end() ) return;
 
-
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
         #endif
@@ -157,6 +175,7 @@ namespace Oxygen
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
         if( !( parent && GTK_IS_NOTEBOOK( parent ) ) ) return FALSE;
 
+        std::cout << "Oxygen::TabWidgetData::childCrossingNotifyEvent - updating." << endl;
         static_cast<TabWidgetData*>(data)->updateHoveredTab( parent );
         return FALSE;
 
