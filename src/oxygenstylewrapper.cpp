@@ -293,7 +293,7 @@ namespace Oxygen
             detail );
         #endif
 
-        if(GTK_IS_MENU_SHELL( widget ) )
+        if(GTK_IS_MENU_BAR( widget ) )
         { Animations::instance().menuShellEngine().registerWidget(widget); }
 
         Style::instance().sanitizeSize( window, w, h );
