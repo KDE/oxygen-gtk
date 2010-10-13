@@ -178,6 +178,20 @@ namespace Oxygen
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 
+        //! metrics
+        /*! these are copied from the old KStyle WidgetProperties */
+        enum Metrics
+        {
+
+            // checkbox. Do not change, unless
+            // changing the actual cached pixmap size
+            CheckBox_Size = 21,
+
+            // slider groove height
+            Slider_GrooveWidth = 5
+
+        };
+
         protected:
 
         //! constructor
@@ -253,17 +267,6 @@ namespace Oxygen
 
 
         private:
-
-        //! metrics
-        /*! these are copied from the old KStyle WidgetProperties */
-        enum InternalMetrics
-        {
-
-            // checkbox. Do not change, unless
-            // changing the actual cached pixmap size
-            CheckBox_Size = 21,
-
-        };
 
         // Qt settings
         QtSettings _settings;

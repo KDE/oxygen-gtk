@@ -1527,11 +1527,7 @@ namespace Oxygen
         const bool vertical( options & Vertical );
         GdkRectangle parent = { x, y, w, h };
 
-        // adjust groove dimension
-        if( vertical ) h -= 28;
-        else w -= 28;
-
-        GdkRectangle child = { 0, 0, vertical ? 5:w, vertical ? h:5 };
+        GdkRectangle child = { 0, 0, vertical ? Slider_GrooveWidth:w, vertical ? h:Slider_GrooveWidth };
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
