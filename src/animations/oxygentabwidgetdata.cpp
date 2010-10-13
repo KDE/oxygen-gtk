@@ -37,6 +37,7 @@ namespace Oxygen
         _target = widget;
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+        _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", (GCallback)pageAddedEvent, this );
 
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( widget ) )
@@ -60,6 +61,7 @@ namespace Oxygen
         _target = 0L;
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _pageAddedId );
 
         // disconnect all children
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
@@ -122,6 +124,10 @@ namespace Oxygen
         static_cast<TabWidgetData*>( data )->setHoveredTab( widget, -1 );
         return FALSE;
     }
+
+    //________________________________________________________________________________
+    void TabWidgetData::pageAddedEvent( GtkNotebook*, GtkWidget* child, guint, gpointer data)
+    { static_cast<TabWidgetData*>( data )->registerChild( child ); }
 
     //________________________________________________________________________________
     void TabWidgetData::registerChild( GtkWidget* widget )

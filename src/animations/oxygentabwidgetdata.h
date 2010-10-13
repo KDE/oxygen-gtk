@@ -20,7 +20,7 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 #include <vector>
 #include <map>
 
@@ -38,6 +38,7 @@ namespace Oxygen
             _target(0L),
             _motionId(-1),
             _leaveId(-1),
+            _pageAddedId(-1),
             _hoveredTab( -1 )
         {}
 
@@ -77,6 +78,7 @@ namespace Oxygen
         //@{
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer);
         //@}
 
         //! child registration and callback
@@ -102,13 +104,14 @@ namespace Oxygen
         //! target widget
         GtkWidget* _target;
 
-        //! motion signal id
+        //!@name callbacks IDs
+        //@{
         int _motionId;
-
-        //! leave signal id
         int _leaveId;
+        int _pageAddedId;
+        //@}
 
-        //! index of hovered tab, if any
+        //! index of currently hovered tab
         int _hoveredTab;
 
         //! store rectangles matching tabs
