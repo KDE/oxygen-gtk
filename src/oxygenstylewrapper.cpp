@@ -122,33 +122,40 @@ namespace Oxygen
         } else if( d.isTooltip() && Style::instance().settings().tooltipDrawStyledFrames() ) {
 
             StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
-            if( !(options&Alpha) )
+            if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() )  )
             {
-                    // make tooltips appear rounded using XShape extension if screen isn't composited
-                if(((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH"))!=w ||
-                        ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT"))!=h)
+
+                // make tooltips appear rounded using XShape extension if screen isn't composited
+                if( ( (gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH"))!=w ||
+                    ( (gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT"))!=h )
                 {
                     g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH",(gpointer)w);
                     g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT",(gpointer)h);
 
-                    GdkPixmap* mask = gdk_pixmap_new(NULL, w, h, 1);
+                    // TODO: move this to oxygenStyle
+                    GdkPixmap* mask( gdk_pixmap_new( NULL, w, h, 1 ) );
                     cairo_t* cr = gdk_cairo_create(GDK_DRAWABLE(mask));
 
                     // clear the window
                     cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-                    cairo_set_source_rgba(cr,0,0,0,0);
+                    cairo_set_source( cr, ColorUtils::Rgba::transparent() );
                     cairo_paint(cr);
+
                     // now draw roundrect mask
                     cairo_set_operator(cr,CAIRO_OPERATOR_OVER);
-                    cairo_set_source_rgba(cr,1,1,1,1);
-                    cairo_rounded_rectangle(cr,0,0,w,h,6); // FIXME: radius found empirically
+                    cairo_set_source(cr, ColorUtils::Rgba::black() );
+
+                    // FIXME: radius found empirically
+                    cairo_rounded_rectangle(cr,0,0,w,h,6);
                     cairo_fill(cr);
 
                     cairo_destroy(cr);
 
                     gdk_window_shape_combine_mask(window,mask,0,0);
                     gdk_pixmap_unref(mask);
+
                 }
+
             }
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
             return;
