@@ -22,8 +22,8 @@
 #include "oxygenstyleoptions.h"
 #include "oxygengtkutils.h"
 
-#include <gtk/gtk.h>
 #include <cmath>
+
 namespace Oxygen
 {
 

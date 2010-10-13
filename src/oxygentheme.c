@@ -25,10 +25,12 @@
 #include "config.h"
 #endif
 
-#include <gmodule.h>
-#include <gtk/gtk.h>
 #include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
+
+#include <gtk/gtkversion.h>
+#include <gtk/gtkmain.h>
+#include <gmodule.h>
 
 //_________________________________________________
 G_MODULE_EXPORT void theme_init( GTypeModule* module )

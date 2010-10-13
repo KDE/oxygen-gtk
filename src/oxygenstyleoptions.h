@@ -23,7 +23,8 @@
 
 #include "oxygengtkutils.h"
 
-#include <gtk/gtk.h>
+#include <gtk/gtkwidget.h>
+
 namespace Oxygen
 {
 
