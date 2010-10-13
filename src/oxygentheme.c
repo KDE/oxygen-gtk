@@ -38,11 +38,15 @@ G_MODULE_EXPORT void theme_init( GTypeModule* module )
 
     // make all widgets have ARGB visual by default
     // TODO: I'd like to pass that to some external code, and use c++ (Hugo)
+    // this way one could use ifstream, simple std::string splitting, become file length independent, etc.
     FILE* configFile=fopen(GTK_THEME_DIR "/argb-apps.conf","r");
     if(configFile)
     {
-        if(OXYGEN_DEBUG)
-            fprintf(stderr,"ARGB config file found\n");
+
+        #if OXYGEN_DEBUG
+        fprintf(stderr,"ARGB config file found\n");
+        #endif
+
         char* progname = g_get_prgname();
         gboolean rgba=FALSE;
         // FIXME: just to make the code trivial i assume config file never exceeds 4KiB
@@ -76,10 +80,12 @@ G_MODULE_EXPORT void theme_init( GTypeModule* module )
             gtk_widget_push_colormap(cmap);
             gtk_widget_set_default_colormap(cmap);
         }
+
+    } else {
+        #if OXYGEN_DEBUG
+        fprintf(stderr,"ARGB config file not found!\n");
+        #endif
     }
-    else
-        if(OXYGEN_DEBUG)
-            fprintf(stderr,"ARGB config file not found!\n");
 }
 
 //_________________________________________________
