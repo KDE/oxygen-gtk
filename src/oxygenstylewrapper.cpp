@@ -126,14 +126,17 @@ namespace Oxygen
             {
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
-                if( ( (gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH"))!=w ||
-                    ( (gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT"))!=h )
+                const GtkAllocation& allocation( widget->allocation );
+                if(
+                    ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH"))!=allocation.width ||
+                    ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT"))!=allocation.height )
                 {
-                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH",(gpointer)w);
-                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT",(gpointer)h);
+
+                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH",(gpointer)allocation.width);
+                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT",(gpointer)allocation.height);
 
                     // TODO: move this to oxygenStyle
-                    GdkPixmap* mask( gdk_pixmap_new( NULL, w, h, 1 ) );
+                    GdkPixmap* mask( gdk_pixmap_new( 0L, w, h, 1 ) );
                     cairo_t* cr = gdk_cairo_create(GDK_DRAWABLE(mask));
 
                     // clear the window
@@ -151,12 +154,13 @@ namespace Oxygen
 
                     cairo_destroy(cr);
 
-                    gdk_window_shape_combine_mask(window,mask,0,0);
-                    gdk_pixmap_unref(mask);
+                    gdk_window_shape_combine_mask( window, mask, 0, 0 );
+                    gdk_pixmap_unref( mask );
 
                 }
 
             }
+
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
             return;
 
