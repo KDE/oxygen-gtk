@@ -34,6 +34,7 @@ namespace Oxygen
     //________________________________________________________________________________
     void TabWidgetData::connect( GtkWidget* widget )
     {
+        _target = widget;
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
 
@@ -55,6 +56,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void TabWidgetData::disconnect( GtkWidget* widget )
     {
+
+        _target = 0L;
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
 
@@ -67,6 +70,9 @@ namespace Oxygen
     //________________________________________________________________________________
     void TabWidgetData::updateHoveredTab(GtkWidget* widget )
     {
+
+        if( !widget ) widget = _target;
+        if( !widget ) return;
 
         // get pointer position
         int xPointer,yPointer;
@@ -129,8 +135,8 @@ namespace Oxygen
 
         // allocate new ChildData
         ChildData data;
-        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+        data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
         data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
 
@@ -172,11 +178,7 @@ namespace Oxygen
     {
 
         // retrieve widget's parent and check type
-        GtkWidget* parent( gtk_widget_get_parent( widget ) );
-        if( !( parent && GTK_IS_NOTEBOOK( parent ) ) ) return FALSE;
-
-        std::cout << "Oxygen::TabWidgetData::childCrossingNotifyEvent - updating." << endl;
-        static_cast<TabWidgetData*>(data)->updateHoveredTab( parent );
+        static_cast<TabWidgetData*>(data)->updateHoveredTab();
         return FALSE;
 
     }

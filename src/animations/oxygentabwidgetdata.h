@@ -35,6 +35,7 @@ namespace Oxygen
 
         //! constructor
         TabWidgetData( void ):
+            _target(0L),
             _motionId(-1),
             _leaveId(-1),
             _hoveredTab( -1 )
@@ -55,7 +56,7 @@ namespace Oxygen
         void updateTabRect( GtkWidget*, int, const GdkRectangle& );
 
         //! update hovered tab
-        void updateHoveredTab( GtkWidget* );
+        void updateHoveredTab( GtkWidget* = 0L );
 
         //! true if hovered
         int hoveredTab( void ) const
@@ -97,6 +98,9 @@ namespace Oxygen
             GdkRectangle out = {0, 0, -1, -1};
             return out;
         }
+
+        //! target widget
+        GtkWidget* _target;
 
         //! motion signal id
         int _motionId;
