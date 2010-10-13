@@ -36,6 +36,10 @@ G_MODULE_EXPORT void theme_init( GTypeModule* module )
 {
     oxygen_rc_style_register_type( module );
     oxygen_style_register_type( module );
+    // make all widget have ARGB visual by default
+    GdkColormap* cmap=gdk_screen_get_rgba_colormap(gdk_screen_get_default());
+    gtk_widget_push_colormap(cmap);
+    gtk_widget_set_default_colormap(cmap);
 }
 
 //_________________________________________________
