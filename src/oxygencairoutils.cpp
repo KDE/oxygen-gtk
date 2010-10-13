@@ -127,7 +127,7 @@ namespace Oxygen
     //__________________________________________________________________
     void cairo_polygon( cairo_t* context, const Polygon& polygon )
     {
-        for( Polygon::const_iterator iter = polygon.begin(); iter != polygon.end(); iter++ )
+        for( Polygon::const_iterator iter = polygon.begin(); iter != polygon.end(); ++iter )
         {
             if( iter == polygon.begin() ) cairo_move_to( context, iter->x(), iter->y() );
             else cairo_line_to( context, iter->x(), iter->y() );

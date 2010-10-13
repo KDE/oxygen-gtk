@@ -73,7 +73,7 @@ namespace Oxygen
         // reload kdeGlobals and oxygen
         _kdeGlobals.clear();
         _oxygen.clear();
-        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); iter++ )
+        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
         {
             #if OXYGEN_DEBUG
             std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
@@ -174,10 +174,10 @@ namespace Oxygen
         icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
 
         PathList iconThemeList;
-        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
+        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
         { iconThemeList.push_back( *iter + '/' + _kdeIconTheme ); }
 
-        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
+        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
         { iconThemeList.push_back( *iter + '/' + _kdeFallbackIconTheme ); }
 
         icons.generate( _rc, iconThemeList );
@@ -321,7 +321,7 @@ namespace Oxygen
         optionNames.insert( std::make_pair( FontInfo::Fixed, "fixed" ) );
         optionNames.insert( std::make_pair( FontInfo::Menu, "menuFont" ) );
         optionNames.insert( std::make_pair( FontInfo::ToolBar, "toolBarFont" ) );
-        for( FontNameMap::const_iterator iter = optionNames.begin(); iter != optionNames.end(); iter++ )
+        for( FontNameMap::const_iterator iter = optionNames.begin(); iter != optionNames.end(); ++iter )
         {
             FontInfo local;
             if( _kdeGlobals.hasOption( "[General]", iter->second ) )

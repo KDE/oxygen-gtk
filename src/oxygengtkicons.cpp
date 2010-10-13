@@ -84,7 +84,7 @@ namespace Oxygen
         // other icons are not recognized
         std::ostringstream pixmapPathStr;
         pixmapPathStr << "pixmap_path \"";
-        for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); iter++ )
+        for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
         {
             if( iter != pathList.begin() ) pixmapPathStr << ":";
             pixmapPathStr << *iter;
@@ -94,7 +94,7 @@ namespace Oxygen
 
         // loop over icons
         std::ostringstream notFoundOut;
-        for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); iconIter++ )
+        for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); icon++iter )
         {
 
             std::string stock( generate( iconIter->first, iconIter->second, pathList ) );
@@ -138,7 +138,7 @@ namespace Oxygen
         stockOut << "  stock[\"" << gtkIconName << "\"]={" << std::endl;
 
         // loop over iconSizes
-        for( SizeMap::const_iterator sizeIter = _sizes.begin(); sizeIter != _sizes.end(); sizeIter++ )
+        for( SizeMap::const_iterator sizeIter = _sizes.begin(); sizeIter != _sizes.end(); size++iter )
         {
 
             // generate full icon name
@@ -147,7 +147,7 @@ namespace Oxygen
 
             // loop over provided path to see if at least one icon is found
             bool found( false );
-            for( std::vector<std::string>::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); pathIter++ )
+            for( std::vector<std::string>::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); path++iter )
             {
                 std::string filename( *pathIter + '/' + iconFileStream.str() );
                 if( !std::ifstream( filename.c_str() ) ) continue;

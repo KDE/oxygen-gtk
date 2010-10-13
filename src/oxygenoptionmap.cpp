@@ -36,7 +36,7 @@ namespace Oxygen
     {
 
         // loop over source maps
-        for( const_iterator iter = other.begin(); iter != other.end(); iter++ )
+        for( const_iterator iter = other.begin(); iter != other.end(); ++iter )
         {
 
             iterator source_iter( find( iter->first ) );
@@ -49,7 +49,7 @@ namespace Oxygen
             } else {
 
                 // otherwise merge both sets
-                for( Option::Set::const_iterator option_iter = iter->second.begin(); option_iter != iter->second.end(); option_iter++ )
+                for( Option::Set::const_iterator option_iter = iter->second.begin(); option_iter != iter->second.end(); option_++iter )
                 {
 
                     source_iter->second.erase( *option_iter );

@@ -90,7 +90,7 @@ namespace Oxygen
     {
 
         // increase ref counter
-        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); iter++ )
+        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); ++iter )
         { g_object_ref( *iter ); }
 
     }
@@ -105,14 +105,14 @@ namespace Oxygen
         _h3 = other._h3;
 
         // unref existing pixmaps
-        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); iter++ )
+        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); ++iter )
         { g_object_unref( *iter ); }
 
         // copy pixmap list
         _pixmaps = other._pixmaps;
 
         // increase ref counter
-        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); iter++ )
+        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); ++iter )
         { g_object_ref( *iter ); }
 
         return *this;
@@ -123,7 +123,7 @@ namespace Oxygen
     TileSet::~TileSet( void )
     {
         // unref existing pixmaps
-        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); iter++ )
+        for( PixbufList::iterator iter = _pixmaps.begin(); iter != _pixmaps.end(); ++iter )
         { if( *iter ) g_object_unref( *iter ); }
     }
 

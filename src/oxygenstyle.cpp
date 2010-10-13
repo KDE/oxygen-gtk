@@ -1937,7 +1937,7 @@ namespace Oxygen
         cairo_fill( context );
 
         // render connections to frame
-        for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); iter++ )
+        for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
     }

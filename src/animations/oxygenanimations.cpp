@@ -37,7 +37,7 @@ namespace Oxygen
     //____________________________________________________________________________________________
     Animations::~Animations( void )
     {
-        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); iter++ )
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { delete *iter; }
     }
 
@@ -78,7 +78,7 @@ namespace Oxygen
         _allWidgets.erase( widget );
 
         // erase from all maps
-        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); iter++ )
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->unregisterWidget( widget ); }
 
     }
