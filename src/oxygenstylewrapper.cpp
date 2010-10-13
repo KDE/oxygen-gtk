@@ -391,8 +391,8 @@ namespace Oxygen
 
                     // make menus appear rounded using Shape X extension if screen isn't composited
                     if(
-                        ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_WIDTH"))!=w ||
-                        ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT"))!=h)
+                        ((glong)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_WIDTH"))!=w ||
+                        ((glong)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT"))!=h)
                     {
                         g_object_set_data(G_OBJECT(widget),"ROUND_MENU_WIDTH",(gpointer)w);
                         g_object_set_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT",(gpointer)h);
