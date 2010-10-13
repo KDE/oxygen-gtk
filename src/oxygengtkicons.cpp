@@ -149,7 +149,7 @@ namespace Oxygen
             bool found( false );
             for( std::vector<std::string>::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); pathIter++ )
             {
-                std::string filename( *pathIter + "/" + iconFileStream.str() );
+                std::string filename( *pathIter + '/' + iconFileStream.str() );
                 if( !std::ifstream( filename.c_str() ) ) continue;
                 found = true;
                 break;

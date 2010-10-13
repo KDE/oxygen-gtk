@@ -38,11 +38,6 @@
 #include <iostream>
 #include <sstream>
 
-#ifndef _WIN32
-#include <pwd.h>
-#include <unistd.h>
-#endif
-
 namespace Oxygen
 {
 
@@ -180,10 +175,10 @@ namespace Oxygen
 
         PathList iconThemeList;
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
-        { iconThemeList.push_back( *iter + "/" + _kdeIconTheme ); }
+        { iconThemeList.push_back( *iter + '/' + _kdeIconTheme ); }
 
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
-        { iconThemeList.push_back( *iter + "/" + _kdeFallbackIconTheme ); }
+        { iconThemeList.push_back( *iter + '/' + _kdeFallbackIconTheme ); }
 
         icons.generate( _rc, iconThemeList );
 
