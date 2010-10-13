@@ -20,7 +20,7 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtkenums.h>
+#include <gtk/gtk.h>
 
 namespace Gtk
 {

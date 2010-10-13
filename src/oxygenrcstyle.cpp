@@ -28,7 +28,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstylewrapper.h"
 
-#include <gtk/gtkrc.h>
+#include <gtk/gtk.h>
 
 //______________________________________________________________________
 struct _OxygenRcStyle

@@ -29,7 +29,7 @@
 #include "oxygengtkicons.h"
 #include "config.h"
 
-#include <gtk/gtkrc.h>
+#include <gtk/gtk.h>
 
 #include <cstdio>
 #include <cstdlib>

@@ -28,8 +28,7 @@
 #include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
 
-#include <gtk/gtkversion.h>
-#include <gtk/gtkmain.h>
+#include <gtk/gtk.h>
 #include <gmodule.h>
 
 //_________________________________________________
