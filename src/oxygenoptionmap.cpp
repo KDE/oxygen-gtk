@@ -49,11 +49,11 @@ namespace Oxygen
             } else {
 
                 // otherwise merge both sets
-                for( Option::Set::const_iterator option_iter = iter->second.begin(); option_iter != iter->second.end(); option_++iter )
+                for( Option::Set::const_iterator optionIter = iter->second.begin(); optionIter != iter->second.end(); ++optionIter )
                 {
 
-                    source_iter->second.erase( *option_iter );
-                    source_iter->second.insert( *option_iter );
+                    source_iter->second.erase( *optionIter );
+                    source_iter->second.insert( *optionIter );
 
                 }
 
@@ -69,8 +69,8 @@ namespace Oxygen
         const_iterator iter( find( section ) );
         if( iter == end() ) return false;
 
-        Option::Set::const_iterator option_iter( iter->second.find( Option(tag) ) );
-        return option_iter != iter->second.end();
+        Option::Set::const_iterator optionIter( iter->second.find( Option(tag) ) );
+        return optionIter != iter->second.end();
     }
 
     //_________________________________________________________
@@ -87,8 +87,8 @@ namespace Oxygen
 
         }
 
-        Option::Set::const_iterator option_iter( iter->second.find( Option(tag) ) );
-        if( option_iter == iter->second.end() )
+        Option::Set::const_iterator optionIter( iter->second.find( Option(tag) ) );
+        if( optionIter == iter->second.end() )
         {
             #if OXYGEN_DEBUG
             std::cout << "Oxygen::OptionMap::getOption - could not find tag " << tag << std::endl;
@@ -98,7 +98,7 @@ namespace Oxygen
 
         } else {
 
-            return *option_iter;
+            return *optionIter;
 
         }
     }
