@@ -2,9 +2,6 @@
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
-* based on the Null Theme Engine for Gtk+.
-* Copyright (c) 2008 Robert Staudinger
-*
 * the lineedit data code is largely inspired from the gtk redmond engine
 *
 * This  library is free  software; you can  redistribute it and/or

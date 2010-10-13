@@ -5,7 +5,7 @@
 *
 * MenuShell prelight effect is based on
 * Redmond95 - a cairo based GTK+ engine
-* Copyright (C) 2001 Red Hat, Inc.
+* Copyright (C) 2001 Red Hat, Inc. <@redhat.com>
 * Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
 * Copyright (C) 2006-2007 Benjamin Berg <benjamin@sipsolutions.net>
 *

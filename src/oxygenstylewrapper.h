@@ -5,7 +5,7 @@
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
 * based on the Null Theme Engine for Gtk+.
-* Copyright (c) 2008 Robert Staudinger
+* Copyright (c) 2008 Robert Staudinger <robert.staudinger@gmail.com>
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public

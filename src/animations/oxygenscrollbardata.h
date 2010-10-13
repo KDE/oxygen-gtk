@@ -5,12 +5,6 @@
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 * Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
-* ScrollBar prelight effect is based on
-* Redmond95 - a cairo based GTK+ engine
-* Copyright (C) 2001 Red Hat, Inc.
-* Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
-* Copyright (C) 2006-2007 Benjamin Berg <benjamin@sipsolutions.net>
-*
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
@@ -26,10 +20,6 @@
 * Software Foundation, Inc., 51  Franklin St, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 */
-
-/* TODO: right now this code is quite dangerous. It installs connections on ScrollBar scrollbars,
-only if the later are found (which is not good), and does not track the scrollbar destruction.
-(which is not good either). One would rather add the relevant ScrollBarData, instead */
 
 #include <gtk/gtk.h>
 

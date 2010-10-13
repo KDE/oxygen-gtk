@@ -4,7 +4,7 @@
 * Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * based on the Null Theme Engine for Gtk+.
-* Copyright (c) 2008 Robert Staudinger
+* Copyright (c) 2008 Robert Staudinger <robert.staudinger@gmail.com>
 *
 * Icon rendering code from Walmis
 * <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
