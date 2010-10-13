@@ -866,37 +866,36 @@ namespace Oxygen
             w-=2;
             h-=2;
 
-            ColorUtils::Rgba shadow( ColorUtils::darken(base,0.,0.) );
-            cairo_set_source_rgb(context,0,0,0);
+            ColorUtils::Rgba shadow( ColorUtils::darken( base, 0., 0. ) );
 
             const double radius( 11*0.5 );
-            ColorUtils::Rgba sh2=ColorUtils::darken(shadow,0.2);
-            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
-            cairo_move_to(context,x+4,y-0.5); cairo_line_to(context,x+w-4,y-0.5);
-            cairo_stroke(context);
+            ColorUtils::Rgba sh2=ColorUtils::darken( shadow, 0.2 );
+            cairo_set_source( context, sh2 );
+            cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
+            cairo_stroke( context );
 
-            cairo_arc_negative(context,x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI,-M_PI);
-            cairo_stroke(context);
-            cairo_arc_negative(context,x+w-11+0.5+radius, y-0.5+radius, radius, 0,-0.5*M_PI);
-            cairo_stroke(context);
+            cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
+            cairo_stroke( context );
+            cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
+            cairo_stroke( context );
 
-            sh2=ColorUtils::darken(shadow,0.35);
-            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
-            cairo_move_to(context,x-0.5,y+4); cairo_line_to(context,x-0.5,y+h-4);
-            cairo_move_to(context,x+w+0.5,y+4); cairo_line_to(context,x+w+0.5,y+h-4);
-            cairo_stroke(context);
+            sh2=ColorUtils::darken( shadow, 0.35 );
+            cairo_set_source( context, sh2 );
+            cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
+            cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
+            cairo_stroke( context );
 
-            sh2=ColorUtils::darken(shadow,0.45);
-            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
-            cairo_arc_negative(context,x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI,-1.5*M_PI);
-            cairo_stroke(context);
-            cairo_arc_negative(context,x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI,0);//-1.5*M_PI,-2*M_PI);
-            cairo_stroke(context);
+            sh2=ColorUtils::darken( shadow, 0.45 );
+            cairo_set_source( context, sh2 );
+            cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
+            cairo_stroke( context );
+            cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );//-1.5*M_PI, -2*M_PI );
+            cairo_stroke( context );
 
-            sh2=ColorUtils::darken(shadow,0.6);
-            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
-            cairo_move_to(context,x+4,y+h+0.5); cairo_line_to(context,x+w-4,y+h+0.5);
-            cairo_stroke(context);
+            sh2=ColorUtils::darken( shadow, 0.6 );
+            cairo_set_source( context, sh2 );
+            cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
+            cairo_stroke( context );
         }
 
         if( isMozilla )
