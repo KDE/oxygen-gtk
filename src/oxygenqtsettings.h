@@ -142,14 +142,14 @@ namespace Oxygen
         // get home directory
         std::string home( void ) const;
 
-        // get kde home
-        std::string kdeHome( void ) const;
-
-        // get kde icon prefix
-        std::string kdeIconPrefix( void ) const;
+        //! path list
+        typedef std::vector<std::string> PathList;
 
         //! icon path
-        std::vector<std::string> kdeIconPath( void ) const;
+        PathList kdeConfigPathList( void ) const;
+
+        //! icon path
+        PathList kdeIconPathList( void ) const;
 
         //! init application name
         void initApplicationName( void );
@@ -176,6 +176,9 @@ namespace Oxygen
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
 
+        // spilt path
+        PathList splitPath( const std::string&, const std::string& = ":" ) const;
+
         // read all options from kdeglobals
         OptionMap readOptions( const std::string& ) const;
 
@@ -191,26 +194,24 @@ namespace Oxygen
         //! kde oxygen options
         OptionMap _oxygen;
 
-        //! kde home path
-        std::string _kdeHome;
-
         //!@name icons
         //@{
 
-        //! icon themes
+        //! icon theme
+        /*! todo: respect user settings here */
         std::string _kdeIconTheme;
+
+        //! fallback icon theme
+        /*! todo: respect user settings here */
         std::string _kdeFallbackIconTheme;
 
-        //! icon prefix
-        std::string _kdeIconPrefix;
+        //@}
 
-        //! default icon prefix
-        static const std::string _defaultKdeIconPrefix;
+        //! config path
+        PathList _kdeConfigPathList;
 
         //! icon path
-        std::vector<std::string> _kdeIconPath;
-
-        //@}
+        PathList _kdeIconPathList;
 
         //! palette
         Palette _palette;

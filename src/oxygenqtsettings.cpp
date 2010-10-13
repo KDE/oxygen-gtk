@@ -46,9 +46,6 @@
 namespace Oxygen
 {
 
-    //_________________________________________________
-    const std::string QtSettings::_defaultKdeIconPrefix = "/usr/share/icons/";
-
     //_________________________________________________________
     QtSettings::QtSettings( void ):
         _kdeIconTheme( "oxygen" ),
@@ -76,27 +73,27 @@ namespace Oxygen
         // init application name
         initApplicationName();
 
-        // reset path
-        _kdeHome = kdeHome();
-        _kdeIconPrefix = kdeIconPrefix();
+        _kdeConfigPathList = kdeConfigPathList();
 
-        // reload icons
-        _kdeIconPath = kdeIconPath();
-        loadKdeIcons();
-
-        // reload kdeGlobals
+        // reload kdeGlobals and oxygen
         _kdeGlobals.clear();
-        _kdeGlobals.merge( readOptions( std::string( GTK_THEME_DIR ) + "/kdeglobals" ) );
-        _kdeGlobals.merge( readOptions( sanitizePath( _kdeHome + "/share/config/kdeglobals" ) ) );
-
-        // reload oxygen options
         _oxygen.clear();
-        _oxygen.merge( readOptions( std::string( GTK_THEME_DIR ) + "/oxygenrc" ) );
-        _oxygen.merge( readOptions( sanitizePath( _kdeHome + "/share/config/oxygenrc" ) ) );
+        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); iter++ )
+        {
+            #if OXYGEN_DEBUG
+            std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
+            #endif
+            _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
+            _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
+        }
 
         // reload palette
         _palette.clear();
         loadKdePalette();
+
+        // reload icons
+        _kdeIconPathList = kdeIconPathList();
+        loadKdeIcons();
 
         // reload fonts
         loadKdeFonts();
@@ -120,91 +117,33 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    std::vector<std::string> QtSettings::kdeIconPath( void ) const
+    QtSettings::PathList QtSettings::kdeConfigPathList( void ) const
     {
-        std::vector<std::string> out;
-        std::vector<std::string> iconThemes;
-        iconThemes.push_back( _kdeIconTheme );
-        iconThemes.push_back( _kdeFallbackIconTheme );
-        for( std::vector<std::string>::const_iterator iter = iconThemes.begin(); iter != iconThemes.end(); iter++ )
-        {
-            out.push_back( sanitizePath( _kdeHome + "/share/config/icons/" + *iter ) );
-            out.push_back( sanitizePath( _kdeIconPrefix + *iter ) );
-        }
 
+        PathList out;
+
+        // load icon install prefix
+        char* path = 0L;
+        if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
+        { out = splitPath( path ); };
+
+        out.push_back( GTK_THEME_DIR );
         return out;
 
     }
 
     //_________________________________________________________
-    std::string QtSettings::home( void ) const
+    QtSettings::PathList QtSettings::kdeIconPathList( void ) const
     {
 
-        const char *home=0L;
-
-        #ifdef _WIN32
-        home = getenv("HOMEPATH");
-        #else
-
-        struct passwd *p=getpwuid(getuid());
-        if( p ) home=p->pw_dir;
-        else {
-
-            char *env=getenv("HOME");
-            if(env) home=env;
-        }
-
-        if(!home) home="/tmp";
-        #endif
-
-        return std::string( home );
-    }
-
-    //_________________________________________________________
-    std::string QtSettings::kdeHome( void ) const
-    {
-
-        char* kdeHome;
-
-        // try run using kde4-config command
-        if( g_spawn_command_line_sync( "kde4-config --expandvars --localprefix", &kdeHome, 0L, 0L, 0L ) )
-        {
-            int len=strlen(kdeHome);
-            if(len>1 && kdeHome[len-1]=='\n')
-            { kdeHome[len-1]='\0'; }
-
-        } else kdeHome=0L;
-
-        if( kdeHome ) {
-
-            return std::string( kdeHome );
-
-        } else if( char *env=getenv( getuid() ? "KDEHOME" : "KDEROOTHOME") ) {
-
-            return std::string( env );
-
-        } else {
-
-            std::ostringstream ostr;
-            ostr << home() << "/" << ".kde4";
-            return ostr.str();
-
-        }
-
-    }
-
-    //_________________________________________________________
-    std::string QtSettings::kdeIconPrefix( void ) const
-    {
-        char* kdeIconPrefix;
-        if( g_spawn_command_line_sync( "kde4-config --expandvars --install icon", &kdeIconPrefix, 0L, 0L, 0L ) )
+        // load icon install prefix
+        char* path = 0L;
+        if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
         {
 
-            int len=strlen(kdeIconPrefix);
-            if(len>1 && kdeIconPrefix[len-1]=='\n') kdeIconPrefix[len-1]='\0';
-            return kdeIconPrefix;
+            return splitPath( path );
 
-        } else return _defaultKdeIconPrefix;
+        } else return PathList();
 
     }
 
@@ -227,16 +166,26 @@ namespace Oxygen
     void QtSettings::loadKdeIcons( void )
     {
 
-        // load translation table
-        GtkIcons icons;
-        icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
-        icons.generate( _rc, _kdeIconPath );
+        // load icon theme and path to gtk
+        _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
-        // set theme names into gtk
         std::ostringstream themeNameStr;
         themeNameStr << "gtk-icon-theme-name=\"" << _kdeIconTheme << "\"" << std::endl;
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
+
+        // load translation table, generate full translation list, and path to gtk
+        GtkIcons icons;
+        icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
+
+        PathList iconThemeList;
+        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
+        { iconThemeList.push_back( *iter + "/" + _kdeIconTheme ); }
+
+        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); iter++ )
+        { iconThemeList.push_back( *iter + "/" + _kdeFallbackIconTheme ); }
+
+        icons.generate( _rc, iconThemeList );
 
     }
 
@@ -497,6 +446,26 @@ namespace Oxygen
         { out.replace( position, 2, "/" ); }
 
         return out;
+    }
+
+    //_________________________________________________________
+    QtSettings::PathList QtSettings::splitPath( const std::string& path, const std::string& separator ) const
+    {
+        PathList out;
+        std::string local( path );
+        if( local.empty() ) return out;
+        if( local[local.size()-1] == '\n' ) local = local.substr( 0, local.size()-1 );
+
+        size_t position( std::string::npos );
+        while( ( position = local.find( separator ) ) != std::string::npos )
+        {
+            out.push_back( local.substr(0, position ) );
+            local = local.substr( position + separator.length() );
+        }
+
+        if( !local.empty() ) out.push_back( local );
+        return out;
+
     }
 
     //_________________________________________________________
