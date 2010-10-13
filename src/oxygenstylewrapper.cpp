@@ -426,15 +426,19 @@ namespace Oxygen
 
         } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
 
-            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, Vertical );
-            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h+16, Vertical );
-            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y-16, w, h+16, Vertical );
+            // TODO: calculate this value from the style "slider-width" property
+            const int offset( 6 );
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h - 2*offset, Vertical );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h, Vertical );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h - offset, Vertical );
 
         } else if( d.isTroughAny() && GTK_IS_HSCALE( widget ) ) {
 
-            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h, None );
-            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w+16, h, None );
-            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x-16, y, w+16, h, None );
+            // TODO: calculate this value from the style "slider-width" property
+            const int offset( 6 );
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w - 2*offset, h, None );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w, h, None );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w - offset, h, None );
 
         } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
