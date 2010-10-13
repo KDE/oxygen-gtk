@@ -210,7 +210,7 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
-
+        const bool isMozilla( settings().applicationName().isMozilla() );
 
         GdkRectangle rect = { x, y, w, h };
 
@@ -233,7 +233,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &upperRect, 3.5, hasAlpha ? CornersTop:CornersNone );
+            gdk_cairo_rounded_rectangle( context, &upperRect, 3.5, isMozilla ? CornersNone:CornersTop );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -244,8 +244,7 @@ namespace Oxygen
         {
 
             // lower part
-            GdkRectangle lowerRect = { 0, splitY, w, wh-splitY };
-            gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, hasAlpha ? CornersBottom:CornersNone );
+            gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, isMozilla ? CornersNone:CornersBottom );
             cairo_set_source( context, bottom );
             cairo_fill( context );
 
@@ -270,6 +269,8 @@ namespace Oxygen
 
         // paint translucent first
         const bool hasAlpha( (options&Alpha) );
+        const bool isMozilla( settings().applicationName().isMozilla() );
+
         if( hasAlpha )
         {
             if( settings().tooltipTransparent() )
@@ -291,7 +292,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, hasAlpha ? CornersAll:CornersNone );
+            gdk_cairo_rounded_rectangle( context, &rect, 4, isMozilla ? CornersNone:CornersAll );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -303,7 +304,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, hasAlpha ? CornersAll:CornersNone );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, isMozilla ? CornersNone:CornersAll );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
