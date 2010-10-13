@@ -69,7 +69,7 @@ namespace Oxygen
         const_iterator iter( find( section ) );
         if( iter == end() ) return false;
 
-        Option::Set::const_iterator option_iter( iter->second.find( tag ) );
+        Option::Set::const_iterator option_iter( iter->second.find( Option(tag) ) );
         return option_iter != iter->second.end();
     }
 
@@ -87,7 +87,7 @@ namespace Oxygen
 
         }
 
-        Option::Set::const_iterator option_iter( iter->second.find( tag ) );
+        Option::Set::const_iterator option_iter( iter->second.find( Option(tag) ) );
         if( option_iter == iter->second.end() )
         {
             #if OXYGEN_DEBUG

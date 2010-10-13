@@ -59,7 +59,7 @@ namespace Gtk
         public:
 
         //! constructor
-        RC( void )
+        explicit RC( void )
         { init(); }
 
         //! destructor
@@ -126,7 +126,7 @@ namespace Gtk
             {}
 
             //! constructor
-            Section( const std::string& name, const std::string& parent = std::string() ):
+            explicit Section( const std::string& name, const std::string& parent = std::string() ):
                 _name( name ),
                 _parent( parent )
             {}
@@ -142,6 +142,10 @@ namespace Gtk
             //! equal operator. Based on name only
             bool operator == (const Section& other ) const
             { return other._name == _name; }
+
+            //! equal operator. Based on name only
+            bool operator == (const std::string& other ) const
+            { return other == _name; }
 
             //! name
             std::string _name;

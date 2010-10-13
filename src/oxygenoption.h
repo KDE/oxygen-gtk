@@ -41,7 +41,7 @@ namespace Oxygen
         typedef std::set<Option> Set;
 
         //! constructor
-        Option( const std::string& tag = std::string(), const std::string& value = std::string() ):
+        explicit Option( const std::string& tag = std::string(), const std::string& value = std::string() ):
             _tag(tag),
             _value(value)
         {}
@@ -53,6 +53,10 @@ namespace Oxygen
         //! equal to operator
         bool operator == (const Option& other ) const
         { return tag() == other.tag(); }
+
+        //! equal to operator
+        bool operator == (const std::string& other ) const
+        { return tag() == other; }
 
         //! less than operator
         bool operator < (const Option& other ) const

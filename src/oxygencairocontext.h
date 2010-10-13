@@ -34,13 +34,13 @@ namespace Cairo
         public:
 
         //! constructor
-        Context( GdkWindow*, GdkRectangle* = 0L );
+        explicit Context( GdkWindow*, GdkRectangle* = 0L );
 
         //! constructor
-        Context( cairo_surface_t*, GdkRectangle* = 0L );
+        explicit Context( cairo_surface_t*, GdkRectangle* = 0L );
 
         //! constructor from pixbuf
-        Context( GdkPixbuf*, GdkRectangle* = 0L );
+        explicit Context( GdkPixbuf*, GdkRectangle* = 0L );
 
         //! destructor
         virtual ~Context( void )
@@ -73,7 +73,7 @@ namespace Cairo
         private:
 
         //! empty constructor is private
-        Context( void ):
+        explicit Context( void ):
             _cr( 0L )
         { assert( false ); }
 
