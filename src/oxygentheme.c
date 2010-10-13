@@ -21,25 +21,61 @@
 * MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "oxygenstylewrapper.h"
-#include "oxygenrcstyle.h"
-
-#include <gtk/gtk.h>
 #include <gmodule.h>
+#include <gtk/gtk.h>
+#include <cstdio>
+
+#include "config.h"
 
 //_________________________________________________
 G_MODULE_EXPORT void theme_init( GTypeModule* module )
 {
     oxygen_rc_style_register_type( module );
     oxygen_style_register_type( module );
-    // make all widget have ARGB visual by default
-    GdkColormap* cmap=gdk_screen_get_rgba_colormap(gdk_screen_get_default());
-    gtk_widget_push_colormap(cmap);
-    gtk_widget_set_default_colormap(cmap);
+
+    // make all widgets have ARGB visual by default
+    FILE* configFile=fopen(GTK_THEME_DIR "/argb-apps.conf","r");
+    if(configFile)
+    {
+        if(OXYGEN_DEBUG)
+            fprintf(stderr,"ARGB config file found\n");
+        char* progname = g_get_prgname();
+        gboolean rgba=FALSE;
+        // FIXME: just to make the code trivial i assume config file never exceeds 4KiB
+        // If it does, anything beyond 4K will not be taken into account.
+        char configBuf[4096];
+        fread(configBuf,sizeof(configBuf[0]),sizeof(configBuf),configFile);
+
+        gboolean allbut = FALSE;
+        char ** apps = g_strsplit(configBuf,":",-1);
+        if (!g_strcmp0(apps[0],"allbut"))
+        {
+            allbut = TRUE;
+            rgba = TRUE;
+        };
+        int i;
+        for (i = 0; apps[i] != NULL;i++)
+        {
+            if (!g_strcmp0(apps[i],progname))
+            {
+                rgba = !allbut;
+            };
+        };
+        g_strfreev(apps);
+
+        if(OXYGEN_DEBUG)
+            fprintf(stderr,"Program name is %s; ARGB visual is %sused\n",progname,rgba?"":"not ");
+
+        if(rgba)
+        {
+            GdkColormap* cmap=gdk_screen_get_rgba_colormap(gdk_screen_get_default());
+            gtk_widget_push_colormap(cmap);
+            gtk_widget_set_default_colormap(cmap);
+        }
+    }
+    else
+        if(OXYGEN_DEBUG)
+            fprintf(stderr,"ARGB config file not found!\n");
 }
 
 //_________________________________________________
