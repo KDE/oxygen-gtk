@@ -39,6 +39,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
+#include "oxygencairoutils.h"
 
 //_______________________________________________________________________________________________________________
 struct _OxygenStyle
@@ -404,11 +405,9 @@ namespace Oxygen
             } else {
 
                 StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
-                Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
-                Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
-
                 if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
                 {
+
                     // make menus appear rounded using Shape X extension if screen isn't composited
                     if(
                         ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_WIDTH"))!=w ||
@@ -441,6 +440,9 @@ namespace Oxygen
                     }
 
                 }
+
+                Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
+                Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
             }
 
