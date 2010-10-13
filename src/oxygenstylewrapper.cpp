@@ -407,6 +407,41 @@ namespace Oxygen
                 Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
                 Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
+                if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
+                {
+                    // make menus appear rounded using Shape X extension if screen isn't composited
+                    if(
+                        ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_WIDTH"))!=w ||
+                        ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT"))!=h)
+                    {
+                        g_object_set_data(G_OBJECT(widget),"ROUND_MENU_WIDTH",(gpointer)w);
+                        g_object_set_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT",(gpointer)h);
+
+                        // TODO: move this to oxygen style or helper.
+                        GdkPixmap* mask = gdk_pixmap_new( 0L, w, h, 1 );
+                        cairo_t* cr = gdk_cairo_create( GDK_DRAWABLE(mask) );
+
+                        // clear the window
+                        cairo_set_operator( cr, CAIRO_OPERATOR_SOURCE );
+                        cairo_set_source( cr, ColorUtils::Rgba::transparent() );
+                        cairo_paint(cr);
+
+                        // now draw roundrect mask
+                        cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
+                        cairo_set_source( cr, ColorUtils::Rgba::black() );
+
+                        // FIXME: radius found empirically
+                        cairo_rounded_rectangle(cr,0,0,w,h,6);
+                        cairo_fill(cr);
+
+                        cairo_destroy(cr);
+
+                        gdk_window_shape_combine_mask(gtk_widget_get_parent_window(widget),mask,0,0);
+                        gdk_pixmap_unref(mask);
+                    }
+
+                }
+
             }
 
         } else if( d.isMenuScrollArrow() ) {

@@ -848,27 +848,78 @@ namespace Oxygen
         ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         ColorUtils::Rgba dark( ColorUtils::darkColor( ColorUtils::backgroundBottomColor( base ) ) );
 
-        // create context and translate
+        const bool hasAlpha( options&Alpha );
+        const bool isMozilla( settings().applicationName().isMozilla() );
+        const bool drawUglyShadow( !( hasAlpha || isMozilla ) );
+
+        // create context
         Cairo::Context context( window, clipRect );
+
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
         cairo_pattern_add_color_stop( pattern, 0, light );
 
-        const bool hasAlpha( options & Alpha );
-        if( hasAlpha )
+        if( drawUglyShadow )
         {
+
+            // adjust rectangle
+            x++;
+            y++;
+            w-=2;
+            h-=2;
+
+            ColorUtils::Rgba shadow( ColorUtils::darken(base,0.,0.) );
+            cairo_set_source_rgb(context,0,0,0);
+
+            const double radius( 11*0.5 );
+            ColorUtils::Rgba sh2=ColorUtils::darken(shadow,0.2);
+            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
+            cairo_move_to(context,x+4,y-0.5); cairo_line_to(context,x+w-4,y-0.5);
+            cairo_stroke(context);
+
+            cairo_arc_negative(context,x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI,-M_PI);
+            cairo_stroke(context);
+            cairo_arc_negative(context,x+w-11+0.5+radius, y-0.5+radius, radius, 0,-0.5*M_PI);
+            cairo_stroke(context);
+
+            sh2=ColorUtils::darken(shadow,0.35);
+            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
+            cairo_move_to(context,x-0.5,y+4); cairo_line_to(context,x-0.5,y+h-4);
+            cairo_move_to(context,x+w+0.5,y+4); cairo_line_to(context,x+w+0.5,y+h-4);
+            cairo_stroke(context);
+
+            sh2=ColorUtils::darken(shadow,0.45);
+            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
+            cairo_arc_negative(context,x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI,-1.5*M_PI);
+            cairo_stroke(context);
+            cairo_arc_negative(context,x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI,0);//-1.5*M_PI,-2*M_PI);
+            cairo_stroke(context);
+
+            sh2=ColorUtils::darken(shadow,0.6);
+            cairo_set_source_rgb(context,sh2.red(),sh2.green(),sh2.blue());
+            cairo_move_to(context,x+4,y+h+0.5); cairo_line_to(context,x+w-4,y+h+0.5);
+            cairo_stroke(context);
+        }
+
+        if( isMozilla )
+        {
+
+            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
+            cairo_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1 );
+
+        } else {
+
             if( h > 20.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 1.0 - 12.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             else if( h > 8.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 3.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
             cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, 3.5 );
-        } else {
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
-            cairo_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1 );
+
         }
+
+        cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, 3.5, isMozilla ? CornersNone:CornersAll );
 
         cairo_set_source( context, pattern );
         cairo_set_line_width( context, 0.8 );
         cairo_stroke( context );
-
     }
 
     //__________________________________________________________________
