@@ -213,6 +213,9 @@ namespace Oxygen
         //! icon path
         PathList _kdeIconPathList;
 
+        //! default icon path
+        static const std::string _defaultKdeIconPath;
+
         //! palette
         Palette _palette;
 

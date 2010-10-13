@@ -42,6 +42,9 @@ namespace Oxygen
 {
 
     //_________________________________________________________
+    const std::string QtSettings::_defaultKdeIconPath = "/usr/share/icons/";
+
+    //_________________________________________________________
     QtSettings::QtSettings( void ):
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" ),
@@ -132,13 +135,17 @@ namespace Oxygen
     {
 
         // load icon install prefix
+        PathList out;
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
         {
 
-            return splitPath( path );
+            out = splitPath( path );
 
-        } else return PathList();
+        }
+
+        out.push_back( _defaultKdeIconPath );
+        return out;
 
     }
 

@@ -113,9 +113,9 @@ namespace Oxygen
         {
             rc.addSection( "oxygen-icons-editor", "oxygen-icons" );
             rc.addToCurrentSection( stock );
+            rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
         }
 
-        rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
 
         return;
 
