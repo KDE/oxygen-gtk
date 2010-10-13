@@ -25,6 +25,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenstylewrapper.h"
+
 #include "config.h"
 
 #include "oxygen.h"
@@ -35,8 +37,6 @@
 #include "oxygenmaps.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
-#include "oxygenstylewrapper.h"
-#include "oxygencairoutils.h"
 
 #include <iostream>
 
