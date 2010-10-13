@@ -269,6 +269,33 @@ namespace Oxygen
         cairo_fill( context );
     }
 
+    //__________________________________________________________________
+    GdkPixmap* StyleHelper::roundMask( int w, int h, int radius ) const
+    {
+
+        GdkPixmap* mask( gdk_pixmap_new( 0L, w, h, 1 ) );
+
+        {
+            Cairo::Context context( GDK_DRAWABLE(mask) );
+
+            // clear the window
+            cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
+            cairo_set_source( context, ColorUtils::Rgba::transparent() );
+            cairo_paint( context );
+
+            // now draw roundrect mask
+            cairo_set_operator( context, CAIRO_OPERATOR_OVER );
+            cairo_set_source( context, ColorUtils::Rgba::black() );
+
+            // FIXME: radius found empirically
+            cairo_rounded_rectangle( context, 0, 0, w, h, radius );
+            cairo_fill( context );
+        }
+
+        return mask;
+
+    }
+
     //________________________________________________________________________________________________________
     TileSet StyleHelper::hole( const ColorUtils::Rgba &base, double shade, int size, bool fill ) const
     {

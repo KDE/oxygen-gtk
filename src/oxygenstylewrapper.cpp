@@ -136,25 +136,7 @@ namespace Oxygen
                     g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH",(gpointer)allocation.width);
                     g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT",(gpointer)allocation.height);
 
-                    // TODO: move this to oxygenStyle
-                    GdkPixmap* mask( gdk_pixmap_new( 0L, w, h, 1 ) );
-                    cairo_t* cr = gdk_cairo_create(GDK_DRAWABLE(mask));
-
-                    // clear the window
-                    cairo_set_operator(cr,CAIRO_OPERATOR_SOURCE);
-                    cairo_set_source( cr, ColorUtils::Rgba::transparent() );
-                    cairo_paint(cr);
-
-                    // now draw roundrect mask
-                    cairo_set_operator(cr,CAIRO_OPERATOR_OVER);
-                    cairo_set_source(cr, ColorUtils::Rgba::black() );
-
-                    // FIXME: radius found empirically
-                    cairo_rounded_rectangle(cr,0,0,w,h,6);
-                    cairo_fill(cr);
-
-                    cairo_destroy(cr);
-
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( window, mask, 0, 0 );
                     gdk_pixmap_unref( mask );
 
@@ -417,24 +399,7 @@ namespace Oxygen
                         g_object_set_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT",(gpointer)h);
 
                         // TODO: move this to oxygen style or helper.
-                        GdkPixmap* mask = gdk_pixmap_new( 0L, w, h, 1 );
-                        cairo_t* cr = gdk_cairo_create( GDK_DRAWABLE(mask) );
-
-                        // clear the window
-                        cairo_set_operator( cr, CAIRO_OPERATOR_SOURCE );
-                        cairo_set_source( cr, ColorUtils::Rgba::transparent() );
-                        cairo_paint(cr);
-
-                        // now draw roundrect mask
-                        cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-                        cairo_set_source( cr, ColorUtils::Rgba::black() );
-
-                        // FIXME: radius found empirically
-                        cairo_rounded_rectangle(cr,0,0,w,h,6);
-                        cairo_fill(cr);
-
-                        cairo_destroy(cr);
-
+                        GdkPixmap* mask( Style::instance().helper().roundMask( w, h ) );
                         gdk_window_shape_combine_mask(gtk_widget_get_parent_window(widget),mask,0,0);
                         gdk_pixmap_unref(mask);
                     }

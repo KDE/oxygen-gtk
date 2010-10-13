@@ -22,6 +22,9 @@
 
 #include "oxygentileset.h"
 
+#include <gdk/gdkpixbuf.h>
+#include <gdk/gdkpixmap.h>
+
 namespace ColorUtils
 {
     class Rgba;
@@ -64,6 +67,10 @@ namespace Oxygen
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h ) const;
 
         //@}
+
+        //! rounded mask
+        /*! used for non-composited tooltips and menus */
+        GdkPixmap* roundMask( int w, int h, int radius = 6 ) const;
 
         //!@name holes
         //@{
