@@ -27,7 +27,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <gtk/gtk.h>
 
 namespace Oxygen
 {

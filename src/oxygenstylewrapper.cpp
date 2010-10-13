@@ -27,9 +27,6 @@
 
 #include "config.h"
 
-#include <gtk/gtk.h>
-#include <iostream>
-
 #include "oxygen.h"
 #include "oxygenanimations.h"
 #include "oxygencairoutils.h"
@@ -40,6 +37,8 @@
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
 #include "oxygencairoutils.h"
+
+#include <iostream>
 
 //_______________________________________________________________________________________________________________
 struct _OxygenStyle

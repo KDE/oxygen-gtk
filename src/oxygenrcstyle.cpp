@@ -25,10 +25,10 @@
 #include "config.h"
 #endif
 
-#include <gtk/gtk.h>
 #include "oxygenrcstyle.h"
 #include "oxygenstylewrapper.h"
 
+#include <gtk/gtkrc.h>
 
 //______________________________________________________________________
 struct _OxygenRcStyle

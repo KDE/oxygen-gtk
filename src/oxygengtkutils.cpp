@@ -24,9 +24,14 @@
 
 #include "oxygengtkutils.h"
 
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
 #include <cmath>
+#include <gtk/gtkbutton.h>
+#include <gtk/gtkcombobox.h>
+#include <gtk/gtkcomboboxentry.h>
+#include <gtk/gtknotebook.h>
+#include <gtk/gtkprogressbar.h>
+#include <gtk/gtkscrolledwindow.h>
+#include <gtk/gtkwidget.h>
 
 namespace Gtk
 {

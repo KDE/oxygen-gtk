@@ -29,6 +29,8 @@
 #include "oxygengtkicons.h"
 #include "config.h"
 
+#include <gtk/gtkrc.h>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -40,8 +42,6 @@
 #include <pwd.h>
 #include <unistd.h>
 #endif
-
-#include <gtk/gtk.h>
 
 namespace Oxygen
 {

@@ -31,7 +31,6 @@
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
 
-#include <gtk/gtk.h>
 #include <iostream>
 #include <sstream>
 #include <map>

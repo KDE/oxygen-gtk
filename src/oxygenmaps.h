@@ -23,8 +23,8 @@
 * MA 02110-1301, USA.
 */
 
-#include <glib.h>
-#include <gtk/gtk.h>
+#include <gtk/gtkenums.h>
+#include <gdk/gdkwindow.h>
 #include <string>
 #include <iostream>
 
