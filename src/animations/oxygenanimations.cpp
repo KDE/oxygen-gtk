@@ -37,7 +37,7 @@ namespace Oxygen
         return singleton;
     }
 
-    //_________________________________________
+    //____________________________________________________________________________________________
     Animations::~Animations( void )
     {
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); iter++ )
