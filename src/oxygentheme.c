@@ -1,6 +1,7 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright( c ) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * based on the Null Theme Engine for Gtk+.
 * Copyright( C ) 2008 Robert Staudinger
@@ -21,11 +22,13 @@
 * MA 02110-1301, USA.
 */
 
+#include "config.h"
+#include "oxygenstylewrapper.h"
+#include "oxygenrcstyle.h"
+
 #include <gmodule.h>
 #include <gtk/gtk.h>
-#include <cstdio>
-
-#include "config.h"
+#include <stdio.h>
 
 //_________________________________________________
 G_MODULE_EXPORT void theme_init( GTypeModule* module )
@@ -34,6 +37,7 @@ G_MODULE_EXPORT void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     // make all widgets have ARGB visual by default
+    // TODO: I'd like to pass that to some external code, and use c++ (Hugo)
     FILE* configFile=fopen(GTK_THEME_DIR "/argb-apps.conf","r");
     if(configFile)
     {
