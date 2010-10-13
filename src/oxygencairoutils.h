@@ -20,12 +20,11 @@
 * MA 02110-1301, USA.
 */
 
-#include <cairo.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <gdk/gdktypes.h>
-
 #include "oxygencairopattern.h"
 #include "oxygengeometry.h"
+
+#include <cairo.h>
+#include <gdk/gdk.h>
 
 namespace ColorUtils
 {

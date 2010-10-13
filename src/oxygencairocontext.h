@@ -21,9 +21,9 @@
 */
 
 #include <cairo.h>
+#include <gdk/gdk.h>
+
 #include <cassert>
-#include <gdk/gdktypes.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 
 namespace Cairo
 {

@@ -31,8 +31,7 @@
 only if the later are found (which is not good), and does not track the scrollbar destruction.
 (which is not good either). One would rather add the relevant ScrollBarData, instead */
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkrange.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {

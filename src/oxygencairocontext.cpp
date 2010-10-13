@@ -19,9 +19,7 @@
 */
 
 #include "oxygencairocontext.h"
-#include <gdk/gdkcairo.h>
-#include <gdk/gdkregion.h>
-#include <gdk/gdkwindow.h>
+#include <gdk/gdk.h>
 namespace Cairo
 {
 

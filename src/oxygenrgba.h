@@ -31,7 +31,7 @@
 #include <string>
 #include <vector>
 
-#include <gdk/gdktypes.h>
+#include <gdk/gdk.h>
 
 namespace ColorUtils
 {

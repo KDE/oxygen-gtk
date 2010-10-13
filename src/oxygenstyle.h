@@ -30,7 +30,7 @@
 #include "oxygentaboptions.h"
 #include "oxygentileset.h"
 
-#include <gdk/gdktypes.h>
+#include <gdk/gdk.h>
 
 namespace Oxygen
 {

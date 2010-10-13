@@ -25,7 +25,7 @@
 
 #include <cassert>
 #include <map>
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {

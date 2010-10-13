@@ -23,8 +23,8 @@
 * MA 02110-1301, USA.
 */
 
-#include <gdk/gdktypes.h>
-#include <gtk/gtkstyle.h>
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 #include "oxygenrgba.h"
 

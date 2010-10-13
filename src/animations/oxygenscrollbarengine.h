@@ -28,8 +28,7 @@
 #include "oxygendatamap.h"
 #include "oxygenscrollbardata.h"
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkscrolledwindow.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {

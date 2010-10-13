@@ -28,7 +28,7 @@
 #include "oxygendatamap.h"
 #include "oxygentabwidgetdata.h"
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {

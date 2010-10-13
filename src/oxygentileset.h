@@ -20,7 +20,7 @@
 */
 
 #include <cairo.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdk.h>
 #include <vector>
 
 namespace Cairo

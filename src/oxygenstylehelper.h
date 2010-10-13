@@ -22,8 +22,7 @@
 
 #include "oxygentileset.h"
 
-#include <gdk/gdkpixbuf.h>
-#include <gdk/gdkpixmap.h>
+#include <gdk/gdk.h>
 
 namespace ColorUtils
 {

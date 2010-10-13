@@ -27,7 +27,7 @@
 #include "oxygenbaseengine.h"
 #include "oxygendatamap.h"
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {

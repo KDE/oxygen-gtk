@@ -27,7 +27,7 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
