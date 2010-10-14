@@ -189,13 +189,26 @@ namespace Oxygen
             Oxygen::StyleOptions options( Oxygen::NoFill );
             options |= Oxygen::styleOptions( widget, state, shadow );
 
+            // calculate proper offsets so that the glow/shadow match parent frame
+            const int xOffset( style ? style->xthickness + 1 : 3);
+            const int yOffset( style ? style->ythickness + 1 : 3);
+
+            // there is no need to render anything if both offsets are larger than 4
+            if( xOffset >= 5 && yOffset >= 5 ) return;
+
+            // adjust rect using offsets above
+            x -= xOffset;
+            y -= yOffset;
+            w += 2*xOffset;
+            h += 2*yOffset;
+
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
                 Animations::instance().spinBoxEngine().registerWidget( widget );
                 if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
                 else options &= ~Hover;
 
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+5, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
+                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -211,7 +224,7 @@ namespace Oxygen
                 else options &= ~Hover;
 
                 // partial highlight
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6+7, h+6, options, TileSet::Ring&( ~TileSet::Right ) );
+                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else {
 
@@ -249,7 +262,7 @@ namespace Oxygen
                 }
 
                 // render hole
-                Oxygen::Style::instance().renderHole( window, clipRect, x-3, y-3, w+6, h+6, options, tiles );
+                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
 
             }
 
