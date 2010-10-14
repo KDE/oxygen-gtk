@@ -1369,6 +1369,10 @@ namespace Oxygen
                 if( tabIndex == Animations::instance().tabWidgetEngine().hoveredTab( widget ) )
                 { options |= Hover; }
 
+                // check tab position and add relevant option flags
+                if( tabIndex == 0 ) tabOptions |= FirstTab;
+                if( tabIndex == gtk_notebook_get_n_pages( GTK_NOTEBOOK( widget ) ) ) tabOptions |= LastTab;
+
             }
 
             // render
