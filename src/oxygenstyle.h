@@ -167,6 +167,12 @@ namespace Oxygen
         //! tab
         void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
 
+        //! tab
+        void renderTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
+
+        //! tab
+        void renderTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
+
         //! tree 'standard' expanders (that is: +!-)
         void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions ) const;
 

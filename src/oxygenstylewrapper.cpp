@@ -1339,11 +1339,12 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s",
+            "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s, position=%s",
             G_OBJECT_TYPE_NAME( widget ),
             Maps::getState( state ),
             Maps::getShadow( shadow ),
-            detail );
+            detail,
+            Maps::getPosition( position ) );
         #endif
 
         Gtk::Detail d( detail );

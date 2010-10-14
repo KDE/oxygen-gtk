@@ -49,6 +49,7 @@ namespace Oxygen
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "hicolor" ),
         _checkBoxStyle( CS_CHECK ),
+        _tabStyle( TS_SINGLE ),
         _scrollBarColored( false ),
         _scrollBarBevel( false ),
         _scrollBarAddLineButtons( 2 ),
@@ -387,6 +388,9 @@ namespace Oxygen
 
         // checkbox style
         _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
+
+        // checkbox style
+        _tabStyle = (_oxygen.getValue( "[Style]", "TabStyle", "TS_SINGLE" ) == "TS_SINGLE") ? TS_SINGLE:TS_PLAIN;
 
         // colored scrollbars
         _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";

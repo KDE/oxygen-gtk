@@ -78,6 +78,17 @@ namespace Oxygen
         CheckBoxStyle checkBoxStyle( void ) const
         { return _checkBoxStyle; }
 
+        //! tab style
+        enum TabStyle
+        {
+            TS_SINGLE,
+            TS_PLAIN
+        };
+
+        //! checkbox style
+        TabStyle tabStyle( void ) const
+        { return _tabStyle; }
+
         //! true if hovered scrollbars must be colored
         bool scrollBarColored( void ) const
         { return _scrollBarColored; }
@@ -116,11 +127,11 @@ namespace Oxygen
             ArrowTiny
         };
 
-        //! checkbox style
+        //! tree expander style
         bool viewDrawTriangularExpander( void ) const
         { return _viewDrawTriangularExpander; }
 
-        //! checkbox style
+        //! tree triangular expander size
         ArrowSize viewTriangularExpanderSize( void ) const
         { return _viewTriangularExpanderSize; }
 
@@ -224,6 +235,9 @@ namespace Oxygen
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;
+
+        //! checkbox style
+        TabStyle _tabStyle;
 
         //! colored scrollbar (on hover)
         bool _scrollBarColored;
