@@ -93,6 +93,7 @@ style "oxygen-entry" = "oxygen-default"
 class "*GtkEntry" style "oxygen-entry"
 class "*GtkSpinButton" style "oxygen-entry"
 widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
+widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
 
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
