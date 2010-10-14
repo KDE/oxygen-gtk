@@ -883,7 +883,7 @@ namespace Oxygen
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
             }
-            Style::instance().drawSeparator( window, clipRect, x, y1, 0, y2-y1, options );
+            Style::instance().drawSeparator( window, clipRect, x+1, y1, 0, y2-y1, options );
 
         }
 
