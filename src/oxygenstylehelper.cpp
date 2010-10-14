@@ -926,7 +926,7 @@ namespace Oxygen
     //___________________________________________________________________________________________
     void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size) const
     {
-        //const double m( double(size-1.5)*0.5 );
+
         const double m( double(size-2)*0.5 );
         const double offset( 0.8 );
         const double k0( (m-4.0) / m );

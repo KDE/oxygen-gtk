@@ -413,7 +413,6 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
 
-        //GdkRectangle rect = { x, y, w, h };
         GdkRectangle rect = { x, y, w, h+1 };
         GdkRectangle mask = {x+1, y+1, w-2, h-2 };
         const double maskRadius = 3.5;
