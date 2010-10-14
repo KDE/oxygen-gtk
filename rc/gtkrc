@@ -113,6 +113,11 @@ style "oxygen-w2" = "oxygen-default"
     ythickness = 2
 }
 
+class "*GtkScrolledWindow" style "oxygen-w2"
+class "*GtkViewport" style "oxygen-w2"
+class "*GtkFrame" style "oxygen-w2"
+
+# tree headers
 style "oxygen-header" = "oxygen-default"
 {
     xthickness = 2
@@ -122,8 +127,4 @@ widget_class "*Tree*GtkButton" style "oxygen-header"
 widget_class "*List*GtkButton" style "oxygen-header"
 widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "oxygen-header"
 
-
-class "*GtkScrolledWindow" style "oxygen-w2"
-class "*GtkViewport" style "oxygen-w2"
-class "*GtkFrame" style "oxygen-w2"
 
