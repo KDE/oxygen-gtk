@@ -86,6 +86,14 @@ namespace Oxygen
             _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
         }
 
+        #if OXYGEN_DEBUG
+        std::cout << "QtSettings::initialize - Kdeglobals: " << std::endl;
+        std::cout << _kdeGlobals << std::endl;
+
+        std::cout << "QtSettings::initialize - Oxygenrc: " << std::endl;
+        std::cout << _oxygen << std::endl;
+        #endif
+
         // reload palette
         _palette.clear();
         loadKdePalette();
@@ -511,7 +519,9 @@ namespace Oxygen
             if( mid == std::string::npos ) continue;
 
             // insert new option in map
-            out[currentSection].insert( Option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) ) );
+            Option option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) );
+            option.setFile( filename );
+            out[currentSection].insert( option );
 
         }
 
