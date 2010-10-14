@@ -1977,6 +1977,9 @@ namespace Oxygen
         const bool isFirstTabAligned( tabOptions & FirstTabAligned );
         const bool isLastTabAligned( tabOptions & LastTabAligned );
 
+        const bool isLeftOfSelected( tabOptions & LeftOfSelected );
+        const bool isRightOfSelected( tabOptions & RightOfSelected );
+
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
@@ -2008,7 +2011,7 @@ namespace Oxygen
                 {
 
                     if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x-8, y+h-1, 4+14, 10, TileSet::Top ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
                     else slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
@@ -2028,6 +2031,8 @@ namespace Oxygen
                         slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
                     }
 
+                    if( isLeftOfSelected ) { baseSlab._w += 3; }
+                    else { baseSlab._w += 2; }
                     slabs.push_back( baseSlab );
 
                 }
@@ -2049,7 +2054,7 @@ namespace Oxygen
                 {
 
                     if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
+                    else slabs.push_back( SlabRect( x-8, y-9, 4+14, 10, TileSet::Bottom ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-7-7, 8, 18, TileSet::Right ) );
                     else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
@@ -2057,8 +2062,11 @@ namespace Oxygen
                 } else {
 
                     SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
-                    if( isFirstTabAligned ) { baseSlab._x -= 4; baseSlab._w += 4; baseSlab._tiles |= TileSet::Left; }
-                    if( isLastTabAligned ) { baseSlab._w +=4; baseSlab._tiles |= TileSet::Right; }
+                    if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
+                    if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
+                    if( isLeftOfSelected ) { baseSlab._w += 3; }
+                    else { baseSlab._w += 2; }
+
                     slabs.push_back( baseSlab );
 
                 }
@@ -2081,7 +2089,7 @@ namespace Oxygen
                 {
 
                     if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
+                    else slabs.push_back( SlabRect( x+w-1, y-8, 10, 4+14, TileSet::Left ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
@@ -2100,6 +2108,9 @@ namespace Oxygen
                         baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
                         slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 16, 8, TileSet::Top ) );
                     }
+
+                    if( isLeftOfSelected ) { baseSlab._h += 3; }
+                    else { baseSlab._h += 1; }
 
                     slabs.push_back( baseSlab );
 
@@ -2123,7 +2134,7 @@ namespace Oxygen
                 {
 
                     if( isFirstTabAligned ) slabs.push_back( SlabRect( x-7-7, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
+                    else slabs.push_back( SlabRect( x-9, y-8, 10, 4+14, TileSet::Right ) );
 
                     if( isLastTabAligned )  slabs.push_back( SlabRect( x-7-7, y+h-7, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
@@ -2142,6 +2153,9 @@ namespace Oxygen
                         baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
                         slabs.push_back( SlabRect( x-10+1 + offset-5, y+h-7, 16, 8, TileSet::Top ) );
                     }
+
+                    if( isLeftOfSelected ) { baseSlab._h += 3; }
+                    else { baseSlab._h += 1; }
 
                     slabs.push_back( baseSlab );
 
@@ -2228,10 +2242,6 @@ namespace Oxygen
             const bool isFirstTab( tabOptions & FirstTab );
             const bool isLastTab( tabOptions & LastTab );
 
-            const bool isLeftOfSelected( tabOptions & LeftOfSelected );
-            const bool isRightOfSelected( tabOptions & RightOfSelected );
-
-
             const double radius( 5 );
             double xF( 0.5 + x );
             double yF( 0.5 + y );
@@ -2284,46 +2294,124 @@ namespace Oxygen
 
                 case GTK_POS_TOP:
                 {
-//                     xF += 1.0;
-//                     wF -= 1.0;
-//                     yF -= 2;
-//                     if( isFirstTab )
-//                     {
-//
-//                         if( isFirstTabAligned ) cairo_move_to( context, xF, yF + hF + 2 );
-//                         else cairo_move_to( context, xF, yF + hF );
-//
-//                         cairo_line_to( context, xF, yF + radius );
-//                         cairo_arc( context, xF + radius, yF + radius, radius, M_PI, 3.0*M_PI/2 );
-//                         cairo_line_to( context, xF + wF, yF );
-//                         cairo_line_to( context, xF + wF, yF + hF );
-//
-//                     } else if( isLastTab ) {
-//
-//                         cairo_move_to( context, xF, yF + hF );
-//                         cairo_line_to( context, xF, yF );
-//                         cairo_line_to( context, xF + wF - radius, yF );
-//                         cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2.0*M_PI );
-//                         if( isLastTabAligned ) cairo_line_to( context, xF + wF, yF + hF + 2 );
-//                         else cairo_line_to( context, xF + wF, yF + hF );
-//
-//                     } else {
-//
-//                         cairo_move_to( context, xF, yF + hF );
-//                         cairo_line_to( context, xF, yF );
-//                         cairo_line_to( context, xF + wF, yF );
-//                         cairo_line_to( context, xF + wF, yF + hF );
-//
-//                     }
-//
+                    xF += 1.0;
+                    wF -= 1.0;
+                    yF -= 1;
+                    hF += 1;
+                    if( isLeftOfSelected ) wF += 1;
+                    else if( isRightOfSelected ) { xF -= 2; wF += 2; }
+
+
+                    if( isFirstTab )
+                    {
+
+                        cairo_move_to( context, xF+wF, yF );
+                        cairo_line_to( context, xF+wF, yF + hF );
+                        cairo_line_to( context, xF+radius, yF + hF );
+                        cairo_arc( context, xF+radius, yF + hF -radius, radius, M_PI/2, M_PI );
+                        if( isFirstTabAligned ) cairo_line_to( context, xF, yF - 2 );
+                        else cairo_line_to( context, xF, yF );
+
+                    } else if( isLastTab ) {
+
+                        if( isLastTabAligned ) cairo_move_to( context, xF+wF, yF-2 );
+                        else  cairo_move_to( context, xF+wF, yF-2 );
+                        cairo_line_to( context, xF+wF, yF+hF-radius );
+                        cairo_arc( context, xF+wF-radius, yF+hF-radius, radius, 0, M_PI/2 );
+                        cairo_line_to( context, xF, yF+hF );
+                        cairo_line_to( context, xF, yF );
+
+                    } else {
+
+                        cairo_move_to( context, xF+wF, yF );
+                        cairo_line_to( context, xF+wF, yF + hF );
+                        cairo_line_to( context, xF, yF+hF );
+                        cairo_line_to( context, xF, yF );
+
+                    }
+
                 }
 
                 break;
 
                 case GTK_POS_RIGHT:
+                {
+
+                    yF += 1.0;
+                    hF -= 1.0;
+                    wF += 2;
+
+                    if( isLeftOfSelected ) hF += 1;
+                    else if( isRightOfSelected ) { yF -= 2; hF += 2; }
+
+                    if( isFirstTab )
+                    {
+
+                        cairo_move_to( context, xF+wF, yF+hF );
+                        cairo_line_to( context, xF, yF+hF );
+                        cairo_line_to( context, xF, yF+radius );
+                        cairo_arc( context, xF+radius, yF+radius, radius, M_PI, 3.0*M_PI/2 );
+                        if( isFirstTabAligned ) cairo_line_to( context, xF+wF+2, yF );
+                        else cairo_line_to( context, xF+wF, yF );
+
+                    } else if( isLastTab ) {
+
+                        if( isLastTabAligned ) cairo_line_to( context, xF + wF + 2, yF + hF );
+                        else cairo_line_to( context, xF + wF, yF + hF );
+                        cairo_line_to( context, xF+radius, yF+hF );
+                        cairo_arc( context, xF+radius, yF+hF - radius, radius, M_PI/2, M_PI );
+                        cairo_line_to( context, xF, yF );
+                        cairo_line_to( context, xF + wF, yF );
+
+                    } else {
+
+                        cairo_move_to( context, xF+wF, yF+hF );
+                        cairo_line_to( context, xF, yF+hF );
+                        cairo_line_to( context, xF, yF );
+                        cairo_line_to( context, xF+wF, yF );
+
+                    }
+                }
                 break;
 
                 case GTK_POS_LEFT:
+                {
+                    yF += 1.0;
+                    hF -= 1.0;
+                    xF -= 2;
+                    wF += 2;
+
+                    if( isLeftOfSelected ) hF += 1;
+                    else if( isRightOfSelected ) { yF -= 2; hF += 2; }
+
+                    if( isFirstTab )
+                    {
+
+                        if( isFirstTabAligned ) cairo_move_to( context, xF-2, yF );
+                        else cairo_move_to( context, xF, yF );
+                        cairo_line_to( context, xF + wF - radius, yF );
+                        cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2*M_PI );
+                        cairo_line_to( context, xF+wF, yF+hF );
+                        cairo_line_to( context, xF, yF+hF );
+
+                    } else if( isLastTab ) {
+
+                        cairo_move_to( context, xF, yF );
+                        cairo_line_to( context, xF+wF, yF );
+                        cairo_line_to( context, xF+wF, yF + hF - radius );
+                        cairo_arc( context, xF+wF-radius, yF + hF - radius, radius, 0, M_PI/2 );
+                        if( isLastTabAligned ) cairo_line_to( context, xF-2, yF+hF );
+                        else cairo_line_to( context, xF, yF+hF );
+
+                    } else {
+
+                        cairo_move_to( context, xF, yF );
+                        cairo_line_to( context, xF+wF, yF );
+                        cairo_line_to( context, xF+wF, yF+hF );
+                        cairo_line_to( context, xF, yF+hF );
+
+                    }
+                }
                 break;
 
                 default: return;
