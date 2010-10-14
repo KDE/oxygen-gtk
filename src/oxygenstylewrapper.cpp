@@ -919,30 +919,6 @@ namespace Oxygen
 
         const Gtk::Detail d( detail );
 
-//         // This does not work. Half the time, the arrow does not react on hover, because no repaint is triggered,
-//         // which is actually worse than having it shown at disabled
-//         if( state==GTK_STATE_INSENSITIVE && GTK_IS_SCROLLBAR(widget) && gtk_widget_is_sensitive(widget))
-//         {
-//
-//             // FIXME: is this coordinate magic correct?
-//             // Yes, constants are obtained empirically
-//             // However, it does not always work because scrollbar arrows are not _always_ repainted on hover
-//             int xPointer,yPointer;
-//             gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
-//             GdkRectangle rect = { x-2, y-4, w+6, h+8 };
-//             if( Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) )
-//             {
-//
-//                 state=GTK_STATE_PRELIGHT;
-//
-//             } else {
-//
-//                 state=GTK_STATE_NORMAL;
-//
-//             }
-//
-//         }
-
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
         if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla() )
         { arrowSize = QtSettings::ArrowTiny; }
@@ -995,7 +971,7 @@ namespace Oxygen
                 }
             }
 
-        } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_combobox_entry( widget ) ) {
+        } else if( Gtk::gtk_parent_button( widget ) && !( Gtk::gtk_parent_combobox_entry( widget ) || Gtk::gtk_parent_treeview( widget ) ) ) {
 
             options &= ~( Focus|Hover );
 
