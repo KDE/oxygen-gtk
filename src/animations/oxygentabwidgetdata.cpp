@@ -34,29 +34,27 @@ namespace Oxygen
     //________________________________________________________________________________
     void TabWidgetData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::connect - " << widget << std::endl;
+        #endif
+
         _target = widget;
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", (GCallback)pageAddedEvent, this );
 
-        // cast to notebook and check against number of pages
-        if( GTK_IS_NOTEBOOK( widget ) )
-        {
-            GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
-            for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
-            {
-
-                // retrieve page and tab label
-                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                registerChild( gtk_notebook_get_tab_label( notebook, page ) );
-            }
-        }
+        updateRegisteredChildren( widget );
 
     }
 
     //________________________________________________________________________________
     void TabWidgetData::disconnect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::disconnect - " << widget << std::endl;
+        #endif
 
         _target = 0L;
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
@@ -126,28 +124,61 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void TabWidgetData::pageAddedEvent( GtkNotebook*, GtkWidget* child, guint, gpointer data)
-    { static_cast<TabWidgetData*>( data )->registerChild( child ); }
+    void TabWidgetData::pageAddedEvent( GtkNotebook* parent, GtkWidget* child, guint, gpointer data)
+    {
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::pageAddedEvent - " << child << std::endl;
+        #endif
+        static_cast<TabWidgetData*>(data)->updateRegisteredChildren( GTK_WIDGET( parent ) );
+    }
+
+    //________________________________________________________________________________
+    void TabWidgetData::updateRegisteredChildren( GtkWidget* widget )
+    {
+
+        if( !widget ) widget = _target;
+        if( !widget ) return;
+
+        // cast to notebook and check against number of pages
+        if( GTK_IS_NOTEBOOK( widget ) )
+        {
+            GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+            for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+            {
+
+                // retrieve page and tab label
+                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+                registerChild( gtk_notebook_get_tab_label( notebook, page ) );
+            }
+        }
+    }
 
     //________________________________________________________________________________
     void TabWidgetData::registerChild( GtkWidget* widget )
     {
+
         // make sure widget is not already in map
-        if( _childrenData.find( widget ) != _childrenData.end() ) return;
+        if( _childrenData.find( widget ) == _childrenData.end() )
+        {
 
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
-        #endif
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
+            #endif
 
-        // allocate new ChildData
-        ChildData data;
-        data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
-        data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
+            // allocate new ChildData
+            ChildData data;
+            data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+            data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
+            data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
 
-        // and insert in map
-        _childrenData.insert( std::make_pair( widget, data ) );
+            if( GTK_IS_CONTAINER( widget ) )
+            { data._addId = g_signal_connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
+
+            // and insert in map
+            _childrenData.insert( std::make_pair( widget, data ) );
+
+        }
 
         /*
         also insert widget's children, recursively.
@@ -155,6 +186,7 @@ namespace Oxygen
         */
         if( GTK_IS_CONTAINER( widget ) )
         {
+
             GList *children( gtk_container_get_children( GTK_CONTAINER(widget) ) );
             for( GList* child = g_list_first(children); child; child = g_list_next(child) )
             { registerChild( GTK_WIDGET( child->data ) ); }
@@ -167,6 +199,7 @@ namespace Oxygen
     //________________________________________________________________________________
     void TabWidgetData::unregisterChild( GtkWidget* widget )
     {
+
         ChildDataMap::iterator iter( _childrenData.find( widget ) );
         if( iter == _childrenData.end() ) return;
 
@@ -178,7 +211,11 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(widget), iter->second._styleChangeId );
         g_signal_handler_disconnect(G_OBJECT(widget), iter->second._enterId );
         g_signal_handler_disconnect(G_OBJECT(widget), iter->second._leaveId );
+
+        if( iter->second._addId >= 0 ) g_signal_handler_disconnect(G_OBJECT(widget), iter->second._addId );
+
         _childrenData.erase( iter );
+
     }
 
     //____________________________________________________________________________________________
@@ -191,6 +228,14 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void TabWidgetData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
     { static_cast<TabWidgetData*>(data)->unregisterChild( widget ); }
+
+    //____________________________________________________________________________________________
+    void TabWidgetData::childAddedEvent( GtkContainer* parent, GtkWidget*, gpointer data )
+    {
+        static_cast<TabWidgetData*>(data)->updateRegisteredChildren();
+        return;
+    }
+
 
     //____________________________________________________________________________________________
     gboolean TabWidgetData::childCrossingNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )

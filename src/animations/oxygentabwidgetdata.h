@@ -84,12 +84,14 @@ namespace Oxygen
         //! child registration and callback
         //@{
 
+        void updateRegisteredChildren( GtkWidget* = 0L );
         void registerChild( GtkWidget* );
         void unregisterChild( GtkWidget* );
 
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static gboolean childCrossingNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static void childAddedEvent( GtkContainer*, GtkWidget*, gpointer );
         //@}
 
         private:
@@ -132,12 +134,14 @@ namespace Oxygen
             ChildData( void ):
                 _destroyId( -1 ),
                 _styleChangeId( -1 ),
+                _addId( -1 ),
                 _enterId( -1 ),
                 _leaveId( -1 )
             {}
 
             int _destroyId;
             int _styleChangeId;
+            int _addId;
             int _enterId;
             int _leaveId;
         };
