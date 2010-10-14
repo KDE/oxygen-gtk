@@ -104,6 +104,14 @@ style "oxygen-combobox-entry" = "oxygen-default"
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
 widget_class "*.GtkComboBoxEntry.*Button" style "oxygen-combobox-entry"
 
+# vertical separators need enough room
+style "oxygen-vseparator" = "oxygen-default"
+{
+    xthickness = 3
+}
+
+class "GtkVSeparator" style "oxygen-vseparator"
+
 #############
 # Workarounds
 
