@@ -84,6 +84,16 @@ style "oxygen-notebook" = "oxygen-default"
 
 class "GtkNotebook" style "oxygen-notebook"
 
+# entry margins
+style "oxygen-entry" = "oxygen-default"
+{
+  xthickness = 2
+  ythickness = 2
+}
+class "*GtkEntry" style "oxygen-entry"
+class "*GtkSpinButton" style "oxygen-entry"
+widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
+
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
 {
@@ -126,5 +136,3 @@ style "oxygen-header" = "oxygen-default"
 widget_class "*Tree*GtkButton" style "oxygen-header"
 widget_class "*List*GtkButton" style "oxygen-header"
 widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "oxygen-header"
-
-
