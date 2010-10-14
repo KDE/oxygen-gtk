@@ -843,8 +843,8 @@ namespace Oxygen
         const ColorUtils::Rgba dark( ColorUtils::shade( darkColor(color), shade ) );
 
         // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = 14 - 2.0*ic;
+        const double ic = 3.6 + 0.5*_slabThickness;
+        const double is = 14.0 - 2.0*ic;
 
         // bevel, part 1
         {
@@ -936,7 +936,7 @@ namespace Oxygen
 
         // mask dimensions
         const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = size - 2.0*ic;
+        const double is = double(size) - 2.0*ic;
 
         Cairo::Pattern pattern( cairo_pattern_create_radial(x, y, m ) );
         for (int i = 0; i < 8; i++)
@@ -963,7 +963,7 @@ namespace Oxygen
 
         // mask dimensions
         const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = size - 2.0*ic;
+        const double is = double(size) - 2.0*ic;
 
         const double w( 4 );
 
