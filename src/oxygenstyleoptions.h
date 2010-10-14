@@ -21,6 +21,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenflags.h"
 #include "oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -31,7 +32,6 @@ namespace Oxygen
     //! internal option flags to pass arguments around
     enum StyleOption
     {
-        None = 0,
         Blend = 1<<0,
         Sunken = 1<<1,
         Flat = 1<<2,
@@ -46,12 +46,12 @@ namespace Oxygen
         Menu = 1<<11
     };
 
-    typedef unsigned long StyleOptions;
+    typedef Flags<StyleOption> StyleOptions;
 
     //! return style options matching widget state and shadow
     inline StyleOptions styleOptions( GtkWidget* widget, GtkStateType state, GtkShadowType shadow = GTK_SHADOW_NONE )
     {
-        StyleOptions options( None );
+        StyleOptions options;
         if( state == GTK_STATE_INSENSITIVE ) options |= Disabled;
         else if( state == GTK_STATE_PRELIGHT ) options |= Hover;
         else if( state == GTK_STATE_SELECTED ) options |= Selected;

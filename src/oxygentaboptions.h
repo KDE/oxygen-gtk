@@ -20,6 +20,7 @@
 * Software Foundation, Inc., 51  Franklin St, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 */
+#include "oxygenflags.h"
 
 #include <gtk/gtk.h>
 
@@ -34,7 +35,7 @@ namespace Oxygen
         CurrentTab = 1<<2
     };
 
-    typedef unsigned long TabOptions;
+    typedef Flags<TabOption> TabOptions;
 
     //! generate options from widget
     TabOptions tabOptions( GtkWidget*, GtkStateType, GtkPositionType, int x, int y, int w, int h );

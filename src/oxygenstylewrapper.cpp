@@ -121,7 +121,8 @@ namespace Oxygen
 
         } else if( d.isTooltip() && Style::instance().settings().tooltipDrawStyledFrames() ) {
 
-            StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
+            StyleOptions options;
+            if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
             if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() )  )
             {
 
@@ -398,7 +399,8 @@ namespace Oxygen
 
             } else {
 
-                StyleOptions options( Gtk::gtk_widget_has_rgba( widget ) ? Alpha : None );
+                StyleOptions options;
+                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
                 if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
                 {
 
@@ -448,9 +450,9 @@ namespace Oxygen
 
             // TODO: calculate this value from the style "slider-width" property
             const int offset( 6 );
-            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w - 2*offset, h, None );
-            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w, h, None );
-            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w - offset, h, None );
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w - 2*offset, h, StyleOptions() );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w, h, StyleOptions() );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w - offset, h, StyleOptions() );
 
         } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
@@ -468,7 +470,7 @@ namespace Oxygen
                     Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
                 }
 
-                StyleOptions options( None );
+                StyleOptions options;
                 if( !Gtk::gtk_progress_bar_is_horizontal( widget ) ) options |= Vertical;
                 Style::instance().renderProgressBarHole( window, clipRect, x, y, w, h, options );
 
@@ -486,9 +488,9 @@ namespace Oxygen
                 // need to adjust scrollbar hole for mozilla applications, because the
                 // GtkScrollbar::trough-under-steppers=0 option is ignored
                 if( Style::instance().settings().applicationName().isMozilla() )
-                { Style::instance().adjustScrollBarHole( x, y, w, h, None ); }
+                { Style::instance().adjustScrollBarHole( x, y, w, h, StyleOptions() ); }
 
-                Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, None );
+                Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, StyleOptions() );
 
             }
 
@@ -815,7 +817,7 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, None );
+                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, StyleOptions() );
                 }
 
             }
@@ -831,11 +833,11 @@ namespace Oxygen
             }
 
             if( accepted )
-            { Style::instance().drawSeparator( window, clipRect, x1, y+1, x2-x1, 0, None ); }
+            { Style::instance().drawSeparator( window, clipRect, x1, y+1, x2-x1, 0, StyleOptions() ); }
 
         } else {
 
-            StyleOptions options( None );
+            StyleOptions options;
             if( !Gtk::gtk_parent_treeview( widget ) )
             {
                 options |= Blend;

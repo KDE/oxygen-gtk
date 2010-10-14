@@ -31,7 +31,7 @@ namespace Oxygen
     TabOptions tabOptions( GtkWidget* widget, GtkStateType state, GtkPositionType position, int x, int y, int w, int h )
     {
 
-        TabOptions out( None );
+        TabOptions out;
 
         // strange: all tabs but the current one are painted with the active flag
         if( state != GTK_STATE_ACTIVE ) out |= CurrentTab;
