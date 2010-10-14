@@ -81,14 +81,11 @@ namespace Oxygen
         {
             #if OXYGEN_DEBUG
             std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
-            OptionMap local( readOptions( *iter + "/kdeglobals" ) );
-            std::cout << local << std::endl;
-            _kdeGlobals.merge( local );
-            #else
-            _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
             #endif
 
+            _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
             _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
+
         }
 
         #if OXYGEN_DEBUG
@@ -497,12 +494,10 @@ namespace Oxygen
         if( !in ) return out;
 
         std::string currentSection;
-        char line[512];
-
-        while( in.getline( line, 512, '\n' ) )
+        std::string currentLine;
+        while( std::getline( in, currentLine, '\n' ) )
         {
 
-            std::string currentLine( line );
             if( currentLine.empty() ) continue;
 
             // check if line is a section
