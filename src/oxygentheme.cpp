@@ -29,6 +29,7 @@
 #include <gmodule.h>
 #include <gtk/gtk.h>
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -51,7 +52,7 @@ void theme_init( GTypeModule* module )
     if( !in )
     {
         #if OXYGEN_DEBUG
-        fprintf(stderr,"Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl;
+        std::cout << "Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl;
         #endif
 
         return;
@@ -91,7 +92,7 @@ void theme_init( GTypeModule* module )
     }
 
     #if OXYGEN_DEBUG
-    std::cout << "Oxygen::init_theme - program: " << proganme << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
+    std::cout << "Oxygen::init_theme - program: " << progname << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
     #endif
 
     if(useRgba)
