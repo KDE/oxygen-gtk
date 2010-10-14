@@ -57,6 +57,7 @@ namespace Oxygen
         {
             ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
             Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
+            if( vertical ) light.setAlpha( 0.7 );
             cairo_pattern_add_color_stop( pattern, 0.3, light );
             cairo_pattern_add_color_stop( pattern, 0.7, light );
             light.setAlpha( 0 );
