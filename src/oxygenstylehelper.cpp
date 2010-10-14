@@ -234,6 +234,7 @@ namespace Oxygen
         return pixbuf;
     }
 
+
     //__________________________________________________________________________________________________________
     GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size) const
     {
@@ -264,9 +265,9 @@ namespace Oxygen
     //__________________________________________________________________
     void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h ) const
     {
-        const double s( 3.3 + (0.5 * _slabThickness) );
-        const double r( 3.0 );
-        cairo_rounded_rectangle( context, x+s, y+s, w-2*s, h-2*s, r );
+        const double s( 3.6 + ( 0.5 * _slabThickness )  );
+        const double r( s/2 );
+        cairo_rounded_rectangle( context, double(x)+s, double(y)+s, double(w)-2*s, double(h)-2*s, r );
         cairo_fill( context );
     }
 
@@ -842,7 +843,7 @@ namespace Oxygen
         const ColorUtils::Rgba dark( ColorUtils::shade( darkColor(color), shade ) );
 
         // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness;
+        const double ic = 3.6 + 0.5*_slabThickness - 1;
         const double is = 14 - 2.0*ic;
 
         // bevel, part 1
@@ -879,8 +880,8 @@ namespace Oxygen
             as a result, need to make the second pattern brighter
             */
             Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 6, 0, 19 ) );
-            cairo_pattern_add_color_stop( pattern, 0, light.light(200) );
-            cairo_pattern_add_color_stop( pattern, 0.9, base.light(200) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 0.9, base );
             cairo_set_source( context, pattern );
             cairo_ellipse( context, 3.6, 3.6, 6.8, 6.8 );
 
@@ -934,7 +935,7 @@ namespace Oxygen
         const double y(m+offset+1);
 
         // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness;
+        const double ic = 3.6 + 0.5*_slabThickness - 1;
         const double is = size - 2.0*ic;
 
         Cairo::Pattern pattern( cairo_pattern_create_radial(x, y, m ) );
@@ -961,7 +962,7 @@ namespace Oxygen
         const double m( double(size)*0.5 );
 
         // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness;
+        const double ic = 3.6 + 0.5*_slabThickness - 1;
         const double is = size - 2.0*ic;
 
         const double w( 4 );
