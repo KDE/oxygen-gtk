@@ -81,8 +81,13 @@ namespace Oxygen
         {
             #if OXYGEN_DEBUG
             std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
-            #endif
+            OptionMap local( readOptions( *iter + "/kdeglobals" ) );
+            std::cout << local << std::endl;
+            _kdeGlobals.merge( local );
+            #else
             _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
+            #endif
+
             _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
         }
 
