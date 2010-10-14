@@ -139,36 +139,24 @@ namespace Oxygen
         std::cout << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
         #endif
 
-        // prepare list of widgets to be connected
-        std::vector<GtkWidget*> widgets;
+        // allocate new ChildData
+        ChildData data;
+        data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+        data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
+        data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
 
-        // insert primary widget
-        widgets.push_back( widget );
+        // and insert in map
+        _childrenData.insert( std::make_pair( widget, data ) );
 
         // also insert widget's children (that should take care of buttons in tabs)
         if( GTK_IS_CONTAINER( widget ) )
         {
             GList *children( gtk_container_get_children( GTK_CONTAINER(widget) ) );
             for( GList* child = g_list_first(children); child; child = g_list_next(child) )
-            { widgets.push_back( GTK_WIDGET( child->data ) ); }
+            { registerChild( GTK_WIDGET( child->data ) ); }
 
             if( children ) g_list_free( children );
-        }
-
-        // allocate data and connect callbacks for all stored widgets
-        for( std::vector<GtkWidget*>::const_iterator iter = widgets.begin(); iter != widgets.end(); iter++ )
-        {
-
-            // allocate new ChildData
-            ChildData data;
-            data._destroyId = g_signal_connect( G_OBJECT(*iter), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId = g_signal_connect( G_OBJECT(*iter), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-            data._enterId = g_signal_connect( G_OBJECT(*iter), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
-            data._leaveId = g_signal_connect( G_OBJECT(*iter), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
-
-            // and insert in map
-            _childrenData.insert( std::make_pair( *iter, data ) );
-
         }
 
     }
