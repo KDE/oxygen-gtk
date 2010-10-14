@@ -2032,6 +2032,7 @@ namespace Oxygen
                     }
 
                     if( isLeftOfSelected ) { baseSlab._w += 3; }
+                    else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
                     else { baseSlab._w += 2; }
                     slabs.push_back( baseSlab );
 
@@ -2065,6 +2066,7 @@ namespace Oxygen
                     if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
                     if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
                     if( isLeftOfSelected ) { baseSlab._w += 3; }
+                    else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
                     else { baseSlab._w += 2; }
 
                     slabs.push_back( baseSlab );
@@ -2110,6 +2112,7 @@ namespace Oxygen
                     }
 
                     if( isLeftOfSelected ) { baseSlab._h += 3; }
+                    else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
                     else { baseSlab._h += 1; }
 
                     slabs.push_back( baseSlab );
@@ -2155,6 +2158,7 @@ namespace Oxygen
                     }
 
                     if( isLeftOfSelected ) { baseSlab._h += 3; }
+                    else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
                     else { baseSlab._h += 1; }
 
                     slabs.push_back( baseSlab );
@@ -2441,8 +2445,26 @@ namespace Oxygen
         }
 
         // render connections to frame
+        // for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
+        // { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+
+
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        {
+            // render tab
+            if( (options&Hover) && !isCurrentTab )
+            {
+
+                const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+                helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            } else {
+
+                helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            }
+
+        }
 
     }
 
