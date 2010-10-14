@@ -149,7 +149,10 @@ namespace Oxygen
         // and insert in map
         _childrenData.insert( std::make_pair( widget, data ) );
 
-        // also insert widget's children (that should take care of buttons in tabs)
+        /*
+        also insert widget's children, recursively.
+        that should take care of buttons in tabs and other fancy stuff that applications mght do
+        */
         if( GTK_IS_CONTAINER( widget ) )
         {
             GList *children( gtk_container_get_children( GTK_CONTAINER(widget) ) );
