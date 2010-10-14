@@ -1371,9 +1371,13 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // check tab position and add relevant option flags
+                GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
                 if( tabIndex == 0 ) tabOptions |= FirstTab;
-                if( tabIndex == gtk_notebook_get_n_pages( GTK_NOTEBOOK( widget ) ) ) tabOptions |= LastTab;
+                if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) tabOptions |= LastTab;
 
+                const int current( gtk_notebook_get_current_page( notebook ) );
+                if( tabIndex == current-1 ) tabOptions |= LeftOfSelected;
+                else if( tabIndex == current+1 ) tabOptions |= RightOfSelected;
             }
 
             // render

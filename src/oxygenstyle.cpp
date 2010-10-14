@@ -1974,9 +1974,6 @@ namespace Oxygen
         // convenience flags
         const bool isCurrentTab( tabOptions & CurrentTab );
 
-        const bool isFirstTab( tabOptions & FirstTab );
-        const bool isLastTab( tabOptions & LastTab );
-
         const bool isFirstTabAligned( tabOptions & FirstTabAligned );
         const bool isLastTabAligned( tabOptions & LastTabAligned );
 
@@ -2225,6 +2222,133 @@ namespace Oxygen
             cairo_set_source( context, pattern );
             cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
             cairo_fill( context );
+
+        } else {
+
+            const bool isFirstTab( tabOptions & FirstTab );
+            const bool isLastTab( tabOptions & LastTab );
+
+            const bool isLeftOfSelected( tabOptions & LeftOfSelected );
+            const bool isRightOfSelected( tabOptions & RightOfSelected );
+
+
+            const double radius( 5 );
+            double xF( 0.5 + x );
+            double yF( 0.5 + y );
+            double wF( w-1 );
+            double hF( h-1 );
+
+            switch( side )
+            {
+
+                case GTK_POS_BOTTOM:
+                {
+                    xF += 1.0;
+                    wF -= 1.0;
+                    hF += 2;
+                    if( isLeftOfSelected ) wF += 1;
+                    else if( isRightOfSelected ) { xF -= 2; wF += 2; }
+
+                    if( isFirstTab )
+                    {
+
+                        if( isFirstTabAligned ) cairo_move_to( context, xF, yF + hF + 2 );
+                        else cairo_move_to( context, xF, yF + hF );
+
+                        cairo_line_to( context, xF, yF + radius );
+                        cairo_arc( context, xF + radius, yF + radius, radius, M_PI, 3.0*M_PI/2 );
+                        cairo_line_to( context, xF + wF, yF );
+                        cairo_line_to( context, xF + wF, yF + hF );
+
+                    } else if( isLastTab ) {
+
+                        cairo_move_to( context, xF, yF + hF );
+                        cairo_line_to( context, xF, yF );
+                        cairo_line_to( context, xF + wF - radius, yF );
+                        cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2.0*M_PI );
+                        if( isLastTabAligned ) cairo_line_to( context, xF + wF, yF + hF + 2 );
+                        else cairo_line_to( context, xF + wF, yF + hF );
+
+                    } else {
+
+                        cairo_move_to( context, xF, yF + hF );
+                        cairo_line_to( context, xF, yF );
+                        cairo_line_to( context, xF + wF, yF );
+                        cairo_line_to( context, xF + wF, yF + hF );
+
+                    }
+
+                }
+
+                break;
+
+                case GTK_POS_TOP:
+                {
+//                     xF += 1.0;
+//                     wF -= 1.0;
+//                     yF -= 2;
+//                     if( isFirstTab )
+//                     {
+//
+//                         if( isFirstTabAligned ) cairo_move_to( context, xF, yF + hF + 2 );
+//                         else cairo_move_to( context, xF, yF + hF );
+//
+//                         cairo_line_to( context, xF, yF + radius );
+//                         cairo_arc( context, xF + radius, yF + radius, radius, M_PI, 3.0*M_PI/2 );
+//                         cairo_line_to( context, xF + wF, yF );
+//                         cairo_line_to( context, xF + wF, yF + hF );
+//
+//                     } else if( isLastTab ) {
+//
+//                         cairo_move_to( context, xF, yF + hF );
+//                         cairo_line_to( context, xF, yF );
+//                         cairo_line_to( context, xF + wF - radius, yF );
+//                         cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2.0*M_PI );
+//                         if( isLastTabAligned ) cairo_line_to( context, xF + wF, yF + hF + 2 );
+//                         else cairo_line_to( context, xF + wF, yF + hF );
+//
+//                     } else {
+//
+//                         cairo_move_to( context, xF, yF + hF );
+//                         cairo_line_to( context, xF, yF );
+//                         cairo_line_to( context, xF + wF, yF );
+//                         cairo_line_to( context, xF + wF, yF + hF );
+//
+//                     }
+//
+                }
+
+                break;
+
+                case GTK_POS_RIGHT:
+                break;
+
+                case GTK_POS_LEFT:
+                break;
+
+                default: return;
+
+            }
+
+            ColorUtils::Rgba backgroundColor( base );
+            {
+
+                gint wh, wy;
+                Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+                if( wh > 0 )
+                {  backgroundColor = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ); }
+
+            }
+
+            const ColorUtils::Rgba midColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.4 ) );
+            const ColorUtils::Rgba darkColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.8 ) );
+
+            cairo_set_line_width( context, 1.0 );
+            cairo_set_source( context, midColor );
+            cairo_fill_preserve( context );
+
+            cairo_set_source( context, darkColor );
+            cairo_stroke( context );
 
         }
 

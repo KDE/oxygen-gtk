@@ -39,7 +39,9 @@ namespace Oxygen
         tabs to the main frame
         */
         FirstTabAligned = 1<<3,
-        LastTabAligned = 1<<4
+        LastTabAligned = 1<<4,
+        LeftOfSelected = 1<<5,
+        RightOfSelected = 1<<6
 
     };
 
