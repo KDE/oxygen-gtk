@@ -32,7 +32,15 @@ namespace Oxygen
     {
         FirstTab = 1<<0,
         LastTab = 1<<1,
-        CurrentTab = 1<<2
+        CurrentTab = 1<<2,
+
+        /*
+        these flags are used to decide how to connect
+        tabs to the main frame
+        */
+        FirstTabAligned = 1<<3,
+        LastTabAligned = 1<<4
+
     };
 
     typedef Flags<TabOption> TabOptions;

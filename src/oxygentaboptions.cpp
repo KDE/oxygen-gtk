@@ -46,14 +46,14 @@ namespace Oxygen
             default:
             case GTK_POS_TOP:
             case GTK_POS_BOTTOM:
-            if( x == allocation.x ) out |= FirstTab;
-            if( x+w == allocation.x + allocation.width ) out |= LastTab;
+            if( x == allocation.x ) out |= FirstTabAligned;
+            if( x+w == allocation.x + allocation.width ) out |= LastTabAligned;
             break;
 
             case GTK_POS_LEFT:
             case GTK_POS_RIGHT:
-            if( y == allocation.y ) out |= FirstTab;
-            if( y+h == allocation.y + allocation.height ) out |= LastTab;
+            if( y == allocation.y ) out |= FirstTabAligned;
+            if( y+h == allocation.y + allocation.height ) out |= LastTabAligned;
             break;
         }
 
