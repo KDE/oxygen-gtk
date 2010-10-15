@@ -127,15 +127,10 @@ namespace Oxygen
             {
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
+                Animations::instance().widgetSizeEngine().registerWidget( widget );
                 const GtkAllocation& allocation( widget->allocation );
-                if(
-                    ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH"))!=allocation.width ||
-                    ((gint)g_object_get_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT"))!=allocation.height )
+                if( Animations::instance().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                 {
-
-                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_WIDTH",(gpointer)allocation.width);
-                    g_object_set_data(G_OBJECT(widget),"ROUND_TOOLTIP_HEIGHT",(gpointer)allocation.height);
-
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( window, mask, 0, 0 );
                     gdk_pixmap_unref( mask );
@@ -404,15 +399,11 @@ namespace Oxygen
                 if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
                 {
 
-                    // make menus appear rounded using Shape X extension if screen isn't composited
-                    if(
-                        ((glong)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_WIDTH"))!=w ||
-                        ((glong)g_object_get_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT"))!=h)
+                    // make tooltips appear rounded using XShape extension if screen isn't composited
+                    Animations::instance().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation& allocation( widget->allocation );
+                    if( Animations::instance().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                     {
-                        g_object_set_data(G_OBJECT(widget),"ROUND_MENU_WIDTH",(gpointer)w);
-                        g_object_set_data(G_OBJECT(widget),"ROUND_MENU_HEIGHT",(gpointer)h);
-
-                        // TODO: move this to oxygen style or helper.
                         GdkPixmap* mask( Style::instance().helper().roundMask( w, h ) );
                         gdk_window_shape_combine_mask(gtk_widget_get_parent_window(widget),mask,0,0);
                         gdk_pixmap_unref(mask);
