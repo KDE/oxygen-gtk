@@ -1695,7 +1695,7 @@ namespace Oxygen
             {
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
+                tabSlab = SlabRect( x, y-offset, w, h+9 + offset, TileSet::Ring&(~TileSet::Bottom ) );
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
@@ -1715,13 +1715,13 @@ namespace Oxygen
                     if( isFirstTabAligned )
                     {
                         baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+                        slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left ) );
                     }
 
                     if( isLastTabAligned )
                     {
                         baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
+                        slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right ) );
                     }
 
                     slabs.push_back( baseSlab );
