@@ -158,3 +158,10 @@ style "oxygen-header" = "oxygen-default"
 widget_class "*Tree*GtkButton" style "oxygen-header"
 widget_class "*List*GtkButton" style "oxygen-header"
 widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "oxygen-header"
+
+style "notebook-close-button" = "oxygen-default"
+{
+    GtkButton::inner-border= {0,0,0,0}
+}
+
+widget_class "*Notebook*.GtkButton" style "notebook-close-button"

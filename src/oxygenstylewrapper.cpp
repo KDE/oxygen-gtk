@@ -380,7 +380,8 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
 
-                Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                if(!Gtk::gtk_parent_notebook(widget)) // TODO: implement a special function to determine if button is tab close button
+                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 
             }
 
@@ -1504,8 +1505,73 @@ namespace Oxygen
         const char* )
     {
 
+        #if OXYGEN_DEBUG
+        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
+            "widget=%s, primitive=icon, state=%s",
+            G_OBJECT_TYPE_NAME( widget ),
+            Maps::getState( state ));
+        #endif
+
         GdkPixbuf* base_pixbuf = gtk_icon_source_get_pixbuf (source);
         g_return_val_if_fail (base_pixbuf != 0L, 0L);
+
+        GtkWidget* button=gtk_widget_get_parent(widget);
+        if( GTK_IS_BUTTON(button) )
+        {
+            if( Gtk::gtk_parent_notebook(button) ) // TODO: check if the button does have the close icon
+            {
+                char* buttonIconName=0;
+                static GdkPixbuf* pbNormal=0;
+                static GdkPixbuf* pbPrelight=0;
+                static GdkPixbuf* pbActive=0;
+                GError* err;
+                switch (state)
+                {
+                    case GTK_STATE_NORMAL:
+                    {
+                        buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-16.png";
+                        if(!pbNormal)
+                            pbNormal=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                        if(pbNormal)
+                            return pbNormal;
+                    }break;
+
+                    case GTK_STATE_ACTIVE:
+                    {
+                        if(!pbActive)
+                            buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
+                        pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                        if(pbActive)
+                        {
+                            // for some strange reason, button is active on tab creation and isn't
+                            // repainted until a state-changing event, so send an event
+                            // FIXME: this only works for first newly-created tab since 
+                            // this function isn't called more than once for each icon
+                            // Really, this should be done on tab creation for each of its child buttons
+                            if(!g_object_get_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON"))
+                            {
+                                gtk_widget_set_state(button,GTK_STATE_NORMAL);
+                                g_object_set_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON",(gpointer)TRUE);
+                            }
+                            return pbActive;
+                        }
+                    }break;
+
+                    case GTK_STATE_PRELIGHT:
+                    {
+                        buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-hover-16.png";
+                        if(!pbPrelight)
+                            pbPrelight=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                        if(pbPrelight)
+                            return pbPrelight;
+                    }break;
+
+                    default:
+                        break;
+                }
+                fprintf(stderr,"Oxygen error: %s\n",err->message);
+            }
+        }
 
         // retrieve screen and settings
         GdkScreen *screen( 0L );
