@@ -90,9 +90,9 @@ namespace Oxygen
         pixmapPathStr << "pixmap_path \"";
         for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
         {
-            //#if OXYGEN_DEBUG
-            std::cout << "GtkIcons::generate - adding path: " << *iter << std::endl;
-            //#endif
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::GtkIcons::generate - adding path: " << *iter << std::endl;
+            #endif
 
             if( iter != pathList.begin() ) pixmapPathStr << ":";
             pixmapPathStr << *iter;

@@ -184,7 +184,7 @@ namespace Oxygen
         _iconThemes.insert( theme );
 
         #if OXYGEN_DEBUG
-        std::cout << "QtSettings::addIconTheme - adding " << theme << std::endl;
+        std::cout << "Oxygen::QtSettings::addIconTheme - adding " << theme << std::endl;
         #endif
 
         // add all possible path (based on _kdeIconPathList) and look for possible parent
