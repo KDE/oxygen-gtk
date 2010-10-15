@@ -1696,7 +1696,8 @@ namespace Oxygen
             {
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-offset, w, h+9 + offset, TileSet::Ring&(~TileSet::Bottom ) );
+                tabSlab = SlabRect( x, y-offset, w, h+9+offset, TileSet::Ring&(~TileSet::Bottom ) );
+                if( isCurrentTab ) { tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
@@ -1716,13 +1717,13 @@ namespace Oxygen
                     if( isFirstTabAligned )
                     {
                         baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left ) );
+                        slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
                     }
 
                     if( isLastTabAligned )
                     {
                         baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right ) );
+                        slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
                     }
 
                     slabs.push_back( baseSlab );
@@ -1737,7 +1738,8 @@ namespace Oxygen
 
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
+                tabSlab = SlabRect( x, y-9, w, h+11+offset, TileSet::Ring&(~TileSet::Top ) );
+                if( isCurrentTab ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
@@ -1754,8 +1756,15 @@ namespace Oxygen
                 } else {
 
                     SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
-                    if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
-                    if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
+                    if( isFirstTabAligned ) {
+                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
+                        slabs.push_back( SlabRect( x-1, y-15+offset, 8, 17, TileSet::Left, Hover ) );
+                    }
+
+                    if( isLastTabAligned ) {
+                        baseSlab._w -=4; baseSlab._tiles |= TileSet::Right;
+                        slabs.push_back( SlabRect( x+w-7, y-15+offset, 8, 17, TileSet::Right, Hover ) );
+                    }
                     slabs.push_back( baseSlab );
 
                 }
@@ -1852,10 +1861,10 @@ namespace Oxygen
         }
 
         // render tab
+        const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
         if( (options&Hover) && !isCurrentTab )
         {
 
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
             helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         } else {
@@ -1958,8 +1967,23 @@ namespace Oxygen
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        {
 
+            // cairo_rectangle( context, iter->_x, iter->_y, iter->_w, iter->_h );
+            // cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
+            // cairo_fill( context );
+
+            if( !isCurrentTab && (iter->_options&Hover) && (options&Hover) )
+            {
+
+                helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            } else {
+
+                helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            }
+        }
     }
 
     //____________________________________________________________________________________
