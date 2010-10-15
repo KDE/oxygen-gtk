@@ -29,6 +29,7 @@
 #include "oxygenscrollbarengine.h"
 #include "oxygenspinboxengine.h"
 #include "oxygentabwidgetengine.h"
+#include "oxygenwidgetsizeengine.h"
 
 #include <gtk/gtk.h>
 #include <vector>
@@ -82,6 +83,10 @@ namespace Oxygen
         TabWidgetEngine& tabWidgetEngine( void ) const
         { return *_tabWidgetEngine; }
 
+        //! window size engine
+        WidgetSizeEngine& widgetSizeEngine( void ) const
+        { return *_widgetSizeEngine; }
+
         protected:
 
         //! register new engine
@@ -122,6 +127,9 @@ namespace Oxygen
 
         //! tab widget engine
         TabWidgetEngine* _tabWidgetEngine;
+
+        //! widget size engine
+        WidgetSizeEngine* _widgetSizeEngine;
 
         //! keep track of destruction and style change signals
         /*!
