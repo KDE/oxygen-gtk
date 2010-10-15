@@ -219,6 +219,10 @@ namespace Oxygen
                 if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
+                // since combobox entry is drawn in the combobox full height, we'll have to adjust glow height
+                y -= (parent->allocation.height-h)/2;
+                h = parent->allocation.height;
+
                 // partial highlight
                 Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
