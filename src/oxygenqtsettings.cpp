@@ -176,10 +176,46 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    void QtSettings::addIconTheme( PathList& pathList, const std::string& theme )
+    {
+
+        // do nothing if theme have already been included in the loop
+        if( _iconThemes.find( theme ) != _iconThemes.end() ) return;
+        _iconThemes.insert( theme );
+
+        #if OXYGEN_DEBUG
+        std::cout << "QtSettings::addIconTheme - adding " << theme << std::endl;
+        #endif
+
+        // add all possible path (based on _kdeIconPathList) and look for possible parent
+        std::string parentTheme;
+        for( PathList::const_iterator iter = _kdeIconPathList.begin(); iter != _kdeIconPathList.end(); ++iter )
+        {
+
+            pathList.push_back( sanitizePath( *iter + '/' + theme ) );
+            if( parentTheme.empty() )
+            {
+                const std::string index( sanitizePath( *iter + '/' + theme + "/index.theme" ) );
+                OptionMap themeOptions( readOptions( index ) );
+                parentTheme = themeOptions.getValue( "[Icon Theme]", "Inherits" );
+            }
+
+        }
+
+        // add parent if needed
+        if( !parentTheme.empty() )
+        { addIconTheme( pathList, parentTheme ); }
+
+        return;
+
+    }
+
+    //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
 
         // load icon theme and path to gtk
+        _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
         std::ostringstream themeNameStr;
@@ -191,12 +227,10 @@ namespace Oxygen
         GtkIcons icons;
         icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
+        // generate full path list
         PathList iconThemeList;
-        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
-        { iconThemeList.push_back( sanitizePath( *iter + '/' + _kdeIconTheme ) ); }
-
-        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
-        { iconThemeList.push_back( sanitizePath( *iter + '/' + _kdeFallbackIconTheme ) ); }
+        addIconTheme( iconThemeList, _kdeIconTheme );
+        addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
         icons.generate( _rc, iconThemeList );
 
