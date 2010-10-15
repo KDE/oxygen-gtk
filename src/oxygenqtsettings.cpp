@@ -227,7 +227,7 @@ namespace Oxygen
         GtkIcons icons;
 
         // set icon sizes from kdeglobals
-        icons.setIconSize( "gtk-small-toolbar", _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-small-toolbar", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
         icons.setIconSize( "gtk-large-toolbar", _kdeGlobals.getOption( "[MainToolbarIcons]", "Size" ).toInt( 32 ) );
         icons.setIconSize( "gtk-dnd", _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 32 ) );
         icons.setIconSize( "gtk-button", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
