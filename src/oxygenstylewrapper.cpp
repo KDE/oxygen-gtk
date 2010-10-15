@@ -627,21 +627,6 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isFrame() ) {
-
-            if( shadow == GTK_SHADOW_IN ) {
-
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
-
-            } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
-
-                Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Blend );
-
-            }
-
-            return;
-
         } else if( ( d.isTrough() || d.isBar() ) && GTK_IS_PROGRESS_BAR( widget ) ) {
 
             return;
@@ -653,13 +638,24 @@ namespace Oxygen
 
         } else {
 
-            // we don't want the default square shadows in Oxygen
-            // FIXME: is hole a good enough default shadow?
-            Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
+            if( shadow == GTK_SHADOW_IN ) {
+
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
+
+            } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
+
+                Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Blend );
+
+            } else if( shadow == GTK_SHADOW_OUT ) {
+
+                Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+
+            }
+
+            return;
 
         }
-
     }
 
     //___________________________________________________________________________________________________________
