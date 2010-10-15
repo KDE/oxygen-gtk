@@ -978,27 +978,6 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
 
-        // for edgeOut buttons create slab first
-        if( !(options&Sunken) )
-        {
-            if( options&Hover )
-            {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
-
-            } else if( options&Focus ) {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
-
-            } else {
-
-                helper().slab( base, 0 ).render( context, x, y, w, h );
-
-            }
-        }
-
         // fill with appropriate pattern
         Cairo::Pattern pattern;
         if( options&Sunken )
@@ -1020,7 +999,30 @@ namespace Oxygen
         helper().fillSlab( context, x, y, w, h );
 
         if( options&Sunken )
-        { helper().slabSunken( base, 0 ).render( context, x, y, w, h ); }
+        {
+
+            helper().slabSunken( base, 0 ).render( context, x, y, w, h );
+
+        } else {
+
+            if( options&Hover )
+            {
+
+                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+            } else if( options&Focus ) {
+
+                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+            } else {
+
+                helper().slab( base, 0 ).render( context, x, y, w, h );
+
+            }
+
+        }
 
     }
 
@@ -1694,7 +1696,8 @@ namespace Oxygen
             {
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
+                tabSlab = SlabRect( x, y-offset, w, h+9+offset, TileSet::Ring&(~TileSet::Bottom ) );
+                if( isCurrentTab ) { tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
@@ -1706,21 +1709,21 @@ namespace Oxygen
                     else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 2+14, 10, TileSet::Top ) );
 
                 } else {
 
-                    SlabRect baseSlab( x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                    SlabRect baseSlab( x-6, y+h-1, w+12, 10, TileSet::Top );
                     if( isFirstTabAligned )
                     {
-                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
+                        baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
+                        slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
                     }
 
                     if( isLastTabAligned )
                     {
-                        baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
+                        baseSlab._w -= 5; baseSlab._tiles |= TileSet::Right;
+                        slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
                     }
 
                     slabs.push_back( baseSlab );
@@ -1735,7 +1738,8 @@ namespace Oxygen
 
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
+                tabSlab = SlabRect( x, y-9, w, h+11+offset, TileSet::Ring&(~TileSet::Top ) );
+                if( isCurrentTab ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
@@ -1743,21 +1747,27 @@ namespace Oxygen
                 if( isCurrentTab )
                 {
 
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
+                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
                     else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
 
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-7-7, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
+                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
+                    else slabs.push_back( SlabRect( x+w-10, y-9, 2+14, 10, TileSet::Bottom ) );
 
                 } else {
 
-                    SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
-                    if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
-                    if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
+                    SlabRect baseSlab( x-6, y-10+1, w+12, 10, TileSet::Bottom );
+                    if( isFirstTabAligned ) {
+                        baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
+                        slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
+                    }
+
+                    if( isLastTabAligned ) {
+                        baseSlab._w -=5; baseSlab._tiles |= TileSet::Right;
+                        slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
+                    }
                     slabs.push_back( baseSlab );
 
                 }
-
 
                 break;
             }
@@ -1767,7 +1777,8 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
+                tabSlab = SlabRect( x-offset, y, w+9+offset, h, TileSet::Ring&(~TileSet::Right ) );
+                if( isCurrentTab ) { tabSlab._w+=1; }
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
@@ -1779,21 +1790,21 @@ namespace Oxygen
                     else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
+                    else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 2+14, TileSet::Left ) );
 
                 } else {
 
-                    SlabRect baseSlab( x+w-1, y-4-1, 10, h+8+3, TileSet::Left );
+                    SlabRect baseSlab( x+w-1, y-6, 10, h+12, TileSet::Left );
                     if( isFirstTabAligned )
                     {
-                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
+                        baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
+                        slabs.push_back( SlabRect( x+w+offset-7, y-1, 17, 8, TileSet::Top, Hover ) );
                     }
 
                     if( isLastTabAligned )
                     {
-                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 16, 8, TileSet::Top ) );
+                        baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
+                        slabs.push_back( SlabRect( x+w+offset-7, y+h-7, 17, 8, TileSet::Top, Hover ) );
                     }
 
                     slabs.push_back( baseSlab );
@@ -1809,7 +1820,8 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
+                tabSlab = SlabRect( x-9, y, w+11+offset, h, TileSet::Ring&(~TileSet::Left ) );
+                if( isCurrentTab ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
@@ -1817,25 +1829,25 @@ namespace Oxygen
                 if( isCurrentTab )
                 {
 
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-7-7, y-1, 18, 8, TileSet::Top ) );
+                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
 
-                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-7-7, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
+                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x-9, y+h-10, 10, 2+14, TileSet::Right ) );
 
                 } else {
 
-                    SlabRect baseSlab( x-10+1, y-4-1, 10, h+8+3, TileSet::Right );
+                    SlabRect baseSlab( x-10+1, y-6, 10, h+12, TileSet::Right );
                     if( isFirstTabAligned )
                     {
-                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
+                        baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
+                        slabs.push_back( SlabRect( x-13 + offset, y-1, 16, 8, TileSet::Top, Hover ) );
                     }
 
                     if( isLastTabAligned )
                     {
-                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x-10+1 + offset-5, y+h-7, 16, 8, TileSet::Top ) );
+                        baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
+                        slabs.push_back( SlabRect( x-13 + offset, y+h-7, 16, 8, TileSet::Top, Hover ) );
                     }
 
                     slabs.push_back( baseSlab );
@@ -1850,10 +1862,10 @@ namespace Oxygen
         }
 
         // render tab
+        const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
         if( (options&Hover) && !isCurrentTab )
         {
 
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
             helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         } else {
@@ -1956,8 +1968,23 @@ namespace Oxygen
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        {
 
+            // cairo_rectangle( context, iter->_x, iter->_y, iter->_w, iter->_h );
+            // cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
+            // cairo_fill( context );
+
+            if( !isCurrentTab && (iter->_options&Hover) && (options&Hover) )
+            {
+
+                helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            } else {
+
+                helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+
+            }
+        }
     }
 
     //____________________________________________________________________________________
@@ -2053,10 +2080,10 @@ namespace Oxygen
                 if( isCurrentTab )
                 {
 
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
+                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
                     else slabs.push_back( SlabRect( x-8, y-9, 4+14, 10, TileSet::Bottom ) );
 
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-7-7, 8, 18, TileSet::Right ) );
+                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
                     else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
 
                 } else {
@@ -2135,10 +2162,10 @@ namespace Oxygen
                 if( isCurrentTab )
                 {
 
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-7-7, y-1, 18, 8, TileSet::Top ) );
+                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x-9, y-8, 10, 4+14, TileSet::Right ) );
 
-                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-7-7, y+h-7, 18, 8, TileSet::Top ) );
+                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
                     else slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
 
                 } else {

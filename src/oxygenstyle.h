@@ -244,7 +244,7 @@ namespace Oxygen
             public:
 
             //! constructor
-            SlabRect(void):
+            explicit SlabRect(void):
                 _x(0),
                 _y(0),
                 _w(-1),
@@ -253,12 +253,13 @@ namespace Oxygen
             {}
 
             //! constructor
-            SlabRect( int x, int y, int w, int h, const int& tiles ):
+            explicit SlabRect( int x, int y, int w, int h, const int& tiles, StyleOptions options = StyleOptions() ):
                 _x(x),
                 _y(y),
                 _w(w),
                 _h(h),
-                _tiles( TileSet::Tiles( tiles ) )
+                _tiles( TileSet::Tiles( tiles ) ),
+                _options( options )
             {}
 
             int _x;
@@ -266,6 +267,7 @@ namespace Oxygen
             int _w;
             int _h;
             TileSet::Tiles _tiles;
+            StyleOptions _options;
 
             typedef std::vector<SlabRect> List;
 
