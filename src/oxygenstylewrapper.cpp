@@ -1592,7 +1592,7 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=resize_grip, state=%s, detail=%s",
+            "widget=%s, primitive=layout, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
             Maps::getState( state ),
             detail );
