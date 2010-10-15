@@ -1,3 +1,6 @@
+gnome-fs-directory places/folder.png
+gnome-fs-regular.png mimetypes/application-x-zerosize.png
+
 gtk-about actions/help-about.png places/start-here-kde.png
 gtk-add actions/list-add.png
 gtk-apply actions/dialog-ok-apply.png actions/ok-apply.png actions/apply.png

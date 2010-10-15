@@ -83,8 +83,8 @@ namespace Oxygen
             std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
             #endif
 
-            _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
-            _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
+            _kdeGlobals.merge( readOptions( sanitizePath( *iter + "/kdeglobals" ) ) );
+            _oxygen.merge( readOptions( sanitizePath( *iter + "/oxygenrc" ) ) );
 
         }
 
@@ -189,14 +189,14 @@ namespace Oxygen
 
         // load translation table, generate full translation list, and path to gtk
         GtkIcons icons;
-        icons.loadTranslations( std::string( GTK_THEME_DIR ) + "/icons4" );
+        icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
         PathList iconThemeList;
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
-        { iconThemeList.push_back( *iter + '/' + _kdeIconTheme ); }
+        { iconThemeList.push_back( sanitizePath( *iter + '/' + _kdeIconTheme ) ); }
 
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
-        { iconThemeList.push_back( *iter + '/' + _kdeFallbackIconTheme ); }
+        { iconThemeList.push_back( sanitizePath( *iter + '/' + _kdeFallbackIconTheme ) ); }
 
         icons.generate( _rc, iconThemeList );
 
