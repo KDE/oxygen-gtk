@@ -1709,20 +1709,20 @@ namespace Oxygen
                     else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
+                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 2+14, 10, TileSet::Top ) );
 
                 } else {
 
-                    SlabRect baseSlab( x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                    SlabRect baseSlab( x-6, y+h-1, w+12, 10, TileSet::Top );
                     if( isFirstTabAligned )
                     {
-                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
+                        baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
                         slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
                     }
 
                     if( isLastTabAligned )
                     {
-                        baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
+                        baseSlab._w -= 5; baseSlab._tiles |= TileSet::Right;
                         slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
                     }
 
@@ -1748,27 +1748,26 @@ namespace Oxygen
                 {
 
                     if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-7-7, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
+                    else slabs.push_back( SlabRect( x-8, y-9, 4+14, 10, TileSet::Bottom ) );
 
                     if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-7-7, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
+                    else slabs.push_back( SlabRect( x+w-10, y-9, 2+14, 10, TileSet::Bottom ) );
 
                 } else {
 
-                    SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
+                    SlabRect baseSlab( x-6, y-10+1, w+12, 10, TileSet::Bottom );
                     if( isFirstTabAligned ) {
-                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y-15+offset, 8, 17, TileSet::Left, Hover ) );
+                        baseSlab._x += 6; baseSlab._w -= 6; baseSlab._tiles |= TileSet::Left;
+                        slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
                     }
 
                     if( isLastTabAligned ) {
-                        baseSlab._w -=4; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y-15+offset, 8, 17, TileSet::Right, Hover ) );
+                        baseSlab._w -=6; baseSlab._tiles |= TileSet::Right;
+                        slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
                     }
                     slabs.push_back( baseSlab );
 
                 }
-
 
                 break;
             }
