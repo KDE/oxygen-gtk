@@ -223,8 +223,19 @@ namespace Oxygen
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
 
-        // load translation table, generate full translation list, and path to gtk
+        // create icon translator
         GtkIcons icons;
+
+        // set icon sizes from kdeglobals
+        icons.setIconSize( "gtk-small-toolbar", _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-large-toolbar", _kdeGlobals.getOption( "[MainToolbarIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "gtk-dnd", _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "gtk-button", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-menu", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-dialog", _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+
+        // load translation table, generate full translation list, and path to gtk
         icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
         // generate full path list
