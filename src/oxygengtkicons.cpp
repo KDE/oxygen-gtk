@@ -58,11 +58,14 @@ namespace Oxygen
             return;
         }
 
-        char line[512];
-        while( in.getline( line, 512, '\n' ) )
+        std::string line;
+        while( std::getline( in, line, '\n' ) )
         {
+
+            if( line.empty() ) continue;
+
             IconPair iconPair;
-            std::istringstream stream( line );
+            std::istringstream stream( line.c_str() );
             stream >> iconPair.first >> iconPair.second;
             if( ( stream.rdstate() & std::ios::failbit ) != 0 )
             { continue; }

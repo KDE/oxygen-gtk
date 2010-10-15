@@ -25,6 +25,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "config.h"
+
 #include <iostream>
 #include <set>
 #include <sstream>
@@ -70,11 +72,27 @@ namespace Oxygen
         const std::string& value( void ) const
         { return _value; }
 
+        #if OXYGEN_DEBUG
+        //! set filename from where option was read
+        void setFile( const std::string& file )
+        { _file = file; }
+
+        #else
+        void setFile( const std::string& )
+        {}
+        #endif
+
         //! convert to integer
         int toInt( int defaultValue ) const
         { return toVariant<int>( defaultValue ); }
 
         template< typename T>  T toVariant( T = T() ) const;
+
+        #if OXYGEN_DEBUG
+        protected:
+        const std::string& file( void ) const
+        { return _file; }
+        #endif
 
         private:
 
@@ -84,9 +102,21 @@ namespace Oxygen
         //! value
         std::string _value;
 
+        //! file (used for debugging)
+        std::string _file;
+
         //! streamer
         friend std::ostream& operator << (std::ostream& out, const Option& option )
-        { return out << option.tag() << "=" << option.value(); }
+        {
+            out << option.tag() << "=" << option.value();
+
+            #if OXYGEN_DEBUG
+            if( !option.file().empty() )
+            { out << " (" << option.file() << ")"; }
+            #endif
+
+            return out;
+        }
 
         //! streamer
         friend std::ostream& operator << (std::ostream& out, const Option::Set& options )

@@ -646,9 +646,15 @@ namespace Oxygen
 
             return;
 
+        } else if (GTK_IS_NOTEBOOK(widget)) {
+
+            Style::instance().renderWindowBackground(window,clipRect,x-4,y-4,w+8,h+8);
+            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+
         } else {
 
             // we don't want the default square shadows in Oxygen
+            // FIXME: is hole a good enough default shadow?
             Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
             Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
 

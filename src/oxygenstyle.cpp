@@ -413,7 +413,6 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
 
-        //GdkRectangle rect = { x, y, w, h };
         GdkRectangle rect = { x, y, w, h+1 };
         GdkRectangle mask = {x+1, y+1, w-2, h-2 };
         const double maskRadius = 3.5;
@@ -979,27 +978,6 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
 
-        // for edgeOut buttons create slab first
-        if( !(options&Sunken) )
-        {
-            if( options&Hover )
-            {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
-
-            } else if( options&Focus ) {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
-
-            } else {
-
-                helper().slab( base, 0 ).render( context, x, y, w, h );
-
-            }
-        }
-
         // fill with appropriate pattern
         Cairo::Pattern pattern;
         if( options&Sunken )
@@ -1021,7 +999,30 @@ namespace Oxygen
         helper().fillSlab( context, x, y, w, h );
 
         if( options&Sunken )
-        { helper().slabSunken( base, 0 ).render( context, x, y, w, h ); }
+        {
+
+            helper().slabSunken( base, 0 ).render( context, x, y, w, h );
+
+        } else {
+
+            if( options&Hover )
+            {
+
+                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+            } else if( options&Focus ) {
+
+                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+            } else {
+
+                helper().slab( base, 0 ).render( context, x, y, w, h );
+
+            }
+
+        }
 
     }
 

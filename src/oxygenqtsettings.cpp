@@ -82,9 +82,19 @@ namespace Oxygen
             #if OXYGEN_DEBUG
             std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
             #endif
+
             _kdeGlobals.merge( readOptions( *iter + "/kdeglobals" ) );
             _oxygen.merge( readOptions( *iter + "/oxygenrc" ) );
+
         }
+
+        #if OXYGEN_DEBUG
+        std::cout << "QtSettings::initialize - Kdeglobals: " << std::endl;
+        std::cout << _kdeGlobals << std::endl;
+
+        std::cout << "QtSettings::initialize - Oxygenrc: " << std::endl;
+        std::cout << _oxygen << std::endl;
+        #endif
 
         // reload palette
         _palette.clear();
@@ -484,12 +494,10 @@ namespace Oxygen
         if( !in ) return out;
 
         std::string currentSection;
-        char line[512];
-
-        while( in.getline( line, 512, '\n' ) )
+        std::string currentLine;
+        while( std::getline( in, currentLine, '\n' ) )
         {
 
-            std::string currentLine( line );
             if( currentLine.empty() ) continue;
 
             // check if line is a section
@@ -511,7 +519,9 @@ namespace Oxygen
             if( mid == std::string::npos ) continue;
 
             // insert new option in map
-            out[currentSection].insert( Option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) ) );
+            Option option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) );
+            option.setFile( filename );
+            out[currentSection].insert( option );
 
         }
 
