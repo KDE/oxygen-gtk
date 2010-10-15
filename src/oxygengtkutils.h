@@ -84,6 +84,9 @@ namespace Gtk
     //! returns tab matching position or -1 if none
     int gtk_notebook_find_tab( GtkWidget*, int x, int y );
 
+    //! returns index of first visible tab
+    int gtk_notebook_find_first_tab( GtkWidget* );
+
     //@}
 
     //@!name gdk utilities

@@ -79,7 +79,7 @@ namespace Oxygen
         gdk_window_get_pointer(widget->window,&xPointer,&yPointer,NULL);
 
         // loop over tabs and check matching
-        for( unsigned int i = 0; i < _tabRects.size(); i++ )
+        for( unsigned int i = (unsigned int)Gtk::gtk_notebook_find_first_tab( widget ); i < _tabRects.size(); i++ )
         {
             if( Gtk::gdk_rectangle_contains( &_tabRects[i], xPointer, yPointer ) )
             { setHoveredTab( widget, i ); return; }
@@ -87,6 +87,7 @@ namespace Oxygen
 
         // reset hovered tab
         setHoveredTab( widget, -1 );
+        return;
 
     }
 

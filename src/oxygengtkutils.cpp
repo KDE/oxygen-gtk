@@ -155,7 +155,7 @@ namespace Gtk
         GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
         int tab(-1);
         int minDistance( -1 );
-        for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+        for( int i = gtk_notebook_find_first_tab( widget ); i <  gtk_notebook_get_n_pages( notebook ); ++i )
         {
 
             // retrieve page and tab label
@@ -177,6 +177,18 @@ namespace Gtk
         }
 
         return tab;
+
+    }
+
+    //________________________________________________________
+    int gtk_notebook_find_first_tab( GtkWidget* widget )
+    {
+
+        if( !GTK_IS_NOTEBOOK( widget ) ) return 0;
+
+        // cast to notebook
+        GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+        return g_list_position( notebook->children, notebook->first_tab );
 
     }
 
