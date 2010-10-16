@@ -26,6 +26,7 @@
 #include "oxygengtkicons.h"
 #include "config.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -46,6 +47,17 @@ namespace Oxygen
         _sizes.push_back( std::make_pair( "gtk-dialog", 32 ) );
         _sizes.push_back( std::make_pair( "", 16 ) );
 
+    }
+
+    //_________________________________________
+    void GtkIcons::setIconSize( const std::string& tag, int value )
+    {
+        SizeMap::iterator iter( std::find_if( _sizes.begin(), _sizes.end(), SameTagFTor( tag ) ) );
+        if( iter == _sizes.end() ) {
+
+            std::cout << "GtkIcons::setIconSize - no match for" << tag << "," << value << std::endl;
+
+        } else iter->second = value;
     }
 
     //_________________________________________

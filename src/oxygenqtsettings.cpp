@@ -126,6 +126,40 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    void QtSettings::PathList::split( const std::string& path, const std::string& separator )
+    {
+
+        clear();
+        std::string local( path );
+        if( local.empty() ) return;
+        if( local[local.size()-1] == '\n' ) local = local.substr( 0, local.size()-1 );
+
+        size_t position( std::string::npos );
+        while( ( position = local.find( separator ) ) != std::string::npos )
+        {
+            push_back( local.substr(0, position ) );
+            local = local.substr( position + separator.length() );
+        }
+
+        if( !local.empty() ) push_back( local );
+        return;
+
+    }
+
+    //_________________________________________________________
+    std::string QtSettings::PathList::join( const std::string& separator ) const
+    {
+        std::ostringstream out;
+        for( const_iterator iter = begin(); iter != end(); iter++ )
+        {
+            if( iter != begin() ) out << separator;
+            out << *iter;
+        }
+
+        return out.str();
+    }
+
+    //_________________________________________________________
     QtSettings::PathList QtSettings::kdeConfigPathList( void ) const
     {
 
@@ -134,7 +168,7 @@ namespace Oxygen
         // load icon install prefix
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
-        { out = splitPath( path ); };
+        { out.split( path ); };
 
         out.push_back( GTK_THEME_DIR );
         return out;
@@ -149,11 +183,7 @@ namespace Oxygen
         PathList out;
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
-        {
-
-            out = splitPath( path );
-
-        }
+        { out.split( path ); }
 
         out.push_back( _defaultKdeIconPath );
         return out;
@@ -168,8 +198,8 @@ namespace Oxygen
 
         std::string appName( applicationName );
 
-        if( appName == "firefox-bin" ) _applicationName = Firefox;
-        else if( appName == "thunderbird-bin" ) _applicationName = Thunderbird;
+        if( appName == "firefox-bin" || appName == "firefox" ) _applicationName = Firefox;
+        else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _applicationName = Thunderbird;
         else if( appName == "gimp" ) _applicationName = Gimp;
         else appName = Unknown;
 
@@ -223,8 +253,19 @@ namespace Oxygen
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
 
-        // load translation table, generate full translation list, and path to gtk
+        // create icon translator
         GtkIcons icons;
+
+        // set icon sizes from kdeglobals
+        icons.setIconSize( "gtk-small-toolbar", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-large-toolbar", _kdeGlobals.getOption( "[MainToolbarIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "gtk-dnd", _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "gtk-button", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-menu", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        icons.setIconSize( "gtk-dialog", _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
+        icons.setIconSize( "", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+
+        // load translation table, generate full translation list, and path to gtk
         icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
         // generate full path list
@@ -496,26 +537,6 @@ namespace Oxygen
         { out.replace( position, 2, "/" ); }
 
         return out;
-    }
-
-    //_________________________________________________________
-    QtSettings::PathList QtSettings::splitPath( const std::string& path, const std::string& separator ) const
-    {
-        PathList out;
-        std::string local( path );
-        if( local.empty() ) return out;
-        if( local[local.size()-1] == '\n' ) local = local.substr( 0, local.size()-1 );
-
-        size_t position( std::string::npos );
-        while( ( position = local.find( separator ) ) != std::string::npos )
-        {
-            out.push_back( local.substr(0, position ) );
-            local = local.substr( position + separator.length() );
-        }
-
-        if( !local.empty() ) out.push_back( local );
-        return out;
-
     }
 
     //_________________________________________________________

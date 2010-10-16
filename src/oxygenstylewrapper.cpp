@@ -175,9 +175,6 @@ namespace Oxygen
                 Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
             }
 
-            // TODO: handle non selected alternate background,
-            // when enabled in options
-
             return;
 
         } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isMozilla() ) {
@@ -200,10 +197,20 @@ namespace Oxygen
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
-                Animations::instance().spinBoxEngine().registerWidget( widget );
-                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
-                else options &= ~Hover;
 
+                if(
+                    Animations::instance().lineEditEngine().contains( widget ) &&
+                    Animations::instance().lineEditEngine().hovered( widget ) )
+                { options |= Hover; }
+
+                // plain background
+                if( style && !Style::instance().settings().applicationName().isMozilla() )
+                {
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                }
+
+                // hole
                 Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -326,7 +333,7 @@ namespace Oxygen
 
                 if( style )
                 {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state == GTK_STATE_INSENSITIVE ? GTK_STATE_INSENSITIVE:GTK_STATE_NORMAL] ) );
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(parent)] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
 
@@ -600,10 +607,16 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                Animations::instance().spinBoxEngine().registerWidget( widget );
-                Animations::instance().spinBoxEngine().updateMouseOver( widget );
-                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
-                else options &= ~Hover;
+                if(
+                    Animations::instance().lineEditEngine().contains( widget ) &&
+                    Animations::instance().lineEditEngine().hovered( widget ) )
+                { options |= Hover; }
+
+                if( style && !Style::instance().settings().applicationName().isMozilla() )
+                {
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                }
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, TileSet::Ring & (~TileSet::Right) );

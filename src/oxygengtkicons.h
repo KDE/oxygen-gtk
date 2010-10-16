@@ -52,6 +52,9 @@ namespace Oxygen
         //! generate rc file
         void generate( Gtk::RC&, const std::vector<std::string>& pathList ) const;
 
+        //! set icon size
+        void setIconSize( const std::string&, int value );
+
         protected:
 
         //! generate rc code for given option
@@ -71,9 +74,30 @@ namespace Oxygen
         //@{
         typedef std::pair<std::string, unsigned int> SizePair;
         typedef std::vector<SizePair> SizeMap;
-
         SizeMap _sizes;
+
+        //! used to find size pair matching given tag
+        class SameTagFTor
+        {
+            public:
+
+            //! constructor
+            SameTagFTor( const std::string& tag ):
+                _tag( tag )
+                {}
+
+            //! predicate
+            bool operator() (const SizePair& pair ) const
+            { return pair.first == _tag; }
+
+            private:
+
+            //! prediction
+            std::string _tag;
+        };
+
         //@}
+
     };
 
 

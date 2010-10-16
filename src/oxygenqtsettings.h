@@ -154,7 +154,17 @@ namespace Oxygen
         std::string home( void ) const;
 
         //! path list
-        typedef std::vector<std::string> PathList;
+        class PathList: public std::vector<std::string>
+        {
+            public:
+
+            //! split string using provided separator and store
+            void split( const std::string&, const std::string& = ":" );
+
+            //! concatenate using provided separator
+            std::string join( const std::string& = ":" ) const;
+
+        };
 
         //! icon path
         PathList kdeConfigPathList( void ) const;
@@ -189,9 +199,6 @@ namespace Oxygen
 
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
-
-        // spilt path
-        PathList splitPath( const std::string&, const std::string& = ":" ) const;
 
         // read all options from kdeglobals
         OptionMap readOptions( const std::string& ) const;
