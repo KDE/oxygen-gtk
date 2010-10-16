@@ -25,6 +25,7 @@
 #include "oxygengtkutils.h"
 
 #include <cmath>
+#include <string.h>
 #include <gtk/gtk.h>
 
 namespace Gtk
