@@ -380,7 +380,7 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
 
-                if(!Gtk::gtk_parent_notebook(widget)) // TODO: implement a special function to determine if button is tab close button
+                if(!Gtk::is_notebook_close_button(widget))
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 
             }
@@ -1518,7 +1518,7 @@ namespace Oxygen
         GtkWidget* button=gtk_widget_get_parent(widget);
         if( GTK_IS_BUTTON(button) )
         {
-            if( Gtk::gtk_parent_notebook(button) ) // TODO: check if the button does have the close icon
+            if( Gtk::is_notebook_close_button(button) )
             {
                 char* buttonIconName=0;
                 static GdkPixbuf* pbNormal=0;

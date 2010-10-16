@@ -204,6 +204,20 @@ namespace Gtk
     }
 
     //________________________________________________________
+    bool is_notebook_close_button(GtkWidget* widget)
+    {
+        if(gtk_parent_notebook(widget))
+        {
+            if(gtk_button_get_image(GTK_BUTTON(widget)) || gtk_button_get_label(GTK_BUTTON(widget)))
+                return false;
+            else
+                return true;
+        }
+        else
+            return false;
+    }
+
+    //________________________________________________________
     bool gtk_object_is_a( const GObject* object, const gchar * type_name )
     {
 
