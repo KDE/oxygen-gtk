@@ -302,6 +302,20 @@ namespace Gtk
         return NULL;
     }
 
+    GtkWidget* gtk_button_find_label(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return NULL;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_LABEL(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return NULL;
+    }
+
     //________________________________________________________
     bool is_notebook_close_button(GtkWidget* widget)
     {
@@ -321,7 +335,23 @@ namespace Gtk
                 return false;
             // make sure button has no text and some image (for now, just hope it's a close icon)
             if(!gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)))
-                return false;
+            {
+                // check for pidgin 'x' close button
+                GtkWidget* label;
+                if(!(label=gtk_button_find_label(widget)))
+                    return false;
+                else
+                {
+                    const gchar* labelText=gtk_label_get_text(GTK_LABEL(label));
+                    if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
+                    {
+                        gtk_widget_hide(label);
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
             else
                 return true;
         }
