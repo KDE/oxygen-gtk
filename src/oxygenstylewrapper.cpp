@@ -197,11 +197,9 @@ namespace Oxygen
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
-
-                if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
-                { options |= Hover; }
+                Animations::instance().spinBoxEngine().registerWidget( widget );
+                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
+                else options &= ~Hover;
 
                 // plain background
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
@@ -603,10 +601,10 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
-                { options |= Hover; }
+                Animations::instance().spinBoxEngine().registerWidget( widget );
+                Animations::instance().spinBoxEngine().updateMouseOver( widget );
+                if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
+                else options &= ~Hover;
 
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
                 {
