@@ -90,6 +90,9 @@ namespace Gtk
     //! returns index of first visible tab
     int gtk_notebook_find_first_tab( GtkWidget* );
 
+    //! returns true if potentialParent is (maybe indirect) parent of widget
+    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent );
+
     //! returns true if widget is a notebook close button
     bool is_notebook_close_button(GtkWidget* widget);
 

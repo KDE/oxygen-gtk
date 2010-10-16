@@ -204,10 +204,32 @@ namespace Gtk
     }
 
     //________________________________________________________
+    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( potentialParent==parent ) return true; }
+
+        return false;
+    }
+
+    //________________________________________________________
     bool is_notebook_close_button(GtkWidget* widget)
     {
-        if(gtk_parent_notebook(widget))
+        if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
         {
+            // check if the button resides on tab label, not anywhere on the tab
+            bool tabLabelIsParent=false;
+            for(int i=0;i<gtk_notebook_get_n_pages(nb);++i)
+            {
+                GtkWidget* tabLabel=gtk_notebook_get_tab_label(nb,gtk_notebook_get_nth_page(nb,i));
+                if(gtk_is_parent(widget,GTK_WIDGET(tabLabel)))
+                {
+                    tabLabelIsParent=true;
+                }
+            }
+            // make sure button has no text and some image (for now, just hope it's a close icon)
             if(gtk_button_get_image(GTK_BUTTON(widget)) || gtk_button_get_label(GTK_BUTTON(widget)))
                 return false;
             else
