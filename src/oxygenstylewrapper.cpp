@@ -1538,9 +1538,9 @@ namespace Oxygen
 
                     case GTK_STATE_ACTIVE:
                     {
+                        buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
                         if(!pbActive)
-                            buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
-                        pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                            pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
                         if(pbActive)
                         {
                             // FIXME:
