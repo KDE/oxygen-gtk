@@ -76,10 +76,6 @@ namespace Oxygen
         bool hasFocus( GtkWidget* widget )
         { return data().value( widget ).hasFocus(); }
 
-        //! update mouseoverstate
-        void updateMouseOver( GtkWidget* widget )
-        { data().value( widget ).updateMouseOver( widget ); }
-
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
