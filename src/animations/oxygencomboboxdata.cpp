@@ -82,7 +82,6 @@ namespace Oxygen
         if( oldHovered != hovered() )
         {
             // trigger repaint
-            //std::cout << "ComboBoxData::setHovered - " << hovered() << std::endl;
             if( _button._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _button._widget ) );
             else if( _entry._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) );
         }
@@ -124,7 +123,6 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean ComboBoxData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        // simply triggers repaint
         static_cast<ComboBoxData*>( data )->setHovered( widget, true );
         return FALSE;
     }
@@ -132,7 +130,6 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean ComboBoxData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        // simply triggers repaint
         static_cast<ComboBoxData*>( data )->setHovered( widget, false );
         return FALSE;
     }
