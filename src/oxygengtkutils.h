@@ -96,6 +96,9 @@ namespace Gtk
     //! returns true if potentialParent is (maybe indirect) parent of widget
     bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent );
 
+    //! returns an image on button-container
+    GtkWidget* gtk_button_find_image(GtkWidget* button);
+
     //! returns true if widget is a notebook close button
     bool is_notebook_close_button(GtkWidget* widget);
 

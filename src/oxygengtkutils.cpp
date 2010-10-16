@@ -242,6 +242,21 @@ namespace Gtk
     }
 
     //________________________________________________________
+    GtkWidget* gtk_button_find_image(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return NULL;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_IMAGE(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return NULL;
+    }
+
+    //________________________________________________________
     bool is_notebook_close_button(GtkWidget* widget)
     {
         if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
@@ -259,7 +274,7 @@ namespace Gtk
             if(!tabLabelIsParent)
                 return false;
             // make sure button has no text and some image (for now, just hope it's a close icon)
-            if(gtk_button_get_image(GTK_BUTTON(widget)) || gtk_button_get_label(GTK_BUTTON(widget)))
+            if(!gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)))
                 return false;
             else
                 return true;

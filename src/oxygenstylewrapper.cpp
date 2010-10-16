@@ -282,6 +282,62 @@ namespace Oxygen
 
     }
 
+    GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
+    {
+        char* buttonIconName=0;
+        static GdkPixbuf* pbNormalColored=0;
+        static GdkPixbuf* pbNormalGray=0;
+        static GdkPixbuf* pbPrelight=0;
+        static GdkPixbuf* pbActive=0;
+        GdkPixbuf* toDraw=0;
+        GError* err=0;
+        switch (state)
+        {
+            case GTK_STATE_NORMAL:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-16.png";
+                if(!pbNormalColored)
+                    pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                // check if our button is on active page and if not, make it gray
+                GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
+                GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+                GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+                if(!Gtk::gtk_is_parent(widget,tabLabel))
+                {
+                    pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
+                    gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
+                    toDraw=pbNormalGray;
+                }
+                else
+                    toDraw=pbNormalColored;
+            }break;
+
+            case GTK_STATE_ACTIVE:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
+                if(!pbActive)
+                    pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                if(pbActive)
+                    toDraw=pbActive;
+            }break;
+
+            case GTK_STATE_PRELIGHT:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-hover-16.png";
+                if(!pbPrelight)
+                    pbPrelight=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                if(pbPrelight)
+                    toDraw=pbPrelight;
+            }break;
+
+            default:
+                toDraw=0;
+                break;
+        }
+        if(err)
+            fprintf(stderr,"Oxygen error: %s\n",err->message);
+        return toDraw;
+    }
     //___________________________________________________________________________________________________________
     static void draw_box( GtkStyle* style,
         GdkWindow* window,
@@ -388,60 +444,11 @@ namespace Oxygen
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
                 else
                 {
-                    char* buttonIconName=0;
-                    static GdkPixbuf* pbNormalColored=0;
-                    static GdkPixbuf* pbNormalGray=0;
-                    static GdkPixbuf* pbPrelight=0;
-                    static GdkPixbuf* pbActive=0;
-                    GdkPixbuf* toDraw=0;
-                    GError* err=0;
-                    switch (state)
-                    {
-                        case GTK_STATE_NORMAL:
-                        {
-                            buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-16.png";
-                            if(!pbNormalColored)
-                                pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName,&err);
-                            // check if our button is on active page and if not, make it gray
-                            GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
-                            GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
-                            GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
-                            if(!Gtk::gtk_is_parent(widget,tabLabel))
-                            {
-                                pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
-                                gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
-                                toDraw=pbNormalGray;
-                            }
-                            else
-                                toDraw=pbNormalColored;
-                        }break;
-
-                        case GTK_STATE_ACTIVE:
-                        {
-                            buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
-                            if(!pbActive)
-                                pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
-                            if(pbActive)
-                                toDraw=pbActive;
-                        }break;
-
-                        case GTK_STATE_PRELIGHT:
-                        {
-                            buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-hover-16.png";
-                            if(!pbPrelight)
-                                pbPrelight=gdk_pixbuf_new_from_file(buttonIconName,&err);
-                            if(pbPrelight)
-                                toDraw=pbPrelight;
-                        }break;
-
-                        default:
-                            toDraw=0;
-                            break;
-                    }
-                    if(err)
-                        fprintf(stderr,"Oxygen error: %s\n",err->message);
+                    GdkPixbuf* toDraw=processTabCloseButton(widget,state);
                     if(toDraw)
                     {
+                        GtkWidget* image=Gtk::gtk_button_find_image(widget);
+                        gtk_widget_hide(image);
                         // center the button image
                         int height=gdk_pixbuf_get_height(toDraw);
                         int width=gdk_pixbuf_get_width(toDraw);
@@ -1591,17 +1598,16 @@ namespace Oxygen
         {
             if( Gtk::is_notebook_close_button(button) )
             {
+                GdkPixbuf* toDraw=processTabCloseButton(button, state);
                 if(state!=GTK_STATE_PRELIGHT && !g_object_get_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON"))
                 {
+                    gtk_widget_hide(widget); // don't draw the icon
                     gtk_widget_set_state(button,GTK_STATE_NORMAL);
                     gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
                     g_object_set_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON",(gpointer)TRUE);
                 }
-                GdkPixbuf* pb=gdk_pixbuf_copy(base_pixbuf);
-                // don't draw the icon - the whole button will be drawn in draw_box()
-                // fill pixbuf with fully transparent pixels
-                gdk_pixbuf_fill(pb,0x0);
-                return pb;
+                if(toDraw)
+                    return toDraw;
             }
         }
 
