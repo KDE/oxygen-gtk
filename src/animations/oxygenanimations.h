@@ -27,7 +27,6 @@
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
 #include "oxygenscrollbarengine.h"
-#include "oxygenspinboxengine.h"
 #include "oxygentabwidgetengine.h"
 #include "oxygenwidgetsizeengine.h"
 
@@ -75,10 +74,6 @@ namespace Oxygen
         ScrollBarEngine& scrollBarEngine( void ) const
         { return *_scrollBarEngine; }
 
-        //! spinbox engine
-        SpinBoxEngine& spinBoxEngine( void ) const
-        { return *_spinBoxEngine; }
-
         //! tab widget engine
         TabWidgetEngine& tabWidgetEngine( void ) const
         { return *_tabWidgetEngine; }
@@ -121,9 +116,6 @@ namespace Oxygen
 
         //! scrolled window engine
         ScrollBarEngine* _scrollBarEngine;
-
-        //! spinbox engine
-        SpinBoxEngine* _spinBoxEngine;
 
         //! tab widget engine
         TabWidgetEngine* _tabWidgetEngine;

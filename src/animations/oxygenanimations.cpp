@@ -104,7 +104,6 @@ namespace Oxygen
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
-        registerEngine( _spinBoxEngine = new SpinBoxEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
 

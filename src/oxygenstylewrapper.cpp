@@ -522,10 +522,10 @@ namespace Oxygen
 
             }
 
-            Animations::instance().spinBoxEngine().registerWidget( widget );
-            Animations::instance().spinBoxEngine().updateMouseOver( widget );
-            if( Animations::instance().spinBoxEngine().hovered( widget ) ) options |= Hover;
-            else options &= ~Hover;
+            if(
+                Animations::instance().lineEditEngine().contains( widget ) &&
+                Animations::instance().lineEditEngine().hovered( widget ) )
+            { options |= Hover; }
 
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, TileSet::Ring & (~TileSet::Left) );
