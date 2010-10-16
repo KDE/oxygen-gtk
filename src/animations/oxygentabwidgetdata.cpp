@@ -31,7 +31,6 @@
 namespace Oxygen
 {
 
-
     //________________________________________________________________________________
     void TabWidgetData::connect( GtkWidget* widget )
     {
