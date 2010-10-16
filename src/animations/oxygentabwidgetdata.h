@@ -79,6 +79,7 @@ namespace Oxygen
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer);
+        static void pageSwitchEvent(GtkNotebook*, GtkNotebookPage*,guint, gpointer);
         //@}
 
         //! child registration and callback
@@ -111,6 +112,7 @@ namespace Oxygen
         int _motionId;
         int _leaveId;
         int _pageAddedId;
+        int _pageSwitchId;
         //@}
 
         //! index of currently hovered tab

@@ -1543,11 +1543,14 @@ namespace Oxygen
                         pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
                         if(pbActive)
                         {
-                            // for some strange reason, button is active on tab creation and isn't
+                            // FIXME:
+                            // for some strange reason, button is active on tab inactivation and isn't
                             // repainted until a state-changing event, so send an event
-                            // FIXME: this only works for first newly-created tab since 
-                            // this function isn't called more than once for each icon
-                            // Really, this should be done on tab creation for each of its child buttons
+                            // This only works for first inactivated (or newly-created) tab since 
+                            // this function isn't called more than once for each icon.
+                            // This should ALSO be done on tab inactivation for each of its child buttons
+                            // first one should be handled here or it won't be handled anywhere at all because 
+                            // e.g. pcmanfm's notebook doesn't emit page-switch signal on adding second tab
                             if(!g_object_get_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON"))
                             {
                                 gtk_widget_set_state(button,GTK_STATE_NORMAL);
