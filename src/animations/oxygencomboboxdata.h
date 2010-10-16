@@ -40,8 +40,7 @@ namespace Oxygen
 
         //! setup connections
         /*! does nothing. Only kept here for consistency with other data */
-        void connect( GtkWidget* )
-        {}
+        void connect( GtkWidget* );
 
         //! disconnect
         void disconnect( GtkWidget* );
@@ -89,15 +88,28 @@ namespace Oxygen
         //!@name  hover
         //@{
 
-        void updateMouseOver( GtkWidget* );
         bool hovered( void ) const
-        { return _hovered; }
+        { return _hovered || _button._hovered || _entry._hovered; }
 
         //@}
 
         protected:
 
+        //! set hover flag for given widget
+        void setHovered( GtkWidget*, bool );
+
+        //! disconnect child
+        void unregisterChild( GtkWidget* );
+
+        //!@name callbacks
+        //@{
+
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        //@}
 
         private:
 
@@ -110,12 +122,25 @@ namespace Oxygen
             Data( void ):
                 _widget( 0L ),
                 _focus( false ),
+                _hovered( false ),
+                _enterId(-1),
                 _leaveId(-1)
             {}
 
+            //! disconnect
+            void disconnect( void );
+
             GtkWidget* _widget;
             bool _focus;
+            bool _hovered;
+
+            //!@name callback ids
+            //@{
+            int _destroyId;
+            int _styleChangeId;
+            int _enterId;
             int _leaveId;
+            //@}
 
         };
 
@@ -127,6 +152,12 @@ namespace Oxygen
 
         //! hover
         bool _hovered;
+
+        //!@name callback ids
+        //@{
+        int _enterId;
+        int _leaveId;
+        //@}
 
     };
 

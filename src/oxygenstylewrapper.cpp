@@ -347,7 +347,6 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setButton( parent, widget );
                 Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
-                Animations::instance().comboBoxEngine().updateMouseOver( parent );
 
                 // update option accordingly
                 if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
@@ -593,7 +592,6 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setEntry( parent, widget );
                 Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
-                Animations::instance().comboBoxEngine().updateMouseOver( parent );
 
                 if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
