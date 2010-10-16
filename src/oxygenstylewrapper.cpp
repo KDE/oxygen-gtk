@@ -177,9 +177,9 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isMozilla() ) {
+        } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla() ) {
 
-            Oxygen::StyleOptions options( Oxygen::NoFill );
+            StyleOptions options( NoFill );
             options |= StyleOptions( widget, state, shadow );
 
             // calculate proper offsets so that the glow/shadow match parent frame
@@ -211,7 +211,7 @@ namespace Oxygen
                 }
 
                 // hole
-                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, TileSet::Ring&( ~TileSet::Right ) );
+                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -231,7 +231,7 @@ namespace Oxygen
                 h = parent->allocation.height;
 
                 // partial highlight
-                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, TileSet::Ring&( ~TileSet::Right ) );
+                Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, TileSet::Ring&( ~TileSet::Right ) );
 
             } else {
 
@@ -269,7 +269,7 @@ namespace Oxygen
                 }
 
                 // render hole
-                Oxygen::Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
+                Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
 
             }
 
@@ -379,7 +379,7 @@ namespace Oxygen
                     int yPointer(0);
                     gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
                     if( Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) )
-                    { options|=Oxygen::Hover; }
+                    { options|=Hover; }
 
                 }
 
