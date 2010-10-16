@@ -1594,24 +1594,6 @@ namespace Oxygen
         GdkPixbuf* base_pixbuf = gtk_icon_source_get_pixbuf (source);
         g_return_val_if_fail (base_pixbuf != 0L, 0L);
 
-        GtkWidget* button=gtk_widget_get_parent(widget);
-        if( GTK_IS_BUTTON(button) )
-        {
-            if( Gtk::is_notebook_close_button(button) )
-            {
-                GdkPixbuf* toDraw=processTabCloseButton(button, state);
-                if(state!=GTK_STATE_PRELIGHT && !g_object_get_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON"))
-                {
-                    gtk_widget_hide(widget); // don't draw the icon
-                    gtk_widget_set_state(button,GTK_STATE_NORMAL);
-                    gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
-                    g_object_set_data(G_OBJECT(button),"OXYGEN_NORMAL_CLOSE_BUTTON",(gpointer)TRUE);
-                }
-                if(toDraw)
-                    return toDraw;
-            }
-        }
-
         // retrieve screen and settings
         GdkScreen *screen( 0L );
         GtkSettings *settings( 0L );
