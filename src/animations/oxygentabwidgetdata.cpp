@@ -108,6 +108,25 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void TabWidgetData::setHoveredTab( GtkWidget* widget, int index )
+    {
+
+        if( _hoveredTab == index ) return;
+
+        int old( _hoveredTab );
+        _hoveredTab = index;
+
+        // trigger repaints of relevant areas
+        if( old >= 0 && old < (int)_tabRects.size() )
+        { gtk_widget_queue_draw_area( widget, _tabRects[old].x, _tabRects[old].y, _tabRects[old].width, _tabRects[old].height ); }
+
+        if( _hoveredTab >= 0 && _hoveredTab < (int)_tabRects.size() )
+        { gtk_widget_queue_draw_area( widget, _tabRects[_hoveredTab].x, _tabRects[_hoveredTab].y, _tabRects[_hoveredTab].width, _tabRects[_hoveredTab].height ); }
+
+        return;
+    }
+
+    //________________________________________________________________________________
     gboolean TabWidgetData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer data )
     {
 

@@ -66,13 +66,7 @@ namespace Oxygen
         protected:
 
         //! set current tab
-        void setHoveredTab( GtkWidget* widget, int value )
-        {
-            if( _hoveredTab == value ) return;
-            _hoveredTab = value;
-            gtk_widget_queue_draw( widget );
-            return;
-        }
+        void setHoveredTab( GtkWidget*, int );
 
         //!@name static callbacks
         //@{
