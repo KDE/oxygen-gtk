@@ -162,7 +162,7 @@ namespace Oxygen
                 if(page)
                     tabLabel=gtk_notebook_get_tab_label( notebook, page );
 
-                if(page && tabLabel)
+                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
                     setButtonsNormal(GTK_CONTAINER(tabLabel));
 
             }
