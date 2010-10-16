@@ -1569,7 +1569,8 @@ namespace Oxygen
                     default:
                         break;
                 }
-                fprintf(stderr,"Oxygen error: %s\n",err->message);
+                if(err)
+                    fprintf(stderr,"Oxygen error: %s\n",err->message);
             }
         }
 
