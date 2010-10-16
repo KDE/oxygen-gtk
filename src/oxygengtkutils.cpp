@@ -229,6 +229,8 @@ namespace Gtk
                     tabLabelIsParent=true;
                 }
             }
+            if(!tabLabelIsParent)
+                return false;
             // make sure button has no text and some image (for now, just hope it's a close icon)
             if(gtk_button_get_image(GTK_BUTTON(widget)) || gtk_button_get_label(GTK_BUTTON(widget)))
                 return false;
