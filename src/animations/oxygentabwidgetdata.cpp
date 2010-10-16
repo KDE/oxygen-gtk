@@ -31,6 +31,7 @@
 namespace Oxygen
 {
 
+
     //________________________________________________________________________________
     void TabWidgetData::connect( GtkWidget* widget )
     {
@@ -43,7 +44,6 @@ namespace Oxygen
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", (GCallback)pageAddedEvent, this );
-        _pageSwitchId = g_signal_connect( G_OBJECT(widget), "switch-page", (GCallback)pageSwitchEvent, this );
 
         updateRegisteredChildren( widget );
 
@@ -61,7 +61,6 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
         g_signal_handler_disconnect(G_OBJECT(widget), _pageAddedId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _pageSwitchId );
 
         // disconnect all children
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
@@ -133,50 +132,6 @@ namespace Oxygen
         std::cout << "Oxygen::TabWidgetData::pageAddedEvent - " << child << std::endl;
         #endif
         static_cast<TabWidgetData*>(data)->updateRegisteredChildren( GTK_WIDGET( parent ) );
-    }
-
-    void setButtonsNormal(GtkContainer* container,gpointer data=NULL)
-    {
-        if(GTK_IS_BUTTON(container))
-        {
-            gtk_button_set_relief(GTK_BUTTON(container),GTK_RELIEF_NORMAL);
-            gtk_widget_set_state(GTK_WIDGET(container),GTK_STATE_NORMAL);
-            return;
-        }
-        if(GTK_IS_CONTAINER(container))
-            gtk_container_foreach(container,(GtkCallback)setButtonsNormal,NULL);
-    }
-
-    gboolean updateCloseButtons(GtkNotebook* notebook)
-    {
-        // cast to notebook and check against number of pages
-        if( GTK_IS_NOTEBOOK( notebook ) )
-        {
-            GtkWidget* tabLabel=0;
-            int numPages=gtk_notebook_get_n_pages( notebook );
-            for( int i = 0; i < numPages; ++i )
-            {
-
-                // retrieve page and tab label
-                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                if(page)
-                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
-
-                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
-                    setButtonsNormal(GTK_CONTAINER(tabLabel));
-
-            }
-        }
-        return FALSE;
-    }
-
-    //________________________________________________________________________________
-    void TabWidgetData::pageSwitchEvent( GtkNotebook* notebook, GtkNotebookPage* /*page*/, guint /*page_num*/, gpointer /*data*/)
-    {
-        // make all the close buttons normal instead of active (pressed)
-        // this is a dirty hack, but i dunno why buttons become active, so for now just force inactivate them
-        // FIXME: this may not work if the system is too loaded so that the buttons haven't activated yet, but the timer activates
-        g_timeout_add(10,(GSourceFunc)updateCloseButtons,(gpointer)notebook);
     }
 
     //________________________________________________________________________________

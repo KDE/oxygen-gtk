@@ -29,6 +29,51 @@
 
 namespace Gtk
 {
+    //____________________________________________________________
+    void setButtonsNormal(GtkContainer* container,gpointer data)
+    {
+        if(GTK_IS_BUTTON(container))
+        {
+            int x,y;
+            GtkWidget* button=GTK_WIDGET(container);
+            gtk_widget_get_pointer(button,&x,&y);
+            if( !(x>0 && y>0 &&
+                    x < button->allocation.width &&
+                    y < button->allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
+            {
+                gtk_widget_set_state(button,GTK_STATE_NORMAL);
+            }
+            gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
+            return;
+        }
+        if(GTK_IS_CONTAINER(container))
+            gtk_container_foreach(container,(GtkCallback)setButtonsNormal,NULL);
+    }
+
+    //____________________________________________________________
+    gboolean updateCloseButtons(GtkNotebook* notebook)
+    {
+        // cast to notebook and check against number of pages
+        if( GTK_IS_NOTEBOOK( notebook ) )
+        {
+            GtkWidget* tabLabel=0;
+            int numPages=gtk_notebook_get_n_pages( notebook );
+            for( int i = 0; i < numPages; ++i )
+            {
+
+                // retrieve page and tab label
+                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+                if(page)
+                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
+
+                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
+                    setButtonsNormal(GTK_CONTAINER(tabLabel));
+
+            }
+        }
+        return FALSE;
+    }
+
     //_________________________________________________________
     bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
     {

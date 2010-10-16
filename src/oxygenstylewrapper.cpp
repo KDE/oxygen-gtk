@@ -1459,6 +1459,7 @@ namespace Oxygen
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
+            Gtk::updateCloseButtons(GTK_NOTEBOOK(widget));
         }
 
     }
