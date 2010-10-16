@@ -579,9 +579,6 @@ namespace Oxygen
 
         } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
-            if( GTK_IS_ENTRY( widget ) )
-            { Animations::instance().lineEditEngine().registerWidget( widget ); }
-
             StyleOptions options( NoFill );
             options |= styleOptions( widget, state, shadow );
 
@@ -605,9 +602,9 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
+                // register to line edit engine
+                Animations::instance().lineEditEngine().registerWidget( widget );
+                if( Animations::instance().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
@@ -621,9 +618,9 @@ namespace Oxygen
 
             } else {
 
-                if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
+                // register to line edit engine
+                Animations::instance().lineEditEngine().registerWidget( widget );
+                if( Animations::instance().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
