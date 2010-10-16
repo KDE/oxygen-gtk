@@ -39,7 +39,6 @@
 #include "oxygenstyle.h"
 
 #include <iostream>
-#include <cmath>
 
 //_______________________________________________________________________________________________________________
 struct _OxygenStyle
