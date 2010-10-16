@@ -39,6 +39,7 @@
 #include "oxygenstyle.h"
 
 #include <iostream>
+#include <cmath>
 
 //_______________________________________________________________________________________________________________
 struct _OxygenStyle
@@ -1634,7 +1635,8 @@ namespace Oxygen
             } else if (state == GTK_STATE_PRELIGHT) {
 
                 stated = gdk_pixbuf_copy( scaled );
-                gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
+                if(!Gtk::gdk_pixbuf_to_gamma(stated,0.5)) // FIXME: correct the value to match KDE
+                    gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
                 g_object_unref( scaled );
 
             }

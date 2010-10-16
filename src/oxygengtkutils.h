@@ -46,6 +46,9 @@ namespace Gtk
     //@!name gtk utilities
     //@{
 
+    //! changes the gamma value of an image
+    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value);
+
     //! returns true if widget supports rgba
     bool gtk_widget_has_rgba( GtkWidget* );
 
