@@ -44,6 +44,7 @@ namespace Gtk
                 gtk_widget_set_state(button,GTK_STATE_NORMAL);
             }
             gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
+	    gtk_widget_set_size_request(button,16,16);
             return;
         }
         if(GTK_IS_CONTAINER(container))
