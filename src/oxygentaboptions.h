@@ -45,10 +45,23 @@ namespace Oxygen
 
     };
 
-    typedef Flags<TabOption> TabOptions;
+    class TabOptions: public Flags<TabOption>
+    {
 
-    //! generate options from widget
-    TabOptions tabOptions( GtkWidget*, GtkStateType, GtkPositionType, int x, int y, int w, int h );
+        public:
+
+        //! constructor
+        TabOptions( void )
+        {}
+
+        //! constructor
+        TabOptions( GtkWidget*, GtkStateType, GtkPositionType, int x, int y, int w, int h );
+
+        //! destructor
+        virtual ~TabOptions( void )
+        {}
+
+    };
 
 }
 

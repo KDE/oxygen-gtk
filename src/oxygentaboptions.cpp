@@ -28,13 +28,11 @@ namespace Oxygen
 {
 
     //______________________________________________________________________
-    TabOptions tabOptions( GtkWidget* widget, GtkStateType state, GtkPositionType position, int x, int y, int w, int h )
+    TabOptions::TabOptions( GtkWidget* widget, GtkStateType state, GtkPositionType position, int x, int y, int w, int h )
     {
 
-        TabOptions out;
-
         // strange: all tabs but the current one are painted with the active flag
-        if( state != GTK_STATE_ACTIVE ) out |= CurrentTab;
+        if( state != GTK_STATE_ACTIVE ) (*this) |= CurrentTab;
 
         // get allocated size
         const GtkAllocation& allocation( widget->allocation );
@@ -46,18 +44,17 @@ namespace Oxygen
             default:
             case GTK_POS_TOP:
             case GTK_POS_BOTTOM:
-            if( x == allocation.x ) out |= FirstTabAligned;
-            if( x+w == allocation.x + allocation.width ) out |= LastTabAligned;
+            if( x == allocation.x ) (*this) |= FirstTabAligned;
+            if( x+w == allocation.x + allocation.width ) (*this) |= LastTabAligned;
             break;
 
             case GTK_POS_LEFT:
             case GTK_POS_RIGHT:
-            if( y == allocation.y ) out |= FirstTabAligned;
-            if( y+h == allocation.y + allocation.height ) out |= LastTabAligned;
+            if( y == allocation.y ) (*this) |= FirstTabAligned;
+            if( y+h == allocation.y + allocation.height ) (*this) |= LastTabAligned;
             break;
         }
 
-        return out;
     }
 
 }

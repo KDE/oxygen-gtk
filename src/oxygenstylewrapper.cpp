@@ -151,7 +151,7 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
-            StyleOptions options( styleOptions( widget, state ) );
+            StyleOptions options( widget, state );
 
             // select palete colorgroup for cell background
             Palette::Group group( Palette::Active );
@@ -180,7 +180,7 @@ namespace Oxygen
         } else if( d.isEntryBg() && !Oxygen::Style::instance().settings().applicationName().isMozilla() ) {
 
             Oxygen::StyleOptions options( Oxygen::NoFill );
-            options |= Oxygen::styleOptions( widget, state, shadow );
+            options |= StyleOptions( widget, state, shadow );
 
             // calculate proper offsets so that the glow/shadow match parent frame
             const int xOffset( style ? style->xthickness + 1 : 3);
@@ -337,8 +337,8 @@ namespace Oxygen
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
 
-                StyleOptions options( Blend | NoFill );
-                options |= styleOptions( widget, state, shadow );
+                StyleOptions options( widget, state, shadow );
+                options |= Blend|NoFill;
 
                 // for now, disable hover, because it is not supported in the entry
                 // options &= ~Hover;
@@ -369,7 +369,7 @@ namespace Oxygen
             } else {
 
                 StyleOptions options( Blend );
-                options |= styleOptions( widget, state, shadow );
+                options |= StyleOptions( widget, state, shadow );
 
                 // prelight flat button if it's pressed but mouse button is still not released
                 if(state==GTK_STATE_ACTIVE)
@@ -437,7 +437,7 @@ namespace Oxygen
 
         } else if( d.isMenuItem() ) {
 
-            StyleOptions options = styleOptions( widget, state, shadow );
+            StyleOptions options = StyleOptions( widget, state, shadow );
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
 
         } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
@@ -498,8 +498,8 @@ namespace Oxygen
 
         } else if( d.isSpinButton()) {
 
-            StyleOptions options( Blend | NoFill );
-            options |= styleOptions( widget, state, shadow );
+            StyleOptions options( widget, state, shadow );
+            options |= Blend|NoFill;
 
             if( style )
             {
@@ -584,7 +584,7 @@ namespace Oxygen
             { Animations::instance().lineEditEngine().registerWidget( widget ); }
 
             StyleOptions options( NoFill );
-            options |= styleOptions( widget, state, shadow );
+            options |= StyleOptions( widget, state, shadow );
 
             if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
             {
@@ -696,7 +696,7 @@ namespace Oxygen
         if( d.isCheckButton() || d.isCellCheck() )
         {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             if( !(d.isCellCheck() || Gtk::gtk_parent_treeview( widget ) ) )
             {
                 // enable blending
@@ -714,7 +714,7 @@ namespace Oxygen
 
         } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill );
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
 
@@ -757,14 +757,14 @@ namespace Oxygen
         if( d.isRadioButton() )
         {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
 
         } else if( d.isOption() ) {
 
             // load options and disable hove
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             if( !Gtk::gtk_parent_treeview( widget ) )
             {
                 options |= Blend;
@@ -936,7 +936,7 @@ namespace Oxygen
         { arrowSize = QtSettings::ArrowTiny; }
 
         StyleOptions options( Contrast );
-        options |= styleOptions( widget, state );
+        options |= StyleOptions( widget, state );
 
         if( d.isTearOffMenuItem() )
         {
@@ -1017,7 +1017,7 @@ namespace Oxygen
             detail );
         #endif
 
-        StyleOptions options( styleOptions( widget, state ) );
+        StyleOptions options( widget, state );
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
 
@@ -1102,7 +1102,7 @@ namespace Oxygen
             // render
             GtkArrowType arrow = GTK_ARROW_DOWN;
             QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
-            StyleOptions options = Contrast;
+            StyleOptions options( Contrast );
             Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
             return;
 
@@ -1156,7 +1156,7 @@ namespace Oxygen
             } else if( shadow == GTK_SHADOW_OUT ) {
 
                 StyleOptions options( NoFill );
-                options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
+                options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
                 options &= ~(Hover|Focus);
                 Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap, options );
 
@@ -1213,7 +1213,7 @@ namespace Oxygen
 
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
-            options |= styleOptions( widget, GTK_STATE_NORMAL, shadow );
+            options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Hover|Focus);
 
             Gtk::Gap gap( gap_x, gap_w, position );
@@ -1302,7 +1302,7 @@ namespace Oxygen
         {
 
             StyleOptions options( Blend );
-            options |= styleOptions( widget, state, shadow );
+            options |= StyleOptions( widget, state, shadow );
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
             Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
             return;
@@ -1310,12 +1310,12 @@ namespace Oxygen
         } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
             StyleOptions options( Vertical );
-            options |= styleOptions( widget, state, shadow );
+            options |= StyleOptions( widget, state, shadow );
             Style::instance().renderScrollBarHandle( window, clipRect, x, y, w-1, h, options );
 
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options );
 
         } else {
@@ -1361,8 +1361,8 @@ namespace Oxygen
         if( d.isTab() )
         {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
-            TabOptions tabOptions( Oxygen::tabOptions( widget, state, position, x, y, w, h ) );
+            StyleOptions options( widget, state, shadow );
+            TabOptions tabOptions( widget, state, position, x, y, w, h );
 
             /*
             see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
@@ -1457,13 +1457,13 @@ namespace Oxygen
         if( d.isPaned() )
         {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             if( GTK_IS_VPANED( widget ) ) options |= Vertical;
             Style::instance().renderSplitter( window, clipRect, x, y, w, h, options );
 
         } else if( d.isHandleBox() ) {
 
-            StyleOptions options( styleOptions( widget, state, shadow ) );
+            StyleOptions options( widget, state, shadow );
             if( orientation == GTK_ORIENTATION_VERTICAL ) options |= Vertical;
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             Style::instance().renderToolBarHandle( window, clipRect, x, y, w, h, options );

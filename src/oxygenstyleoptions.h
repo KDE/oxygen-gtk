@@ -46,22 +46,37 @@ namespace Oxygen
         Menu = 1<<11
     };
 
-    typedef Flags<StyleOption> StyleOptions;
-
-    //! return style options matching widget state and shadow
-    inline StyleOptions styleOptions( GtkWidget* widget, GtkStateType state, GtkShadowType shadow = GTK_SHADOW_NONE )
+    class StyleOptions: public Flags<StyleOption>
     {
-        StyleOptions options;
-        if( state == GTK_STATE_INSENSITIVE ) options |= Disabled;
-        else if( state == GTK_STATE_PRELIGHT ) options |= Hover;
-        else if( state == GTK_STATE_SELECTED ) options |= Selected;
 
-        if( shadow == GTK_SHADOW_IN ) options |= Sunken;
-        if( gtk_widget_has_focus(widget) ) options|=Focus;
+        public:
 
-        return options;
-    }
+        //! constructor
+        StyleOptions( void )
+        {}
 
-};
+        //! constructor
+        StyleOptions(StyleOption f):
+            Flags<StyleOption>( f )
+        {}
+
+        //! constructor from widget
+        StyleOptions( GtkWidget* widget, GtkStateType state, GtkShadowType shadow = GTK_SHADOW_NONE )
+        {
+            if( state == GTK_STATE_INSENSITIVE ) (*this) |= Disabled;
+            else if( state == GTK_STATE_PRELIGHT ) (*this) |= Hover;
+            else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
+
+            if( shadow == GTK_SHADOW_IN ) (*this) |= Sunken;
+            if( gtk_widget_has_focus(widget) ) (*this)|=Focus;
+        }
+
+        //! destructor
+        virtual ~StyleOptions( void )
+        {}
+
+    };
+
+}
 
 #endif
