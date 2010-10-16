@@ -253,17 +253,27 @@ namespace Oxygen
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
 
-        // create icon translator
+        // create icon translator, for stock icons
         GtkIcons icons;
 
-        // set icon sizes from kdeglobals
-        icons.setIconSize( "gtk-small-toolbar", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
-        icons.setIconSize( "gtk-large-toolbar", _kdeGlobals.getOption( "[MainToolbarIcons]", "Size" ).toInt( 32 ) );
-        icons.setIconSize( "gtk-dnd", _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 32 ) );
-        icons.setIconSize( "gtk-button", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
-        icons.setIconSize( "gtk-menu", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
-        icons.setIconSize( "gtk-dialog", _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
-        icons.setIconSize( "", _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        // load icon sizes from kde
+        const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
+        const int dialogIconSize( _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
+        const int panelIconSize( _kdeGlobals.getOption( "[PanelIcons]", "Size" ).toInt( 32 ) );
+        const int mainToolbarIconSize( _kdeGlobals.getOption( "[MainToolbarIcons]", "Size" ).toInt( 22 ) );
+        const int smallIconSize( _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
+        const int toolbarIconSize( _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 22 ) );
+
+        // set gtk icon sizes
+        icons.setIconSize( "panel-menu", smallIconSize );
+        icons.setIconSize( "panel", panelIconSize );
+        icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
+        icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
+        icons.setIconSize( "gtk-dnd", desktopIconSize );
+        icons.setIconSize( "gtk-button", smallIconSize );
+        icons.setIconSize( "gtk-menu", smallIconSize );
+        icons.setIconSize( "gtk-dialog", dialogIconSize );
+        icons.setIconSize( "", smallIconSize );
 
         // load translation table, generate full translation list, and path to gtk
         icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );

@@ -39,9 +39,11 @@ namespace Oxygen
     {
 
         // initialize sizes
-        _sizes.push_back( std::make_pair( "gtk-small-toolbar", 16 ) );
-        _sizes.push_back( std::make_pair( "gtk-large-toolbar", 32 ) );
-        _sizes.push_back( std::make_pair( "gtk-dnd", 32 ) );
+        _sizes.push_back( std::make_pair( "panel-menu", 16 ) );
+        _sizes.push_back( std::make_pair( "panel", 32 ) );
+        _sizes.push_back( std::make_pair( "gtk-small-toolbar", 22 ) );
+        _sizes.push_back( std::make_pair( "gtk-large-toolbar", 22 ) );
+        _sizes.push_back( std::make_pair( "gtk-dnd", 48 ) );
         _sizes.push_back( std::make_pair( "gtk-button", 16 ) );
         _sizes.push_back( std::make_pair( "gtk-menu", 16 ) );
         _sizes.push_back( std::make_pair( "gtk-dialog", 32 ) );
@@ -93,7 +95,17 @@ namespace Oxygen
     void GtkIcons::generate( Gtk::RC& rc, const std::vector<std::string>& pathList ) const
     {
 
-        rc.addSection( "oxygen-icons", "oxygen-default" );
+        // generate icon size string
+        std::ostringstream iconSizesStr;
+        iconSizesStr << "gtk-icon-sizes = \"";
+        for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
+        {
+            if( iter->first.empty() ) continue;
+            if( iter != _sizes.begin() ) iconSizesStr << ": ";
+            iconSizesStr << iter->first << " = " << iter->second << "," << iter->second;
+        }
+        iconSizesStr << "\"";
+        rc.addToHeaderSection( iconSizesStr.str() );
 
         // generate pixmap path
         // this must be passed to gtk before any icon settings, otherwise
@@ -113,6 +125,7 @@ namespace Oxygen
         rc.addToHeaderSection( pixmapPathStr.str() );
 
         // loop over icons
+        rc.addSection( "oxygen-icons", "oxygen-default" );
         std::ostringstream notFoundOut;
         for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
         {
@@ -135,7 +148,6 @@ namespace Oxygen
             rc.addToCurrentSection( stock );
             rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
         }
-
 
         return;
 
