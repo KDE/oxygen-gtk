@@ -556,12 +556,14 @@ namespace Oxygen
             Cairo::Context context( pixbuf );
             cairo_save( context );
             cairo_translate( context, 0.5, 0.5 );
+            cairo_scale( context, 1.0, 4.0/5.0 );
 
             // local rectangle
-            const int xl(0);
-            const int yl(0);
-            const int wl( w-1 );
-            const int hl( h );
+            const double xl(0);
+            const double yl(0);
+            const double wl( w-1 );
+            const double hl( (5.0*h)/4.0 );
+
 
             const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
             const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
@@ -580,7 +582,7 @@ namespace Oxygen
                 cairo_rounded_rectangle( context, xl, yl-1, wl, hl, 4.5 );
                 cairo_stroke( context );
 
-                cairo_rounded_rectangle( context, xl+2, yl+1, wl-4, hl-3, 4.5 );
+                cairo_rounded_rectangle( context, xl+2, yl+1, wl-4, hl-3, 4 );
                 cairo_stroke( context );
             }
 
@@ -593,7 +595,7 @@ namespace Oxygen
 
                 cairo_set_line_width( context, 1 );
                 cairo_set_source( context, pattern );
-                cairo_rounded_rectangle( context, xl+1, yl, wl-2, hl-2, 4.5 );
+                cairo_rounded_rectangle( context, xl+1, yl, wl-2, hl-2, 4 );
                 cairo_stroke( context );
             }
 
