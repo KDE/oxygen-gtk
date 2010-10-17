@@ -406,15 +406,12 @@ namespace Oxygen
 
                 if( style )
                 {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(parent)] ) );
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[gtk_widget_get_state(parent)] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
 
                 StyleOptions options( widget, state, shadow );
                 options |= Blend|NoFill;
-
-                // for now, disable hover, because it is not supported in the entry
-                // options &= ~Hover;
 
                 // focus handling
                 Animations::instance().comboBoxEngine().registerWidget( parent );

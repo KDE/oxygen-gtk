@@ -310,10 +310,6 @@ namespace Oxygen
         _palette.setColor( Palette::Active, Palette::BaseAlternate, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "BackgroundAlternate" ) ) );
         _palette.setColor( Palette::Active, Palette::Text, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "ForegroundNormal" ) ) );
 
-        // copy to inactive and disabled palette
-        //_palette.copy( Palette::Active, Palette::Inactive );
-        //_palette.copy( Palette::Active, Palette::Disabled );
-
         // generate inactive and disabled palette from active, applying effects from kdeglobals
         _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( "[ColorEffects:Inactive]", _kdeGlobals ) );
         _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( "[ColorEffects:Disabled]", _kdeGlobals ) );
@@ -394,11 +390,19 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToRootSection( "widget_class \"*<GtkButton>*\" style \"oxygen-buttons\"" );
 
-        // spinboxes
-        _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
+        // text entries
+        /*
+        to match oxygen: the Window background is used for disabled entries,
+        whereas the 'base' background is used when enabled
+        */
+        _rc.addSection( "oxygen-entry", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
-        _rc.addToRootSection( "widget_class \"*<GtkSpinButton>*\" style \"oxygen-spinbutton\"" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
+        _rc.addToRootSection( "widget_class \"*<GtkSpinButton>*\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkEntry>*\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkEntry>*\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*.GtkComboBoxEntry.*Button\" style \"oxygen-entry\"" );
 
         // tooltips
         _rc.addSection( "oxygen-tooltips", "oxygen-default" );
