@@ -46,6 +46,15 @@ namespace Gtk
     //@!name gtk utilities
     //@{
 
+    // set all buttons in the container to state NORMAL
+    void setButtonsNormal(GtkContainer* container,gpointer data=NULL);
+
+    // make all the buttons on the tabs normal
+    gboolean updateCloseButtons(GtkNotebook* notebook);
+
+    //! changes the gamma value of an image
+    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value);
+
     //! returns true if widget supports rgba
     bool gtk_widget_has_rgba( GtkWidget* );
 
@@ -67,6 +76,9 @@ namespace Gtk
     //! return parent combobox if any.
     GtkWidget* gtk_parent_scrolled_window( GtkWidget* );
 
+    //! return parent combobox if any.
+    GtkWidget* gtk_parent_notebook( GtkWidget* );
+
     //! true if object match a given type
     bool gtk_object_is_a( const GObject*, const gchar* );
 
@@ -86,6 +98,16 @@ namespace Gtk
 
     //! returns index of first visible tab
     int gtk_notebook_find_first_tab( GtkWidget* );
+
+    //! returns true if potentialParent is (maybe indirect) parent of widget
+    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent );
+
+    //! returns an image on button-container
+    GtkWidget* gtk_button_find_image(GtkWidget* button);
+
+    //! returns true if widget is a notebook close button
+    bool is_notebook_close_button(GtkWidget* widget);
+
 
     //@}
 

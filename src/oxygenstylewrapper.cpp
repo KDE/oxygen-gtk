@@ -288,6 +288,62 @@ namespace Oxygen
 
     }
 
+    GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
+    {
+        char* buttonIconName=0;
+        static GdkPixbuf* pbNormalColored=0;
+        static GdkPixbuf* pbNormalGray=0;
+        static GdkPixbuf* pbPrelight=0;
+        static GdkPixbuf* pbActive=0;
+        GdkPixbuf* toDraw=0;
+        GError* err=0;
+        switch (state)
+        {
+            case GTK_STATE_NORMAL:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-16.png";
+                if(!pbNormalColored)
+                    pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                // check if our button is on active page and if not, make it gray
+                GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
+                GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+                GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+                if(!Gtk::gtk_is_parent(widget,tabLabel))
+                {
+                    pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
+                    gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
+                    toDraw=pbNormalGray;
+                }
+                else
+                    toDraw=pbNormalColored;
+            }break;
+
+            case GTK_STATE_ACTIVE:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
+                if(!pbActive)
+                    pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                if(pbActive)
+                    toDraw=pbActive;
+            }break;
+
+            case GTK_STATE_PRELIGHT:
+            {
+                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-hover-16.png";
+                if(!pbPrelight)
+                    pbPrelight=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                if(pbPrelight)
+                    toDraw=pbPrelight;
+            }break;
+
+            default:
+                toDraw=0;
+                break;
+        }
+        if(err)
+            fprintf(stderr,"Oxygen error: %s\n",err->message);
+        return toDraw;
+    }
     //___________________________________________________________________________________________________________
     static void draw_box( GtkStyle* style,
         GdkWindow* window,
@@ -386,8 +442,30 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
 
-                Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                if(Gtk::is_notebook_close_button(widget) && gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE)
+                    gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL);
 
+                if(!Gtk::is_notebook_close_button(widget))
+                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                else
+                {
+                    GdkPixbuf* toDraw=processTabCloseButton(widget,state);
+                    if(toDraw)
+                    {
+                        GtkWidget* image=Gtk::gtk_button_find_image(widget);
+                        gtk_widget_hide(image);
+                        // center the button image
+                        int height=gdk_pixbuf_get_height(toDraw);
+                        int width=gdk_pixbuf_get_width(toDraw);
+                        x=x+(w-width)/2;
+                        y=y+(h-height)/2;
+                        // render the image
+                        cairo_t* cr=gdk_cairo_create(window);
+                        gdk_cairo_set_source_pixbuf(cr,toDraw,x,y);
+                        cairo_paint(cr);
+                        cairo_destroy(cr);
+                    }
+                }
             }
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
@@ -1388,6 +1466,7 @@ namespace Oxygen
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
+            Gtk::updateCloseButtons(GTK_NOTEBOOK(widget));
         }
 
     }
@@ -1512,6 +1591,13 @@ namespace Oxygen
         const char* )
     {
 
+        #if OXYGEN_DEBUG
+        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
+            "widget=%s, primitive=icon, state=%s",
+            G_OBJECT_TYPE_NAME( widget ),
+            Maps::getState( state ));
+        #endif
+
         GdkPixbuf* base_pixbuf = gtk_icon_source_get_pixbuf (source);
         g_return_val_if_fail (base_pixbuf != 0L, 0L);
 
@@ -1572,7 +1658,8 @@ namespace Oxygen
             } else if (state == GTK_STATE_PRELIGHT) {
 
                 stated = gdk_pixbuf_copy( scaled );
-                gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
+                if(!Gtk::gdk_pixbuf_to_gamma(stated,0.5)) // FIXME: correct the value to match KDE
+                    gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
                 g_object_unref( scaled );
 
             }

@@ -77,3 +77,4 @@ configure_file( config.h.cmake ${CMAKE_BINARY_DIR}/config.h )
 # Subdirectories
 add_subdirectory( src )
 add_subdirectory( rc )
+add_subdirectory( special-icons )

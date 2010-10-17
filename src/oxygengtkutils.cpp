@@ -25,10 +25,84 @@
 #include "oxygengtkutils.h"
 
 #include <cmath>
+#include <string.h>
 #include <gtk/gtk.h>
 
 namespace Gtk
 {
+    //____________________________________________________________
+    void setButtonsNormal(GtkContainer* container,gpointer data)
+    {
+        if(GTK_IS_BUTTON(container))
+        {
+            int x,y;
+            GtkWidget* button=GTK_WIDGET(container);
+            gtk_widget_get_pointer(button,&x,&y);
+            if( !(x>0 && y>0 &&
+                    x < button->allocation.width &&
+                    y < button->allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
+            {
+                gtk_widget_set_state(button,GTK_STATE_NORMAL);
+            }
+            gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
+	    gtk_widget_set_size_request(button,16,16);
+            return;
+        }
+        if(GTK_IS_CONTAINER(container))
+            gtk_container_foreach(container,(GtkCallback)setButtonsNormal,NULL);
+    }
+
+    //____________________________________________________________
+    gboolean updateCloseButtons(GtkNotebook* notebook)
+    {
+        // cast to notebook and check against number of pages
+        if( GTK_IS_NOTEBOOK( notebook ) )
+        {
+            GtkWidget* tabLabel=0;
+            int numPages=gtk_notebook_get_n_pages( notebook );
+            for( int i = 0; i < numPages; ++i )
+            {
+
+                // retrieve page and tab label
+                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+                if(page)
+                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
+
+                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
+                    setButtonsNormal(GTK_CONTAINER(tabLabel));
+
+            }
+        }
+        return FALSE;
+    }
+
+    //_________________________________________________________
+    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
+    {
+                if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
+                        gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
+                        gdk_pixbuf_get_has_alpha(pixbuf) &&
+                        gdk_pixbuf_get_n_channels(pixbuf)==4)
+                {
+                    double gamma=1./(2.*value+0.5);
+                    guchar* data=gdk_pixbuf_get_pixels(pixbuf);
+                    int height=gdk_pixbuf_get_height(pixbuf);
+                    int width=gdk_pixbuf_get_width(pixbuf);
+                    int rowstride=gdk_pixbuf_get_rowstride(pixbuf);
+                    for(int x=0;x<width;++x)
+                        for(int y=0; y<height; y++)
+                        {
+                            guchar* p=data + y*rowstride + x*4;
+                            p[0]=(char)(pow((p[0]/255.),gamma)*255);
+                            p[1]=(char)(pow((p[1]/255.),gamma)*255);
+                            p[2]=(char)(pow((p[2]/255.),gamma)*255);
+                        }
+                    return true;
+                } else
+                {
+                    return false;
+                }
+    }
 
     //________________________________________________________
     bool gtk_widget_has_rgba( GtkWidget* widget )
@@ -117,6 +191,17 @@ namespace Gtk
         return 0L;
     }
 
+    //________________________________________________________
+    GtkWidget* gtk_parent_notebook( GtkWidget* widget )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_NOTEBOOK( parent ) ) return parent; }
+
+        return 0L;
+    }
+
 
     //________________________________________________________
     bool gtk_button_is_flat( GtkWidget* widget )
@@ -190,6 +275,89 @@ namespace Gtk
         GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
         return g_list_position( notebook->children, notebook->first_tab );
 
+    }
+
+    //________________________________________________________
+    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( potentialParent==parent ) return true; }
+
+        return false;
+    }
+
+    //________________________________________________________
+    GtkWidget* gtk_button_find_image(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return NULL;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_IMAGE(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return NULL;
+    }
+
+    GtkWidget* gtk_button_find_label(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return NULL;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_LABEL(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return NULL;
+    }
+
+    //________________________________________________________
+    bool is_notebook_close_button(GtkWidget* widget)
+    {
+        if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
+        {
+            // check if the button resides on tab label, not anywhere on the tab
+            bool tabLabelIsParent=false;
+            for(int i=0;i<gtk_notebook_get_n_pages(nb);++i)
+            {
+                GtkWidget* tabLabel=gtk_notebook_get_tab_label(nb,gtk_notebook_get_nth_page(nb,i));
+                if(gtk_is_parent(widget,GTK_WIDGET(tabLabel)))
+                {
+                    tabLabelIsParent=true;
+                }
+            }
+            if(!tabLabelIsParent)
+                return false;
+            // make sure button has no text and some image (for now, just hope it's a close icon)
+            if(!gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)))
+            {
+                // check for pidgin 'x' close button
+                GtkWidget* label;
+                if(!(label=gtk_button_find_label(widget)))
+                    return false;
+                else
+                {
+                    const gchar* labelText=gtk_label_get_text(GTK_LABEL(label));
+                    if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
+                    {
+                        gtk_widget_hide(label);
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+            else
+                return true;
+        }
+        else
+            return false;
     }
 
     //________________________________________________________
