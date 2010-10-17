@@ -356,6 +356,12 @@ namespace Oxygen
 
         _rc.addToRootSection( "widget_class \"*\" style \"oxygen-colors\"" );
 
+        // buttons
+        _rc.addSection( "oxygen-buttons", "oxygen-default" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToRootSection( "widget_class \"*<GtkButton>*\" style \"oxygen-buttons\"" );
+
         // menu items
         _rc.addSection( "oxygen-menu-item", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
@@ -384,12 +390,6 @@ namespace Oxygen
 
         _rc.addToRootSection( "widget_class \"*<GtkMenuItem>*\" style \"oxygen-menu-item\"" );
 
-        // buttons
-        _rc.addSection( "oxygen-buttons", "oxygen-default" );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Button ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
-        _rc.addToRootSection( "widget_class \"*<GtkButton>*\" style \"oxygen-buttons\"" );
-
         // text entries
         /*
         to match oxygen: the Window background is used for disabled entries,
@@ -402,7 +402,7 @@ namespace Oxygen
         _rc.addToRootSection( "widget_class \"*<GtkSpinButton>*\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "widget_class \"*<GtkEntry>*\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "widget_class \"*<GtkEntry>*\" style \"oxygen-entry\"" );
-        _rc.addToRootSection( "widget_class \"*.GtkComboBoxEntry.*Button\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkComboBoxEntry>*.*<GtkButton>*\" style \"oxygen-entry\"" );
 
         // tooltips
         _rc.addSection( "oxygen-tooltips", "oxygen-default" );
