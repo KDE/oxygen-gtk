@@ -1356,12 +1356,12 @@ namespace Oxygen
         if( settings().menuHighlightMode() == QtSettings::MM_STRONG )
         {
 
-            if( (options & Sunken) || isInMenu ) color = settings().palette().color( Palette::Focus );
+            if( (options & Sunken) || isInMenu ) color = settings().palette().color( Palette::Selected );
             else color = ColorUtils::tint( color, settings().palette().color( Palette::Hover ) );
 
         } else if( settings().menuHighlightMode() == QtSettings::MM_SUBTLE ) {
 
-            if( (options & Sunken) || isInMenu ) color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Focus ), 0.6 ) );
+            if( (options & Sunken) || isInMenu ) color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Selected ), 0.6 ) );
             else color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Hover ), 0.6 ) );
 
         } else if( !( isInMenu && wh<= 0 ) ) color = ColorUtils::midColor( color );
