@@ -288,22 +288,26 @@ namespace Oxygen
 
     }
 
+    //_____________________________________________________________________________________
     GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
     {
-        char* buttonIconName=0;
-        static GdkPixbuf* pbNormalColored=0;
-        static GdkPixbuf* pbNormalGray=0;
-        static GdkPixbuf* pbPrelight=0;
-        static GdkPixbuf* pbActive=0;
-        GdkPixbuf* toDraw=0;
-        GError* err=0;
+        static GdkPixbuf* pbNormalColored(0L);
+        static GdkPixbuf* pbNormalGray(0L);
+        static GdkPixbuf* pbPrelight(0L);
+        static GdkPixbuf* pbActive(0L);
+        GdkPixbuf* toDraw( 0L );
+        GError* err( 0L );
         switch (state)
         {
             case GTK_STATE_NORMAL:
             {
-                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-16.png";
+
                 if(!pbNormalColored)
-                    pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName,&err);
+                {
+                    std::string buttonIconName = std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-16.png";
+                    pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
+                }
+
                 // check if our button is on active page and if not, make it gray
                 GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
                 GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
@@ -314,34 +318,44 @@ namespace Oxygen
                     gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
                     toDraw=pbNormalGray;
                 }
-                else
-                    toDraw=pbNormalColored;
-            }break;
+                else toDraw = pbNormalColored;
+            }
+
+            break;
 
             case GTK_STATE_ACTIVE:
             {
-                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-down-16.png";
-                if(!pbActive)
-                    pbActive=gdk_pixbuf_new_from_file(buttonIconName,&err);
-                if(pbActive)
-                    toDraw=pbActive;
-            }break;
+                if(!pbActive) {
+
+                    std::string buttonIconName = std::string(GTK_THEME_DIR)+ "/special-icons/standardbutton-closetab-down-16.png";
+                    pbActive = gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
+
+                }
+
+                if(pbActive) toDraw = pbActive;
+            }
+
+            break;
 
             case GTK_STATE_PRELIGHT:
             {
-                buttonIconName=GTK_THEME_DIR "/special-icons/standardbutton-closetab-hover-16.png";
                 if(!pbPrelight)
-                    pbPrelight=gdk_pixbuf_new_from_file(buttonIconName,&err);
-                if(pbPrelight)
-                    toDraw=pbPrelight;
-            }break;
+                {
+                    std::string buttonIconName = std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-hover-16.png";
+                    pbPrelight = gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
+                }
+                if(pbPrelight) toDraw = pbPrelight;
+            }
+
+            break;
 
             default:
-                toDraw=0;
-                break;
+            toDraw = 0L;
+            break;
+
         }
-        if(err)
-            fprintf(stderr,"Oxygen error: %s\n",err->message);
+
+        if(err) fprintf(stderr,"Oxygen error: %s\n",err->message);
         return toDraw;
     }
     //___________________________________________________________________________________________________________
@@ -445,13 +459,14 @@ namespace Oxygen
                 if(Gtk::is_notebook_close_button(widget) && gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE)
                     gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL);
 
-                if(!Gtk::is_notebook_close_button(widget))
+               if(!Gtk::is_notebook_close_button(widget))
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
                 else
                 {
                     GdkPixbuf* toDraw=processTabCloseButton(widget,state);
                     if(toDraw)
                     {
+
                         GtkWidget* image=Gtk::gtk_button_find_image(widget);
                         gtk_widget_hide(image);
                         // center the button image
@@ -459,11 +474,14 @@ namespace Oxygen
                         int width=gdk_pixbuf_get_width(toDraw);
                         x=x+(w-width)/2;
                         y=y+(h-height)/2;
+
                         // render the image
-                        cairo_t* cr=gdk_cairo_create(window);
-                        gdk_cairo_set_source_pixbuf(cr,toDraw,x,y);
-                        cairo_paint(cr);
-                        cairo_destroy(cr);
+                        Cairo::Context context( window, clipRect );
+                        gdk_cairo_set_source_pixbuf( context, toDraw, x, y);
+                        cairo_paint(context);
+
+                        //g_object_unref( toDraw );
+
                     }
                 }
             }
@@ -1466,7 +1484,7 @@ namespace Oxygen
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
-            Gtk::updateCloseButtons(GTK_NOTEBOOK(widget));
+            Gtk::gtk_notebook_update_close_buttons(GTK_NOTEBOOK(widget));
         }
 
     }

@@ -47,10 +47,10 @@ namespace Gtk
     //@{
 
     // set all buttons in the container to state NORMAL
-    void setButtonsNormal(GtkContainer* container,gpointer data=NULL);
+    void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data=NULL);
 
     // make all the buttons on the tabs normal
-    gboolean updateCloseButtons(GtkNotebook* notebook);
+    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook);
 
     //! changes the gamma value of an image
     bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value);

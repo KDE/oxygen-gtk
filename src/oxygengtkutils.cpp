@@ -31,7 +31,7 @@
 namespace Gtk
 {
     //____________________________________________________________
-    void setButtonsNormal(GtkContainer* container,gpointer data)
+    void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
     {
         if(GTK_IS_BUTTON(container))
         {
@@ -49,11 +49,11 @@ namespace Gtk
             return;
         }
         if(GTK_IS_CONTAINER(container))
-            gtk_container_foreach(container,(GtkCallback)setButtonsNormal,NULL);
+            gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,NULL);
     }
 
     //____________________________________________________________
-    gboolean updateCloseButtons(GtkNotebook* notebook)
+    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( notebook ) )
@@ -69,7 +69,7 @@ namespace Gtk
                     tabLabel=gtk_notebook_get_tab_label( notebook, page );
 
                 if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
-                    setButtonsNormal(GTK_CONTAINER(tabLabel));
+                    gtk_container_adjust_buttons_state(GTK_CONTAINER(tabLabel));
 
             }
         }
