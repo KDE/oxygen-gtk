@@ -459,34 +459,38 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
 
-                if(Gtk::is_notebook_close_button(widget) && gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE)
-                    gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL);
+                if( Gtk::is_notebook_close_button(widget) && gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE)
+                { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
 
-               if(!Gtk::is_notebook_close_button(widget))
-                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
-                else
-                {
-                    GdkPixbuf* toDraw=processTabCloseButton(widget,state);
-                    if(toDraw)
+                if( Gtk::is_notebook_close_button(widget)) {
+
+                    if( GdkPixbuf* pixbuf = processTabCloseButton(widget,state) )
                     {
 
+                        // hide previous image
+                        // show ours instead
                         GtkWidget* image=Gtk::gtk_button_find_image(widget);
                         gtk_widget_hide(image);
+
                         // center the button image
-                        int height=gdk_pixbuf_get_height(toDraw);
-                        int width=gdk_pixbuf_get_width(toDraw);
+                        const int height( gdk_pixbuf_get_height( pixbuf ) );
+                        const int width( gdk_pixbuf_get_width( pixbuf ) );
                         x=x+(w-width)/2;
                         y=y+(h-height)/2;
 
                         // render the image
                         Cairo::Context context( window, clipRect );
-                        gdk_cairo_set_source_pixbuf( context, toDraw, x, y);
+                        gdk_cairo_set_source_pixbuf( context, pixbuf, x, y);
                         cairo_paint(context);
 
-                        //g_object_unref( toDraw );
-
                     }
+
+                } else {
+
+                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+
                 }
+
             }
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
@@ -1619,8 +1623,8 @@ namespace Oxygen
             Maps::getState( state ));
         #endif
 
-        GdkPixbuf* base_pixbuf = gtk_icon_source_get_pixbuf (source);
-        g_return_val_if_fail (base_pixbuf != 0L, 0L);
+        GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
+        g_return_val_if_fail( base_pixbuf != 0L, 0L );
 
         // retrieve screen and settings
         GdkScreen *screen( 0L );
@@ -1672,15 +1676,18 @@ namespace Oxygen
             if( state == GTK_STATE_INSENSITIVE )
             {
 
-                stated = Gtk::gdk_pixbuf_set_alpha(scaled, 0.3);
+                stated = Gtk::gdk_pixbuf_set_alpha( scaled, 0.3 );
                 gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
                 g_object_unref (scaled);
 
             } else if (state == GTK_STATE_PRELIGHT) {
 
                 stated = gdk_pixbuf_copy( scaled );
-                if(!Gtk::gdk_pixbuf_to_gamma(stated,0.5)) // FIXME: correct the value to match KDE
+                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.5 ) )
+                {
+                    // FIXME: correct the value to match KDE
                     gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
+                }
                 g_object_unref( scaled );
 
             }

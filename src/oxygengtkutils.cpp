@@ -82,29 +82,34 @@ namespace Gtk
     //_________________________________________________________
     bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
     {
-                if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
-                        gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
-                        gdk_pixbuf_get_has_alpha(pixbuf) &&
-                        gdk_pixbuf_get_n_channels(pixbuf)==4)
+
+        if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
+            gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
+            gdk_pixbuf_get_has_alpha(pixbuf) &&
+            gdk_pixbuf_get_n_channels(pixbuf)==4)
+        {
+
+            double gamma=1./(2.*value+0.5);
+            unsigned char* data=gdk_pixbuf_get_pixels(pixbuf);
+            const int height=gdk_pixbuf_get_height(pixbuf);
+            const int width=gdk_pixbuf_get_width(pixbuf);
+            const int rowstride=gdk_pixbuf_get_rowstride(pixbuf);
+            for(int x=0;x<width;++x)
+            {
+
+                for(int y=0; y<height; y++)
                 {
-                    double gamma=1./(2.*value+0.5);
-                    guchar* data=gdk_pixbuf_get_pixels(pixbuf);
-                    int height=gdk_pixbuf_get_height(pixbuf);
-                    int width=gdk_pixbuf_get_width(pixbuf);
-                    int rowstride=gdk_pixbuf_get_rowstride(pixbuf);
-                    for(int x=0;x<width;++x)
-                        for(int y=0; y<height; y++)
-                        {
-                            guchar* p=data + y*rowstride + x*4;
-                            p[0]=(char)(pow((p[0]/255.),gamma)*255);
-                            p[1]=(char)(pow((p[1]/255.),gamma)*255);
-                            p[2]=(char)(pow((p[2]/255.),gamma)*255);
-                        }
-                    return true;
-                } else
-                {
-                    return false;
+                    unsigned char* p=data + y*rowstride + x*4;
+                    *p = (char)(pow((p[0]/255.),gamma)*255); p++;
+                    *p = (char)(pow((p[1]/255.),gamma)*255); p++;
+                    *p = (char)(pow((p[2]/255.),gamma)*255);
                 }
+            }
+
+            return true;
+
+        } else return false;
+
     }
 
     //________________________________________________________
@@ -331,9 +336,7 @@ namespace Gtk
             {
                 GtkWidget* tabLabel=gtk_notebook_get_tab_label(nb,gtk_notebook_get_nth_page(nb,i));
                 if(gtk_is_parent(widget,GTK_WIDGET(tabLabel)))
-                {
-                    tabLabelIsParent=true;
-                }
+                { tabLabelIsParent=true; }
             }
 
             if(!tabLabelIsParent) return false;
