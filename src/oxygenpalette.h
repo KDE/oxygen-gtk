@@ -4,11 +4,6 @@
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
-* inspired notably from kdelibs/kdeui/color/kcolorutils.h
-* Copyright (C) 2007 Matthew Woehlke <mw_triad@users.sourceforge.net>
-* Copyright (C) 2007 Thomas Zander <zander@kde.org>
-* Copyright (C) 2007 Zack Rusin <zack@kde.org>
-*
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
@@ -27,8 +22,16 @@
 
 #include "oxygenrgba.h"
 
+//! forward declarations
+namespace ColorUtils
+{
+    class Effect;
+}
+
 namespace Oxygen
 {
+
+    //! store colors for all Color groups and roles
     class Palette
     {
 
@@ -96,6 +99,9 @@ namespace Oxygen
         //! copy on group onto the other
         void copy( Group from, Group to )
         { colorList(to) = colorList(from); }
+
+        //! generate group from input, using provided effect
+        void generate( Group from, Group to, const ColorUtils::Effect& );
 
         protected:
 

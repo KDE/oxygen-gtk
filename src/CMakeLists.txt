@@ -6,6 +6,7 @@ set( OXYGEN-GTK-SOURCES
     oxygencairocontext.cpp
     oxygencairopattern.cpp
     oxygencairoutils.cpp
+    oxygencoloreffect.cpp
     oxygencolorutils.cpp
     oxygenfontinfo.cpp
     oxygengtkicons.cpp
@@ -13,6 +14,7 @@ set( OXYGEN-GTK-SOURCES
     oxygengtkutils.cpp
     oxygenmaps.cpp
     oxygenoptionmap.cpp
+    oxygenpalette.cpp
     oxygenqtsettings.cpp
     oxygenrcstyle.cpp
     oxygenrgba.cpp

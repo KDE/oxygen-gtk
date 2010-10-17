@@ -595,7 +595,7 @@ namespace Oxygen
 
         // colors
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
-        const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
+        const ColorUtils::Rgba glow( settings().palette().color( Palette::Selected ) );
 
         // context
         Cairo::Context context( window );
@@ -1414,7 +1414,7 @@ namespace Oxygen
     {
 
         ColorUtils::Rgba base;
-        if( options & Selected  ) base = settings().palette().color( Palette::Focus );
+        if( options & Selected  ) base = settings().palette().color( Palette::Selected );
         else if( options & Hover ) base = settings().palette().color( Palette::Hover );
         else return;
 
@@ -1890,7 +1890,8 @@ namespace Oxygen
             dimension = fillSlab._h;
             if( isCurrentTab ) fillSlab._h -= 2;
             else fillSlab._h -= 3;
-            pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
+            //pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
+            pattern.set( cairo_pattern_create_linear( 0, fillSlab._y, 0, fillSlab._y + fillSlab._h ) );
             break;
 
             case GTK_POS_TOP:
@@ -1907,14 +1908,14 @@ namespace Oxygen
                 fillSlab._h -= 3;
 
             }
-            pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
+            pattern.set( cairo_pattern_create_linear( 0, fillSlab._y + fillSlab._h, 0, fillSlab._y ) );
             break;
 
             case GTK_POS_RIGHT:
             dimension = fillSlab._w;
             if( isCurrentTab ) fillSlab._w -= 2;
             else fillSlab._w -= 3;
-            pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
+            pattern.set( cairo_pattern_create_linear( fillSlab._x, 0, fillSlab._x + fillSlab._w, 0 ) );
             break;
 
             case GTK_POS_LEFT:
@@ -1927,7 +1928,7 @@ namespace Oxygen
                 fillSlab._x += 3;
                 fillSlab._w -= 3;
             }
-            pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
+            pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
             break;
 
             default: return;
@@ -1948,8 +1949,7 @@ namespace Oxygen
 
             cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.1 ) );
             cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::alphaColor( dark, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, std::max( 0.8, 1.0 - 10.0/dimension ), ColorUtils::alphaColor( dark, 0.4 ) );
-            cairo_pattern_add_color_stop( pattern, std::max( 0.9, 1.0 - 5.0/dimension ), ColorUtils::Rgba::transparent( dark ) );
+            cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
 
         }
 

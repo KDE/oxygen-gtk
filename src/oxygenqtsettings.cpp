@@ -24,6 +24,7 @@
 */
 
 #include "oxygenqtsettings.h"
+#include "oxygencoloreffect.h"
 #include "oxygencolorutils.h"
 #include "oxygenfontinfo.h"
 #include "oxygengtkicons.h"
@@ -310,8 +311,12 @@ namespace Oxygen
         _palette.setColor( Palette::Active, Palette::Text, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "ForegroundNormal" ) ) );
 
         // copy to inactive and disabled palette
-        _palette.copy( Palette::Active, Palette::Inactive );
-        _palette.copy( Palette::Active, Palette::Disabled );
+        //_palette.copy( Palette::Active, Palette::Inactive );
+        //_palette.copy( Palette::Active, Palette::Disabled );
+
+        // generate inactive and disabled palette from active, applying effects from kdeglobals
+        _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( "[ColorEffects:Inactive]", _kdeGlobals ) );
+        _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( "[ColorEffects:Disabled]", _kdeGlobals ) );
 
         // fill (overwrite) additional colors for disabled palette
         _palette.setColor( Palette::Disabled, Palette::WindowText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "ForegroundInactive" ) ) );
@@ -339,6 +344,7 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[NORMAL]", _palette.color( Palette::Base ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[PRELIGHT]", _palette.color( Palette::Base ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[SELECTED]", _palette.color( Palette::Selected ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
 
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
@@ -391,6 +397,7 @@ namespace Oxygen
         // spinboxes
         _rc.addSection( "oxygen-spinbutton", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
         _rc.addToRootSection( "widget_class \"*<GtkSpinButton>*\" style \"oxygen-spinbutton\"" );
 
         // tooltips
