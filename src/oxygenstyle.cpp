@@ -520,12 +520,12 @@ namespace Oxygen
             if( vertical )
             {
 
-                if( w > 30 ) a = 10/w;
+                if( w > 30 ) a = 10.0/w;
                 pattern.set( cairo_pattern_create_linear( x, 0, x+w, 0 ) );
 
             } else {
 
-                if( h>30 ) a = 10/h;
+                if( h>30 ) a = 10.0/h;
                 pattern.set( cairo_pattern_create_linear( 0, y, 0, y+h ) );
 
             }
