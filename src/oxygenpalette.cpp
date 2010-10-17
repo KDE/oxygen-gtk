@@ -23,6 +23,7 @@
 
 #include "oxygenpalette.h"
 #include "oxygencoloreffect.h"
+#include "oxygencolorutils.h"
 
 namespace Oxygen
 {
@@ -44,6 +45,8 @@ namespace Oxygen
         destination[Text] = effect.color(source[Text], source[Base] );
         destination[Focus] = effect.color(source[Focus], source[Base] );
         destination[Hover] = effect.color(source[Hover], source[Base] );
+
+        destination[Selected] = ColorUtils::tint( destination[Base], destination[Selected] );
 
     }
 
