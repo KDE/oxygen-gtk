@@ -378,7 +378,7 @@ namespace Oxygen
     {
 
         // do nothing if not enough room
-        if( w < 14 )  return false;
+        if( w < 14 || h < 14 )  return false;
 
         /*
         this code is the same as in renderWindowBackground
@@ -1262,7 +1262,7 @@ namespace Oxygen
     {
 
         // do nothing if not enough room
-        if( w < 14 )  return;
+        if( w < 14 || h < 14 )  return;
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
@@ -1298,6 +1298,9 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
     {
+
+        // do nothing if not enough room
+        if( w < 9 || h < 9 )  return;
 
         // define colors
         ColorUtils::Rgba base;
@@ -2561,8 +2564,8 @@ namespace Oxygen
     void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, StyleOptions options, TileSet::Tiles tiles ) const
     {
 
-        // check rect
-        if( !( w>=0 && h>=0 ) ) return;
+        // do nothing if not enough room
+        if( w<14 || h<14 ) return;
 
         // additional adjustment for sunken frames
         // TODO: double check
