@@ -25,7 +25,7 @@
 #include "oxygengtkutils.h"
 
 #include <cmath>
-#include <string.h>
+#include <cstring>
 #include <gtk/gtk.h>
 
 namespace Gtk
@@ -41,15 +41,18 @@ namespace Gtk
             if( !(x>0 && y>0 &&
                     x < button->allocation.width &&
                     y < button->allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
-            {
-                gtk_widget_set_state(button,GTK_STATE_NORMAL);
-            }
+            { gtk_widget_set_state(button,GTK_STATE_NORMAL); }
+
             gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
-	    gtk_widget_set_size_request(button,16,16);
+            gtk_widget_set_size_request(button,16,16);
+
             return;
+
         }
+
         if(GTK_IS_CONTAINER(container))
-            gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,NULL);
+        { gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,0L); }
+
     }
 
     //____________________________________________________________
@@ -292,7 +295,7 @@ namespace Gtk
     GtkWidget* gtk_button_find_image(GtkWidget* button)
     {
         if(!GTK_IS_CONTAINER(button))
-            return NULL;
+            return 0L;
         for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
         {
             if(GTK_IS_IMAGE(children->data))
@@ -300,13 +303,13 @@ namespace Gtk
             else if(GTK_IS_CONTAINER(children->data))
                 return gtk_button_find_image(GTK_WIDGET(children->data));
         }
-        return NULL;
+        return 0L;
     }
 
     GtkWidget* gtk_button_find_label(GtkWidget* button)
     {
         if(!GTK_IS_CONTAINER(button))
-            return NULL;
+            return 0L;
         for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
         {
             if(GTK_IS_LABEL(children->data))
@@ -314,7 +317,7 @@ namespace Gtk
             else if(GTK_IS_CONTAINER(children->data))
                 return gtk_button_find_image(GTK_WIDGET(children->data));
         }
-        return NULL;
+        return 0L;
     }
 
     //________________________________________________________
@@ -332,32 +335,28 @@ namespace Gtk
                     tabLabelIsParent=true;
                 }
             }
-            if(!tabLabelIsParent)
-                return false;
+
+            if(!tabLabelIsParent) return false;
+
             // make sure button has no text and some image (for now, just hope it's a close icon)
             if(!gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)))
             {
                 // check for pidgin 'x' close button
                 GtkWidget* label;
-                if(!(label=gtk_button_find_label(widget)))
-                    return false;
-                else
-                {
+                if(!(label=gtk_button_find_label(widget))) return false;
+                else {
+
                     const gchar* labelText=gtk_label_get_text(GTK_LABEL(label));
                     if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
                     {
                         gtk_widget_hide(label);
                         return true;
-                    }
-                    else
-                        return false;
+                    } else return false;
                 }
-            }
-            else
-                return true;
-        }
-        else
-            return false;
+
+            } else return true;
+
+        } else return false;
     }
 
     //________________________________________________________

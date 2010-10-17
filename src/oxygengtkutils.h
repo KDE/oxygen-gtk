@@ -47,13 +47,13 @@ namespace Gtk
     //@{
 
     // set all buttons in the container to state NORMAL
-    void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data=NULL);
+    void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
     // make all the buttons on the tabs normal
-    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook);
+    gboolean gtk_notebook_update_close_buttons( GtkNotebook*);
 
     //! changes the gamma value of an image
-    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value);
+    bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
 
     //! returns true if widget supports rgba
     bool gtk_widget_has_rgba( GtkWidget* );
