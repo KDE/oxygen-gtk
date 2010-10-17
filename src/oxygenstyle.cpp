@@ -595,7 +595,7 @@ namespace Oxygen
 
         // colors
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
-        const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
+        const ColorUtils::Rgba glow( settings().palette().color( Palette::Selected ) );
 
         // context
         Cairo::Context context( window );
@@ -1414,7 +1414,7 @@ namespace Oxygen
     {
 
         ColorUtils::Rgba base;
-        if( options & Selected  ) base = settings().palette().color( Palette::Focus );
+        if( options & Selected  ) base = settings().palette().color( Palette::Selected );
         else if( options & Hover ) base = settings().palette().color( Palette::Hover );
         else return;
 
