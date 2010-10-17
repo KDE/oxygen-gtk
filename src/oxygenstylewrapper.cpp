@@ -459,10 +459,14 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 { options |= Flat; }
 
-                if( Gtk::is_notebook_close_button(widget) && gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE)
-                { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
-
                 if( Gtk::is_notebook_close_button(widget)) {
+
+                    if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
+                    {
+
+                        gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL);
+
+                    }
 
                     if( GdkPixbuf* pixbuf = processTabCloseButton(widget,state) )
                     {
