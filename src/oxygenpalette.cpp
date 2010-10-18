@@ -41,12 +41,13 @@ namespace Oxygen
         destination[Base] = effect.color(source[Base]);
         destination[BaseAlternate] = effect.color(source[BaseAlternate]);
 
+        if( effect.changeSelectionColor() ) destination[Selected] = effect.color( ColorUtils::tint( source[Window], source[Selected], 0.4 ) );
+        else destination[Selected] = effect.color( source[Selected] );
+
         // apply effects to hover and focus and text
         destination[Text] = effect.color(source[Text], source[Base] );
         destination[Focus] = effect.color(source[Focus], source[Base] );
         destination[Hover] = effect.color(source[Hover], source[Base] );
-
-        destination[Selected] = ColorUtils::tint( destination[Base], destination[Selected] );
 
     }
 

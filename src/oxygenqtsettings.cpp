@@ -312,8 +312,8 @@ namespace Oxygen
         _palette.setColor( Palette::Active, Palette::Text, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "ForegroundNormal" ) ) );
 
         // generate inactive and disabled palette from active, applying effects from kdeglobals
-        _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( "[ColorEffects:Inactive]", _kdeGlobals ) );
-        _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( "[ColorEffects:Disabled]", _kdeGlobals ) );
+        _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( Palette::Inactive, _kdeGlobals ) );
+        _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( Palette::Disabled, _kdeGlobals ) );
 
         // fill (overwrite) additional colors for disabled palette
         _palette.setColor( Palette::Disabled, Palette::WindowText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "ForegroundInactive" ) ) );

@@ -29,11 +29,36 @@ namespace ColorUtils
 {
 
     //__________________________________________________________________________________________
-    Effect::Effect( const std::string& section, const Oxygen::OptionMap& options )
+    Effect::Effect( Oxygen::Palette::Group group, const Oxygen::OptionMap& options ):
+        _intensityEffect( IntensityNoEffect ),
+        _intensityEffectAmount(0),
+        _colorEffect( ColorNoEffect ),
+        _colorEffectAmount(0),
+        _contrastEffect( ContrastNoEffect ),
+        _contrastEffectAmount(0),
+        _changeSelectionColor( false ),
+        _enabled( false )
     {
+
+        // select section
+        std::string section;
+        switch( group )
+        {
+            case Oxygen::Palette::Inactive:
+            section = "[ColorEffects:Inactive]";
+            break;
+
+            case Oxygen::Palette::Disabled:
+            section = "[ColorEffects:Disabled]";
+            break;
+
+            default: return;
+        }
+
+        const bool disabled( group == Oxygen::Palette::Disabled );
+
         // intensity settings
-        // TODO: load correct default values, that match kcolorscheme.cpp
-        switch( options.getOption( section, "IntensityEffect" ).toInt(0) )
+        switch( options.getOption( section, "IntensityEffect" ).toInt( disabled ? IntensityDarken : IntensityNoEffect ) )
         {
             case 1: _intensityEffect = IntensityShade; break;
             case 2: _intensityEffect = IntensityDarken; break;
@@ -42,20 +67,20 @@ namespace ColorUtils
 
         }
 
-        _intensityEffectAmount = options.getOption( section, "IntensityAmount" ).toVariant<double>(0);
+        _intensityEffectAmount = options.getOption( section, "IntensityAmount" ).toVariant<double>( disabled ? 0.1 : 0.0 );
 
         // contrast effect
-        switch( options.getOption( section, "ContrastEffect" ).toInt(0) )
+        switch( options.getOption( section, "ContrastEffect" ).toInt( disabled ? ContrastFade : ContrastTint ) )
         {
             case 1: _contrastEffect = ContrastFade; break;
             case 2: _contrastEffect = ContrastTint; break;
             default: _contrastEffect = ContrastNoEffect; break;
         }
 
-        _contrastEffectAmount = options.getOption( section, "ContrastAmount" ).toVariant<double>(0);
+        _contrastEffectAmount = options.getOption( section, "ContrastAmount" ).toVariant<double>( disabled ? 0.65 : 0.10 );
 
         // color effect
-        switch( options.getOption( section, "ColorEffect" ).toInt(0) )
+        switch( options.getOption( section, "ColorEffect" ).toInt( disabled ? ColorNoEffect: ColorFade ) )
         {
             case 1: _colorEffect = ColorDesaturate; break;
             case 2: _colorEffect = ColorFade; break;
@@ -63,14 +88,17 @@ namespace ColorUtils
             default: _colorEffect = ColorNoEffect; break;
         }
 
-        _colorEffectAmount = options.getOption( section, "ColorAmount" ).toVariant<double>(0);
+        _colorEffectAmount = options.getOption( section, "ColorAmount" ).toVariant<double>( disabled ? 0:0.025 );
 
         // color
         _color = Rgba::fromKdeOption( options.getValue( section, "Color" ) );
 
+        if( !_color.isValid() )
+        { _color = disabled ? Rgba( 56.0/255, 56.0/255, 56.0/255 ) : Rgba( 112.0/255, 111.0/255, 110.0/255 ); }
+
         // enable state
         _enabled = ( options.getOption( section, "Enabled" ).toVariant<std::string>("true") == "true" );
-
+        _changeSelectionColor = ( options.getOption( section, "ChangeSelectionColor" ).toVariant<std::string>( _enabled ? "true":"false" ) == "true" );
     }
 
     //__________________________________________________________________________________________
