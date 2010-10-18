@@ -797,7 +797,6 @@ namespace Oxygen
                 cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, rounding );
                 cairo_set_source( context, base );
                 cairo_stroke( context );
-
             }
 
             {
