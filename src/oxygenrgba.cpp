@@ -114,36 +114,6 @@ namespace ColorUtils
         return;
 
     }
-//
-//     //___________________________________________________________
-//     Rgba& Rgba::fromHsv( double hue, double saturation, double value )
-//     {
-//
-//         if( hue < 0 )
-//         {
-//             setRed( value );
-//             setGreen( value );
-//             setBlue( value );
-//             return *this;
-//         }
-//
-//         const double c = value*saturation;
-//         const double h = hue/60;
-//         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
-//         if( h>=0 && h<1 ) { setRed( c ); setGreen( x ); setBlue( 0 ); }
-//         else if( h>=1 && h<2 ) { setRed( x ); setGreen( c ); setBlue( 0 ); }
-//         else if( h>=2 && h<3 ) { setRed( 0 ); setGreen( c ); setBlue( x ); }
-//         else if( h>=3 && h<4 ) { setRed( 0 ); setGreen( x ); setBlue( c ); }
-//         else if( h>=4 && h<5 ) { setRed( x ); setGreen( 0 ); setBlue( c ); }
-//         else { setRed( c ); setGreen( 0 ); setBlue( x ); }
-//
-//         double m = value - c;
-//         setRed( red() + m );
-//         setGreen( green() + m );
-//         setBlue( blue() + m );
-//
-//         return *this;
-//     }
 
     //___________________________________________________________
     Rgba& Rgba::fromHsv( double hue, double saturation, double value )
