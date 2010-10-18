@@ -41,10 +41,12 @@ namespace ColorUtils
     class Rgba
     {
 
+        private:
+        typedef unsigned short color_t;
+
         public:
 
         typedef std::vector<Rgba> List;
-        typedef unsigned short color_t;
         //! constructor
         Rgba( void ):
             _red(0),
