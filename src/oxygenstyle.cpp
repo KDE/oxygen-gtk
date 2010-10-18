@@ -1417,8 +1417,9 @@ namespace Oxygen
     {
 
         ColorUtils::Rgba base;
-        if( options & Selected  ) base = settings().palette().color( Palette::Selected );
-        else if( options & Hover ) base = settings().palette().color( Palette::Hover );
+        Palette::Group group( (options&Focus) ? Palette::Active : Palette::Inactive );
+        if( options & Selected  ) base = settings().palette().color( group, Palette::Selected );
+        else if( options & Hover ) base = settings().palette().color( group, Palette::Hover );
         else return;
 
         // create context
