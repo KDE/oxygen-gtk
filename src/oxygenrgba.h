@@ -41,10 +41,12 @@ namespace ColorUtils
     class Rgba
     {
 
+        private:
+        typedef unsigned short color_t;
+
         public:
 
         typedef std::vector<Rgba> List;
-
         //! constructor
         Rgba( void ):
             _red(0),
@@ -56,10 +58,10 @@ namespace ColorUtils
 
         //! constructor
         Rgba( double r, double g, double b, double a = 1 ):
-            _red( r*USHRT_MAX ),
-            _green( g*USHRT_MAX ),
-            _blue( b*USHRT_MAX ),
-            _alpha( a*USHRT_MAX ),
+            _red( (color_t) (r*USHRT_MAX) ),
+            _green( (color_t) (g*USHRT_MAX) ),
+            _blue( (color_t) (b*USHRT_MAX) ),
+            _alpha( (color_t) (a*USHRT_MAX) ),
             _mask( RGBA )
         {}
 
@@ -131,28 +133,28 @@ namespace ColorUtils
 
         Rgba& setRed( double value )
         {
-            _red = (unsigned short)(value*USHRT_MAX);
+            _red = (color_t)(value*USHRT_MAX);
             _mask |= R;
             return *this;
         }
 
         Rgba& setGreen( double value )
         {
-            _green = (unsigned short)(value*USHRT_MAX);
+            _green = (color_t)(value*USHRT_MAX);
             _mask |= G;
             return *this;
         }
 
         Rgba& setBlue( double value )
         {
-            _blue = (unsigned short)(value*USHRT_MAX);
+            _blue = (color_t)(value*USHRT_MAX);
             _mask |= B;
             return *this;
         }
 
         Rgba& setAlpha( double value )
         {
-            _alpha = (unsigned short)(value*USHRT_MAX);
+            _alpha = (color_t)(value*USHRT_MAX);
             _mask |= A;
             return *this;
         }
@@ -193,10 +195,10 @@ namespace ColorUtils
             RGBA = RGB|A
         };
 
-        unsigned short _red;
-        unsigned short _green;
-        unsigned short _blue;
-        unsigned short _alpha;
+        color_t _red;
+        color_t _green;
+        color_t _blue;
+        color_t _alpha;
 
         unsigned int _mask;
 

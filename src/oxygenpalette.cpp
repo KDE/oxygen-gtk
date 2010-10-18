@@ -29,7 +29,7 @@ namespace Oxygen
 {
 
     //_______________________________________________________
-    void Palette::generate( Group from, Group to, const ColorUtils::Effect& effect )
+    void Palette::generate( Group from, Group to, const ColorUtils::Effect& effect, bool changeSelectionColor )
     {
         // start by copying palette
         colorList(to) = colorList(from);
@@ -43,7 +43,7 @@ namespace Oxygen
         destination[Base] = effect.color(source[Base]);
         destination[BaseAlternate] = effect.color(source[BaseAlternate]);
 
-        if( effect.changeSelectionColor() ) destination[Selected] = effect.color( ColorUtils::tint( source[Window], source[Selected], 0.4 ) );
+        if( changeSelectionColor ) destination[Selected] = effect.color( ColorUtils::tint( source[Window], source[Selected], 0.4 ) );
         else destination[Selected] = effect.color( source[Selected] );
 
         // apply effects to hover and focus and text

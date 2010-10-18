@@ -50,7 +50,6 @@ namespace ColorUtils
             _colorEffectAmount(0),
             _contrastEffect( ContrastNoEffect ),
             _contrastEffectAmount(0),
-            _changeSelectionColor( false ),
             _enabled( false )
         {}
 
@@ -66,10 +65,6 @@ namespace ColorUtils
 
         //! apply effect to input foreground
         Rgba color( const Rgba& foreground, const Rgba& background ) const;
-
-        //! true if selection color must also be changed by effect
-        bool changeSelectionColor( void ) const
-        { return _changeSelectionColor; }
 
         private:
 
@@ -120,9 +115,6 @@ namespace ColorUtils
         double _contrastEffectAmount;
 
         //@}
-
-        //! change selection color
-        bool _changeSelectionColor;
 
         //! enable state
         bool _enabled;

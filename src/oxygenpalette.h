@@ -101,7 +101,7 @@ namespace Oxygen
         { colorList(to) = colorList(from); }
 
         //! generate group from input, using provided effect
-        void generate( Group from, Group to, const ColorUtils::Effect& );
+        void generate( Group from, Group to, const ColorUtils::Effect&, bool changeSelectionColor = false );
 
         protected:
 

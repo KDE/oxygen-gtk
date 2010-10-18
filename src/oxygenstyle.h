@@ -116,7 +116,8 @@ namespace Oxygen
         void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! checkbox
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        /*! shadow type is used to decide whether check is on/off or tristate */
+        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions ) const;
 
         //! radio button
         void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;

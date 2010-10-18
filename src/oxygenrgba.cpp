@@ -34,17 +34,30 @@ namespace ColorUtils
     //___________________________________________________________
     Rgba Rgba::light( int factor ) const
     {
-        if( factor <= 100 ) return *this;
+
+        if( factor <= 0 ) return *this;
+        else if( factor < 100 ) return dark( 10000 / factor );
+
         double h, s, v;
         toHsv( h, s, v );
-        v = std::min( 1.0, (v*factor)/100 );
+        v = (v*factor)/100;
+        if( v > 1 )
+        {
+            // overflow. Adjust saturation
+            s -= v - 1;
+            if( s < 0 ) s = 0;
+            v = 1.0;
+        }
+
         return Rgba( *this ).fromHsv( h, s, v );
     }
 
     //___________________________________________________________
     Rgba Rgba::dark( int factor ) const
     {
-        if( factor <= 100 ) return *this;
+        if( factor <= 0 ) return *this;
+        else if( factor < 100 ) return light( 10000/ factor );
+
         double h, s, v;
         toHsv( h, s, v );
         v = (v*100.0)/factor;
@@ -90,9 +103,9 @@ namespace ColorUtils
 
         if( !isValid() ) return;
 
-        const unsigned short max =  std::max( _red, std::max( _green, _blue ) );
-        const unsigned short min =  std::min( _red, std::min( _green, _blue ) );
-        const unsigned short delta = max-min;
+        const color_t max =  std::max( _red, std::max( _green, _blue ) );
+        const color_t min =  std::min( _red, std::min( _green, _blue ) );
+        const color_t delta = max-min;
         value = double(max)/USHRT_MAX;
 
         if( delta <= 0 )
@@ -131,17 +144,17 @@ namespace ColorUtils
         const double c = value*saturation*USHRT_MAX;
         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
 
-        if( h>=0 && h<1 ) { _red = c; _green = x; _blue = 0; }
-        else if( h>=1 && h<2 ) { _red = x; _green = c; _blue = 0; }
-        else if( h>=2 && h<3 ) { _red = 0; _green = c; _blue = x; }
-        else if( h>=3 && h<4 ) { _red = 0; _green = x; _blue = c; }
-        else if( h>=4 && h<5 ) { _red = x; _green = 0; _blue = c; }
-        else { _red = c; _green = 0; _blue = x; }
+        if( h>=0 && h<1 ) { _red = (color_t) c; _green = (color_t) x; _blue = 0; }
+        else if( h>=1 && h<2 ) { _red = (color_t) x; _green = (color_t) c; _blue = 0; }
+        else if( h>=2 && h<3 ) { _red = 0; _green = (color_t) c; _blue = (color_t) x; }
+        else if( h>=3 && h<4 ) { _red = 0; _green = (color_t) x; _blue = (color_t) c; }
+        else if( h>=4 && h<5 ) { _red = (color_t) x; _green = 0; _blue = (color_t) c; }
+        else { _red = (color_t) c; _green = 0; _blue = (color_t) x; }
 
         double m = value*USHRT_MAX - c;
-        _red += m;
-        _green += m;
-        _blue += m;
+        _red += (color_t) m;
+        _green += (color_t) m;
+        _blue += (color_t) m;
 
         _mask |= RGB;
 

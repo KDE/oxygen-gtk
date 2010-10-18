@@ -1059,7 +1059,7 @@ namespace Oxygen
     void Style::renderCheckBox(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options ) const
     {
 
         // define checkbox rect
@@ -1071,17 +1071,18 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base;
+        const Palette::Group group( options&Disabled ? Palette::Active : Palette::Disabled );
         const Palette::Role role( options&Flat ? Palette::Window : Palette::Button );
-        if( options&Blend )
+        if( false && options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( role ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( role );
+            base = settings().palette().color( group, role );
 
         }
 
@@ -1106,12 +1107,12 @@ namespace Oxygen
         x = int( double(child.x + child.width/2) - 3.5 );
         y = int( double(child.y + child.height/2) - 2.5 );
 
-        if( options&Sunken )
+        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
         {
 
-            cairo_set_line_width( context, 2.0 );
             cairo_set_line_cap( context, CAIRO_LINE_CAP_ROUND );
             cairo_set_line_join( context, CAIRO_LINE_JOIN_ROUND );
+            if( shadow == GTK_SHADOW_IN ) cairo_set_line_width( context, 2.0 );
 
             Palette::Group group( (options&Disabled) ? Palette::Disabled : Palette::Active );
             const ColorUtils::Rgba& color( settings().palette().color( group, ( options&Sunken ) ? Palette::WindowText : Palette::ButtonText ) );
@@ -1119,12 +1120,19 @@ namespace Oxygen
             const ColorUtils::Rgba& base( ColorUtils::decoColor( background, color ) );
             const ColorUtils::Rgba& contrast( ColorUtils::lightColor( background ) );
 
-            cairo_translate( context, 0.5, 1.5 );
-            if( !( options&Flat ) ) cairo_translate( context, 0, -1 );
+            cairo_translate( context, 0.5, 0.5 );
 
             const double offset( 1.0 );
             if( settings().checkBoxStyle() == QtSettings::CS_CHECK )
             {
+
+                // dask pattern for tristate buttons
+                if( shadow == GTK_SHADOW_ETCHED_IN )
+                {
+                    cairo_set_line_width( context, 1.3 );
+                    double dashes[2] = { 1.3, 2.6 };
+                    cairo_set_dash( context, &dashes[0], 2, 0 );
+                }
 
                 cairo_save( context );
                 cairo_translate( context, 0, offset );
@@ -1143,7 +1151,14 @@ namespace Oxygen
 
             } else {
 
-                if( options&Sunken )
+                // dask pattern for tristate buttons
+                if( shadow == GTK_SHADOW_ETCHED_IN )
+                {
+                    double dashes[2] = { 0.8, 4.0 };
+                    cairo_set_dash( context, &dashes[0], 2, 0 );
+                }
+
+                if( options&Flat )
                 {
 
                     cairo_save( context );
@@ -1175,11 +1190,13 @@ namespace Oxygen
                     cairo_stroke( context );
 
                 }
+
             }
 
-
         }
+
     }
+
     //___________________________________________________________________
     void Style::renderRadioButton(
         GdkWindow* window,
@@ -1416,11 +1433,16 @@ namespace Oxygen
         ) const
     {
 
-        ColorUtils::Rgba base;
+        // do nothing if not selected nor hovered
+        if( !options & (Hover|Selected ) ) return;
+
         Palette::Group group( (options&Focus) ? Palette::Active : Palette::Inactive );
-        if( options & Selected  ) base = settings().palette().color( group, Palette::Selected );
-        else if( options & Hover ) base = settings().palette().color( group, Palette::Hover );
-        else return;
+        ColorUtils::Rgba base( settings().palette().color( group, Palette::Selected ) );
+        if( options & Hover  )
+        {
+            if( !( options & Selected ) ) base.setAlpha( 0.2 );
+            else base = base.light( 110 );
+        }
 
         // create context
         Cairo::Context context( window, clipRect );
