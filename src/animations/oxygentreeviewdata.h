@@ -34,6 +34,7 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
+            _fullWidth( false ),
             _enterId(-1),
             _motionId(-1),
             _leaveId(-1),
@@ -52,18 +53,20 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
+        //! full width flag
+        void setFullWidth( bool value )
+        { _fullWidth = value; }
+
         //! true if hovered
         bool hovered( void ) const
         { return _hovered; }
 
         //! true if current position is contained int rect
-        /*! TODO add flag for full-width or single-cell */
         bool isCellHovered( int x, int y, int w, int h ) const
         {
-            return
-                _hovered &&
-                //(_x >= x) && (_x <= x+w ) &&
-                ( _y >= y ) && ( _y <= y+h );
+            if( !_hovered ) return false;
+            if( _fullWidth ) return ( _y >= y ) && ( _y <= y+h );
+            else return (_x >= x) && (_x <= x+w ) && ( _y >= y ) && ( _y <= y+h );
         }
 
         protected:
@@ -71,7 +74,9 @@ namespace Oxygen
         //! set mouse over state
         void setHovered( GtkWidget* widget, bool value )
         {
+            if( _hovered == value ) return;
             _hovered = value;
+            gtk_widget_queue_draw( widget );
         }
 
         //! update pointer position
@@ -85,6 +90,9 @@ namespace Oxygen
         //@}
 
         private:
+
+        //! true if hover works on full width
+        bool _fullWidth;
 
         //! enter signal id
         int _enterId;

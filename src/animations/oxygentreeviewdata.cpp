@@ -32,6 +32,11 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::connect( GtkWidget* widget )
     {
+
+        // get full-width flag
+        if( GTK_IS_TREE_VIEW( widget ) )
+        { gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, 0L ); }
+
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
