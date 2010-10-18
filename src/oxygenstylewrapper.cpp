@@ -151,6 +151,9 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
+            if( GTK_IS_TREE_VIEW( widget ) )
+            { Animations::instance().treeViewEngine().registerWidget( widget ); }
+
             StyleOptions options( widget, state );
 
             // select palete colorgroup for cell background
@@ -164,7 +167,12 @@ namespace Oxygen
             else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
-            if( state == GTK_STATE_SELECTED  || state == GTK_STATE_PRELIGHT )
+            if( Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
+            {
+                options |= Hover;
+            }
+
+            if( options & (Selected|Hover) )
             {
 
                 unsigned int tiles( TileSet::Center );

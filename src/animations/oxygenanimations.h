@@ -28,6 +28,7 @@
 #include "oxygenmenushellengine.h"
 #include "oxygenscrollbarengine.h"
 #include "oxygentabwidgetengine.h"
+#include "oxygentreeviewengine.h"
 #include "oxygenwidgetsizeengine.h"
 
 #include <gtk/gtk.h>
@@ -78,6 +79,10 @@ namespace Oxygen
         TabWidgetEngine& tabWidgetEngine( void ) const
         { return *_tabWidgetEngine; }
 
+        //! tree view engine
+        TreeViewEngine& treeViewEngine( void ) const
+        { return *_treeViewEngine; }
+
         //! window size engine
         WidgetSizeEngine& widgetSizeEngine( void ) const
         { return *_widgetSizeEngine; }
@@ -119,6 +124,9 @@ namespace Oxygen
 
         //! tab widget engine
         TabWidgetEngine* _tabWidgetEngine;
+
+        //! tree view engine
+        TreeViewEngine* _treeViewEngine;
 
         //! widget size engine
         WidgetSizeEngine* _widgetSizeEngine;
