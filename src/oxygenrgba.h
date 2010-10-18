@@ -25,12 +25,12 @@
 * MA 02110-1301, USA.
 */
 
+#include <climits>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <limits.h>
 #include <gdk/gdk.h>
 
 namespace ColorUtils
