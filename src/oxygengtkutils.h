@@ -153,6 +153,17 @@ namespace Gtk
     //! resize pixbuf
     GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
 
+    //! returns initialized GdkRectangle
+    inline GdkRectangle gdk_rectangle( int x = 0, int y = 0, int w = -1, int h = -1 )
+    {
+        GdkRectangle out = {x, y, w, h};
+        return out;
+    }
+
+    //! returns true if rectangle is valid
+    inline bool gdk_rectangle_is_valid( const GdkRectangle* rect )
+    { return rect && rect->width > 0 && rect->height > 0; }
+
     //! returns true if given rectangle contains point
     inline bool gdk_rectangle_contains( const GdkRectangle* rect, int x, int y )
     {
