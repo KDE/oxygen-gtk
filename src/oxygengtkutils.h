@@ -58,6 +58,13 @@ namespace Gtk
     //! returns true if widget supports rgba
     bool gtk_widget_has_rgba( GtkWidget* );
 
+    //! trigger area update using GdkRectangle
+    inline void gtk_widget_queue_draw( GtkWidget* widget, const GdkRectangle* rect = 0L )
+    {
+        if( !rect ) ::gtk_widget_queue_draw( widget );
+        else ::gtk_widget_queue_draw_area( widget, rect->x, rect->y, rect->width, rect->height );
+    }
+
     //! return parent button if any.
     GtkWidget* gtk_parent_button( GtkWidget* );
 
