@@ -102,9 +102,9 @@ namespace ColorUtils
 
         if( !isValid() ) return;
 
-        const unsigned short max =  std::max( _red, std::max( _green, _blue ) );
-        const unsigned short min =  std::min( _red, std::min( _green, _blue ) );
-        const unsigned short delta = max-min;
+        const color_t max =  std::max( _red, std::max( _green, _blue ) );
+        const color_t min =  std::min( _red, std::min( _green, _blue ) );
+        const color_t delta = max-min;
         value = double(max)/USHRT_MAX;
 
         if( delta <= 0 )
@@ -143,17 +143,17 @@ namespace ColorUtils
         const double c = value*saturation*USHRT_MAX;
         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
 
-        if( h>=0 && h<1 ) { _red = (unsigned short) c; _green = (unsigned short) x; _blue = 0; }
-        else if( h>=1 && h<2 ) { _red = (unsigned short) x; _green = (unsigned short) c; _blue = 0; }
-        else if( h>=2 && h<3 ) { _red = 0; _green = (unsigned short) c; _blue = (unsigned short) x; }
-        else if( h>=3 && h<4 ) { _red = 0; _green = (unsigned short) x; _blue = (unsigned short) c; }
-        else if( h>=4 && h<5 ) { _red = (unsigned short) x; _green = 0; _blue = (unsigned short) c; }
-        else { _red = (unsigned short) c; _green = 0; _blue = (unsigned short) x; }
+        if( h>=0 && h<1 ) { _red = (color_t) c; _green = (color_t) x; _blue = 0; }
+        else if( h>=1 && h<2 ) { _red = (color_t) x; _green = (color_t) c; _blue = 0; }
+        else if( h>=2 && h<3 ) { _red = 0; _green = (color_t) c; _blue = (color_t) x; }
+        else if( h>=3 && h<4 ) { _red = 0; _green = (color_t) x; _blue = (color_t) c; }
+        else if( h>=4 && h<5 ) { _red = (color_t) x; _green = 0; _blue = (color_t) c; }
+        else { _red = (color_t) c; _green = 0; _blue = (color_t) x; }
 
         double m = value*USHRT_MAX - c;
-        _red += (unsigned short) m;
-        _green += (unsigned short) m;
-        _blue += (unsigned short) m;
+        _red += (color_t) m;
+        _green += (color_t) m;
+        _blue += (color_t) m;
 
         _mask |= RGB;
 
