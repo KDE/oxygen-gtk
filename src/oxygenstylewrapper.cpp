@@ -765,7 +765,18 @@ namespace Oxygen
 
             } else if( shadow == GTK_SHADOW_OUT ) {
 
-                Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+                if( GTK_IS_CALENDAR( widget ) )
+                {
+
+                    if( style )
+                    {
+                        Style::instance().fill( window,clipRect,x-2,y-2,w+4,h+4, Gtk::gdk_get_color( style->base[state] ) );
+                        Style::instance().fill( window,clipRect,x+2,y+2,w-4,h-6, Gtk::gdk_get_color( style->bg[state] ) );
+                    }
+
+                    Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, NoFill );
+
+                } else Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
 
             }
 
