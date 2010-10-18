@@ -33,6 +33,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygenmenushelldata.cpp
     animations/oxygenscrollbardata.cpp
     animations/oxygentabwidgetdata.cpp
+    animations/oxygentreeviewdata.cpp
  )
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )

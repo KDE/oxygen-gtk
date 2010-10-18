@@ -1416,11 +1416,16 @@ namespace Oxygen
         ) const
     {
 
-        ColorUtils::Rgba base;
+        // do nothing if not selected nor hovered
+        if( !options & (Hover|Selected ) ) return;
+
         Palette::Group group( (options&Focus) ? Palette::Active : Palette::Inactive );
-        if( options & Selected  ) base = settings().palette().color( group, Palette::Selected );
-        else if( options & Hover ) base = settings().palette().color( group, Palette::Hover );
-        else return;
+        ColorUtils::Rgba base( settings().palette().color( group, Palette::Selected ) );
+        if( options & Hover  )
+        {
+            if( !( options & Selected ) ) base.setAlpha( 0.2 );
+            else base = base.light( 110 );
+        }
 
         // create context
         Cairo::Context context( window, clipRect );

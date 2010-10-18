@@ -105,6 +105,7 @@ namespace Oxygen
         registerEngine( _lineEditEngine = new LineEditEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
+        registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
 
     }
