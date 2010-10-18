@@ -90,10 +90,10 @@ namespace ColorUtils
 
         if( !isValid() ) return;
 
-        const double max =  std::max( _red, std::max( _green, _blue ) );
-        const double min =  std::min( _red, std::min( _green, _blue ) );
-        const double delta = max-min;
-        value = max;
+        const unsigned short max =  std::max( _red, std::max( _green, _blue ) );
+        const unsigned short min =  std::min( _red, std::min( _green, _blue ) );
+        const unsigned short delta = max-min;
+        value = double(max)/USHRT_MAX;
 
         if( delta <= 0 )
         {
@@ -103,10 +103,10 @@ namespace ColorUtils
 
         }
 
-        saturation = delta/max;
-        if( _red == max ) hue =  (_green - _blue )/delta;
-        else if( _green == max ) hue = 2.0 + (_blue-_red)/delta;
-        else if( _blue == max ) hue = 4.0 + (_red-_green)/delta;
+        saturation = double(delta)/max;
+        if( _red == max ) hue =  double(_green - _blue )/delta;
+        else if( _green == max ) hue = 2.0 + double(_blue-_red)/delta;
+        else if( _blue == max ) hue = 4.0 + double(_red-_green)/delta;
         else assert( false );
 
         hue *= 60.0;
@@ -114,6 +114,36 @@ namespace ColorUtils
         return;
 
     }
+//
+//     //___________________________________________________________
+//     Rgba& Rgba::fromHsv( double hue, double saturation, double value )
+//     {
+//
+//         if( hue < 0 )
+//         {
+//             setRed( value );
+//             setGreen( value );
+//             setBlue( value );
+//             return *this;
+//         }
+//
+//         const double c = value*saturation;
+//         const double h = hue/60;
+//         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
+//         if( h>=0 && h<1 ) { setRed( c ); setGreen( x ); setBlue( 0 ); }
+//         else if( h>=1 && h<2 ) { setRed( x ); setGreen( c ); setBlue( 0 ); }
+//         else if( h>=2 && h<3 ) { setRed( 0 ); setGreen( c ); setBlue( x ); }
+//         else if( h>=3 && h<4 ) { setRed( 0 ); setGreen( x ); setBlue( c ); }
+//         else if( h>=4 && h<5 ) { setRed( x ); setGreen( 0 ); setBlue( c ); }
+//         else { setRed( c ); setGreen( 0 ); setBlue( x ); }
+//
+//         double m = value - c;
+//         setRed( red() + m );
+//         setGreen( green() + m );
+//         setBlue( blue() + m );
+//
+//         return *this;
+//     }
 
     //___________________________________________________________
     Rgba& Rgba::fromHsv( double hue, double saturation, double value )
@@ -127,9 +157,10 @@ namespace ColorUtils
             return *this;
         }
 
-        const double c = value*saturation;
         const double h = hue/60;
+        const double c = value*saturation*USHRT_MAX;
         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
+
         if( h>=0 && h<1 ) { _red = c; _green = x; _blue = 0; }
         else if( h>=1 && h<2 ) { _red = x; _green = c; _blue = 0; }
         else if( h>=2 && h<3 ) { _red = 0; _green = c; _blue = x; }
@@ -137,10 +168,12 @@ namespace ColorUtils
         else if( h>=4 && h<5 ) { _red = x; _green = 0; _blue = c; }
         else { _red = c; _green = 0; _blue = x; }
 
-        double m = value - c;
-        setRed( _red + m );
-        setGreen( _green + m );
-        setBlue( _blue + m );
+        double m = value*USHRT_MAX - c;
+        _red += m;
+        _green += m;
+        _blue += m;
+
+        _mask |= RGB;
 
         return *this;
     }

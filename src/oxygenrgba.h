@@ -30,7 +30,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include <limits.h>
 #include <gdk/gdk.h>
 
 namespace ColorUtils
@@ -50,27 +50,37 @@ namespace ColorUtils
             _red(0),
             _green(0),
             _blue(0),
-            _alpha(1),
+            _alpha(USHRT_MAX),
             _mask(0)
         {}
 
         //! constructor
         Rgba( double r, double g, double b, double a = 1 ):
-            _red( r ),
-            _green( g ),
-            _blue( b ),
-            _alpha( a ),
+            _red( r*USHRT_MAX ),
+            _green( g*USHRT_MAX ),
+            _blue( b*USHRT_MAX ),
+            _alpha( a*USHRT_MAX ),
             _mask( RGBA )
         {}
+
+        //! equal to operator
+        bool operator == (const Rgba& other ) const
+        {
+            return
+                _mask == other._mask &&
+                _red == other._red &&
+                _green == other._green &&
+                _blue == other._blue;
+        }
 
         // convert to integer
         guint32 toInt( void ) const
         {
             return
-                (guint32( _red*255 ) << 24) |
-                (guint32( _green*255 ) << 16) |
-                (guint32( _green*255 ) << 8) |
-                guint32( _alpha*255 );
+                (guint32( _red >> 8 ) << 24) |
+                (guint32( _green >> 8 ) << 16) |
+                (guint32( _green >> 8 ) << 8) |
+                guint32( _alpha >> 8 );
         }
 
         // convert to string
@@ -80,14 +90,12 @@ namespace ColorUtils
             out
                 << "\"#"
                 << std::hex
-                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _red*255 )
-                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _green*255 )
-                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue*255 )
+                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _red >> 8 )
+                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _green >> 8 )
+                << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue >> 8 )
                 << "\"";
             return out.str();
         }
-
-
 
         //! make color lighter
         /*! Copied from QColor. Amount must be > 100. */
@@ -101,20 +109,20 @@ namespace ColorUtils
         //@{
 
         double red( void ) const
-        { return _red; }
+        { return double(_red)/USHRT_MAX; }
 
         double green( void ) const
-        { return _green; }
+        { return double(_green)/USHRT_MAX; }
 
         double blue( void ) const
-        { return _blue; }
+        { return double(_blue)/USHRT_MAX; }
 
         double alpha( void ) const
-        { return _alpha; }
+        { return double(_alpha)/USHRT_MAX; }
 
         //! value (in HSV colorspace)
         double value( void ) const
-        { return std::max( _red, std::max( _green, _blue ) ); }
+        { return std::max( red(), std::max( green(), blue() ) ); }
 
         //@}
 
@@ -123,28 +131,28 @@ namespace ColorUtils
 
         Rgba& setRed( double value )
         {
-            _red = value;
+            _red = (unsigned short)(value*USHRT_MAX);
             _mask |= R;
             return *this;
         }
 
         Rgba& setGreen( double value )
         {
-            _green = value;
+            _green = (unsigned short)(value*USHRT_MAX);
             _mask |= G;
             return *this;
         }
 
         Rgba& setBlue( double value )
         {
-            _blue = value;
+            _blue = (unsigned short)(value*USHRT_MAX);
             _mask |= B;
             return *this;
         }
 
         Rgba& setAlpha( double value )
         {
-            _alpha = value;
+            _alpha = (unsigned short)(value*USHRT_MAX);
             _mask |= A;
             return *this;
         }
@@ -169,7 +177,7 @@ namespace ColorUtils
         static Rgba black( void ) { return Rgba( 0, 0, 0, 1 ); }
         static Rgba white( void ) { return Rgba( 1, 1, 1, 1 ); }
         static Rgba transparent( const ColorUtils::Rgba& base = black()  )
-        { return Rgba( base._red, base._green, base._blue, 0 ); }
+        { return Rgba( base ).setAlpha(0); }
 
         //@}
 
@@ -185,15 +193,16 @@ namespace ColorUtils
             RGBA = RGB|A
         };
 
-        double _red;
-        double _green;
-        double _blue;
-        double _alpha;
+        unsigned short _red;
+        unsigned short _green;
+        unsigned short _blue;
+        unsigned short _alpha;
 
         unsigned int _mask;
 
         friend std::ostream& operator << ( std::ostream& out, const Rgba& rgba )
-        { return out << int(rgba.red()*255) << "," << int(rgba.green()*255) << "," << int(rgba.blue()*255) << "," << int(rgba.alpha()*255); }
+        { return out << ( rgba._red >> 8 ) << "," << ( rgba._green >> 8 ) << "," << ( rgba._blue >> 8 ) << "," << (rgba._alpha >> 8); }
+
     };
 
 }
