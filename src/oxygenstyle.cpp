@@ -577,8 +577,8 @@ namespace Oxygen
         gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
-        // context
-        const ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        const ColorUtils::Rgba base(settings().palette().color( group, Palette::Window ) );
 
         Cairo::Context context( window, clipRect );
         renderScrollBarHole( context, x, y, w, h, base, (options&Vertical) );
@@ -590,12 +590,13 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
-        GtkProgressBarOrientation orientation ) const
+        GtkProgressBarOrientation orientation, StyleOptions options ) const
     {
 
         // colors
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
-        const ColorUtils::Rgba glow( settings().palette().color( Palette::Selected ) );
+        const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Selected ) );
 
         // context
         Cairo::Context context( window );
@@ -641,7 +642,8 @@ namespace Oxygen
     {
 
         // colors
-        const ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        const ColorUtils::Rgba base(settings().palette().color( group, Palette::Window ) );
 
         // context
         Cairo::Context context( window, clipRect );
@@ -657,7 +659,8 @@ namespace Oxygen
     {
 
         // store colors
-        const ColorUtils::Rgba color( settings().palette().color( Palette::Button ) );
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        const ColorUtils::Rgba color( settings().palette().color( group, Palette::Button ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
         const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( color ) );
@@ -927,25 +930,26 @@ namespace Oxygen
     {
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         if( options & Flat )
         {
             if( options & Sunken )
             {
 
                 Cairo::Context context( window, clipRect );
-                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+                ColorUtils::Rgba base( settings().palette().color( group, Palette::Window ) );
 
                 if( options & Hover )
                 {
 
-                    const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
+                    const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Hover ) );
                     helper().holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
 
                 } else helper().hole( base, 0, 7, false ).render( context, x, y, w, h );
 
             } else if( options&Hover ) {
 
-                const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
+                const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Focus ) );
                 Cairo::Context context( window, clipRect );
                 helper().slitFocused( glow ).render( context, x, y, w, h );
 
@@ -965,11 +969,11 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( group, Palette::Button );
 
         }
 
@@ -1071,9 +1075,9 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base;
-        const Palette::Group group( options&Disabled ? Palette::Active : Palette::Disabled );
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const Palette::Role role( options&Flat ? Palette::Window : Palette::Button );
-        if( false && options&Blend )
+        if( options&Blend )
         {
 
             gint wh, wy;
@@ -1214,18 +1218,19 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base;
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         if( options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
 
-            if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
-            else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+            else base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( group, Palette::Button );
 
         }
 
@@ -1568,17 +1573,18 @@ namespace Oxygen
     {
 
         // define colors
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         ColorUtils::Rgba base;
         if( options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( group, Palette::Button );
 
         }
 
@@ -2577,8 +2583,9 @@ namespace Oxygen
     {
 
         ColorUtils::Rgba glow;
-        if( options & Hover ) glow = settings().palette().color( Palette::Hover );
-        else if( options & Focus ) glow =  settings().palette().color( Palette::Focus );
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        if( options & Hover ) glow = settings().palette().color( group, Palette::Hover );
+        else if( options & Focus ) glow =  settings().palette().color( group, Palette::Focus );
         return glow;
 
     }
