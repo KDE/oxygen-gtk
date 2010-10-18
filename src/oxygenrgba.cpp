@@ -44,7 +44,8 @@ namespace ColorUtils
         if( v > 1 )
         {
             // overflow. Adjust saturation
-            s -= std::max( 0.0, (v - 1 ) );
+            s -= v - 1;
+            if( s < 0 ) s = 0;
             v = 1.0;
         }
 
