@@ -39,6 +39,7 @@ namespace Oxygen
             _motionId(-1),
             _leaveId(-1),
             _hovered( false ),
+            _path(0),
             _x(-1),
             _y(-1)
         {}
@@ -64,9 +65,9 @@ namespace Oxygen
         //! true if current position is contained int rect
         bool isCellHovered( int x, int y, int w, int h ) const
         {
-            if( !_hovered ) return false;
-            if( _fullWidth ) return ( _y >= y ) && ( _y <= y+h );
-            else return (_x >= x) && (_x <= x+w ) && ( _y >= y ) && ( _y <= y+h );
+            if( !( _path && _hovered ) ) return false;
+            if( _fullWidth ) return ( _y >= y ) && ( _y < y+h );
+            else return (_x >= x) && (_x < x+w ) && ( _y >= y ) && ( _y < y+h );
         }
 
         protected:
@@ -105,6 +106,9 @@ namespace Oxygen
 
         //! true if hovered
         bool _hovered;
+
+        //! keep track of the hovered path
+        GtkTreePath* _path;
 
         //! position
         int _x;

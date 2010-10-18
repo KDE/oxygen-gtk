@@ -35,7 +35,7 @@ namespace Oxygen
 
         // get full-width flag
         if( GTK_IS_TREE_VIEW( widget ) )
-        { gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, 0L ); }
+        { gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL ); }
 
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
@@ -55,9 +55,38 @@ namespace Oxygen
     {
 
         if( !GTK_IS_TREE_VIEW( widget ) ) return;
+        GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
-        _x = x;
-        _y = y;
+        // get path at x and y
+        GtkTreePath* path(0L);
+        gtk_tree_view_get_path_at_pos( treeView, x,y, &path, 0L, 0L, 0L );
+
+        // compare path.
+        // do nothing if unchanged
+        if( !( path || _path ) ) return;
+        else if( _path && path && !gtk_tree_path_compare( _path, path ) )
+        {
+            gtk_tree_path_free( path );
+            return;
+        }
+
+        if( !path )
+        {
+
+            _x = -1;
+            _y = -1;
+            if( _path ) gtk_tree_path_free( _path );
+            _path = 0L;
+
+        } else {
+
+            _x = x;
+            _y = y;
+            if( _path ) gtk_tree_path_free( _path );
+            _path = path;
+
+        }
+
         gtk_widget_queue_draw( widget );
 
     }
