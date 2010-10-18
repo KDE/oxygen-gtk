@@ -38,6 +38,8 @@ namespace Oxygen
         ColorUtils::Rgba::List &destination = colorList(to);
 
         // apply effects to background
+        destination[Window] = effect.color(source[Window]);
+        destination[Button] = effect.color(source[Button]);
         destination[Base] = effect.color(source[Base]);
         destination[BaseAlternate] = effect.color(source[BaseAlternate]);
 
@@ -45,6 +47,8 @@ namespace Oxygen
         else destination[Selected] = effect.color( source[Selected] );
 
         // apply effects to hover and focus and text
+        destination[WindowText] = effect.color(source[WindowText], source[Window] );
+        destination[ButtonText] = effect.color(source[ButtonText], source[Button] );
         destination[Text] = effect.color(source[Text], source[Base] );
         destination[Focus] = effect.color(source[Focus], source[Base] );
         destination[Hover] = effect.color(source[Hover], source[Base] );
