@@ -31,9 +31,6 @@ namespace ColorUtils
 namespace Oxygen
 {
 
-    //! streamer
-    inline std::ostream& operator << (std::ostream& out, const ColorUtils::Rgba::List& colors );
-
     //! store colors for all Color groups and roles
     class Palette
     {
@@ -106,42 +103,6 @@ namespace Oxygen
         //! generate group from input, using provided effect
         void generate( Group from, Group to, const ColorUtils::Effect& );
 
-        // get string from group
-        static std::string group( unsigned int group )
-        {
-            switch( group )
-            {
-                case Active: return "Active";
-                case Inactive: return "Inactive";
-                case Disabled: return "Disabled";
-                default: return "unknown";
-            }
-        }
-
-        // get string from role
-        static std::string role( unsigned int role )
-        {
-            switch( role )
-            {
-                case Base: return "Base";
-                case BaseAlternate: return "BaseAlternate";
-                case Button: return "Button";
-                case Selected: return "Selected";
-                case Window: return "Window";
-                case Tooltip: return "Tooltip";
-                case Text: return "Text";
-                case ButtonText: return "ButtonText";
-                case SelectedText: return "SelectedText";
-                case WindowText: return "WindowText";
-                case TooltipText: return "TooltipText";
-                case Focus: return "Focus";
-                case Hover: return "Hover";
-                case NumColors: return "NumColors";
-                default: return "unknown";
-            }
-
-        }
-
         protected:
 
         //! get color list from group
@@ -177,30 +138,7 @@ namespace Oxygen
         //! current group
         Group _group;
 
-        //! streamer
-        friend std::ostream& operator << (std::ostream& out, const Palette& palette )
-        {
-            out << Palette::group( Palette::Active ) << ":" << std::endl;
-            out << palette._activeColors << std::endl;
-
-            out << Palette::group( Palette::Inactive ) << ":" << std::endl;
-            out << palette._inactiveColors << std::endl;
-
-            out << Palette::group( Palette::Disabled ) << ":" << std::endl;
-            out << palette._disabledColors << std::endl;
-            return out;
-        }
-
     };
-
-    //______________________________________________________________________________
-    std::ostream& operator << (std::ostream& out, const ColorUtils::Rgba::List& colors )
-    {
-        for( unsigned int i=0; i<colors.size(); i++ )
-        { out << Palette::role( i ) << " " << colors[i] << std::endl; }
-        return out;
-
-    }
 
 }
 
