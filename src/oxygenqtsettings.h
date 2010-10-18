@@ -243,8 +243,11 @@ namespace Oxygen
         //! palette
         Palette _palette;
 
-        //!@name oxygen style options
+        //!@name kde/oxygen style options
         //@{
+
+        //! if true, inactive selection has different color from active
+        bool _inactiveChangeSelectionColor;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;

@@ -36,7 +36,6 @@ namespace ColorUtils
         _colorEffectAmount(0),
         _contrastEffect( ContrastNoEffect ),
         _contrastEffectAmount(0),
-        _changeSelectionColor( false ),
         _enabled( false )
     {
 
@@ -98,7 +97,6 @@ namespace ColorUtils
 
         // enable state
         _enabled = ( options.getOption( section, "Enable" ).toVariant<std::string>("true") == "true" );
-        _changeSelectionColor = ( options.getOption( section, "ChangeSelectionColor" ).toVariant<std::string>( "false" ) == "true" );
     }
 
     //__________________________________________________________________________________________
