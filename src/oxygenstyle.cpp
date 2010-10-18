@@ -1071,17 +1071,18 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base;
+        const Palette::Group group( options&Disabled ? Palette::Active : Palette::Disabled );
         const Palette::Role role( options&Flat ? Palette::Window : Palette::Button );
-        if( options&Blend )
+        if( false && options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( role ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( role );
+            base = settings().palette().color( group, role );
 
         }
 
