@@ -1205,7 +1205,7 @@ namespace Oxygen
     void Style::renderRadioButton(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options ) const
     {
 
         // define checkbox rect
@@ -1249,13 +1249,13 @@ namespace Oxygen
         cairo_restore( context );
         g_object_unref( pixbuf );
 
-        if( options&Sunken )
+        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
         {
-            const double radius( 2.6 );
+            const double radius( shadow == GTK_SHADOW_IN ? 2.6:1.4 );
+
             const double dx( 0.5*child.width - radius );
             const double dy( 0.5*child.height - radius );
 
-            Palette::Group group( (options&Disabled) ? Palette::Disabled : Palette::Active );
             const ColorUtils::Rgba background( settings().palette().color( Palette::Button ) );
             const ColorUtils::Rgba color( settings().palette().color( group, Palette::ButtonText ) );
 
@@ -1263,12 +1263,27 @@ namespace Oxygen
             cairo_translate( context, 0, radius/2 );
             cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
             cairo_restore( context );
-            cairo_set_source( context, ColorUtils::lightColor( background ) );
-            cairo_fill( context );
+            if( shadow == GTK_SHADOW_IN )
+            {
 
-            cairo_set_source( context, ColorUtils::decoColor( background, color ) );
-            cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
-            cairo_fill( context );
+                cairo_set_source( context, ColorUtils::lightColor( background ) );
+                cairo_fill( context );
+
+                cairo_set_source( context, ColorUtils::decoColor( background, color ) );
+                cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
+                cairo_fill( context );
+
+            } else {
+
+                cairo_set_line_width( context, 1.3 );
+                cairo_set_source( context, ColorUtils::lightColor( background ) );
+                cairo_stroke( context );
+
+                cairo_set_source( context, ColorUtils::decoColor( background, color ) );
+                cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
+                cairo_stroke( context );
+
+            }
 
         }
 

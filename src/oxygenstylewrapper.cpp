@@ -867,7 +867,7 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
             if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
-            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
+            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
 
         } else if( d.isOption() ) {
 
@@ -879,7 +879,7 @@ namespace Oxygen
                 if( Gtk::gtk_parent_menu( widget ) ) options|=Menu;
             }
             options &= ~Hover;
-            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, options );
+            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
 
         } else {
 

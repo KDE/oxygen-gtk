@@ -120,7 +120,7 @@ namespace Oxygen
         void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions ) const;
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions ) const;
 
         //!@name generic slab
         //@{
