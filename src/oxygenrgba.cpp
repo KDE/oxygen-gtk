@@ -34,7 +34,10 @@ namespace ColorUtils
     //___________________________________________________________
     Rgba Rgba::light( int factor ) const
     {
-        if( factor <= 100 ) return *this;
+
+        if( factor <= 0 ) return *this;
+        else if( factor < 100 ) return dark( 10000 / factor );
+
         double h, s, v;
         toHsv( h, s, v );
         v = (v*factor)/100;
@@ -51,7 +54,9 @@ namespace ColorUtils
     //___________________________________________________________
     Rgba Rgba::dark( int factor ) const
     {
-        if( factor <= 100 ) return *this;
+        if( factor <= 0 ) return *this;
+        else if( factor < 100 ) return light( 10000/ factor );
+
         double h, s, v;
         toHsv( h, s, v );
         v = (v*100.0)/factor;
