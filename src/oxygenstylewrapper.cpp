@@ -817,13 +817,13 @@ namespace Oxygen
                 options &= ~(Hover|Focus);
             }
 
-            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
+            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
 
         } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill );
-            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, options );
+            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
 
         } else {
 
