@@ -37,7 +37,14 @@ namespace ColorUtils
         if( factor <= 100 ) return *this;
         double h, s, v;
         toHsv( h, s, v );
-        v = std::min( 1.0, (v*factor)/100 );
+        v = (v*factor)/100;
+        if( v > 1 )
+        {
+            // overflow. Adjust saturation
+            s -= std::max( 0.0, (v - 1 ) );
+            v = 1.0;
+        }
+
         return Rgba( *this ).fromHsv( h, s, v );
     }
 
