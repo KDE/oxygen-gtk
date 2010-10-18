@@ -352,7 +352,8 @@ namespace ColorUtils
 
         double ri = contrastRatio( base, color );
         double rg = 1.0 + ( ( ri + 1.0 ) * amount * amount * amount );
-        double u = 1.0, l = 0.0;
+        double u = 1.0;
+        double l = 0.0;
         Rgba result;
         for ( int i = 12 ; i ; --i )
         {
