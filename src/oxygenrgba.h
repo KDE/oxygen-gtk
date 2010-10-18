@@ -56,10 +56,10 @@ namespace ColorUtils
 
         //! constructor
         Rgba( double r, double g, double b, double a = 1 ):
-            _red( r*USHRT_MAX ),
-            _green( g*USHRT_MAX ),
-            _blue( b*USHRT_MAX ),
-            _alpha( a*USHRT_MAX ),
+            _red( (unsigned short) (r*USHRT_MAX) ),
+            _green( (unsigned short) (g*USHRT_MAX) ),
+            _blue( (unsigned short) (b*USHRT_MAX) ),
+            _alpha( (unsigned short) (a*USHRT_MAX) ),
             _mask( RGBA )
         {}
 

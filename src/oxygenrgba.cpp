@@ -143,17 +143,17 @@ namespace ColorUtils
         const double c = value*saturation*USHRT_MAX;
         const double x = c*(1 - std::abs((h-2*int(h/2)) - 1 ));
 
-        if( h>=0 && h<1 ) { _red = c; _green = x; _blue = 0; }
-        else if( h>=1 && h<2 ) { _red = x; _green = c; _blue = 0; }
-        else if( h>=2 && h<3 ) { _red = 0; _green = c; _blue = x; }
-        else if( h>=3 && h<4 ) { _red = 0; _green = x; _blue = c; }
-        else if( h>=4 && h<5 ) { _red = x; _green = 0; _blue = c; }
-        else { _red = c; _green = 0; _blue = x; }
+        if( h>=0 && h<1 ) { _red = (unsigned short) c; _green = (unsigned short) x; _blue = 0; }
+        else if( h>=1 && h<2 ) { _red = (unsigned short) x; _green = (unsigned short) c; _blue = 0; }
+        else if( h>=2 && h<3 ) { _red = 0; _green = (unsigned short) c; _blue = (unsigned short) x; }
+        else if( h>=3 && h<4 ) { _red = 0; _green = (unsigned short) x; _blue = (unsigned short) c; }
+        else if( h>=4 && h<5 ) { _red = (unsigned short) x; _green = 0; _blue = (unsigned short) c; }
+        else { _red = (unsigned short) c; _green = 0; _blue = (unsigned short) x; }
 
         double m = value*USHRT_MAX - c;
-        _red += m;
-        _green += m;
-        _blue += m;
+        _red += (unsigned short) m;
+        _green += (unsigned short) m;
+        _blue += (unsigned short) m;
 
         _mask |= RGB;
 
