@@ -195,7 +195,10 @@ namespace Oxygen
             CheckBox_Size = 21,
 
             // slider groove height
-            Slider_GrooveWidth = 5
+            Slider_GrooveWidth = 5,
+
+            // menu vertical offset
+            Menu_VerticalOffset = 2
 
         };
 

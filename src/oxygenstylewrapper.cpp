@@ -526,8 +526,8 @@ namespace Oxygen
                     const GtkAllocation& allocation( widget->allocation );
                     if( Animations::instance().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                     {
-                        GdkPixmap* mask( Style::instance().helper().roundMask( w, h ) );
-                        gdk_window_shape_combine_mask(gtk_widget_get_parent_window(widget),mask,0,0);
+                        GdkPixmap* mask( Style::instance().helper().roundMask( w, h-2*Style::Menu_VerticalOffset ) );
+                        gdk_window_shape_combine_mask(gtk_widget_get_parent_window(widget),mask,0,Style::Menu_VerticalOffset);
                         gdk_pixmap_unref(mask);
                     }
 

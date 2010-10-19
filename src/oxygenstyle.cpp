@@ -223,8 +223,9 @@ namespace Oxygen
         }
 
         const int splitY( std::min(200, 3*wh/4 ) );
-
-        GdkRectangle upperRect = { 0, 0, ww, splitY };
+        const int verticalOffset( isMozilla ? 0:Menu_VerticalOffset );
+        
+        GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
             // upper rect
@@ -238,7 +239,7 @@ namespace Oxygen
 
         }
 
-        GdkRectangle lowerRect = { 0, splitY, w, wh-splitY };
+        GdkRectangle lowerRect = { 0, splitY, w, wh-splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
@@ -840,6 +841,13 @@ namespace Oxygen
 
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
         cairo_pattern_add_color_stop( pattern, 0, light );
+
+        // add vertical offset
+        if( !isMozilla )
+        {
+            y += Menu_VerticalOffset;
+            h -= 2*Menu_VerticalOffset;
+        }
 
         if( drawUglyShadow )
         {
