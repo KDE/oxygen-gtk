@@ -324,7 +324,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool is_notebook_close_button(GtkWidget* widget)
+    bool gtk_notebook_is_close_button(GtkWidget* widget)
     {
         if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
         {

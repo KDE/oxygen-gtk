@@ -113,7 +113,7 @@ namespace Gtk
     GtkWidget* gtk_button_find_image(GtkWidget* button);
 
     //! returns true if widget is a notebook close button
-    bool is_notebook_close_button(GtkWidget* widget);
+    bool gtk_notebook_is_close_button(GtkWidget* widget);
 
 
     //@}
