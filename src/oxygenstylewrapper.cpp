@@ -752,37 +752,38 @@ namespace Oxygen
             Style::instance().renderWindowBackground(window,clipRect,x-4,y-4,w+8,h+8);
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
 
-        } else {
+        } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
-            if( shadow == GTK_SHADOW_IN ) {
-
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
-
-            } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
-
-                Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Blend );
-
-            } else if( shadow == GTK_SHADOW_OUT ) {
-
-                if( GTK_IS_CALENDAR( widget ) )
-                {
-
-                    if( style )
-                    {
-                        Style::instance().fill( window,clipRect,x-2,y-2,w+4,h+4, Gtk::gdk_get_color( style->base[state] ) );
-                        Style::instance().fill( window,clipRect,x+2,y+2,w-4,h-6, Gtk::gdk_get_color( style->bg[state] ) );
-                    }
-
-                    Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, NoFill );
-
-                } else Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
-
+            // calendar header
+            if( style )
+            {
+                Style::instance().fill( window,clipRect,x-2,y-2,w+4,h+4, Gtk::gdk_get_color( style->base[state] ) );
+                Style::instance().renderWindowBackground( window,clipRect,x+2,y+2,w-4,h-6 );
             }
 
-            return;
+            StyleOptions options( Blend );
+            options |= NoFill;
+            Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
+
+        } else if( shadow == GTK_SHADOW_IN ) {
+
+            // default shadow_in frame
+            Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
+
+        } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
+
+            // default etched frame
+            Style::instance().renderDockFrame( window, clipRect, x, y+1, w, h-2, Blend );
+
+        } else if( shadow == GTK_SHADOW_OUT ) {
+
+            // default shadow_out frame
+            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
 
         }
+
+        return;
     }
 
     //___________________________________________________________________________________________________________
@@ -1106,9 +1107,14 @@ namespace Oxygen
 
             options &= ~( Focus|Hover );
 
+        } else if( GTK_IS_CALENDAR( widget ) ) {
+
+            // need to render background behind arrows from calendar
+            Style::instance().renderWindowBackground( window, clipRect, x-2, y-3, w+4, h+6 );
+
         }
 
-        // render
+        // render arrow
         Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
 
     }
