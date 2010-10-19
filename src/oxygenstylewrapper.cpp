@@ -648,7 +648,7 @@ namespace Oxygen
         } else if( d.isBar() && GTK_IS_PROGRESS_BAR( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
-            Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
+            Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, gtk_progress_bar_get_orientation( GTK_PROGRESS_BAR( widget ) ), options );
             return;
 
         } else {
