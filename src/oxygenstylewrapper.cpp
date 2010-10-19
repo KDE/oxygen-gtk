@@ -765,7 +765,7 @@ namespace Oxygen
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
 
-        } else if( shadow == GTK_SHADOW_IN ) {
+        } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
             // default shadow_in frame
             Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );

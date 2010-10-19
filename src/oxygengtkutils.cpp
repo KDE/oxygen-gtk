@@ -198,6 +198,18 @@ namespace Gtk
     }
 
     //________________________________________________________
+    GtkWidget* gtk_parent_statusbar( GtkWidget* widget )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_STATUSBAR( parent ) ) return parent; }
+
+        return 0L;
+    }
+
+
+    //________________________________________________________
     GtkWidget* gtk_parent_notebook( GtkWidget* widget )
     {
 

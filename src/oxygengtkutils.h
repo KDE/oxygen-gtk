@@ -80,8 +80,11 @@ namespace Gtk
     //! return parent combobox if any.
     GtkWidget* gtk_parent_combobox_entry( GtkWidget* );
 
-    //! return parent combobox if any.
+    //! return parent scrolled window if any.
     GtkWidget* gtk_parent_scrolled_window( GtkWidget* );
+
+    //! return parent statusbar if any.
+    GtkWidget* gtk_parent_statusbar( GtkWidget* );
 
     //! return parent combobox if any.
     GtkWidget* gtk_parent_notebook( GtkWidget* );
