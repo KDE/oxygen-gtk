@@ -173,7 +173,7 @@ namespace Oxygen
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
 
-        static_cast<TreeViewData*>( data )->updatePosition( widget, event->x, event->y );
+        static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y );
         return FALSE;
 
     }
