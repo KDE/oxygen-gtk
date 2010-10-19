@@ -107,14 +107,13 @@ namespace Gtk
     int gtk_notebook_find_first_tab( GtkWidget* );
 
     //! returns true if potentialParent is (maybe indirect) parent of widget
-    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent );
+    bool gtk_is_parent( GtkWidget*, GtkWidget* potentialParent );
 
     //! returns an image on button-container
-    GtkWidget* gtk_button_find_image(GtkWidget* button);
+    GtkWidget* gtk_button_find_image( GtkWidget* );
 
     //! returns true if widget is a notebook close button
-    bool gtk_notebook_is_close_button(GtkWidget* widget);
-
+    bool gtk_notebook_is_close_button( GtkWidget* );
 
     //@}
 
