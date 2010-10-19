@@ -754,7 +754,7 @@ namespace Oxygen
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
             Style::instance().renderWindowBackground(window,clipRect,x-4,y-4,w+8,h+8);
-            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
