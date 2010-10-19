@@ -601,7 +601,11 @@ namespace Oxygen
         // context
         Cairo::Context context( window );
 
-        // get pixbug
+        // validate rect
+        if(w<0 || h<0)
+            return;
+
+        // get pixbuf
         GdkPixbuf* pixbuf( helper().progressBarIndicator( base, glow, w, h ) );
         cairo_translate( context, -1, -2 );
         cairo_translate( context, x, y );
