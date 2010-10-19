@@ -40,6 +40,7 @@ namespace Oxygen
             _leaveId(-1),
             _hovered( false ),
             _path(0),
+            _column(0),
             _x(-1),
             _y(-1)
         {}
@@ -73,15 +74,14 @@ namespace Oxygen
         protected:
 
         //! set mouse over state
-        void setHovered( GtkWidget* widget, bool value )
-        {
-            if( _hovered == value ) return;
-            _hovered = value;
-            gtk_widget_queue_draw( widget );
-        }
+        void setHovered( bool value )
+        { _hovered = value; }
 
         //! update pointer position
-        void updatePosition( GtkWidget* widget, int x, int y );
+        void updatePosition( GtkWidget*, int x, int y );
+
+        //! update pointer position
+        void clearPosition( GtkWidget* );
 
         //!@name static callbacks
         //@{
@@ -109,7 +109,7 @@ namespace Oxygen
 
         //! keep track of the hovered path
         GtkTreePath* _path;
-
+        GtkTreeViewColumn* _column;
         //! position
         int _x;
 
