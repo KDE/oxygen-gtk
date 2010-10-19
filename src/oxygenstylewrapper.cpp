@@ -645,10 +645,14 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isBar() && GTK_IS_PROGRESS_BAR( widget ) ) {
+        } else if( d.isBar() ) {
 
             StyleOptions options( widget, state, shadow );
-            Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
+            if(GTK_IS_PROGRESS_BAR(widget))
+                Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
+            else // most likely it's progressbar in the list
+                // FIXME: is it always the case?
+                Style::instance().renderProgressBarHandle( window, clipRect, x, y+2, w, h-4, options );
             return;
 
         } else {
@@ -750,7 +754,7 @@ namespace Oxygen
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
             Style::instance().renderWindowBackground(window,clipRect,x-4,y-4,w+8,h+8);
-            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
@@ -765,6 +769,12 @@ namespace Oxygen
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
 
+        } else if ( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN)
+        {
+            // it's likely progressbar hole
+            // FIXME: is it enough to check for TreeView? is shadow_in the only possible case?
+            StyleOptions options;
+            Style::instance().renderProgressBarHole(window,clipRect,x-2,y,w+4,h,options);
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
             // default shadow_in frame
