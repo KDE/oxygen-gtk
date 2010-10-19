@@ -70,6 +70,29 @@ namespace Oxygen
             return;
         }
 
+        // prepare update area
+        GdkRectangle oldRect( Gtk::gdk_rectangle() );
+        if( _path )
+        {
+            gtk_tree_view_get_background_area( treeView, _path, 0L, &oldRect );
+            oldRect.width = widget->allocation.width;
+        }
+
+        GdkRectangle newRect( Gtk::gdk_rectangle() );
+        if( path )
+        {
+            gtk_tree_view_get_background_area( treeView, path, 0L, &newRect );
+            newRect.width = widget->allocation.width;
+        }
+
+        GdkRectangle updateRect;
+        if( Gtk::gdk_rectangle_is_valid( &oldRect ) )
+        {
+            if( Gtk::gdk_rectangle_is_valid( &newRect ) ) gdk_rectangle_union( &oldRect, &newRect, &updateRect );
+            else updateRect = oldRect;
+        } else updateRect = newRect;
+
+        // update path and position
         if( !path )
         {
 
@@ -80,14 +103,15 @@ namespace Oxygen
 
         } else {
 
-            _x = x;
-            _y = y;
+            _x = newRect.x + newRect.width/2;
+            _y = newRect.y + newRect.height/2;
             if( _path ) gtk_tree_path_free( _path );
             _path = path;
 
         }
 
-        gtk_widget_queue_draw( widget );
+        // schedule redraw
+        Gtk::gtk_widget_queue_draw( widget, &updateRect );
 
     }
 

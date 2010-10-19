@@ -167,10 +167,8 @@ namespace Oxygen
             else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
-            if( Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
-            {
-                options |= Hover;
-            }
+            if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
+            { options |= Hover; }
 
             if( options & (Selected|Hover) )
             {
