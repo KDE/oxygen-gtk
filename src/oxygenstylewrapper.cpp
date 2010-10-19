@@ -769,7 +769,7 @@ namespace Oxygen
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
 
-        } else if (GTK_IS_TREE_VIEW(widget) && shadow==GTK_SHADOW_IN)
+        } else if ( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN)
         {
             // it's likely progressbar hole
             // FIXME: is it enough to check for TreeView? is shadow_in the only possible case?
