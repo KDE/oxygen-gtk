@@ -48,6 +48,17 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+
+        if( _path ) {
+            gtk_tree_path_free( _path );
+            _path = 0L;
+        }
+
+        _column = 0L;
+        _hovered = 0;
+        _x = -1;
+        _y = -1;
+
     }
 
     //________________________________________________________________________________
@@ -59,58 +70,85 @@ namespace Oxygen
 
         // get path at x and y
         GtkTreePath* path(0L);
-        gtk_tree_view_get_path_at_pos( treeView, x,y, &path, 0L, 0L, 0L );
+        GtkTreeViewColumn* column( 0L );
+        gtk_tree_view_get_path_at_pos( treeView, x,y, &path, &column, 0L, 0L );
 
         // compare path.
         // do nothing if unchanged
         if( !( path || _path ) ) return;
-        else if( _path && path && !gtk_tree_path_compare( _path, path ) )
+        else if( _path && path && !gtk_tree_path_compare( _path, path ) && (_fullWidth || column == _column ) )
         {
+            column = _column;
             gtk_tree_path_free( path );
             return;
         }
 
         // prepare update area
+        // get old rectangle
         GdkRectangle oldRect( Gtk::gdk_rectangle() );
         if( _path )
         {
-            gtk_tree_view_get_background_area( treeView, _path, 0L, &oldRect );
-            oldRect.width = widget->allocation.width;
+            gtk_tree_view_get_background_area( treeView, _path, _column, &oldRect );
+            if( _fullWidth ) { oldRect.x = 0; oldRect.width = widget->allocation.width; }
         }
 
+        // get new rectangle and update position
         GdkRectangle newRect( Gtk::gdk_rectangle() );
         if( path )
         {
-            gtk_tree_view_get_background_area( treeView, path, 0L, &newRect );
-            newRect.width = widget->allocation.width;
-        }
 
-        GdkRectangle updateRect;
-        if( Gtk::gdk_rectangle_is_valid( &oldRect ) )
-        {
-            if( Gtk::gdk_rectangle_is_valid( &newRect ) ) gdk_rectangle_union( &oldRect, &newRect, &updateRect );
-            else updateRect = oldRect;
-        } else updateRect = newRect;
 
-        // update path and position
-        if( !path )
-        {
-
-            _x = -1;
-            _y = -1;
-            if( _path ) gtk_tree_path_free( _path );
-            _path = 0L;
+            gtk_tree_view_get_background_area( treeView, path, column, &newRect );
+            if( _fullWidth ) { newRect.x = 0; newRect.width = widget->allocation.width; }
+            _x = newRect.x + newRect.width/2;
+            _y = newRect.y + newRect.height/2;
 
         } else {
 
-            _x = newRect.x + newRect.width/2;
-            _y = newRect.y + newRect.height/2;
-            if( _path ) gtk_tree_path_free( _path );
-            _path = path;
-
+            _x = -1;
+            _y = -1;
         }
 
+        // take the union of both rectangles
+        GdkRectangle updateRect;
+        if( Gtk::gdk_rectangle_is_valid( &oldRect ) )
+        {
+
+            if( Gtk::gdk_rectangle_is_valid( &newRect ) ) gdk_rectangle_union( &oldRect, &newRect, &updateRect );
+            else updateRect = oldRect;
+
+        } else updateRect = newRect;
+
+        // update path and column
+        if( _path ) gtk_tree_path_free( _path );
+        _column = column;
+        _path = path;
+
+        // convert to widget coordinates and schedule redraw
+        gtk_tree_view_convert_bin_window_to_widget_coords( treeView, updateRect.x, updateRect.y, &updateRect.x, &updateRect.y );
+        Gtk::gtk_widget_queue_draw( widget, &updateRect );
+
+    }
+
+    //________________________________________________________________________________
+    void TreeViewData::clearPosition( GtkWidget* widget )
+    {
+
+        // clear stored position
+        _x = -1;
+        _y = -1;
+
+        // check path and widget
+        if( !( _path && GTK_IS_TREE_VIEW( widget ) ) ) return;
+        GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+
+        // prepare update area
+        GdkRectangle updateRect( Gtk::gdk_rectangle() );
+        gtk_tree_view_get_background_area( treeView, _path, 0L, &updateRect );
+        updateRect.width = widget->allocation.width;
+
         // schedule redraw
+        gtk_tree_view_convert_bin_window_to_widget_coords( treeView, updateRect.x, updateRect.y, &updateRect.x, &updateRect.y );
         Gtk::gtk_widget_queue_draw( widget, &updateRect );
 
     }
@@ -118,7 +156,7 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean TreeViewData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<TreeViewData*>( data )->setHovered( widget, true );
+        static_cast<TreeViewData*>( data )->setHovered( true );
         return FALSE;
     }
 
@@ -134,7 +172,8 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean TreeViewData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<TreeViewData*>( data )->setHovered( widget, false );
+        static_cast<TreeViewData*>( data )->setHovered( false );
+        static_cast<TreeViewData*>( data )->clearPosition( widget );
         return FALSE;
     }
 
