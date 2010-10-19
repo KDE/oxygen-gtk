@@ -35,7 +35,11 @@ namespace Oxygen
 
         // get full-width flag
         if( GTK_IS_TREE_VIEW( widget ) )
-        { gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL ); }
+        {
+            gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
+            GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
+            _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", (GCallback)rowDeletedEvent, this );
+        }
 
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
@@ -49,7 +53,15 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
 
-        if( _path ) {
+        // TODO: this should really get handled at model deletion
+        if( _rowDeletedId >= 0 && GTK_IS_TREE_VIEW( widget ) )
+        {
+            GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
+            g_signal_handler_disconnect(G_OBJECT(model), _rowDeletedId );
+        }
+
+        if( _path )
+        {
             gtk_tree_path_free( _path );
             _path = 0L;
         }
@@ -138,8 +150,13 @@ namespace Oxygen
         _x = -1;
         _y = -1;
 
+        // clear path and column
+        if( _path ) gtk_tree_path_free( _path );
+        _path = 0L;
+        _column = 0L;
+
         // check path and widget
-        if( !( _path && GTK_IS_TREE_VIEW( widget ) ) ) return;
+        if( !( _path && widget && GTK_IS_TREE_VIEW( widget ) ) ) return;
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
         // prepare update area
@@ -176,5 +193,9 @@ namespace Oxygen
         static_cast<TreeViewData*>( data )->clearPosition( widget );
         return FALSE;
     }
+
+    //________________________________________________________________________________
+    void TreeViewData::rowDeletedEvent( GtkTreeModel*, GtkTreePath* path, gpointer data )
+    { static_cast<TreeViewData*>( data )->clearPosition(); }
 
 }
