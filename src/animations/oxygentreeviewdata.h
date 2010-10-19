@@ -34,10 +34,11 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
-            _fullWidth( false ),
             _enterId(-1),
             _motionId(-1),
             _leaveId(-1),
+            _rowDeletedId(-1),
+            _fullWidth( false ),
             _hovered( false ),
             _path(0),
             _column(0),
@@ -81,40 +82,47 @@ namespace Oxygen
         void updatePosition( GtkWidget*, int x, int y );
 
         //! update pointer position
-        void clearPosition( GtkWidget* );
+        void clearPosition( GtkWidget* = 0L );
 
         //!@name static callbacks
         //@{
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static void rowActivatedEvent( GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gpointer );
+        static void cursorChangedEvent( GtkTreeView*, gpointer );
+        static void rowDeletedEvent( GtkTreeModel*, GtkTreePath*, gpointer );
         //@}
 
         private:
 
+        //!@name callbacks ids
+        //@{
+        int _enterId;
+        int _motionId;
+        int _leaveId;
+        int _rowDeletedId;
+        //@}
+
         //! true if hover works on full width
         bool _fullWidth;
-
-        //! enter signal id
-        int _enterId;
-
-        //! motion signal id
-        int _motionId;
-
-        //! leave signal id
-        int _leaveId;
 
         //! true if hovered
         bool _hovered;
 
-        //! keep track of the hovered path
+        //!@name keep track of the hovered path and
+        //@{
+
         GtkTreePath* _path;
         GtkTreeViewColumn* _column;
-        //! position
-        int _x;
 
-        //! position
+        //@}
+
+        //!@name position
+        //@{
+        int _x;
         int _y;
+        //@}
 
     };
 
