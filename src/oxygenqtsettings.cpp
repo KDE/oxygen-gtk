@@ -58,6 +58,7 @@ namespace Oxygen
         _scrollBarAddLineButtons( 2 ),
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
+        _viewDrawFocusIndicator( true ),
         _tooltipTransparent( true ),
         _tooltipDrawStyledFrames( true ),
         _viewDrawTriangularExpander( true ),
@@ -525,6 +526,9 @@ namespace Oxygen
 
         // toolbar separators
         _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
+
+        // focus indicator in views
+        _viewDrawFocusIndicator = _oxygen.getOption( "[Style]", "viewDrawFocusIndicator" ).toVariant<std::string>("true") == "true";
 
         // tooltips
         _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";

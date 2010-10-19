@@ -111,6 +111,10 @@ namespace Oxygen
         bool toolBarDrawItemSeparator( void ) const
         { return _toolBarDrawItemSeparator; }
 
+        //! toolbar item separator
+        bool viewDrawFocusIndicator( void ) const
+        { return _viewDrawFocusIndicator; }
+
         //! transparent tooltips
         bool tooltipTransparent( void ) const
         { return _tooltipTransparent; }
@@ -271,6 +275,9 @@ namespace Oxygen
 
         //! item separator
         bool _toolBarDrawItemSeparator;
+
+        //! focus indicator in views
+        bool _viewDrawFocusIndicator;
 
         //! transparent tooltips
         bool _tooltipTransparent;
