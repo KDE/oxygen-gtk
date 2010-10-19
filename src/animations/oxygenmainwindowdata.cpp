@@ -44,7 +44,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MainWindowData::updateSize( GtkWidget* widget, int width, int height )
+    void MainWindowData::updateSize( int width, int height )
     {
 
         if( width == _width && height == _height ) return;
@@ -60,7 +60,7 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MainWindowData::configureNotifyEvent(GtkWidget* widget, GdkEventConfigure* event, gpointer data )
     {
-        static_cast<MainWindowData*>(data)->updateSize( widget, event->width, event->height );
+        static_cast<MainWindowData*>(data)->updateSize( event->width, event->height );
         return FALSE;
     }
 

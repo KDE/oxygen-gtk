@@ -53,7 +53,7 @@ namespace Oxygen
         protected:
 
         //! update size
-        void updateSize( GtkWidget*, int width, int height );
+        void updateSize( int width, int height );
 
         //!name static callbacks
         static gboolean configureNotifyEvent( GtkWidget*, GdkEventConfigure*, gpointer);
