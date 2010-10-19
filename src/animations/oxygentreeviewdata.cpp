@@ -60,16 +60,8 @@ namespace Oxygen
             g_signal_handler_disconnect(G_OBJECT(model), _rowDeletedId );
         }
 
-        if( _path )
-        {
-            gtk_tree_path_free( _path );
-            _path = 0L;
-        }
-
-        _column = 0L;
-        _hovered = 0;
-        _x = -1;
-        _y = -1;
+        // also free path if valid
+        if( _path ) gtk_tree_path_free( _path );
 
     }
 
