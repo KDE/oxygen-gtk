@@ -39,7 +39,6 @@ style "oxygen-default"
     GtkMenu::horizontal-offset = -7
     GtkScale::slider-width = 23
     GtkScale::slider-length = 15
-    GtkScrollbar::trough-under-steppers=0
     GtkScrollbar::trough-border=1
     GtkScrolledWindow::scrollbar-spacing=1
     GtkStatusbar::has-resize-grip = FALSE
