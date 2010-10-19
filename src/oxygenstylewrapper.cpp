@@ -151,13 +151,6 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
-            g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-                "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
-                G_OBJECT_TYPE_NAME( widget ),
-                Maps::getState( state ),
-                Maps::getShadow( shadow ),
-                detail );
-
             if( GTK_IS_TREE_VIEW( widget ) )
             { Animations::instance().treeViewEngine().registerWidget( widget ); }
 
