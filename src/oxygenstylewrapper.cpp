@@ -721,7 +721,7 @@ namespace Oxygen
         {
 
             // now make it look like in Oxygen-Qt - with float frame and round edges
-            const GtkAllocation& allocation(parent->allocation);
+            GtkAllocation allocation(parent->allocation);
             StyleOptions options;
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
@@ -731,8 +731,8 @@ namespace Oxygen
                 Animations::instance().widgetSizeEngine().registerWidget( parent );
                 if( Animations::instance().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                 {
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height - 2*Style::Menu_VerticalOffset ) );
-                    gdk_window_shape_combine_mask( parent->window, mask, 0, Style::Menu_VerticalOffset );
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -753,10 +753,10 @@ namespace Oxygen
                     const gint offset( options&Alpha ? 0:1 );
                     GdkPixmap* mask( Style::instance().helper().roundMask(
                         widget->allocation.width - 2*offset,
-                        widget->allocation.height - 2*offset - 2*Style::Menu_VerticalOffset,
+                        widget->allocation.height - 2*offset,
                         3 ) );
 
-                    gdk_window_shape_combine_mask( widget->window, mask, offset, offset + Style::Menu_VerticalOffset );
+                    gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -764,6 +764,8 @@ namespace Oxygen
             }
 
             // now draw float frame on background window
+            allocation.y -= Style::Menu_VerticalOffset;
+            allocation.height += 2*Style::Menu_VerticalOffset;
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             return;
