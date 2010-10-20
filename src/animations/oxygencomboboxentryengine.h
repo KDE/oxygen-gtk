@@ -1,5 +1,5 @@
-#ifndef oxygencomboboxengine_h
-#define oxygencomboboxengine_h
+#ifndef oxygencomboboxentryengine_h
+#define oxygencomboboxentryengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -23,7 +23,7 @@
 
 #include "oxygengenericengine.h"
 #include "oxygendatamap.h"
-#include "oxygencomboboxdata.h"
+#include "oxygencomboboxentrydata.h"
 
 #include <gtk/gtk.h>
 
@@ -32,23 +32,23 @@ namespace Oxygen
     //! forward declaration
     class Animations;
 
-    //! stores data associated to editable comboboxes
+    //! stores data associated to editable comboboxentryes
     /*!
-    ensures that the text entry and the button of editable comboboxes
+    ensures that the text entry and the button of editable comboboxentryes
     gets hovered and focus flags at the same time
     */
-    class ComboBoxEngine: public GenericEngine<ComboBoxData>
+    class ComboBoxEntryEngine: public GenericEngine<ComboBoxEntryData>
     {
 
         public:
 
         //! constructor
-        ComboBoxEngine( Animations* widget ):
-            GenericEngine<ComboBoxData>( widget )
+        ComboBoxEntryEngine( Animations* widget ):
+            GenericEngine<ComboBoxEntryData>( widget )
             {}
 
         //! destructor
-        virtual ~ComboBoxEngine( void )
+        virtual ~ComboBoxEntryEngine( void )
         {}
 
         //!@name modifiers

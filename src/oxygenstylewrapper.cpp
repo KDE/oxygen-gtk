@@ -246,14 +246,14 @@ namespace Oxygen
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // since combobox entry is drawn in the combobox full height, we'll have to adjust glow height
@@ -446,15 +446,15 @@ namespace Oxygen
                 options |= Blend|NoFill;
 
                 // focus handling
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setButton( parent, widget );
-                Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setButton( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
 
                 // update option accordingly
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // render
@@ -783,14 +783,14 @@ namespace Oxygen
             {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // render
@@ -1816,8 +1816,13 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_layout(
-        GtkStyle* style, GdkWindow* window, GtkStateType state, gboolean use_text,
-        GdkRectangle* clipRect, GtkWidget* widget, const gchar* detail,
+        GtkStyle* style,
+        GdkWindow* window,
+        GtkStateType state,
+        gboolean use_text,
+        GdkRectangle* clipRect,
+        GtkWidget* widget,
+        const gchar* detail,
         gint x, gint y,
         PangoLayout* layout)
     {
