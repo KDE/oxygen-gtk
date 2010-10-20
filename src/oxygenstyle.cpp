@@ -224,7 +224,7 @@ namespace Oxygen
 
         const int splitY( std::min(200, 3*wh/4 ) );
         const int verticalOffset( isMozilla ? 0:Menu_VerticalOffset );
-        
+
         GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
@@ -916,7 +916,8 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options,
+        TileSet::Tiles tiles ) const
     {
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
@@ -941,7 +942,7 @@ namespace Oxygen
 
                 const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Focus ) );
                 Cairo::Context context( window, clipRect );
-                helper().slitFocused( glow ).render( context, x, y, w, h );
+                helper().slitFocused( glow ).render( context, x, y, w, h, tiles );
 
             }
 
@@ -1003,16 +1004,16 @@ namespace Oxygen
             {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
 
             } else if( options&Focus ) {
 
                 ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
 
             } else {
 
-                helper().slab( base, 0 ).render( context, x, y, w, h );
+                helper().slab( base, 0 ).render( context, x, y, w, h, tiles );
 
             }
 
