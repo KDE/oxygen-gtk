@@ -169,11 +169,43 @@ namespace Oxygen
             //! disconnect
             virtual void disconnect( void );
 
+            //! true if widget is down
             bool _pressed;
+
+            //! true if widget has focus
             bool _focus;
 
             //! toggled callback Id
             int _toggledId;
+
+        };
+
+        class HoverData: public ChildData
+        {
+            public:
+
+            //! constructor
+            explicit HoverData( void ):
+                _hovered( false ),
+                _enterId(-1),
+                _leaveId(-1)
+            {}
+
+            //! destructor
+            virtual ~HoverData( void )
+            {}
+
+            //! disconnect
+            virtual void disconnect( void );
+
+            //! true if widget is hovered
+            bool _hovered;
+
+            //!@name callback ids
+            //@{
+            int _enterId;
+            int _leaveId;
+            //@}
 
         };
 

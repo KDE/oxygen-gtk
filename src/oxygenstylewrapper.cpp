@@ -738,8 +738,9 @@ namespace Oxygen
             StyleOptions options;
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
-            if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+            if( !(options&Alpha) )
             {
+                // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
                 // make background window rounded
                 Animations::instance().widgetSizeEngine().registerWidget( parent );
                 if( Animations::instance().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )

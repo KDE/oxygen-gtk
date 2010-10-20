@@ -145,6 +145,19 @@ namespace Oxygen
 
     }
 
+    //________________________________________________________________________________
+    void ComboBoxData::HoverData::disconnect( void )
+    {
+        if( !_widget ) return;
+        g_signal_handler_disconnect(G_OBJECT(_widget), _enterId );
+        g_signal_handler_disconnect(G_OBJECT(_widget), _leaveId );
+        _hovered = false;
+
+        // base class
+        ChildData::disconnect();
+
+    }
+
     //____________________________________________________________________________________________
     gboolean ComboBoxData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
