@@ -408,7 +408,7 @@ namespace Oxygen
             _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
 
         }
-        _rc.addToRootSection( "widget_class \"*.<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menubar-item\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menubar-item\"" );
 
 
         if( _menuHighlightMode == MM_STRONG )
@@ -416,7 +416,7 @@ namespace Oxygen
             _rc.addSection( "oxygen-menu-item", "oxygen-menubar-item" );
             _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::SelectedText ) ) );
             _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::SelectedText ) ) );
-            _rc.addToRootSection( "widget_class \"*.<GtkMenu>.<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-item\"" );
+            _rc.addToRootSection( "widget_class \"*<GtkMenu>.<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-item\"" );
         }
 
         // text entries
@@ -431,7 +431,7 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
-        _rc.addToRootSection( "widget_class \"<GtkComboBoxEntry>.<GtkButton>\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkComboBoxEntry>.<GtkButton>\" style \"oxygen-entry\"" );
 
         // tooltips
         _rc.addSection( "oxygen-tooltips", "oxygen-default" );
@@ -499,11 +499,11 @@ namespace Oxygen
 
         _rc.addSection( "oxygen-menu-font", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
-        _rc.addToRootSection( "widget_class \"*.<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
 
         _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
-        _rc.addToRootSection( "widget_class \"*.<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
 
     }
 
