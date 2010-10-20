@@ -198,7 +198,7 @@ namespace Oxygen
             Slider_GrooveWidth = 5,
 
             // menu vertical offset
-            Menu_VerticalOffset = 2
+            Menu_VerticalOffset = 1
 
         };
 

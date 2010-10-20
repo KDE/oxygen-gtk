@@ -67,6 +67,23 @@ style "oxygen-pathbutton" = "oxygen-default"
 widget_class "*PathBar.*Button" style "oxygen-pathbutton"
 
 # menuitems padding
+style "oxygen-menubar" = "oxygen-default"
+{
+    xthickness = 1
+    ythickness = 1
+}
+
+widget_class "*<GtkMenuBar>*" style "oxygen-menubar"
+
+# menuitems padding
+style "oxygen-menubaritem" = "oxygen-default"
+{
+    xthickness = 3
+}
+
+widget_class "*<GtkMenuItem>*" style "oxygen-menubaritem"
+
+# menuitems padding
 style "oxygen-menuitem" = "oxygen-default"
 {
     xthickness = 1
