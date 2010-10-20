@@ -176,6 +176,29 @@ namespace Oxygen
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
+            // draw flat selection in combobox list
+            if(GTK_IS_SCROLLED_WINDOW(gtk_widget_get_parent(widget)))
+            {
+                gchar* wp;
+                gtk_widget_path(widget,NULL,&wp,NULL);
+                if(!strcmp(wp,"gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView"))
+                {
+                    g_free(wp); // have to free it here since we might not go further
+                    if(state==GTK_STATE_SELECTED)
+                    {
+                        Palette::Group group( Palette::Active );
+                        ColorUtils::Rgba selection( Style::instance().settings().palette().color( group, Palette::Selected ) );
+                        Cairo::Context context(window,clipRect);
+                        cairo_set_source(context,selection);
+                        cairo_rectangle(context,x,y,w,h);
+                        cairo_fill(context);
+                        return;
+                    }
+                }
+                else 
+                    g_free(wp);
+            }
+
             // get hover selection from tree view engine
             if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
             { options |= Hover; }
