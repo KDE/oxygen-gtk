@@ -717,12 +717,12 @@ namespace Oxygen
                     if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
                     {
                         // make background window rounded
-                        Animations::instance().widgetSizeEngine().registerWidget(parent);
-                        if( Animations::instance().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+                        Animations::instance().widgetSizeEngine().registerWidget( parent );
+                        if( Animations::instance().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                         {
                             GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
-                            gdk_window_shape_combine_mask(parent->window,mask,0,0);
-                            gdk_pixmap_unref(mask);
+                            gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
+                            gdk_pixmap_unref( mask );
                         }
 
                     }
@@ -731,22 +731,24 @@ namespace Oxygen
                     // if( !(options&Alpha) )
                     {
                         // and make the list rounded
-                        GList* children=gtk_container_get_children(GTK_CONTAINER(widget));
-                        widget=GTK_WIDGET(children->data);
-                        Animations::instance().widgetSizeEngine().registerWidget(widget);
-                        if( Animations::instance().widgetSizeEngine().updateSize(widget,widget->allocation.width,widget->allocation.height))
+                        GList* children=gtk_container_get_children(GTK_CONTAINER( widget ));
+                        widget=GTK_WIDGET( children->data );
+                        Animations::instance().widgetSizeEngine().registerWidget( widget );
+                        if( Animations::instance().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
                         {
-                            // offset is needed to make combobox list border 3px wide instead of default 2 - additional pixel is for ugly shadow
-                            const gint offset=((options&Alpha)?0:1);
-                            GdkPixmap* mask( Style::instance().helper().roundMask( widget->allocation.width-2*offset,widget->allocation.height-2*offset,3 ) );
-                            gdk_window_shape_combine_mask(widget->window,mask,offset,offset);
-                            gdk_pixmap_unref(mask);
+                            // offset is needed to make combobox list border 3px wide instead of default 2
+                            // additional pixel is for ugly shadow
+                            const gint offset( options&Alpha ? 0:1 );
+                            GdkPixmap* mask( Style::instance().helper().roundMask( widget->allocation.width-2*offset, widget->allocation.height-2*offset, 3 ) );
+                            gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
+                            gdk_pixmap_unref( mask );
                         }
+                        if( children ) g_list_free( children );
                     }
 
                     // now draw float frame on background window
-                    Style::instance().renderMenuBackground(parent->window,clipRect,allocation.x,allocation.y,allocation.width,allocation.height,options);
-                    Style::instance().drawFloatFrame(parent->window,clipRect,allocation.x,allocation.y,allocation.width,allocation.height,options);
+                    Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+                    Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
                     return;
                 }
 
