@@ -55,11 +55,28 @@ namespace Oxygen
         //! assign entry
         void setEntry( GtkWidget* value );
 
+        //! button focus
+        void setButtonFocus( bool value )
+        {
+            if( _button._focus == value ) return;
+            _button._focus = value;
+
+            // trigger entry update
+            if( _entry._widget )
+            { gtk_widget_queue_draw( _entry._widget ); }
+
+            return;
+        }
+
         //@}
 
         //! pressed
         bool pressed( void ) const
         { return _entry._pressed || _button._pressed; }
+
+        //! true if either button or entry has focus
+        bool hasFocus( void ) const
+        { return _button._focus || _entry._focus; }
 
         protected:
 
@@ -89,6 +106,7 @@ namespace Oxygen
             Data( void ):
                 _widget( 0L ),
                 _pressed( false ),
+                _focus( false ),
                 _destroyId(-1),
                 _styleChangeId(-1),
                 _toggledId(-1)
@@ -99,6 +117,7 @@ namespace Oxygen
 
             GtkWidget* _widget;
             bool _pressed;
+            bool _focus;
 
             //!@name callback ids
             //@{

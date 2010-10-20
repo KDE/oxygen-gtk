@@ -54,7 +54,15 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void ComboBoxData::setEntry( GtkWidget* widget )
-    {}
+    {
+        if( _entry._widget == widget ) return;
+        assert( !_entry._widget );
+
+        _entry._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+        _entry._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        _entry._widget = widget;
+
+    }
 
     //________________________________________________________________________________
     void ComboBoxData::setPressed( GtkWidget* widget, bool value )
@@ -91,6 +99,8 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
         _widget = 0L;
+        _pressed = false;
+        _focus = false;
     }
 
     //____________________________________________________________________________________________

@@ -449,11 +449,13 @@ namespace Oxygen
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox( widget ) ) {
 
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setButton( parent, widget );
-
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
+
+                Animations::instance().comboBoxEngine().registerWidget( parent );
+                Animations::instance().comboBoxEngine().setButton( parent, widget );
+                Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
+
                 Style::instance().renderButtonSlab( window, clipRect, x-7, y+1, w+7, h-2, options, TileSet::Ring&(~TileSet::Left) );
 
             } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
@@ -1778,9 +1780,13 @@ namespace Oxygen
 
             GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
 
-            const GtkAllocation& allocation( widget->allocation );
             StyleOptions options( widget, state, shadow );
             options |= Blend;
+
+            if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+            else options &= ~Focus;
+
+            const GtkAllocation& allocation( widget->allocation );
             Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
             Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );
 

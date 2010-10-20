@@ -62,11 +62,19 @@ namespace Oxygen
         void setEntry( GtkWidget* widget, GtkWidget* value )
         { data().value( widget ).setEntry( value ); }
 
+        //! button focus
+        void setButtonFocus( GtkWidget* widget, bool value )
+        { data().value( widget ).setButtonFocus( value ); }
+
         //@}
 
         //! true if either button or is pressed
         bool pressed( GtkWidget* widget )
         { return data().value( widget ).pressed(); }
+
+        //! true if either button or entry has focus
+        bool hasFocus( GtkWidget* widget )
+        { return data().value( widget ).hasFocus(); }
 
     };
 
