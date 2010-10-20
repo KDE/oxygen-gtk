@@ -24,6 +24,8 @@
 
 namespace Oxygen
 {
+
+    // handles focus and hover for editable comboboxes
     class ComboBoxEntryData
     {
 
@@ -123,6 +125,8 @@ namespace Oxygen
                 _widget( 0L ),
                 _focus( false ),
                 _hovered( false ),
+                _destroyId(-1),
+                _styleChangedId(-1),
                 _enterId(-1),
                 _leaveId(-1)
             {}
