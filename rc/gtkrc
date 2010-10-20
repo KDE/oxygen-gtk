@@ -117,10 +117,8 @@ style "oxygen-entry" = "oxygen-default"
   ythickness = 2
 }
 
-class "*GtkEntry" style "oxygen-entry"
-class "*GtkSpinButton" style "oxygen-entry"
-#widget_class "*.<GtkToolbar>.<GtkEntry>" style "oxygen-entry"
-#widget_class "*.SwtFixed.<GtkCombo.GtkEntry" style "oxygen-entry"
+class "GtkEntry" style "oxygen-entry"
+class "GtkSpinButton" style "oxygen-entry"
 
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
