@@ -84,7 +84,7 @@ namespace Oxygen
 
         //! true if either button or entry has hover
         bool hovered( void ) const
-        { return _hovered || _button._hovered || _entry._hovered; }
+        { return false; }
 
         //@}
 
@@ -119,40 +119,61 @@ namespace Oxygen
 
         private:
 
-        class Data
+        // handle child registration
+        class ChildData
         {
 
             public:
 
             //! constructor
-            Data( void ):
+            explicit ChildData( void ):
                 _widget( 0L ),
-                _pressed( false ),
-                _focus( false ),
-                _hovered( false ),
                 _destroyId(-1),
-                _styleChangeId(-1),
-                _toggledId(-1),
-                _enterId(-1),
-                _leaveId(-1)
+                _styleChangeId(-1)
+            {}
+
+            //! destructor
+            virtual ~ChildData( void )
             {}
 
             //! disconnect
-            void disconnect( void );
+            virtual void disconnect( void );
 
             GtkWidget* _widget;
-            bool _pressed;
-            bool _focus;
-            bool _hovered;
 
             //!@name callback ids
             //@{
             int _destroyId;
             int _styleChangeId;
-            int _toggledId;
-            int _enterId;
-            int _leaveId;
             //@}
+
+        };
+
+        // handle focus and toggle state
+        class Data: public ChildData
+        {
+
+            public:
+
+            //! constructor
+            explicit Data( void ):
+                _pressed( false ),
+                _focus( false ),
+                _toggledId(-1)
+            {}
+
+            //! destructor
+            virtual ~Data( void )
+            {}
+
+            //! disconnect
+            virtual void disconnect( void );
+
+            bool _pressed;
+            bool _focus;
+
+            //! toggled callback Id
+            int _toggledId;
 
         };
 

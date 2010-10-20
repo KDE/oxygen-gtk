@@ -54,8 +54,6 @@ namespace Oxygen
         _button._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _button._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         _button._toggledId = g_signal_connect( G_OBJECT(widget), "toggled", GCallback(childToggledEvent), this );
-        _button._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
-        _button._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _button._widget = widget;
 
     }
@@ -91,8 +89,6 @@ namespace Oxygen
 
         _entry._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _entry._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        _entry._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
-        _entry._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _entry._widget = widget;
 
     }
@@ -117,18 +113,6 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::setHovered( GtkWidget* widget, bool value )
     {
-        const bool oldHovered( hovered() );
-        if( widget == _entry._widget ) _entry._hovered = value;
-        else if( widget == _button._widget ) _button._hovered = value;
-        else _hovered = value;
-
-        if( oldHovered != hovered() )
-        {
-            // trigger repaint
-            if( _button._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _button._widget ) );
-            else if( _entry._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) );
-        }
-
     }
 
     //________________________________________________________________________________
@@ -140,18 +124,25 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::Data::disconnect( void )
+    void ComboBoxData::ChildData::disconnect( void )
     {
         if( !_widget ) return;
         g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _leaveId );
-        if( _toggledId >= 0 ) g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
         _widget = 0L;
+    }
+
+    //________________________________________________________________________________
+    void ComboBoxData::Data::disconnect( void )
+    {
+        if( !_widget ) return;
+        if( _toggledId >= 0 ) g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
         _pressed = false;
         _focus = false;
-        _hovered = false;
+
+        // base class
+        ChildData::disconnect();
+
     }
 
     //____________________________________________________________________________________________
