@@ -126,7 +126,7 @@ namespace Oxygen
                 _focus( false ),
                 _hovered( false ),
                 _destroyId(-1),
-                _styleChangedId(-1),
+                _styleChangeId(-1),
                 _enterId(-1),
                 _leaveId(-1)
             {}
