@@ -58,10 +58,6 @@ namespace Oxygen
         void setButton( GtkWidget* widget, GtkWidget* value )
         { data().value( widget ).setButton( value ); }
 
-        //! assign  to data matching widget
-        void setEntry( GtkWidget* widget, GtkWidget* value )
-        { data().value( widget ).setEntry( value ); }
-
         //! button focus
         void setButtonFocus( GtkWidget* widget, bool value )
         { data().value( widget ).setButtonFocus( value ); }

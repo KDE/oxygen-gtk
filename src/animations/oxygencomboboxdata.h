@@ -55,9 +55,6 @@ namespace Oxygen
         //! assign button
         void setButton( GtkWidget* value );
 
-        //! assign entry
-        void setEntry( GtkWidget* value );
-
         //! button focus
         void setButtonFocus( bool value )
         {
@@ -65,8 +62,9 @@ namespace Oxygen
             _button._focus = value;
 
             // trigger entry update
+            /* in fact the entry parent is updated, which is necessary to get the right margins */
             if( _entry._widget )
-            { gtk_widget_queue_draw( _entry._widget ); }
+            { gtk_widget_queue_draw( _entry._widget->parent ); }
 
             return;
         }
@@ -91,6 +89,12 @@ namespace Oxygen
         //@}
 
         protected:
+
+        //! assign entry
+        void findEntry( GtkWidget* value );
+
+        //! assign entry
+        void setEntry( GtkWidget* value );
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );

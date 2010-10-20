@@ -457,7 +457,7 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
                 if( Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
-                Style::instance().renderButtonSlab( window, clipRect, x-7, y+1, w+7, h-2, options, TileSet::Ring&(~TileSet::Left) );
+                Style::instance().renderButtonSlab( window, clipRect, x-7, y-1, w+7, h+2, options, TileSet::Ring&(~TileSet::Left) );
 
             } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
@@ -709,6 +709,7 @@ namespace Oxygen
             detail );
         #endif
 
+        GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
         if( d.isSlider() || d.isRuler() ) {
 
@@ -789,16 +790,22 @@ namespace Oxygen
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
 
-        } else if( Gtk::gtk_parent_combobox( widget ) ) {
+        } else if( (parent = Gtk::gtk_parent_combobox( widget )) && !GTK_IS_CELL_VIEW( widget ) ) {
 
+            Animations::instance().comboBoxEngine().registerWidget( parent );
+            GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
+            StyleOptions options( widget, state, shadow );
+            options |= Blend;
 
-            Style::instance().renderButtonSlab( window, clipRect, x, y+1, w+10, h-2 , Blend, TileSet::Ring&(~TileSet::Right) );
+            if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+            else options &= ~Focus;
 
-            //StyleOptions options( widget, state, GTK_SHADOW_OUT );
-            //options |= Blend;
-            //Style::instance().renderButtonSlab( window, clipRect, x-3, y-2, w+10, h+2, options, TileSet::Ring&(~TileSet::Left) );
+            if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+            else options &= ~Hover;
 
-        } else if ( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN) {
+            Style::instance().renderButtonSlab( window, clipRect, x, y-1, w+10, h+2, options, TileSet::Ring&(~TileSet::Right) );
+
+        } else if( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN) {
 
             // it's likely progressbar hole
             // FIXME: is it enough to check for TreeView? is shadow_in the only possible case?
@@ -1775,31 +1782,6 @@ namespace Oxygen
         gint x, gint y,
         PangoLayout* layout)
     {
-
-        GtkWidget* parent( 0L );
-        if( GTK_IS_CELL_VIEW( widget ) && ( parent = Gtk::gtk_parent_combobox( widget ) ) )
-        {
-            Animations::instance().comboBoxEngine().registerWidget( parent );
-            Animations::instance().comboBoxEngine().setEntry( parent, widget );
-
-            gtk_cell_view_set_background_color( GTK_CELL_VIEW( widget ), 0L );
-
-//             GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
-//
-//             StyleOptions options( widget, state, shadow );
-//             options |= Blend;
-//
-//             if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
-//             else options &= ~Focus;
-//
-//             const GtkAllocation& allocation( widget->allocation );
-//             Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
-//             Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );
-//
-//             // todo: find a way to pass this to the gtkrc file
-//             x+=4;
-
-        }
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,

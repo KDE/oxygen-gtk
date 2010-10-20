@@ -121,12 +121,19 @@ class "*GtkSpinButton" style "oxygen-entry"
 widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
 widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
 
-# editable combobox margins
 style "oxygen-combobox" = "oxygen-default"
 {
     xthickness = 0
+    ythickness = 3
 }
 widget_class "*<GtkComboBox>*" style "oxygen-combobox"
+
+style "oxygen-combobox-frame" = "oxygen-default"
+{
+    xthickness = 5
+}
+widget_class "*.GtkComboBox.GtkFrame" style "oxygen-combobox-frame"
+#widget_class "*<GtkComboBox>*" style "oxygen-combobox"
 
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
