@@ -29,8 +29,11 @@ namespace Gtk
         public:
 
         //! constructor
-        Detail( const char* value )
+        explicit Detail( const char* value = 0L )
         { if( value ) _value = value; }
+
+        //! true when no valid value was passed
+        bool isNull( void ) const { return _value.empty(); }
 
         bool isBar( void ) const { return _value == "bar"; }
         bool isBase( void ) const { return _value == "base"; }
@@ -122,7 +125,6 @@ namespace Gtk
 
         bool isViewport( void ) const { return _value == "viewport"; }
         bool isViewportBin( void ) const { return _value == "viewportbin"; }
-
 
         private:
 
