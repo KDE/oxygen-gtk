@@ -685,7 +685,7 @@ namespace Oxygen
             } else {
 
                 // most likely it's progressbar in the list
-                // FIXME: is it always the case?
+                // FIXME: is it always the case ? Should we check on TREE_VIEW, CELL_VIEW, like done with scrollbar hole ?
                 Style::instance().renderProgressBarHandle( window, clipRect, x, y+2, w, h-4, options );
 
             }
@@ -878,7 +878,7 @@ namespace Oxygen
 
             Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, TileSet::Ring&(~TileSet::Right) );
 
-        } else if( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN) {
+        } else if( d.isNull() && (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN ) {
 
             // it's likely progressbar hole
             // FIXME: is it enough to check for TreeView? is shadow_in the only possible case?
