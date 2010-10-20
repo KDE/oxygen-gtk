@@ -181,7 +181,7 @@ namespace Oxygen
             {
                 gchar* wp;
                 gtk_widget_path(widget,NULL,&wp,NULL);
-                if(!strcmp(wp,"gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView"))
+                if( std::string( wp ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" )
                 {
                     g_free(wp); // have to free it here since we might not go further
                     if(state==GTK_STATE_SELECTED)
@@ -195,8 +195,9 @@ namespace Oxygen
                         return;
                     }
                 }
-                else 
-                    g_free(wp);
+
+                if( wp ) g_free( wp );
+
             }
 
             // get hover selection from tree view engine
@@ -775,7 +776,7 @@ namespace Oxygen
                     return;
                 }
 
-                g_free( wp );
+                if( wp ) g_free( wp );
 
             }
         }
