@@ -22,6 +22,7 @@
 */
 
 #include "oxygenbaseengine.h"
+#include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
 #include "oxygenlineeditengine.h"
 #include "oxygenmainwindowengine.h"
@@ -54,6 +55,10 @@ namespace Oxygen
 
         //! unregister widget
         void unregisterWidget( GtkWidget* );
+
+        //! comboboxengine
+        ComboBoxEngine& comboBoxEngine( void ) const
+        { return *_comboBoxEngine; }
 
         //! comboboxentry engine
         ComboBoxEntryEngine& comboBoxEntryEngine( void ) const
@@ -106,6 +111,9 @@ namespace Oxygen
 
         //! list of engines
         BaseEngine::List _engines;
+
+        //! combobox engine
+        ComboBoxEngine* _comboBoxEngine;
 
         //! comboboxentry engine
         ComboBoxEntryEngine* _comboBoxEntryEngine;
