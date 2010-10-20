@@ -34,7 +34,6 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
-            _enterId(-1),
             _motionId(-1),
             _leaveId(-1),
             _rowDeletedId(-1),
@@ -86,7 +85,6 @@ namespace Oxygen
 
         //!@name static callbacks
         //@{
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static void rowActivatedEvent( GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gpointer );
@@ -98,7 +96,6 @@ namespace Oxygen
 
         //!@name callbacks ids
         //@{
-        int _enterId;
         int _motionId;
         int _leaveId;
         int _rowDeletedId;

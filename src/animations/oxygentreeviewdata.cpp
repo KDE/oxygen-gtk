@@ -41,7 +41,6 @@ namespace Oxygen
             _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", (GCallback)rowDeletedEvent, this );
         }
 
-        _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
     }
@@ -49,7 +48,6 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::disconnect( GtkWidget* widget )
     {
-        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
 
@@ -163,16 +161,10 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean TreeViewData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
-    {
-        static_cast<TreeViewData*>( data )->setHovered( true );
-        return FALSE;
-    }
-
-    //________________________________________________________________________________
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
 
+        static_cast<TreeViewData*>( data )->setHovered( true );
         static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y );
         return FALSE;
 
