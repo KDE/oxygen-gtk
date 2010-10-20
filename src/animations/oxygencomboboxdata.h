@@ -62,7 +62,7 @@ namespace Oxygen
 
             // trigger entry update
             if( _entry._widget )
-            { gtk_widget_queue_draw( _entry._widget ); }
+            { gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) ); }
 
             return;
         }

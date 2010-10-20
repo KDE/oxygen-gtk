@@ -713,7 +713,7 @@ namespace Oxygen
             detail );
         #endif
 
-        GtkWidget* parent(0L);
+        GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
 
         // check if it's combobox list window
@@ -1031,7 +1031,7 @@ namespace Oxygen
             {
                 // render background, this is needed to prevent a plain rect to be rendered (by gtk) where the item is
                 // rectangle is adjusted manually so that it matches
-                if( widget && GTK_IS_MENU( widget->parent ) && GTK_MENU( widget->parent )->torn_off )
+                if( widget && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
                 {
 
                     Style::instance().renderWindowBackground( window, clipRect, x1-4, y-7, x2-x1+10, 20 );
@@ -1151,7 +1151,7 @@ namespace Oxygen
 
         if( d.isTearOffMenuItem() )
         {
-            if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( widget->parent ) && GTK_MENU( widget->parent )->torn_off )
+            if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
             {
 
                 Style::instance().renderWindowBackground( window, clipRect, x-8, y-8, w+16, h+16);
