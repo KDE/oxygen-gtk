@@ -419,7 +419,6 @@ namespace Oxygen
         { Animations::instance().menuShellEngine().registerWidget(widget); }
 
         Style::instance().sanitizeSize( window, w, h );
-        GtkWidget* parent(0L);
         const Gtk::Detail d( detail );
 
         if( d.isButton() || d.isOptionMenu() )
@@ -430,7 +429,7 @@ namespace Oxygen
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
-            } else if( parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
                 /*
                 editable combobox button get a hole (with left corner hidden), and a background
@@ -714,6 +713,7 @@ namespace Oxygen
             detail );
         #endif
 
+        GtkWidget* parent(0L);
         const Gtk::Detail d( detail );
 
         // check if it's combobox list window
