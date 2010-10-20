@@ -177,26 +177,16 @@ namespace Oxygen
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
             // draw flat selection in combobox list
-            if(GTK_IS_SCROLLED_WINDOW(gtk_widget_get_parent(widget)))
+            if( Gtk::gtk_combobox_is_tree_view( widget ) )
             {
-                gchar* wp;
-                gtk_widget_path(widget,NULL,&wp,NULL);
-                if( std::string( wp ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" )
+
+                if(state==GTK_STATE_SELECTED)
                 {
+                    ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, selection );
+                }
 
-                    g_free(wp);
-                    if(state==GTK_STATE_SELECTED)
-                    {
-                        Palette::Group group( Palette::Active );
-                        ColorUtils::Rgba selection( Style::instance().settings().palette().color( group, Palette::Selected ) );
-                        Cairo::Context context(window,clipRect);
-                        cairo_set_source(context,selection);
-                        cairo_rectangle(context,x,y,w,h);
-                        cairo_fill(context);
-                        return;
-                    }
-
-                } else if( wp ) g_free(wp);
+                return;
 
             }
 
@@ -434,7 +424,7 @@ namespace Oxygen
         {
 
             GtkWidget* parent(0L);
-            if( Gtk::gtk_parent_treeview( widget ) )
+            if( Gtk::gtk_parent_tree_view( widget ) )
             {
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
@@ -956,7 +946,7 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !(d.isCellCheck() || Gtk::gtk_parent_treeview( widget ) ) )
+            if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
             {
                 // enable blending
                 options |= Blend;
@@ -1017,14 +1007,14 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_treeview( widget ) ) options |= Blend;
+            if( !Gtk::gtk_parent_tree_view( widget ) ) options |= Blend;
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
 
         } else if( d.isOption() ) {
 
             // load options and disable hove
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_treeview( widget ) )
+            if( !Gtk::gtk_parent_tree_view( widget ) )
             {
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options|=Menu;
@@ -1107,7 +1097,7 @@ namespace Oxygen
         } else {
 
             StyleOptions options;
-            if( !Gtk::gtk_parent_treeview( widget ) )
+            if( !Gtk::gtk_parent_tree_view( widget ) )
             {
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
@@ -1147,7 +1137,7 @@ namespace Oxygen
         else {
 
             StyleOptions options( Vertical );
-            if( !Gtk::gtk_parent_treeview( widget ) )
+            if( !Gtk::gtk_parent_tree_view( widget ) )
             {
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
@@ -1209,7 +1199,7 @@ namespace Oxygen
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
 
-        } else if( d.isMenuItem() && !Gtk::gtk_parent_treeview( widget ) ) {
+        } else if( d.isMenuItem() && !Gtk::gtk_parent_tree_view( widget ) ) {
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
@@ -1242,7 +1232,7 @@ namespace Oxygen
                 }
             }
 
-        } else if( Gtk::gtk_parent_button( widget ) && !( Gtk::gtk_parent_combobox_entry( widget ) || Gtk::gtk_parent_treeview( widget ) ) ) {
+        } else if( Gtk::gtk_parent_button( widget ) && !( Gtk::gtk_parent_combobox_entry( widget ) || Gtk::gtk_parent_tree_view( widget ) ) ) {
 
             options &= ~( Focus|Hover );
 
