@@ -711,6 +711,65 @@ namespace Oxygen
 
         GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
+
+        // check if it's combobox list window
+        if(GTK_IS_SCROLLED_WINDOW(widget)) // don't do string operations if it's not GtkScrolledWindow
+        {
+            GtkWidget* parent=gtk_widget_get_parent(widget);
+            gchar* wp;
+            gtk_widget_path(widget,NULL,&wp,NULL);
+            if( std::string(wp) == "gtk-combobox-popup-window.GtkScrolledWindow")
+            {
+                if(GTK_IS_WINDOW(parent)) // double check
+                {
+                    // now make it look like in Oxygen-Qt - with float frame and round edges
+                    const GtkAllocation& allocation(parent->allocation);
+                    StyleOptions options;
+                    if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
+
+                    if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+                    {
+                        // make background window rounded
+                        Animations::instance().widgetSizeEngine().registerWidget( parent );
+                        if( Animations::instance().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
+                        {
+                            GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
+                            gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
+                            gdk_pixmap_unref( mask );
+                        }
+
+                    }
+                    // TODO: when RGBA visual is present, do this via RGBA (maybe in list rendering code) and uncomment the following if statement
+                    // for now, this if statement is commented out so that we get rounded list anyway
+                    // if( !(options&Alpha) )
+                    {
+                        // and make the list rounded
+                        GList* children=gtk_container_get_children(GTK_CONTAINER( widget ));
+                        widget=GTK_WIDGET( children->data );
+                        Animations::instance().widgetSizeEngine().registerWidget( widget );
+                        if( Animations::instance().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
+                        {
+                            // offset is needed to make combobox list border 3px wide instead of default 2
+                            // additional pixel is for ugly shadow
+                            const gint offset( options&Alpha ? 0:1 );
+                            GdkPixmap* mask( Style::instance().helper().roundMask( widget->allocation.width-2*offset, widget->allocation.height-2*offset, 3 ) );
+                            gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
+                            gdk_pixmap_unref( mask );
+                        }
+                        if( children ) g_list_free( children );
+                    }
+
+                    // now draw float frame on background window
+                    Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+                    Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+                    return;
+                }
+
+                g_free( wp );
+
+            }
+        }
+
         if( d.isSlider() || d.isRuler() ) {
 
             return;
