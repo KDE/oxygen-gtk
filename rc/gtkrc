@@ -130,7 +130,7 @@ widget_class "*<GtkComboBox>*" style "oxygen-combobox"
 
 style "oxygen-combobox-frame" = "oxygen-default"
 {
-    xthickness = 4
+    xthickness = 6
 }
 widget_class "*.GtkComboBox.GtkFrame" style "oxygen-combobox-frame"
 #widget_class "*<GtkComboBox>*" style "oxygen-combobox"
