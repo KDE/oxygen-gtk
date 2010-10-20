@@ -69,7 +69,7 @@ namespace Gtk
     GtkWidget* gtk_parent_menu( GtkWidget* );
 
     //! return parent treeview if any.
-    GtkWidget* gtk_parent_treeview( GtkWidget* );
+    GtkWidget* gtk_parent_tree_view( GtkWidget* );
 
     //! return parent combobox if any.
     GtkWidget* gtk_parent_combobox( GtkWidget* );
@@ -106,6 +106,15 @@ namespace Gtk
 
     //! returns an image on button-container
     GtkWidget* gtk_button_find_label( GtkWidget* );
+
+    //@}
+
+    //!@name combobox utilities
+    //@{
+
+    //! true if widget is the treeview of a combobox
+    bool gtk_combobox_is_tree_view( GtkWidget* );
+
 
     //@}
 

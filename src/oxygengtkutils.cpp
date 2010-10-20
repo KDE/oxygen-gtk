@@ -113,7 +113,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_treeview( GtkWidget* widget )
+    GtkWidget* gtk_parent_tree_view( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -224,6 +224,19 @@ namespace Gtk
                 return gtk_button_find_image(GTK_WIDGET(children->data));
         }
         return 0L;
+    }
+
+    //________________________________________________________
+    bool gtk_combobox_is_tree_view( GtkWidget* widget )
+    {
+        // check types
+        if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
+
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        bool out( std::string( widgetPath ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" );
+        g_free( widgetPath );
+        return out;
     }
 
     //________________________________________________________
