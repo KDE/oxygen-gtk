@@ -64,7 +64,7 @@ namespace Oxygen
             // trigger entry update
             /* in fact the entry parent is updated, which is necessary to get the right margins */
             if( _entry._widget )
-            { gtk_widget_queue_draw( _entry._widget->parent ); }
+            { gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) ); }
 
             return;
         }
