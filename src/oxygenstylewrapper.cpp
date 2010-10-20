@@ -408,12 +408,14 @@ namespace Oxygen
         const Gtk::Detail d( detail );
         if( d.isButton() || d.isOptionMenu() )
         {
+
+            GtkWidget* parent(0L);
             if( Gtk::gtk_parent_treeview( widget ) )
             {
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
-            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+            } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
                 /*
                 editable combobox button get a hole (with left corner hidden), and a background
@@ -447,7 +449,7 @@ namespace Oxygen
 
                 return;
 
-            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox( widget ) ) {
+            } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) && !Style::instance().settings().applicationName().isMozilla() ) {
 
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
@@ -849,7 +851,10 @@ namespace Oxygen
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
 
-        } else if( (parent = Gtk::gtk_parent_combobox( widget )) && !GTK_IS_CELL_VIEW( widget ) ) {
+        } else if(
+            (parent = Gtk::gtk_parent_combobox( widget )) &&
+            !GTK_IS_CELL_VIEW( widget ) &&
+            !Style::instance().settings().applicationName().isMozilla() ) {
 
             Animations::instance().comboBoxEngine().registerWidget( parent );
             GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
