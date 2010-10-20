@@ -183,7 +183,8 @@ namespace Oxygen
                 gtk_widget_path(widget,NULL,&wp,NULL);
                 if( std::string( wp ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" )
                 {
-                    g_free(wp); // have to free it here since we might not go further
+
+                    g_free(wp);
                     if(state==GTK_STATE_SELECTED)
                     {
                         Palette::Group group( Palette::Active );
@@ -194,9 +195,8 @@ namespace Oxygen
                         cairo_fill(context);
                         return;
                     }
-                }
 
-                if( wp ) g_free( wp );
+                } else if( wp ) g_free(wp);
 
             }
 
@@ -776,7 +776,7 @@ namespace Oxygen
                     return;
                 }
 
-                if( wp ) g_free( wp );
+                g_free( wp );
 
             }
         }
