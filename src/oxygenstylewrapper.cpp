@@ -764,14 +764,16 @@ namespace Oxygen
                     // offset is needed to make combobox list border 3px wide instead of default 2
                     // additional pixel is for ugly shadow
                     const gint offset( options&Alpha ? 0:1 );
+                    const GtkAllocation& allocation(widget->allocation);
                     GdkPixmap* mask( Style::instance().helper().roundMask(
-                        widget->allocation.width - 2*offset,
-                        widget->allocation.height - 2*offset,
+                        allocation.width - 2*offset,
+                        allocation.height - 2*offset - (options&Alpha ? 1:0),
                         3 ) );
 
                     gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
                     gdk_pixmap_unref( mask );
                 }
+
 
                 if( children ) g_list_free( children );
             }
