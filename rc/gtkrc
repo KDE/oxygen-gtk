@@ -64,7 +64,7 @@ style "oxygen-pathbutton" = "oxygen-default"
     #add some spacing to have centered text
     GtkButton::inner-border = { 4, 4, 1, 0 }
 }
-widget_class "*PathBar.*Button" style "oxygen-pathbutton"
+widget_class "*PathBar.<GtkButton>" style "oxygen-pathbutton"
 
 # menuitems padding
 style "oxygen-menubar" = "oxygen-default"
@@ -73,7 +73,7 @@ style "oxygen-menubar" = "oxygen-default"
     ythickness = 1
 }
 
-widget_class "*<GtkMenuBar>*" style "oxygen-menubar"
+class "GtkMenuBar" style "oxygen-menubar"
 
 # menuitems padding
 style "oxygen-menubaritem" = "oxygen-default"
@@ -81,7 +81,7 @@ style "oxygen-menubaritem" = "oxygen-default"
     xthickness = 3
 }
 
-widget_class "*<GtkMenuItem>*" style "oxygen-menubaritem"
+class "GtkMenuItem" style "oxygen-menubaritem"
 
 # menuitems padding
 style "oxygen-menuitem" = "oxygen-default"
@@ -90,7 +90,7 @@ style "oxygen-menuitem" = "oxygen-default"
     ythickness = 5
 }
 
-widget_class "*.GtkMenu.*MenuItem" style "oxygen-menuitem"
+widget_class "*.<GtkMenu>.<GtkMenuItem>" style "oxygen-menuitem"
 
 # menuitems padding, for separators
 style "oxygen-separator-menuitem" = "oxygen-default"
@@ -99,7 +99,7 @@ style "oxygen-separator-menuitem" = "oxygen-default"
     ythickness = 1
 }
 
-widget_class "*.GtkMenu.*SeparatorMenuItem" style "oxygen-separator-menuitem"
+widget_class "*.<GtkMenu>.<GtkSeparatorMenuItem>" style "oxygen-separator-menuitem"
 
 # notebook settings
 style "oxygen-notebook" = "oxygen-default"
@@ -116,24 +116,27 @@ style "oxygen-entry" = "oxygen-default"
   xthickness = 2
   ythickness = 2
 }
+
 class "*GtkEntry" style "oxygen-entry"
 class "*GtkSpinButton" style "oxygen-entry"
-widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
-widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
+#widget_class "*.<GtkToolbar>.<GtkEntry>" style "oxygen-entry"
+#widget_class "*.SwtFixed.<GtkCombo.GtkEntry" style "oxygen-entry"
 
+# comboboxes
 style "oxygen-combobox" = "oxygen-default"
 {
     xthickness = 0
     ythickness = 2
 }
-widget_class "*<GtkComboBox>*" style "oxygen-combobox"
+
+class "GtkComboBox" style "oxygen-combobox"
 
 style "oxygen-combobox-frame" = "oxygen-default"
 {
     xthickness = 6
 }
-widget_class "*.GtkComboBox.GtkFrame" style "oxygen-combobox-frame"
-#widget_class "*<GtkComboBox>*" style "oxygen-combobox"
+
+widget_class "*<GtkComboBox>.<GtkFrame>" style "oxygen-combobox-frame"
 
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
@@ -142,7 +145,7 @@ style "oxygen-combobox-entry" = "oxygen-default"
     ythickness = 1
 }
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
-widget_class "*.GtkComboBoxEntry.*Button" style "oxygen-combobox-entry"
+widget_class "*.<GtkComboBoxEntry>.<GtkButton>" style "oxygen-combobox-entry"
 
 # vertical separators need enough room
 style "oxygen-vseparator" = "oxygen-default"
@@ -172,9 +175,9 @@ style "oxygen-w2" = "oxygen-default"
     ythickness = 2
 }
 
-class "*GtkScrolledWindow" style "oxygen-w2"
-class "*GtkViewport" style "oxygen-w2"
-class "*GtkFrame" style "oxygen-w2"
+class "GtkScrolledWindow" style "oxygen-w2"
+class "GtkViewport" style "oxygen-w2"
+class "GtkFrame" style "oxygen-w2"
 
 # tree headers
 style "oxygen-header" = "oxygen-default"
@@ -182,7 +185,7 @@ style "oxygen-header" = "oxygen-default"
     xthickness = 2
     ythickness = 0
 }
-widget_class "*Tree*GtkButton" style "oxygen-header"
-widget_class "*List*GtkButton" style "oxygen-header"
-widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "oxygen-header"
+widget_class "*Tree*.<GtkButton>" style "oxygen-header"
+widget_class "*List*.<GtkButton>" style "oxygen-header"
+widget_class "*GimpThumbBox*.<GtkEventBox>.<GtkVBox>.<GtkButton>" style "oxygen-header"
 
