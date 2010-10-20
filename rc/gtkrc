@@ -32,7 +32,8 @@ style "oxygen-default"
     GtkCalendar::inner-border = 0
     GtkCalendar::horizontal-separation = 0
     GtkCheckButton::indicator-size = 18
-    GtkComboBoxEntry::appears-as-list = 1
+    GtkComboBox::appears-as-list = 1
+    #GtkComboBoxEntry::appears-as-list = 1
     GtkEntry::honors-transparent-bg-hint = 1
     GtkMenu::horizontal-padding = 3
     GtkMenu::vertical-padding = 5
@@ -120,6 +121,13 @@ class "*GtkEntry" style "oxygen-entry"
 class "*GtkSpinButton" style "oxygen-entry"
 widget_class "*.Toolbar*GtkEntry" style "oxygen-entry"
 widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
+
+# editable combobox margins
+style "oxygen-combobox" = "oxygen-default"
+{
+    xthickness = 0
+}
+widget_class "*<GtkComboBox>*" style "oxygen-combobox"
 
 # editable combobox margins
 style "oxygen-combobox-entry" = "oxygen-default"
