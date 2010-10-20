@@ -43,6 +43,15 @@ namespace Oxygen
 namespace Gtk
 {
 
+    //! mouse buttons enumeration
+    enum MousButton
+    {
+        LeftMouseButton = 1,
+        MiddleMouseButton = 2,
+        RightMouseButton = 3
+    };
+
+
     //@!name gtk utilities
     //@{
 
