@@ -106,6 +106,8 @@ namespace Oxygen
         g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _enterId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _leaveId );
+        _hovered = false;
+        _focus = false;
         _widget = 0L;
     }
 
