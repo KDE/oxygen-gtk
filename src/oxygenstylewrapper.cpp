@@ -420,6 +420,7 @@ namespace Oxygen
 
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
+
         if( d.isButton() || d.isOptionMenu() )
         {
 
@@ -725,7 +726,11 @@ namespace Oxygen
             detail );
         #endif
 
+<<<<<<< HEAD
         GtkWidget* parent( 0L );
+=======
+        GtkWidget* parent(0L);
+>>>>>>> master
         const Gtk::Detail d( detail );
 
         // check if it's combobox list window
