@@ -115,6 +115,8 @@ namespace Gtk
     //! true if widget is the treeview of a combobox
     bool gtk_combobox_is_tree_view( GtkWidget* );
 
+    //! true if widget is the treeview of a combobox
+    bool gtk_combobox_is_scrolled_window( GtkWidget* );
 
     //@}
 
