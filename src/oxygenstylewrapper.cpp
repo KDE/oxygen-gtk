@@ -447,7 +447,10 @@ namespace Oxygen
 
                 return;
 
-            } else if( Gtk::gtk_parent_combobox( widget ) ) {
+            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox( widget ) ) {
+
+                Animations::instance().comboBoxEngine().registerWidget( parent );
+                Animations::instance().comboBoxEngine().setButton( parent, widget );
 
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
@@ -1770,10 +1773,13 @@ namespace Oxygen
         GtkWidget* parent( 0L );
         if( GTK_IS_CELL_VIEW( widget ) && ( parent = Gtk::gtk_parent_combobox( widget ) ) )
         {
-            std::cout << "Oxygen::draw_layout - " << Maps::getState( gtk_widget_get_state( parent ) ) << std::endl;
+            Animations::instance().comboBoxEngine().registerWidget( parent );
+            Animations::instance().comboBoxEngine().setEntry( parent, widget );
+
+            GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
 
             const GtkAllocation& allocation( widget->allocation );
-            StyleOptions options( widget, state, GTK_SHADOW_OUT );
+            StyleOptions options( widget, state, shadow );
             options |= Blend;
             Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
             Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );

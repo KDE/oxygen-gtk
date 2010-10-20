@@ -47,22 +47,14 @@ namespace Oxygen
 
         _button._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _button._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        _button._buttonPressId = g_signal_connect( G_OBJECT(widget), "button-press-event", (GCallback)childButtonPressEvent, this );
-        _button._buttonReleaseId = g_signal_connect( G_OBJECT(widget), "button-release-event", (GCallback)childButtonReleaseEvent, this );
+        _button._toggledId = g_signal_connect( widget, "toggled", GCallback(childToggledEvent), this );
         _button._widget = widget;
+
     }
 
     //________________________________________________________________________________
     void ComboBoxData::setEntry( GtkWidget* widget )
-    {
-        if( _entry._widget == widget ) return;
-        assert( !_entry._widget );
-        _entry._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        _entry._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        _entry._buttonPressId = g_signal_connect( G_OBJECT(widget), "button-press-event", (GCallback)childButtonPressEvent, this );
-        _entry._buttonReleaseId = g_signal_connect( G_OBJECT(widget), "button-release-event", (GCallback)childButtonReleaseEvent, this );
-        _entry._widget = widget;
-    }
+    {}
 
     //________________________________________________________________________________
     void ComboBoxData::setPressed( GtkWidget* widget, bool value )
@@ -97,8 +89,7 @@ namespace Oxygen
         if( !_widget ) return;
         g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _buttonPressId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _buttonReleaseId );
+        g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
         _widget = 0L;
     }
 
@@ -114,19 +105,12 @@ namespace Oxygen
     { static_cast<ComboBoxData*>(data)->unregisterChild( widget ); }
 
     //____________________________________________________________________________________________
-    gboolean ComboBoxData::childButtonPressEvent( GtkWidget* widget, GdkEventButton* event, gpointer data)
+    void ComboBoxData::childToggledEvent( GtkWidget* widget, gpointer data)
     {
-        if( event && event->button == Gtk::LeftMouseButton )
-        { static_cast<ComboBoxData*>(data)->setPressed( widget, true ); }
-        return FALSE;
+        if( GTK_IS_TOGGLE_BUTTON( widget ) )
+        { static_cast<ComboBoxData*>(data)->setPressed( widget, gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ); }
+        return;
     }
 
-    //____________________________________________________________________________________________
-    gboolean ComboBoxData::childButtonReleaseEvent( GtkWidget* widget, GdkEventButton* event, gpointer data)
-    {
-        if( event && event->button == Gtk::LeftMouseButton )
-        { static_cast<ComboBoxData*>(data)->setPressed( widget, false ); }
-        return FALSE;
-    }
 
 }

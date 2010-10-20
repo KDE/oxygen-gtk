@@ -74,9 +74,7 @@ namespace Oxygen
 
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-
-        static gboolean childButtonPressEvent( GtkWidget*, GdkEventButton*, gpointer);
-        static gboolean childButtonReleaseEvent( GtkWidget*, GdkEventButton*, gpointer);
+        static void childToggledEvent( GtkWidget*, gpointer);
 
         //@}
 
@@ -93,8 +91,7 @@ namespace Oxygen
                 _pressed( false ),
                 _destroyId(-1),
                 _styleChangeId(-1),
-                _buttonPressId(-1),
-                _buttonReleaseId(-1)
+                _toggledId(-1)
             {}
 
             //! disconnect
@@ -107,8 +104,7 @@ namespace Oxygen
             //@{
             int _destroyId;
             int _styleChangeId;
-            int _buttonPressId;
-            int _buttonReleaseId;
+            int _toggledId;
             //@}
 
         };
