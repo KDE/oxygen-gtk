@@ -38,8 +38,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void MenuShellData::connect( GtkWidget* widget )
     {
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, 0L);
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, 0L );
+        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), 0L);
+        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), 0L );
     }
 
     //________________________________________________________________________________

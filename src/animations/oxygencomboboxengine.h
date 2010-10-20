@@ -62,6 +62,10 @@ namespace Oxygen
         void setButtonFocus( GtkWidget* widget, bool value )
         { data().value( widget ).setButtonFocus( value ); }
 
+        //! register child
+        void registerChild( GtkWidget* widget, GtkWidget* child )
+        { data().value( widget ).registerChild( child ); }
+
         //@}
 
         //! true if either button or is pressed

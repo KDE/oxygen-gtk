@@ -120,18 +120,21 @@ namespace Oxygen
         This is notably the case for gimp, nautilus (in tabbed mode), etc.
         */
 
-        class ChildData
+        class Data
         {
             public:
 
             //! constructor
-            ChildData( void ):
+            Data( void ):
                 _destroyId( -1 ),
                 _styleChangeId( -1 ),
                 _addId( -1 ),
                 _enterId( -1 ),
                 _leaveId( -1 )
             {}
+
+            //! disconnect
+            virtual void disconnect( GtkWidget* );
 
             int _destroyId;
             int _styleChangeId;
@@ -141,8 +144,8 @@ namespace Oxygen
         };
 
         //! map registered children and corresponding data
-        typedef std::map<GtkWidget*, ChildData> ChildDataMap;
-        ChildDataMap _childrenData;
+        typedef std::map<GtkWidget*, Data> DataMap;
+        DataMap _childrenData;
 
 
     };

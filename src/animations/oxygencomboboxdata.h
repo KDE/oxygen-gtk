@@ -21,6 +21,8 @@
 */
 
 #include <gtk/gtk.h>
+#include <algorithm>
+#include <map>
 
 namespace Oxygen
 {
@@ -33,9 +35,10 @@ namespace Oxygen
 
         //! constructor
         ComboBoxData( void ):
-            _hovered( false ),
+            _target( 0L ),
             _enterId( -1 ),
-            _leaveId( -1 )
+            _leaveId( -1 ),
+            _hovered( false )
         {}
 
         //! destructor
@@ -61,13 +64,14 @@ namespace Oxygen
             if( _button._focus == value ) return;
             _button._focus = value;
 
-            // trigger entry update
-            /* in fact the entry parent is updated, which is necessary to get the right margins */
-            if( _entry._widget )
-            { gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) ); }
+            // trigger update
+            if( _target ) gtk_widget_queue_draw( _target );
 
             return;
         }
+
+        //! register child
+        void registerChild( GtkWidget*, bool recursive = true );
 
         //@}
 
@@ -76,25 +80,22 @@ namespace Oxygen
 
         //! pressed
         bool pressed( void ) const
-        { return _entry._pressed || _button._pressed; }
+        { return _button._pressed; }
 
         //! true if either button or entry has focus
         bool hasFocus( void ) const
-        { return _button._focus || _entry._focus; }
+        { return _button._focus; }
 
         //! true if either button or entry has hover
         bool hovered( void ) const
-        { return false; }
+        { return _hovered || ( std::find_if( _hoverData.begin(), _hoverData.end(), HoveredFTor() ) != _hoverData.end() ); }
 
         //@}
 
         protected:
 
         //! assign entry
-        void findEntry( GtkWidget* value );
-
-        //! assign entry
-        void setEntry( GtkWidget* value );
+        void adjustCell( GtkWidget* value );
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
@@ -119,6 +120,18 @@ namespace Oxygen
 
         private:
 
+        //! target widget
+        GtkWidget* _target;
+
+        //!@name callback ids
+        //@{
+        int _enterId;
+        int _leaveId;
+        //@}
+
+        //! hover
+        bool _hovered;
+
         // handle child registration
         class ChildData
         {
@@ -127,7 +140,6 @@ namespace Oxygen
 
             //! constructor
             explicit ChildData( void ):
-                _widget( 0L ),
                 _destroyId(-1),
                 _styleChangeId(-1)
             {}
@@ -137,9 +149,7 @@ namespace Oxygen
             {}
 
             //! disconnect
-            virtual void disconnect( void );
-
-            GtkWidget* _widget;
+            virtual void disconnect( GtkWidget* );
 
             //!@name callback ids
             //@{
@@ -150,24 +160,28 @@ namespace Oxygen
         };
 
         // handle focus and toggle state
-        class Data: public ChildData
+        class ButtonData: public ChildData
         {
 
             public:
 
             //! constructor
-            explicit Data( void ):
+            explicit ButtonData( void ):
+                _widget(0L),
                 _pressed( false ),
                 _focus( false ),
                 _toggledId(-1)
             {}
 
             //! destructor
-            virtual ~Data( void )
+            virtual ~ButtonData( void )
             {}
 
             //! disconnect
             virtual void disconnect( void );
+
+            //! widget
+            GtkWidget* _widget;
 
             //! true if widget is down
             bool _pressed;
@@ -196,7 +210,7 @@ namespace Oxygen
             {}
 
             //! disconnect
-            virtual void disconnect( void );
+            virtual void disconnect( GtkWidget* );
 
             //! true if widget is hovered
             bool _hovered;
@@ -209,20 +223,21 @@ namespace Oxygen
 
         };
 
+        //! need to detect hovered child
+        class HoveredFTor
+        {
+            public:
+
+            bool operator () ( const std::pair<GtkWidget*, HoverData>& dataPair )
+            { return dataPair.second._hovered; }
+
+        };
+
+        typedef std::map<GtkWidget*, HoverData> HoverDataMap;
+        HoverDataMap _hoverData;
+
         //! button data
-        Data _button;
-
-        //! entry data
-        Data _entry;
-
-        //! hover
-        bool _hovered;
-
-        //!@name callback ids
-        //@{
-        int _enterId;
-        int _leaveId;
-        //@}
+        ButtonData _button;
 
     };
 
