@@ -31,7 +31,6 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::connect( GtkWidget* widget )
     {
-        std::cout << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
         findEntry( widget );
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
@@ -70,7 +69,6 @@ namespace Oxygen
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
         {
             if( GTK_IS_CELL_VIEW( child->data ) ) {
-                std::cout << "ComboBoxData::setEntry - found cell" << std::endl;
                 setEntry( GTK_WIDGET( child->data ) );
                 break;
             }
@@ -85,15 +83,11 @@ namespace Oxygen
     void ComboBoxData::setEntry( GtkWidget* widget )
     {
 
-        std::cout << "Oxygen::ComboBoxData::setEntry - widget: " << widget << std::endl;
         if( _entry._widget == widget ) return;
         assert( !_entry._widget );
 
         if( GTK_IS_CELL_VIEW( widget ) )
-        {
-            std::cout << "Oxygen::ComboBoxData::setEntry - setting color." << std::endl;
-            gtk_cell_view_set_background_color( GTK_CELL_VIEW( widget ), 0L );
-        }
+        { gtk_cell_view_set_background_color( GTK_CELL_VIEW( widget ), 0L ); }
 
         _entry._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _entry._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
