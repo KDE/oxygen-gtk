@@ -21,7 +21,6 @@
 */
 
 #include "oxygencairocontext.h"
-#include "oxygencomboboxdata.h"
 #include "oxygengeometry.h"
 #include "oxygengtkgap.h"
 #include "oxygenqtsettings.h"

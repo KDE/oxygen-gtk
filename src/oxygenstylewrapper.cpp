@@ -232,14 +232,14 @@ namespace Oxygen
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // since combobox entry is drawn in the combobox full height, we'll have to adjust glow height
@@ -430,15 +430,15 @@ namespace Oxygen
                 options |= Blend|NoFill;
 
                 // focus handling
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setButton( parent, widget );
-                Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setButton( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
 
                 // update option accordingly
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // render
@@ -446,6 +446,12 @@ namespace Oxygen
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, TileSet::Ring&(~TileSet::Left) );
 
                 return;
+
+            } else if( Gtk::gtk_parent_combobox( widget ) ) {
+
+                StyleOptions options( widget, state, shadow );
+                options |= Blend;
+                Style::instance().renderButtonSlab( window, clipRect, x-7, y+1, w+7, h-2, options, TileSet::Ring&(~TileSet::Left) );
 
             } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
@@ -711,14 +717,14 @@ namespace Oxygen
             {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEngine().setEntryFocus( parent, options & Focus );
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
+                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
-                if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                 else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                 else options &= ~Hover;
 
                 // render
@@ -776,6 +782,12 @@ namespace Oxygen
             StyleOptions options( Blend );
             options |= NoFill;
             Style::instance().renderSlab(window,clipRect,x-2,y-2,w+4,h+2, options );
+
+        } else if( Gtk::gtk_parent_combobox( widget ) ) {
+
+            //StyleOptions options( widget, state, GTK_SHADOW_OUT );
+            //options |= Blend;
+            //Style::instance().renderButtonSlab( window, clipRect, x-3, y-2, w+10, h+2, options, TileSet::Ring&(~TileSet::Left) );
 
         } else if ( (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN) {
 
@@ -1744,11 +1756,32 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_layout(
-        GtkStyle* style, GdkWindow* window, GtkStateType state, gboolean use_text,
-        GdkRectangle* clipRect, GtkWidget* widget, const gchar* detail,
+        GtkStyle* style,
+        GdkWindow* window,
+        GtkStateType state,
+        gboolean use_text,
+        GdkRectangle* clipRect,
+        GtkWidget* widget,
+        const gchar* detail,
         gint x, gint y,
         PangoLayout* layout)
     {
+
+        GtkWidget* parent( 0L );
+        if( GTK_IS_CELL_VIEW( widget ) && ( parent = Gtk::gtk_parent_combobox( widget ) ) )
+        {
+            std::cout << "Oxygen::draw_layout - " << Maps::getState( gtk_widget_get_state( parent ) ) << std::endl;
+
+            const GtkAllocation& allocation( widget->allocation );
+            StyleOptions options( widget, state, GTK_SHADOW_OUT );
+            options |= Blend;
+            Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
+            Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );
+
+            // todo: find a way to pass this to the gtkrc file
+            x+=4;
+
+        }
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,

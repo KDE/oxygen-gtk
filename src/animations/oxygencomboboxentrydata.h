@@ -1,5 +1,5 @@
-#ifndef oxygencomboboxdata_h
-#define oxygencomboboxdata_h
+#ifndef oxygencomboboxentrydata_h
+#define oxygencomboboxentrydata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -24,18 +24,18 @@
 
 namespace Oxygen
 {
-    class ComboBoxData
+    class ComboBoxEntryData
     {
 
         public:
 
         //! constructor
-        ComboBoxData( void ):
+        ComboBoxEntryData( void ):
             _hovered( false )
         {}
 
         //! destructor
-        virtual ~ComboBoxData( void )
+        virtual ~ComboBoxEntryData( void )
         {}
 
         //! setup connections

@@ -18,7 +18,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygencomboboxdata.h"
+#include "oxygencomboboxentrydata.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -29,14 +29,14 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void ComboBoxData::connect( GtkWidget* widget )
+    void ComboBoxEntryData::connect( GtkWidget* widget )
     {
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::disconnect( GtkWidget* widget )
+    void ComboBoxEntryData::disconnect( GtkWidget* widget )
     {
 
         g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
@@ -47,7 +47,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::setButton( GtkWidget* widget )
+    void ComboBoxEntryData::setButton( GtkWidget* widget )
     {
         if( _button._widget == widget ) return;
         assert( !_button._widget );
@@ -60,7 +60,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::setEntry( GtkWidget* widget )
+    void ComboBoxEntryData::setEntry( GtkWidget* widget )
     {
         if( _entry._widget == widget ) return;
         assert( !_entry._widget );
@@ -72,7 +72,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::setHovered( GtkWidget* widget, bool value )
+    void ComboBoxEntryData::setHovered( GtkWidget* widget, bool value )
     {
         const bool oldHovered( hovered() );
         if( widget == _entry._widget ) _entry._hovered = value;
@@ -89,7 +89,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::unregisterChild( GtkWidget* widget )
+    void ComboBoxEntryData::unregisterChild( GtkWidget* widget )
     {
 
         if( widget == _button._widget ) _button.disconnect();
@@ -99,7 +99,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::Data::disconnect( void )
+    void ComboBoxEntryData::Data::disconnect( void )
     {
         if( !_widget ) return;
         g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
@@ -110,27 +110,27 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    gboolean ComboBoxData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    gboolean ComboBoxEntryData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
-        static_cast<ComboBoxData*>(data)->unregisterChild( widget );
+        static_cast<ComboBoxEntryData*>(data)->unregisterChild( widget );
         return FALSE;
     }
 
     //____________________________________________________________________________________________
-    void ComboBoxData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<ComboBoxData*>(data)->unregisterChild( widget ); }
+    void ComboBoxEntryData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
+    { static_cast<ComboBoxEntryData*>(data)->unregisterChild( widget ); }
 
     //________________________________________________________________________________
-    gboolean ComboBoxData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ComboBoxEntryData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<ComboBoxData*>( data )->setHovered( widget, true );
+        static_cast<ComboBoxEntryData*>( data )->setHovered( widget, true );
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean ComboBoxData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ComboBoxEntryData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<ComboBoxData*>( data )->setHovered( widget, false );
+        static_cast<ComboBoxEntryData*>( data )->setHovered( widget, false );
         return FALSE;
     }
 
