@@ -43,20 +43,14 @@ namespace Oxygen
 namespace Gtk
 {
 
-    //@!name gtk utilities
-    //@{
-
     // set all buttons in the container to state NORMAL
     void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
-    // make all the buttons on the tabs normal
-    gboolean gtk_notebook_update_close_buttons( GtkNotebook*);
-
-    //! changes the gamma value of an image
-    bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
-
     //! returns true if widget supports rgba
     bool gtk_widget_has_rgba( GtkWidget* );
+
+    //! true if object match a given type
+    bool gtk_object_is_a( const GObject*, const gchar* );
 
     //! trigger area update using GdkRectangle
     inline void gtk_widget_queue_draw( GtkWidget* widget, const GdkRectangle* rect = 0L )
@@ -64,6 +58,9 @@ namespace Gtk
         if( !rect ) ::gtk_widget_queue_draw( widget );
         else ::gtk_widget_queue_draw_area( widget, rect->x, rect->y, rect->width, rect->height );
     }
+
+    //!@name check parent type
+    //@{
 
     //! return parent button if any.
     GtkWidget* gtk_parent_button( GtkWidget* );
@@ -89,15 +86,31 @@ namespace Gtk
     //! return parent combobox if any.
     GtkWidget* gtk_parent_notebook( GtkWidget* );
 
-    //! true if object match a given type
-    bool gtk_object_is_a( const GObject*, const gchar* );
+    //! returns true if potentialParent is (maybe indirect) parent of widget
+    bool gtk_is_parent( GtkWidget*, GtkWidget* potentialParent );
+
+    //@}
 
     //! true if a progressbar is horizontal
     /*! adapted from QtCurve code */
     bool gtk_progress_bar_is_horizontal( GtkWidget* );
 
+    //!@name button utilities
+    //@{
+
     //! true for 'flat' buttons (e.g. toolbuttons)
     bool gtk_button_is_flat( GtkWidget* );
+
+    //! returns an image on button-container
+    GtkWidget* gtk_button_find_image( GtkWidget* );
+
+    //! returns an image on button-container
+    GtkWidget* gtk_button_find_label( GtkWidget* );
+
+    //@}
+
+    //!@name notebook utilities
+    //@{
 
     //! returns true if position is in hovered tab
     //* this should move to OxygenTabWidgetData
@@ -109,11 +122,8 @@ namespace Gtk
     //! returns index of first visible tab
     int gtk_notebook_find_first_tab( GtkWidget* );
 
-    //! returns true if potentialParent is (maybe indirect) parent of widget
-    bool gtk_is_parent( GtkWidget*, GtkWidget* potentialParent );
-
-    //! returns an image on button-container
-    GtkWidget* gtk_button_find_image( GtkWidget* );
+    // make all the buttons on the tabs normal
+    gboolean gtk_notebook_update_close_buttons( GtkNotebook*);
 
     //! returns true if widget is a notebook close button
     bool gtk_notebook_is_close_button( GtkWidget* );
@@ -158,6 +168,9 @@ namespace Gtk
 
     //! add alpha channel to pixbuf
     GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf*, double );
+
+    //! changes the gamma value of an image
+    bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
 
     //! resize pixbuf
     GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );

@@ -55,61 +55,6 @@ namespace Gtk
 
     }
 
-    //____________________________________________________________
-    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook)
-    {
-        // cast to notebook and check against number of pages
-        if( GTK_IS_NOTEBOOK( notebook ) )
-        {
-            GtkWidget* tabLabel=0;
-            int numPages=gtk_notebook_get_n_pages( notebook );
-            for( int i = 0; i < numPages; ++i )
-            {
-
-                // retrieve page and tab label
-                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                if(page)
-                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
-
-                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
-                    gtk_container_adjust_buttons_state(GTK_CONTAINER(tabLabel));
-
-            }
-        }
-        return FALSE;
-    }
-
-    //_________________________________________________________
-    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
-    {
-        if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
-            gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
-            gdk_pixbuf_get_has_alpha(pixbuf) &&
-            gdk_pixbuf_get_n_channels(pixbuf)==4)
-        {
-            double gamma=1./(2.*value+0.5);
-            unsigned char* data=gdk_pixbuf_get_pixels(pixbuf);
-            const int height=gdk_pixbuf_get_height(pixbuf);
-            const int width=gdk_pixbuf_get_width(pixbuf);
-            const int rowstride=gdk_pixbuf_get_rowstride(pixbuf);
-            for(int x=0;x<width;++x)
-            {
-                for(int y=0; y<height; y++)
-                {
-                    unsigned char* p=data + y*rowstride + x*4;
-                    *p=(char)(pow((*p/255.),gamma)*255); ++p;
-                    *p=(char)(pow((*p/255.),gamma)*255); ++p;
-                    *p=(char)(pow((*p/255.),gamma)*255);
-                }
-
-            }
-
-            return true;
-
-        } else return false;
-
-    }
-
     //________________________________________________________
     bool gtk_widget_has_rgba( GtkWidget* widget )
     {
@@ -129,6 +74,20 @@ namespace Gtk
 
         } else return false;
 
+    }
+
+    //________________________________________________________
+    bool gtk_object_is_a( const GObject* object, const gchar * type_name )
+    {
+
+        if( object )
+        {
+            const GType tmp( g_type_from_name( type_name ) );
+            if( tmp )
+            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
+        }
+
+        return false;
     }
 
     //________________________________________________________
@@ -208,7 +167,6 @@ namespace Gtk
         return 0L;
     }
 
-
     //________________________________________________________
     GtkWidget* gtk_parent_notebook( GtkWidget* widget )
     {
@@ -220,12 +178,52 @@ namespace Gtk
         return 0L;
     }
 
+    //________________________________________________________
+    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    {
+
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( potentialParent==parent ) return true; }
+
+        return false;
+    }
 
     //________________________________________________________
     bool gtk_button_is_flat( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
         return ( gtk_button_get_relief( GTK_BUTTON( widget ) ) == GTK_RELIEF_NONE );
+    }
+
+    //________________________________________________________
+    GtkWidget* gtk_button_find_image(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return 0L;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_IMAGE(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return 0L;
+    }
+
+    //________________________________________________________
+    GtkWidget* gtk_button_find_label(GtkWidget* button)
+    {
+        if(!GTK_IS_CONTAINER(button))
+            return 0L;
+        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        {
+            if(GTK_IS_LABEL(children->data))
+                return GTK_WIDGET(children->data);
+            else if(GTK_IS_CONTAINER(children->data))
+                return gtk_button_find_image(GTK_WIDGET(children->data));
+        }
+        return 0L;
     }
 
     //________________________________________________________
@@ -295,44 +293,28 @@ namespace Gtk
 
     }
 
-    //________________________________________________________
-    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    //____________________________________________________________
+    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
-
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
-        { if( potentialParent==parent ) return true; }
-
-        return false;
-    }
-
-    //________________________________________________________
-    GtkWidget* gtk_button_find_image(GtkWidget* button)
-    {
-        if(!GTK_IS_CONTAINER(button))
-            return 0L;
-        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+        // cast to notebook and check against number of pages
+        if( GTK_IS_NOTEBOOK( notebook ) )
         {
-            if(GTK_IS_IMAGE(children->data))
-                return GTK_WIDGET(children->data);
-            else if(GTK_IS_CONTAINER(children->data))
-                return gtk_button_find_image(GTK_WIDGET(children->data));
-        }
-        return 0L;
-    }
+            GtkWidget* tabLabel=0;
+            int numPages=gtk_notebook_get_n_pages( notebook );
+            for( int i = 0; i < numPages; ++i )
+            {
 
-    GtkWidget* gtk_button_find_label(GtkWidget* button)
-    {
-        if(!GTK_IS_CONTAINER(button))
-            return 0L;
-        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
-        {
-            if(GTK_IS_LABEL(children->data))
-                return GTK_WIDGET(children->data);
-            else if(GTK_IS_CONTAINER(children->data))
-                return gtk_button_find_image(GTK_WIDGET(children->data));
+                // retrieve page and tab label
+                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+                if(page)
+                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
+
+                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
+                    gtk_container_adjust_buttons_state(GTK_CONTAINER(tabLabel));
+
+            }
         }
-        return 0L;
+        return FALSE;
     }
 
     //________________________________________________________
@@ -372,20 +354,6 @@ namespace Gtk
             } else return true;
 
         } else return false;
-    }
-
-    //________________________________________________________
-    bool gtk_object_is_a( const GObject* object, const gchar * type_name )
-    {
-
-        if( object )
-        {
-            const GType tmp( g_type_from_name( type_name ) );
-            if( tmp )
-            { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
-        }
-
-        return false;
     }
 
     //________________________________________________________
@@ -548,6 +516,37 @@ namespace Gtk
         }
 
         return target;
+    }
+
+    //_________________________________________________________
+    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
+    {
+        if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
+            gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
+            gdk_pixbuf_get_has_alpha(pixbuf) &&
+            gdk_pixbuf_get_n_channels(pixbuf)==4)
+        {
+            double gamma=1./(2.*value+0.5);
+            unsigned char* data=gdk_pixbuf_get_pixels(pixbuf);
+            const int height=gdk_pixbuf_get_height(pixbuf);
+            const int width=gdk_pixbuf_get_width(pixbuf);
+            const int rowstride=gdk_pixbuf_get_rowstride(pixbuf);
+            for(int x=0;x<width;++x)
+            {
+                for(int y=0; y<height; y++)
+                {
+                    unsigned char* p=data + y*rowstride + x*4;
+                    *p=(char)(pow((*p/255.),gamma)*255); ++p;
+                    *p=(char)(pow((*p/255.),gamma)*255); ++p;
+                    *p=(char)(pow((*p/255.),gamma)*255);
+                }
+
+            }
+
+            return true;
+
+        } else return false;
+
     }
 
     //___________________________________________________________
