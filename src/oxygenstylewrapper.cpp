@@ -705,7 +705,7 @@ namespace Oxygen
             GtkWidget* parent=gtk_widget_get_parent(widget);
             gchar* wp;
             gtk_widget_path(widget,NULL,&wp,NULL);
-            if(!strcmp(wp,"gtk-combobox-popup-window.GtkScrolledWindow"))
+            if( std::string(wp) == "gtk-combobox-popup-window.GtkScrolledWindow")
             {
                 if(GTK_IS_WINDOW(parent)) // double check
                 {
@@ -728,7 +728,7 @@ namespace Oxygen
                     }
                     // TODO: when RGBA visual is present, do this via RGBA (maybe in list rendering code) and uncomment the following if statement
                     // for now, this if statement is commented out so that we get rounded list anyway
-//                    if( !(options&Alpha) )
+                    // if( !(options&Alpha) )
                     {
                         // and make the list rounded
                         GList* children=gtk_container_get_children(GTK_CONTAINER(widget));
@@ -743,11 +743,15 @@ namespace Oxygen
                             gdk_pixmap_unref(mask);
                         }
                     }
-                     // now draw float frame on background window
+
+                    // now draw float frame on background window
                     Style::instance().renderMenuBackground(parent->window,clipRect,allocation.x,allocation.y,allocation.width,allocation.height,options);
                     Style::instance().drawFloatFrame(parent->window,clipRect,allocation.x,allocation.y,allocation.width,allocation.height,options);
                     return;
                 }
+
+                g_free( wp );
+
             }
         }
 
