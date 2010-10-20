@@ -32,7 +32,7 @@ namespace Oxygen
     {
         _target = widget;
         _timeOutCount = 0;
-        _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", (GCallback)configureNotifyEvent, this);
+        _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", G_CALLBACK( configureNotifyEvent ), this);
     }
 
     //________________________________________________________________________________

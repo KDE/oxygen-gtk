@@ -38,11 +38,11 @@ namespace Oxygen
         {
             gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
             GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
-            _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", (GCallback)rowDeletedEvent, this );
+            _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", G_CALLBACK( rowDeletedEvent ), this );
         }
 
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }
 
     //________________________________________________________________________________

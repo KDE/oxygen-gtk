@@ -40,9 +40,9 @@ namespace Oxygen
         #endif
 
         _target = widget;
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", (GCallback)motionNotifyEvent, this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
-        _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", (GCallback)pageAddedEvent, this );
+        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+        _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", G_CALLBACK( pageAddedEvent ), this );
 
         updateRegisteredChildren( widget );
 
@@ -189,8 +189,8 @@ namespace Oxygen
             ChildData data;
             data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
             data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-            data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)childCrossingNotifyEvent, this );
-            data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)childCrossingNotifyEvent, this );
+            data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
+            data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
 
             if( GTK_IS_CONTAINER( widget ) )
             { data._addId = g_signal_connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
