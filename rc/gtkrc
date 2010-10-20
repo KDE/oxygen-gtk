@@ -124,13 +124,13 @@ widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "oxygen-entry"
 style "oxygen-combobox" = "oxygen-default"
 {
     xthickness = 0
-    ythickness = 3
+    ythickness = 2
 }
 widget_class "*<GtkComboBox>*" style "oxygen-combobox"
 
 style "oxygen-combobox-frame" = "oxygen-default"
 {
-    xthickness = 5
+    xthickness = 4
 }
 widget_class "*.GtkComboBox.GtkFrame" style "oxygen-combobox-frame"
 #widget_class "*<GtkComboBox>*" style "oxygen-combobox"
