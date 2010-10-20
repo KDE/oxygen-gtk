@@ -29,7 +29,7 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void ScrollBarData::connect( GtkWidget* widget )
-    { _valueChangedId = g_signal_connect( G_OBJECT(widget), "value-changed", (GCallback)valueChanged, widget ); }
+    { _valueChangedId = g_signal_connect( G_OBJECT(widget), "value-changed", G_CALLBACK( valueChanged ), widget ); }
 
     //________________________________________________________________________________
     void ScrollBarData::disconnect( GtkWidget* widget )
