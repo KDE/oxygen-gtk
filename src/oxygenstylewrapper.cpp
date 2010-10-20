@@ -791,6 +791,9 @@ namespace Oxygen
 
         } else if( Gtk::gtk_parent_combobox( widget ) ) {
 
+
+            Style::instance().renderButtonSlab( window, clipRect, x, y+1, w+10, h-2 , Blend, TileSet::Ring&(~TileSet::Right) );
+
             //StyleOptions options( widget, state, GTK_SHADOW_OUT );
             //options |= Blend;
             //Style::instance().renderButtonSlab( window, clipRect, x-3, y-2, w+10, h+2, options, TileSet::Ring&(~TileSet::Left) );
@@ -1779,20 +1782,22 @@ namespace Oxygen
             Animations::instance().comboBoxEngine().registerWidget( parent );
             Animations::instance().comboBoxEngine().setEntry( parent, widget );
 
-            GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
+            gtk_cell_view_set_background_color( GTK_CELL_VIEW( widget ), 0L );
 
-            StyleOptions options( widget, state, shadow );
-            options |= Blend;
-
-            if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
-            else options &= ~Focus;
-
-            const GtkAllocation& allocation( widget->allocation );
-            Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
-            Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );
-
-            // todo: find a way to pass this to the gtkrc file
-            x+=4;
+//             GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
+//
+//             StyleOptions options( widget, state, shadow );
+//             options |= Blend;
+//
+//             if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+//             else options &= ~Focus;
+//
+//             const GtkAllocation& allocation( widget->allocation );
+//             Style::instance().renderWindowBackground( window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height );
+//             Style::instance().renderButtonSlab( window, clipRect, allocation.x, allocation.y-1, allocation.width+10, allocation.height + 2 , options, TileSet::Ring&(~TileSet::Right) );
+//
+//             // todo: find a way to pass this to the gtkrc file
+//             x+=4;
 
         }
 

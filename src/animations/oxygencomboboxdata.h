@@ -32,7 +32,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxData( void )
+        ComboBoxData( void ):
+            _hovered( false ),
+            _enterId( -1 ),
+            _leaveId( -1 )
         {}
 
         //! destructor
@@ -122,6 +125,7 @@ namespace Oxygen
                 _widget( 0L ),
                 _pressed( false ),
                 _focus( false ),
+                _hovered( false ),
                 _destroyId(-1),
                 _styleChangeId(-1),
                 _toggledId(-1),

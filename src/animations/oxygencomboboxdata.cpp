@@ -31,6 +31,9 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::connect( GtkWidget* widget )
     {
+        std::cout << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
+        gdk_window_set_events( widget->window, (GdkEventMask)(gdk_window_get_events(widget->window) | GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK) );
+
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
     }
@@ -62,6 +65,7 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::setEntry( GtkWidget* widget )
     {
+        gdk_window_set_events( widget->window, (GdkEventMask)(gdk_window_get_events(widget->window) | GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK) );
         if( _entry._widget == widget ) return;
         assert( !_entry._widget );
 
@@ -152,6 +156,7 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean ComboBoxData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
+        std::cout << "Oxygen::ComboBoxData::enterNotifyEvent" << widget << std::endl;
         static_cast<ComboBoxData*>( data )->setHovered( widget, true );
         return FALSE;
     }
@@ -159,6 +164,7 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean ComboBoxData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
+        std::cout << "Oxygen::ComboBoxData::leaveNotifyEvent" << widget << std::endl;
         static_cast<ComboBoxData*>( data )->setHovered( widget, false );
         return FALSE;
     }
