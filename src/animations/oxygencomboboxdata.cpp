@@ -30,11 +30,16 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void ComboBoxData::connect( GtkWidget* widget )
-    {}
+    {
+        _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
+        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
+    }
 
     //________________________________________________________________________________
     void ComboBoxData::disconnect( GtkWidget* widget )
     {
+        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
         _entry.disconnect();
         _button.disconnect();
     }
@@ -47,7 +52,9 @@ namespace Oxygen
 
         _button._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _button._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        _button._toggledId = g_signal_connect( widget, "toggled", GCallback(childToggledEvent), this );
+        _button._toggledId = g_signal_connect( G_OBJECT(widget), "toggled", GCallback(childToggledEvent), this );
+        _button._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
+        _button._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _button._widget = widget;
 
     }
@@ -60,6 +67,8 @@ namespace Oxygen
 
         _entry._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
         _entry._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        _entry._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
+        _entry._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _entry._widget = widget;
 
     }
@@ -82,13 +91,28 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void ComboBoxData::setHovered( GtkWidget* widget, bool value )
+    {
+        const bool oldHovered( hovered() );
+        if( widget == _entry._widget ) _entry._hovered = value;
+        else if( widget == _button._widget ) _button._hovered = value;
+        else _hovered = value;
+
+        if( oldHovered != hovered() )
+        {
+            // trigger repaint
+            if( _button._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _button._widget ) );
+            else if( _entry._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) );
+        }
+
+    }
+
+    //________________________________________________________________________________
     void ComboBoxData::unregisterChild( GtkWidget* widget )
     {
-
         if( widget == _button._widget ) _button.disconnect();
         else if( widget == _entry._widget ) _entry.disconnect();
         return;
-
     }
 
     //________________________________________________________________________________
@@ -97,10 +121,13 @@ namespace Oxygen
         if( !_widget ) return;
         g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
         g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
+        g_signal_handler_disconnect(G_OBJECT(_widget), _enterId );
+        g_signal_handler_disconnect(G_OBJECT(_widget), _leaveId );
+        if( _toggledId >= 0 ) g_signal_handler_disconnect(G_OBJECT(_widget), _toggledId );
         _widget = 0L;
         _pressed = false;
         _focus = false;
+        _hovered = false;
     }
 
     //____________________________________________________________________________________________
@@ -120,6 +147,20 @@ namespace Oxygen
         if( GTK_IS_TOGGLE_BUTTON( widget ) )
         { static_cast<ComboBoxData*>(data)->setPressed( widget, gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ); }
         return;
+    }
+
+    //________________________________________________________________________________
+    gboolean ComboBoxData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    {
+        static_cast<ComboBoxData*>( data )->setHovered( widget, true );
+        return FALSE;
+    }
+
+    //________________________________________________________________________________
+    gboolean ComboBoxData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    {
+        static_cast<ComboBoxData*>( data )->setHovered( widget, false );
+        return FALSE;
     }
 
 

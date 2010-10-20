@@ -38,12 +38,10 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxEntryData::disconnect( GtkWidget* widget )
     {
-
         g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
         _entry.disconnect();
         _button.disconnect();
-
     }
 
     //________________________________________________________________________________

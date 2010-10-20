@@ -70,6 +70,9 @@ namespace Oxygen
 
         //@}
 
+        //!@name accessors
+        //@{
+
         //! pressed
         bool pressed( void ) const
         { return _entry._pressed || _button._pressed; }
@@ -78,10 +81,19 @@ namespace Oxygen
         bool hasFocus( void ) const
         { return _button._focus || _entry._focus; }
 
+        //! true if either button or entry has hover
+        bool hovered( void ) const
+        { return _hovered || _button._hovered || _entry._hovered; }
+
+        //@}
+
         protected:
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
+
+        //! set hover flag for given widget
+        void setHovered( GtkWidget*, bool );
 
         //! disconnect child
         void unregisterChild( GtkWidget* );
@@ -92,6 +104,9 @@ namespace Oxygen
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childToggledEvent( GtkWidget*, gpointer);
+
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
 
         //@}
 
@@ -109,7 +124,9 @@ namespace Oxygen
                 _focus( false ),
                 _destroyId(-1),
                 _styleChangeId(-1),
-                _toggledId(-1)
+                _toggledId(-1),
+                _enterId(-1),
+                _leaveId(-1)
             {}
 
             //! disconnect
@@ -118,12 +135,15 @@ namespace Oxygen
             GtkWidget* _widget;
             bool _pressed;
             bool _focus;
+            bool _hovered;
 
             //!@name callback ids
             //@{
             int _destroyId;
             int _styleChangeId;
             int _toggledId;
+            int _enterId;
+            int _leaveId;
             //@}
 
         };
@@ -133,6 +153,15 @@ namespace Oxygen
 
         //! entry data
         Data _entry;
+
+        //! hover
+        bool _hovered;
+
+        //!@name callback ids
+        //@{
+        int _enterId;
+        int _leaveId;
+        //@}
 
     };
 

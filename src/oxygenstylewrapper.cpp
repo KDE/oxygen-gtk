@@ -455,6 +455,7 @@ namespace Oxygen
                 Animations::instance().comboBoxEngine().registerWidget( parent );
                 Animations::instance().comboBoxEngine().setButton( parent, widget );
                 Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
+                if( Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
                 Style::instance().renderButtonSlab( window, clipRect, x-7, y+1, w+7, h-2, options, TileSet::Ring&(~TileSet::Left) );
 

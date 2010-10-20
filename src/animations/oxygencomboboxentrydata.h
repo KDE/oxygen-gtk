@@ -83,13 +83,14 @@ namespace Oxygen
 
         //@}
 
+        //!@name accessors
+        //@{
+
         //! true if either button or entry has focus
         bool hasFocus( void ) const
         { return _button._focus || _entry._focus; }
 
-        //!@name  hover
-        //@{
-
+        //! true if either button or entry has hover
         bool hovered( void ) const
         { return _hovered || _button._hovered || _entry._hovered; }
 
