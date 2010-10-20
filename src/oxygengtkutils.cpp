@@ -232,9 +232,22 @@ namespace Gtk
         // check types
         if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
 
+        // retrieve widget path, compare and free
         gchar* widgetPath;
         gtk_widget_path( widget, 0L, &widgetPath, 0L);
         bool out( std::string( widgetPath ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" );
+        g_free( widgetPath );
+        return out;
+    }
+
+    //________________________________________________________
+    bool gtk_combobox_is_scrolled_window( GtkWidget* widget )
+    {
+        if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
+
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        bool out( std::string( widgetPath ) == "gtk-combobox-popup-window.GtkScrolledWindow" );
         g_free( widgetPath );
         return out;
     }
