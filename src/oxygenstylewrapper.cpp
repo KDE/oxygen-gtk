@@ -190,7 +190,7 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
-                    Animations::instance().treeViewEngine().registerWidget( widget );
+                    Animations::instance().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
                     if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
                     { options |= Hover; }
 
@@ -1256,11 +1256,11 @@ namespace Oxygen
             if( d.isTreeView() ) arrowSize = Style::instance().settings().viewTriangularExpanderSize();
             else options |= Contrast;
 
-            Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
+            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options );
 
         } else {
 
-            Style::instance().renderTreeExpander( window, clipRect, x-16, y-16, 32, 32, expander_style, options );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options );
 
         }
 

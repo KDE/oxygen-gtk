@@ -51,6 +51,14 @@ namespace Oxygen
         virtual ~TreeViewEngine( void )
         {}
 
+        //! register widget
+        virtual bool registerWidget( GtkWidget* widget, bool drawTreeBranchLines )
+        {
+            if( GenericEngine<TreeViewData>::registerWidget( widget ) && GTK_IS_TREE_VIEW( widget ) )
+            { gtk_tree_view_set_enable_tree_lines( GTK_TREE_VIEW( widget ), drawTreeBranchLines ); }
+            return true;
+        }
+
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }

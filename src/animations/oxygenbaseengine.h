@@ -43,7 +43,7 @@ namespace Oxygen
         virtual ~BaseEngine(){}
 
         //! register widget
-        virtual void registerWidget( GtkWidget* widget );
+        virtual bool registerWidget( GtkWidget* widget );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* ) = 0;

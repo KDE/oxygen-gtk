@@ -44,7 +44,6 @@ style "oxygen-default"
     GtkStatusbar::has-resize-grip = FALSE
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
-    GtkTreeView::enable-tree-lines = TRUE
 
     # shadow types
     GtkMenuBar::shadow-type = GTK_SHADOW_NONE

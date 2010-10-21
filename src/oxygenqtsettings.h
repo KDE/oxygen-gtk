@@ -111,9 +111,13 @@ namespace Oxygen
         bool toolBarDrawItemSeparator( void ) const
         { return _toolBarDrawItemSeparator; }
 
-        //! toolbar item separator
+        //! focus indicator in lists (not supported yet)
         bool viewDrawFocusIndicator( void ) const
         { return _viewDrawFocusIndicator; }
+
+        //! tree branch lines
+        bool viewDrawTreeBranchLines( void ) const
+        { return _viewDrawTreeBranchLines; }
 
         //! transparent tooltips
         bool tooltipTransparent( void ) const
@@ -276,14 +280,17 @@ namespace Oxygen
         //! item separator
         bool _toolBarDrawItemSeparator;
 
-        //! focus indicator in views
-        bool _viewDrawFocusIndicator;
-
         //! transparent tooltips
         bool _tooltipTransparent;
 
         //! framed tooltips
         bool _tooltipDrawStyledFrames;
+
+        //! focus indicator in views
+        bool _viewDrawFocusIndicator;
+
+        //! true if tree lines should be drawn
+        bool _viewDrawTreeBranchLines;
 
         //! true if arrows are used for expanders
         bool _viewDrawTriangularExpander;

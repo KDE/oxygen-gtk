@@ -42,10 +42,10 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void Animations::registerWidget( GtkWidget* widget )
+    bool Animations::registerWidget( GtkWidget* widget )
     {
 
-        if( _allWidgets.find( widget ) != _allWidgets.end() ) return;
+        if( _allWidgets.find( widget ) != _allWidgets.end() ) return false;
 
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::Animations::registerWidget - " << widget << std::endl;
@@ -55,6 +55,7 @@ namespace Oxygen
         data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyNotifyEvent ), this );
         data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( styleChangeNotifyEvent ), this );
         _allWidgets.insert( std::make_pair( widget, data ) );
+        return true;
 
     }
 

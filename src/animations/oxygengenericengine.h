@@ -48,13 +48,15 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual void registerWidget( GtkWidget* widget )
+        virtual bool registerWidget( GtkWidget* widget )
         {
-            if( _data.contains( widget ) ) return;
+            if( _data.contains( widget ) ) return false;
             T& data = _data.registerWidget( widget );
             data.connect( widget );
 
             BaseEngine::registerWidget( widget );
+            return true;
+
         }
 
         //! unregister widget
