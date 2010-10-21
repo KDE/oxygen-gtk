@@ -431,31 +431,23 @@ namespace Oxygen
         {
 
             // check if it's PathBar toggle button
-            if(GTK_IS_BUTTON(widget)/*GTK_IS_TOGGLE_BUTTON(widget)*/)
+            if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
-                GtkWidget* parent=gtk_widget_get_parent(widget);
-                std::string name(G_OBJECT_TYPE_NAME(parent));
-                if(name == "GtkPathBar" || name == "NautilusPathBar")
+
+                Animations::instance().flatButtonEngine().registerWidget( widget );
+
+                // only two style options possible: hover or don't draw
+                StyleOptions options(Hover);
+                if(state!=GTK_STATE_NORMAL)
                 {
+                    if(state==GTK_STATE_ACTIVE && !Animations::instance().flatButtonEngine().hovered( widget ) )
+                    { return; }
 
-                    Animations::instance().flatButtonEngine().registerWidget( widget );
+                    Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
 
-                    // only two style options possible: hover or don't draw
-                    StyleOptions options(Hover);
-                    if(state!=GTK_STATE_NORMAL)
-                    {
-                        if(state==GTK_STATE_ACTIVE && !Animations::instance().flatButtonEngine().hovered( widget ) )
-                        { return; }
-
-                        Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
-
-                    }
-                    return;
                 }
-            }
 
-            if( Gtk::gtk_parent_tree_view( widget ) )
-            {
+            } else if( Gtk::gtk_parent_tree_view( widget ) ) {
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 

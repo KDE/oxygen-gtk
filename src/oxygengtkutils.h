@@ -101,6 +101,9 @@ namespace Gtk
     //! true for 'flat' buttons (e.g. toolbuttons)
     bool gtk_button_is_flat( GtkWidget* );
 
+    //! true for buttons in path bars
+    bool gtk_button_is_in_path_bar( GtkWidget* widget );
+
     //! returns an image on button-container
     GtkWidget* gtk_button_find_image( GtkWidget* );
 
