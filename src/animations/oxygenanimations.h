@@ -23,6 +23,7 @@
 
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxentryengine.h"
+#include "oxygenflatbuttonengine.h"
 #include "oxygenlineeditengine.h"
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
@@ -58,6 +59,10 @@ namespace Oxygen
         //! comboboxentry engine
         ComboBoxEntryEngine& comboBoxEntryEngine( void ) const
         { return *_comboBoxEntryEngine; }
+
+        //! flat button engine
+        FlatButtonEngine& flatButtonEngine( void ) const
+        { return *_flatButtonEngine; }
 
         //! main window engine
         MainWindowEngine& mainWindowEngine( void ) const
@@ -109,6 +114,9 @@ namespace Oxygen
 
         //! comboboxentry engine
         ComboBoxEntryEngine* _comboBoxEntryEngine;
+
+        //! flat button engine
+        FlatButtonEngine* _flatButtonEngine;
 
         //! main window engine
         MainWindowEngine* _mainWindowEngine;

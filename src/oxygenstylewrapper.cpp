@@ -505,22 +505,14 @@ namespace Oxygen
                 StyleOptions options( Blend );
                 options |= StyleOptions( widget, state, shadow );
 
-                if( widget && Gtk::gtk_button_is_flat( widget ) && ( options | Sunken ) )
+                if( widget && Gtk::gtk_button_is_flat( widget ) )
                 {
-
-                    // prelight flat button if it's pressed but mouse button is still not released
-                    // FIXME: is this coordinate magic correct?
-                    // would rather move that to engine and detect enter/leave events
-                    int xPointer(0);
-                    int yPointer(0);
-                    gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
-                    if( Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) )
-                    { options|=Hover; }
+                    options |= Flat;
+                    Animations::instance().flatButtonEngine().registerWidget( widget );
+                    if( Animations::instance().flatButtonEngine().hovered( widget ) )
+                    { options |= Hover; }
 
                 }
-
-                if( widget && Gtk::gtk_button_is_flat( widget ) )
-                { options |= Flat; }
 
                 if( Gtk::gtk_notebook_is_close_button(widget)) {
 
