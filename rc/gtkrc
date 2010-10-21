@@ -108,8 +108,9 @@ class "GtkNotebook" style "oxygen-notebook"
 # entry margins
 style "oxygen-entry" = "oxygen-default"
 {
-  xthickness = 2
-  ythickness = 2
+    xthickness = 2
+    ythickness = 2
+    GtkEntry::inner-border = { 2, 2, 2, 2 }
 }
 
 class "GtkEntry" style "oxygen-entry"
