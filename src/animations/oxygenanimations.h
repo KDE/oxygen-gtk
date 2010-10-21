@@ -112,7 +112,7 @@ namespace Oxygen
         //! list of engines
         BaseEngine::List _engines;
 
-        //! combobox engine
+        //! comboboxentry engine
         ComboBoxEngine* _comboBoxEngine;
 
         //! comboboxentry engine
