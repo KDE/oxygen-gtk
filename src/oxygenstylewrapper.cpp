@@ -38,7 +38,6 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 
-#include <cstring>
 #include <iostream>
 
 //_______________________________________________________________________________________________________________
