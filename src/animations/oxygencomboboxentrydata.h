@@ -20,30 +20,27 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenhoverdata.h"
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
-    class ComboBoxEntryData
+
+    class ComboBoxEntryData: public HoverData
     {
 
         public:
 
         //! constructor
-        ComboBoxEntryData( void ):
-            _hovered( false )
+        ComboBoxEntryData( void )
         {}
 
         //! destructor
         virtual ~ComboBoxEntryData( void )
         {}
 
-        //! setup connections
-        /*! does nothing. Only kept here for consistency with other data */
-        void connect( GtkWidget* );
-
         //! disconnect
-        void disconnect( GtkWidget* );
+        virtual void disconnect( GtkWidget* );
 
         //!@name modifiers
         //@{
@@ -89,14 +86,14 @@ namespace Oxygen
         //@{
 
         bool hovered( void ) const
-        { return _hovered || _button._hovered || _entry._hovered; }
+        { return HoverData::hovered() || _button._hovered || _entry._hovered; }
 
         //@}
 
         protected:
 
         //! set hover flag for given widget
-        void setHovered( GtkWidget*, bool );
+        virtual bool setHovered( GtkWidget*, bool );
 
         //! disconnect child
         void unregisterChild( GtkWidget* );
@@ -107,8 +104,6 @@ namespace Oxygen
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
 
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         //@}
 
         private:
@@ -149,15 +144,6 @@ namespace Oxygen
 
         //! entry data
         Data _entry;
-
-        //! hover
-        bool _hovered;
-
-        //!@name callback ids
-        //@{
-        int _enterId;
-        int _leaveId;
-        //@}
 
     };
 

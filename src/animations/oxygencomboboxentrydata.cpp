@@ -29,18 +29,10 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void ComboBoxEntryData::connect( GtkWidget* widget )
-    {
-        _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
-    }
-
-    //________________________________________________________________________________
     void ComboBoxEntryData::disconnect( GtkWidget* widget )
     {
 
-        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+        HoverData::disconnect( widget );
         _entry.disconnect();
         _button.disconnect();
 
@@ -72,19 +64,22 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxEntryData::setHovered( GtkWidget* widget, bool value )
+    bool ComboBoxEntryData::setHovered( GtkWidget* widget, bool value )
     {
         const bool oldHovered( hovered() );
         if( widget == _entry._widget ) _entry._hovered = value;
         else if( widget == _button._widget ) _button._hovered = value;
-        else _hovered = value;
+        else HoverData::setHovered( widget, value );
 
         if( oldHovered != hovered() )
         {
+
             // trigger repaint
             if( _button._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _button._widget ) );
             else if( _entry._widget ) gtk_widget_queue_draw( gtk_widget_get_parent( _entry._widget ) );
-        }
+            return true;
+
+        } else return false;
 
     }
 
@@ -119,19 +114,5 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void ComboBoxEntryData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
     { static_cast<ComboBoxEntryData*>(data)->unregisterChild( widget ); }
-
-    //________________________________________________________________________________
-    gboolean ComboBoxEntryData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
-    {
-        static_cast<ComboBoxEntryData*>( data )->setHovered( widget, true );
-        return FALSE;
-    }
-
-    //________________________________________________________________________________
-    gboolean ComboBoxEntryData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
-    {
-        static_cast<ComboBoxEntryData*>( data )->setHovered( widget, false );
-        return FALSE;
-    }
 
 }
