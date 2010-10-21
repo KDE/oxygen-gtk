@@ -804,44 +804,39 @@ namespace Oxygen
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             return;
 
-        } else if( GTK_IS_FRAME(widget) || GTK_IS_VIEWPORT(widget) ) {
+        } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {
+
+            return;
+
+        } else if( Gtk::gtk_combobox_is_frame( widget ) ) {
 
             // make GtkCombo list look a bit better
+            // retrieve proper parent and check
             GtkWidget* parent=gtk_widget_get_parent(widget);
-            parent=gtk_widget_get_parent(parent);
-            gchar* wp;
-            gtk_widget_path(widget,NULL,&wp,NULL);
-            if(strstr(wp,"gtk-combo-popup-window")==wp)
-            {
-                g_free(wp);
-                if(GTK_IS_VIEWPORT(widget))
-                    return;
-                if(GTK_IS_WINDOW(parent)) // double check
-                {
-                    // now make it look like in Oxygen-Qt - with float frame and round edges
-                    const GtkAllocation& allocation(parent->allocation);
-                    StyleOptions options;
-                    if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
+            if( parent ) parent=gtk_widget_get_parent(parent);
+            if( !( parent && GTK_IS_WINDOW(parent) ) ) return;
 
-                    if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
-                    {
-                        // make background window rounded
-                        Animations::instance().widgetSizeEngine().registerWidget(parent);
-                        if( Animations::instance().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
-                        {
-                            GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
-                            gdk_window_shape_combine_mask(parent->window,mask,0,0);
-                            gdk_pixmap_unref(mask);
-                        }
-                    }
-                    // now draw float frame on background window
-                    Style::instance().renderMenuBackground(window,clipRect,x,y,w,h,options);
-                    Style::instance().drawFloatFrame(window,clipRect,x,y,w,h,options);
+            const GtkAllocation& allocation(parent->allocation);
+            StyleOptions options;
+            if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
+
+            if( !(options&Alpha) )
+            {
+                // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+                // make background window rounded
+                Animations::instance().widgetSizeEngine().registerWidget(parent);
+                if( Animations::instance().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+                {
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
+                    gdk_window_shape_combine_mask(parent->window,mask,0,0);
+                    gdk_pixmap_unref(mask);
                 }
-                return;
             }
-            else
-                g_free(wp);
+            // now draw float frame on background window
+            Style::instance().renderMenuBackground(window,clipRect,x,y,w,h,options);
+            Style::instance().drawFloatFrame(window,clipRect,x,y,w,h,options);
+
+            return;
 
         } else if( d.isSlider() || d.isRuler() ) {
 

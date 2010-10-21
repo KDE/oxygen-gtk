@@ -253,6 +253,30 @@ namespace Gtk
     }
 
     //________________________________________________________
+    bool gtk_combobox_is_viewport( GtkWidget* widget )
+    {
+        if( !GTK_IS_VIEWPORT(widget) ) return false;
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        static const std::string match( "gtk-combo-popup-window" );
+        bool out = ( std::string( widgetPath ).substr( 0, match.size() ) == match );
+        g_free( widgetPath );
+        return out;
+    }
+
+    //________________________________________________________
+    bool gtk_combobox_is_frame( GtkWidget* widget )
+    {
+        if( !GTK_IS_FRAME(widget) ) return false;
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        static const std::string match( "gtk-combo-popup-window" );
+        bool out = ( std::string( widgetPath ).substr( 0, match.size() ) == match );
+        g_free( widgetPath );
+        return out;
+    }
+
+    //________________________________________________________
     bool gtk_notebook_tab_contains( GtkWidget* widget, int tab, int x, int y )
     {
 
