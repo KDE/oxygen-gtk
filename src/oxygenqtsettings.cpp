@@ -431,6 +431,7 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "widget_class \"*<GtkComboBoxEntry>.<GtkButton>\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkCombo>.<GtkButton>\" style \"oxygen-entry\"" );
 
         // tooltips
         _rc.addSection( "oxygen-tooltips", Gtk::RC::defaultSection() );
