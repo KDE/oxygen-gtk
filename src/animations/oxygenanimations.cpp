@@ -71,8 +71,8 @@ namespace Oxygen
         assert( iter != _allWidgets.end() );
 
         // disconnect signal
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._destroyId );
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._styleChangeId );
+        g_signal_handler_disconnect( G_OBJECT(widget), iter->second._destroyId );
+        g_signal_handler_disconnect( G_OBJECT(widget), iter->second._styleChangeId );
 
         // erase from map
         _allWidgets.erase( widget );

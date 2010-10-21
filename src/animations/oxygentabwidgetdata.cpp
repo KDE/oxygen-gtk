@@ -57,9 +57,9 @@ namespace Oxygen
         #endif
 
         _target = 0L;
-        g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _pageAddedId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _pageAddedId );
 
         // disconnect all children
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )

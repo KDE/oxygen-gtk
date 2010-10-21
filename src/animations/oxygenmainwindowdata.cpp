@@ -40,7 +40,7 @@ namespace Oxygen
     {
         _target = 0L;
         _timeOutCount = 0;
-        g_signal_handler_disconnect(G_OBJECT(widget), _configureId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _configureId );
     }
 
     //________________________________________________________________________________

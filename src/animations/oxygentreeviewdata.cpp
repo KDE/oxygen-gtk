@@ -48,14 +48,14 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::disconnect( GtkWidget* widget )
     {
-        g_signal_handler_disconnect(G_OBJECT(widget), _motionId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
 
         // TODO: this should really get handled at model deletion
         if( _rowDeletedId >= 0 && GTK_IS_TREE_VIEW( widget ) )
         {
             GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
-            g_signal_handler_disconnect(G_OBJECT(model), _rowDeletedId );
+            g_signal_handler_disconnect( G_OBJECT(model), _rowDeletedId );
         }
 
         // also free path if valid
