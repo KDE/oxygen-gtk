@@ -922,9 +922,14 @@ namespace Oxygen
 
             if( d.isCellCheck() )
             {
-                // disable hover and focus in cellcheck because all cells would
-                // get it when view is hovered/focused otherwise
-                options &= ~(Hover|Focus);
+                options &= ~Focus;
+                if(
+                    Animations::instance().treeViewEngine().contains( widget ) &&
+                    Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h, false ) )
+                {
+                    options |= Hover;
+                } else options &= ~Hover;
+
             }
 
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
