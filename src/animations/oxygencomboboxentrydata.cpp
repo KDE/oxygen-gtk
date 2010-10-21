@@ -38,8 +38,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxEntryData::disconnect( GtkWidget* widget )
     {
-        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
         _entry.disconnect();
         _button.disconnect();
     }
@@ -100,10 +100,10 @@ namespace Oxygen
     void ComboBoxEntryData::Data::disconnect( void )
     {
         if( !_widget ) return;
-        g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _leaveId );
+        g_signal_handler_disconnect( G_OBJECT(_widget), _destroyId );
+        g_signal_handler_disconnect( G_OBJECT(_widget), _styleChangeId );
+        g_signal_handler_disconnect( G_OBJECT(_widget), _enterId );
+        g_signal_handler_disconnect( G_OBJECT(_widget), _leaveId );
         _hovered = false;
         _focus = false;
         _widget = 0L;

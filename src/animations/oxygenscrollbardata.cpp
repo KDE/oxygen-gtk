@@ -33,7 +33,7 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void ScrollBarData::disconnect( GtkWidget* widget )
-    { g_signal_handler_disconnect(G_OBJECT(widget), _valueChangedId ); }
+    { g_signal_handler_disconnect( G_OBJECT(widget), _valueChangedId ); }
 
     //________________________________________________________________________________
     void ScrollBarData::valueChanged( GtkRange* widget, gpointer data )

@@ -39,8 +39,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void LineEditData::disconnect( GtkWidget* widget )
     {
-        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
+        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
     }
 
     //________________________________________________________________________________
