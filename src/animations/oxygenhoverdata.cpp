@@ -32,6 +32,13 @@ namespace Oxygen
     //________________________________________________________________________________
     void HoverData::connect( GtkWidget* widget )
     {
+        // on connection, needs to check whether mouse pointer is in widget or not
+        // to have the proper initial value of the hover flag
+        gint xPointer,yPointer;
+        gtk_widget_get_pointer(widget,&xPointer,&yPointer);
+        setHovered( widget, Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) );
+
+        // register callbacks
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }

@@ -54,7 +54,7 @@ namespace Oxygen
         protected:
 
         //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value )
+        virtual bool setHovered( GtkWidget*, bool value )
         {
             if( _hovered == value ) return false;
             _hovered = value;
