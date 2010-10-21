@@ -32,7 +32,7 @@ namespace Oxygen
     std::ostream& operator << ( std::ostream& out, const ColorUtils::Rgba::List& colors )
     {
         for( unsigned int i=0; i<colors.size(); i++ )
-        { out << Palette::roleName( Palette::Role(i) ) << ": " << colors[i] << std::endl; }
+        { out << Palette::roleName( Palette::Role(i) ) << "=" << colors[i] << std::endl; }
 
         return out;
 

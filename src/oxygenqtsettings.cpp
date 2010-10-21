@@ -124,6 +124,7 @@ namespace Oxygen
         gtk_rc_parse_string( _rc.toString().c_str() );
 
         #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
         std::cout << _rc << std::endl;
         #endif
 
@@ -325,6 +326,11 @@ namespace Oxygen
         _palette.setColor( Palette::Disabled, Palette::SelectedText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Selection]", "ForegroundInactive" ) ) );
         _palette.setColor( Palette::Disabled, Palette::TooltipText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Tooltip]", "ForegroundInactive" ) ) );
         _palette.setColor( Palette::Disabled, Palette::Text, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:View]", "ForegroundInactive" ) ) );
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
+        std::cout << _palette << std::endl;
+        #endif
 
     }
 
