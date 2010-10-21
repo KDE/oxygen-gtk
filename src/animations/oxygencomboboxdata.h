@@ -36,9 +36,7 @@ namespace Oxygen
         //! constructor
         ComboBoxData( void ):
             _target( 0L ),
-            _enterId( -1 ),
-            _leaveId( -1 ),
-            _hovered( false )
+            _cellLayoutInitialized( false )
         {}
 
         //! destructor
@@ -73,6 +71,9 @@ namespace Oxygen
         //! register child
         void registerChild( GtkWidget*, bool recursive = true );
 
+        //! initialize cell layout
+        void initializeCellLayout( void );
+
         //@}
 
         //!@name accessors
@@ -88,14 +89,14 @@ namespace Oxygen
 
         //! true if either button or entry has hover
         bool hovered( void ) const
-        { return _hovered || ( std::find_if( _hoverData.begin(), _hoverData.end(), HoveredFTor() ) != _hoverData.end() ); }
+        { return std::find_if( _hoverData.begin(), _hoverData.end(), HoveredFTor() ) != _hoverData.end(); }
 
         //@}
 
         protected:
 
-        //! assign entry
-        void adjustCell( GtkWidget* value );
+        //! initialize cell view
+        void initializeCellView( GtkWidget* value );
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
@@ -123,15 +124,6 @@ namespace Oxygen
         //! target widget
         GtkWidget* _target;
 
-        //!@name callback ids
-        //@{
-        int _enterId;
-        int _leaveId;
-        //@}
-
-        //! hover
-        bool _hovered;
-
         // handle child registration
         class ChildData
         {
@@ -140,6 +132,7 @@ namespace Oxygen
 
             //! constructor
             explicit ChildData( void ):
+                _widget(0L),
                 _destroyId(-1),
                 _styleChangeId(-1)
             {}
@@ -149,7 +142,10 @@ namespace Oxygen
             {}
 
             //! disconnect
-            virtual void disconnect( GtkWidget* );
+            virtual void disconnect( void );
+
+            //! widget
+            GtkWidget* _widget;
 
             //!@name callback ids
             //@{
@@ -167,7 +163,6 @@ namespace Oxygen
 
             //! constructor
             explicit ButtonData( void ):
-                _widget(0L),
                 _pressed( false ),
                 _focus( false ),
                 _toggledId(-1)
@@ -179,9 +174,6 @@ namespace Oxygen
 
             //! disconnect
             virtual void disconnect( void );
-
-            //! widget
-            GtkWidget* _widget;
 
             //! true if widget is down
             bool _pressed;
@@ -210,7 +202,7 @@ namespace Oxygen
             {}
 
             //! disconnect
-            virtual void disconnect( GtkWidget* );
+            virtual void disconnect( void );
 
             //! true if widget is hovered
             bool _hovered;
@@ -235,6 +227,12 @@ namespace Oxygen
 
         typedef std::map<GtkWidget*, HoverData> HoverDataMap;
         HoverDataMap _hoverData;
+
+        //! true if cell layout has been initialized
+        bool _cellLayoutInitialized;
+
+        //! cell data
+        ChildData _cell;
 
         //! button data
         ButtonData _button;

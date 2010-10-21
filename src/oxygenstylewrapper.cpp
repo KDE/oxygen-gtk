@@ -470,6 +470,7 @@ namespace Oxygen
                 options |= Blend;
 
                 Animations::instance().comboBoxEngine().registerWidget( parent );
+                Animations::instance().comboBoxEngine().initializeCellLayout( parent );
                 Animations::instance().comboBoxEngine().setButton( parent, widget );
                 Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
                 if( Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
@@ -871,6 +872,7 @@ namespace Oxygen
             !Style::instance().settings().applicationName().isMozilla() ) {
 
             Animations::instance().comboBoxEngine().registerWidget( parent );
+            Animations::instance().comboBoxEngine().initializeCellLayout( parent );
             Animations::instance().comboBoxEngine().registerChild( parent, widget );
             GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
             StyleOptions options( widget, state, shadow );
