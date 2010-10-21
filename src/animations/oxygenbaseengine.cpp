@@ -24,10 +24,7 @@
 namespace Oxygen
 {
     //______________________________________________________
-    void BaseEngine::registerWidget( GtkWidget* widget )
-    {
-        // make sure widget is known to parent
-        parent().registerWidget( widget );
-    }
+    bool BaseEngine::registerWidget( GtkWidget* widget )
+    { return parent().registerWidget( widget ); }
 
 }

@@ -65,9 +65,13 @@ namespace Oxygen
 
         //! true if current position is contained int rect
         bool isCellHovered( int x, int y, int w, int h ) const
+        { return isCellHovered( x, y, w, h, _fullWidth ); }
+
+        //! true if current position is contained int rect
+        bool isCellHovered( int x, int y, int w, int h, bool fullWidth ) const
         {
             if( !( _path && _hovered ) ) return false;
-            if( _fullWidth ) return ( _y >= y ) && ( _y < y+h );
+            if( fullWidth ) return ( _y >= y ) && ( _y < y+h );
             else return (_x >= x) && (_x < x+w ) && ( _y >= y ) && ( _y < y+h );
         }
 

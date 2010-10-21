@@ -58,9 +58,10 @@ namespace Oxygen
         _scrollBarAddLineButtons( 2 ),
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
-        _viewDrawFocusIndicator( true ),
         _tooltipTransparent( true ),
         _tooltipDrawStyledFrames( true ),
+        _viewDrawFocusIndicator( true ),
+        _viewDrawTreeBranchLines( true ),
         _viewDrawTriangularExpander( true ),
         _viewTriangularExpanderSize( ArrowSmall ),
         _menuHighlightMode( MM_DARK )
@@ -546,12 +547,15 @@ namespace Oxygen
         // toolbar separators
         _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
 
-        // focus indicator in views
-        _viewDrawFocusIndicator = _oxygen.getOption( "[Style]", "viewDrawFocusIndicator" ).toVariant<std::string>("true") == "true";
-
         // tooltips
         _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
         _tooltipDrawStyledFrames = _oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
+
+        // focus indicator in views
+        _viewDrawFocusIndicator = _oxygen.getOption( "[Style]", "ViewDrawFocusIndicator" ).toVariant<std::string>("true") == "true";
+
+        // tree branch lines
+        _viewDrawTreeBranchLines = _oxygen.getOption( "[Style]", "ViewDrawTreeBranchLines" ).toVariant<std::string>("true") == "true";
 
         // triangular expanders
         _viewDrawTriangularExpander = _oxygen.getOption( "[Style]", "ViewDrawTriangularExpander" ).toVariant<std::string>("true") == "true";
@@ -574,7 +578,6 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<int>(
             "  GtkScrollbar::slider-width",
             _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
-        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
 
         _rc.setCurrentSection( "oxygen-scrollbar" );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
@@ -583,6 +586,28 @@ namespace Oxygen
         // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
+
+        // view  expander size
+        _rc.addSection( "oxygen-treeview", "oxygen-default" );
+        switch( _viewTriangularExpanderSize )
+        {
+            case ArrowNormal:
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 10 ) );
+            break;
+
+            default:
+            case ArrowSmall:
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 8 ) );
+            break;
+
+            case ArrowTiny:
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 6 ) );
+            break;
+        }
+        _rc.addToRootSection( "class \"GtkTreeView\" style \"oxygen-treeview\"" );
+
+
 
     }
 

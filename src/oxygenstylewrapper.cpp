@@ -159,9 +159,6 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
-            if( GTK_IS_TREE_VIEW( widget ) )
-            { Animations::instance().treeViewEngine().registerWidget( widget ); }
-
             StyleOptions options( widget, state );
 
             // select palete colorgroup for cell background
@@ -176,34 +173,43 @@ namespace Oxygen
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
-            // draw flat selection in combobox list
             if( Gtk::gtk_combobox_is_tree_view( widget ) )
             {
 
+                // draw flat selection in combobox list
                 if(state==GTK_STATE_SELECTED)
                 {
                     ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, selection );
                 }
 
-                return;
+            } else {
+
+                // draw rounded selection in normal list,
+                // and detect hover
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+
+                    Animations::instance().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
+                    if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
+                    { options |= Hover; }
+
+                }
+
+                if( options & (Selected|Hover) )
+                {
+
+                    unsigned int tiles( TileSet::Center );
+                    if( d.isCellStart() ) tiles |= TileSet::Left;
+                    else if( d.isCellEnd() ) tiles |= TileSet::Right;
+                    else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
+
+                    Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
+
+                }
 
             }
 
-            // get hover selection from tree view engine
-            if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
-            { options |= Hover; }
-
-            if( options & (Selected|Hover) )
-            {
-
-                unsigned int tiles( TileSet::Center );
-                if( d.isCellStart() ) tiles |= TileSet::Left;
-                else if( d.isCellEnd() ) tiles |= TileSet::Right;
-                else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
-
-                Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
-            }
 
             return;
 
@@ -953,9 +959,14 @@ namespace Oxygen
 
             if( d.isCellCheck() )
             {
-                // disable hover and focus in cellcheck because all cells would
-                // get it when view is hovered/focused otherwise
-                options &= ~(Hover|Focus);
+                options &= ~Focus;
+                if(
+                    Animations::instance().treeViewEngine().contains( widget ) &&
+                    Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h, false ) )
+                {
+                    options |= Hover;
+                } else options &= ~Hover;
+
             }
 
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
@@ -1282,11 +1293,11 @@ namespace Oxygen
             if( d.isTreeView() ) arrowSize = Style::instance().settings().viewTriangularExpanderSize();
             else options |= Contrast;
 
-            Style::instance().renderArrow( window, clipRect, arrow, x-16, y-16, 32, 32, arrowSize, options );
+            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options );
 
         } else {
 
-            Style::instance().renderTreeExpander( window, clipRect, x-16, y-16, 32, 32, expander_style, options );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options );
 
         }
 

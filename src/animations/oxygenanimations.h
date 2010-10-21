@@ -51,7 +51,7 @@ namespace Oxygen
         virtual ~Animations( void );
 
         //! unregister widget
-        void registerWidget( GtkWidget* );
+        bool registerWidget( GtkWidget* );
 
         //! unregister widget
         void unregisterWidget( GtkWidget* );
