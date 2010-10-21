@@ -67,6 +67,7 @@ namespace Oxygen
         //! entry focus
         void setEntryFocus( bool value )
         {
+
             if( _entry._focus == value ) return;
             _entry._focus = value;
 
@@ -78,13 +79,18 @@ namespace Oxygen
 
         //@}
 
+        //!@name accessors
+        //@{
+
+        //! return entry widget
+        GtkWidget* entry( void ) const
+        { return _entry._widget; }
+
         //! true if either button or entry has focus
         bool hasFocus( void ) const
         { return _button._focus || _entry._focus; }
 
-        //!@name  hover
-        //@{
-
+        //! hover
         bool hovered( void ) const
         { return HoverData::hovered() || _button._hovered || _entry._hovered; }
 
