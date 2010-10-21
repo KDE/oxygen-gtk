@@ -103,6 +103,40 @@ namespace Oxygen
         //! generate group from input, using provided effect
         void generate( Group from, Group to, const ColorUtils::Effect&, bool changeSelectionColor = false );
 
+        //! get string for role
+        static std::string groupName( const Group& group )
+        {
+            switch( group )
+            {
+                case Active: return "Active";
+                case Inactive: return "Inactive";
+                case Disabled: return "Disabled";
+                default: return "unknown";
+            }
+        }
+
+        //! get string for role
+        static std::string roleName( const Role& role )
+        {
+            switch( role )
+            {
+                case Base: return "Base";
+                case BaseAlternate: return "BaseAlternate";
+                case Button: return "Button";
+                case Selected: return "Selected";
+                case Window: return "Window";
+                case Tooltip: return "Tooltip";
+                case Text: return "Text";
+                case ButtonText: return "ButtonText";
+                case SelectedText: return "SelectedText";
+                case WindowText: return "WindowText";
+                case TooltipText: return "TooltipText";
+                case Focus: return "Focus";
+                case Hover: return "Hover";
+                default: return "unknown";
+            }
+        }
+
         protected:
 
         //! get color list from group
@@ -137,6 +171,10 @@ namespace Oxygen
 
         //! current group
         Group _group;
+
+        //! streamer for color list
+        friend std::ostream& operator << ( std::ostream& out, const ColorUtils::Rgba::List& colors );
+        friend std::ostream& operator << ( std::ostream& out, const Palette& palette );
 
     };
 
