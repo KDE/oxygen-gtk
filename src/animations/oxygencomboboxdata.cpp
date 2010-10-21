@@ -33,6 +33,7 @@ namespace Oxygen
     void ComboBoxData::connect( GtkWidget* widget )
     {
         _target = widget;
+        _stateChangeId = g_signal_connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
         gtk_widget_add_events( widget, GDK_ALL_EVENTS_MASK );
         initializeCellView( widget );
     }
@@ -40,6 +41,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::disconnect( GtkWidget* widget )
     {
+
+        g_signal_handler_disconnect( G_OBJECT(widget), _stateChangeId );
 
         _target = 0L;
         _button.disconnect();
@@ -85,13 +88,20 @@ namespace Oxygen
             _cell._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
             _cell._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
 
-            // change background color
-            gtk_cell_view_set_background_color( GTK_CELL_VIEW( child->data ), 0L );
+            updateCellViewColor();
+
         }
 
         if( children ) g_list_free( children );
         return;
 
+    }
+    //________________________________________________________________________________
+    void ComboBoxData::updateCellViewColor( void )
+    {
+        // change background color
+        if( _cell._widget )
+        { gtk_cell_view_set_background_color( GTK_CELL_VIEW( _cell._widget ), 0L ); }
     }
 
     //________________________________________________________________________________
@@ -103,6 +113,8 @@ namespace Oxygen
 
         GtkTreePath* path( gtk_cell_view_get_displayed_row( GTK_CELL_VIEW( _cell._widget ) ) );
         if( !path ) return;
+
+        gtk_cell_view_set_background_color( GTK_CELL_VIEW( _cell._widget ), 0L );
 
         GtkCellLayout* layout( GTK_CELL_LAYOUT( _cell._widget ) );
         GList* renderers( gtk_cell_layout_get_cells( layout ) );
@@ -304,5 +316,9 @@ namespace Oxygen
         static_cast<ComboBoxData*>( data )->setHovered( widget, false );
         return FALSE;
     }
+
+    //________________________________________________________________________________
+    void ComboBoxData::stateChangeEvent( GtkWidget*, GtkStateType, gpointer data )
+    { static_cast<ComboBoxData*>( data )->updateCellViewColor(); }
 
 }

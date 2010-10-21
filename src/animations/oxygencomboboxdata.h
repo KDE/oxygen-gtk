@@ -98,6 +98,9 @@ namespace Oxygen
         //! initialize cell view
         void initializeCellView( GtkWidget* value );
 
+        //! update cell view color
+        void updateCellViewColor( void );
+
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
 
@@ -116,6 +119,7 @@ namespace Oxygen
 
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static void stateChangeEvent( GtkWidget*, GtkStateType, gpointer );
 
         //@}
 
@@ -123,6 +127,8 @@ namespace Oxygen
 
         //! target widget
         GtkWidget* _target;
+
+        int _stateChangeId;
 
         // handle child registration
         class ChildData
