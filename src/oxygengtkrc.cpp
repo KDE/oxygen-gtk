@@ -29,6 +29,7 @@ namespace Gtk
     //_________________________________________________
     const std::string RC::_headerSectionName = "__head__";
     const std::string RC::_rootSectionName = "__root__";
+    const std::string RC::_defaultSectionName = "oxygen-default-internal";
 
     //_________________________________________________
     void RC::addSection( const std::string& name, const std::string& parent )

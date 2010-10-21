@@ -95,6 +95,10 @@ namespace Gtk
         void addToRootSection( const std::string& content )
         { addToSection( _rootSectionName, content ); }
 
+        //! default section name
+        static const std::string& defaultSection( void )
+        { return _defaultSectionName; }
+
         //! convert to string
         std::string toString( void ) const
         {
@@ -110,6 +114,8 @@ namespace Gtk
         {
             addSection( _headerSectionName );
             addSection( _rootSectionName );
+            addSection( _defaultSectionName, "oxygen-default" );
+            addToRootSection( "class \"*\" style \"oxygen-default-internal\"" );
         }
 
         //! describes each style section in resource list
@@ -163,6 +169,7 @@ namespace Gtk
         //! root section name
         static const std::string _headerSectionName;
         static const std::string _rootSectionName;
+        static const std::string _defaultSectionName;
 
         //! list of sections
         Section::List _sections;
