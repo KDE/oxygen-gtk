@@ -78,7 +78,7 @@ namespace Oxygen
         // compare path.
         // do nothing if unchanged
         if( !( path || _path ) ) return;
-        else if( _path && path && !gtk_tree_path_compare( _path, path ) && (_fullWidth || column == _column ) )
+        else if( _path && path && !gtk_tree_path_compare( _path, path ) && column == _column )
         {
             column = _column;
             gtk_tree_path_free( path );
@@ -101,9 +101,10 @@ namespace Oxygen
 
 
             gtk_tree_view_get_background_area( treeView, path, column, &newRect );
-            if( _fullWidth ) { newRect.x = 0; newRect.width = widget->allocation.width; }
             _x = newRect.x + newRect.width/2;
             _y = newRect.y + newRect.height/2;
+
+            if( _fullWidth ) { newRect.x = 0; newRect.width = widget->allocation.width; }
 
         } else {
 

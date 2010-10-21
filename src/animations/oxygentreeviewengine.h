@@ -59,6 +59,9 @@ namespace Oxygen
         bool isCellHovered( GtkWidget* widget, int x, int y, int w, int h )
         { return data().value( widget ).isCellHovered( x, y, w, h ); }
 
+        bool isCellHovered( GtkWidget* widget, int x, int y, int w, int h, bool fullWidth )
+        { return data().value( widget ).isCellHovered( x, y, w, h, fullWidth ); }
+
     };
 
 }
