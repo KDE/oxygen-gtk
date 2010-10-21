@@ -336,7 +336,7 @@ namespace Oxygen
         _palette.setGroup( Palette::Active );
 
         // default colors
-        _rc.addSection( "oxygen-colors", "oxygen-default" );
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Window ) ) );
 
@@ -376,16 +376,14 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::SelectedText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Text ) ) );
 
-        _rc.addToRootSection( "class \"*\" style \"oxygen-colors\"" );
-
         // buttons
-        _rc.addSection( "oxygen-buttons", "oxygen-default" );
+        _rc.addSection( "oxygen-buttons", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Button ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToRootSection( "class \"GtkButton\" style \"oxygen-buttons\"" );
 
         // menu items
-        _rc.addSection( "oxygen-menubar-item", "oxygen-default" );
+        _rc.addSection( "oxygen-menubar-item", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
 
@@ -425,7 +423,7 @@ namespace Oxygen
         to match oxygen: the Window background is used for disabled entries,
         whereas the 'base' background is used when enabled
         */
-        _rc.addSection( "oxygen-entry", "oxygen-default" );
+        _rc.addSection( "oxygen-entry", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
@@ -435,7 +433,7 @@ namespace Oxygen
         _rc.addToRootSection( "widget_class \"*<GtkComboBoxEntry>.<GtkButton>\" style \"oxygen-entry\"" );
 
         // tooltips
-        _rc.addSection( "oxygen-tooltips", "oxygen-default" );
+        _rc.addSection( "oxygen-tooltips", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
@@ -494,15 +492,14 @@ namespace Oxygen
         // pass fonts to RC
         _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default] ) );
 
-        _rc.addSection( "oxygen-default-font", "oxygen-default" );
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Default] ) );
-        _rc.addToRootSection( "widget_class \"*\" style \"oxygen-default-font\"" );
 
-        _rc.addSection( "oxygen-menu-font", "oxygen-default" );
+        _rc.addSection( "oxygen-menu-font", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
         _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
 
-        _rc.addSection( "oxygen-toolbar-font", "oxygen-default" );
+        _rc.addSection( "oxygen-toolbar-font", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
         _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
 
@@ -574,22 +571,19 @@ namespace Oxygen
 
         // copy relevant options to to gtk
         // scrollbar width
-        _rc.addSection( "oxygen-scrollbar", "oxygen-default" );
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<int>(
             "  GtkScrollbar::slider-width",
             _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
 
-        _rc.setCurrentSection( "oxygen-scrollbar" );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
 
         // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
-        _rc.addToRootSection( "class \"GtkScrollbar\" style \"oxygen-scrollbar\"" );
 
         // view  expander size
-        _rc.addSection( "oxygen-treeview", "oxygen-default" );
         switch( _viewTriangularExpanderSize )
         {
             case ArrowNormal:
@@ -605,10 +599,6 @@ namespace Oxygen
             _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 6 ) );
             break;
         }
-        _rc.addToRootSection( "class \"GtkTreeView\" style \"oxygen-treeview\"" );
-
-
-
     }
 
     //_________________________________________________________

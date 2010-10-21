@@ -125,7 +125,7 @@ namespace Oxygen
         rc.addToHeaderSection( pixmapPathStr.str() );
 
         // loop over icons
-        rc.addSection( "oxygen-icons", "oxygen-default" );
+        rc.setCurrentSection( Gtk::RC::defaultSection() );
         std::ostringstream notFoundOut;
         for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
         {
@@ -138,13 +138,12 @@ namespace Oxygen
 
         // add list of not found icons to the bottom of the list
         rc.addToCurrentSection( notFoundOut.str() );
-        rc.addToRootSection( "class \"*\" style \"oxygen-icons\"" );
 
         // extra settings for entries
         std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
         if( !stock.empty() )
         {
-            rc.addSection( "oxygen-icons-editor", "oxygen-icons" );
+            rc.addSection( "oxygen-icons-editor", Gtk::RC::defaultSection() );
             rc.addToCurrentSection( stock );
             rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
         }
