@@ -38,6 +38,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 
+#include <cstring>
 #include <iostream>
 
 //_______________________________________________________________________________________________________________
@@ -430,6 +431,33 @@ namespace Oxygen
         if( d.isButton() || d.isOptionMenu() )
         {
 
+            // check if it's PathBar toggle button
+            GtkWidget* parent=gtk_widget_get_parent(widget);
+            if(GTK_IS_BUTTON(widget)/*GTK_IS_TOGGLE_BUTTON(widget)*/)
+            {
+                std::string name(G_OBJECT_TYPE_NAME(parent));
+                if(name == "GtkPathBar" || name == "NautilusPathBar")
+                {
+                    // only two style options possible: hover or don't draw
+                    StyleOptions options(Hover);
+                    if(state!=GTK_STATE_NORMAL)
+                    {
+                        if(state==GTK_STATE_ACTIVE)
+                        {
+                            // don't draw anything if mouse pointer isn't inside the button
+                            gint xP,yP;
+                            gtk_widget_get_pointer(widget,&xP,&yP);
+                            if( !(xP>0 && yP>0 &&
+                                    xP < widget->allocation.width &&
+                                    yP < widget->allocation.height) )
+                                return;
+                        }
+                        Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
+                    }
+                    return;
+                }
+            }
+
             if( Gtk::gtk_parent_tree_view( widget ) )
             {
 
@@ -759,7 +787,7 @@ namespace Oxygen
                     const gint offset( options&Alpha ? 0:1 );
                     GdkPixmap* mask( Style::instance().helper().roundMask(
                         widget->allocation.width - 2*offset,
-                        widget->allocation.height - 2*offset,
+                        widget->allocation.height - 2*offset - ( options&Alpha ? 1:0 ),
                         3 ) );
 
                     gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
@@ -775,6 +803,45 @@ namespace Oxygen
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             return;
+
+        } else if( GTK_IS_FRAME(widget) || GTK_IS_VIEWPORT(widget) ) {
+
+            // make GtkCombo list look a bit better
+            GtkWidget* parent=gtk_widget_get_parent(widget);
+            parent=gtk_widget_get_parent(parent);
+            gchar* wp;
+            gtk_widget_path(widget,NULL,&wp,NULL);
+            if(strstr(wp,"gtk-combo-popup-window")==wp)
+            {
+                g_free(wp);
+                if(GTK_IS_VIEWPORT(widget))
+                    return;
+                if(GTK_IS_WINDOW(parent)) // double check
+                {
+                    // now make it look like in Oxygen-Qt - with float frame and round edges
+                    const GtkAllocation& allocation(parent->allocation);
+                    StyleOptions options;
+                    if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
+
+                    if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+                    {
+                        // make background window rounded
+                        Animations::instance().widgetSizeEngine().registerWidget(parent);
+                        if( Animations::instance().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+                        {
+                            GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
+                            gdk_window_shape_combine_mask(parent->window,mask,0,0);
+                            gdk_pixmap_unref(mask);
+                        }
+                    }
+                    // now draw float frame on background window
+                    Style::instance().renderMenuBackground(window,clipRect,x,y,w,h,options);
+                    Style::instance().drawFloatFrame(window,clipRect,x,y,w,h,options);
+                }
+                return;
+            }
+            else
+                g_free(wp);
 
         } else if( d.isSlider() || d.isRuler() ) {
 
