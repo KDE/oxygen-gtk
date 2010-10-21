@@ -427,38 +427,28 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
+        GtkWidget* parent(0L);
         if( d.isButton() || d.isOptionMenu() )
         {
 
             // check if it's PathBar toggle button
-            GtkWidget* parent=gtk_widget_get_parent(widget);
-            if(GTK_IS_BUTTON(widget)/*GTK_IS_TOGGLE_BUTTON(widget)*/)
+            if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
-                std::string name(G_OBJECT_TYPE_NAME(parent));
-                if(name == "GtkPathBar" || name == "NautilusPathBar")
-                {
-                    // only two style options possible: hover or don't draw
-                    StyleOptions options(Hover);
-                    if(state!=GTK_STATE_NORMAL)
-                    {
-                        if(state==GTK_STATE_ACTIVE)
-                        {
-                            // don't draw anything if mouse pointer isn't inside the button
-                            gint xP,yP;
-                            gtk_widget_get_pointer(widget,&xP,&yP);
-                            if( !(xP>0 && yP>0 &&
-                                    xP < widget->allocation.width &&
-                                    yP < widget->allocation.height) )
-                                return;
-                        }
-                        Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
-                    }
-                    return;
-                }
-            }
 
-            if( Gtk::gtk_parent_tree_view( widget ) )
-            {
+                Animations::instance().flatButtonEngine().registerWidget( widget );
+
+                // only two style options possible: hover or don't draw
+                StyleOptions options(Hover);
+                if(state!=GTK_STATE_NORMAL)
+                {
+                    if(state==GTK_STATE_ACTIVE && !Animations::instance().flatButtonEngine().hovered( widget ) )
+                    { return; }
+
+                    Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
+
+                }
+
+            } else if( Gtk::gtk_parent_tree_view( widget ) ) {
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
@@ -518,22 +508,14 @@ namespace Oxygen
                 StyleOptions options( Blend );
                 options |= StyleOptions( widget, state, shadow );
 
-                if( widget && Gtk::gtk_button_is_flat( widget ) && ( options | Sunken ) )
+                if( widget && Gtk::gtk_button_is_flat( widget ) )
                 {
-
-                    // prelight flat button if it's pressed but mouse button is still not released
-                    // FIXME: is this coordinate magic correct?
-                    // would rather move that to engine and detect enter/leave events
-                    int xPointer(0);
-                    int yPointer(0);
-                    gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
-                    if( Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) )
-                    { options|=Hover; }
+                    options |= Flat;
+                    Animations::instance().flatButtonEngine().registerWidget( widget );
+                    if( Animations::instance().flatButtonEngine().hovered( widget ) )
+                    { options |= Hover; }
 
                 }
-
-                if( widget && Gtk::gtk_button_is_flat( widget ) )
-                { options |= Flat; }
 
                 if( Gtk::gtk_notebook_is_close_button(widget)) {
 

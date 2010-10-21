@@ -197,6 +197,15 @@ namespace Gtk
     }
 
     //________________________________________________________
+    bool gtk_button_is_in_path_bar( GtkWidget* widget )
+    {
+        if( !GTK_IS_BUTTON( widget ) ) return false;
+
+        std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
+        return name == "GtkPathBar" || name == "NautilusPathBar";
+    }
+
+    //________________________________________________________
     GtkWidget* gtk_button_find_image(GtkWidget* button)
     {
         if(!GTK_IS_CONTAINER(button))

@@ -1,5 +1,5 @@
-#ifndef oxygenlineeditdata_h
-#define oxygenlineeditdata_h
+#ifndef oxygenflatbuttonengine_h
+#define oxygenflatbuttonengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -21,34 +21,39 @@
 * MA 02110-1301, USA.
 */
 
-#include <oxygenhoverdata.h>
+#include "oxygengenericengine.h"
+#include "oxygendatamap.h"
+#include "oxygenhoverdata.h"
 
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
-    class LineEditData: public HoverData
+    //! forward declaration
+    class Animations;
+
+    //! stores data associated to editable comboboxes
+    /*!
+    ensures that the text entry and the button of editable comboboxes
+    gets hovered and focus flags at the same time
+    */
+    class FlatButtonEngine: public GenericEngine<HoverData>
     {
 
         public:
 
         //! constructor
-        LineEditData( void )
-        {}
+        FlatButtonEngine( Animations* parent ):
+            GenericEngine<HoverData>( parent )
+            {}
 
         //! destructor
-        virtual ~LineEditData( void )
+        virtual ~FlatButtonEngine( void )
         {}
 
-        protected:
-
-        //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value )
-        {
-            if( !HoverData::setHovered( widget, value ) ) return false;
-            gtk_widget_queue_draw( widget );
-            return true;
-        }
+        //! true if widget is hovered
+        bool hovered( GtkWidget* widget )
+        { return data().value( widget ).hovered(); }
 
     };
 

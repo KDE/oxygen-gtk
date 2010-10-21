@@ -1,5 +1,5 @@
-#ifndef oxygenlineeditdata_h
-#define oxygenlineeditdata_h
+#ifndef oxygenhoverdata_h
+#define oxygenhoverdata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -21,34 +21,62 @@
 * MA 02110-1301, USA.
 */
 
-#include <oxygenhoverdata.h>
-
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
-    class LineEditData: public HoverData
+    class HoverData
     {
 
         public:
 
         //! constructor
-        LineEditData( void )
+        HoverData( void ):
+            _enterId(-1),
+            _leaveId(-1),
+            _hovered( false )
         {}
 
         //! destructor
-        virtual ~LineEditData( void )
+        virtual ~HoverData( void )
         {}
+
+        //! setup connections
+        virtual void connect( GtkWidget* );
+
+        //! disconnect
+        virtual void disconnect( GtkWidget* );
+
+        //! true if hovered
+        virtual bool hovered( void ) const
+        { return _hovered; }
 
         protected:
 
         //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value )
+        virtual bool setHovered( GtkWidget*, bool value )
         {
-            if( !HoverData::setHovered( widget, value ) ) return false;
-            gtk_widget_queue_draw( widget );
+            if( _hovered == value ) return false;
+            _hovered = value;
             return true;
         }
+
+        //!@name static callbacks
+        //@{
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        //@}
+
+        private:
+
+        //! enter signal id
+        int _enterId;
+
+        //! leave signal id
+        int _leaveId;
+
+        //! true if hovered
+        bool _hovered;
 
     };
 

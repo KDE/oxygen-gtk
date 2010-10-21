@@ -2,7 +2,7 @@
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
-* the lineedit data code is largely inspired from the gtk redmond engine
+* the hover data code is largely inspired from the gtk redmond engine
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -20,8 +20,9 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenlineeditdata.h"
+#include "oxygenhoverdata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 #include <iostream>
@@ -30,30 +31,54 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void LineEditData::connect( GtkWidget* widget )
+    void HoverData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+        // on connection, needs to check whether mouse pointer is in widget or not
+        // to have the proper initial value of the hover flag
+        gint xPointer,yPointer;
+        gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+        setHovered( widget, Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) );
+
+        // register callbacks
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }
 
     //________________________________________________________________________________
-    void LineEditData::disconnect( GtkWidget* widget )
+    void HoverData::disconnect( GtkWidget* widget )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean HoverData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<LineEditData*>( data )->setHovered( widget, true );
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::enterNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+        static_cast<HoverData*>( data )->setHovered( widget, true );
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean HoverData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<LineEditData*>( data )->setHovered( widget, false );
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+        static_cast<HoverData*>( data )->setHovered( widget, false );
         return FALSE;
     }
 
