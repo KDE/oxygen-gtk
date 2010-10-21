@@ -159,9 +159,6 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
-            if( GTK_IS_TREE_VIEW( widget ) )
-            { Animations::instance().treeViewEngine().registerWidget( widget ); }
-
             StyleOptions options( widget, state );
 
             // select palete colorgroup for cell background
@@ -176,34 +173,43 @@ namespace Oxygen
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
 
-            // draw flat selection in combobox list
             if( Gtk::gtk_combobox_is_tree_view( widget ) )
             {
 
+                // draw flat selection in combobox list
                 if(state==GTK_STATE_SELECTED)
                 {
                     ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, selection );
                 }
 
-                return;
+            } else {
+
+                // draw rounded selection in normal list,
+                // and detect hover
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+
+                    Animations::instance().treeViewEngine().registerWidget( widget );
+                    if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
+                    { options |= Hover; }
+
+                }
+
+                if( options & (Selected|Hover) )
+                {
+
+                    unsigned int tiles( TileSet::Center );
+                    if( d.isCellStart() ) tiles |= TileSet::Left;
+                    else if( d.isCellEnd() ) tiles |= TileSet::Right;
+                    else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
+
+                    Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
+
+                }
 
             }
 
-            // get hover selection from tree view engine
-            if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
-            { options |= Hover; }
-
-            if( options & (Selected|Hover) )
-            {
-
-                unsigned int tiles( TileSet::Center );
-                if( d.isCellStart() ) tiles |= TileSet::Left;
-                else if( d.isCellEnd() ) tiles |= TileSet::Right;
-                else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
-
-                Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
-            }
 
             return;
 
