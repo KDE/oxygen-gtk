@@ -35,7 +35,7 @@ namespace Oxygen
         // on connection, needs to check whether mouse pointer is in widget or not
         // to have the proper initial value of the hover flag
         gint xPointer,yPointer;
-        gtk_widget_get_pointer(widget,&xPointer,&yPointer);
+        gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
         setHovered( widget, Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) );
 
         // register callbacks
