@@ -22,6 +22,7 @@
 
 #include "oxygenhoverdata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 #include <iostream>
@@ -32,6 +33,11 @@ namespace Oxygen
     //________________________________________________________________________________
     void HoverData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         // on connection, needs to check whether mouse pointer is in widget or not
         // to have the proper initial value of the hover flag
         gint xPointer,yPointer;
@@ -46,6 +52,10 @@ namespace Oxygen
     //________________________________________________________________________________
     void HoverData::disconnect( GtkWidget* widget )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
     }
@@ -53,6 +63,10 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean HoverData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::enterNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         static_cast<HoverData*>( data )->setHovered( widget, true );
         return FALSE;
     }
@@ -60,6 +74,10 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean HoverData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         static_cast<HoverData*>( data )->setHovered( widget, false );
         return FALSE;
     }

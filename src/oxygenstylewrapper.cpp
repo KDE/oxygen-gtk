@@ -431,27 +431,24 @@ namespace Oxygen
         {
 
             // check if it's PathBar toggle button
-            GtkWidget* parent=gtk_widget_get_parent(widget);
             if(GTK_IS_BUTTON(widget)/*GTK_IS_TOGGLE_BUTTON(widget)*/)
             {
+                GtkWidget* parent=gtk_widget_get_parent(widget);
                 std::string name(G_OBJECT_TYPE_NAME(parent));
                 if(name == "GtkPathBar" || name == "NautilusPathBar")
                 {
+
+                    Animations::instance().flatButtonEngine().registerWidget( widget );
+
                     // only two style options possible: hover or don't draw
                     StyleOptions options(Hover);
                     if(state!=GTK_STATE_NORMAL)
                     {
-                        if(state==GTK_STATE_ACTIVE)
-                        {
-                            // don't draw anything if mouse pointer isn't inside the button
-                            gint xP,yP;
-                            gtk_widget_get_pointer(widget,&xP,&yP);
-                            if( !(xP>0 && yP>0 &&
-                                    xP < widget->allocation.width &&
-                                    yP < widget->allocation.height) )
-                                return;
-                        }
+                        if(state==GTK_STATE_ACTIVE && !Animations::instance().flatButtonEngine().hovered( widget ) )
+                        { return; }
+
                         Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
+
                     }
                     return;
                 }
