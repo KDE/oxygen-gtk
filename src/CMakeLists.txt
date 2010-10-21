@@ -27,8 +27,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
     animations/oxygencomboboxentrydata.cpp
-    animations/oxygenanimations.cpp
-    animations/oxygenlineeditdata.cpp
+    animations/oxygenhoverdata.cpp
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenushelldata.cpp
     animations/oxygenscrollbardata.cpp

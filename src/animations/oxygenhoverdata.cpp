@@ -2,7 +2,7 @@
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
-* the lineedit data code is largely inspired from the gtk redmond engine
+* the hover data code is largely inspired from the gtk redmond engine
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -20,7 +20,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenlineeditdata.h"
+#include "oxygenhoverdata.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -30,30 +30,30 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void LineEditData::connect( GtkWidget* widget )
+    void HoverData::connect( GtkWidget* widget )
     {
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
         _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }
 
     //________________________________________________________________________________
-    void LineEditData::disconnect( GtkWidget* widget )
+    void HoverData::disconnect( GtkWidget* widget )
     {
         g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
         g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean HoverData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<LineEditData*>( data )->setHovered( widget, true );
+        static_cast<HoverData*>( data )->setHovered( widget, true );
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean LineEditData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean HoverData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
-        static_cast<LineEditData*>( data )->setHovered( widget, false );
+        static_cast<HoverData*>( data )->setHovered( widget, false );
         return FALSE;
     }
 
