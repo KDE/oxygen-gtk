@@ -425,7 +425,6 @@ namespace Oxygen
         { Animations::instance().menuShellEngine().registerWidget(widget); }
 
         Style::instance().sanitizeSize( window, w, h );
-        GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
 
         if( d.isButton() || d.isOptionMenu() )
