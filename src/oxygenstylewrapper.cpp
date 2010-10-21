@@ -256,11 +256,14 @@ namespace Oxygen
                 Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
                 Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
-                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
-                else options &= ~Focus;
+                if( state != GTK_STATE_INSENSITIVE )
+                {
+                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
-                else options &= ~Hover;
+                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    else options &= ~Hover;
+                }
 
                 // since combobox entry is drawn in the combobox full height, we'll have to adjust glow height
                 y -= (parent->allocation.height-h)/2;
@@ -459,26 +462,35 @@ namespace Oxygen
                 that match the corresponding text entry background.
                 */
 
-                if( style )
-                {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[gtk_widget_get_state(parent)] ) );
-                    Style::instance().fill( window, clipRect, x, y, w, h, background );
-                }
-
                 StyleOptions options( widget, state, shadow );
                 options |= Blend|NoFill;
 
                 // focus handling
                 Animations::instance().comboBoxEntryEngine().registerWidget( parent );
                 Animations::instance().comboBoxEntryEngine().setButton( parent, widget );
-                Animations::instance().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
+                GtkWidget* entry( Animations::instance().comboBoxEntryEngine().entry( parent ) );
+
+                if( GTK_IS_COMBO( parent ) && entry ) { state = gtk_widget_get_state( entry ); }
+                else state = gtk_widget_get_state(parent);
+
+                if( style )
+                {
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                }
 
                 // update option accordingly
-                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
-                else options &= ~Focus;
+                if( state == GTK_STATE_INSENSITIVE ) options &= ~(Hover|Focus);
+                else {
 
-                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
-                else options &= ~Hover;
+                    Animations::instance().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
+                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    else options &= ~Focus;
+
+                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    else options &= ~Hover;
+
+                }
 
                 // render
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
@@ -852,12 +864,16 @@ namespace Oxygen
                 Animations::instance().comboBoxEntryEngine().registerWidget( parent );
                 Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
                 Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+                GtkWidget* entry( Animations::instance().comboBoxEntryEngine().entry( parent ) );
+                if( !( GTK_IS_COMBO( parent ) && entry && gtk_widget_get_state( entry ) == GTK_STATE_INSENSITIVE ) )
+                {
 
-                if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
-                else options &= ~Focus;
+                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    else options &= ~Focus;
 
-                if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
-                else options &= ~Hover;
+                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    else options &= ~Hover;
+                }
 
                 // render
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
@@ -1285,13 +1301,25 @@ namespace Oxygen
                 }
             }
 
-        } else if( Gtk::gtk_parent_button( widget ) && !( Gtk::gtk_parent_combobox_entry( widget ) || Gtk::gtk_parent_tree_view( widget ) ) ) {
+        } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+            if( GTK_IS_COMBO( parent ) )
+            {
+                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
+                if( GtkWidget* entry = Animations::instance().comboBoxEntryEngine().entry( parent ) )
+                { state = gtk_widget_get_state( entry ); }
+            }
+
+            if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
+
+        } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_tree_view( widget ) ) {
 
             options &= ~( Focus|Hover );
 
         } else if( GTK_IS_CALENDAR( widget ) ) {
 
             // need to render background behind arrows from calendar
+            // offsets are empirical
             Style::instance().renderWindowBackground( window, clipRect, x-2, y-3, w+4, h+6 );
 
         }

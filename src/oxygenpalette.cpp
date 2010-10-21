@@ -28,6 +28,31 @@
 namespace Oxygen
 {
 
+    //____________________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const ColorUtils::Rgba::List& colors )
+    {
+        for( unsigned int i=0; i<colors.size(); i++ )
+        { out << Palette::roleName( Palette::Role(i) ) << "=" << colors[i] << std::endl; }
+
+        return out;
+
+    }
+
+    //____________________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const Palette& palette )
+    {
+        out << "[Colors:" << Palette::groupName( Palette::Active ) << "]" << std::endl;
+        out << palette._activeColors << std::endl;
+
+        out << "[Colors:" << Palette::groupName( Palette::Inactive ) << "]" << std::endl;
+        out << palette._inactiveColors << std::endl;
+
+        out << "[Colors:" << Palette::groupName( Palette::Disabled ) << "]" << std::endl;
+        out << palette._disabledColors << std::endl;
+
+        return out;
+    }
+
     //_______________________________________________________
     void Palette::generate( Group from, Group to, const ColorUtils::Effect& effect, bool changeSelectionColor )
     {
