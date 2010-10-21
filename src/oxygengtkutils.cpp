@@ -140,7 +140,7 @@ namespace Gtk
 
         GtkWidget *parent( widget );
         while( parent && (parent = gtk_widget_get_parent( parent ) ) )
-        { if( GTK_IS_COMBO_BOX_ENTRY( parent ) ) return parent; }
+        { if( GTK_IS_COMBO_BOX_ENTRY( parent ) || GTK_IS_COMBO( parent ) ) return parent; }
 
         return 0L;
     }
