@@ -87,6 +87,19 @@ namespace Oxygen
         //! update pointer position
         void clearPosition( GtkWidget* = 0L );
 
+        //! repaint selection
+        void repaintSelection( GtkWidget* = 0L );
+
+        //!@name child (scrollbars) handling
+        //@{
+        void registerScrollBars( GtkWidget* );
+        void registerChild( GtkWidget* );
+        void unregisterChild( GtkWidget* );
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static void childValueChanged( GtkRange*, gpointer );
+        //@}
+
         //!@name static callbacks
         //@{
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
@@ -127,6 +140,13 @@ namespace Oxygen
                 _styleChangeId( -1 ),
                 _valueChangedId( -1 )
             {}
+
+            //! destructor
+            virtual ~ChildData( void )
+            {}
+
+            //! disconnect all signals
+            void disconnect( GtkWidget* );
 
             int _destroyId;
             int _styleChangeId;

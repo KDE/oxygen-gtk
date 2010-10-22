@@ -21,10 +21,13 @@
 */
 
 #include "oxygentreeviewdata.h"
+#include "../config.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
 #include <iostream>
+
+#define OXYGEN_DEBUG 1
 
 namespace Oxygen
 {
@@ -50,6 +53,7 @@ namespace Oxygen
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
 
         // also register scrollbars from parent scrollWindow
+        registerScrollBars( widget );
 
     }
 
@@ -72,6 +76,11 @@ namespace Oxygen
 
         // also free path if valid
         _cellInfo.clear();
+
+        // disconnect all children
+        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
+        { iter->second.disconnect( iter->first ); }
+        _childrenData.clear();
 
         // base class
         HoverData::disconnect( widget );
@@ -139,8 +148,12 @@ namespace Oxygen
         _x = -1;
         _y = -1;
 
+        // check widget
+        if( !widget ) widget = _target;
+        if( !widget ) return;
+
         // check path and widget
-        if( !( _cellInfo.isValid() && widget && GTK_IS_TREE_VIEW( widget ) ) ) return;
+        if( !( _cellInfo.isValid() && GTK_IS_TREE_VIEW( widget ) ) ) return;
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
         // prepare update area
@@ -158,6 +171,102 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void TreeViewData::repaintSelection( GtkWidget* widget )
+    {
+
+        // check widget
+        if( !widget ) widget = _target;
+        if( !widget ) return;
+
+        // check path and widget
+        if( !( hovered() && _cellInfo.isValid() && GTK_IS_TREE_VIEW( widget ) ) ) return;
+        GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+
+        // prepare update area
+        GdkRectangle updateRect( _cellInfo.backgroundRect( treeView ) );
+        updateRect.x = 0;
+        updateRect.width = widget->allocation.width;
+
+        // schedule redraw
+        gtk_tree_view_convert_bin_window_to_widget_coords( treeView, updateRect.x, updateRect.y, &updateRect.x, &updateRect.y );
+        Gtk::gtk_widget_queue_draw( widget, &updateRect );
+
+    }
+
+    //________________________________________________________________________________
+    void TreeViewData::registerScrollBars( GtkWidget* widget )
+    {
+
+        // find parent scrolled window
+        GtkWidget* parent( Gtk::gtk_parent_scrolled_window( widget ) );
+        if( !parent ) return;
+
+        // cast and register scrollbars
+        GtkScrolledWindow *scrolledWindow( GTK_SCROLLED_WINDOW( parent ) );
+
+        if( GtkWidget* hScrollBar = gtk_scrolled_window_get_hscrollbar( scrolledWindow ) )
+        { registerChild( hScrollBar ); }
+
+        if( GtkWidget* vScrollBar = gtk_scrolled_window_get_vscrollbar( scrolledWindow ) )
+        { registerChild( vScrollBar ); }
+
+    }
+
+    //________________________________________________________________________________
+    void TreeViewData::registerChild( GtkWidget* widget )
+    {
+
+        // make sure widget is not already in map
+        if( _childrenData.find( widget ) == _childrenData.end() )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::TreeViewData::registerChild - " << widget << std::endl;
+            #endif
+
+            // allocate new ChildData
+            ChildData data;
+            data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+            data._valueChangedId = g_signal_connect( G_OBJECT(widget), "value-changed", G_CALLBACK( childValueChanged ), this );
+
+            // and insert in map
+            _childrenData.insert( std::make_pair( widget, data ) );
+
+        }
+
+    }
+
+    //________________________________________________________________________________
+    void TreeViewData::unregisterChild( GtkWidget* widget )
+    {
+
+        ChildDataMap::iterator iter( _childrenData.find( widget ) );
+        if( iter == _childrenData.end() ) return;
+        iter->second.disconnect( widget );
+        _childrenData.erase( iter );
+
+    }
+
+    //____________________________________________________________________________________________
+    gboolean TreeViewData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        static_cast<TreeViewData*>(data)->unregisterChild( widget );
+        return FALSE;
+    }
+
+    //____________________________________________________________________________________________
+    void TreeViewData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
+    { static_cast<TreeViewData*>(data)->unregisterChild( widget ); }
+
+    //________________________________________________________________________________
+    void TreeViewData::childValueChanged( GtkRange* widget, gpointer data )
+    {
+        static_cast<TreeViewData*>(data)->repaintSelection();
+        return;
+    }
+
+    //________________________________________________________________________________
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
 
@@ -169,5 +278,19 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::rowDeletedEvent( GtkTreeModel*, GtkTreePath* path, gpointer data )
     { static_cast<TreeViewData*>( data )->clearPosition(); }
+
+    //____________________________________________________________________________________________
+    void TreeViewData::ChildData::disconnect( GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TreeViewData::ChildData::disconnect - " << widget << std::endl;
+        #endif
+
+        g_signal_handler_disconnect(G_OBJECT(widget), _destroyId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _styleChangeId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _valueChangedId );
+
+    }
 
 }
