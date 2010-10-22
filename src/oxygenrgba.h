@@ -66,6 +66,7 @@ namespace ColorUtils
         {}
 
         //! equal to operator
+        /*! TODO: check why alpha channel is not used in the comparison */
         bool operator == (const Rgba& other ) const
         {
             return
