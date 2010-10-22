@@ -503,11 +503,11 @@ namespace Oxygen
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
 
-                Animations::instance().comboBoxEngine().registerWidget( parent );
-                Animations::instance().comboBoxEngine().initializeCellLayout( parent );
-                Animations::instance().comboBoxEngine().setButton( parent, widget );
-                Animations::instance().comboBoxEngine().setButtonFocus( parent, options & Focus );
-                if( Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                Style::instance().animations().comboBoxEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEngine().initializeCellLayout( parent );
+                Style::instance().animations().comboBoxEngine().setButton( parent, widget );
+                Style::instance().animations().comboBoxEngine().setButtonFocus( parent, options & Focus );
+                if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
                 Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, TileSet::Ring&(~TileSet::Left) );
 
@@ -581,7 +581,7 @@ namespace Oxygen
 
             } else {
 
-                StyleOptions options;
+                StyleOptions options( Menu );
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
                 if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
                 {
@@ -783,20 +783,21 @@ namespace Oxygen
             // TODO: when RGBA visual is present, do this via RGBA (maybe in list rendering code) and uncomment the following if statement
             // for now, this if statement is commented out so that we get rounded list anyway
             // if( !(options&Alpha) )
+            // NOTE (Hugo): I do not think rgba would help here. What you want is draw the corners of the list with
+            // antialiased rounded corners. Since it is not a toplevel window, in principle this could be done
+            // whether rgba is enabled or not.
+            if( GList* children=gtk_container_get_children(GTK_CONTAINER( widget )) )
             {
-                // and make the list rounded
-                GList* children=gtk_container_get_children(GTK_CONTAINER( widget ));
-                widget=GTK_WIDGET( children->data );
+                widget=GTK_WIDGET( g_list_first(children)->data );
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 if( Style::instance().animations().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
                 {
                     // offset is needed to make combobox list border 3px wide instead of default 2
                     // additional pixel is for ugly shadow
                     const gint offset( options&Alpha ? 0:1 );
-                    const GtkAllocation& allocation(widget->allocation);
                     GdkPixmap* mask( Style::instance().helper().roundMask(
-                        allocation.width - 2*offset,
-                        allocation.height - 2*offset - ( options&Alpha ? 1:0 ),
+                        widget->allocation.width - 2*offset,
+                        widget->allocation.height - 2*offset,
                         3 ) );
 
                     gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
@@ -808,8 +809,6 @@ namespace Oxygen
             }
 
             // now draw float frame on background window
-            allocation.y -= Style::Menu_VerticalOffset;
-            allocation.height += 2*Style::Menu_VerticalOffset;
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             return;
@@ -936,17 +935,17 @@ namespace Oxygen
             !GTK_IS_CELL_VIEW( widget ) &&
             !Style::instance().settings().applicationName().isMozilla() ) {
 
-            Animations::instance().comboBoxEngine().registerWidget( parent );
-            Animations::instance().comboBoxEngine().initializeCellLayout( parent );
-            Animations::instance().comboBoxEngine().registerChild( parent, widget );
-            GtkShadowType shadow( Animations::instance().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
+            Style::instance().animations().comboBoxEngine().registerWidget( parent );
+            Style::instance().animations().comboBoxEngine().initializeCellLayout( parent );
+            Style::instance().animations().comboBoxEngine().registerChild( parent, widget );
+            GtkShadowType shadow( Style::instance().animations().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
             StyleOptions options( widget, state, shadow );
             options |= Blend;
 
-            if( Animations::instance().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+            if( Style::instance().animations().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
             else options &= ~Focus;
 
-            if(  Animations::instance().comboBoxEngine().hovered( parent ) ) options |= Hover;
+            if(  Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
             else options &= ~Hover;
 
             Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, TileSet::Ring&(~TileSet::Right) );
@@ -1145,7 +1144,7 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, StyleOptions() );
+                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, Menu );
                 }
 
             }
