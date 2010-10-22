@@ -567,7 +567,7 @@ namespace Oxygen
 
             } else {
 
-                StyleOptions options;
+                StyleOptions options( Menu );
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
                 if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
                 {
@@ -768,10 +768,12 @@ namespace Oxygen
             // TODO: when RGBA visual is present, do this via RGBA (maybe in list rendering code) and uncomment the following if statement
             // for now, this if statement is commented out so that we get rounded list anyway
             // if( !(options&Alpha) )
+            // NOTE (Hugo): I do not think rgba would help here. What you want is draw the corners of the list with
+            // antialiased rounded corners. Since it is not a toplevel window, in principle this could be done
+            // whether rgba is enabled or not.
+            if( GList* children=gtk_container_get_children(GTK_CONTAINER( widget )) )
             {
-                // and make the list rounded
-                GList* children=gtk_container_get_children(GTK_CONTAINER( widget ));
-                widget=GTK_WIDGET( children->data );
+                widget=GTK_WIDGET( g_list_first(children)->data );
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 if( Style::instance().animations().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
                 {
@@ -780,7 +782,7 @@ namespace Oxygen
                     const gint offset( options&Alpha ? 0:1 );
                     GdkPixmap* mask( Style::instance().helper().roundMask(
                         widget->allocation.width - 2*offset,
-                        widget->allocation.height - 2*offset - ( options&Alpha ? 1:0 ),
+                        widget->allocation.height - 2*offset,
                         3 ) );
 
                     gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
@@ -791,8 +793,6 @@ namespace Oxygen
             }
 
             // now draw float frame on background window
-            allocation.y -= Style::Menu_VerticalOffset;
-            allocation.height += 2*Style::Menu_VerticalOffset;
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             return;
@@ -1108,7 +1108,7 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, StyleOptions() );
+                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, Menu );
                 }
 
             }
