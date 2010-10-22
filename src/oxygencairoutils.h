@@ -21,6 +21,7 @@
 */
 
 #include "oxygencairopattern.h"
+#include "oxygenflags.h"
 #include "oxygengeometry.h"
 
 #include <cairo.h>
@@ -74,7 +75,7 @@ namespace Oxygen
         CornersAll = CornersTop|CornersBottom
     };
 
-    typedef unsigned long Corners;
+    typedef Flags<Corner> Corners;
 
     //! rounded rectangle
     void cairo_rounded_rectangle( cairo_t*, double x, double y, double width, double height, double radius, Corners corners = CornersAll );
