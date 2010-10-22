@@ -50,7 +50,9 @@ namespace Oxygen
 
         // disconnect all children
         for( HoverDataMap::iterator iter = _hoverData.begin(); iter != _hoverData.end(); ++iter )
-        { unregisterChild( iter->first ); }
+        { iter->second.disconnect(); }
+
+        _hoverData.clear();
 
     }
 
@@ -60,8 +62,6 @@ namespace Oxygen
         if( _button._widget == widget ) return;
         assert( !_button._widget );
 
-        _button._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        _button._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         _button._toggledId = g_signal_connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
         _button._widget = widget;
 
@@ -219,14 +219,13 @@ namespace Oxygen
     void ComboBoxData::unregisterChild( GtkWidget* widget )
     {
 
+        // see if widget is button or cell
+        if( widget == _button._widget ) _button.disconnect();
+        if( widget == _cell._widget ) _cell.disconnect();
+
+        // loopup in hover map
         HoverDataMap::iterator iter( _hoverData.find( widget ) );
         if( iter == _hoverData.end() ) return;
-
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::unregisterChild -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
 
         iter->second.disconnect();
         _hoverData.erase( iter );
@@ -237,8 +236,9 @@ namespace Oxygen
     void ComboBoxData::ChildData::disconnect( void )
     {
         if( !_widget ) return;
-        g_signal_handler_disconnect( G_OBJECT(_widget), _destroyId );
-        g_signal_handler_disconnect( G_OBJECT(_widget), _styleChangeId );
+
+        if( _destroyId >= 0 ) g_signal_handler_disconnect( G_OBJECT(_widget), _destroyId );
+        if( _styleChangeId >= 0 ) g_signal_handler_disconnect( G_OBJECT(_widget), _styleChangeId );
         _destroyId = -1;
         _styleChangeId = -1;
     }
@@ -260,6 +260,13 @@ namespace Oxygen
     void ComboBoxData::HoverData::disconnect( void )
     {
         if( !_widget ) return;
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::HoverData::ChildData::disconnect -"
+            << " " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")"
+            << std::endl;
+        #endif
+
         g_signal_handler_disconnect( G_OBJECT(_widget), _enterId );
         g_signal_handler_disconnect( G_OBJECT(_widget), _leaveId );
         _enterId = -1;
