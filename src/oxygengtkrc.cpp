@@ -109,7 +109,7 @@ namespace Gtk
         out << *iter << std::endl;
 
         // dump all section except root
-        for( RC::Section::List::const_iterator iter = rc._sections.begin(); iter != rc._sections.end(); iter++ )
+        for( RC::Section::List::const_iterator iter = rc._sections.begin(); iter != rc._sections.end(); ++iter )
         { if( !(*iter == RC::_rootSectionName || *iter == RC::_headerSectionName ) ) out << *iter << std::endl; }
 
         // dump root section

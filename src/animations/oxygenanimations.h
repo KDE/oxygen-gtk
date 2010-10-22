@@ -44,8 +44,8 @@ namespace Oxygen
 
         public:
 
-        //! singleton
-        static Animations& instance( void );
+        //! constructor
+        Animations( void );
 
         //! destructor
         virtual ~Animations( void );
@@ -105,9 +105,6 @@ namespace Oxygen
         static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
 
         private:
-
-        //! constructor
-        Animations( void );
 
         //! list of engines
         BaseEngine::List _engines;

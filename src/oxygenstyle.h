@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenanimations.h"
 #include "oxygencairocontext.h"
 #include "oxygengeometry.h"
 #include "oxygengtkgap.h"
@@ -58,6 +59,14 @@ namespace Oxygen
         //! helper
         const StyleHelper& helper( void ) const
         { return _helper; }
+
+        //! animations
+        const Animations& animations( void ) const
+        { return _animations; }
+
+        //! animations
+        Animations& animations( void )
+        { return _animations; }
 
         //!@name primitives
         //@{
@@ -284,6 +293,9 @@ namespace Oxygen
 
         // helper
         StyleHelper _helper;
+
+        // animations
+        Animations _animations;
 
         //! singleton
         static Style* _instance;

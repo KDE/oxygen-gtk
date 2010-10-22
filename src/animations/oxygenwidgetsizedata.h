@@ -42,11 +42,11 @@ namespace Oxygen
         {}
 
         //! setup connections
-        void connect( GtkWidget* )
+        void connect( GtkWidget* ) const
         {}
 
         //! disconnect
-        void disconnect( GtkWidget* )
+        void disconnect( GtkWidget* ) const
         {}
 
         //! update size, returns true if changed

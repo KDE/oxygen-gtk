@@ -27,11 +27,21 @@
 namespace Oxygen
 {
 
-    //____________________________________________________________________________________________
-    Animations& Animations::instance( void )
+    //_________________________________________
+    Animations::Animations( void )
     {
-        static Animations singleton;
-        return singleton;
+
+        // create engines
+        registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
+        registerEngine( _flatButtonEngine = new FlatButtonEngine( this ) );
+        registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
+        registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
+        registerEngine( _lineEditEngine = new LineEditEngine( this ) );
+        registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
+        registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
+        registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
+        registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
+
     }
 
     //____________________________________________________________________________________________
@@ -94,25 +104,5 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void Animations::styleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
     { static_cast<Animations*>(data)->unregisterWidget( widget ); }
-
-    //_________________________________________
-    Animations::Animations( void )
-    {
-
-        // create engines
-        registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
-        registerEngine( _flatButtonEngine = new FlatButtonEngine( this ) );
-        registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
-        registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
-        registerEngine( _lineEditEngine = new LineEditEngine( this ) );
-        registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
-        registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
-        registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
-        registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
-
-    }
-
-
-
 
 }

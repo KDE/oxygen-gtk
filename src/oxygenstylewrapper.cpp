@@ -88,11 +88,11 @@ namespace Oxygen
             if( GTK_IS_WINDOW( widget ) )
             {
 
-                Animations::instance().mainWindowEngine().registerWidget( widget );
+                Style::instance().animations().mainWindowEngine().registerWidget( widget );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) ) {
 
-                Animations::instance().scrollBarEngine().registerScrolledWindow( parent );
+                Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent );
 
             }
 
@@ -116,7 +116,7 @@ namespace Oxygen
                 // make sure that widget is registered to scrolledBarEngine,
                 // so that background gets updated properly
                 if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
-                { Animations::instance().scrollBarEngine().registerScrolledWindow( parent ); }
+                { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
                 accepted = true;
@@ -135,9 +135,9 @@ namespace Oxygen
             {
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
-                Animations::instance().widgetSizeEngine().registerWidget( widget );
+                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 const GtkAllocation& allocation( widget->allocation );
-                if( Animations::instance().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( window, mask, 0, 0 );
@@ -190,8 +190,8 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
-                    Animations::instance().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
-                    if(  Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
+                    Style::instance().animations().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
+                    if(  Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
                     { options |= Hover; }
 
                 }
@@ -235,8 +235,8 @@ namespace Oxygen
             {
 
                 if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
+                    Style::instance().animations().lineEditEngine().contains( widget ) &&
+                    Style::instance().animations().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 // plain background
@@ -252,16 +252,16 @@ namespace Oxygen
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
-                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
+                Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
 
                 if( state != GTK_STATE_INSENSITIVE )
                 {
-                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                     else options &= ~Focus;
 
-                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                     else options &= ~Hover;
                 }
 
@@ -275,8 +275,8 @@ namespace Oxygen
             } else {
 
                 if(
-                    Animations::instance().lineEditEngine().contains( widget ) &&
-                    Animations::instance().lineEditEngine().hovered( widget ) )
+                    Style::instance().animations().lineEditEngine().contains( widget ) &&
+                    Style::instance().animations().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 // compare painting rect to widget rect, to decide if some sides are to be masked
@@ -425,7 +425,7 @@ namespace Oxygen
         #endif
 
         if(GTK_IS_MENU_BAR( widget ) )
-        { Animations::instance().menuShellEngine().registerWidget(widget); }
+        { Style::instance().animations().menuShellEngine().registerWidget(widget); }
 
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
@@ -437,13 +437,13 @@ namespace Oxygen
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
 
-                Animations::instance().flatButtonEngine().registerWidget( widget );
+                Style::instance().animations().flatButtonEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options(Hover);
                 if(state!=GTK_STATE_NORMAL)
                 {
-                    if(state==GTK_STATE_ACTIVE && !Animations::instance().flatButtonEngine().hovered( widget ) )
+                    if(state==GTK_STATE_ACTIVE && !Style::instance().animations().flatButtonEngine().hovered( widget ) )
                     { return; }
 
                     Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
@@ -465,9 +465,9 @@ namespace Oxygen
                 options |= Blend|NoFill;
 
                 // focus handling
-                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
-                Animations::instance().comboBoxEntryEngine().setButton( parent, widget );
-                GtkWidget* entry( Animations::instance().comboBoxEntryEngine().entry( parent ) );
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
+                GtkWidget* entry( Style::instance().animations().comboBoxEntryEngine().entry( parent ) );
 
                 if( GTK_IS_COMBO( parent ) && entry ) { state = gtk_widget_get_state( entry ); }
                 else state = gtk_widget_get_state(parent);
@@ -482,11 +482,11 @@ namespace Oxygen
                 if( state == GTK_STATE_INSENSITIVE ) options &= ~(Hover|Focus);
                 else {
 
-                    Animations::instance().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
-                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    Style::instance().animations().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
+                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                     else options &= ~Focus;
 
-                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                     else options &= ~Hover;
 
                 }
@@ -509,8 +509,8 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 {
                     options |= Flat;
-                    Animations::instance().flatButtonEngine().registerWidget( widget );
-                    if( Animations::instance().flatButtonEngine().hovered( widget ) )
+                    Style::instance().animations().flatButtonEngine().registerWidget( widget );
+                    if( Style::instance().animations().flatButtonEngine().hovered( widget ) )
                     { options |= Hover; }
 
                 }
@@ -573,9 +573,9 @@ namespace Oxygen
                 {
 
                     // make tooltips appear rounded using XShape extension if screen isn't composited
-                    Animations::instance().widgetSizeEngine().registerWidget( widget );
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const GtkAllocation& allocation( widget->allocation );
-                    if( Animations::instance().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                    if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                     {
                         GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
                         gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
@@ -677,8 +677,8 @@ namespace Oxygen
             }
 
             if(
-                Animations::instance().lineEditEngine().contains( widget ) &&
-                Animations::instance().lineEditEngine().hovered( widget ) )
+                Style::instance().animations().lineEditEngine().contains( widget ) &&
+                Style::instance().animations().lineEditEngine().hovered( widget ) )
             { options |= Hover; }
 
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
@@ -755,8 +755,8 @@ namespace Oxygen
             if( !(options&Alpha) ) // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
             {
                 // make background window rounded
-                Animations::instance().widgetSizeEngine().registerWidget( parent );
-                if( Animations::instance().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
+                Style::instance().animations().widgetSizeEngine().registerWidget( parent );
+                if( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
@@ -772,8 +772,8 @@ namespace Oxygen
                 // and make the list rounded
                 GList* children=gtk_container_get_children(GTK_CONTAINER( widget ));
                 widget=GTK_WIDGET( children->data );
-                Animations::instance().widgetSizeEngine().registerWidget( widget );
-                if( Animations::instance().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
+                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
                 {
                     // offset is needed to make combobox list border 3px wide instead of default 2
                     // additional pixel is for ugly shadow
@@ -817,8 +817,8 @@ namespace Oxygen
             {
                 // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
                 // make background window rounded
-                Animations::instance().widgetSizeEngine().registerWidget(parent);
-                if( Animations::instance().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+                Style::instance().animations().widgetSizeEngine().registerWidget(parent);
+                if( Style::instance().animations().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
                     gdk_window_shape_combine_mask(parent->window,mask,0,0);
@@ -844,17 +844,17 @@ namespace Oxygen
             {
 
                 // check if parent is in style map
-                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
-                Animations::instance().comboBoxEntryEngine().setEntry( parent, widget );
-                Animations::instance().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
-                GtkWidget* entry( Animations::instance().comboBoxEntryEngine().entry( parent ) );
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
+                Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+                GtkWidget* entry( Style::instance().animations().comboBoxEntryEngine().entry( parent ) );
                 if( !( GTK_IS_COMBO( parent ) && entry && gtk_widget_get_state( entry ) == GTK_STATE_INSENSITIVE ) )
                 {
 
-                    if( Animations::instance().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                     else options &= ~Focus;
 
-                    if(  Animations::instance().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                     else options &= ~Hover;
                 }
 
@@ -865,8 +865,8 @@ namespace Oxygen
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
                 // register to line edit engine
-                Animations::instance().lineEditEngine().registerWidget( widget );
-                if( Animations::instance().lineEditEngine().hovered( widget ) )
+                Style::instance().animations().lineEditEngine().registerWidget( widget );
+                if( Style::instance().animations().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
@@ -881,8 +881,8 @@ namespace Oxygen
             } else {
 
                 // register to line edit engine
-                Animations::instance().lineEditEngine().registerWidget( widget );
-                if( Animations::instance().lineEditEngine().hovered( widget ) )
+                Style::instance().animations().lineEditEngine().registerWidget( widget );
+                if( Style::instance().animations().lineEditEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
@@ -983,8 +983,8 @@ namespace Oxygen
             {
                 options &= ~Focus;
                 if(
-                    Animations::instance().treeViewEngine().contains( widget ) &&
-                    Animations::instance().treeViewEngine().isCellHovered( widget, x, y, w, h, false ) )
+                    Style::instance().animations().treeViewEngine().contains( widget ) &&
+                    Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h, false ) )
                 {
                     options |= Hover;
                 } else options &= ~Hover;
@@ -1268,8 +1268,8 @@ namespace Oxygen
 
             if( GTK_IS_COMBO( parent ) )
             {
-                Animations::instance().comboBoxEntryEngine().registerWidget( parent );
-                if( GtkWidget* entry = Animations::instance().comboBoxEntryEngine().entry( parent ) )
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                if( GtkWidget* entry = Style::instance().animations().comboBoxEntryEngine().entry( parent ) )
                 { state = gtk_widget_get_state( entry ); }
             }
 
@@ -1670,12 +1670,12 @@ namespace Oxygen
             {
 
                 // make sure widget is registered
-                Animations::instance().tabWidgetEngine().registerWidget( widget );
+                Style::instance().animations().tabWidgetEngine().registerWidget( widget );
 
                 // get current tab, update tabRect and see if current tab is hovered
                 const int tabIndex( Gtk::gtk_notebook_find_tab( widget, x+w/2, y+h/2 ) );
-                Animations::instance().tabWidgetEngine().updateTabRect( widget, tabIndex, x, y, w, h );
-                if( tabIndex == Animations::instance().tabWidgetEngine().hoveredTab( widget ) )
+                Style::instance().animations().tabWidgetEngine().updateTabRect( widget, tabIndex, x, y, w, h );
+                if( tabIndex == Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) )
                 { options |= Hover; }
 
                 // check tab position and add relevant option flags

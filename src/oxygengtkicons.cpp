@@ -154,8 +154,8 @@ namespace Oxygen
 
     //__________________________________________________________________
     std::string GtkIcons::generate(
-        const std::string gtkIconName,
-        const std::string kdeIconName,
+        const std::string& gtkIconName,
+        const std::string& kdeIconName,
         const std::vector<std::string>& pathList ) const
     {
 

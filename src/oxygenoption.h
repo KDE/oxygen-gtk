@@ -76,10 +76,6 @@ namespace Oxygen
         //! set filename from where option was read
         void setFile( const std::string& file )
         { _file = file; }
-
-        #else
-        void setFile( const std::string& )
-        {}
         #endif
 
         //! convert to integer
@@ -121,7 +117,7 @@ namespace Oxygen
         //! streamer
         friend std::ostream& operator << (std::ostream& out, const Option::Set& options )
         {
-            for( Option::Set::const_iterator iter = options.begin(); iter != options.end(); iter++ )
+            for( Option::Set::const_iterator iter = options.begin(); iter != options.end(); ++iter )
             { out << *iter << std::endl; }
 
             return out;

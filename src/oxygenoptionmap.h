@@ -66,7 +66,7 @@ namespace Oxygen
         //! streamer
         friend std::ostream& operator << (std::ostream& out, const OptionMap& options )
         {
-            for( OptionMap::const_iterator iter = options.begin(); iter != options.end(); iter++ )
+            for( OptionMap::const_iterator iter = options.begin(); iter != options.end(); ++iter )
             {
                 out << iter->first << std::endl;
                 out << iter->second << std::endl;

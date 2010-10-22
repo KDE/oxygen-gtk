@@ -58,7 +58,7 @@ namespace Oxygen
         protected:
 
         //! generate rc code for given option
-        std::string generate( const std::string gtkIconName, const std::string kdeIconName, const std::vector<std::string>& pathList ) const;
+        std::string generate( const std::string& gtkIconName, const std::string& kdeIconName, const std::vector<std::string>& pathList ) const;
 
         private:
 
