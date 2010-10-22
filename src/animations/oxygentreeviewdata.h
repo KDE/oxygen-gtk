@@ -36,6 +36,7 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
+            _target(0L),
             _motionId(-1),
             _rowDeletedId(-1),
             _fullWidth( false ),
@@ -85,6 +86,47 @@ namespace Oxygen
         //! update pointer position
         void clearPosition( GtkWidget* = 0L );
 
+        //! repaint selection
+        void triggerRepaint( void );
+
+        //! handles scrollbar value change
+        class ScrollBarData
+        {
+            public:
+
+            //! constructor
+            ScrollBarData( void ):
+                _widget( 0L ),
+                _destroyId( -1 ),
+                _styleChangeId( -1 ),
+                _valueChangedId( -1 )
+            {}
+
+            //! destructor
+            virtual ~ScrollBarData( void )
+            {}
+
+            //! disconnect all signals
+            void disconnect( void );
+
+            GtkWidget* _widget;
+            int _destroyId;
+            int _styleChangeId;
+            int _valueChangedId;
+        };
+
+        //!@name child (scrollbars) handling
+        //@{
+
+
+        void registerScrollBars( GtkWidget* );
+        void registerChild( GtkWidget*, ScrollBarData& );
+        void unregisterChild( GtkWidget* );
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static void childValueChanged( GtkRange*, gpointer );
+        //@}
+
         //!@name static callbacks
         //@{
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
@@ -94,6 +136,8 @@ namespace Oxygen
         //@}
 
         private:
+
+        GtkWidget* _target;
 
         //!@name callbacks ids
         //@{
@@ -112,6 +156,12 @@ namespace Oxygen
         int _x;
         int _y;
         //@}
+
+        //! vertical scrollbar data
+        ScrollBarData _vScrollBar;
+
+        //! horizontal scrollbar data
+        ScrollBarData _hScrollBar;
 
     };
 
