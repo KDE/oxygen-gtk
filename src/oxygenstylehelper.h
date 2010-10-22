@@ -63,7 +63,7 @@ namespace Oxygen
         GdkPixbuf* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
         GdkPixbuf* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 ) const;
 
-        void fillSlab( Cairo::Context& context, int x, int y, int w, int h ) const;
+        void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
         //@}
 
