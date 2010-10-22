@@ -416,7 +416,7 @@ namespace Oxygen
         cairo_translate( context, -wx, -wy );
 
         GdkRectangle rect = { x, y, w, h+1 };
-        GdkRectangle mask = {x+1, y+1, w-2, h-2 };
+        GdkRectangle mask = {x+2, y+1, w-4, h-2 };
         const double maskRadius = 3.5;
 
         // the hard-coded metrics are copied for
