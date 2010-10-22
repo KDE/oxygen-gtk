@@ -30,6 +30,7 @@
 
 namespace Gtk
 {
+
     //____________________________________________________________
     void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
     {
