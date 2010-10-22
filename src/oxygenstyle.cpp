@@ -376,7 +376,7 @@ namespace Oxygen
     bool Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h ) const
+        gint x, gint y, gint w, gint h, TileSet::Tiles tiles ) const
     {
 
         // do nothing if not enough room
@@ -416,8 +416,20 @@ namespace Oxygen
         cairo_translate( context, -wx, -wy );
 
         GdkRectangle rect = { x, y, w, h+1 };
-        GdkRectangle mask = {x+1, y+1, w-2, h-2 };
+        GdkRectangle mask = {x+2, y+1, w-4, h-2 };
         const double maskRadius = 3.5;
+        Corners corners( CornersNone );
+        if( tiles & TileSet::Top )
+        {
+            if( tiles & TileSet::Left ) corners |= CornersTopLeft;
+            if( tiles & TileSet::Right ) corners |= CornersTopRight;
+        }
+
+        if( tiles & TileSet::Bottom )
+        {
+            if( tiles & TileSet::Left ) corners |= CornersBottomLeft;
+            if( tiles & TileSet::Right ) corners |= CornersBottomRight;
+        }
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
@@ -436,7 +448,7 @@ namespace Oxygen
             cairo_set_source( context, pattern );
 
             gdk_cairo_rectangle( context, &upperRect );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius );
+            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
             cairo_fill( context );
 
             cairo_restore( context );
@@ -455,7 +467,7 @@ namespace Oxygen
             ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
             cairo_set_source( context, bottom );
             gdk_cairo_rectangle( context, &lowerRect );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius );
+            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
             cairo_fill( context );
 
             cairo_restore( context );
@@ -486,7 +498,7 @@ namespace Oxygen
             cairo_clip( context );
 
             gdk_cairo_rectangle( context, &local );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius );
+            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 

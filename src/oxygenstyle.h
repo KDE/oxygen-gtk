@@ -97,7 +97,7 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+        bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring ) const;
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
@@ -265,7 +265,7 @@ namespace Oxygen
             {}
 
             //! constructor
-            explicit SlabRect( int x, int y, int w, int h, const int& tiles, StyleOptions options = StyleOptions() ):
+            explicit SlabRect( int x, int y, int w, int h, const TileSet::Tiles& tiles, StyleOptions options = StyleOptions() ):
                 _x(x),
                 _y(y),
                 _w(w),

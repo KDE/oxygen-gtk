@@ -60,7 +60,7 @@ namespace Oxygen
     //!@name path
     //@{
 
-    enum Corners
+    enum Corner
     {
         CornersNone = 0,
         CornersTopLeft = 1<<0,
@@ -74,11 +74,13 @@ namespace Oxygen
         CornersAll = CornersTop|CornersBottom
     };
 
-    //! rounded rectangle
-    void cairo_rounded_rectangle( cairo_t*, double x, double y, double width, double height, double radius, unsigned int corners = CornersAll );
+    typedef unsigned long Corners;
 
     //! rounded rectangle
-    void cairo_rounded_rectangle_negative( cairo_t*, double x, double y, double width, double height, double radius, unsigned int corners = CornersAll );
+    void cairo_rounded_rectangle( cairo_t*, double x, double y, double width, double height, double radius, Corners corners = CornersAll );
+
+    //! rounded rectangle
+    void cairo_rounded_rectangle_negative( cairo_t*, double x, double y, double width, double height, double radius, Corners corners = CornersAll );
 
     //! ellipse
     void cairo_ellipse( cairo_t*, double x, double y, double width, double height );
@@ -94,11 +96,11 @@ namespace Oxygen
     //!@name gdk path
     //@{
     //! rounded rectangle
-    inline void gdk_cairo_rounded_rectangle( cairo_t* context, GdkRectangle* rect, double radius, unsigned int corners = CornersAll )
+    inline void gdk_cairo_rounded_rectangle( cairo_t* context, GdkRectangle* rect, double radius, Corners corners = CornersAll )
     { cairo_rounded_rectangle( context, rect->x, rect->y, rect->width, rect->height, radius, corners ); }
 
     //! rounded rectangle
-    inline void gdk_cairo_rounded_rectangle_negative( cairo_t* context, GdkRectangle* rect, double radius, unsigned int corners = CornersAll )
+    inline void gdk_cairo_rounded_rectangle_negative( cairo_t* context, GdkRectangle* rect, double radius, Corners corners = CornersAll )
     { cairo_rounded_rectangle_negative( context, rect->x, rect->y, rect->width, rect->height, radius, corners ); }
 
     //! ellipse

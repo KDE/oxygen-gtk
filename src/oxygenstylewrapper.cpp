@@ -493,8 +493,9 @@ namespace Oxygen
                 }
 
                 // render
-                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1 );
-                Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, TileSet::Ring&(~TileSet::Left) );
+                const TileSet::Tiles tiles( TileSet::Ring&(~TileSet::Left) );
+                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1, tiles );
+                Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
 
                 return;
 
@@ -695,8 +696,9 @@ namespace Oxygen
                 Style::instance().animations().lineEditEngine().hovered( widget ) )
             { options |= Hover; }
 
-            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1 );
-            Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, TileSet::Ring & (~TileSet::Left) );
+            const TileSet::Tiles tiles( TileSet::Ring & (~TileSet::Left) );
+            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1, tiles );
+            Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -875,8 +877,9 @@ namespace Oxygen
                 }
 
                 // render
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1 );
-                Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, TileSet::Ring&(~TileSet::Right) );
+                const TileSet::Tiles tiles( TileSet::Ring&(~TileSet::Right) );
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1, tiles );
+                Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -891,8 +894,9 @@ namespace Oxygen
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, TileSet::Ring & (~TileSet::Right) );
+                const TileSet::Tiles tiles( TileSet::Ring & (~TileSet::Right) );
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1, tiles );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, tiles );
 
             } else {
 

@@ -35,7 +35,7 @@ namespace Oxygen
     { cairo_set_source_rgba( context, color.red(), color.green(), color.blue(), color.alpha() ); }
 
     //__________________________________________________________________
-    void cairo_rounded_rectangle( cairo_t* context, double x, double y, double w, double h, double r, unsigned int corners )
+    void cairo_rounded_rectangle( cairo_t* context, double x, double y, double w, double h, double r, Corners corners )
     {
 
         if( corners == CornersNone )
@@ -73,7 +73,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void cairo_rounded_rectangle_negative( cairo_t* context, double x, double y, double w, double h, double r, unsigned int corners )
+    void cairo_rounded_rectangle_negative( cairo_t* context, double x, double y, double w, double h, double r, Corners corners )
     {
 
         if( corners & CornersTopRight )
