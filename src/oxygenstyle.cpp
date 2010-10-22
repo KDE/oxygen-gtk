@@ -373,6 +373,39 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, StyleOptions options ) const
+    {
+
+        // do nothing for top-level items
+        if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
+
+//         // define pen color
+//         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+//         const ColorUtils::Rgba base( ColorUtils::mix(
+//             setting().palette().color( group, Palette::Text ),
+//             settings().palette().color( group, Palette::Background ),
+//             0.8 ) );
+
+        ColorUtils::Rgba base( 1, 0, 0, 0.3 );
+        Cairo::Context context( window, clipRect );
+        cairo_set_source( context, base );
+        cairo_set_line_width( context, 1.0 );
+
+        int cellIndent( 4 + cellFlags._levelIndent + cellFlags._expanderSize );
+        int xStart( 3 + cellFlags._expanderSize + cellIndent/2 );
+        for( int i=0; i< cellFlags._depth; i++ )
+        {
+
+            cairo_move_to( context, double(xStart)+0.5, double(y)+0.5 );
+            cairo_line_to( context, double(xStart)+0.5, y + h - 1 );
+            cairo_stroke( context );
+            xStart += cellIndent;
+        }
+
+        return;
+    }
+
+    //____________________________________________________________________________________
     bool Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,

@@ -135,7 +135,9 @@ namespace Gtk
 
         //! constructor
         explicit CellInfoFlags( void ):
-            _depth( -1 )
+            _depth( -1 ),
+            _expanderSize(0),
+            _levelIndent(0)
             {}
 
         //! flags
@@ -148,11 +150,16 @@ namespace Gtk
 
         //! constructor from CellInfo
         explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
-            _depth( cellInfo.depth() )
+            _depth( cellInfo.depth() ),
+            _expanderSize(0),
+            _levelIndent(gtk_tree_view_get_level_indentation(treeView))
         {
             if( cellInfo.hasParent( treeView ) ) _flags |= HasParent;
             if( cellInfo.hasChildren( treeView ) ) _flags |= HasChildren;
             if( cellInfo.isLast( treeView ) ) _flags |= IsLast;
+
+            gtk_widget_style_get( GTK_WIDGET( treeView ), "expander-size", &_expanderSize, NULL );
+
         }
 
         //! flags
@@ -161,6 +168,8 @@ namespace Gtk
 
         //! depth
         int _depth;
+        int _expanderSize;
+        int _levelIndent;
 
     };
 
