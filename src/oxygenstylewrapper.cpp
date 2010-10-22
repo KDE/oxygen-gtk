@@ -1313,6 +1313,7 @@ namespace Oxygen
 
         } else if( Gtk::gtk_parent_combobox( widget ) ) {
 
+            options &= ~( Focus|Hover );
             y+= 1;
 
         } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_tree_view( widget ) ) {

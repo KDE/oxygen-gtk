@@ -150,6 +150,15 @@ style "oxygen-combo-entry" = "oxygen-default"
 }
 widget_class "*<GtkCombo>.<GtkEntry>" style "oxygen-combo-entry"
 
+# option menu
+style "oxygen-option-menu" = "oxygen-default"
+{
+    ythickness = 1
+    xthickness = 4
+}
+
+class "GtkOptionMenu" style "oxygen-option-menu"
+
 # vertical separators need enough room
 style "oxygen-vseparator" = "oxygen-default"
 {
