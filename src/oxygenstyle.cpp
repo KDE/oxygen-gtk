@@ -209,6 +209,7 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
+        const bool isMenu( options&Menu );
         const bool isMozilla( settings().applicationName().isMozilla() );
 
         GdkRectangle rect = { x, y, w, h };
@@ -223,8 +224,8 @@ namespace Oxygen
         }
 
         const int splitY( std::min(200, 3*wh/4 ) );
-        const int verticalOffset( isMozilla ? 0:Menu_VerticalOffset );
-        
+        const int verticalOffset( (isMozilla||!isMenu) ? 0:Menu_VerticalOffset );
+
         GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
@@ -833,6 +834,7 @@ namespace Oxygen
         ColorUtils::Rgba dark( ColorUtils::darkColor( ColorUtils::backgroundBottomColor( base ) ) );
 
         const bool hasAlpha( options&Alpha );
+        const bool isMenu( options&Menu );
         const bool isMozilla( settings().applicationName().isMozilla() );
         const bool drawUglyShadow( !( hasAlpha || isMozilla ) );
 
@@ -843,7 +845,7 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 0, light );
 
         // add vertical offset
-        if( !isMozilla )
+        if( isMenu && !isMozilla )
         {
             y += Menu_VerticalOffset;
             h -= 2*Menu_VerticalOffset;
