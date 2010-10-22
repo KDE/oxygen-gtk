@@ -160,6 +160,12 @@ namespace Oxygen
 
         } else if( d.isCell() ) {
 
+            // this fixes some glitches but is not efficient.
+            // one would rather add proper scrollbar handling directly inside the TreeView engine
+            // and update only the relevant part
+            if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
+            { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
+
             StyleOptions options( widget, state );
 
             // select palete colorgroup for cell background
