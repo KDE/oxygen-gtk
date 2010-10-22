@@ -27,6 +27,12 @@ namespace Gtk
 {
 
     //! stores information for a given treeview cell
+    /*!
+    note: treeview itself is not stored as a member of the object, to avoid carying dangling pointers
+    around. As a consequence it must be passed as argument of all methods that would need it. This
+    implicitely requires that the same treeview is used in constructor and accessors, although it would
+    not crash if not the case
+    */
     class CellInfo
     {
 
@@ -79,6 +85,9 @@ namespace Gtk
             _column = 0L;
         }
 
+        //!@name accessors
+        //@{
+
         //! true if valid
         bool isValid( void ) const
         { return _path && _column; }
@@ -87,20 +96,23 @@ namespace Gtk
         bool isExpanderColumn( GtkTreeView* tree_view ) const
         { return _column == gtk_tree_view_get_expander_column( tree_view ); }
 
+        //! returns true if path has parent
+        bool hasParent( GtkTreeView* ) const;
+
+        //! returns true if path has children
+        bool hasChildren( GtkTreeView* ) const;
+
+        //! returns true if path is last at its given level
+        bool isLast( GtkTreeView* ) const;
+
         //! return path depth
         int depth( void ) const
         { return _path ? gtk_tree_path_get_depth( _path ):-1;  }
 
         //! background rect
-        GdkRectangle backgroundRect( GtkTreeView* treeView ) const
-        {
-            GdkRectangle out = {0, 0, -1, -1 };
-            if( treeView && isValid() )
-            { gtk_tree_view_get_background_area( treeView, _path, _column, &out ); }
+        GdkRectangle backgroundRect( GtkTreeView* ) const;
 
-            return out;
-
-        }
+        //@}
 
         private:
 
