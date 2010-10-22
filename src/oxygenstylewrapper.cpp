@@ -1479,6 +1479,7 @@ namespace Oxygen
             GtkArrowType arrow = GTK_ARROW_DOWN;
             QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
             StyleOptions options( Contrast );
+            options |= StyleOptions( widget, state, shadow );
             Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
             return;
 
