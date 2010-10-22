@@ -515,7 +515,9 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEngine().setButtonFocus( parent, options & Focus );
                 if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
-                Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, TileSet::Ring&(~TileSet::Left) );
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Left;
+                Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
 
             } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
@@ -960,7 +962,9 @@ namespace Oxygen
             if(  Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
             else options &= ~Hover;
 
-            Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, TileSet::Ring&(~TileSet::Right) );
+            TileSet::Tiles tiles( TileSet::Ring );
+            tiles &= ~TileSet::Right;
+            Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
 
         } else if( d.isNull() && (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN ) {
 
