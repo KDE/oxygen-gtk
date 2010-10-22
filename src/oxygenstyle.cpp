@@ -930,8 +930,7 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options,
-        TileSet::Tiles tiles ) const
+        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles ) const
     {
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
@@ -1010,7 +1009,7 @@ namespace Oxygen
         if( options&Sunken )
         {
 
-            helper().slabSunken( base, 0 ).render( context, x, y, w, h );
+            helper().slabSunken( base, 0 ).render( context, x, y, w, h, tiles );
 
         } else {
 
