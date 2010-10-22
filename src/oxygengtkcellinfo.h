@@ -20,6 +20,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenflags.h"
+
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
@@ -121,6 +123,44 @@ namespace Gtk
 
         //! column
         GtkTreeViewColumn* _column;
+
+    };
+
+    //! cell info flags
+    /*! stores relevent information from cell info needed for painting */
+    class CellInfoFlags
+    {
+
+        public:
+
+        //! constructor
+        explicit CellInfoFlags( void ):
+            _depth( -1 )
+            {}
+
+        //! flags
+        enum CellFlag
+        {
+            HasParent = 1<<0,
+            HasChildren = 1<<1,
+            IsLast = 1<<2
+        };
+
+        //! constructor from CellInfo
+        explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
+            _depth( cellInfo.depth() )
+        {
+            if( cellInfo.hasParent( treeView ) ) _flags |= HasParent;
+            if( cellInfo.hasChildren( treeView ) ) _flags |= HasChildren;
+            if( cellInfo.isLast( treeView ) ) _flags |= IsLast;
+        }
+
+        //! flags
+        typedef Oxygen::Flags<CellFlag> CellFlags;
+        CellFlags _flags;
+
+        //! depth
+        int _depth;
 
     };
 
