@@ -33,6 +33,9 @@ namespace Oxygen
     void TreeViewData::connect( GtkWidget* widget )
     {
 
+        // base class
+        HoverData::connect( widget );
+
         // get full-width flag
         if( GTK_IS_TREE_VIEW( widget ) )
         {
@@ -42,14 +45,14 @@ namespace Oxygen
         }
 
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }
 
     //________________________________________________________________________________
     void TreeViewData::disconnect( GtkWidget* widget )
     {
+
+        // motion handler
         g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
-        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
 
         // TODO: this should really get handled at model deletion
         if( _rowDeletedId >= 0 && GTK_IS_TREE_VIEW( widget ) )
@@ -60,6 +63,9 @@ namespace Oxygen
 
         // also free path if valid
         _cellInfo.clear();
+
+        // base class
+        HoverData::disconnect( widget );
 
     }
 
@@ -146,18 +152,9 @@ namespace Oxygen
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
 
-        static_cast<TreeViewData*>( data )->setHovered( true );
         static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y );
         return FALSE;
 
-    }
-
-    //________________________________________________________________________________
-    gboolean TreeViewData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
-    {
-        static_cast<TreeViewData*>( data )->setHovered( false );
-        static_cast<TreeViewData*>( data )->clearPosition( widget );
-        return FALSE;
     }
 
     //________________________________________________________________________________
