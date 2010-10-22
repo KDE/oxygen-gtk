@@ -199,6 +199,26 @@ namespace Oxygen
                 if( options & (Selected|Hover) )
                 {
 
+                    if( GTK_IS_TREE_VIEW( widget ) )
+                    {
+                        GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                        Gtk::CellInfo cellInfo( treeView, x+w/2, y+h/2 );
+                        if( cellInfo.isExpanderColumn( treeView ) )
+                        {
+
+                            // get expander size from widget
+                            int depth( cellInfo.depth() );
+                            int expanderSize(0);
+                            gtk_widget_style_get( widget, "expander-size", &expanderSize, NULL );
+
+                            int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
+
+                            x += offset;
+                            w -= offset;
+
+                        }
+                    }
+
                     TileSet::Tiles tiles( TileSet::Center );
                     if( d.isCellStart() ) tiles |= TileSet::Left;
                     else if( d.isCellEnd() ) tiles |= TileSet::Right;
