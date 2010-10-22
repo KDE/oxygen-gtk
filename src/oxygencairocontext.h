@@ -78,12 +78,15 @@ namespace Cairo
         { assert( false ); }
 
         //! copy constructor is private
-        Context( const Context& other )
+        Context( const Context& other ):
+            _cr( 0L )
         { assert( false ); }
 
         //! equal to operator is private
         Context& operator = (const Context& other )
         {
+            _cr = other._cr;
+            _pixbuf_key = other._pixbuf_key;
             assert( false );
             return *this;
         }

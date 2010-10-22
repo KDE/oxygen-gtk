@@ -155,7 +155,7 @@ namespace Oxygen
     std::string QtSettings::PathList::join( const std::string& separator ) const
     {
         std::ostringstream out;
-        for( const_iterator iter = begin(); iter != end(); iter++ )
+        for( const_iterator iter = begin(); iter != end(); ++iter )
         {
             if( iter != begin() ) out << separator;
             out << *iter;
@@ -656,7 +656,11 @@ namespace Oxygen
 
             // insert new option in map
             Option option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) );
+
+            #if OXYGEN_DEBUG
             option.setFile( filename );
+            #endif
+
             out[currentSection].insert( option );
 
         }

@@ -66,12 +66,14 @@ namespace Cairo
         private:
 
         //! copy constructor is private
-        Pattern( const Pattern& other )
+        Pattern( const Pattern& other ):
+            _pattern( 0L )
         { assert( false ); }
 
         //! equal to operator is private
         Pattern& operator = (const Pattern& other )
         {
+            _pattern = other._pattern;
             assert( false );
             return *this;
         }
