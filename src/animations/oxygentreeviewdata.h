@@ -25,6 +25,7 @@
 #include "oxygenhoverdata.h"
 
 #include <gtk/gtk.h>
+#include <map>
 #include <algorithm>
 
 namespace Oxygen
@@ -36,6 +37,7 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
+            _target(0L),
             _motionId(-1),
             _rowDeletedId(-1),
             _fullWidth( false ),
@@ -95,6 +97,8 @@ namespace Oxygen
 
         private:
 
+        GtkWidget* _target;
+
         //!@name callbacks ids
         //@{
         int _motionId;
@@ -112,6 +116,26 @@ namespace Oxygen
         int _x;
         int _y;
         //@}
+
+        class ChildData
+        {
+            public:
+
+            //! constructor
+            ChildData( void ):
+                _destroyId( -1 ),
+                _styleChangeId( -1 ),
+                _valueChangedId( -1 )
+            {}
+
+            int _destroyId;
+            int _styleChangeId;
+            int _valueChangedId;
+        };
+
+        //! map registered children and corresponding data
+        typedef std::map<GtkWidget*, ChildData> ChildDataMap;
+        ChildDataMap _childrenData;
 
     };
 

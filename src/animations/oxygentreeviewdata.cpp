@@ -33,6 +33,9 @@ namespace Oxygen
     void TreeViewData::connect( GtkWidget* widget )
     {
 
+        // store target
+        _target = widget;
+
         // base class
         HoverData::connect( widget );
 
@@ -45,11 +48,17 @@ namespace Oxygen
         }
 
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+
+        // also register scrollbars from parent scrollWindow
+
     }
 
     //________________________________________________________________________________
     void TreeViewData::disconnect( GtkWidget* widget )
     {
+
+        // reset target
+        _target = 0L;
 
         // motion handler
         g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
