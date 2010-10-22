@@ -20,6 +20,7 @@
 * Software Foundation, Inc., 51  Franklin St, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 */
+#include "../oxygengtkcellinfo.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -39,8 +40,6 @@ namespace Oxygen
             _rowDeletedId(-1),
             _fullWidth( false ),
             _hovered( false ),
-            _path(0),
-            _column(0),
             _x(-1),
             _y(-1)
         {}
@@ -70,7 +69,7 @@ namespace Oxygen
         //! true if current position is contained int rect
         bool isCellHovered( int x, int y, int w, int h, bool fullWidth ) const
         {
-            if( !( _path && _hovered ) ) return false;
+            if( !( _cellInfo.isValid() && _hovered ) ) return false;
             if( fullWidth ) return ( _y >= y ) && ( _y < y+h );
             else return (_x >= x) && (_x < x+w ) && ( _y >= y ) && ( _y < y+h );
         }
@@ -111,13 +110,8 @@ namespace Oxygen
         //! true if hovered
         bool _hovered;
 
-        //!@name keep track of the hovered path and
-        //@{
-
-        GtkTreePath* _path;
-        GtkTreeViewColumn* _column;
-
-        //@}
+        //!@name keep track of the hovered path and column
+        Gtk::CellInfo _cellInfo;
 
         //!@name position
         //@{

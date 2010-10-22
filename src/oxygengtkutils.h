@@ -3,6 +3,7 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * GdkPixbuf modification code from Walmis
 * <http://gnome-look.org/content/show.php?content=77783&forumpage=3>
@@ -42,62 +43,6 @@ namespace Oxygen
 
 namespace Gtk
 {
-
-    //! stores information for a given treeview cell
-    class CellInfo
-    {
-
-        public:
-
-        //! empty constructor
-        explicit CellInfo( void ):
-            _path( 0L ),
-            _column( 0L )
-        {}
-
-        //! copy constructor
-        explicit CellInfo( const CellInfo& other ):
-            _path( other._path ? gtk_tree_path_copy( other._path ):0L ),
-            _column( other._column )
-        {}
-
-        //! construct from tree view and position
-        explicit CellInfo( GtkTreeView*, int, int );
-
-        //! destructor
-        virtual ~CellInfo( void )
-        { if( _path ) gtk_tree_path_free( _path ); }
-
-        //! assignment operator
-        CellInfo& operator == (const CellInfo& other )
-        {
-            if( _path ) gtk_tree_path_free( _path );
-            _path = other._path ? gtk_tree_path_copy( other._path ):0L;
-            _column = other._column;
-            return *this;
-        }
-
-        //! true if valid
-        bool isValid( void ) const
-        { return _path && _column; }
-
-        //! returns true if column is the one that contains expander
-        bool isExpanderColumn( GtkTreeView* tree_view ) const
-        { return _column == gtk_tree_view_get_expander_column( tree_view ); }
-
-        //! return path depth
-        int depth( void ) const
-        { return _path ? gtk_tree_path_get_depth( _path ):-1;  }
-
-        private:
-
-        //! path
-        GtkTreePath* _path;
-
-        //! column
-        GtkTreeViewColumn* _column;
-
-    };
 
     // set all buttons in the container to state NORMAL
     void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );

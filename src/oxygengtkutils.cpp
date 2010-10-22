@@ -30,11 +30,6 @@
 
 namespace Gtk
 {
-    //____________________________________________________________
-    CellInfo::CellInfo( GtkTreeView* treeView, int x, int y ):
-        _path(0L),
-        _column(0L)
-    { gtk_tree_view_get_path_at_pos( treeView, x,y, &_path, &_column, 0L, 0L ); }
 
     //____________________________________________________________
     void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)

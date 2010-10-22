@@ -59,7 +59,7 @@ namespace Oxygen
         }
 
         // also free path if valid
-        if( _path ) gtk_tree_path_free( _path );
+        _cellInfo.clear();
 
     }
 
@@ -70,37 +70,22 @@ namespace Oxygen
         if( !GTK_IS_TREE_VIEW( widget ) ) return;
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
-        // get path at x and y
-        GtkTreePath* path(0L);
-        GtkTreeViewColumn* column( 0L );
-        gtk_tree_view_get_path_at_pos( treeView, x,y, &path, &column, 0L, 0L );
+        // get cellInfo at x and y
+        Gtk::CellInfo cellInfo( treeView, x, y );
 
-        // compare path.
         // do nothing if unchanged
-        if( !( path || _path ) ) return;
-        else if( _path && path && !gtk_tree_path_compare( _path, path ) && column == _column )
-        {
-            column = _column;
-            gtk_tree_path_free( path );
-            return;
-        }
+        if( cellInfo == _cellInfo ) return;
 
         // prepare update area
         // get old rectangle
-        GdkRectangle oldRect( Gtk::gdk_rectangle() );
-        if( _path )
-        {
-            gtk_tree_view_get_background_area( treeView, _path, _column, &oldRect );
-            if( _fullWidth ) { oldRect.x = 0; oldRect.width = widget->allocation.width; }
-        }
+        GdkRectangle oldRect( _cellInfo.backgroundRect( treeView ) );
+        if( _fullWidth ) { oldRect.x = 0; oldRect.width = widget->allocation.width; }
 
         // get new rectangle and update position
-        GdkRectangle newRect( Gtk::gdk_rectangle() );
-        if( path )
+        GdkRectangle newRect( cellInfo.backgroundRect( treeView ) );
+        if( cellInfo.isValid() )
         {
 
-
-            gtk_tree_view_get_background_area( treeView, path, column, &newRect );
             _x = newRect.x + newRect.width/2;
             _y = newRect.y + newRect.height/2;
 
@@ -122,10 +107,8 @@ namespace Oxygen
 
         } else updateRect = newRect;
 
-        // update path and column
-        if( _path ) gtk_tree_path_free( _path );
-        _column = column;
-        _path = path;
+        // store new cell info
+        _cellInfo = cellInfo;
 
         // convert to widget coordinates and schedule redraw
         gtk_tree_view_convert_bin_window_to_widget_coords( treeView, updateRect.x, updateRect.y, &updateRect.x, &updateRect.y );
@@ -141,19 +124,17 @@ namespace Oxygen
         _x = -1;
         _y = -1;
 
-        // clear path and column
-        if( _path ) gtk_tree_path_free( _path );
-        _path = 0L;
-        _column = 0L;
-
         // check path and widget
-        if( !( _path && widget && GTK_IS_TREE_VIEW( widget ) ) ) return;
+        if( !( _cellInfo.isValid() && widget && GTK_IS_TREE_VIEW( widget ) ) ) return;
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
         // prepare update area
-        GdkRectangle updateRect( Gtk::gdk_rectangle() );
-        gtk_tree_view_get_background_area( treeView, _path, 0L, &updateRect );
+        GdkRectangle updateRect( _cellInfo.backgroundRect( treeView ) );
+        updateRect.x = 0;
         updateRect.width = widget->allocation.width;
+
+        // clear path and column
+        _cellInfo.clear();
 
         // schedule redraw
         gtk_tree_view_convert_bin_window_to_widget_coords( treeView, updateRect.x, updateRect.y, &updateRect.x, &updateRect.y );

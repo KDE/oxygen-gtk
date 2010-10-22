@@ -32,6 +32,7 @@
 #include "oxygen.h"
 #include "oxygenanimations.h"
 #include "oxygencairoutils.h"
+#include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtkutils.h"
 #include "oxygenmaps.h"
