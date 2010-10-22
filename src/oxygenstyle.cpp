@@ -1005,7 +1005,7 @@ namespace Oxygen
         }
 
         cairo_set_source( context, pattern );
-        helper().fillSlab( context, x, y, w, h );
+        helper().fillSlab( context, x, y, w, h, tiles );
 
         if( options&Sunken )
         {
@@ -2652,7 +2652,7 @@ namespace Oxygen
             }
 
             cairo_set_source( context, pattern );
-            helper().fillSlab( context, x, y, w, h );
+            helper().fillSlab( context, x, y, w, h, tiles );
 
         }
 

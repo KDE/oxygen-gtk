@@ -263,11 +263,27 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h ) const
+    void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& tiles ) const
     {
+
         const double s( 3.6 + ( 0.5 * _slabThickness )  );
         const double r( s/2 );
-        cairo_rounded_rectangle( context, double(x)+s, double(y)+s, double(w)-2*s, double(h)-2*s, r );
+
+        Corners corners( CornersNone );
+        if( tiles & TileSet::Top )
+        {
+            if( tiles & TileSet::Left ) corners |= CornersTopLeft;
+            if( tiles & TileSet::Right ) corners |= CornersTopRight;
+        }
+
+        if( tiles & TileSet::Bottom )
+        {
+            if( tiles & TileSet::Left ) corners |= CornersBottomLeft;
+            if( tiles & TileSet::Right ) corners |= CornersBottomRight;
+        }
+
+
+        cairo_rounded_rectangle( context, double(x)+s, double(y)+s, double(w)-2*s, double(h)-2*s, r, corners );
         cairo_fill( context );
     }
 
