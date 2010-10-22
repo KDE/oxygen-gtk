@@ -1739,6 +1739,7 @@ namespace Oxygen
         // the same is true with oxygen-qt
         int offset = 2;
         int adjust = settings().applicationName().isMozilla() ? 0:2;
+        const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
 
         SlabRect tabSlab;
         SlabRect::List slabs;
@@ -1748,7 +1749,7 @@ namespace Oxygen
             {
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-offset, w, h+9+offset, TileSet::Ring&(~TileSet::Bottom ) );
+                tabSlab = SlabRect( x, y-offset, w, h+9+offset, tabTiles );
                 if( isCurrentTab ) { tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
@@ -1790,7 +1791,7 @@ namespace Oxygen
 
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-9, w, h+11+offset, TileSet::Ring&(~TileSet::Top ) );
+                tabSlab = SlabRect( x, y-9, w, h+11+offset, tabTiles );
                 if( isCurrentTab ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w-=1; }
@@ -1829,7 +1830,7 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-offset, y, w+9+offset, h, TileSet::Ring&(~TileSet::Right ) );
+                tabSlab = SlabRect( x-offset, y, w+9+offset, h, tabTiles );
                 if( isCurrentTab ) { tabSlab._w+=1; }
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
@@ -1872,7 +1873,7 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-9, y, w+11+offset, h, TileSet::Ring&(~TileSet::Left ) );
+                tabSlab = SlabRect( x-9, y, w+11+offset, h, tabTiles );
                 if( isCurrentTab ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
@@ -2071,6 +2072,7 @@ namespace Oxygen
         // the same is true with oxygen-qt
         int offset = 2;
         int adjust = settings().applicationName().isMozilla() ? 0:2;
+        const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
 
         SlabRect tabSlab;
         SlabRect::List slabs;
@@ -2080,7 +2082,7 @@ namespace Oxygen
             {
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-offset, w, h+10 + offset, TileSet::Ring&(~TileSet::Bottom ) );
+                tabSlab = SlabRect( x, y-offset, w, h+10 + offset, tabTiles );
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
@@ -2124,7 +2126,7 @@ namespace Oxygen
 
                 // main slab
                 y += adjust; h -= 2*adjust;
-                tabSlab = SlabRect( x, y-10, w, h+10+offset, TileSet::Ring&(~TileSet::Top ) );
+                tabSlab = SlabRect( x, y-10, w, h+10+offset, tabTiles );
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
@@ -2160,7 +2162,7 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-offset, y, w+10+offset, h, TileSet::Ring&(~TileSet::Right ) );
+                tabSlab = SlabRect( x-offset, y, w+10+offset, h, tabTiles );
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
@@ -2206,7 +2208,7 @@ namespace Oxygen
 
                 // main slab
                 x += adjust; w -= 2*adjust;
-                tabSlab = SlabRect( x-10, y, w+10+offset, h, TileSet::Ring&(~TileSet::Left ) );
+                tabSlab = SlabRect( x-10, y, w+10+offset, h, tabTiles );
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 

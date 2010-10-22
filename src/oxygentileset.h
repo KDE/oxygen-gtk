@@ -19,6 +19,8 @@
 * Boston, MA 02110-1301, USA.
 */
 
+#include "oxygenflags.h"
+
 #include <cairo.h>
 #include <gdk/gdk.h>
 #include <vector>
@@ -84,13 +86,13 @@ namespace Oxygen
         top-center, center-left, and top-left chunks. The center-center chunk is
         only drawn when Center is requested.
         */
-        enum Tile {
-            None = 0x0,
-            Top = 0x1,
-            Left = 0x2,
-            Bottom = 0x4,
-            Right = 0x8,
-            Center = 0x10,
+        enum Tile
+        {
+            Top = 1<<0,
+            Left = 1<<1,
+            Bottom = 1<<2,
+            Right = 1<<3,
+            Center = 1<<4,
             TopLeft = Top|Left,
             TopRight = Top|Right,
             BottomLeft = Bottom|Left,
@@ -101,7 +103,7 @@ namespace Oxygen
             Full = Ring|Center
         };
 
-        typedef unsigned long Tiles;
+        typedef Flags<Tile> Tiles;
 
         //! return size associated to this tileset
         int width( void ) const

@@ -199,7 +199,7 @@ namespace Oxygen
                 if( options & (Selected|Hover) )
                 {
 
-                    unsigned int tiles( TileSet::Center );
+                    TileSet::Tiles tiles( TileSet::Center );
                     if( d.isCellStart() ) tiles |= TileSet::Left;
                     else if( d.isCellEnd() ) tiles |= TileSet::Right;
                     else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
@@ -247,7 +247,9 @@ namespace Oxygen
                 }
 
                 // hole
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, TileSet::Ring&( ~TileSet::Right ) );
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Right;
+                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -270,7 +272,9 @@ namespace Oxygen
                 h = parent->allocation.height;
 
                 // partial highlight
-                Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, TileSet::Ring&( ~TileSet::Right ) );
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Right;
+                Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
 
             } else {
 
@@ -493,7 +497,8 @@ namespace Oxygen
                 }
 
                 // render
-                const TileSet::Tiles tiles( TileSet::Ring&(~TileSet::Left) );
+                TileSet::Tiles tiles( TileSet::Ring);
+                tiles &= ~TileSet::Left;
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1, tiles );
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
 
@@ -696,7 +701,8 @@ namespace Oxygen
                 Style::instance().animations().lineEditEngine().hovered( widget ) )
             { options |= Hover; }
 
-            const TileSet::Tiles tiles( TileSet::Ring & (~TileSet::Left) );
+            TileSet::Tiles tiles( TileSet::Ring);
+            tiles &= ~TileSet::Left;
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1, tiles );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
 
@@ -877,7 +883,8 @@ namespace Oxygen
                 }
 
                 // render
-                const TileSet::Tiles tiles( TileSet::Ring&(~TileSet::Right) );
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Right;
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
 
@@ -894,7 +901,8 @@ namespace Oxygen
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
 
-                const TileSet::Tiles tiles( TileSet::Ring & (~TileSet::Right) );
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Right;
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, tiles );
 

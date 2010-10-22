@@ -210,6 +210,23 @@ namespace Oxygen
 
         };
 
+        // get tiles for given tab orientation
+        TileSet::Tiles tabTiles( GtkPositionType position ) const
+        {
+
+            TileSet::Tiles out( TileSet::Ring );
+            switch( position )
+            {
+                case GTK_POS_BOTTOM: out &= ~TileSet::Bottom; break;
+                case GTK_POS_TOP: out &= ~TileSet::Top; break;
+                case GTK_POS_LEFT: out &= ~TileSet::Left; break;
+                case GTK_POS_RIGHT: out &= ~TileSet::Right; break;
+                default: break;
+            }
+
+            return out;
+        }
+
         protected:
 
         //! constructor
