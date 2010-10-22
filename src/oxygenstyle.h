@@ -121,7 +121,7 @@ namespace Oxygen
         void drawFloatFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! button slab
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring ) const;
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
