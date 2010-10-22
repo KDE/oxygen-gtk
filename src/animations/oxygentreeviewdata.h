@@ -25,7 +25,6 @@
 #include "oxygenhoverdata.h"
 
 #include <gtk/gtk.h>
-#include <map>
 #include <algorithm>
 
 namespace Oxygen
@@ -88,12 +87,40 @@ namespace Oxygen
         void clearPosition( GtkWidget* = 0L );
 
         //! repaint selection
-        void repaintSelection( GtkWidget* = 0L );
+        void triggerRepaint( void );
+
+        //! handles scrollbar value change
+        class ScrollBarData
+        {
+            public:
+
+            //! constructor
+            ScrollBarData( void ):
+                _widget( 0L ),
+                _destroyId( -1 ),
+                _styleChangeId( -1 ),
+                _valueChangedId( -1 )
+            {}
+
+            //! destructor
+            virtual ~ScrollBarData( void )
+            {}
+
+            //! disconnect all signals
+            void disconnect( void );
+
+            GtkWidget* _widget;
+            int _destroyId;
+            int _styleChangeId;
+            int _valueChangedId;
+        };
 
         //!@name child (scrollbars) handling
         //@{
+
+
         void registerScrollBars( GtkWidget* );
-        void registerChild( GtkWidget* );
+        void registerChild( GtkWidget*, ScrollBarData& );
         void unregisterChild( GtkWidget* );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
@@ -130,32 +157,11 @@ namespace Oxygen
         int _y;
         //@}
 
-        class ChildData
-        {
-            public:
+        //! vertical scrollbar data
+        ScrollBarData _vScrollBar;
 
-            //! constructor
-            ChildData( void ):
-                _destroyId( -1 ),
-                _styleChangeId( -1 ),
-                _valueChangedId( -1 )
-            {}
-
-            //! destructor
-            virtual ~ChildData( void )
-            {}
-
-            //! disconnect all signals
-            void disconnect( GtkWidget* );
-
-            int _destroyId;
-            int _styleChangeId;
-            int _valueChangedId;
-        };
-
-        //! map registered children and corresponding data
-        typedef std::map<GtkWidget*, ChildData> ChildDataMap;
-        ChildDataMap _childrenData;
+        //! horizontal scrollbar data
+        ScrollBarData _hScrollBar;
 
     };
 
