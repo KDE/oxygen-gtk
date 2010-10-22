@@ -133,6 +133,13 @@ namespace Oxygen
                 _leaveId( -1 )
             {}
 
+            //! destructor
+            virtual ~ChildData( void )
+            {}
+
+            //! disconnect all signals
+            void disconnect( GtkWidget* );
+
             int _destroyId;
             int _styleChangeId;
             int _addId;
