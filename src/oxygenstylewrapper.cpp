@@ -1275,6 +1275,10 @@ namespace Oxygen
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
 
+        } else if( Gtk::gtk_parent_combobox( widget ) ) {
+
+            y+= 1;
+
         } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_tree_view( widget ) ) {
 
             options &= ~( Focus|Hover );
