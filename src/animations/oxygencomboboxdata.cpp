@@ -128,9 +128,15 @@ namespace Oxygen
         for( GList* renderer = g_list_first(renderers); renderer; renderer = g_list_next(renderer) )
         {
             GtkCellRenderer* r( GTK_CELL_RENDERER( renderer->data ) );
+
             int xpad, ypad;
             gtk_cell_renderer_get_padding( r, &xpad, &ypad );
+
+            int xsize, ysize;
+            gtk_cell_renderer_get_size( r, _cell._widget, 0L, 0L, 0L, &xsize, &ysize );
+
             gtk_cell_renderer_set_padding( r, std::max( 6, xpad ), ypadmax );
+            gtk_cell_renderer_set_fixed_size( r, xsize+6, ysize + ypadmax );
         }
 
         if( renderers ) g_list_free( renderers );
@@ -140,8 +146,9 @@ namespace Oxygen
         GtkTreeIter iter;
         gtk_combo_box_get_active_iter( GTK_COMBO_BOX( _target ), &iter );
         gtk_tree_model_row_changed( model, path, &iter );
-
         gtk_tree_path_free( path );
+
+        // mark as initialized
         _cellLayoutInitialized = true;
 
     }
