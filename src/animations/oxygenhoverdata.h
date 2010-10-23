@@ -34,7 +34,8 @@ namespace Oxygen
         HoverData( void ):
             _enterId(-1),
             _leaveId(-1),
-            _hovered( false )
+            _hovered( false ),
+            _updateOnHover( false )
         {}
 
         //! destructor
@@ -51,13 +52,22 @@ namespace Oxygen
         virtual bool hovered( void ) const
         { return _hovered; }
 
+        //! true if hover state change should trigger widget repaint
+        void setUpdateOnHover( bool value )
+        { _updateOnHover = value; }
+
         protected:
 
         //! set mouse over state
-        virtual bool setHovered( GtkWidget*, bool value )
+        virtual bool setHovered( GtkWidget* widget, bool value )
         {
             if( _hovered == value ) return false;
             _hovered = value;
+
+            // schedule repaint
+            if( _updateOnHover )
+            { gtk_widget_queue_draw( widget ); }
+
             return true;
         }
 
@@ -77,6 +87,9 @@ namespace Oxygen
 
         //! true if hovered
         bool _hovered;
+
+        //! also update
+        bool _updateOnHover;
 
     };
 

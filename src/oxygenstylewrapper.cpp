@@ -271,8 +271,8 @@ namespace Oxygen
             {
 
                 if(
-                    Style::instance().animations().lineEditEngine().contains( widget ) &&
-                    Style::instance().animations().lineEditEngine().hovered( widget ) )
+                    Style::instance().animations().hoverEngine().contains( widget ) &&
+                    Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 // plain background
@@ -315,8 +315,8 @@ namespace Oxygen
             } else {
 
                 if(
-                    Style::instance().animations().lineEditEngine().contains( widget ) &&
-                    Style::instance().animations().lineEditEngine().hovered( widget ) )
+                    Style::instance().animations().hoverEngine().contains( widget ) &&
+                    Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 // compare painting rect to widget rect, to decide if some sides are to be masked
@@ -478,13 +478,13 @@ namespace Oxygen
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
 
-                Style::instance().animations().flatButtonEngine().registerWidget( widget );
+                Style::instance().animations().hoverEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options(Hover);
                 if(state!=GTK_STATE_NORMAL)
                 {
-                    if(state==GTK_STATE_ACTIVE && !Style::instance().animations().flatButtonEngine().hovered( widget ) )
+                    if(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) )
                     { return; }
 
                     Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
@@ -565,8 +565,8 @@ namespace Oxygen
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 {
                     options |= Flat;
-                    Style::instance().animations().flatButtonEngine().registerWidget( widget );
-                    if( Style::instance().animations().flatButtonEngine().hovered( widget ) )
+                    Style::instance().animations().hoverEngine().registerWidget( widget );
+                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
 
                 } else if( Gtk::gtk_parent_combo( widget ) ) {
@@ -742,8 +742,8 @@ namespace Oxygen
             }
 
             if(
-                Style::instance().animations().lineEditEngine().contains( widget ) &&
-                Style::instance().animations().lineEditEngine().hovered( widget ) )
+                Style::instance().animations().hoverEngine().contains( widget ) &&
+                Style::instance().animations().hoverEngine().hovered( widget ) )
             { options |= Hover; }
 
             TileSet::Tiles tiles( TileSet::Ring);
@@ -931,9 +931,9 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                // register to line edit engine
-                Style::instance().animations().lineEditEngine().registerWidget( widget );
-                if( Style::instance().animations().lineEditEngine().hovered( widget ) )
+                // register to hover engine
+                Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
@@ -949,12 +949,12 @@ namespace Oxygen
 
             } else {
 
-                // register to line edit engine
+                // register to hover engine
                 if( GTK_IS_ENTRY( widget ) )
                 {
 
-                    Style::instance().animations().lineEditEngine().registerWidget( widget );
-                    if( Style::instance().animations().lineEditEngine().hovered( widget ) )
+                    Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
 
                 } else {
