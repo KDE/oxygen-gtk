@@ -1028,9 +1028,9 @@ namespace Oxygen
                 {
 
                     const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Hover ) );
-                    helper().holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
+                    helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
 
-                } else helper().hole( base, 0, 7, false ).render( context, x, y, w, h );
+                } else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
 
             } else if( options&Hover ) {
 
@@ -1389,8 +1389,6 @@ namespace Oxygen
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        const bool fill( !( options&NoFill ) );
-        if( fill ) tiles |= TileSet::Center;
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
@@ -1401,16 +1399,16 @@ namespace Oxygen
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else if( enabled && (options & Hover) ) {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            helper().hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().hole( base, 0, 7 ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -2688,7 +2686,7 @@ namespace Oxygen
 
         ColorUtils::Rgba glow;
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-        
+
         const bool enabled( !(options&Disabled ) );
         if( enabled && (options & Hover) ) glow = settings().palette().color( group, Palette::Hover );
         else if( enabled && (options & Focus) ) glow =  settings().palette().color( group, Palette::Focus );

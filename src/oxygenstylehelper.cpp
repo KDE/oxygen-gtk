@@ -315,7 +315,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    TileSet StyleHelper::hole( const ColorUtils::Rgba &base, double shade, int size, bool fill ) const
+    TileSet StyleHelper::hole( const ColorUtils::Rgba &base, double shade, int size ) const
     {
 
         // create pixbuf and initialize
@@ -331,14 +331,6 @@ namespace Oxygen
             Cairo::Context context( pixbuf );
             cairo_translate( context, -2, -2 );
             cairo_scale( context, 10.0/w, 10.0/h );
-
-            // inside
-            if( fill )
-            {
-                cairo_ellipse( context, 3, 3, 8, 8 );
-                cairo_set_source( context, ColorUtils::Rgba::white() );
-                cairo_fill( context );
-            }
 
             // shadow
             drawInverseShadow( context, ColorUtils::shadowColor( base ), 3, 8, 0.0);
@@ -388,7 +380,7 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    TileSet StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &glow, double shade, int size, bool fill ) const
+    TileSet StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &glow, double shade, int size ) const
     {
 
 
@@ -403,7 +395,7 @@ namespace Oxygen
         {
 
             Cairo::Context context( pixbuf );
-            TileSet holeTileSet = hole( base, shade, size, fill );
+            TileSet holeTileSet = hole( base, shade, size );
 
             // hole
             holeTileSet.render( context, 0, 0, w, h );
