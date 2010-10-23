@@ -28,11 +28,11 @@
 #include <cassert>
 #include <cmath>
 
-namespace ColorUtils
+namespace Oxygen
 {
 
     //___________________________________________________________
-    Rgba Rgba::light( int factor ) const
+    ColorUtils::Rgba ColorUtils::Rgba::light( int factor ) const
     {
 
         if( factor <= 0 ) return *this;
@@ -53,7 +53,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________
-    Rgba Rgba::dark( int factor ) const
+    ColorUtils::Rgba ColorUtils::Rgba::dark( int factor ) const
     {
         if( factor <= 0 ) return *this;
         else if( factor < 100 ) return light( 10000/ factor );
@@ -65,7 +65,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________
-    Rgba Rgba::fromKdeOption( std::string value )
+    ColorUtils::Rgba ColorUtils::Rgba::fromKdeOption( std::string value )
     {
 
         Rgba out;
@@ -98,7 +98,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________
-    void Rgba::toHsv( double& hue, double& saturation, double& value ) const
+    void ColorUtils::Rgba::toHsv( double& hue, double& saturation, double& value ) const
     {
 
         if( !isValid() ) return;
@@ -129,7 +129,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________
-    Rgba& Rgba::fromHsv( double hue, double saturation, double value )
+    ColorUtils::Rgba& ColorUtils::Rgba::fromHsv( double hue, double saturation, double value )
     {
 
         if( hue < 0 )

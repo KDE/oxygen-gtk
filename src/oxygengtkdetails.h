@@ -21,118 +21,121 @@
 */
 
 #include<string>
-namespace Gtk
+namespace Oxygen
 {
-
-    class Detail
+    namespace Gtk
     {
-        public:
 
-        //! constructor
-        explicit Detail( const char* value = 0L )
-        { if( value ) _value = value; }
+        class Detail
+        {
+            public:
 
-        //! true when no valid value was passed
-        bool isNull( void ) const { return _value.empty(); }
+            //! constructor
+            explicit Detail( const char* value = 0L )
+            { if( value ) _value = value; }
 
-        bool isBar( void ) const { return _value == "bar"; }
-        bool isBase( void ) const { return _value == "base"; }
-        bool isButton( void ) const { return _value == "button"; }
+            //! true when no valid value was passed
+            bool isNull( void ) const { return _value.empty(); }
 
-        //!@name treeview cells
-        //@{
+            bool isBar( void ) const { return _value == "bar"; }
+            bool isBase( void ) const { return _value == "base"; }
+            bool isButton( void ) const { return _value == "button"; }
 
-        bool isCellEvenSorted( void ) const { return _value == "cell_even_sorted"; }
-        bool isCellEvenRuled( void ) const { return _value == "cell_even_ruled"; }
-        bool isCellOddSorted( void ) const { return _value == "cell_odd_sorted"; }
-        bool isCellOddRuled( void ) const { return _value == "cell_odd_ruled"; }
-        bool isCell( void ) const { return _value.find( "cell_" ) == 0; }
+            //!@name treeview cells
+            //@{
 
-        bool isCellOdd( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
-        bool isCellEven( void ) const { return isCell() && _value.find( "_even" ) != std::string::npos; }
+            bool isCellEvenSorted( void ) const { return _value == "cell_even_sorted"; }
+            bool isCellEvenRuled( void ) const { return _value == "cell_even_ruled"; }
+            bool isCellOddSorted( void ) const { return _value == "cell_odd_sorted"; }
+            bool isCellOddRuled( void ) const { return _value == "cell_odd_ruled"; }
+            bool isCell( void ) const { return _value.find( "cell_" ) == 0; }
 
-        bool isCellRuled( void ) const { return isCell() && _value.find( "_ruled" ) != std::string::npos; }
-        bool isCellStart( void ) const { return isCell() && _value.find( "_start" ) != std::string::npos; }
-        bool isCellEnd( void ) const { return isCell() && _value.find( "_end" ) != std::string::npos; }
-        bool isCellMiddle( void ) const { return isCell() && _value.find( "_middle" ) != std::string::npos; }
+            bool isCellOdd( void ) const { return isCell() && _value.find( "_odd" ) != std::string::npos; }
+            bool isCellEven( void ) const { return isCell() && _value.find( "_even" ) != std::string::npos; }
 
-        //@}
+            bool isCellRuled( void ) const { return isCell() && _value.find( "_ruled" ) != std::string::npos; }
+            bool isCellStart( void ) const { return isCell() && _value.find( "_start" ) != std::string::npos; }
+            bool isCellEnd( void ) const { return isCell() && _value.find( "_end" ) != std::string::npos; }
+            bool isCellMiddle( void ) const { return isCell() && _value.find( "_middle" ) != std::string::npos; }
 
-        //!@name scrollbars
-        //@{
-        bool isHScrollBar( void ) const { return _value == "hscrollbar"; }
-        bool isVScrollBar( void ) const { return _value == "vscrollbar"; }
-        bool isScrollBar( void ) const { return isVScrollBar() || isHScrollBar(); }
-        //@}
+            //@}
 
-        //!@name scales
-        //@{
-        bool isHScale( void ) const { return _value == "hscale"; }
-        bool isVScale( void ) const { return _value == "vscale"; }
-        bool isScale( void ) const { return isHScale() || isVScale(); }
-        //@}
+            //!@name scrollbars
+            //@{
+            bool isHScrollBar( void ) const { return _value == "hscrollbar"; }
+            bool isVScrollBar( void ) const { return _value == "vscrollbar"; }
+            bool isScrollBar( void ) const { return isVScrollBar() || isHScrollBar(); }
+            //@}
 
-        bool isCellCheck( void ) const { return _value == "cellcheck"; }
-        bool isCheck( void ) const { return _value == "check"; }
-        bool isCheckButton( void ) const { return _value == "checkbutton"; }
-        bool isDefaultButton( void ) const { return _value == "buttondefault"; }
-        bool isEntry( void ) const { return _value == "entry"; }
-        bool isEntryBg( void ) const { return _value == "entry_bg"; }
-        bool isEventBox( void ) const { return _value == "eventbox"; }
-        bool isExpander( void ) const { return _value == "expander"; }
-        bool isFrame( void ) const { return _value == "frame"; }
-        bool isHandleBox( void ) const { return _value == "handlebox" || _value == "handlebox_bin"; }
-        bool isMenu( void ) const { return _value == "menu"; }
-        bool isMenuBar( void ) const { return _value == "menubar"; }
-        bool isMenuItem( void ) const { return _value == "menuitem"; }
-        bool isMenuScrollArrow( void ) const { return _value == "menu_scroll_arrow_down" || _value == "menu_scroll_arrow_up"; }
-        bool isNotebook( void ) const { return _value == "notebook"; }
-        bool isOption( void ) const { return _value == "option"; }
-        bool isOptionMenu( void ) const { return _value == "optionmenu"; }
-        bool isOptionMenuTab( void ) const { return _value == "optionmenutab"; }
-        bool isPaned( void ) const { return _value == "paned"; }
-        bool isRadioButton( void ) const { return _value == "radiobutton"; }
-        bool isProgressBar( void) const { return _value == "progressbar"; }
-        //!@name rulers
-        //@{
-        bool isRuler( void ) const { return _value == "vruler" || _value == "hruler"; }
-        //@}
+            //!@name scales
+            //@{
+            bool isHScale( void ) const { return _value == "hscale"; }
+            bool isVScale( void ) const { return _value == "vscale"; }
+            bool isScale( void ) const { return isHScale() || isVScale(); }
+            //@}
 
-        bool isScrolledWindow( void ) const { return _value == "scrolled_window"; }
-        bool isSlider( void ) const { return _value == "slider"; }
+            bool isCellCheck( void ) const { return _value == "cellcheck"; }
+            bool isCheck( void ) const { return _value == "check"; }
+            bool isCheckButton( void ) const { return _value == "checkbutton"; }
+            bool isDefaultButton( void ) const { return _value == "buttondefault"; }
+            bool isEntry( void ) const { return _value == "entry"; }
+            bool isEntryBg( void ) const { return _value == "entry_bg"; }
+            bool isEventBox( void ) const { return _value == "eventbox"; }
+            bool isExpander( void ) const { return _value == "expander"; }
+            bool isFrame( void ) const { return _value == "frame"; }
+            bool isHandleBox( void ) const { return _value == "handlebox" || _value == "handlebox_bin"; }
+            bool isMenu( void ) const { return _value == "menu"; }
+            bool isMenuBar( void ) const { return _value == "menubar"; }
+            bool isMenuItem( void ) const { return _value == "menuitem"; }
+            bool isMenuScrollArrow( void ) const { return _value == "menu_scroll_arrow_down" || _value == "menu_scroll_arrow_up"; }
+            bool isNotebook( void ) const { return _value == "notebook"; }
+            bool isOption( void ) const { return _value == "option"; }
+            bool isOptionMenu( void ) const { return _value == "optionmenu"; }
+            bool isOptionMenuTab( void ) const { return _value == "optionmenutab"; }
+            bool isPaned( void ) const { return _value == "paned"; }
+            bool isRadioButton( void ) const { return _value == "radiobutton"; }
+            bool isProgressBar( void) const { return _value == "progressbar"; }
+            //!@name rulers
+            //@{
+            bool isRuler( void ) const { return _value == "vruler" || _value == "hruler"; }
+            //@}
 
-        //!@name spinbuttons
-        //@{
-        bool isSpinButton( void ) const { return _value == "spinbutton"; }
-        bool isSpinButtonUp( void ) const { return _value=="spinbutton_up"; }
-        bool isSpinButtonDown( void ) const { return _value=="spinbutton_down"; }
-        bool isSpinButtonArrow( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
-        //@}
+            bool isScrolledWindow( void ) const { return _value == "scrolled_window"; }
+            bool isSlider( void ) const { return _value == "slider"; }
 
-        bool isTab( void ) const { return _value == "tab"; }
-        bool isTearOffMenuItem( void ) const { return _value == "tearoffmenuitem"; }
-        bool isToolBar( void ) const { return _value == "toolbar"; }
-        bool isTooltip( void ) const { return _value == "tooltip"; }
-        bool isTreeView( void ) const { return _value == "treeview"; }
+            //!@name spinbuttons
+            //@{
+            bool isSpinButton( void ) const { return _value == "spinbutton"; }
+            bool isSpinButtonUp( void ) const { return _value=="spinbutton_up"; }
+            bool isSpinButtonDown( void ) const { return _value=="spinbutton_down"; }
+            bool isSpinButtonArrow( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
+            //@}
 
-        //!@name through
-        //@{
-        bool isTroughLower( void ) const { return _value == "trough-lower"; }
-        bool isTroughUpper( void ) const { return _value == "trough-upper"; }
-        bool isTrough( void ) const { return _value == "trough"; }
-        bool isTroughAny( void ) const { return isTrough()||isTroughLower()||isTroughUpper(); }
-        //@}
+            bool isTab( void ) const { return _value == "tab"; }
+            bool isTearOffMenuItem( void ) const { return _value == "tearoffmenuitem"; }
+            bool isToolBar( void ) const { return _value == "toolbar"; }
+            bool isTooltip( void ) const { return _value == "tooltip"; }
+            bool isTreeView( void ) const { return _value == "treeview"; }
 
-        bool isViewport( void ) const { return _value == "viewport"; }
-        bool isViewportBin( void ) const { return _value == "viewportbin"; }
+            //!@name through
+            //@{
+            bool isTroughLower( void ) const { return _value == "trough-lower"; }
+            bool isTroughUpper( void ) const { return _value == "trough-upper"; }
+            bool isTrough( void ) const { return _value == "trough"; }
+            bool isTroughAny( void ) const { return isTrough()||isTroughLower()||isTroughUpper(); }
+            //@}
 
-        private:
+            bool isViewport( void ) const { return _value == "viewport"; }
+            bool isViewportBin( void ) const { return _value == "viewportbin"; }
 
-        //! value
-        std::string _value;
+            private:
 
-    };
+            //! value
+            std::string _value;
+
+        };
+
+    }
 
 }
-
 #endif

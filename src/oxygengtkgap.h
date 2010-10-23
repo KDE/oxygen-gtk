@@ -22,62 +22,65 @@
 
 #include <gtk/gtk.h>
 
-namespace Gtk
+namespace Oxygen
 {
-
-    //! stores 'gap' parameters, for convenience
-    class Gap
+    namespace Gtk
     {
-        public:
 
-        //! constructor
-        explicit Gap( void ):
-            _x(0),
-            _w(0),
-            _h( DefaultGapHeight ),
-            _position( GTK_POS_TOP )
-        {}
+        //! stores 'gap' parameters, for convenience
+        class Gap
+        {
+            public:
 
-        //! constructor
-        Gap( gint x, gint w, GtkPositionType position ):
-            _x( x ),
-            _w( w ),
-            _h( DefaultGapHeight ),
-            _position( position )
-        {}
+            //! constructor
+            explicit Gap( void ):
+                _x(0),
+                _w(0),
+                _h( DefaultGapHeight ),
+                _position( GTK_POS_TOP )
+            {}
 
-        //!@name accessors
-        //@{
+            //! constructor
+            Gap( gint x, gint w, GtkPositionType position ):
+                _x( x ),
+                _w( w ),
+                _h( DefaultGapHeight ),
+                _position( position )
+            {}
 
-        const gint& x( void ) const { return _x; }
-        const gint& width( void ) const { return _w; }
-        const gint& height( void ) const { return _h; }
-        const GtkPositionType& position( void ) const { return _position; }
+            //!@name accessors
+            //@{
 
-        //@}
+            const gint& x( void ) const { return _x; }
+            const gint& width( void ) const { return _w; }
+            const gint& height( void ) const { return _h; }
+            const GtkPositionType& position( void ) const { return _position; }
 
-        //!@name modifiers
-        //@{
+            //@}
 
-        void setX( gint value ) { _x = value; }
-        void setWidth( gint value) { _w = value; }
-        void setHeight( gint value ) { _h = value; }
+            //!@name modifiers
+            //@{
 
-        //@}
+            void setX( gint value ) { _x = value; }
+            void setWidth( gint value) { _w = value; }
+            void setHeight( gint value ) { _h = value; }
 
-        private:
+            //@}
 
-        enum { DefaultGapHeight = 4 };
+            private:
 
-        gint _x;
-        gint _w;
-        gint _h;
-        GtkPositionType _position;
+            enum { DefaultGapHeight = 4 };
+
+            gint _x;
+            gint _w;
+            gint _h;
+            GtkPositionType _position;
 
 
 
-    };
+        };
+
+    }
 
 }
-
 #endif

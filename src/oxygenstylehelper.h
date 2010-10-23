@@ -24,18 +24,14 @@
 
 #include <gdk/gdk.h>
 
-namespace ColorUtils
-{
-    class Rgba;
-}
-
-namespace Cairo
-{
-    class Context;
-}
-
 namespace Oxygen
 {
+    // forward declaration
+    namespace Cairo
+    { class Context; }
+
+    namespace ColorUtils
+    { class Rgba; }
 
     class StyleHelper
     {

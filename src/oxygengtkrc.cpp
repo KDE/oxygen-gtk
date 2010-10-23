@@ -23,16 +23,16 @@
 #include <algorithm>
 #include <cassert>
 
-namespace Gtk
+namespace Oxygen
 {
 
     //_________________________________________________
-    const std::string RC::_headerSectionName = "__head__";
-    const std::string RC::_rootSectionName = "__root__";
-    const std::string RC::_defaultSectionName = "oxygen-default-internal";
+    const std::string Gtk::RC::_headerSectionName = "__head__";
+    const std::string Gtk::RC::_rootSectionName = "__root__";
+    const std::string Gtk::RC::_defaultSectionName = "oxygen-default-internal";
 
     //_________________________________________________
-    void RC::addSection( const std::string& name, const std::string& parent )
+    void Gtk::RC::addSection( const std::string& name, const std::string& parent )
     {
         if( std::find( _sections.begin(), _sections.end(), name ) != _sections.end() )
         {
@@ -50,7 +50,7 @@ namespace Gtk
     }
 
     //_________________________________________________
-    void RC::addToSection( const std::string& name, const std::string& content )
+    void Gtk::RC::addToSection( const std::string& name, const std::string& content )
     {
         Section::List::iterator iter( std::find( _sections.begin(), _sections.end(), name ) );
         if( iter == _sections.end() )
@@ -63,7 +63,7 @@ namespace Gtk
     }
 
     //_________________________________________________
-    void RC::setCurrentSection( const std::string& name )
+    void Gtk::RC::setCurrentSection( const std::string& name )
     {
         if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
         {
@@ -78,46 +78,49 @@ namespace Gtk
         }
     }
 
-    //_______________________________________________________________________
-    std::ostream& operator << (std::ostream& out, const RC::Section& section )
+    namespace Gtk
     {
-        if( section._name == RC::_rootSectionName || section._name == RC::_headerSectionName )
+        //_______________________________________________________________________
+        std::ostream& operator << (std::ostream& out, const RC::Section& section )
         {
+            if( section._name == RC::_rootSectionName || section._name == RC::_headerSectionName )
+            {
 
-            out << section._content;
+                out << section._content;
 
-        } else {
+            } else {
 
-            out << "style \"" << section._name << "\"";
-            if( !section._parent.empty() ) out << " = \"" << section._parent << "\"";
-            out << std::endl;
-            out << "{" << std::endl;
-            out << section._content;
-            out << "}" << std::endl;
+                out << "style \"" << section._name << "\"";
+                if( !section._parent.empty() ) out << " = \"" << section._parent << "\"";
+                out << std::endl;
+                out << "{" << std::endl;
+                out << section._content;
+                out << "}" << std::endl;
 
+            }
+
+            return out;
         }
 
-        return out;
+        //_______________________________________________________________________
+        std::ostream& operator << (std::ostream& out, const RC& rc )
+        {
+            // dump header section
+            RC::Section::List::const_iterator iter( std::find( rc._sections.begin(), rc._sections.end(), RC::_headerSectionName ) );
+            assert( iter != rc._sections.end() );
+            out << *iter << std::endl;
+
+            // dump all section except root
+            for( RC::Section::List::const_iterator iter = rc._sections.begin(); iter != rc._sections.end(); ++iter )
+            { if( !(*iter == RC::_rootSectionName || *iter == RC::_headerSectionName ) ) out << *iter << std::endl; }
+
+            // dump root section
+            iter = std::find( rc._sections.begin(), rc._sections.end(), RC::_rootSectionName );
+            assert( iter != rc._sections.end() );
+            out << *iter << std::endl;
+
+            return out;
+        }
+
     }
-
-    //_______________________________________________________________________
-    std::ostream& operator << (std::ostream& out, const RC& rc )
-    {
-        // dump header section
-        RC::Section::List::const_iterator iter( std::find( rc._sections.begin(), rc._sections.end(), RC::_headerSectionName ) );
-        assert( iter != rc._sections.end() );
-        out << *iter << std::endl;
-
-        // dump all section except root
-        for( RC::Section::List::const_iterator iter = rc._sections.begin(); iter != rc._sections.end(); ++iter )
-        { if( !(*iter == RC::_rootSectionName || *iter == RC::_headerSectionName ) ) out << *iter << std::endl; }
-
-        // dump root section
-        iter = std::find( rc._sections.begin(), rc._sections.end(), RC::_rootSectionName );
-        assert( iter != rc._sections.end() );
-        out << *iter << std::endl;
-
-        return out;
-    }
-
 }

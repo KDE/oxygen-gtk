@@ -23,74 +23,76 @@
 #include <cairo.h>
 #include <cassert>
 
-namespace Cairo
+namespace Oxygen
 {
-
-    //! wrapper class around cairo_pattern_t structure
-    class Pattern
+    namespace Cairo
     {
-        public:
-
-        //! empty constructor is private
-        Pattern( void ):
-            _pattern( 0L )
-        {}
-
-        //! constructor
-        Pattern( cairo_pattern_t* pattern ):
-            _pattern( pattern )
-        {}
-
-        //! destructor
-        virtual ~Pattern( void )
-        { free(); }
-
-        //! set pattern
-        void set( cairo_pattern_t* pattern )
+        
+        //! wrapper class around cairo_pattern_t structure
+        class Pattern
         {
-            assert( !_pattern );
-            _pattern = pattern;
-        }
+            public:
+            
+            //! empty constructor is private
+            Pattern( void ):
+                _pattern( 0L )
+            {}
+                
+            //! constructor
+            Pattern( cairo_pattern_t* pattern ):
+                _pattern( pattern )
+            {}
+            
+            //! destructor
+            virtual ~Pattern( void )
+            { free(); }
+            
+            //! set pattern
+            void set( cairo_pattern_t* pattern )
+            {
+                assert( !_pattern );
+                _pattern = pattern;
+            }
+            
+            //! free the pattern
+            /*!
+            it should not be necessary to call this method
+            since it is already handled in destructor
+            */
+            void free( void );
+            
+            //! cast to cairo_pattern_t
+            operator cairo_pattern_t* (void) const
+            { return _pattern; }
+            
+            private:
+            
+            //! copy constructor is private
+            Pattern( const Pattern& other ):
+                _pattern( 0L )
+            { assert( false ); }
+                
+            //! equal to operator is private
+            Pattern& operator = (const Pattern& other )
+            {
+                _pattern = other._pattern;
+                assert( false );
+                return *this;
+            }
 
-        //! free the pattern
-        /*!
-        it should not be necessary to call this method
-        since it is already handled in destructor
-        */
-        void free( void );
+            //! equal to operator is private
+            Pattern& operator = (cairo_pattern_t* other )
+            {
+                assert( false );
+                return *this;
+            }
 
-        //! cast to cairo_pattern_t
-        operator cairo_pattern_t* (void) const
-        { return _pattern; }
-
-        private:
-
-        //! copy constructor is private
-        Pattern( const Pattern& other ):
-            _pattern( 0L )
-        { assert( false ); }
-
-        //! equal to operator is private
-        Pattern& operator = (const Pattern& other )
-        {
-            _pattern = other._pattern;
-            assert( false );
-            return *this;
-        }
-
-        //! equal to operator is private
-        Pattern& operator = (cairo_pattern_t* other )
-        {
-            assert( false );
-            return *this;
-        }
-
-        //! pattern
-        cairo_pattern_t* _pattern;
+            //! pattern
+            cairo_pattern_t* _pattern;
 
 
-    };
+        };
 
+    }
 }
-
 #endif

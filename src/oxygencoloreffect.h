@@ -26,101 +26,101 @@
 #include "oxygenpalette.h"
 #include "oxygenrgba.h"
 
-//! forward declaration
 namespace Oxygen
 {
+
+    // forward declaration
     class OptionMap;
-}
 
-namespace ColorUtils
-{
-
-    //! used to handle color modification effects
-    /*! used notably to generate the correct disabled palette from kde options */
-    class Effect
+    namespace ColorUtils
     {
 
-        public:
-
-        //!constructor
-        explicit Effect( void ):
-            _intensityEffect( IntensityNoEffect ),
-            _intensityEffectAmount(0),
-            _colorEffect( ColorNoEffect ),
-            _colorEffectAmount(0),
-            _contrastEffect( ContrastNoEffect ),
-            _contrastEffectAmount(0),
-            _enabled( false )
-        {}
-
-        //! constructor from option map
-        explicit Effect( Oxygen::Palette::Group, const Oxygen::OptionMap& );
-
-        //! destructor
-        virtual ~Effect( void )
-        {}
-
-        //! apply effect to input background
-        Rgba color( const Rgba& background ) const;
-
-        //! apply effect to input foreground
-        Rgba color( const Rgba& foreground, const Rgba& background ) const;
-
-        private:
-
-        //!@name intensity
-        //@{
-
-        enum IntensityEffect
+        //! used to handle color modification effects
+        /*! used notably to generate the correct disabled palette from kde options */
+        class Effect
         {
-            IntensityNoEffect,
-            IntensityShade,
-            IntensityDarken,
-            IntensityLighten,
+
+            public:
+
+            //!constructor
+            explicit Effect( void ):
+                _intensityEffect( IntensityNoEffect ),
+                _intensityEffectAmount(0),
+                _colorEffect( ColorNoEffect ),
+                _colorEffectAmount(0),
+                _contrastEffect( ContrastNoEffect ),
+                _contrastEffectAmount(0),
+                _enabled( false )
+            {}
+
+            //! constructor from option map
+            explicit Effect( Palette::Group, const OptionMap& );
+
+            //! destructor
+            virtual ~Effect( void )
+            {}
+
+            //! apply effect to input background
+            Rgba color( const Rgba& background ) const;
+
+            //! apply effect to input foreground
+            Rgba color( const Rgba& foreground, const Rgba& background ) const;
+
+            private:
+
+            //!@name intensity
+            //@{
+
+            enum IntensityEffect
+            {
+                IntensityNoEffect,
+                IntensityShade,
+                IntensityDarken,
+                IntensityLighten,
+            };
+
+            IntensityEffect _intensityEffect;
+            double _intensityEffectAmount;
+
+            //@}
+
+            //!@name color
+            //@{
+
+            enum ColorEffect
+            {
+                ColorNoEffect,
+                ColorDesaturate,
+                ColorFade,
+                ColorTint
+            };
+
+            Rgba _color;
+            ColorEffect _colorEffect;
+            double _colorEffectAmount;
+
+            //@}
+
+            //!@name contrast
+            //@{
+
+            enum ContrastEffect
+            {
+                ContrastNoEffect,
+                ContrastFade,
+                ContrastTint
+            };
+
+            ContrastEffect _contrastEffect;
+            double _contrastEffectAmount;
+
+            //@}
+
+            //! enable state
+            bool _enabled;
+
         };
 
-        IntensityEffect _intensityEffect;
-        double _intensityEffectAmount;
-
-        //@}
-
-        //!@name color
-        //@{
-
-        enum ColorEffect
-        {
-            ColorNoEffect,
-            ColorDesaturate,
-            ColorFade,
-            ColorTint
-        };
-
-        Rgba _color;
-        ColorEffect _colorEffect;
-        double _colorEffectAmount;
-
-        //@}
-
-        //!@name contrast
-        //@{
-
-        enum ContrastEffect
-        {
-            ContrastNoEffect,
-            ContrastFade,
-            ContrastTint
-        };
-
-        ContrastEffect _contrastEffect;
-        double _contrastEffectAmount;
-
-        //@}
-
-        //! enable state
-        bool _enabled;
-
-    };
-
+    }
 }
-
 #endif

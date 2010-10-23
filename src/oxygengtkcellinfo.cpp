@@ -23,11 +23,11 @@
 #include <iostream>
 #include <cassert>
 
-namespace Gtk
+namespace Oxygen
 {
 
     //____________________________________________________________________________
-    bool CellInfo::hasParent( GtkTreeView* treeView ) const
+    bool Gtk::CellInfo::hasParent( GtkTreeView* treeView ) const
     {
         // check treeview and path
         if( !( treeView && _path ) ) return false;
@@ -46,7 +46,7 @@ namespace Gtk
     }
 
     //____________________________________________________________________________
-    CellInfo CellInfo::parent( void ) const
+    Gtk::CellInfo Gtk::CellInfo::parent( void ) const
     {
         CellInfo out;
         out._column = _column;
@@ -63,7 +63,7 @@ namespace Gtk
     }
 
     //____________________________________________________________________________
-    bool CellInfo::hasChildren( GtkTreeView* treeView ) const
+    bool Gtk::CellInfo::hasChildren( GtkTreeView* treeView ) const
     {
         // check treeview and path
         if( !( treeView && _path ) ) return false;
@@ -80,7 +80,7 @@ namespace Gtk
     }
 
     //____________________________________________________________________________
-    bool CellInfo::isLast( GtkTreeView* treeView ) const
+    bool Gtk::CellInfo::isLast( GtkTreeView* treeView ) const
     {
        // check treeview and path
         if( !( treeView && _path ) ) return false;
@@ -96,7 +96,7 @@ namespace Gtk
     }
 
     //____________________________________________________________________________
-    GdkRectangle CellInfo::backgroundRect( GtkTreeView* treeView ) const
+    GdkRectangle Gtk::CellInfo::backgroundRect( GtkTreeView* treeView ) const
     {
         GdkRectangle out = {0, 0, -1, -1 };
         if( treeView && isValid() )
@@ -107,7 +107,7 @@ namespace Gtk
     }
 
     //____________________________________________________________________________
-    CellInfoFlags::CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
+    Gtk::CellInfoFlags::CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
         _depth( cellInfo.depth() ),
         _expanderSize(0),
         _levelIndent(gtk_tree_view_get_level_indentation(treeView))

@@ -30,35 +30,40 @@
 #include <algorithm>
 #include <sstream>
 
-namespace ColorUtils
+namespace Oxygen
 {
 
-    //___________________________________________________________
-    // contrast
-    static double _contrast = 0.5;
-    static double _bgcontrast = 0.5;
-
-    //___________________________________________________________
-    void setContrast( double value )
+    namespace ColorUtils
     {
-        _contrast = value;
-        _bgcontrast = std::min( 1.0, 0.9*_contrast/0.7 );
+
+        //___________________________________________________________
+        // contrast
+        static double _contrast = 0.5;
+        static double _bgcontrast = 0.5;
+
+        //___________________________________________________________
+        void setContrast( double value )
+        {
+            _contrast = value;
+            _bgcontrast = std::min( 1.0, 0.9*_contrast/0.7 );
+        }
+
+        //___________________________________________________________
+        const double& contrast( void )
+        { return _contrast; }
+
+        //___________________________________________________________
+        const double& backgroundContrast( void )
+        { return _bgcontrast; }
+
+        //___________________________________________________________________
+        static inline double normalize( double a )
+        { return ( a < 1.0 ? ( a > 0.0 ? a : 0.0 ) : 1.0 ); }
+
     }
 
-    //___________________________________________________________
-    const double& contrast( void )
-    { return _contrast; }
-
-    //___________________________________________________________
-    const double& backgroundContrast( void )
-    { return _bgcontrast; }
-
-    //___________________________________________________________________
-    static inline double normalize( double a )
-    { return ( a < 1.0 ? ( a > 0.0 ? a : 0.0 ) : 1.0 ); }
-
     //____________________________________________________________________
-    bool lowThreshold(const Rgba &color)
+    bool ColorUtils::lowThreshold(const Rgba &color)
     {
 
         const Rgba darker( shade(color, MidShade, 0.5 ) );
@@ -67,14 +72,14 @@ namespace ColorUtils
     }
 
      //____________________________________________________________________
-    bool highThreshold(const Rgba &color)
+    bool ColorUtils::highThreshold(const Rgba &color)
     {
         const Rgba lighter( shade(color, LightShade, 0.5 ) );
         return luma(lighter) < luma(color);
     }
 
     //_________________________________________________________________________
-    Rgba backgroundTopColor(const Rgba &color)
+    ColorUtils::Rgba ColorUtils::backgroundTopColor(const Rgba &color)
     {
         if( lowThreshold(color) ) return shade(color, MidlightShade, 0.0);
         else {
@@ -86,7 +91,7 @@ namespace ColorUtils
     }
 
     //_________________________________________________________________________
-    Rgba backgroundBottomColor(const Rgba &color)
+    ColorUtils::Rgba ColorUtils::backgroundBottomColor(const Rgba &color)
     {
 
         const Rgba midColor( shade(color, MidShade, 0.0) );
@@ -101,7 +106,7 @@ namespace ColorUtils
     }
 
     //_________________________________________________________________________
-    Rgba backgroundRadialColor(const Rgba &color)
+    ColorUtils::Rgba ColorUtils::backgroundRadialColor(const Rgba &color)
     {
 
         if( lowThreshold(color) ) return shade(color, LightShade, 0.0);
@@ -110,11 +115,11 @@ namespace ColorUtils
     }
 
     //_________________________________________________________________________
-    Rgba lightColor(const Rgba &color)
+    ColorUtils::Rgba ColorUtils::lightColor(const ColorUtils::Rgba &color)
     { return highThreshold( color ) ? color: shade( color, LightShade, contrast() ); }
 
     //_________________________________________________________________________
-    Rgba darkColor( const Rgba& color )
+    ColorUtils::Rgba ColorUtils::darkColor( const ColorUtils::Rgba& color )
     {
         return lowThreshold(color) ?
             mix( lightColor(color), color, 0.3 + 0.7 * contrast() ):
@@ -122,27 +127,26 @@ namespace ColorUtils
     }
 
     //_________________________________________________________________________
-    Rgba midColor( const Rgba& color )
+    ColorUtils::Rgba ColorUtils::midColor( const ColorUtils::Rgba& color )
     { return shade( color, MidShade, contrast() - 1.0 ); }
 
-
     //_________________________________________________________________________
-    Rgba shadowColor( const Rgba& color )
+    ColorUtils::Rgba ColorUtils::shadowColor( const ColorUtils::Rgba& color )
     {
         Rgba mixed( mix( Rgba::black(), color, color.alpha() ) );
         return lowThreshold(color) ? mixed: shade( mixed, ShadowShade, contrast() );
     }
 
     //_________________________________________________________________________
-    Rgba decoColor( const Rgba& background, const Rgba& color )
+    ColorUtils::Rgba ColorUtils::decoColor( const ColorUtils::Rgba& background, const ColorUtils::Rgba& color )
     { return mix( background, color, 0.4 + 0.8*contrast() ); }
 
     //_________________________________________________________________________
-    Rgba alphaColor( const Rgba& color, double alpha )
+    ColorUtils::Rgba ColorUtils::alphaColor( const ColorUtils::Rgba& color, double alpha )
     { return Rgba( color.red(), color.green(), color.blue(), normalize(alpha)*color.alpha() ); }
 
     //____________________________________________________________________
-    Rgba backgroundColor(const Rgba &color, double ratio )
+    ColorUtils::Rgba ColorUtils::backgroundColor(const ColorUtils::Rgba &color, double ratio )
     {
 
         if( ratio < 0 ) return color;
@@ -162,143 +166,157 @@ namespace ColorUtils
 
     }
 
-    //___________________________________________________________________
-    // luma coefficient
-    static const double yc[3] = { 0.2126, 0.7152, 0.0722 };
-
-    //___________________________________________________________________
-    static inline double mixdouble( double a, double b, double bias )
-    { return a + ( b - a ) * bias; }
-
-    //___________________________________________________________________
-    static inline double gamma( double n )
-    { return pow( normalize( n ), 2.2 ); }
-
-    //___________________________________________________________________
-    static inline double igamma(double n)
-    { return pow( normalize(n), 1.0/2.2); }
-
-    //___________________________________________________________________
-    static inline double wrap( double a, double d = 1.0 )
+    namespace ColorUtils
     {
-        double r = fmod( a, d );
-        return ( r < 0.0 ? d + r : ( r > 0.0 ? r : 0.0 ) );
+
+        //___________________________________________________________________
+        // luma coefficient
+        static const double yc[3] = { 0.2126, 0.7152, 0.0722 };
+
+        //___________________________________________________________________
+        static inline double mixdouble( double a, double b, double bias )
+        { return a + ( b - a ) * bias; }
+
+        //___________________________________________________________________
+        static inline double gamma( double n )
+        { return pow( normalize( n ), 2.2 ); }
+
+        //___________________________________________________________________
+        static inline double igamma(double n)
+        { return pow( normalize(n), 1.0/2.2); }
+
+        //___________________________________________________________________
+        static inline double wrap( double a, double d = 1.0 )
+        {
+            double r = fmod( a, d );
+            return ( r < 0.0 ? d + r : ( r > 0.0 ? r : 0.0 ) );
+        }
+
+        //___________________________________________________________________
+        // hcy representation of a colors
+        class HCY
+        {
+
+            public:
+
+            //! constructor
+            HCY( const Rgba& color )
+            {
+
+                // transparency
+                a = color.alpha();
+
+                // luma component
+                y = luma( color );
+
+                double r = gamma( color.red() );
+                double g = gamma( color.green() );
+                double b = gamma( color.blue() );
+
+                // hue component
+                double p = std::max( std::max( r, g ), b );
+                double n = std::min( std::min( r, g ), b );
+                double d = 6.0 * ( p - n );
+                if( n == p ) h = 0.0;
+                else if( r == p ) h = ( ( g - b ) / d );
+                else if( g == p ) h = ( ( b - r ) / d ) + ( 1.0 / 3.0 );
+                else h = ( ( r - g ) / d ) + ( 2.0 / 3.0 );
+
+                // chroma component
+                if( r == g && g == b ) c = 0.0;
+                else c = std::max( ( y - n ) / y, ( p - y ) / ( 1 - y ) );
+
+            }
+
+            //! convert back to color
+            Rgba rgba() const
+            {
+                // start with sane component values
+                double _h = wrap( h );
+                double _c = normalize( c );
+                double _y = normalize( y );
+
+                // calculate some needed variables
+                double _hs = _h * 6.0, th, tm;
+                if( _hs < 1.0 )
+                {
+
+                    th = _hs;
+                    tm = yc[0] + yc[1] * th;
+
+                } else if( _hs < 2.0 ) {
+
+                    th = 2.0 - _hs;
+                    tm = yc[1] + yc[0] * th;
+
+                } else if( _hs < 3.0 ) {
+
+                    th = _hs - 2.0;
+                    tm = yc[1] + yc[2] * th;
+
+                } else if( _hs < 4.0 ) {
+
+                    th = 4.0 - _hs;
+                    tm = yc[2] + yc[1] * th;
+
+                } else if( _hs < 5.0 ) {
+
+                    th = _hs - 4.0;
+                    tm = yc[2] + yc[0] * th;
+
+                } else {
+
+                    th = 6.0 - _hs;
+                    tm = yc[0] + yc[2] * th;
+
+                }
+
+                // calculate RGB channels in sorted order
+                double tn, to, tp;
+                if( tm >= _y )
+                {
+
+                    tp = _y + _y * _c * ( 1.0 - tm ) / tm;
+                    to = _y + _y * _c * ( th - tm ) / tm;
+                    tn = _y - ( _y * _c );
+
+                } else {
+
+                    tp = _y + ( 1.0 - _y ) * _c;
+                    to = _y + ( 1.0 - _y ) * _c * ( th - tm ) / ( 1.0 - tm );
+                    tn = _y - ( 1.0 - _y ) * _c * tm / ( 1.0 - tm );
+
+                }
+
+                // return RGB channels in appropriate order
+                if( _hs < 1.0 ) return Rgba( igamma( tp ), igamma( to ), igamma( tn ), a );
+                else if( _hs < 2.0 ) return Rgba( igamma( to ), igamma( tp ), igamma( tn ), a );
+                else if( _hs < 3.0 ) return Rgba( igamma( tn ), igamma( tp ), igamma( to ), a );
+                else if( _hs < 4.0 ) return Rgba( igamma( tn ), igamma( to ), igamma( tp ), a );
+                else if( _hs < 5.0 ) return Rgba( igamma( to ), igamma( tn ), igamma( tp ), a );
+                else return Rgba( igamma( tp ), igamma( tn ), igamma( to ), a );
+            }
+
+            double h;
+            double c;
+            double y;
+            double a;
+
+        };
+
+        //___________________________________________________________________
+        static inline Rgba tintHelper( const Rgba &base, const Rgba &color, double amount )
+        {
+            HCY result( mix( base, color, pow( amount, 0.3 ) ) );
+            result.y = mixdouble( luma( base ), result.y, amount );
+
+            return result.rgba();
+        }
+
     }
 
     //___________________________________________________________________
-    // hcy representation of a colors
-    class HCY
-    {
-
-        public:
-
-        //! constructor
-        HCY( const Rgba& color )
-        {
-
-            // transparency
-            a = color.alpha();
-
-            // luma component
-            y = luma( color );
-
-            double r = gamma( color.red() );
-            double g = gamma( color.green() );
-            double b = gamma( color.blue() );
-
-            // hue component
-            double p = std::max( std::max( r, g ), b );
-            double n = std::min( std::min( r, g ), b );
-            double d = 6.0 * ( p - n );
-            if( n == p ) h = 0.0;
-            else if( r == p ) h = ( ( g - b ) / d );
-            else if( g == p ) h = ( ( b - r ) / d ) + ( 1.0 / 3.0 );
-            else h = ( ( r - g ) / d ) + ( 2.0 / 3.0 );
-
-            // chroma component
-            if( r == g && g == b ) c = 0.0;
-            else c = std::max( ( y - n ) / y, ( p - y ) / ( 1 - y ) );
-
-        }
-
-        //! convert back to color
-        Rgba rgba() const
-        {
-            // start with sane component values
-            double _h = wrap( h );
-            double _c = normalize( c );
-            double _y = normalize( y );
-
-            // calculate some needed variables
-            double _hs = _h * 6.0, th, tm;
-            if( _hs < 1.0 )
-            {
-
-                th = _hs;
-                tm = yc[0] + yc[1] * th;
-
-            } else if( _hs < 2.0 ) {
-
-                th = 2.0 - _hs;
-                tm = yc[1] + yc[0] * th;
-
-            } else if( _hs < 3.0 ) {
-
-                th = _hs - 2.0;
-                tm = yc[1] + yc[2] * th;
-
-            } else if( _hs < 4.0 ) {
-
-                th = 4.0 - _hs;
-                tm = yc[2] + yc[1] * th;
-
-            } else if( _hs < 5.0 ) {
-
-                th = _hs - 4.0;
-                tm = yc[2] + yc[0] * th;
-
-            } else {
-
-                th = 6.0 - _hs;
-                tm = yc[0] + yc[2] * th;
-
-            }
-
-            // calculate RGB channels in sorted order
-            double tn, to, tp;
-            if( tm >= _y )
-            {
-
-                tp = _y + _y * _c * ( 1.0 - tm ) / tm;
-                to = _y + _y * _c * ( th - tm ) / tm;
-                tn = _y - ( _y * _c );
-
-            } else {
-
-                tp = _y + ( 1.0 - _y ) * _c;
-                to = _y + ( 1.0 - _y ) * _c * ( th - tm ) / ( 1.0 - tm );
-                tn = _y - ( 1.0 - _y ) * _c * tm / ( 1.0 - tm );
-
-            }
-
-            // return RGB channels in appropriate order
-            if( _hs < 1.0 ) return Rgba( igamma( tp ), igamma( to ), igamma( tn ), a );
-            else if( _hs < 2.0 ) return Rgba( igamma( to ), igamma( tp ), igamma( tn ), a );
-            else if( _hs < 3.0 ) return Rgba( igamma( tn ), igamma( tp ), igamma( to ), a );
-            else if( _hs < 4.0 ) return Rgba( igamma( tn ), igamma( to ), igamma( tp ), a );
-            else if( _hs < 5.0 ) return Rgba( igamma( to ), igamma( tn ), igamma( tp ), a );
-            else return Rgba( igamma( tp ), igamma( tn ), igamma( to ), a );
-        }
-
-        double h;
-        double c;
-        double y;
-        double a;
-
-    };
-
-    //___________________________________________________________________
-    double luma( const Rgba &color )
+    double ColorUtils::luma( const ColorUtils::Rgba &color )
     {
 
         // RGB ratios
@@ -309,7 +327,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    double contrastRatio( const Rgba &c1, const Rgba &c2 )
+    double ColorUtils::contrastRatio( const ColorUtils::Rgba &c1, const ColorUtils::Rgba &c2 )
     {
         double y1 = luma( c1 ), y2 = luma( c2 );
         if( y1 > y2 ) return ( y1 + 0.05 ) / ( y2 + 0.05 );
@@ -317,7 +335,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    Rgba lighten( const Rgba &color, double ky, double kc )
+    ColorUtils::Rgba ColorUtils::lighten( const ColorUtils::Rgba &color, double ky, double kc )
     {
         HCY c( color );
         c.y = 1.0 - normalize( ( 1.0 - c.y ) * ( 1.0 - ky ) );
@@ -326,7 +344,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    Rgba darken( const Rgba &color, double ky, double kc )
+    ColorUtils::Rgba ColorUtils::darken( const ColorUtils::Rgba &color, double ky, double kc )
     {
         HCY c( color );
         c.y = normalize( c.y * ( 1.0 - ky ) );
@@ -335,16 +353,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    static inline Rgba tintHelper( const Rgba &base, const Rgba &color, double amount )
-    {
-        HCY result( mix( base, color, pow( amount, 0.3 ) ) );
-        result.y = mixdouble( luma( base ), result.y, amount );
-
-        return result.rgba();
-    }
-
-    //___________________________________________________________________
-    Rgba tint( const Rgba &base, const Rgba &color, double amount )
+    ColorUtils::Rgba ColorUtils::tint( const ColorUtils::Rgba &base, const ColorUtils::Rgba &color, double amount )
     {
         if( amount <= 0.0 ) return base;
         if( amount >= 1.0 ) return color;
@@ -371,7 +380,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    Rgba mix( const Rgba &c1, const Rgba &c2, double bias )
+    ColorUtils::Rgba ColorUtils::mix( const ColorUtils::Rgba &c1, const ColorUtils::Rgba &c2, double bias )
     {
         if( bias <= 0.0 ) return c1;
         if( bias >= 1.0 ) return c2;
@@ -385,13 +394,12 @@ namespace ColorUtils
         return Rgba( r, g, b, a );
     }
 
-
     //___________________________________________________________________
-    Rgba shade(const Rgba &color, ShadeRole role)
+    ColorUtils::Rgba ColorUtils::shade(const ColorUtils::Rgba &color, ColorUtils::ShadeRole role)
     { return shade(color, role, _contrast ); }
 
     //___________________________________________________________________
-    Rgba shade(const Rgba &color, ShadeRole role, double contrast, double chromaAdjust)
+    ColorUtils::Rgba ColorUtils::shade(const ColorUtils::Rgba &color, ColorUtils::ShadeRole role, double contrast, double chromaAdjust)
     {
 
         // nan -> 1.0
@@ -444,7 +452,7 @@ namespace ColorUtils
     }
 
     //___________________________________________________________________
-    Rgba shade( const Rgba &color, double ky, double kc )
+    ColorUtils::Rgba ColorUtils::shade( const ColorUtils::Rgba &color, double ky, double kc )
     {
         HCY c( color );
         c.y = normalize( c.y + ky );

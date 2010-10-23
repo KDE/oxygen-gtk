@@ -22,14 +22,12 @@
 
 #include "oxygenrgba.h"
 
-//! forward declarations
-namespace ColorUtils
-{
-    class Effect;
-}
-
 namespace Oxygen
 {
+
+    // forward declarations
+    namespace ColorUtils
+    { class Effect; }
 
     //! store colors for all Color groups and roles
     class Palette
