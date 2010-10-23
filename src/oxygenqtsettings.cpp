@@ -594,16 +594,16 @@ namespace Oxygen
         switch( _viewTriangularExpanderSize )
         {
             case ArrowNormal:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 10 ) );
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 15 ) );
             break;
 
             default:
             case ArrowSmall:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 8 ) );
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 15 ) );
             break;
 
             case ArrowTiny:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 6 ) );
+            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 8 ) );
             break;
         }
     }

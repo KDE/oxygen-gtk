@@ -56,10 +56,13 @@ namespace Oxygen
         {
             if( GenericEngine<TreeViewData>::registerWidget( widget ) && GTK_IS_TREE_VIEW( widget ) )
             {
+
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
                 // always enable expander, and disable treelines.
                 /* tree lines are rendered by the style, in order to be able to draw them with custom color */
-                gtk_tree_view_set_show_expanders( GTK_TREE_VIEW( widget ), true );
-                gtk_tree_view_set_enable_tree_lines( GTK_TREE_VIEW( widget ), false );
+                gtk_tree_view_set_show_expanders( treeView, true );
+                gtk_tree_view_set_enable_tree_lines( treeView, false );
+                //gtk_tree_view_set_level_indentation( treeView, 0 );
             }
             return true;
         }
