@@ -377,7 +377,7 @@ namespace Oxygen
     {
 
         // do nothing for top-level items
-        if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
+        //if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
 
         // define pen color
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
@@ -391,8 +391,8 @@ namespace Oxygen
         cairo_set_line_width( context, 1.0 );
 
         int cellIndent( cellFlags._levelIndent + cellFlags._expanderSize + 4 );
-        int xStart( cellIndent*3/2 );
-        for( unsigned int i=1; i< cellFlags._depth; ++i  )
+        int xStart( cellIndent/2 );
+        for( unsigned int i=0; i< cellFlags._depth; ++i  )
         {
 
             const bool isLastCell( cellFlags._isLast[i] );
