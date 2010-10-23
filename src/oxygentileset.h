@@ -25,13 +25,12 @@
 #include <gdk/gdk.h>
 #include <vector>
 
-namespace Cairo
-{
-    class Context;
-}
-
 namespace Oxygen
 {
+
+    // forward declaration
+    namespace Cairo
+    { class Context; }
 
     class TileSet
     {

@@ -30,7 +30,7 @@ namespace Oxygen
 {
     namespace Gtk
     {
-        
+
         //! stores information for a given treeview cell
         /*!
         note: treeview itself is not stored as a member of the object, to avoid carying dangling pointers
@@ -40,31 +40,31 @@ namespace Oxygen
         */
         class CellInfo
         {
-            
+
             public:
-            
+
             //! empty constructor
             explicit CellInfo( void ):
                 _path( 0L ),
                 _column( 0L )
             {}
-            
+
             //! copy constructor
             CellInfo( const CellInfo& other ):
                 _path( other._path ? gtk_tree_path_copy( other._path ):0L ),
                 _column( other._column )
             {}
-            
+
             //! construct from tree view and position
             explicit CellInfo( GtkTreeView* treeView, int x, int y ):
                 _path(0L),
                 _column(0L)
             { gtk_tree_view_get_path_at_pos( treeView, x,y, &_path, &_column, 0L, 0L ); }
-            
+
             //! destructor
             virtual ~CellInfo( void )
             { if( _path ) gtk_tree_path_free( _path ); }
-            
+
             //! assignment operator
             CellInfo& operator = (const CellInfo& other )
             {
@@ -73,7 +73,7 @@ namespace Oxygen
                 _column = other._column;
                 return *this;
             }
-            
+
             //! equal to operator
             bool operator == (const CellInfo& other ) const
             {
@@ -81,7 +81,7 @@ namespace Oxygen
                 else if( _path ) return other._path && !gtk_tree_path_compare( _path, other._path );
                 else return !other._path;
             }
-            
+
             //! clear
             void clear( void )
             {
@@ -89,63 +89,63 @@ namespace Oxygen
                 _path = 0L;
                 _column = 0L;
             }
-            
+
             //!@name accessors
             //@{
-            
+
             //! true if valid
             bool isValid( void ) const
             { return _path && _column; }
-            
+
             //! returns true if column is the one that contains expander
             bool isExpanderColumn( GtkTreeView* tree_view ) const
             { return _column == gtk_tree_view_get_expander_column( tree_view ); }
-            
+
             //! returns true if path has parent
             bool hasParent( GtkTreeView* ) const;
-            
+
             //! parent cell
             CellInfo parent( void ) const;
-            
+
             //! returns true if path has children
             bool hasChildren( GtkTreeView* ) const;
-            
+
             //! returns true if path is last at its given level
             bool isLast( GtkTreeView* ) const;
-            
+
             //! return path depth
             unsigned int depth( void ) const
             { return _path ? (unsigned int) gtk_tree_path_get_depth( _path ):0;  }
-            
+
             //! background rect
             GdkRectangle backgroundRect( GtkTreeView* ) const;
-            
+
             //@}
-            
+
             private:
-            
+
             //! path
             GtkTreePath* _path;
-            
+
             //! column
             GtkTreeViewColumn* _column;
-            
+
         };
-        
+
         //! cell info flags
         /*! stores relevent information from cell info needed for painting */
         class CellInfoFlags
         {
-            
+
             public:
-            
+
             //! constructor
             explicit CellInfoFlags( void ):
                 _depth(0),
                 _expanderSize(0),
                 _levelIndent(0)
             {}
-            
+
             //! flags
             enum CellFlag
             {
@@ -153,12 +153,12 @@ namespace Oxygen
                 HasChildren = 1<<1,
                 IsLast = 1<<2
             };
-                
+
             //! constructor from CellInfo
             explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo );
 
             //! flags
-            typedef Oxygen::Flags<CellFlag> CellFlags;
+            typedef Flags<CellFlag> CellFlags;
             CellFlags _flags;
 
             //! depth

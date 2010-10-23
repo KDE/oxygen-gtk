@@ -20,11 +20,11 @@
 
 #include "oxygencairocontext.h"
 #include <gdk/gdk.h>
-namespace Cairo
+namespace Oxygen
 {
 
     //_________________________________________-
-    Context::Context( GdkWindow* window, GdkRectangle* clipRect):
+    Cairo::Context::Context( GdkWindow* window, GdkRectangle* clipRect):
         _cr( 0L )
     {
 
@@ -35,7 +35,7 @@ namespace Cairo
     }
 
     //_________________________________________-
-    Context::Context( cairo_surface_t* surface, GdkRectangle* clipRect):
+    Cairo::Context::Context( cairo_surface_t* surface, GdkRectangle* clipRect):
         _cr( 0L )
     {
 
@@ -45,7 +45,7 @@ namespace Cairo
     }
 
     //__________________________________________________________________
-    Context::Context( GdkPixbuf *pixbuf, GdkRectangle* clipRect ):
+    Cairo::Context::Context( GdkPixbuf *pixbuf, GdkRectangle* clipRect ):
         _cr( 0L )
     {
 
@@ -158,7 +158,7 @@ namespace Cairo
     }
 
     //_________________________________________________
-    void Context::free( void )
+    void Cairo::Context::free( void )
     {
         if( _cr ) {
 
@@ -169,7 +169,7 @@ namespace Cairo
     }
 
     //_________________________________________________
-    void Context::setClipping( GdkRectangle* clipRect ) const
+    void Cairo::Context::setClipping( GdkRectangle* clipRect ) const
     {
         if( !clipRect ) return;
         cairo_rectangle( _cr, clipRect->x, clipRect->y, clipRect->width, clipRect->height );
@@ -177,7 +177,7 @@ namespace Cairo
     }
 
     //_________________________________________________
-    void Context::setClipping( GdkRegion* clipRegion ) const
+    void Cairo::Context::setClipping( GdkRegion* clipRegion ) const
     {
         if( !clipRegion ) return;
 
@@ -197,7 +197,7 @@ namespace Cairo
     }
 
     //__________________________________________________________________
-    void Context::updateGdkPixbuf( void ) const
+    void Cairo::Context::updateGdkPixbuf( void ) const
     {
 
         /* Obtain pixbuf to be returned */

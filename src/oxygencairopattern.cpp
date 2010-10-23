@@ -20,11 +20,11 @@
 
 #include "oxygencairopattern.h"
 
-namespace Cairo
+namespace Oxygen
 {
 
     //_____________________________________________________-
-    void Pattern::free( void )
+    void Cairo::Pattern::free( void )
     {
         if( _pattern )
         {

@@ -25,11 +25,11 @@
 #include "oxygencolorutils.h"
 #include "oxygenoptionmap.h"
 
-namespace ColorUtils
+namespace Oxygen
 {
 
     //__________________________________________________________________________________________
-    Effect::Effect( Oxygen::Palette::Group group, const Oxygen::OptionMap& options ):
+    ColorUtils::Effect::Effect( Palette::Group group, const OptionMap& options ):
         _intensityEffect( IntensityNoEffect ),
         _intensityEffectAmount(0),
         _colorEffect( ColorNoEffect ),
@@ -43,18 +43,18 @@ namespace ColorUtils
         std::string section;
         switch( group )
         {
-            case Oxygen::Palette::Inactive:
+            case Palette::Inactive:
             section = "[ColorEffects:Inactive]";
             break;
 
-            case Oxygen::Palette::Disabled:
+            case Palette::Disabled:
             section = "[ColorEffects:Disabled]";
             break;
 
             default: return;
         }
 
-        const bool disabled( group == Oxygen::Palette::Disabled );
+        const bool disabled( group == Palette::Disabled );
 
         // intensity settings
         switch( options.getOption( section, "IntensityEffect" ).toInt( disabled ? IntensityDarken : IntensityNoEffect ) )
@@ -100,7 +100,7 @@ namespace ColorUtils
     }
 
     //__________________________________________________________________________________________
-    Rgba Effect::color( const Rgba& background ) const
+    ColorUtils::Rgba ColorUtils::Effect::color( const ColorUtils::Rgba& background ) const
     {
 
         // do nothing if disabled
@@ -149,7 +149,7 @@ namespace ColorUtils
     }
 
     //__________________________________________________________________________________________
-    Rgba Effect::color( const Rgba& foreground, const Rgba& background ) const
+    ColorUtils::Rgba ColorUtils::Effect::color( const ColorUtils::Rgba& foreground, const ColorUtils::Rgba& background ) const
     {
 
         if( !_enabled ) return foreground;
