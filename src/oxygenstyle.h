@@ -24,6 +24,7 @@
 #include "oxygenanimations.h"
 #include "oxygencairocontext.h"
 #include "oxygengeometry.h"
+#include "oxygengtkcellinfo.h"
 #include "oxygengtkgap.h"
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
@@ -95,6 +96,9 @@ namespace Oxygen
 
         //! tree view header
         void renderHeaderLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+
+        //! tree view lines
+        void renderTreeLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, StyleOptions ) const;
 
         //! editors hole
         /*! returns true if window gradient could be rendered */

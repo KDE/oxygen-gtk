@@ -373,6 +373,56 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, StyleOptions options ) const
+    {
+
+        // do nothing for top-level items
+        if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
+
+        // define pen color
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        const ColorUtils::Rgba base( ColorUtils::mix(
+            settings().palette().color( group, Palette::Text ),
+            settings().palette().color( group, Palette::Window ),
+            0.8 ) );
+
+        Cairo::Context context( window, clipRect );
+        cairo_set_source( context, base );
+        cairo_set_line_width( context, 1.0 );
+
+        int cellIndent( 4 + cellFlags._levelIndent + cellFlags._expanderSize );
+        int xStart( cellIndent/2 );
+        for( int i=1; i< cellFlags._depth; ++i  )
+        {
+
+            const bool last( i == cellFlags._depth -1 );
+
+            // vertical line
+            cairo_move_to( context, double(xStart)+0.5, double(y)+0.5 );
+            if( last && cellFlags._flags & Gtk::CellInfoFlags::IsLast ) cairo_line_to( context, double(xStart)+0.5, y + h/2 );
+            else cairo_line_to( context, double(xStart)+0.5, y + h );
+            cairo_stroke( context );
+
+            // horizontal line
+            if( last )
+            {
+
+                cairo_move_to( context, double(xStart) + 0.5, y + h/2 - 0.5 );
+                cairo_line_to( context, double(xStart) + cellFlags._expanderSize -0.5, y + h/2 - 0.5 );
+                cairo_stroke( context );
+
+            } else {
+
+                // increment
+                xStart += cellIndent;
+
+            }
+        }
+
+        return;
+    }
+
+    //____________________________________________________________________________________
     bool Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,

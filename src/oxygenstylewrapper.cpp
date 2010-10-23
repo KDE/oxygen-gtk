@@ -191,20 +191,25 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
-                    Style::instance().animations().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
+                    Style::instance().animations().treeViewEngine().registerWidget( widget );
                     if(  Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
                     { options |= Hover; }
 
-                }
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    Gtk::CellInfo cellInfo( treeView, x+w/2, y+h/2 );
 
-                if( options & (Selected|Hover) )
-                {
-
-                    if( GTK_IS_TREE_VIEW( widget ) )
+                    if( cellInfo.isExpanderColumn( treeView ) )
                     {
-                        GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                        Gtk::CellInfo cellInfo( treeView, x+w/2, y+h/2 );
-                        if( cellInfo.isExpanderColumn( treeView ) )
+
+                        // tree lines
+                        if( Style::instance().settings().viewDrawTreeBranchLines() )
+                        {
+                            StyleOptions options( widget, state, shadow );
+                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, Gtk::CellInfoFlags( treeView, cellInfo ), options );
+                        }
+
+                        // change selection rect so that it does not overlap with expander
+                        if( options & (Selected|Hover) )
                         {
 
                             // get expander size from widget
@@ -218,7 +223,14 @@ namespace Oxygen
                             w -= offset;
 
                         }
+
+
                     }
+
+                }
+
+                if( options & (Selected|Hover) )
+                {
 
                     TileSet::Tiles tiles( TileSet::Center );
                     if( d.isCellStart() ) tiles |= TileSet::Left;
