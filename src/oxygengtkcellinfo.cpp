@@ -20,6 +20,9 @@
 
 #include "oxygengtkcellinfo.h"
 
+#include <iostream>
+#include <cassert>
+
 namespace Gtk
 {
 
@@ -39,6 +42,23 @@ namespace Gtk
 
         GtkTreeIter parent;
         return gtk_tree_model_iter_parent( model, &parent, &iter );
+
+    }
+
+    //____________________________________________________________________________
+    CellInfo CellInfo::parent( void ) const
+    {
+        CellInfo out;
+        out._column = _column;
+
+        // check path
+        if( !_path ) return out;
+
+        GtkTreePath* parent( gtk_tree_path_copy( _path ) );
+        if( gtk_tree_path_up( parent ) ) out._path = parent;
+        else gtk_tree_path_free( parent );
+
+        return out;
 
     }
 
@@ -86,5 +106,28 @@ namespace Gtk
 
     }
 
+    //____________________________________________________________________________
+    CellInfoFlags::CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
+        _depth( cellInfo.depth() ),
+        _expanderSize(0),
+        _levelIndent(gtk_tree_view_get_level_indentation(treeView))
+    {
+        if( cellInfo.hasParent( treeView ) ) _flags |= HasParent;
+        if( cellInfo.hasChildren( treeView ) ) _flags |= HasChildren;
+        if( cellInfo.isLast( treeView ) ) _flags |= IsLast;
+
+        gtk_widget_style_get( GTK_WIDGET( treeView ), "expander-size", &_expanderSize, NULL );
+
+        _isLast = std::vector<bool>(_depth, false);
+
+        unsigned int index( _depth-1 );
+        for( CellInfo parent = cellInfo; parent.isValid() && parent.depth() > 0; parent = parent.parent() )
+        {
+            assert( index >= 0 );
+            _isLast[index] = parent.isLast( treeView );
+            --index;
+        }
+
+    }
 
 }

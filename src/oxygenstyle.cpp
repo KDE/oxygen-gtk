@@ -376,9 +376,6 @@ namespace Oxygen
     void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, StyleOptions options ) const
     {
 
-        // do nothing for top-level items
-        if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
-
         // define pen color
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const ColorUtils::Rgba base( ColorUtils::mix(
@@ -390,33 +387,67 @@ namespace Oxygen
         cairo_set_source( context, base );
         cairo_set_line_width( context, 1.0 );
 
-        int cellIndent( 4 + cellFlags._levelIndent + cellFlags._expanderSize );
+        int cellIndent( cellFlags._levelIndent + cellFlags._expanderSize + 4 );
         int xStart( cellIndent/2 );
-        for( int i=1; i< cellFlags._depth; ++i  )
+        for( unsigned int i=0; i< cellFlags._depth; ++i  )
         {
 
+            const bool isLastCell( cellFlags._isLast[i] );
+
             const bool last( i == cellFlags._depth -1 );
+            double xCenter = xStart;
 
-            // vertical line
-            cairo_move_to( context, double(xStart)+0.5, double(y)+0.5 );
-            if( last && cellFlags._flags & Gtk::CellInfoFlags::IsLast ) cairo_line_to( context, double(xStart)+0.5, y + h/2 );
-            else cairo_line_to( context, double(xStart)+0.5, y + h );
-            cairo_stroke( context );
-
-            // horizontal line
             if( last )
             {
 
-                cairo_move_to( context, double(xStart) + 0.5, y + h/2 - 0.5 );
-                cairo_line_to( context, double(xStart) + cellFlags._expanderSize -0.5, y + h/2 - 0.5 );
-                cairo_stroke( context );
+                double yCenter = int(y+h/2);
+                const bool hasChildren( cellFlags._flags & Gtk::CellInfoFlags::HasChildren );
 
-            } else {
+                if( hasChildren )
+                {
+                    // first vertical line
+                    cairo_move_to( context, xCenter + 0.5 , y );
+                    cairo_line_to( context, xCenter + 0.5, yCenter - int(cellFlags._expanderSize/3 ) );
 
-                // increment
-                xStart += cellIndent;
+                    // second vertical line
+                    if( !isLastCell )
+                    {
+
+                        cairo_move_to( context, xCenter + 0.5, y+h );
+                        cairo_line_to( context, xCenter + 0.5, yCenter + int( cellFlags._expanderSize/3 ) );
+                    }
+
+                    // horizontal line
+                    cairo_move_to( context, xCenter + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                    cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                } else {
+
+                    cairo_move_to( context, xCenter + 0.5, y );
+                    if( isLastCell ) cairo_line_to( context, xCenter + 0.5, yCenter );
+                    else cairo_line_to( context, xCenter + 0.5, y+h );
+
+                    // horizontal line
+                    cairo_move_to( context, xCenter, yCenter + 0.5 );
+                    cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                }
+
+            } else if( !isLastCell ) {
+
+
+                // vertical line
+                cairo_move_to( context, xCenter + 0.5, y );
+                cairo_line_to( context, xCenter + 0.5, y + h );
 
             }
+
+            // render
+            cairo_stroke( context );
+
+            // increment
+            xStart += cellIndent;
+
         }
 
         return;
