@@ -1,5 +1,5 @@
-#ifndef oxygenlineeditengine_h
-#define oxygenlineeditengine_h
+#ifndef oxygenhoverengine_h
+#define oxygenhoverengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -23,7 +23,7 @@
 
 #include "oxygengenericengine.h"
 #include "oxygendatamap.h"
-#include "oxygenlineeditdata.h"
+#include "oxygenhoverdata.h"
 
 #include <gtk/gtk.h>
 
@@ -37,23 +37,34 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class LineEditEngine: public GenericEngine<LineEditData>
+    class HoverEngine: public GenericEngine<HoverData>
     {
 
         public:
 
         //! constructor
-        LineEditEngine( Animations* parent ):
-            GenericEngine<LineEditData>( parent )
+        HoverEngine( Animations* parent ):
+            GenericEngine<HoverData>( parent )
             {}
 
         //! destructor
-        virtual ~LineEditEngine( void )
+        virtual ~HoverEngine( void )
         {}
 
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
+
+        //! register widget
+        virtual bool registerWidget( GtkWidget* widget, bool updateOnHover = false )
+        {
+            if( GenericEngine<HoverData>::registerWidget( widget ) )
+            {
+                data().value(widget).setUpdateOnHover( updateOnHover );
+                return true;
+            } else return false;
+
+        }
 
     };
 
