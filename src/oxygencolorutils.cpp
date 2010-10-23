@@ -26,8 +26,9 @@
 #include "oxygencolorutils.h"
 #include "oxygenrgba.h"
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+#include <map>
 #include <sstream>
 
 namespace Oxygen
@@ -60,48 +61,112 @@ namespace Oxygen
         static inline double normalize( double a )
         { return ( a < 1.0 ? ( a > 0.0 ? a : 0.0 ) : 1.0 ); }
 
+        // caches
+        typedef std::map<guint32,Rgba> ColorCache;
+
+        static ColorCache m_decoColorCache;
+        static ColorCache m_lightColorCache;
+        static ColorCache m_darkColorCache;
+        static ColorCache m_midColorCache;
+        static ColorCache m_shadowColorCache;
+        static ColorCache m_backgroundTopColorCache;
+        static ColorCache m_backgroundBottomColorCache;
+        static ColorCache m_backgroundRadialColorCache;
+        static ColorCache m_backgroundColorCache;
+
+        typedef std::map<guint32,bool> ColorFlags;
+        ColorFlags m_highThreshold;
+        ColorFlags m_lowThreshold;
+
+
+        // clear caches
+        static inline void clearCaches( void )
+        {
+            m_decoColorCache.clear();
+            m_lightColorCache.clear();
+            m_darkColorCache.clear();
+            m_midColorCache.clear();
+            m_shadowColorCache.clear();
+            m_backgroundTopColorCache.clear();
+            m_backgroundBottomColorCache.clear();
+            m_backgroundRadialColorCache.clear();
+            m_backgroundColorCache.clear();
+
+            m_highThreshold.clear();
+            m_lowThreshold.clear();
+
+        }
+
     }
 
     //____________________________________________________________________
     bool ColorUtils::lowThreshold(const Rgba &color)
     {
 
-        const Rgba darker( shade(color, MidShade, 0.5 ) );
-        return luma(darker) > luma(color);
+        ColorFlags::const_iterator iter( m_lowThreshold.find( color.toInt() ) );
+        if( iter != m_lowThreshold.end() ) return iter->second;
+        else {
+
+            const Rgba darker( shade(color, MidShade, 0.5 ) );
+            const bool out( luma(darker) > luma(color) );
+            m_lowThreshold.insert( std::make_pair( color.toInt(), out ) );
+            return out;
+        }
 
     }
 
      //____________________________________________________________________
     bool ColorUtils::highThreshold(const Rgba &color)
     {
-        const Rgba lighter( shade(color, LightShade, 0.5 ) );
-        return luma(lighter) < luma(color);
+
+        ColorFlags::const_iterator iter( m_highThreshold.find( color.toInt() ) );
+        if( iter != m_highThreshold.end() ) return iter->second;
+        else {
+
+            const Rgba lighter( shade(color, LightShade, 0.5 ) );
+            const bool out( luma(lighter) < luma(color) );
+            m_highThreshold.insert( std::make_pair( color.toInt(), out ) );
+            return out;
+        }
     }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::backgroundTopColor(const Rgba &color)
     {
-        if( lowThreshold(color) ) return shade(color, MidlightShade, 0.0);
-        else {
-            const double my( luma( shade(color, LightShade, 0.0) ) );
-            const double by( luma(color) );
-            return shade(color, (my - by) * backgroundContrast());
-        }
 
+        ColorCache::const_iterator iter( m_backgroundTopColorCache.find( color.toInt() ) );
+        if( iter != m_backgroundTopColorCache.end() ) return iter->second;
+        else {
+            Rgba out;
+            if( lowThreshold(color) ) out = shade(color, MidlightShade, 0.0);
+            else {
+                const double my( luma( shade(color, LightShade, 0.0) ) );
+                const double by( luma(color) );
+                out = shade(color, (my - by) * backgroundContrast());
+            }
+
+            m_backgroundTopColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
+        }
     }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::backgroundBottomColor(const Rgba &color)
     {
 
-        const Rgba midColor( shade(color, MidShade, 0.0) );
-        if( lowThreshold(color) ) return midColor;
+        ColorCache::const_iterator iter( m_backgroundBottomColorCache.find( color.toInt() ) );
+        if( iter != m_backgroundBottomColorCache.end() ) return iter->second;
         else {
+            Rgba out( shade(color, MidShade, 0.0) );
+            if( !lowThreshold(color) ) {
 
-            const double by( luma(color) );
-            const double my( luma(midColor) );
-            return shade(color, (my - by) * backgroundContrast());
+                const double by( luma(color) );
+                const double my( luma(out) );
+                out = shade(color, (my - by) * backgroundContrast());
+            }
 
+            m_backgroundBottomColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
         }
     }
 
@@ -109,32 +174,70 @@ namespace Oxygen
     ColorUtils::Rgba ColorUtils::backgroundRadialColor(const Rgba &color)
     {
 
-        if( lowThreshold(color) ) return shade(color, LightShade, 0.0);
-        else if( highThreshold( color ) ) return color;
-        else return shade(color, LightShade, backgroundContrast() );
+        ColorCache::const_iterator iter( m_backgroundRadialColorCache.find( color.toInt() ) );
+        if( iter != m_backgroundRadialColorCache.end() ) return iter->second;
+        else {
+            Rgba out;
+            if( lowThreshold(color) ) out = shade(color, LightShade, 0.0);
+            else if( highThreshold( color ) ) out = color;
+            else out = shade(color, LightShade, backgroundContrast() );
+            m_backgroundRadialColorCache.insert( std::make_pair( color.toInt(), out ) );
+            return out;
+        }
+
     }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::lightColor(const ColorUtils::Rgba &color)
-    { return highThreshold( color ) ? color: shade( color, LightShade, contrast() ); }
+    {
+
+        ColorCache::const_iterator iter( m_lightColorCache.find( color.toInt() ) );
+        if( iter != m_lightColorCache.end() ) return iter->second;
+        else {
+            const Rgba out( highThreshold( color ) ? color: shade( color, LightShade, contrast() ) );
+            m_lightColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
+        }
+    }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::darkColor( const ColorUtils::Rgba& color )
     {
-        return lowThreshold(color) ?
-            mix( lightColor(color), color, 0.3 + 0.7 * contrast() ):
-            shade(color, MidShade, contrast() );
+        ColorCache::const_iterator iter( m_darkColorCache.find( color.toInt() ) );
+        if( iter != m_darkColorCache.end() ) return iter->second;
+        else {
+            const Rgba out( lowThreshold(color) ?
+                mix( lightColor(color), color, 0.3 + 0.7 * contrast() ):
+                shade(color, MidShade, contrast() ) );
+            m_darkColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
+        }
     }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::midColor( const ColorUtils::Rgba& color )
-    { return shade( color, MidShade, contrast() - 1.0 ); }
+    {
+        ColorCache::const_iterator iter( m_midColorCache.find( color.toInt() ) );
+        if( iter != m_midColorCache.end() ) return iter->second;
+        else {
+            const Rgba out( shade( color, MidShade, contrast() - 1.0 ) );
+            m_midColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
+        }
+    }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::shadowColor( const ColorUtils::Rgba& color )
     {
-        Rgba mixed( mix( Rgba::black(), color, color.alpha() ) );
-        return lowThreshold(color) ? mixed: shade( mixed, ShadowShade, contrast() );
+        ColorCache::const_iterator iter( m_shadowColorCache.find( color.toInt() ) );
+        if( iter != m_shadowColorCache.end() ) return iter->second;
+        else {
+
+            Rgba out( mix( Rgba::black(), color, color.alpha() ) );
+            if( !lowThreshold(color) ) out = shade( out, ShadowShade, contrast() );
+            m_shadowColorCache.insert( std::make_pair(color.toInt(), out) );
+            return out;
+        }
     }
 
     //_________________________________________________________________________
