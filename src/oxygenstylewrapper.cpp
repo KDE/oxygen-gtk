@@ -555,6 +555,10 @@ namespace Oxygen
 
                 } else if( Gtk::gtk_parent_combo( widget ) ) {
 
+                    /*
+                    make button flat; disable focus and hover
+                    (this is handled when rendering the arrow
+                    */
                     options |= Flat;
                     options &= ~(Hover|Focus);
 
@@ -1333,11 +1337,11 @@ namespace Oxygen
             options &= ~( Focus|Hover );
             y+= 1;
 
-        } else if( Gtk::gtk_parent_combo( widget ) ) {
-
-            state = gtk_widget_get_state( Gtk::gtk_parent_button( widget ) );
-
-        } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_tree_view( widget ) ) {
+        } else if(
+            Gtk::gtk_parent_button( widget ) &&
+            !Gtk::gtk_parent_tree_view( widget ) &&
+            !Gtk::gtk_parent_combo( widget ) )
+        {
 
             options &= ~( Focus|Hover );
 
