@@ -379,9 +379,6 @@ namespace Oxygen
         // do nothing for top-level items
         if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
 
-        const bool isLastCell( cellFlags._flags & Gtk::CellInfoFlags::IsLast );
-        const bool hasChildren( cellFlags._flags & Gtk::CellInfoFlags::HasChildren );
-
         // define pen color
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const ColorUtils::Rgba base( ColorUtils::mix(
@@ -395,8 +392,10 @@ namespace Oxygen
 
         int cellIndent( cellFlags._levelIndent + cellFlags._expanderSize + 4 );
         int xStart( cellIndent*3/2 );
-        for( int i=1; i< cellFlags._depth; ++i  )
+        for( unsigned int i=1; i< cellFlags._depth; ++i  )
         {
+
+            const bool isLastCell( cellFlags._isLast[i] );
 
             const bool last( i == cellFlags._depth -1 );
             double xCenter = xStart;
@@ -405,6 +404,7 @@ namespace Oxygen
             {
 
                 double yCenter = int(y+h/2);
+                const bool hasChildren( cellFlags._flags & Gtk::CellInfoFlags::HasChildren );
 
                 if( hasChildren )
                 {
@@ -436,20 +436,20 @@ namespace Oxygen
 
                 }
 
-            } else {
+            } else if( !isLastCell ) {
 
 
                 // vertical line
                 cairo_move_to( context, xCenter + 0.5, y );
                 cairo_line_to( context, xCenter + 0.5, y + h );
 
-                // increment
-                xStart += cellIndent;
-
             }
 
             // render
             cairo_stroke( context );
+
+            // increment
+            xStart += cellIndent;
 
         }
 

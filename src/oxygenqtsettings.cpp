@@ -590,22 +590,6 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
 
-        // view  expander size
-        switch( _viewTriangularExpanderSize )
-        {
-            case ArrowNormal:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 15 ) );
-            break;
-
-            default:
-            case ArrowSmall:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 15 ) );
-            break;
-
-            case ArrowTiny:
-            _rc.addToCurrentSection( Gtk::RCOption<int>("  GtkTreeView::expander-size", 8 ) );
-            break;
-        }
     }
 
     //_________________________________________________________

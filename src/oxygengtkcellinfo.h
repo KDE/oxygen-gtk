@@ -22,6 +22,7 @@
 
 #include "oxygenflags.h"
 
+#include <vector>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
@@ -47,7 +48,7 @@ namespace Gtk
         {}
 
         //! copy constructor
-        explicit CellInfo( const CellInfo& other ):
+        CellInfo( const CellInfo& other ):
             _path( other._path ? gtk_tree_path_copy( other._path ):0L ),
             _column( other._column )
         {}
@@ -101,6 +102,9 @@ namespace Gtk
         //! returns true if path has parent
         bool hasParent( GtkTreeView* ) const;
 
+        //! parent cell
+        CellInfo parent( void ) const;
+
         //! returns true if path has children
         bool hasChildren( GtkTreeView* ) const;
 
@@ -108,8 +112,8 @@ namespace Gtk
         bool isLast( GtkTreeView* ) const;
 
         //! return path depth
-        int depth( void ) const
-        { return _path ? gtk_tree_path_get_depth( _path ):-1;  }
+        unsigned int depth( void ) const
+        { return _path ? (unsigned int) gtk_tree_path_get_depth( _path ):0;  }
 
         //! background rect
         GdkRectangle backgroundRect( GtkTreeView* ) const;
@@ -135,7 +139,7 @@ namespace Gtk
 
         //! constructor
         explicit CellInfoFlags( void ):
-            _depth( -1 ),
+            _depth(0),
             _expanderSize(0),
             _levelIndent(0)
             {}
@@ -149,28 +153,19 @@ namespace Gtk
         };
 
         //! constructor from CellInfo
-        explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo ):
-            _depth( cellInfo.depth() ),
-            _expanderSize(0),
-            _levelIndent(gtk_tree_view_get_level_indentation(treeView))
-        {
-            if( cellInfo.hasParent( treeView ) ) _flags |= HasParent;
-            if( cellInfo.hasChildren( treeView ) ) _flags |= HasChildren;
-            if( cellInfo.isLast( treeView ) ) _flags |= IsLast;
-
-            gtk_widget_style_get( GTK_WIDGET( treeView ), "expander-size", &_expanderSize, NULL );
-
-        }
+        explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo );
 
         //! flags
         typedef Oxygen::Flags<CellFlag> CellFlags;
         CellFlags _flags;
 
         //! depth
-        int _depth;
+        unsigned int _depth;
         int _expanderSize;
         int _levelIndent;
 
+        //! keep track of whether this cell, or parents are last in hierarchy
+        std::vector<bool> _isLast;
     };
 
 }
