@@ -20,7 +20,10 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygengdkpixbufcache.h"
 #include "oxygentileset.h"
+#include "oxygentilesetcache.h"
+#include "oxygentilesetkey.h"
 
 #include <gdk/gdk.h>
 
@@ -43,21 +46,40 @@ namespace Oxygen
         {}
 
         //! destructor
-        virtual ~StyleHelper( void )
+        ~StyleHelper( void )
         {}
 
         //! separators
-        virtual void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical ) const;
+        void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical ) const;
+
+        //! clear caches
+        void clearCaches( void )
+        {
+            m_slabCache.clear();
+            m_slabFocusedCache.clear();
+            m_slabSunkenCache.clear();
+            m_holeCache.clear();
+            m_holeFocusedCache.clear();
+            m_holeFlatCache.clear();
+            m_scrollHoleCache.clear();
+            m_slitFocusedCache.clear();
+            m_dockFrameCache.clear();
+            m_grooveCache.clear();
+            m_selectionCache.clear();
+            m_roundSlabCache.clear();
+            m_roundSlabFocusedCache.clear();
+            m_progressBarIndicatorCache.clear();
+        }
 
         //!@name slabs
         //@{
 
-        TileSet slab( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
-        TileSet slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 ) const;
-        TileSet slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
+        const TileSet& slab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        GdkPixbuf* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
-        GdkPixbuf* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 ) const;
+        GdkPixbuf* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        GdkPixbuf* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -70,27 +92,27 @@ namespace Oxygen
         //!@name holes
         //@{
 
-        TileSet hole( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
-        TileSet holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 ) const;
-        TileSet holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba &glowColor, double shade, int size = 7 ) const;
-        TileSet scrollHole( const ColorUtils::Rgba&, bool vertical ) const;
+        const TileSet& hole( const ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba &glowColor, double shade, int size = 7 );
+        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
 
         //@}
 
         //! 'slit' (for hovered/focused flat buttons )
-        TileSet slitFocused( const ColorUtils::Rgba& ) const;
+        const TileSet& slitFocused( const ColorUtils::Rgba& );
 
         //! dock frame
-        TileSet dockFrame( const ColorUtils::Rgba&, int size ) const;
+        const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
 
         //! progressbar indicator
-        GdkPixbuf* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h ) const;
+        GdkPixbuf* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
-        TileSet groove( const ColorUtils::Rgba&, double shade, int size = 7 ) const;
+        const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
 
         //! selection
-        TileSet selection( const ColorUtils::Rgba&, int, bool custom ) const;
+        const TileSet& selection( const ColorUtils::Rgba&, int, bool custom );
 
         //! dots
         void renderDot( Cairo::Context&, const ColorUtils::Rgba&, int x, int y ) const;
@@ -128,6 +150,53 @@ namespace Oxygen
         static const double _slabThickness;
         static const double _shadowGain;
         static const double _glowBias;
+        //@}
+
+        //!@name caches
+        //@{
+
+        //! slabs
+        TileSetCache<SlabKey> m_slabCache;
+
+        //! slabs
+        TileSetCache<SlabFocusedKey> m_slabFocusedCache;
+
+        //! slabs
+        TileSetCache<SlabKey> m_slabSunkenCache;
+
+        //! holes
+        TileSetCache<HoleKey> m_holeCache;
+
+        //! holes
+        TileSetCache<HoleFocusedKey> m_holeFocusedCache;
+
+        //! holes
+        TileSetCache<HoleFlatKey> m_holeFlatCache;
+
+        //! scroll hole
+        TileSetCache<ScrollHoleKey> m_scrollHoleCache;
+
+        //! slit
+        TileSetCache<SlitFocusedKey> m_slitFocusedCache;
+
+        //! docks
+        TileSetCache<DockFrameKey> m_dockFrameCache;
+
+        //! groove
+        TileSetCache<GrooveKey> m_grooveCache;
+
+        //! selection
+        TileSetCache<SelectionKey> m_selectionCache;
+
+        //! round slabs
+        GdkPixbufCache<SlabKey> m_roundSlabCache;
+
+        //! round slabs
+        GdkPixbufCache<SlabFocusedKey> m_roundSlabFocusedCache;
+
+        //! progressbar indicators
+        GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
+
         //@}
 
     };
