@@ -191,7 +191,7 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
-                    Style::instance().animations().treeViewEngine().registerWidget( widget, Style::instance().settings().viewDrawTreeBranchLines() );
+                    Style::instance().animations().treeViewEngine().registerWidget( widget );
                     if(  Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
                     { options |= Hover; }
 
@@ -201,6 +201,14 @@ namespace Oxygen
                     if( cellInfo.isExpanderColumn( treeView ) )
                     {
 
+                        // tree lines
+                        if( Style::instance().settings().viewDrawTreeBranchLines() )
+                        {
+                            StyleOptions options( widget, state, shadow );
+                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, Gtk::CellInfoFlags( treeView, cellInfo ), options );
+                        }
+
+                        // change selection rect so that it does not overlap with expander
                         if( options & (Selected|Hover) )
                         {
 
