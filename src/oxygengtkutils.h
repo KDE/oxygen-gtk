@@ -73,6 +73,9 @@ namespace Gtk
     GtkWidget* gtk_parent_tree_view( GtkWidget* );
 
     //! return parent combobox if any.
+    GtkWidget* gtk_parent_combo( GtkWidget* );
+
+    //! return parent combobox if any.
     GtkWidget* gtk_parent_combobox( GtkWidget* );
 
     //! return parent combobox if any.
