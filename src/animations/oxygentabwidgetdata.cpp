@@ -63,7 +63,8 @@ namespace Oxygen
 
         // disconnect all children
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
-        { unregisterChild( iter->first ); }
+        { iter->second.disconnect( iter->first ); }
+        _childrenData.clear();
 
     }
 
@@ -222,18 +223,7 @@ namespace Oxygen
 
         ChildDataMap::iterator iter( _childrenData.find( widget ) );
         if( iter == _childrenData.end() ) return;
-
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
-        #endif
-
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._destroyId );
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._enterId );
-        g_signal_handler_disconnect(G_OBJECT(widget), iter->second._leaveId );
-
-        if( iter->second._addId >= 0 ) g_signal_handler_disconnect(G_OBJECT(widget), iter->second._addId );
-
+        iter->second.disconnect( widget );
         _childrenData.erase( iter );
 
     }
@@ -264,6 +254,23 @@ namespace Oxygen
         // retrieve widget's parent and check type
         static_cast<TabWidgetData*>(data)->updateHoveredTab();
         return FALSE;
+
+    }
+
+    //____________________________________________________________________________________________
+    void TabWidgetData::ChildData::disconnect( GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::ChildData::disconnect - " << widget << std::endl;
+        #endif
+
+        g_signal_handler_disconnect(G_OBJECT(widget), _destroyId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _styleChangeId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
+        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
+
+        if( _addId >= 0 ) g_signal_handler_disconnect(G_OBJECT(widget), _addId );
 
     }
 

@@ -22,24 +22,24 @@
 */
 #include "../oxygengtkcellinfo.h"
 #include "../oxygengtkutils.h"
+#include "oxygenhoverdata.h"
 
 #include <gtk/gtk.h>
 #include <algorithm>
 
 namespace Oxygen
 {
-    class TreeViewData
+    class TreeViewData: public HoverData
     {
 
         public:
 
         //! constructor
         TreeViewData( void ):
+            _target(0L),
             _motionId(-1),
-            _leaveId(-1),
             _rowDeletedId(-1),
             _fullWidth( false ),
-            _hovered( false ),
             _x(-1),
             _y(-1)
         {}
@@ -58,10 +58,6 @@ namespace Oxygen
         void setFullWidth( bool value )
         { _fullWidth = value; }
 
-        //! true if hovered
-        bool hovered( void ) const
-        { return _hovered; }
-
         //! true if current position is contained int rect
         bool isCellHovered( int x, int y, int w, int h ) const
         { return isCellHovered( x, y, w, h, _fullWidth ); }
@@ -69,7 +65,7 @@ namespace Oxygen
         //! true if current position is contained int rect
         bool isCellHovered( int x, int y, int w, int h, bool fullWidth ) const
         {
-            if( !( _cellInfo.isValid() && _hovered ) ) return false;
+            if( !( _cellInfo.isValid() && hovered() ) ) return false;
             if( fullWidth ) return ( _y >= y ) && ( _y < y+h );
             else return (_x >= x) && (_x < x+w ) && ( _y >= y ) && ( _y < y+h );
         }
@@ -77,8 +73,12 @@ namespace Oxygen
         protected:
 
         //! set mouse over state
-        void setHovered( bool value )
-        { _hovered = value; }
+        virtual bool setHovered( GtkWidget* widget, bool value )
+        {
+            if( !HoverData::setHovered( widget, value ) ) return false;
+            if( !value ) clearPosition();
+            return true;
+        }
 
         //! update pointer position
         void updatePosition( GtkWidget*, int x, int y );
@@ -86,10 +86,50 @@ namespace Oxygen
         //! update pointer position
         void clearPosition( GtkWidget* = 0L );
 
+        //! repaint selection
+        void triggerRepaint( void );
+
+        //! handles scrollbar value change
+        class ScrollBarData
+        {
+            public:
+
+            //! constructor
+            ScrollBarData( void ):
+                _widget( 0L ),
+                _destroyId( -1 ),
+                _styleChangeId( -1 ),
+                _valueChangedId( -1 )
+            {}
+
+            //! destructor
+            virtual ~ScrollBarData( void )
+            {}
+
+            //! disconnect all signals
+            void disconnect( void );
+
+            GtkWidget* _widget;
+            int _destroyId;
+            int _styleChangeId;
+            int _valueChangedId;
+        };
+
+        //!@name child (scrollbars) handling
+        //@{
+
+
+        void registerScrollBars( GtkWidget* );
+        void registerChild( GtkWidget*, ScrollBarData& );
+        void unregisterChild( GtkWidget* );
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static void childValueChanged( GtkRange*, gpointer );
+        //@}
+
         //!@name static callbacks
         //@{
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static void rowActivatedEvent( GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gpointer );
         static void cursorChangedEvent( GtkTreeView*, gpointer );
         static void rowDeletedEvent( GtkTreeModel*, GtkTreePath*, gpointer );
@@ -97,18 +137,16 @@ namespace Oxygen
 
         private:
 
+        GtkWidget* _target;
+
         //!@name callbacks ids
         //@{
         int _motionId;
-        int _leaveId;
         int _rowDeletedId;
         //@}
 
         //! true if hover works on full width
         bool _fullWidth;
-
-        //! true if hovered
-        bool _hovered;
 
         //!@name keep track of the hovered path and column
         Gtk::CellInfo _cellInfo;
@@ -118,6 +156,12 @@ namespace Oxygen
         int _x;
         int _y;
         //@}
+
+        //! vertical scrollbar data
+        ScrollBarData _vScrollBar;
+
+        //! horizontal scrollbar data
+        ScrollBarData _hScrollBar;
 
     };
 
