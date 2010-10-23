@@ -376,9 +376,6 @@ namespace Oxygen
     void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, StyleOptions options ) const
     {
 
-        // do nothing for top-level items
-        //if( !( cellFlags._flags & Gtk::CellInfoFlags::HasParent ) ) return;
-
         // define pen color
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const ColorUtils::Rgba base( ColorUtils::mix(
