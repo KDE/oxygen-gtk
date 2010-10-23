@@ -173,7 +173,6 @@ namespace Oxygen
             else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
-
             if( Gtk::gtk_combobox_is_tree_view( widget ) )
             {
 
@@ -188,6 +187,7 @@ namespace Oxygen
 
                 // draw rounded selection in normal list,
                 // and detect hover
+                bool forceCellStart( false );
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
@@ -202,6 +202,7 @@ namespace Oxygen
                     {
 
                         // tree lines
+                        forceCellStart = true;
                         if( Style::instance().settings().viewDrawTreeBranchLines() )
                         {
                             StyleOptions options( widget, state, shadow );
@@ -236,6 +237,8 @@ namespace Oxygen
                     if( d.isCellStart() ) tiles |= TileSet::Left;
                     else if( d.isCellEnd() ) tiles |= TileSet::Right;
                     else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
+
+                    if( forceCellStart ) tiles |= TileSet::Left;
 
                     Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
 
