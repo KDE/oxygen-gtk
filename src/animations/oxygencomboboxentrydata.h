@@ -83,10 +83,6 @@ namespace Oxygen
         //!@name accessors
         //@{
 
-        //! return entry widget
-        GtkWidget* entry( void ) const
-        { return _entry._widget; }
-
         //! true if either button or entry has focus
         bool hasFocus( void ) const
         { return _button._focus || _entry._focus; }
