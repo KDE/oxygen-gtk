@@ -70,14 +70,8 @@ namespace Oxygen
         */
         TileSet( GdkPixbuf*, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
 
-        //! copy constructor
-        TileSet( const TileSet& );
-
         //! destructor
         virtual ~TileSet();
-
-        //! assignment operator
-        TileSet& operator = ( const TileSet& );
 
         /*!
         Flags specifying what sides to draw in ::render. Corners are drawn when
@@ -123,6 +117,14 @@ namespace Oxygen
         perfectly filled. Filling is performed as if all chunks are being drawn.
         */
         void render( Cairo::Context&, int x, int y, int w, int h, unsigned int = Ring) const;
+
+        protected:
+
+        //! copy constructor
+        TileSet( const TileSet& );
+
+        //! assignment operator
+        TileSet& operator = ( const TileSet& );
 
         private:
 

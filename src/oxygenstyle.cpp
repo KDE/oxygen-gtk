@@ -2738,12 +2738,13 @@ namespace Oxygen
         if( !(options&Sunken) ) {
 
             // calculate glow color
-            TileSet tile;
+            const TileSet* tile;
             ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = helper().slabFocused( base, glow , 0);
-            else if( base.isValid() ) tile = helper().slab( base, 0 );
+            if( glow.isValid() ) tile = &helper().slabFocused( base, glow , 0);
+            else if( base.isValid() ) tile = &helper().slab( base, 0 );
             else return;
-            tile.render( context, x, y, w, h );
+
+            if( tile ) tile->render( context, x, y, w, h );
 
         } else if( base.isValid() ) {
 

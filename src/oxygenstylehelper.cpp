@@ -444,7 +444,7 @@ namespace Oxygen
             {
 
                 Cairo::Context context( pixbuf );
-                TileSet holeTileSet = hole( base, shade, size );
+                const TileSet& holeTileSet = hole( base, shade, size );
 
                 // hole
                 holeTileSet.render( context, 0, 0, w, h );
