@@ -75,10 +75,6 @@ namespace Oxygen
         //!@name accessors
         //@{
 
-        //! returns entry associated to given combobox
-        GtkWidget* entry( GtkWidget* widget )
-        { return data().value( widget ).entry(); }
-
         //! true if either button or entry has focus
         bool hasFocus( GtkWidget* widget )
         { return data().value( widget ).hasFocus(); }

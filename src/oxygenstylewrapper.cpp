@@ -507,10 +507,8 @@ namespace Oxygen
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
-                GtkWidget* entry( Style::instance().animations().comboBoxEntryEngine().entry( parent ) );
 
-                if( GTK_IS_COMBO( parent ) && entry ) { state = gtk_widget_get_state( entry ); }
-                else state = gtk_widget_get_state(parent);
+                state = gtk_widget_get_state(parent);
 
                 if( style )
                 {
@@ -554,6 +552,11 @@ namespace Oxygen
                     Style::instance().animations().flatButtonEngine().registerWidget( widget );
                     if( Style::instance().animations().flatButtonEngine().hovered( widget ) )
                     { options |= Hover; }
+
+                } else if( Gtk::gtk_parent_combo( widget ) ) {
+
+                    options |= Flat;
+                    options &= ~(Hover|Focus);
 
                 }
 
@@ -891,16 +894,12 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
                 Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
-                GtkWidget* entry( Style::instance().animations().comboBoxEntryEngine().entry( parent ) );
-                if( !( GTK_IS_COMBO( parent ) && entry && gtk_widget_get_state( entry ) == GTK_STATE_INSENSITIVE ) )
-                {
 
-                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
-                    else options &= ~Focus;
+                if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                else options &= ~Focus;
 
-                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
-                    else options &= ~Hover;
-                }
+                if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                else options &= ~Hover;
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
@@ -1325,14 +1324,7 @@ namespace Oxygen
                 }
             }
 
-        } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
-
-            if( GTK_IS_COMBO( parent ) )
-            {
-                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
-                if( GtkWidget* entry = Style::instance().animations().comboBoxEntryEngine().entry( parent ) )
-                { state = gtk_widget_get_state( entry ); }
-            }
+        } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
 
@@ -1340,6 +1332,10 @@ namespace Oxygen
 
             options &= ~( Focus|Hover );
             y+= 1;
+
+        } else if( Gtk::gtk_parent_combo( widget ) ) {
+
+            state = gtk_widget_get_state( Gtk::gtk_parent_button( widget ) );
 
         } else if( Gtk::gtk_parent_button( widget ) && !Gtk::gtk_parent_tree_view( widget ) ) {
 
