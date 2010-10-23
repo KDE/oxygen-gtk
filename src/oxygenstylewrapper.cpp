@@ -944,9 +944,22 @@ namespace Oxygen
             } else {
 
                 // register to line edit engine
-                Style::instance().animations().lineEditEngine().registerWidget( widget );
-                if( Style::instance().animations().lineEditEngine().hovered( widget ) )
-                { options |= Hover; }
+                if( GTK_IS_ENTRY( widget ) )
+                {
+
+                    Style::instance().animations().lineEditEngine().registerWidget( widget );
+                    if( Style::instance().animations().lineEditEngine().hovered( widget ) )
+                    { options |= Hover; }
+
+                } else {
+
+                    /*
+                    for now, hover and focus highlight
+                    is not supported in anything but entries
+                    */
+                    options &= ~(Hover|Focus);
+
+                }
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
