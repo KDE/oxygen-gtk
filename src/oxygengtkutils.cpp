@@ -28,11 +28,11 @@
 #include <cstring>
 #include <gtk/gtk.h>
 
-namespace Gtk
+namespace Oxygen
 {
 
     //____________________________________________________________
-    void gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
+    void Gtk::gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
     {
         if(GTK_IS_BUTTON(container))
         {
@@ -57,7 +57,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_widget_has_rgba( GtkWidget* widget )
+    bool Gtk::gtk_widget_has_rgba( GtkWidget* widget )
     {
 
         if( !widget ) return false;
@@ -78,7 +78,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_object_is_a( const GObject* object, const gchar * type_name )
+    bool Gtk::gtk_object_is_a( const GObject* object, const gchar * type_name )
     {
 
         if( object )
@@ -92,7 +92,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_button( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_button( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -103,7 +103,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_menu( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_menu( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -114,7 +114,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_tree_view( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_tree_view( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -125,7 +125,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_combo( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_combo( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -136,7 +136,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_combobox( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_combobox( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -147,7 +147,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_combobox_entry( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_combobox_entry( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -158,7 +158,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_scrolled_window( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_scrolled_window( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -169,7 +169,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_statusbar( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_statusbar( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -180,7 +180,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_parent_notebook( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_parent_notebook( GtkWidget* widget )
     {
 
         GtkWidget *parent( widget );
@@ -191,7 +191,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    bool Gtk::gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
     {
 
         GtkWidget *parent( widget );
@@ -202,14 +202,14 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_button_is_flat( GtkWidget* widget )
+    bool Gtk::gtk_button_is_flat( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
         return ( gtk_button_get_relief( GTK_BUTTON( widget ) ) == GTK_RELIEF_NONE );
     }
 
     //________________________________________________________
-    bool gtk_button_is_in_path_bar( GtkWidget* widget )
+    bool Gtk::gtk_button_is_in_path_bar( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;
 
@@ -218,7 +218,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_button_find_image(GtkWidget* button)
+    GtkWidget* Gtk::gtk_button_find_image(GtkWidget* button)
     {
         if(!GTK_IS_CONTAINER(button))
             return 0L;
@@ -233,7 +233,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    GtkWidget* gtk_button_find_label(GtkWidget* button)
+    GtkWidget* Gtk::gtk_button_find_label(GtkWidget* button)
     {
         if(!GTK_IS_CONTAINER(button))
             return 0L;
@@ -248,7 +248,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_combobox_is_tree_view( GtkWidget* widget )
+    bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
     {
         // check types
         if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
@@ -262,7 +262,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_combobox_is_scrolled_window( GtkWidget* widget )
+    bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
         if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
 
@@ -274,7 +274,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_combobox_is_viewport( GtkWidget* widget )
+    bool Gtk::gtk_combobox_is_viewport( GtkWidget* widget )
     {
         if( !GTK_IS_VIEWPORT(widget) ) return false;
         gchar* widgetPath;
@@ -286,7 +286,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_combobox_is_frame( GtkWidget* widget )
+    bool Gtk::gtk_combobox_is_frame( GtkWidget* widget )
     {
         if( !GTK_IS_FRAME(widget) ) return false;
         gchar* widgetPath;
@@ -298,7 +298,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_notebook_tab_contains( GtkWidget* widget, int tab, int x, int y )
+    bool Gtk::gtk_notebook_tab_contains( GtkWidget* widget, int tab, int x, int y )
     {
 
         if( !( tab >= 0 && GTK_IS_NOTEBOOK( widget ) ) ) return false;
@@ -318,7 +318,7 @@ namespace Gtk
     }
 
      //________________________________________________________
-    int gtk_notebook_find_tab( GtkWidget* widget, int x, int y )
+    int Gtk::gtk_notebook_find_tab( GtkWidget* widget, int x, int y )
     {
 
         if( !GTK_IS_NOTEBOOK( widget ) ) return -1;
@@ -353,7 +353,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    int gtk_notebook_find_first_tab( GtkWidget* widget )
+    int Gtk::gtk_notebook_find_first_tab( GtkWidget* widget )
     {
 
         if( !GTK_IS_NOTEBOOK( widget ) ) return 0;
@@ -365,7 +365,7 @@ namespace Gtk
     }
 
     //____________________________________________________________
-    gboolean gtk_notebook_update_close_buttons(GtkNotebook* notebook)
+    gboolean Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( notebook ) )
@@ -389,7 +389,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_notebook_is_close_button(GtkWidget* widget)
+    bool Gtk::gtk_notebook_is_close_button(GtkWidget* widget)
     {
         if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
         {
@@ -428,7 +428,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gtk_progress_bar_is_horizontal( GtkWidget* widget )
+    bool Gtk::gtk_progress_bar_is_horizontal( GtkWidget* widget )
     {
 
         if( !GTK_IS_PROGRESS_BAR( widget ) ) return true;
@@ -448,7 +448,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
+    bool Gtk::gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
     {
 
         // always initialize arguments (to invalid values)
@@ -492,7 +492,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    void gdk_toplevel_get_size( GdkWindow* window, gint* w, gint* h )
+    void Gtk::gdk_toplevel_get_size( GdkWindow* window, gint* w, gint* h )
     {
 
         if( !( window && GDK_IS_WINDOW( window ) ) )
@@ -512,7 +512,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    void gdk_toplevel_get_frame_size( GdkWindow* window, gint* w, gint* h )
+    void Gtk::gdk_toplevel_get_frame_size( GdkWindow* window, gint* w, gint* h )
     {
 
         if( !( window && GDK_IS_WINDOW( window ) ) )
@@ -535,7 +535,7 @@ namespace Gtk
     }
 
     //________________________________________________________
-    void gdk_window_get_toplevel_origin( GdkWindow* window, gint* x, gint* y )
+    void Gtk::gdk_window_get_toplevel_origin( GdkWindow* window, gint* x, gint* y )
     {
         if( x ) *x = 0;
         if( y ) *y = 0;
@@ -557,7 +557,7 @@ namespace Gtk
     }
 
     //___________________________________________________________
-    GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf *pixbuf, double alpha )
+    GdkPixbuf* Gtk::gdk_pixbuf_set_alpha( const GdkPixbuf *pixbuf, double alpha )
     {
 
         g_return_val_if_fail( pixbuf != 0L, 0L);
@@ -590,7 +590,7 @@ namespace Gtk
     }
 
     //_________________________________________________________
-    bool gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
+    bool Gtk::gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
     {
         if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
             gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
@@ -621,7 +621,7 @@ namespace Gtk
     }
 
     //___________________________________________________________
-    GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height )
+    GdkPixbuf* Gtk::gdk_pixbuf_resize( GdkPixbuf* src, int width, int height )
     {
         if( width == gdk_pixbuf_get_width( src ) &&  height == gdk_pixbuf_get_height( src ) )
         {
