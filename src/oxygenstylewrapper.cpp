@@ -34,8 +34,8 @@
 #include "oxygencairoutils.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
+#include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
-#include "oxygenmaps.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 
@@ -76,8 +76,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -459,8 +459,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -802,8 +802,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=shadow, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1067,8 +1067,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=check, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1133,8 +1133,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=option, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1185,7 +1185,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=hline, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
@@ -1262,7 +1262,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=vline, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
@@ -1307,10 +1307,10 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=arrow, state=%s, shadow=%s, detail=%s, arrow=%s, fill=%d",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail,
-            Maps::getArrow( arrow ),
+            Gtk::TypeNames::arrow( arrow ),
             fill );
         #endif
 
@@ -1417,7 +1417,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=expander, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
@@ -1463,8 +1463,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=diamond, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1494,8 +1494,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=tab, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1544,8 +1544,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=shadow_gap, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1607,8 +1607,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1704,8 +1704,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=slider, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1763,10 +1763,10 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s, position=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail,
-            Maps::getPosition( position ) );
+            Gtk::TypeNames::position( position ) );
         #endif
 
         Gtk::Detail d( detail );
@@ -1867,7 +1867,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=focus, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
@@ -1896,8 +1896,8 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=handle, state=%s, shadow=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
-            Maps::getShadow( shadow ),
+            Gtk::TypeNames::state( state ),
+            Gtk::TypeNames::shadow( shadow ),
             detail );
         #endif
 
@@ -1946,7 +1946,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=resize_grip, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
@@ -1969,7 +1969,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=icon, state=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ));
+            Gtk::TypeNames::state( state ));
         #endif
 
         GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
@@ -2062,7 +2062,7 @@ namespace Oxygen
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=layout, state=%s, detail=%s",
             G_OBJECT_TYPE_NAME( widget ),
-            Maps::getState( state ),
+            Gtk::TypeNames::state( state ),
             detail );
         #endif
 
