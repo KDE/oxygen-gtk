@@ -90,6 +90,9 @@ namespace Oxygen
         /*! cannot be const, because key gets promoted when found */
         inline iterator find( const T& );
 
+        //! return value for given key, or defaultValue if not found
+        inline M value( const T& );
+
         //! end
         inline iterator end( void )
         { return _map.end(); }
@@ -107,6 +110,14 @@ namespace Oxygen
         */
         virtual void erase( M& )
         {}
+
+        //! default value
+        /*!
+        by default, returns empty constructor. Must be re-implemented with proper
+        construction if for instance cache is used to store pointer
+        */
+        virtual M defaultValue( void ) const
+        { return M(); }
 
         private:
 
@@ -181,6 +192,10 @@ namespace Oxygen
         if( iter == _map.end() )
         {
 
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::Cache - " << this << ": inserting (" << key << ", " << value << ")" << std::endl;
+            #endif
+
             // insert in map, and push key in list
             const Key& internal_key( _map.insert( std::make_pair( key, value ) ).first->first );
             _keys.push_front( &internal_key );
@@ -231,6 +246,22 @@ namespace Oxygen
 
         }
         return iter;
+    }
+
+    //______________________________________________________________________
+    template <typename T, typename M>
+    M Cache<T,M>::value( const T& key )
+    {
+        typename Map::iterator iter = _map.find( key );
+        if( iter == _map.end() ) return defaultValue();
+        else {
+
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::Cache - re-using key: " << key << std::endl;
+            #endif
+            promote( iter->first );
+            return iter->second;
+        }
     }
 
     //______________________________________________________________________
