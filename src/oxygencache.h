@@ -21,7 +21,6 @@
 * MA 02110-1301, USA.
 */
 
-#include <cassert>
 #include <map>
 #include <list>
 #include <iostream>
@@ -53,7 +52,7 @@ namespace Oxygen
         typedef typename Map::const_iterator const_iterator;
 
         //! creator
-        Cache( size_t size = 512 ):
+        Cache( size_t size = 100 ):
             _maxSize( size )
             {}
 
@@ -151,7 +150,6 @@ namespace Oxygen
         {
             // find corresponding iterator
             typename Map::const_iterator iter( _map.find( **key_iter ) );
-            assert( iter != _map.end() );
 
             // insert address of corresponding key in key list
             _keys.push_back( &iter->first );
@@ -174,7 +172,6 @@ namespace Oxygen
         {
             // find corresponding iterator
             typename Map::const_iterator iter( _map.find( **key_iter ) );
-            assert( iter != _map.end() );
 
             // insert address of corresponding key in key list
             _keys.push_back( &iter->first );
@@ -191,10 +188,6 @@ namespace Oxygen
         typename Map::iterator iter = _map.find( key );
         if( iter == _map.end() )
         {
-
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::Cache - " << this << ": inserting (" << key << ", " << value << ")" << std::endl;
-            #endif
 
             // insert in map, and push key in list
             const Key& internal_key( _map.insert( std::make_pair( key, value ) ).first->first );
@@ -237,14 +230,7 @@ namespace Oxygen
     typename Cache<T,M>::iterator Cache<T,M>::find( const T& key )
     {
         typename Map::iterator iter = _map.find( key );
-        if( iter != _map.end() ) {
-
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::Cache - re-using key: " << key << std::endl;
-            #endif
-            promote( iter->first );
-
-        }
+        if( iter != _map.end() ) promote( iter->first );
         return iter;
     }
 
@@ -256,9 +242,6 @@ namespace Oxygen
         if( iter == _map.end() ) return defaultValue();
         else {
 
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::Cache - re-using key: " << key << std::endl;
-            #endif
             promote( iter->first );
             return iter->second;
         }
@@ -286,13 +269,8 @@ namespace Oxygen
             // get last key in key list
             const Key* key( _keys.back() );
 
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::Cache - removing key: " << *key << std::endl;
-            #endif
-
             // find matching item in map
             typename Map::iterator iter( _map.find( *key ) );
-            assert( iter != _map.end() );
 
             // delete value
             erase( iter->second );
