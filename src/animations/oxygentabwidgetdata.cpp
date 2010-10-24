@@ -114,15 +114,13 @@ namespace Oxygen
 
         if( _hoveredTab == index ) return;
 
-        int old( _hoveredTab );
         _hoveredTab = index;
 
-        // trigger repaints of relevant areas
-        if( old >= 0 && old < (int)_tabRects.size() )
-        { gtk_widget_queue_draw_area( widget, _tabRects[old].x, _tabRects[old].y, _tabRects[old].width, _tabRects[old].height ); }
+        GdkRectangle updateRect( Gtk::gdk_rectangle() );
+        for( RectangleList::const_iterator iter = _tabRects.begin(); iter != _tabRects.end(); iter++ )
+        { gdk_rectangle_union( &(*iter), &updateRect, &updateRect ); }
 
-        if( _hoveredTab >= 0 && _hoveredTab < (int)_tabRects.size() )
-        { gtk_widget_queue_draw_area( widget, _tabRects[_hoveredTab].x, _tabRects[_hoveredTab].y, _tabRects[_hoveredTab].width, _tabRects[_hoveredTab].height ); }
+        gtk_widget_queue_draw_area( widget, updateRect.x-4, updateRect.y-4, updateRect.width+8, updateRect.height+8 );
 
         return;
     }

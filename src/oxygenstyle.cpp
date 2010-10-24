@@ -1779,17 +1779,83 @@ namespace Oxygen
         )
     {
 
-        switch( settings().tabStyle() )
+        if( tabOptions & CurrentTab )
         {
-            case QtSettings::TS_SINGLE: return renderTab_Single( window, clipRect, x, y, w, h, side, options, tabOptions );
-            case QtSettings::TS_PLAIN: return renderTab_Plain( window, clipRect, x, y, w, h, side, options, tabOptions );
-            default: return;
+
+            return renderActiveTab( window, clipRect, x, y, w, h, side, options, tabOptions );
+
+        } else {
+
+            switch( settings().tabStyle() )
+            {
+                case QtSettings::TS_SINGLE: return renderInactiveTab_Single( window, clipRect, x, y, w, h, side, options, tabOptions );
+                case QtSettings::TS_PLAIN: return renderInactiveTab_Plain( window, clipRect, x, y, w, h, side, options, tabOptions );
+                default: return;
+            }
+
         }
 
     }
 
     //____________________________________________________________________________________
-    void Style::renderTab_Single(
+    void Style::renderTabBarBase(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        GtkPositionType side,
+        Gtk::Gap gap,
+        StyleOptions options,
+        TabOptions tabOptions
+        )
+    {
+
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+
+        // adjust gap
+        if( tabOptions & FirstTabAligned ) { gap.setX( gap.x()-3 ); gap.setWidth( gap.width()+3 ); }
+        if( tabOptions & LastTabAligned ) { gap.setWidth( gap.width()+3 ); }
+
+        // create context
+        Cairo::Context context( window, 0L );
+
+        // generate mask and main slab
+        SlabRect tabSlab;
+        const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            tabSlab = SlabRect( x, y+h-4, w, 15, tabTiles );
+            generateGapMask( context, x-1, y-4, w+2, h+8, gap );
+            break;
+
+            case GTK_POS_TOP:
+            tabSlab = SlabRect( x, y-11, w, 15, tabTiles );
+            generateGapMask( context, x-1, y-4, w+2, h+8, gap );
+            break;
+
+            case GTK_POS_RIGHT:
+            tabSlab = SlabRect( x+w-4, y, 15, h, tabTiles );
+            generateGapMask( context, x-4, y-1, w+8, h+2, gap );
+            break;
+
+
+            case GTK_POS_LEFT:
+            tabSlab = SlabRect( x-11, y, 15, h, tabTiles );
+            generateGapMask( context, x-4, y-1, w+8, h+2, gap );
+            break;
+
+            default: break;
+
+        }
+
+        // render
+        helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        return;
+
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderActiveTab(
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
@@ -1798,8 +1864,7 @@ namespace Oxygen
         TabOptions tabOptions
         )
     {
-        // convenience flags
-        const bool isCurrentTab( tabOptions & CurrentTab );
+
         const bool isFirstTabAligned( tabOptions & FirstTabAligned );
         const bool isLastTabAligned( tabOptions & LastTabAligned );
 
@@ -1827,38 +1892,14 @@ namespace Oxygen
                 // main slab
                 y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-offset, w, h+9+offset, tabTiles );
-                if( isCurrentTab ) { tabSlab._h+=1; }
+                tabSlab._h+=1;
+
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
-                {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 2+14, 10, TileSet::Top ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-6, y+h-1, w+12, 10, TileSet::Top );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._w -= 5; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
-                    }
-
-                    slabs.push_back( baseSlab );
-
-                }
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
 
                 break;
             }
@@ -1869,35 +1910,14 @@ namespace Oxygen
                 // main slab
                 y += adjust; h -= 2*adjust;
                 tabSlab = SlabRect( x, y-9, w, h+11+offset, tabTiles );
-                if( isCurrentTab ) { tabSlab._y-=1; tabSlab._h+=1; }
+                tabSlab._y-=1; tabSlab._h+=1;
+
                 if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
                 // connections to frame
-                if( isCurrentTab )
-                {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y-9, 2+14, 10, TileSet::Bottom ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-6, y-10+1, w+12, 10, TileSet::Bottom );
-                    if( isFirstTabAligned ) {
-                        baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
-                    }
-
-                    if( isLastTabAligned ) {
-                        baseSlab._w -=5; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
-                    }
-                    slabs.push_back( baseSlab );
-
-                }
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
 
                 break;
             }
@@ -1908,38 +1928,13 @@ namespace Oxygen
                 // main slab
                 x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-offset, y, w+9+offset, h, tabTiles );
-                if( isCurrentTab ) { tabSlab._w+=1; }
+                tabSlab._w+=1;
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
-                {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 2+14, TileSet::Left ) );
-
-                } else {
-
-                    SlabRect baseSlab( x+w-1, y-6, 10, h+12, TileSet::Left );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x+w+offset-7, y-1, 17, 8, TileSet::Top, Hover ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x+w+offset-7, y+h-7, 17, 8, TileSet::Top, Hover ) );
-                    }
-
-                    slabs.push_back( baseSlab );
-
-                }
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
 
                 break;
             }
@@ -1951,38 +1946,13 @@ namespace Oxygen
                 // main slab
                 x += adjust; w -= 2*adjust;
                 tabSlab = SlabRect( x-9, y, w+11+offset, h, tabTiles );
-                if( isCurrentTab ) { tabSlab._x-=1; tabSlab._w+=1; }
+                tabSlab._x-=1; tabSlab._w+=1;
                 if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
-                {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
-
-                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y+h-10, 10, 2+14, TileSet::Right ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-10+1, y-6, 10, h+12, TileSet::Right );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x-13 + offset, y-1, 16, 8, TileSet::Top, Hover ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x-13 + offset, y+h-7, 16, 8, TileSet::Top, Hover ) );
-                    }
-
-                    slabs.push_back( baseSlab );
-
-                }
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
+                if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
 
                 break;
 
@@ -1992,8 +1962,177 @@ namespace Oxygen
         }
 
         // render tab
+        helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+
+        // adjust rect for filling
+        SlabRect fillSlab( tabSlab );
+        fillSlab._x += 4;
+        fillSlab._y += 4;
+        fillSlab._w -= 8;
+        fillSlab._h -= 8;
+
+        // fill
+        Cairo::Pattern pattern;
+        int dimension = 0;
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            dimension = fillSlab._h;
+            fillSlab._h -= 2;
+            pattern.set( cairo_pattern_create_linear( 0, fillSlab._y, 0, fillSlab._y + fillSlab._h ) );
+            break;
+
+            case GTK_POS_TOP:
+            dimension = fillSlab._h;
+            fillSlab._y += 2;
+            fillSlab._h -= 2;
+            pattern.set( cairo_pattern_create_linear( 0, fillSlab._y + fillSlab._h, 0, fillSlab._y ) );
+            break;
+
+            case GTK_POS_RIGHT:
+            dimension = fillSlab._w;
+            fillSlab._w -= 2;
+            pattern.set( cairo_pattern_create_linear( fillSlab._x, 0, fillSlab._x + fillSlab._w, 0 ) );
+            break;
+
+            case GTK_POS_LEFT:
+            dimension = fillSlab._w;
+            fillSlab._x += 2;
+            fillSlab._w -= 2;
+            pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
+            break;
+
+            default: return;
+
+        }
+
+        cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.5 ) );
+        cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::alphaColor( light, 0.5 ) );
+        cairo_pattern_add_color_stop( pattern, 0.25, ColorUtils::alphaColor( light, 0.3 ) );
+        cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.2 ) );
+        cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( light, 0.1 ) );
+        cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
+
+        // in firefox a solid background must be filled
+        if( settings().applicationName().isMozilla() )
+        {
+            cairo_set_source( context, base );
+            cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
+            cairo_fill( context );
+        }
+
+        // draw pattern
+        cairo_set_source( context, pattern );
+        cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
+        cairo_fill( context );
+
+        // render connections to frame
+        for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
+        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderInactiveTab_Single(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        GtkPositionType side,
+        StyleOptions options,
+        TabOptions tabOptions
+        )
+    {
+
+        // convenience flags
+        const bool isFirstTabAligned( tabOptions & FirstTabAligned );
+        const bool isLastTabAligned( tabOptions & LastTabAligned );
+
+        // get color
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+        // create context
+        Cairo::Context context( window, clipRect );
+
+        // borders and connections to tabs
+        // this is quite painfull and slipery code.
+        // the same is true with oxygen-qt
+        int offset = 2;
+        int adjust = settings().applicationName().isMozilla() ? 0:2;
+        const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
+
+        SlabRect tabSlab;
+        SlabRect::List slabs;
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            {
+                // main slab
+                y += adjust; h -= 2*adjust;
+                tabSlab = SlabRect( x, y-offset, w, h+9+offset, tabTiles );
+                if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
+                if( isLastTabAligned ) { tabSlab._w+=1; }
+
+                // connections to frame
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
+                break;
+            }
+
+            case GTK_POS_TOP:
+            {
+
+                // main slab
+                y += adjust; h -= 2*adjust;
+                tabSlab = SlabRect( x, y-9, w, h+11+offset, tabTiles );
+                if( isFirstTabAligned ) { tabSlab._x-=1; tabSlab._w+=1; }
+                if( isLastTabAligned ) { tabSlab._w-=1; }
+
+                // connections to frame
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
+                break;
+            }
+
+            case GTK_POS_RIGHT:
+            {
+
+                // main slab
+                x += adjust; w -= 2*adjust;
+                tabSlab = SlabRect( x-offset, y, w+9+offset, h, tabTiles );
+                if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
+                if( isLastTabAligned ) { tabSlab._h+=1; }
+
+                // connections to frame
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-7, y-1, 17, 8, TileSet::Top, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-7, y+h-7, 17, 8, TileSet::Top, Hover ) );
+                break;
+            }
+
+
+            case GTK_POS_LEFT:
+            {
+
+                // main slab
+                x += adjust; w -= 2*adjust;
+                tabSlab = SlabRect( x-9, y, w+11+offset, h, tabTiles );
+                if( isFirstTabAligned ) { tabSlab._y-=1; tabSlab._h+=1; }
+                if( isLastTabAligned ) { tabSlab._h+=1; }
+
+                // connections to frame
+                SlabRect baseSlab( x-10+1, y-6, 10, h+12, TileSet::Right );
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-13 + offset, y-1, 16, 8, TileSet::Top, Hover ) );
+                if( isLastTabAligned )slabs.push_back( SlabRect( x-13 + offset, y+h-7, 16, 8, TileSet::Top, Hover ) );
+                break;
+            }
+
+            default: return;
+        }
+
+        // render tab
         const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-        if( (options&Hover) && !isCurrentTab )
+        if( (options&Hover) )
         {
 
             helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
@@ -2018,46 +2157,27 @@ namespace Oxygen
         {
             case GTK_POS_BOTTOM:
             dimension = fillSlab._h;
-            if( isCurrentTab ) fillSlab._h -= 2;
-            else fillSlab._h -= 3;
-            //pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
+            fillSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y, 0, fillSlab._y + fillSlab._h ) );
             break;
 
             case GTK_POS_TOP:
             dimension = fillSlab._h;
-            if( isCurrentTab )
-            {
-
-                fillSlab._y += 2;
-                fillSlab._h -= 2;
-
-            } else {
-
-                fillSlab._y += 3;
-                fillSlab._h -= 3;
-
-            }
+            fillSlab._y += 3;
+            fillSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y + fillSlab._h, 0, fillSlab._y ) );
             break;
 
             case GTK_POS_RIGHT:
             dimension = fillSlab._w;
-            if( isCurrentTab ) fillSlab._w -= 2;
-            else fillSlab._w -= 3;
+            fillSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( fillSlab._x, 0, fillSlab._x + fillSlab._w, 0 ) );
             break;
 
             case GTK_POS_LEFT:
             dimension = fillSlab._w;
-            if( isCurrentTab )
-            {
-                fillSlab._x += 2;
-                fillSlab._w -= 2;
-            } else {
-                fillSlab._x += 3;
-                fillSlab._w -= 3;
-            }
+            fillSlab._x += 3;
+            fillSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
             break;
 
@@ -2065,31 +2185,9 @@ namespace Oxygen
 
         }
 
-        if( isCurrentTab )
-        {
-
-            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::alphaColor( light, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.25, ColorUtils::alphaColor( light, 0.3 ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.2 ) );
-            cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( light, 0.1 ) );
-            cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
-
-        } else {
-
-            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.1 ) );
-            cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::alphaColor( dark, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
-
-        }
-
-        // in firefox a solid background must be filled
-        if( isCurrentTab && settings().applicationName().isMozilla() )
-        {
-            cairo_set_source( context, base );
-            cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
-            cairo_fill( context );
-        }
+        cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.1 ) );
+        cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::alphaColor( dark, 0.5 ) );
+        cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::alphaColor( dark, 0.4 ) );
 
         // draw pattern
         cairo_set_source( context, pattern );
@@ -2100,11 +2198,7 @@ namespace Oxygen
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         {
 
-            // cairo_rectangle( context, iter->_x, iter->_y, iter->_w, iter->_h );
-            // cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
-            // cairo_fill( context );
-
-            if( !isCurrentTab && (iter->_options&Hover) && (options&Hover) )
+            if( (iter->_options&Hover) && (options&Hover) )
             {
 
                 helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
@@ -2118,7 +2212,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderTab_Plain(
+    void Style::renderInactiveTab_Plain(
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
@@ -2128,8 +2222,6 @@ namespace Oxygen
         )
     {
         // convenience flags
-        const bool isCurrentTab( tabOptions & CurrentTab );
-
         const bool isFirstTabAligned( tabOptions & FirstTabAligned );
         const bool isLastTabAligned( tabOptions & LastTabAligned );
 
@@ -2164,37 +2256,24 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
+                SlabRect baseSlab( x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
+                if( isFirstTabAligned )
                 {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-8, y+h-1, 4+14, 10, TileSet::Top ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y+h-1, 3+14, 10, TileSet::Top ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-4-1, y+h-1, w+8+2, 10, TileSet::Top );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
-                        slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
-                        slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
-                    }
-
-                    if( isLeftOfSelected ) { baseSlab._w += 3; }
-                    else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
-                    else { baseSlab._w += 2; }
-                    slabs.push_back( baseSlab );
-
+                    baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left;
+                    slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 16, TileSet::Left ) );
                 }
 
+                if( isLastTabAligned )
+                {
+                    baseSlab._w -= 4; baseSlab._tiles |= TileSet::Right;
+                    slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 16, TileSet::Right ) );
+                }
+
+                if( isLeftOfSelected ) { baseSlab._w += 3; }
+                else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
+                else { baseSlab._w += 2; }
+
+                slabs.push_back( baseSlab );
                 break;
             }
 
@@ -2208,29 +2287,14 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
                 // connections to frame
-                if( isCurrentTab )
-                {
+                SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
+                if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
+                if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
+                if( isLeftOfSelected ) { baseSlab._w += 3; }
+                else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
+                else { baseSlab._w += 2; }
 
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
-                    else slabs.push_back( SlabRect( x-8, y-9, 4+14, 10, TileSet::Bottom ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
-                    else slabs.push_back( SlabRect( x+w-10, y-9, 3+14, 10, TileSet::Bottom ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-4-1, y-10+1, w+8+2, 10, TileSet::Bottom );
-                    if( isFirstTabAligned ) { baseSlab._x += 4; baseSlab._w -= 4; baseSlab._tiles |= TileSet::Left; }
-                    if( isLastTabAligned ) { baseSlab._w -=4; baseSlab._tiles |= TileSet::Right; }
-                    if( isLeftOfSelected ) { baseSlab._w += 3; }
-                    else if( isRightOfSelected ) { baseSlab._x -= 3; baseSlab._w += 4; }
-                    else { baseSlab._w += 2; }
-
-                    slabs.push_back( baseSlab );
-
-                }
-
-
+                slabs.push_back( baseSlab );
                 break;
             }
 
@@ -2244,38 +2308,24 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
+                SlabRect baseSlab( x+w-1, y-4-1, 10, h+8+3, TileSet::Left );
+                if( isFirstTabAligned )
                 {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y-8, 10, 4+14, TileSet::Left ) );
-
-                    if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 3+14, TileSet::Left ) );
-
-                } else {
-
-                    SlabRect baseSlab( x+w-1, y-4-1, 10, h+8+3, TileSet::Left );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 16, 8, TileSet::Top ) );
-                    }
-
-                    if( isLeftOfSelected ) { baseSlab._h += 3; }
-                    else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
-                    else { baseSlab._h += 1; }
-
-                    slabs.push_back( baseSlab );
-
+                    baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
+                    slabs.push_back( SlabRect( x+w+offset-6, y-1, 16, 8, TileSet::Top ) );
                 }
 
+                if( isLastTabAligned )
+                {
+                    baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
+                    slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 16, 8, TileSet::Top ) );
+                }
+
+                if( isLeftOfSelected ) { baseSlab._h += 3; }
+                else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
+                else { baseSlab._h += 1; }
+
+                slabs.push_back( baseSlab );
                 break;
             }
 
@@ -2290,326 +2340,233 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
                 // connections to frame
-                if( isCurrentTab )
+                SlabRect baseSlab( x-10+1, y-4-1, 10, h+8+3, TileSet::Right );
+                if( isFirstTabAligned )
                 {
-
-                    if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y-8, 10, 4+14, TileSet::Right ) );
-
-                    if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
-                    else slabs.push_back( SlabRect( x-9, y+h-10, 10, 3+14, TileSet::Right ) );
-
-                } else {
-
-                    SlabRect baseSlab( x-10+1, y-4-1, 10, h+8+3, TileSet::Right );
-                    if( isFirstTabAligned )
-                    {
-                        baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
-                        slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
-                    }
-
-                    if( isLastTabAligned )
-                    {
-                        baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
-                        slabs.push_back( SlabRect( x-10+1 + offset-5, y+h-7, 16, 8, TileSet::Top ) );
-                    }
-
-                    if( isLeftOfSelected ) { baseSlab._h += 3; }
-                    else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
-                    else { baseSlab._h += 1; }
-
-                    slabs.push_back( baseSlab );
-
+                    baseSlab._y += 4; baseSlab._h -= 4; baseSlab._tiles |= TileSet::Top;
+                    slabs.push_back( SlabRect( x-10+1 + offset-5, y-1, 16, 8, TileSet::Top ) );
                 }
 
-                break;
+                if( isLastTabAligned )
+                {
+                    baseSlab._h -= 4; baseSlab._tiles |= TileSet::Bottom;
+                    slabs.push_back( SlabRect( x-10+1 + offset-5, y+h-7, 16, 8, TileSet::Top ) );
+                }
 
+                if( isLeftOfSelected ) { baseSlab._h += 3; }
+                else if( isRightOfSelected ) { baseSlab._y -= 3; baseSlab._h += 3; }
+                else { baseSlab._h += 1; }
+
+                slabs.push_back( baseSlab );
+                break;
             }
 
             default: return;
         }
 
-        if( isCurrentTab )
+        const bool isFirstTab( tabOptions & FirstTab );
+        const bool isLastTab( tabOptions & LastTab );
+
+        const double radius( 5 );
+        double xF( 0.5 + x );
+        double yF( 0.5 + y );
+        double wF( w-1 );
+        double hF( h-1 );
+
+        switch( side )
         {
 
-            helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-            // adjust rect for filling
-            SlabRect fillSlab( tabSlab );
-            fillSlab._x += 4;
-            fillSlab._y += 4;
-            fillSlab._w -= 8;
-            fillSlab._h -= 8;
-
-            // fill
-            Cairo::Pattern pattern;
-            int dimension = 0;
-            switch( side )
+            case GTK_POS_BOTTOM:
             {
+                xF += 1.0;
+                wF -= 1.0;
+                hF += 2;
+                if( isLeftOfSelected ) wF += 1;
+                else if( isRightOfSelected ) { xF -= 2; wF += 2; }
 
-                case GTK_POS_BOTTOM:
-                dimension = fillSlab._h;
-                fillSlab._h -= 2;
-                pattern.set( cairo_pattern_create_linear( 0, y-4, 0, y+h+10 ) );
-                break;
-
-                case GTK_POS_TOP:
-                dimension = fillSlab._h;
-                fillSlab._y += 2;
-                fillSlab._h -= 2;
-                pattern.set( cairo_pattern_create_linear( 0, y+h+2, 0, y-10 ) );
-                break;
-
-                case GTK_POS_RIGHT:
-                dimension = fillSlab._w;
-                fillSlab._w -= 2;
-                pattern.set( cairo_pattern_create_linear( x-4, 0, x+w+10, 0 ) );
-                break;
-
-                case GTK_POS_LEFT:
-                dimension = fillSlab._w;
-                fillSlab._x += 2;
-                fillSlab._w -= 2;
-                pattern.set( cairo_pattern_create_linear( x+w+2, 0, x-10, 0 ) );
-                break;
-
-                default: return;
-
-            }
-
-            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::alphaColor( light, 0.5 ) );
-            cairo_pattern_add_color_stop( pattern, 0.25, ColorUtils::alphaColor( light, 0.3 ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.2 ) );
-            cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( light, 0.1 ) );
-            cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
-
-            // in firefox a solid background must be filled
-            if( settings().applicationName().isMozilla() )
-            {
-                cairo_set_source( context, base );
-                cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
-                cairo_fill( context );
-            }
-
-
-            // draw pattern
-            cairo_set_source( context, pattern );
-            cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
-            cairo_fill( context );
-
-        } else {
-
-            const bool isFirstTab( tabOptions & FirstTab );
-            const bool isLastTab( tabOptions & LastTab );
-
-            const double radius( 5 );
-            double xF( 0.5 + x );
-            double yF( 0.5 + y );
-            double wF( w-1 );
-            double hF( h-1 );
-
-            switch( side )
-            {
-
-                case GTK_POS_BOTTOM:
+                if( isFirstTab )
                 {
-                    xF += 1.0;
-                    wF -= 1.0;
-                    hF += 2;
-                    if( isLeftOfSelected ) wF += 1;
-                    else if( isRightOfSelected ) { xF -= 2; wF += 2; }
 
-                    if( isFirstTab )
-                    {
+                    if( isFirstTabAligned ) cairo_move_to( context, xF, yF + hF + 2 );
+                    else cairo_move_to( context, xF, yF + hF );
 
-                        if( isFirstTabAligned ) cairo_move_to( context, xF, yF + hF + 2 );
-                        else cairo_move_to( context, xF, yF + hF );
+                    cairo_line_to( context, xF, yF + radius );
+                    cairo_arc( context, xF + radius, yF + radius, radius, M_PI, 3.0*M_PI/2 );
+                    cairo_line_to( context, xF + wF, yF );
+                    cairo_line_to( context, xF + wF, yF + hF );
 
-                        cairo_line_to( context, xF, yF + radius );
-                        cairo_arc( context, xF + radius, yF + radius, radius, M_PI, 3.0*M_PI/2 );
-                        cairo_line_to( context, xF + wF, yF );
-                        cairo_line_to( context, xF + wF, yF + hF );
+                } else if( isLastTab ) {
 
-                    } else if( isLastTab ) {
+                    cairo_move_to( context, xF, yF + hF );
+                    cairo_line_to( context, xF, yF );
+                    cairo_line_to( context, xF + wF - radius, yF );
+                    cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2.0*M_PI );
+                    if( isLastTabAligned ) cairo_line_to( context, xF + wF, yF + hF + 2 );
+                    else cairo_line_to( context, xF + wF, yF + hF );
 
-                        cairo_move_to( context, xF, yF + hF );
-                        cairo_line_to( context, xF, yF );
-                        cairo_line_to( context, xF + wF - radius, yF );
-                        cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2.0*M_PI );
-                        if( isLastTabAligned ) cairo_line_to( context, xF + wF, yF + hF + 2 );
-                        else cairo_line_to( context, xF + wF, yF + hF );
+                } else {
 
-                    } else {
-
-                        cairo_move_to( context, xF, yF + hF );
-                        cairo_line_to( context, xF, yF );
-                        cairo_line_to( context, xF + wF, yF );
-                        cairo_line_to( context, xF + wF, yF + hF );
-
-                    }
+                    cairo_move_to( context, xF, yF + hF );
+                    cairo_line_to( context, xF, yF );
+                    cairo_line_to( context, xF + wF, yF );
+                    cairo_line_to( context, xF + wF, yF + hF );
 
                 }
 
-                break;
+            }
 
-                case GTK_POS_TOP:
-                {
-                    xF += 1.0;
-                    wF -= 1.0;
-                    yF -= 1;
-                    hF += 1;
-                    if( isLeftOfSelected ) wF += 1;
-                    else if( isRightOfSelected ) { xF -= 2; wF += 2; }
+            break;
+
+            case GTK_POS_TOP:
+            {
+                xF += 1.0;
+                wF -= 1.0;
+                yF -= 1;
+                hF += 1;
+                if( isLeftOfSelected ) wF += 1;
+                else if( isRightOfSelected ) { xF -= 2; wF += 2; }
 
 
-                    if( isFirstTab )
-                    {
-
-                        cairo_move_to( context, xF+wF, yF );
-                        cairo_line_to( context, xF+wF, yF + hF );
-                        cairo_line_to( context, xF+radius, yF + hF );
-                        cairo_arc( context, xF+radius, yF + hF -radius, radius, M_PI/2, M_PI );
-                        if( isFirstTabAligned ) cairo_line_to( context, xF, yF - 2 );
-                        else cairo_line_to( context, xF, yF );
-
-                    } else if( isLastTab ) {
-
-                        if( isLastTabAligned ) cairo_move_to( context, xF+wF, yF-2 );
-                        else  cairo_move_to( context, xF+wF, yF-2 );
-                        cairo_line_to( context, xF+wF, yF+hF-radius );
-                        cairo_arc( context, xF+wF-radius, yF+hF-radius, radius, 0, M_PI/2 );
-                        cairo_line_to( context, xF, yF+hF );
-                        cairo_line_to( context, xF, yF );
-
-                    } else {
-
-                        cairo_move_to( context, xF+wF, yF );
-                        cairo_line_to( context, xF+wF, yF + hF );
-                        cairo_line_to( context, xF, yF+hF );
-                        cairo_line_to( context, xF, yF );
-
-                    }
-
-                }
-
-                break;
-
-                case GTK_POS_RIGHT:
+                if( isFirstTab )
                 {
 
-                    yF += 1.0;
-                    hF -= 1.0;
-                    wF += 2;
+                    cairo_move_to( context, xF+wF, yF );
+                    cairo_line_to( context, xF+wF, yF + hF );
+                    cairo_line_to( context, xF+radius, yF + hF );
+                    cairo_arc( context, xF+radius, yF + hF -radius, radius, M_PI/2, M_PI );
+                    if( isFirstTabAligned ) cairo_line_to( context, xF, yF - 2 );
+                    else cairo_line_to( context, xF, yF );
 
-                    if( isLeftOfSelected ) hF += 1;
-                    else if( isRightOfSelected ) { yF -= 2; hF += 2; }
+                } else if( isLastTab ) {
 
-                    if( isFirstTab )
-                    {
+                    if( isLastTabAligned ) cairo_move_to( context, xF+wF, yF-2 );
+                    else  cairo_move_to( context, xF+wF, yF-2 );
+                    cairo_line_to( context, xF+wF, yF+hF-radius );
+                    cairo_arc( context, xF+wF-radius, yF+hF-radius, radius, 0, M_PI/2 );
+                    cairo_line_to( context, xF, yF+hF );
+                    cairo_line_to( context, xF, yF );
 
-                        cairo_move_to( context, xF+wF, yF+hF );
-                        cairo_line_to( context, xF, yF+hF );
-                        cairo_line_to( context, xF, yF+radius );
-                        cairo_arc( context, xF+radius, yF+radius, radius, M_PI, 3.0*M_PI/2 );
-                        if( isFirstTabAligned ) cairo_line_to( context, xF+wF+2, yF );
-                        else cairo_line_to( context, xF+wF, yF );
+                } else {
 
-                    } else if( isLastTab ) {
+                    cairo_move_to( context, xF+wF, yF );
+                    cairo_line_to( context, xF+wF, yF + hF );
+                    cairo_line_to( context, xF, yF+hF );
+                    cairo_line_to( context, xF, yF );
 
-                        if( isLastTabAligned ) cairo_line_to( context, xF + wF + 2, yF + hF );
-                        else cairo_line_to( context, xF + wF, yF + hF );
-                        cairo_line_to( context, xF+radius, yF+hF );
-                        cairo_arc( context, xF+radius, yF+hF - radius, radius, M_PI/2, M_PI );
-                        cairo_line_to( context, xF, yF );
-                        cairo_line_to( context, xF + wF, yF );
-
-                    } else {
-
-                        cairo_move_to( context, xF+wF, yF+hF );
-                        cairo_line_to( context, xF, yF+hF );
-                        cairo_line_to( context, xF, yF );
-                        cairo_line_to( context, xF+wF, yF );
-
-                    }
                 }
-                break;
-
-                case GTK_POS_LEFT:
-                {
-                    yF += 1.0;
-                    hF -= 1.0;
-                    xF -= 2;
-                    wF += 2;
-
-                    if( isLeftOfSelected ) hF += 1;
-                    else if( isRightOfSelected ) { yF -= 2; hF += 2; }
-
-                    if( isFirstTab )
-                    {
-
-                        if( isFirstTabAligned ) cairo_move_to( context, xF-2, yF );
-                        else cairo_move_to( context, xF, yF );
-                        cairo_line_to( context, xF + wF - radius, yF );
-                        cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2*M_PI );
-                        cairo_line_to( context, xF+wF, yF+hF );
-                        cairo_line_to( context, xF, yF+hF );
-
-                    } else if( isLastTab ) {
-
-                        cairo_move_to( context, xF, yF );
-                        cairo_line_to( context, xF+wF, yF );
-                        cairo_line_to( context, xF+wF, yF + hF - radius );
-                        cairo_arc( context, xF+wF-radius, yF + hF - radius, radius, 0, M_PI/2 );
-                        if( isLastTabAligned ) cairo_line_to( context, xF-2, yF+hF );
-                        else cairo_line_to( context, xF, yF+hF );
-
-                    } else {
-
-                        cairo_move_to( context, xF, yF );
-                        cairo_line_to( context, xF+wF, yF );
-                        cairo_line_to( context, xF+wF, yF+hF );
-                        cairo_line_to( context, xF, yF+hF );
-
-                    }
-                }
-                break;
-
-                default: return;
 
             }
 
-            ColorUtils::Rgba backgroundColor( base );
+            break;
+
+            case GTK_POS_RIGHT:
             {
 
-                gint wh, wy;
-                Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-                if( wh > 0 )
-                {  backgroundColor = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ); }
+                yF += 1.0;
+                hF -= 1.0;
+                wF += 2;
 
+                if( isLeftOfSelected ) hF += 1;
+                else if( isRightOfSelected ) { yF -= 2; hF += 2; }
+
+                if( isFirstTab )
+                {
+
+                    cairo_move_to( context, xF+wF, yF+hF );
+                    cairo_line_to( context, xF, yF+hF );
+                    cairo_line_to( context, xF, yF+radius );
+                    cairo_arc( context, xF+radius, yF+radius, radius, M_PI, 3.0*M_PI/2 );
+                    if( isFirstTabAligned ) cairo_line_to( context, xF+wF+2, yF );
+                    else cairo_line_to( context, xF+wF, yF );
+
+                } else if( isLastTab ) {
+
+                    if( isLastTabAligned ) cairo_line_to( context, xF + wF + 2, yF + hF );
+                    else cairo_line_to( context, xF + wF, yF + hF );
+                    cairo_line_to( context, xF+radius, yF+hF );
+                    cairo_arc( context, xF+radius, yF+hF - radius, radius, M_PI/2, M_PI );
+                    cairo_line_to( context, xF, yF );
+                    cairo_line_to( context, xF + wF, yF );
+
+                } else {
+
+                    cairo_move_to( context, xF+wF, yF+hF );
+                    cairo_line_to( context, xF, yF+hF );
+                    cairo_line_to( context, xF, yF );
+                    cairo_line_to( context, xF+wF, yF );
+
+                }
             }
+            break;
 
-            const ColorUtils::Rgba midColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.4 ) );
-            const ColorUtils::Rgba darkColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.8 ) );
+            case GTK_POS_LEFT:
+            {
+                yF += 1.0;
+                hF -= 1.0;
+                xF -= 2;
+                wF += 2;
 
-            cairo_set_line_width( context, 1.0 );
-            cairo_set_source( context, midColor );
-            cairo_fill_preserve( context );
+                if( isLeftOfSelected ) hF += 1;
+                else if( isRightOfSelected ) { yF -= 2; hF += 2; }
 
-            cairo_set_source( context, darkColor );
-            cairo_stroke( context );
+                if( isFirstTab )
+                {
+
+                    if( isFirstTabAligned ) cairo_move_to( context, xF-2, yF );
+                    else cairo_move_to( context, xF, yF );
+                    cairo_line_to( context, xF + wF - radius, yF );
+                    cairo_arc( context, xF + wF - radius, yF + radius, radius, 3.0*M_PI/2, 2*M_PI );
+                    cairo_line_to( context, xF+wF, yF+hF );
+                    cairo_line_to( context, xF, yF+hF );
+
+                } else if( isLastTab ) {
+
+                    cairo_move_to( context, xF, yF );
+                    cairo_line_to( context, xF+wF, yF );
+                    cairo_line_to( context, xF+wF, yF + hF - radius );
+                    cairo_arc( context, xF+wF-radius, yF + hF - radius, radius, 0, M_PI/2 );
+                    if( isLastTabAligned ) cairo_line_to( context, xF-2, yF+hF );
+                    else cairo_line_to( context, xF, yF+hF );
+
+                } else {
+
+                    cairo_move_to( context, xF, yF );
+                    cairo_line_to( context, xF+wF, yF );
+                    cairo_line_to( context, xF+wF, yF+hF );
+                    cairo_line_to( context, xF, yF+hF );
+
+                }
+            }
+            break;
+
+            default: return;
 
         }
 
-        // render connections to frame
-        // for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        // { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        ColorUtils::Rgba backgroundColor( base );
+        {
 
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+            if( wh > 0 )
+            {  backgroundColor = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ); }
+
+        }
+
+        const ColorUtils::Rgba midColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.4 ) );
+        const ColorUtils::Rgba darkColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.8 ) );
+
+        cairo_set_line_width( context, 1.0 );
+        cairo_set_source( context, midColor );
+        cairo_fill_preserve( context );
+
+        cairo_set_source( context, darkColor );
+        cairo_stroke( context );
 
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         {
             // render tab
-            if( (options&Hover) && !isCurrentTab )
+            if( options&Hover )
             {
 
                 const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
@@ -2882,38 +2839,46 @@ namespace Oxygen
         GdkRectangle r = { x, y, w, h };
         GdkRegion* region = gdk_region_rectangle( &r );
 
+        GdkRectangle mask_r;
         GdkRegion* mask = 0L;
         switch( gap.position() )
         {
             case GTK_POS_TOP:
             {
-                GdkRectangle mask_r = { x+gap.x(), y, gap.width(), gap.height() };
+                mask_r = Gtk::gdk_rectangle( x+gap.x(), y, gap.width(), gap.height() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_BOTTOM:
             {
-                GdkRectangle mask_r = { x+gap.x(), y+h-gap.height(), gap.width(), gap.height() };
+                mask_r = Gtk::gdk_rectangle( x+gap.x(), y+h-gap.height(), gap.width(), gap.height() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_LEFT:
             {
-                GdkRectangle mask_r = { x, y+gap.x(), gap.height(), gap.width() };
+                mask_r = Gtk::gdk_rectangle( x, y+gap.x(), gap.height(), gap.width() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_RIGHT:
             {
-                GdkRectangle mask_r = { x + w - gap.height(), y+gap.x(), gap.height(), gap.width() };
+                mask_r = Gtk::gdk_rectangle( x + w - gap.height(), y+gap.x(), gap.height(), gap.width() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             default: return;
+        }
+
+        if( false )
+        {
+            cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
+            gdk_cairo_rectangle( context, &mask_r );
+            cairo_fill( context );
         }
 
         gdk_region_subtract( region, mask );

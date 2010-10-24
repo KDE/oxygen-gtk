@@ -111,7 +111,8 @@ namespace Oxygen
         int _hoveredTab;
 
         //! store rectangles matching tabs
-        std::vector<GdkRectangle> _tabRects;
+        typedef std::vector<GdkRectangle> RectangleList;
+        RectangleList _tabRects;
 
         //! child data
         /*!
