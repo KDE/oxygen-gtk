@@ -198,7 +198,7 @@ namespace Oxygen
                     GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
-                    if( cellInfo.isExpanderColumn( treeView ) )
+                    if( cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ) )
                     {
 
                         // tree lines
