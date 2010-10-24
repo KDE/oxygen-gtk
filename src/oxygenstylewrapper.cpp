@@ -1508,6 +1508,10 @@ namespace Oxygen
             QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
             StyleOptions options( Contrast );
             options |= StyleOptions( widget, state, shadow );
+
+            // disable hover and focus
+            options &= ~(Hover|Focus);
+
             Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
             return;
 
