@@ -28,7 +28,7 @@
 namespace Oxygen
 {
 
-    //! simple "most recently used" stl based cache
+    //! simple firt-in first-out stl based cache
     /*!
     an stl::map is used to keep the association between key and value.
     an stl::list is used to keep track of the most recently used values.
@@ -39,7 +39,7 @@ namespace Oxygen
     non default Value deletion, when, for instance, the cache is used to store pointers
     */
     template <typename T, typename M>
-    class Cache
+    class SimpleCache
     {
 
         public:
@@ -52,22 +52,22 @@ namespace Oxygen
         typedef typename Map::const_iterator const_iterator;
 
         //! creator
-        Cache( size_t size = 100 ):
+        SimpleCache( size_t size = 100 ):
             _maxSize( size )
             {}
 
         //! copy constructor
-        inline Cache( const Cache<T,M>& );
+        inline SimpleCache( const SimpleCache<T,M>& );
 
         //! destructor
-        virtual ~Cache( void )
+        virtual ~SimpleCache( void )
         {
             for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
             { erase( iter->second ); }
         }
 
         //! assignment
-        inline Cache<T, M>& operator = (const Cache<T, M>& );
+        inline SimpleCache<T, M>& operator = (const SimpleCache<T, M>& );
 
         //! clear cache
         virtual void clear( void )
@@ -118,13 +118,18 @@ namespace Oxygen
         virtual M defaultValue( void ) const
         { return M(); }
 
-        private:
-
         //! promote key to front of the list
-        inline void promote( const Key& );
+        virtual inline void promote( const T& );
 
         //! adjust cache size
         inline void adjustSize( void );
+
+        //! give access to key list to derived classes
+        typedef std::list<const T*> List;
+        List& keys( void )
+        { return _keys; }
+
+        private:
 
         //! cache maximum size
         size_t _maxSize;
@@ -133,14 +138,13 @@ namespace Oxygen
         Map _map;
 
         //! keys
-        typedef std::list<const T*> List;
         List _keys;
 
     };
 
     //______________________________________________________________________
     template <typename T, typename M>
-    Cache<T,M>::Cache( const Cache<T,M>& other ):
+    SimpleCache<T,M>::SimpleCache( const SimpleCache<T,M>& other ):
         _maxSize( other._maxSize ),
         _map( other._map )
     {
@@ -158,7 +162,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    Cache<T,M>& Cache<T,M>::operator = (const Cache<T,M>& other )
+    SimpleCache<T,M>& SimpleCache<T,M>::operator = (const SimpleCache<T,M>& other )
     {
         // clear
         clear();
@@ -182,7 +186,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    void Cache<T,M>::insert( const T& key, const M& value )
+    void SimpleCache<T,M>::insert( const T& key, const M& value )
     {
 
         typename Map::iterator iter = _map.find( key );
@@ -213,7 +217,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    bool Cache<T,M>::contains( const T& key )
+    bool SimpleCache<T,M>::contains( const T& key )
     {
         typename Map::const_iterator iter = _map.find( key );
         if( iter == _map.end() ) return false;
@@ -227,7 +231,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    typename Cache<T,M>::iterator Cache<T,M>::find( const T& key )
+    typename SimpleCache<T,M>::iterator SimpleCache<T,M>::find( const T& key )
     {
         typename Map::iterator iter = _map.find( key );
         if( iter != _map.end() ) promote( iter->first );
@@ -236,7 +240,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    M Cache<T,M>::value( const T& key )
+    M SimpleCache<T,M>::value( const T& key )
     {
         typename Map::iterator iter = _map.find( key );
         if( iter == _map.end() ) return defaultValue();
@@ -249,18 +253,12 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    void Cache<T,M>::promote( const T& key )
-    {
-
-        // erase key in list
-        _keys.remove( &key );
-        _keys.push_front( &key );
-
-    }
+    void SimpleCache<T,M>::promote( const T& key )
+    {}
 
     //______________________________________________________________________
     template <typename T, typename M>
-    void Cache<T,M>::adjustSize( void )
+    void SimpleCache<T,M>::adjustSize( void )
     {
 
         while( _keys.size() > _maxSize )
@@ -282,6 +280,47 @@ namespace Oxygen
             _keys.pop_back();
 
         }
+
+    }
+
+
+    //! simple "most recently used" stl based cache
+    /*!
+    an stl::map is used to keep the association between key and value.
+    an stl::list is used to keep track of the most recently used values.
+    the list contains pointers to the keys inserted in the map, to avoid
+    unnecessary copy constructors.
+    the 'erase' method is used to delete objects that are removed from the cache.
+    By default, the erase method does nothing. It must be reimplemented to deal with
+    non default Value deletion, when, for instance, the cache is used to store pointers
+    */
+    template <typename T, typename M>
+    class Cache: public SimpleCache<T,M>
+    {
+
+        public:
+
+
+        //! creator
+        Cache( size_t size = 100 ):
+            SimpleCache<T,M>( size )
+            {}
+
+        protected:
+
+        //! promote key to front of the list
+        virtual inline void promote( const T& );
+
+    };
+
+    //______________________________________________________________________
+    template <typename T, typename M>
+    void Cache<T,M>::promote( const T& key )
+    {
+
+        // erase key in list
+        SimpleCache<T,M>::keys().remove( &key );
+        SimpleCache<T,M>::keys().push_front( &key );
 
     }
 

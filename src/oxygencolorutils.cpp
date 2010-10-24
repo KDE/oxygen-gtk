@@ -63,7 +63,7 @@ namespace Oxygen
         { return ( a < 1.0 ? ( a > 0.0 ? a : 0.0 ) : 1.0 ); }
 
         // caches
-        typedef Cache<guint32,Rgba> ColorCache;
+        typedef SimpleCache<guint32,Rgba> ColorCache;
 
         static ColorCache m_decoColorCache;
         static ColorCache m_lightColorCache;
@@ -75,7 +75,7 @@ namespace Oxygen
         static ColorCache m_backgroundRadialColorCache;
         static ColorCache m_backgroundColorCache;
 
-        typedef Cache<guint32,bool> ColorFlags;
+        typedef SimpleCache<guint32,bool> ColorFlags;
         ColorFlags m_highThreshold;
         ColorFlags m_lowThreshold;
 
