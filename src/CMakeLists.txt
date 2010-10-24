@@ -12,8 +12,8 @@ set( OXYGEN-GTK-SOURCES
     oxygengtkcellinfo.cpp
     oxygengtkicons.cpp
     oxygengtkrc.cpp
+    oxygengtktypenames.cpp
     oxygengtkutils.cpp
-    oxygenmaps.cpp
     oxygenoptionmap.cpp
     oxygenpalette.cpp
     oxygenqtsettings.cpp
