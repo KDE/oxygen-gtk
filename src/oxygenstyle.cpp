@@ -1779,11 +1779,12 @@ namespace Oxygen
         )
     {
 
-        return;
+        if( tabOptions & CurrentTab )
+        {
 
-        const bool isCurrentTab( tabOptions & CurrentTab );
-        if( isCurrentTab ) return renderActiveTab( window, clipRect, x, y, w, h, side, options, tabOptions );
-        else {
+            return renderActiveTab( window, clipRect, x, y, w, h, side, options, tabOptions );
+
+        } else {
 
             switch( settings().tabStyle() )
             {
@@ -1802,7 +1803,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
-        const Gtk::Gap& gap,
+        Gtk::Gap gap,
         StyleOptions options,
         TabOptions tabOptions
         )
@@ -1810,24 +1811,44 @@ namespace Oxygen
 
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
+        // adjust gap
+        if( tabOptions & FirstTabAligned ) { gap.setX( gap.x()-3 ); gap.setWidth( gap.width()+3 ); }
+        if( tabOptions & LastTabAligned ) { gap.setWidth( gap.width()+3 ); }
+
+        // create context
+        Cairo::Context context( window, 0L );
+
+        // generate mask and main slab
         SlabRect tabSlab;
         const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
         switch( side )
         {
             case GTK_POS_BOTTOM:
-            {
-                std::cout << "Oxygen::style::renderTabBarBase." << std::endl;
-                tabSlab = SlabRect( x, y+h-2, w, 14, tabTiles );
-                break;
-            }
+            tabSlab = SlabRect( x, y+h-4, w, 15, tabTiles );
+            generateGapMask( context, x-1, y-4, w+2, h+8, gap );
+            break;
+
+            case GTK_POS_TOP:
+            tabSlab = SlabRect( x, y-11, w, 15, tabTiles );
+            generateGapMask( context, x-1, y-4, w+2, h+8, gap );
+            break;
+
+            case GTK_POS_RIGHT:
+            tabSlab = SlabRect( x+w-4, y, 15, h, tabTiles );
+            generateGapMask( context, x-4, y-1, w+8, h+2, gap );
+            break;
+
+
+            case GTK_POS_LEFT:
+            tabSlab = SlabRect( x-11, y, 15, h, tabTiles );
+            generateGapMask( context, x-4, y-1, w+8, h+2, gap );
+            break;
 
             default: break;
 
         }
 
-        fill( window, clipRect, x, y, w, h, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
-
-        Cairo::Context context( window, 0L );
+        // render
         helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
         return;
 
@@ -1878,10 +1899,7 @@ namespace Oxygen
 
                 // connections to frame
                 if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-6, 8, 18, TileSet::Left ) );
-                else slabs.push_back( SlabRect( x-7, y+h-1, 3+14, 10, TileSet::Top ) );
-
                 if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-6, 8, 18, TileSet::Right ) );
-                else slabs.push_back( SlabRect( x+w-10, y+h-1, 2+14, 10, TileSet::Top ) );
 
                 break;
             }
@@ -1899,10 +1917,7 @@ namespace Oxygen
 
                 // connections to frame
                 if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-14, 8, 18, TileSet::Left ) );
-                else slabs.push_back( SlabRect( x-7, y-9, 3+14, 10, TileSet::Bottom ) );
-
                 if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-14, 8, 18, TileSet::Right ) );
-                else slabs.push_back( SlabRect( x+w-10, y-9, 2+14, 10, TileSet::Bottom ) );
 
                 break;
             }
@@ -1919,10 +1934,7 @@ namespace Oxygen
 
                 // connections to frame
                 if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y-1, 18, 8, TileSet::Top ) );
-                else slabs.push_back( SlabRect( x+w-1, y-7, 10, 3+14, TileSet::Left ) );
-
                 if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-6, y+h-7, 18, 8, TileSet::Top ) );
-                else slabs.push_back( SlabRect( x+w-1, y+h-10, 10, 2+14, TileSet::Left ) );
 
                 break;
             }
@@ -1940,10 +1952,7 @@ namespace Oxygen
 
                 // connections to frame
                 if( isFirstTabAligned ) slabs.push_back( SlabRect( x-14, y-1, 18, 8, TileSet::Top ) );
-                else slabs.push_back( SlabRect( x-9, y-7, 10, 3+14, TileSet::Right ) );
-
                 if( isLastTabAligned )  slabs.push_back( SlabRect( x-14, y+h-7, 18, 8, TileSet::Top ) );
-                else slabs.push_back( SlabRect( x-9, y+h-10, 10, 2+14, TileSet::Right ) );
 
                 break;
 
@@ -2066,20 +2075,8 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._w+=1; }
 
                 // connections to frame
-                SlabRect baseSlab( x-6, y+h-1, w+12, 10, TileSet::Top );
-                if( isFirstTabAligned )
-                {
-                    baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
-                    slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
-                }
-
-                if( isLastTabAligned )
-                {
-                    baseSlab._w -= 5; baseSlab._tiles |= TileSet::Right;
-                    slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
-                }
-
-                slabs.push_back( baseSlab );
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y+h+offset-7, 8, 17, TileSet::Left, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y+h+offset-7, 8, 17, TileSet::Right, Hover ) );
                 break;
             }
 
@@ -2093,18 +2090,8 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._w-=1; }
 
                 // connections to frame
-                SlabRect baseSlab( x-6, y-10+1, w+12, 10, TileSet::Bottom );
-                if( isFirstTabAligned ) {
-                    baseSlab._x += 5; baseSlab._w -= 5; baseSlab._tiles |= TileSet::Left;
-                    slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
-                }
-
-                if( isLastTabAligned ) {
-                    baseSlab._w -=5; baseSlab._tiles |= TileSet::Right;
-                    slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
-                }
-
-                slabs.push_back( baseSlab );
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-1, y-13+offset, 8, 16, TileSet::Left, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w-7, y-13+offset, 8, 16, TileSet::Right, Hover ) );
                 break;
             }
 
@@ -2118,20 +2105,8 @@ namespace Oxygen
                 if( isLastTabAligned ) { tabSlab._h+=1; }
 
                 // connections to frame
-                SlabRect baseSlab( x+w-1, y-6, 10, h+12, TileSet::Left );
-                if( isFirstTabAligned )
-                {
-                    baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
-                    slabs.push_back( SlabRect( x+w+offset-7, y-1, 17, 8, TileSet::Top, Hover ) );
-                }
-
-                if( isLastTabAligned )
-                {
-                    baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
-                    slabs.push_back( SlabRect( x+w+offset-7, y+h-7, 17, 8, TileSet::Top, Hover ) );
-                }
-
-                slabs.push_back( baseSlab );
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x+w+offset-7, y-1, 17, 8, TileSet::Top, Hover ) );
+                if( isLastTabAligned ) slabs.push_back( SlabRect( x+w+offset-7, y+h-7, 17, 8, TileSet::Top, Hover ) );
                 break;
             }
 
@@ -2147,19 +2122,8 @@ namespace Oxygen
 
                 // connections to frame
                 SlabRect baseSlab( x-10+1, y-6, 10, h+12, TileSet::Right );
-                if( isFirstTabAligned )
-                {
-                    baseSlab._y += 5; baseSlab._h -= 5; baseSlab._tiles |= TileSet::Top;
-                    slabs.push_back( SlabRect( x-13 + offset, y-1, 16, 8, TileSet::Top, Hover ) );
-                }
-
-                if( isLastTabAligned )
-                {
-                    baseSlab._h -= 5; baseSlab._tiles |= TileSet::Bottom;
-                    slabs.push_back( SlabRect( x-13 + offset, y+h-7, 16, 8, TileSet::Top, Hover ) );
-                }
-
-                slabs.push_back( baseSlab );
+                if( isFirstTabAligned ) slabs.push_back( SlabRect( x-13 + offset, y-1, 16, 8, TileSet::Top, Hover ) );
+                if( isLastTabAligned )slabs.push_back( SlabRect( x-13 + offset, y+h-7, 16, 8, TileSet::Top, Hover ) );
                 break;
             }
 
@@ -2875,38 +2839,46 @@ namespace Oxygen
         GdkRectangle r = { x, y, w, h };
         GdkRegion* region = gdk_region_rectangle( &r );
 
+        GdkRectangle mask_r;
         GdkRegion* mask = 0L;
         switch( gap.position() )
         {
             case GTK_POS_TOP:
             {
-                GdkRectangle mask_r = { x+gap.x(), y, gap.width(), gap.height() };
+                mask_r = Gtk::gdk_rectangle( x+gap.x(), y, gap.width(), gap.height() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_BOTTOM:
             {
-                GdkRectangle mask_r = { x+gap.x(), y+h-gap.height(), gap.width(), gap.height() };
+                mask_r = Gtk::gdk_rectangle( x+gap.x(), y+h-gap.height(), gap.width(), gap.height() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_LEFT:
             {
-                GdkRectangle mask_r = { x, y+gap.x(), gap.height(), gap.width() };
+                mask_r = Gtk::gdk_rectangle( x, y+gap.x(), gap.height(), gap.width() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             case GTK_POS_RIGHT:
             {
-                GdkRectangle mask_r = { x + w - gap.height(), y+gap.x(), gap.height(), gap.width() };
+                mask_r = Gtk::gdk_rectangle( x + w - gap.height(), y+gap.x(), gap.height(), gap.width() );
                 mask = gdk_region_rectangle( &mask_r );
                 break;
             }
 
             default: return;
+        }
+
+        if( false )
+        {
+            cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
+            gdk_cairo_rectangle( context, &mask_r );
+            cairo_fill( context );
         }
 
         gdk_region_subtract( region, mask );

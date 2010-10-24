@@ -1778,18 +1778,17 @@ namespace Oxygen
                 switch( position )
                 {
                     case GTK_POS_BOTTOM:
-                    gap = Gtk::Gap( x - xBase + 1, w + 2, position );
+                    case GTK_POS_TOP:
+                    gap = Gtk::Gap( x - xBase + 5, w - 6, position );
                     yBase = y;
                     hBase = h;
                     break;
 
-                    case GTK_POS_TOP:
-                    gap = Gtk::Gap( x - xBase + 1, w + 2, position );
-                    break;
-
                     case GTK_POS_LEFT:
                     case GTK_POS_RIGHT:
-                    gap = Gtk::Gap( y - yBase + 1, h + 2, position );
+                    gap = Gtk::Gap( y - yBase + 5, h - 6, position );
+                    xBase = x;
+                    wBase = w;
                     break;
 
                     default: break;
