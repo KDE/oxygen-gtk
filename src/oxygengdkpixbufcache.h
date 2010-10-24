@@ -21,25 +21,16 @@
 * MA 02110-1301, USA.
 */
 
-#include <map>
+#include "oxygencache.h"
+
 #include <gdk/gdk.h>
 
 namespace Oxygen
 {
 
     template< typename T>
-    class GdkPixbufCache
+    class GdkPixbufCache: public Cache<T, GdkPixbuf*>
     {
-
-        public:
-
-        //! key type
-        typedef T Key;
-
-        private:
-
-        //! internal map
-        typedef std::map<Key, GdkPixbuf*> Map;
 
         public:
 
@@ -48,40 +39,18 @@ namespace Oxygen
         {}
 
         //! destructor
-        ~GdkPixbufCache( void )
-        {
-            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
-            { g_object_unref( iter->second ); }
-        }
+        virtual ~GdkPixbufCache( void )
+        {}
 
-        //! return pixbug matching key, or NULL if not found
-        GdkPixbuf* find( const Key& key ) const
-        {
-            typename Map::const_iterator iter( _map.find( key ) );
-            if( iter == _map.end() ) return 0L;
-            else return iter->second;
-        }
+        protected:
 
-        //! insert in cache
-        void insert( const Key& key, GdkPixbuf* tileSet )
-        {
-            typename Map::iterator iter( _map.find( key ) );
-            if( iter != _map.end() ) g_object_unref( iter->second );
-            _map.insert( std::make_pair( key, tileSet ) );
-        }
+        //! erase value from map
+        virtual void erase( GdkPixbuf*& pixbuf )
+        { g_object_unref( pixbuf ); }
 
-        //! clear
-        void clear( void )
-        {
-            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
-            { g_object_unref( iter->second ); }
-
-            _map.clear();
-        }
-
-        private:
-
-        Map _map;
+        //! default value
+        virtual GdkPixbuf* defaultValue( void ) const
+        { return 0L; }
 
     };
 

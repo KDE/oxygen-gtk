@@ -21,7 +21,7 @@
 * MA 02110-1301, USA.
 */
 
-#include <map>
+#include "oxygencache.h"
 
 namespace Oxygen
 {
@@ -30,18 +30,8 @@ namespace Oxygen
     class TileSet;
 
     template< typename T>
-    class TileSetCache
+    class TileSetCache: public Cache<T, TileSet*>
     {
-
-        public:
-
-        //! key type
-        typedef T Key;
-
-        private:
-
-        //! internal map
-        typedef std::map<Key, TileSet*> Map;
 
         public:
 
@@ -50,40 +40,18 @@ namespace Oxygen
         {}
 
         //! destructor
-        ~TileSetCache( void )
-        {
-            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
-            { delete iter->second; }
-        }
+        virtual ~TileSetCache( void )
+        {}
 
-        //! return tileset matching key, or NULL if not found
-        TileSet* find( const Key& key ) const
-        {
-            typename Map::const_iterator iter( _map.find( key ) );
-            if( iter == _map.end() ) return 0L;
-            else return iter->second;
-        }
+        protected:
 
-        //! insert in cache
-        void insert( const Key& key, TileSet* tileSet )
-        {
-            typename Map::iterator iter( _map.find( key ) );
-            if( iter != _map.end() ) delete iter->second;
-            _map.insert( std::make_pair( key, tileSet ) );
-        }
+        //! erase value from map
+        virtual void erase( TileSet*& tileset )
+        { delete tileset; }
 
-        //! clear
-        void clear( void )
-        {
-            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
-            { delete iter->second; }
-
-            _map.clear();
-        }
-
-        private:
-
-        Map _map;
+        //! default value
+        virtual TileSet* defaultValue( void ) const
+        { return 0L; }
 
     };
 

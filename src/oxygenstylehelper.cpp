@@ -109,7 +109,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, shade, size );
-        TileSet* tileSet( m_slabCache.find( key ) );
+        TileSet* tileSet( m_slabCache.value( key ) );
         if( !tileSet )
         {
 
@@ -152,7 +152,7 @@ namespace Oxygen
     {
 
         const SlabFocusedKey key( base, glow, shade, size );
-        TileSet* tileSet( m_slabFocusedCache.find( key ) );
+        TileSet* tileSet( m_slabFocusedCache.value( key ) );
         if( !tileSet )
         {
 
@@ -193,7 +193,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, shade, size );
-        TileSet* tileSet = m_slabSunkenCache.find( key );
+        TileSet* tileSet = m_slabSunkenCache.value( key );
         if( !tileSet )
         {
 
@@ -238,7 +238,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, shade, size );
-        GdkPixbuf* pixbuf( m_roundSlabCache.find( key ) );
+        GdkPixbuf* pixbuf( m_roundSlabCache.value( key ) );
         if( !pixbuf )
         {
             const int w( 3*size );
@@ -348,7 +348,7 @@ namespace Oxygen
     {
 
         const HoleKey key( base, shade, size );
-        TileSet* tileSet( m_holeCache.find( key ) );
+        TileSet* tileSet( m_holeCache.value( key ) );
         if( !tileSet )
         {
 
@@ -387,7 +387,7 @@ namespace Oxygen
     {
 
         const HoleFlatKey key( base, shade, size );
-        TileSet* tileSet( m_holeFlatCache.find( key ) );
+        TileSet* tileSet( m_holeFlatCache.value( key ) );
         if( !tileSet )
         {
             const int rsize( ( int )ceil( double( size ) * 5.0/7.0 ) );
@@ -430,7 +430,7 @@ namespace Oxygen
     {
 
         const HoleFocusedKey key( base, glow, shade, size );
-        TileSet* tileSet( m_holeFocusedCache.find( key ) );
+        TileSet* tileSet( m_holeFocusedCache.value( key ) );
         if( !tileSet )
         {
             // create pixbuf and initialize
@@ -474,7 +474,7 @@ namespace Oxygen
     {
 
         const ScrollHoleKey key( base, vertical );
-        TileSet* tileSet( m_scrollHoleCache.find( key ) );
+        TileSet* tileSet( m_scrollHoleCache.value( key ) );
         if( !tileSet )
         {
 
@@ -580,7 +580,7 @@ namespace Oxygen
     {
 
         const SlitFocusedKey key( glow );
-        TileSet* tileSet( m_slitFocusedCache.find( key ) );
+        TileSet* tileSet( m_slitFocusedCache.value( key ) );
         if( !tileSet )
         {
 
@@ -627,7 +627,7 @@ namespace Oxygen
 
         // key
         DockFrameKey key( base, w );
-        TileSet* tileSet( m_dockFrameCache.find( key ) );
+        TileSet* tileSet( m_dockFrameCache.value( key ) );
         if( !tileSet )
         {
 
@@ -705,7 +705,7 @@ namespace Oxygen
     {
 
         ProgressBarIndicatorKey key( base, highlight, w, h );
-        GdkPixbuf* pixbuf = m_progressBarIndicatorCache.find( key );
+        GdkPixbuf* pixbuf = m_progressBarIndicatorCache.value( key );
         if( !pixbuf )
         {
 
@@ -830,7 +830,7 @@ namespace Oxygen
     {
 
         const GrooveKey key( base, shade, size );
-        TileSet* tileSet( m_grooveCache.find( key ) );
+        TileSet* tileSet( m_grooveCache.value( key ) );
         if( !tileSet )
         {
             const int rsize( ( int )ceil( double( size ) * 3.0/7.0 ) );
@@ -869,7 +869,7 @@ namespace Oxygen
     {
 
         const SelectionKey key( base, h, custom );
-        TileSet* tileSet( m_selectionCache.find( key ) );
+        TileSet* tileSet( m_selectionCache.value( key ) );
         if( !tileSet )
         {
             const int w = 32+16;
