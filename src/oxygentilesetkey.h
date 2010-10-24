@@ -72,7 +72,7 @@ namespace Oxygen
         //! constructor
         SlabFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size ):
             _color( color.toInt() ),
-            _glow( color.toInt() ),
+            _glow( glow.toInt() ),
             _shade( shade ),
             _size( size )
         {}
@@ -258,7 +258,7 @@ namespace Oxygen
         //! constructor
         ProgressBarIndicatorKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, int width, int height ):
             _color( color.toInt() ),
-            _glow( color.toInt() ),
+            _glow( glow.toInt() ),
             _width( width ),
             _height( height )
         {}
