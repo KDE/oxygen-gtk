@@ -3,9 +3,10 @@
 
 rc/ contains 'default' configuration files
 src/ contains all the source code.
+src/animations/ contains code needed for hover/focus effects, and will contain code for smooth animations
+it connects to various widgets signals and events to setup and trigger widget updates when adequate conditions are fullfilled.
 
-
-2/ some details on files in src/
+2/ some details on some files in src/
 --------------------------------
 
 oxygenrcstyle:
@@ -22,11 +23,15 @@ oxygentileset:
 stores 3x3 pixmap array to handle scalable widgets, similar to what kde/plasma does (as well as oxygen-qt)
 they can be cached.
 
+oxygentilesetcache: caches tilesets, for optimization
+
 oxygenrgba:
 stores rgba color representation and has some conversion utility functions
 
 oxygencolorutils:
 all color handling, used to shade, mix, blend, etc. It is based on code in oxygen-qt and kde/kdelibs/kdeui kcolorutils and kcolorscheme.
+
+oxygenpalette: internal storage of colors. It extends the colors used by gdk and passed via gtkstyle
 
 oxygenqtsettings:
 does all the handling of Qt/Kde options, and conversion to gtk options where needed
@@ -34,11 +39,14 @@ does all the handling of Qt/Kde options, and conversion to gtk options where nee
 oxygengtkicons:
 is responsible for mapping/replacing gtk icons by oxygen icons. This is largely inspired from QtCurve-gtk
 
-
 utility files/classes:
 oxygengeometry.h: some low-level geometry classes
-oxygencairocontext: some self-freed wrapper around cairo_context_t;
+oxygencairocontext: a self-freed wrapper around cairo_context_t;
+oxygencairopattern: a self-freed wrapper around cairo_pattern_t;
+oxygencache: some stl based implementation of a fifo cache and a mru cache;
 oxygencairoutils: some cairo/gdk-cairo utilities 
-oxygengtktypenames: some wrapper around gtk type names (strings) 
 oxygengtkdetail: wrapper around the 'detail' strings passed to painting routines
-oxygengkutils: some widget/window ancestry tree navigation utility functions.
+oxygengtkutils: some widget/window ancestry tree navigation utility functions.
+oxygenflags: generic utility class to handle enumeration based bit patterns.
+oxygentaboptions: stores options relevant for tab rendering in notebooks
+oxygenstyleoptions: stores generic options for widget rendering, based on their state, shadow, etc.
