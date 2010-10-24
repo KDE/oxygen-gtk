@@ -36,6 +36,8 @@ namespace Oxygen
 
         // get allocated size
         const GtkAllocation& allocation( widget->allocation );
+        int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
+
 
         // this simple comparison seems robust enough and much simpler
         // than any other implementation
@@ -44,14 +46,14 @@ namespace Oxygen
             default:
             case GTK_POS_TOP:
             case GTK_POS_BOTTOM:
-            if( x == allocation.x ) (*this) |= FirstTabAligned;
-            if( x+w == allocation.x + allocation.width ) (*this) |= LastTabAligned;
+            if( x == allocation.x + borderWidth ) (*this) |= FirstTabAligned;
+            if( x+w == allocation.x + allocation.width - borderWidth ) (*this) |= LastTabAligned;
             break;
 
             case GTK_POS_LEFT:
             case GTK_POS_RIGHT:
-            if( y == allocation.y ) (*this) |= FirstTabAligned;
-            if( y+h == allocation.y + allocation.height ) (*this) |= LastTabAligned;
+            if( y == allocation.y + borderWidth ) (*this) |= FirstTabAligned;
+            if( y+h == allocation.y + allocation.height - borderWidth ) (*this) |= LastTabAligned;
             break;
         }
 

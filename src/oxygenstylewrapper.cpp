@@ -1768,11 +1768,11 @@ namespace Oxygen
             // render tabbar base if current tab
             if( ( tabOptions & CurrentTab ) )
             {
-
-                int xBase( widget->allocation.x );
-                int yBase( widget->allocation.y );
-                int wBase( widget->allocation.width );
-                int hBase( widget->allocation.height );
+                int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
+                int xBase( widget->allocation.x + borderWidth );
+                int yBase( widget->allocation.y + borderWidth );
+                int wBase( widget->allocation.width - 2*borderWidth );
+                int hBase( widget->allocation.height - 2*borderWidth );
 
                 Gtk::Gap gap;
                 switch( position )
