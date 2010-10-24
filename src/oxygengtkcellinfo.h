@@ -56,10 +56,14 @@ namespace Oxygen
             {}
 
             //! construct from tree view and position
+            /*! unfortunately the path retrieval does not always work because x and y must be positive */
             explicit CellInfo( GtkTreeView* treeView, int x, int y ):
                 _path(0L),
                 _column(0L)
             { gtk_tree_view_get_path_at_pos( treeView, x,y, &_path, &_column, 0L, 0L ); }
+
+            //! construct from tree view and rectangle
+            explicit CellInfo( GtkTreeView* treeView, int x, int y, int w, int h );
 
             //! destructor
             virtual ~CellInfo( void )

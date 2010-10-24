@@ -19,12 +19,30 @@
 */
 
 #include "oxygengtkcellinfo.h"
+#include "oxygengeometry.h"
 
 #include <iostream>
 #include <cassert>
 
 namespace Oxygen
 {
+
+    //____________________________________________________________________________
+    Gtk::CellInfo::CellInfo( GtkTreeView* treeView, int x, int y, int w, int h ):
+        _path(0L),
+        _column(0L)
+    {
+
+        std::vector<Point> points;
+        points.push_back( Point( x+1, y+1 ) );
+        points.push_back( Point( x+1, y+h-1 ) );
+        points.push_back( Point( x+w-1, y+1 ) );
+        points.push_back( Point( x+w, y+h-1 ) );
+
+        for( std::vector<Point>::iterator iter  = points.begin(); iter != points.end() && !_path; iter++ )
+        { gtk_tree_view_get_path_at_pos( treeView, iter->x(), iter->y(), &_path, &_column, 0L, 0L ); }
+
+    }
 
     //____________________________________________________________________________
     bool Gtk::CellInfo::hasParent( GtkTreeView* treeView ) const

@@ -196,7 +196,7 @@ namespace Oxygen
                     { options |= Hover; }
 
                     GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                    Gtk::CellInfo cellInfo( treeView, x+w/2, y+h/2 );
+                    Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     if( cellInfo.isExpanderColumn( treeView ) )
                     {
