@@ -185,6 +185,9 @@ namespace Oxygen
         //! tab
         void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
 
+        //! tab
+        void renderTabBarBase( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const Gtk::Gap&, StyleOptions, TabOptions );
+
         //! tree 'standard' expanders (that is: +!-)
         void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions ) const;
 

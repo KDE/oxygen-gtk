@@ -1778,6 +1778,9 @@ namespace Oxygen
         TabOptions tabOptions
         )
     {
+
+        return;
+
         const bool isCurrentTab( tabOptions & CurrentTab );
         if( isCurrentTab ) return renderActiveTab( window, clipRect, x, y, w, h, side, options, tabOptions );
         else {
@@ -1790,6 +1793,43 @@ namespace Oxygen
             }
 
         }
+
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderTabBarBase(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        GtkPositionType side,
+        const Gtk::Gap& gap,
+        StyleOptions options,
+        TabOptions tabOptions
+        )
+    {
+
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+
+        SlabRect tabSlab;
+        const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
+        switch( side )
+        {
+            case GTK_POS_BOTTOM:
+            {
+                std::cout << "Oxygen::style::renderTabBarBase." << std::endl;
+                tabSlab = SlabRect( x, y+h-2, w, 14, tabTiles );
+                break;
+            }
+
+            default: break;
+
+        }
+
+        fill( window, clipRect, x, y, w, h, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
+
+        Cairo::Context context( window, 0L );
+        helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        return;
 
     }
 

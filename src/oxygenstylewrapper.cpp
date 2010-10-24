@@ -1581,9 +1581,10 @@ namespace Oxygen
             options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Hover|Focus);
 
-            Gtk::Gap gap( gap_x, gap_w, position );
             if( Style::instance().settings().applicationName().isMozilla() )
             {
+
+                Gtk::Gap gap( gap_x, gap_w, position );
 
                 /*
                 firefox calls box_gap twice. Once for the main frame, once for the actual gap
@@ -1594,26 +1595,32 @@ namespace Oxygen
 
             } else {
 
+                Gtk::Gap gap;
+
                 // need adjustment depending on gap side
                 const int adjust = 2;
                 switch( position )
                 {
 
                     case GTK_POS_TOP:
+                    gap = Gtk::Gap( 0, w+2, position );
                     y -= adjust;
                     h += adjust;
                     break;
 
                     case GTK_POS_BOTTOM:
+                    gap = Gtk::Gap( 0, w+2, position );
                     h += adjust;
                     break;
 
                     case GTK_POS_LEFT:
+                    gap = Gtk::Gap( 0, h+2, position );
                     x -= adjust;
                     w +=  adjust;
                     break;
 
                     case GTK_POS_RIGHT:
+                    gap = Gtk::Gap( 0, h+2, position );
                     w += adjust;
                     break;
 
@@ -1757,6 +1764,42 @@ namespace Oxygen
 
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
+
+            // render tabbar base if current tab
+            if( ( tabOptions & CurrentTab ) )
+            {
+
+                int xBase( widget->allocation.x );
+                int yBase( widget->allocation.y );
+                int wBase( widget->allocation.width );
+                int hBase( widget->allocation.height );
+
+                Gtk::Gap gap;
+                switch( position )
+                {
+                    case GTK_POS_BOTTOM:
+                    gap = Gtk::Gap( x - xBase + 1, w + 2, position );
+                    yBase = y;
+                    hBase = h;
+                    break;
+
+                    case GTK_POS_TOP:
+                    gap = Gtk::Gap( x - xBase + 1, w + 2, position );
+                    break;
+
+                    case GTK_POS_LEFT:
+                    case GTK_POS_RIGHT:
+                    gap = Gtk::Gap( y - yBase + 1, h + 2, position );
+                    break;
+
+                    default: break;
+
+                }
+
+                gap.setHeight( 8 );
+                Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
+
+            }
 
             Gtk::gtk_notebook_update_close_buttons(GTK_NOTEBOOK(widget));
         }
