@@ -59,6 +59,10 @@ namespace Oxygen
         { return _settings; }
 
         //! helper
+        StyleHelper& helper( void )
+        { return _helper; }
+
+        //! helper
         const StyleHelper& helper( void ) const
         { return _helper; }
 
@@ -109,13 +113,13 @@ namespace Oxygen
 
         //!@name progressbar
         //@{
-        void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
+        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
         //@}
 
         //!@name scrollbar
         //@{
-        void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
         void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
         //@}
 
@@ -126,20 +130,20 @@ namespace Oxygen
         void drawFloatFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! button slab
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring ) const;
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions ) const;
+        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions );
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions ) const;
+        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions );
 
         //!@name generic slab
         //@{
 
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
-        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
+        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o )
         { renderSlab( window, r, x, y, w, h, Gtk::Gap(), o ); }
 
         //@}
@@ -147,45 +151,39 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions, TileSet::Tiles = TileSet::Ring ) const;
-        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o, TileSet::Tiles tiles = TileSet::Ring ) const
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions, TileSet::Tiles = TileSet::Ring );
+        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o, TileSet::Tiles tiles = TileSet::Ring )
         { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, tiles ); }
 
         //@}
 
         //!@name dock frame
         //@{
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions ) const;
-        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o ) const
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
+        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o )
         { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
 
         //! menu item
-        void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, StyleOptions );
 
         //! selection
-        void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions ) const;
+        void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions );
 
         //! arrow
         void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize = QtSettings::ArrowNormal, StyleOptions = Contrast ) const;
 
         //! slider groove
-        void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
 
         //! slider handle
-        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
 
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
         //! tab
-        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
-
-        //! tab
-        void renderTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
-
-        //! tab
-        void renderTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions ) const;
+        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
 
         //! tree 'standard' expanders (that is: +!-)
         void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions ) const;
@@ -237,6 +235,12 @@ namespace Oxygen
         //! constructor
         explicit Style( void );
 
+        //! tab
+        void renderTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+
+        //! tab
+        void renderTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+
         //@name internal rendering
         //@{
 
@@ -244,11 +248,11 @@ namespace Oxygen
         ColorUtils::Rgba slabShadowColor( StyleOptions ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, StyleOptions, TileSet::Tiles tiles = TileSet::Ring ) const;
+        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, StyleOptions, TileSet::Tiles tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */
-        void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full ) const;
+        void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;

@@ -669,7 +669,7 @@ namespace Oxygen
     void Style::renderProgressBarHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
@@ -684,7 +684,7 @@ namespace Oxygen
     void Style::renderProgressBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         // colors
@@ -707,15 +707,13 @@ namespace Oxygen
         gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
         cairo_fill( context );
 
-        g_object_unref( pixbuf );
-
     }
 
     //____________________________________________________________________________________
     void Style::renderScrollBarHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         // colors
@@ -1011,7 +1009,7 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles ) const
+        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles )
     {
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
@@ -1028,9 +1026,9 @@ namespace Oxygen
                 {
 
                     const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Hover ) );
-                    helper().holeFocused( base, glow, 0, 7, false ).render( context, x, y, w, h );
+                    helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
 
-                } else helper().hole( base, 0, 7, false ).render( context, x, y, w, h );
+                } else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
 
             } else if( options&Hover ) {
 
@@ -1120,7 +1118,7 @@ namespace Oxygen
     void Style::renderSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
     {
 
         // define colors
@@ -1149,7 +1147,7 @@ namespace Oxygen
     void Style::renderCheckBox(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options )
     {
 
         // define checkbox rect
@@ -1291,7 +1289,7 @@ namespace Oxygen
     void Style::renderRadioButton(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options )
     {
 
         // define checkbox rect
@@ -1333,7 +1331,6 @@ namespace Oxygen
         gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
         cairo_fill( context );
         cairo_restore( context );
-        g_object_unref( pixbuf );
 
         if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
         {
@@ -1381,7 +1378,7 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options,
-        TileSet::Tiles tiles ) const
+        TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
@@ -1389,8 +1386,6 @@ namespace Oxygen
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        const bool fill( !( options&NoFill ) );
-        if( fill ) tiles |= TileSet::Center;
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
@@ -1401,16 +1396,16 @@ namespace Oxygen
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else if( enabled && (options & Hover) ) {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            helper().hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().hole( base, 0, 7 ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -1420,7 +1415,7 @@ namespace Oxygen
     void Style::renderDockFrame(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
     {
 
         // do nothing if not enough room
@@ -1452,7 +1447,7 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         GtkWidget* widget,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         ColorUtils::Rgba base;
@@ -1537,7 +1532,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         TileSet::Tiles tiles,
         StyleOptions options
-        ) const
+        )
     {
 
         // do nothing if not selected nor hovered
@@ -1651,7 +1646,7 @@ namespace Oxygen
     void Style::renderSliderGroove(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
@@ -1671,7 +1666,7 @@ namespace Oxygen
     void Style::renderSliderHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         // define colors
@@ -1781,7 +1776,7 @@ namespace Oxygen
         GtkPositionType side,
         StyleOptions options,
         TabOptions tabOptions
-        ) const
+        )
     {
 
         switch( settings().tabStyle() )
@@ -1801,7 +1796,7 @@ namespace Oxygen
         GtkPositionType side,
         StyleOptions options,
         TabOptions tabOptions
-        ) const
+        )
     {
         // convenience flags
         const bool isCurrentTab( tabOptions & CurrentTab );
@@ -2130,7 +2125,7 @@ namespace Oxygen
         GtkPositionType side,
         StyleOptions options,
         TabOptions tabOptions
-        ) const
+        )
     {
         // convenience flags
         const bool isCurrentTab( tabOptions & CurrentTab );
@@ -2688,7 +2683,7 @@ namespace Oxygen
 
         ColorUtils::Rgba glow;
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-        
+
         const bool enabled( !(options&Disabled ) );
         if( enabled && (options & Hover) ) glow = settings().palette().color( group, Palette::Hover );
         else if( enabled && (options & Focus) ) glow =  settings().palette().color( group, Palette::Focus );
@@ -2697,7 +2692,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, StyleOptions options, TileSet::Tiles tiles ) const
+    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, StyleOptions options, TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
@@ -2743,12 +2738,13 @@ namespace Oxygen
         if( !(options&Sunken) ) {
 
             // calculate glow color
-            TileSet tile;
+            const TileSet* tile;
             ColorUtils::Rgba glow( slabShadowColor( options ) );
-            if( glow.isValid() ) tile = helper().slabFocused( base, glow , 0);
-            else if( base.isValid() ) tile = helper().slab( base, 0 );
+            if( glow.isValid() ) tile = &helper().slabFocused( base, glow , 0);
+            else if( base.isValid() ) tile = &helper().slab( base, 0 );
             else return;
-            tile.render( context, x, y, w, h );
+
+            if( tile ) tile->render( context, x, y, w, h );
 
         } else if( base.isValid() ) {
 
@@ -2759,7 +2755,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderScrollBarHole( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool vertical, TileSet::Tiles tiles ) const
+    void Style::renderScrollBarHole( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool vertical, TileSet::Tiles tiles )
     {
 
         // use tileset from helper

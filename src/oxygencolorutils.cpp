@@ -23,6 +23,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygencache.h"
 #include "oxygencolorutils.h"
 #include "oxygenrgba.h"
 
@@ -62,7 +63,7 @@ namespace Oxygen
         { return ( a < 1.0 ? ( a > 0.0 ? a : 0.0 ) : 1.0 ); }
 
         // caches
-        typedef std::map<guint32,Rgba> ColorCache;
+        typedef Cache<guint32,Rgba> ColorCache;
 
         static ColorCache m_decoColorCache;
         static ColorCache m_lightColorCache;
@@ -74,10 +75,9 @@ namespace Oxygen
         static ColorCache m_backgroundRadialColorCache;
         static ColorCache m_backgroundColorCache;
 
-        typedef std::map<guint32,bool> ColorFlags;
+        typedef Cache<guint32,bool> ColorFlags;
         ColorFlags m_highThreshold;
         ColorFlags m_lowThreshold;
-
 
         // clear caches
         static inline void clearCaches( void )
@@ -109,7 +109,7 @@ namespace Oxygen
 
             const Rgba darker( shade(color, MidShade, 0.5 ) );
             const bool out( luma(darker) > luma(color) );
-            m_lowThreshold.insert( std::make_pair( color.toInt(), out ) );
+            m_lowThreshold.insert( color.toInt(), out );
             return out;
         }
 
@@ -125,7 +125,7 @@ namespace Oxygen
 
             const Rgba lighter( shade(color, LightShade, 0.5 ) );
             const bool out( luma(lighter) < luma(color) );
-            m_highThreshold.insert( std::make_pair( color.toInt(), out ) );
+            m_highThreshold.insert( color.toInt(), out );
             return out;
         }
     }
@@ -145,7 +145,7 @@ namespace Oxygen
                 out = shade(color, (my - by) * backgroundContrast());
             }
 
-            m_backgroundTopColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_backgroundTopColorCache.insert( color.toInt(), out );
             return out;
         }
     }
@@ -165,7 +165,7 @@ namespace Oxygen
                 out = shade(color, (my - by) * backgroundContrast());
             }
 
-            m_backgroundBottomColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_backgroundBottomColorCache.insert( color.toInt(), out );
             return out;
         }
     }
@@ -181,7 +181,7 @@ namespace Oxygen
             if( lowThreshold(color) ) out = shade(color, LightShade, 0.0);
             else if( highThreshold( color ) ) out = color;
             else out = shade(color, LightShade, backgroundContrast() );
-            m_backgroundRadialColorCache.insert( std::make_pair( color.toInt(), out ) );
+            m_backgroundRadialColorCache.insert( color.toInt(), out );
             return out;
         }
 
@@ -195,7 +195,7 @@ namespace Oxygen
         if( iter != m_lightColorCache.end() ) return iter->second;
         else {
             const Rgba out( highThreshold( color ) ? color: shade( color, LightShade, contrast() ) );
-            m_lightColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_lightColorCache.insert( color.toInt(), out );
             return out;
         }
     }
@@ -209,7 +209,7 @@ namespace Oxygen
             const Rgba out( lowThreshold(color) ?
                 mix( lightColor(color), color, 0.3 + 0.7 * contrast() ):
                 shade(color, MidShade, contrast() ) );
-            m_darkColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_darkColorCache.insert( color.toInt(), out );
             return out;
         }
     }
@@ -221,7 +221,7 @@ namespace Oxygen
         if( iter != m_midColorCache.end() ) return iter->second;
         else {
             const Rgba out( shade( color, MidShade, contrast() - 1.0 ) );
-            m_midColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_midColorCache.insert( color.toInt(), out );
             return out;
         }
     }
@@ -235,7 +235,7 @@ namespace Oxygen
 
             Rgba out( mix( Rgba::black(), color, color.alpha() ) );
             if( !lowThreshold(color) ) out = shade( out, ShadowShade, contrast() );
-            m_shadowColorCache.insert( std::make_pair(color.toInt(), out) );
+            m_shadowColorCache.insert( color.toInt(), out );
             return out;
         }
     }

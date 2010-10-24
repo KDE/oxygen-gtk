@@ -50,19 +50,12 @@ namespace Oxygen
     {
 
         /* Inspect input pixbuf and create compatible cairo surface */
-        gint width;
-        gint height;
-        gint p_stride;
-        gint p_n_channels;
-        guchar *p_pixels;
-        g_object_get(
-            G_OBJECT( pixbuf ),
-            "width", &width,
-            "height", &height,
-            "rowstride", &p_stride,
-            "n-channels", &p_n_channels,
-            "pixels", &p_pixels,
-            NULL );
+        const gint width( gdk_pixbuf_get_width( pixbuf ) );
+        gint height( gdk_pixbuf_get_height( pixbuf ) );
+
+        const gint p_stride( gdk_pixbuf_get_rowstride( pixbuf ) );
+        const gint p_n_channels( gdk_pixbuf_get_n_channels( pixbuf ) );
+        guchar *p_pixels( gdk_pixbuf_get_pixels( pixbuf ) );
 
         // create surface and get data
         cairo_surface_t* surface = cairo_image_surface_create( CAIRO_FORMAT_ARGB32, width, height );
@@ -206,20 +199,12 @@ namespace Oxygen
         /* Obtain surface from where pixel values will be copied */
         cairo_surface_t* surface = cairo_get_target( _cr );
 
-        /* Inspect pixbuf and surface */
-        gint width;
-        gint height;
-        gint p_stride;
-        gint p_n_channels;
-        guchar *p_pixels;
-        g_object_get(
-            G_OBJECT( pixbuf ),
-            "width",           &width,
-            "height",          &height,
-            "rowstride",       &p_stride,
-            "n-channels",      &p_n_channels,
-            "pixels",          &p_pixels,
-            NULL );
+        /* Inspect input pixbuf and create compatible cairo surface */
+        const gint width( gdk_pixbuf_get_width( pixbuf ) );
+        gint height( gdk_pixbuf_get_height( pixbuf ) );
+        const gint p_stride( gdk_pixbuf_get_rowstride( pixbuf ) );
+        const gint p_n_channels( gdk_pixbuf_get_n_channels( pixbuf ) );
+        guchar *p_pixels( gdk_pixbuf_get_pixels( pixbuf ) );
 
         gint s_stride = cairo_image_surface_get_stride( surface );
         guchar* s_pixels = cairo_image_surface_get_data( surface );
