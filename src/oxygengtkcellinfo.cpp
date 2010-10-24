@@ -136,6 +136,10 @@ namespace Oxygen
 
         gtk_widget_style_get( GTK_WIDGET( treeView ), "expander-size", &_expanderSize, NULL );
 
+        /*
+        for every parent of the current cell, one needs to know whether or not
+        it is the last one at its level, to render the tree lines properly
+        */
         _isLast = std::vector<bool>(_depth, false);
 
         unsigned int index( _depth-1 );
