@@ -21,8 +21,9 @@
 * MA 02110-1301, USA.
 */
 
+#include <algorithm>
 #include <map>
-#include <list>
+#include <deque>
 #include <iostream>
 
 namespace Oxygen
@@ -125,7 +126,7 @@ namespace Oxygen
         inline void adjustSize( void );
 
         //! give access to key list to derived classes
-        typedef std::list<const T*> List;
+        typedef std::deque<const T*> List;
         List& keys( void )
         { return _keys; }
 
@@ -318,8 +319,19 @@ namespace Oxygen
     void Cache<T,M>::promote( const T& key )
     {
 
-        // erase key in list
-        SimpleCache<T,M>::keys().remove( &key );
+        if( (!SimpleCache<T,M>::keys().empty()) )
+        {
+
+            // do nothing if key is already up front
+            if( SimpleCache<T,M>::keys().front() == &key ) return;
+
+            // erase key in list
+            typename SimpleCache<T,M>::List::iterator iter( std::find( SimpleCache<T,M>::keys().begin(), SimpleCache<T,M>::keys().end(), &key ) );
+            SimpleCache<T,M>::keys().erase( iter );
+
+        }
+
+        // (re) add key up front
         SimpleCache<T,M>::keys().push_front( &key );
 
     }

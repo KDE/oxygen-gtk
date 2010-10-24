@@ -2024,6 +2024,19 @@ namespace Oxygen
             detail );
         #endif
 
+        const Gtk::Detail d(detail);
+
+        // draw progressbar text white if above indicator, black if not
+        if( GTK_IS_PROGRESS( widget ) || GTK_IS_PROGRESS_BAR( widget ) || d.isProgressBar() )
+        {
+            Cairo::Context context( window,clipRect );
+            if(state==GTK_STATE_PRELIGHT) gdk_cairo_set_source_color(context, &style->text[GTK_STATE_SELECTED]);
+            else gdk_cairo_set_source_color(context, &style->text[state]);
+            cairo_translate(context,x,y);
+            pango_cairo_show_layout(context,layout);
+            return;
+        }
+
         if( state == GTK_STATE_INSENSITIVE )
         {
 
