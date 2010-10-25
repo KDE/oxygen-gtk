@@ -211,12 +211,12 @@ namespace Oxygen
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
         const bool isMozilla( settings().applicationName().isMozilla() );
-        const bool isOOffice( settings().applicationName().isOOffice() );
+        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
 
         GdkRectangle rect = { x, y, w, h };
 
         // paint translucent first
-        if( hasAlpha && !isOOffice )
+        if( hasAlpha && !isOpenOffice )
         {
             cairo_rectangle( context, 0, 0, ww, wh );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
@@ -225,7 +225,7 @@ namespace Oxygen
         }
 
         const int splitY( std::min(200, 3*wh/4 ) );
-        const int verticalOffset( (isMozilla||isOOffice||!isMenu) ? 0:Menu_VerticalOffset );
+        const int verticalOffset( (isMozilla||isOpenOffice||!isMenu) ? 0:Menu_VerticalOffset );
 
         GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
@@ -928,8 +928,8 @@ namespace Oxygen
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
         const bool isMozilla( settings().applicationName().isMozilla() );
-        const bool isOOffice( settings().applicationName().isOOffice() );
-        const bool drawUglyShadow( !( hasAlpha || isMozilla || isOOffice ) );
+        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
+        const bool drawUglyShadow( !( hasAlpha || isMozilla || isOpenOffice ) );
 
         // create context
         Cairo::Context context( window, clipRect );
@@ -938,7 +938,7 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 0, light );
 
         // add vertical offset
-        if( isMenu && !( isMozilla || isOOffice ) )
+        if( isMenu && !( isMozilla || isOpenOffice ) )
         {
             y += Menu_VerticalOffset;
             h -= 2*Menu_VerticalOffset;
@@ -985,7 +985,7 @@ namespace Oxygen
             cairo_stroke( context );
         }
 
-        if( isMozilla || isOOffice )
+        if( isMozilla || isOpenOffice )
         {
 
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );

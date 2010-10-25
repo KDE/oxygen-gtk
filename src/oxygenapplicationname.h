@@ -35,7 +35,7 @@ namespace Oxygen
         Firefox,
         Thunderbird,
         Gimp,
-        OOffice
+        OpenOffice
     };
 
     //! stores application name and provides some utility functions
@@ -67,7 +67,7 @@ namespace Oxygen
         bool isThunderbird( void ) const { return _name == Thunderbird; }
         bool isMozilla( void ) const { return isFirefox() || isThunderbird(); }
         bool isGimp( void ) const { return _name == Gimp; }
-        bool isOOffice( void ) const { return _name == OOffice; }
+        bool isOpenOffice( void ) const { return _name == OpenOffice; }
         bool isUnknown( void ) const { return _name == Unknown; }
 
         //@}

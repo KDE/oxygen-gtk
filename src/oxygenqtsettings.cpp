@@ -209,7 +209,7 @@ namespace Oxygen
 
         if( appName == "firefox-bin" || appName == "firefox" ) _applicationName = Firefox;
         else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _applicationName = Thunderbird;
-        else if( appName == "soffice" ) _applicationName = OOffice;
+        else if( appName == "soffice" ) _applicationName = OpenOffice;
         else if( appName == "gimp" ) _applicationName = Gimp;
         else appName = Unknown;
 

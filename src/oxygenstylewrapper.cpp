@@ -636,7 +636,7 @@ namespace Oxygen
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
                 if( !( (options&Alpha) ||
                     Style::instance().settings().applicationName().isMozilla() ||
-                    Style::instance().settings().applicationName().isOOffice() ) &&
+                    Style::instance().settings().applicationName().isOpenOffice() ) &&
                     GTK_IS_MENU(widget) )
                 {
 
