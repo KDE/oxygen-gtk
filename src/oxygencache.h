@@ -26,7 +26,6 @@
 #include <algorithm>
 #include <map>
 #include <deque>
-#include <iostream>
 
 namespace Oxygen
 {
@@ -237,15 +236,7 @@ namespace Oxygen
     typename SimpleCache<T,M>::iterator SimpleCache<T,M>::find( const T& key )
     {
         typename Map::iterator iter = _map.find( key );
-        if( iter != _map.end() ) {
-
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::SimpleCache::value - re-using key: " << key << std::endl;
-            #endif
-            promote( iter->first );
-
-        }
-
+        if( iter != _map.end() ) promote( iter->first );
         return iter;
     }
 
@@ -256,10 +247,6 @@ namespace Oxygen
         typename Map::iterator iter = _map.find( key );
         if( iter == _map.end() ) return defaultValue();
         else {
-
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::SimpleCache::value - re-using key: " << key << std::endl;
-            #endif
             promote( iter->first );
             return iter->second;
         }
