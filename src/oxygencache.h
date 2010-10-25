@@ -21,6 +21,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "config.h"
+
 #include <algorithm>
 #include <map>
 #include <deque>
@@ -247,6 +249,9 @@ namespace Oxygen
         if( iter == _map.end() ) return defaultValue();
         else {
 
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::SimpleCache::value - re-using key: " << key << std::endl;
+            #endif
             promote( iter->first );
             return iter->second;
         }
