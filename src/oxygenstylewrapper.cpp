@@ -1635,7 +1635,7 @@ namespace Oxygen
                 the second call must be discarded somehow
                 */
                 if( h>12 )
-                { Style::instance().renderSlab( window, clipRect, x-1, y-3, w+2, h-4, gap, options ); }
+                { Style::instance().renderSlab( window, clipRect, x, y-3, w, h-4, gap, options ); }
 
             } else {
 
