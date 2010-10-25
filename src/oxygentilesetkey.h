@@ -119,13 +119,107 @@ namespace Oxygen
     };
 
     //! key for holes
-    typedef SlabKey HoleKey;
+    class HoleKey
+    {
+        public:
+
+        //! constructor
+        HoleKey( const ColorUtils::Rgba& color, double shade, int size, bool fill ):
+            _color( color.toInt() ),
+            _shade( shade ),
+            _size( size ),
+            _fill( fill )
+        {}
+
+        //! equal to operator
+        bool operator == (const HoleKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _shade == other._shade &&
+                _size == other._size &&
+                _fill == other._fill;
+        }
+
+        //! less than operator
+        bool operator < (const HoleKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _shade != other._shade ) return _shade < other._shade;
+            else if( _size != other._size ) return _size < other._size;
+            else return _fill != other._fill;
+        }
+
+        private:
+
+        guint32 _color;
+        double _shade;
+        int _size;
+        bool _fill;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const HoleKey& key )
+        {
+            out << "HoleKey - color: " << key._color << " shade: " << key._shade << " size: " << key._size << " fill: " << key._fill;
+            return out;
+        }
+
+    };
+
+    //! key for holes
+    class HoleFocusedKey
+    {
+        public:
+
+        //! constructor
+        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size, bool fill ):
+            _color( color.toInt() ),
+            _glow( glow.toInt() ),
+            _shade( shade ),
+            _size( size ),
+            _fill( fill )
+        {}
+
+        //! equal to operator
+        bool operator == (const HoleFocusedKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _glow == other._glow &&
+                _shade == other._shade &&
+                _size == other._size &&
+                _fill == other._fill;
+        }
+
+        //! less than operator
+        bool operator < (const HoleFocusedKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            if( _glow != other._glow ) return _glow < other._glow;
+            else if( _shade != other._shade ) return _shade < other._shade;
+            else if( _size != other._size ) return _size < other._size;
+            else return _fill != other._fill;
+        }
+
+        private:
+
+        guint32 _color;
+        guint32 _glow;
+        double _shade;
+        int _size;
+        bool _fill;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const HoleFocusedKey& key )
+        {
+            out << "HoleFocusedKey - color: " << key._color << " glow:" << key._glow << " shade: " << key._shade << " size: " << key._size << " fill: " << key._fill;
+            return out;
+        }
+
+    };
 
     //! key for flat holes
     typedef SlabKey HoleFlatKey;
-
-    //! key for focused holes
-    typedef SlabFocusedKey HoleFocusedKey;
 
     //! key for scroll holes
     class ScrollHoleKey
