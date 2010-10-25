@@ -201,10 +201,15 @@ namespace Oxygen
         const char* applicationName = g_get_prgname();
         if( !applicationName ) return;
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::initApplicationName - " << applicationName << std::endl;
+        #endif
+
         std::string appName( applicationName );
 
         if( appName == "firefox-bin" || appName == "firefox" ) _applicationName = Firefox;
         else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _applicationName = Thunderbird;
+        else if( appName == "soffice" ) _applicationName = OOffice;
         else if( appName == "gimp" ) _applicationName = Gimp;
         else appName = Unknown;
 

@@ -634,7 +634,10 @@ namespace Oxygen
 
                 StyleOptions options( Menu );
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-                if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() ) && GTK_IS_MENU(widget) )
+                if( !( (options&Alpha) ||
+                    Style::instance().settings().applicationName().isMozilla() ||
+                    Style::instance().settings().applicationName().isOOffice() ) &&
+                    GTK_IS_MENU(widget) )
                 {
 
                     // make tooltips appear rounded using XShape extension if screen isn't composited
