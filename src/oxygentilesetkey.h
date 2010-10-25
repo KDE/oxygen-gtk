@@ -62,6 +62,13 @@ namespace Oxygen
         double _shade;
         int _size;
 
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SlabKey& key )
+        {
+            out << "SlabKey - color: " << key._color << " shade: " << key._shade << " size: " << key._size;
+            return out;
+        }
+
     };
 
     //! key for focused slabs
@@ -102,6 +109,13 @@ namespace Oxygen
         guint32 _glow;
         double _shade;
         int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SlabFocusedKey& key )
+        {
+            out << "SlabFocusedKey - color: " << key._color << " glow: " << key._glow << " shade: " << key._shade << " size: " << key._size;
+            return out;
+        }
     };
 
     //! key for holes
@@ -144,6 +158,13 @@ namespace Oxygen
         guint32 _color;
         bool _vertical;
 
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const ScrollHoleKey& key )
+        {
+            out << "ScrollHoleKey - color: " << key._color << "vertical: " << (key._vertical ? "true":"false");
+            return out;
+        }
+
     };
 
     //@}
@@ -164,11 +185,18 @@ namespace Oxygen
 
         //! less than operator
         bool operator < (const SlitFocusedKey& other ) const
-        { return _color == other._color; }
+        { return _color < other._color; }
 
         private:
 
         guint32 _color;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SlitFocusedKey& key )
+        {
+            out << "SlitFocusedKey - color: " << key._color;
+            return out;
+        }
 
     };
 
@@ -204,6 +232,13 @@ namespace Oxygen
 
         guint32 _color;
         int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const DockFrameKey& key )
+        {
+            out << "DockFrameKey - color: " << key._color << " size: " << key._size;
+            return out;
+        }
 
     };
 
@@ -248,6 +283,13 @@ namespace Oxygen
         int _size;
         bool _custom;
 
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SelectionKey& key )
+        {
+            out << "SelectionKey - color: " << key._color << " size: " << key._size << " custom: " << ( key._custom ? "true":"false" );
+            return out;
+        }
+
     };
 
     //! key for progressbar indicator
@@ -288,6 +330,13 @@ namespace Oxygen
         guint32 _glow;
         int _width;
         int _height;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const ProgressBarIndicatorKey& key )
+        {
+            out << "ProgressBarIndicatorKey - color: " << key._color << " glow: " << key._glow << " width: " << key._width << " height: " << key._height;
+            return out;
+        }
     };
 
 }
