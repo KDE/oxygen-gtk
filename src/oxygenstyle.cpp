@@ -272,6 +272,7 @@ namespace Oxygen
         // paint translucent first
         const bool hasAlpha( (options&Alpha) );
         const bool isMozilla( settings().applicationName().isMozilla() );
+        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
 
         if( hasAlpha )
         {
@@ -294,7 +295,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, isMozilla ? CornersNone:CornersAll );
+            gdk_cairo_rounded_rectangle( context, &rect, 4, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -306,7 +307,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, isMozilla ? CornersNone:CornersAll );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
@@ -1393,21 +1394,25 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
 
+        const bool fill( !(options&NoFill) );
         const bool enabled( !(options&Disabled ) );
+
+        if( fill ) tiles |= TileSet::Center;
+
         if( enabled && (options & Focus) )
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         } else if( enabled && (options & Hover) ) {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            helper().hole( base, 0, 7 ).render( context, x, y, w, h, tiles );
+            helper().hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
 
         }
 

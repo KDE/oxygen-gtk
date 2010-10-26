@@ -86,6 +86,9 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox())
         {
 
+            if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
+            { return; }
+
             if( GTK_IS_WINDOW( widget ) )
             {
 
@@ -132,7 +135,9 @@ namespace Oxygen
 
             StyleOptions options;
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-            if( !( (options&Alpha) || Style::instance().settings().applicationName().isMozilla() )  )
+            if( !( (options&Alpha) ||
+                Style::instance().settings().applicationName().isMozilla() ||
+                Style::instance().settings().applicationName().isOpenOffice() )  )
             {
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
@@ -251,8 +256,8 @@ namespace Oxygen
 
         } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla() ) {
 
-            StyleOptions options( NoFill );
-            options |= StyleOptions( widget, state, shadow );
+            StyleOptions options( widget, state, shadow );
+            if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
 
             // calculate proper offsets so that the glow/shadow match parent frame
             const int xOffset( style ? style->xthickness + 1 : 3);
@@ -471,7 +476,7 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         GtkWidget* parent(0L);
-        if( d.isButton() || d.isOptionMenu() )
+        if( d.isButton() || d.isOptionMenu() || d.isToggleButton() )
         {
 
             // check if it's PathBar toggle button
@@ -490,7 +495,6 @@ namespace Oxygen
                     Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
 
                 }
-
             } else if( Gtk::gtk_parent_tree_view( widget ) ) {
 
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
@@ -503,7 +507,8 @@ namespace Oxygen
                 */
 
                 StyleOptions options( widget, state, shadow );
-                options |= Blend|NoFill;
+                if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
+                options |= Blend;
 
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
@@ -661,7 +666,7 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() || d.isHandleBox()  ) {
+        } else if( d.isDefaultButton() || d.isScrollBar() || d.isPaned() || d.isHandleBox() ) {
 
             return;
 
@@ -721,7 +726,8 @@ namespace Oxygen
         } else if( d.isSpinButton()) {
 
             StyleOptions options( widget, state, shadow );
-            options |= Blend|NoFill;
+            if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
+            options |= Blend;
 
             if( style )
             {
@@ -909,8 +915,8 @@ namespace Oxygen
 
         } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
-            StyleOptions options( NoFill );
-            options |= StyleOptions( widget, state, shadow );
+            StyleOptions options( widget, state, shadow );
+            if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
 
             if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
             {
@@ -934,10 +940,13 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                // register to hover engine
-                Style::instance().animations().hoverEngine().registerWidget( widget, true );
-                if( Style::instance().animations().hoverEngine().hovered( widget ) )
-                { options |= Hover; }
+                if( !Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    // register to hover engine
+                    Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                    { options |= Hover; }
+                }
 
                 if( style && !Style::instance().settings().applicationName().isMozilla() )
                 {
@@ -953,7 +962,7 @@ namespace Oxygen
             } else {
 
                 // register to hover engine
-                if( GTK_IS_ENTRY( widget ) )
+                if( GTK_IS_ENTRY( widget ) && !Style::instance().settings().applicationName().isOpenOffice() )
                 {
 
                     Style::instance().animations().hoverEngine().registerWidget( widget, true );

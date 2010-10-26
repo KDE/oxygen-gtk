@@ -111,8 +111,11 @@ namespace Oxygen
             bool isSpinButtonArrow( void ) const { return isSpinButtonUp() || isSpinButtonDown(); }
             //@}
 
+            bool isStepper( void ) const { return _value == "stepper"; }
+
             bool isTab( void ) const { return _value == "tab"; }
             bool isTearOffMenuItem( void ) const { return _value == "tearoffmenuitem"; }
+            bool isToggleButton( void ) const { return _value == "togglebutton"; }
             bool isToolBar( void ) const { return _value == "toolbar"; }
             bool isTooltip( void ) const { return _value == "tooltip"; }
             bool isTreeView( void ) const { return _value == "treeview"; }
