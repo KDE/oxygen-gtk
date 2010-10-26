@@ -57,8 +57,7 @@ namespace Oxygen
         void unregisterWidget( GtkWidget* );
 
         //! enabled state
-        void setEnabled( bool value )
-        { _enabled = value; }
+        void setEnabled( bool value );
 
         //! enabled state
         bool enabled( void ) const

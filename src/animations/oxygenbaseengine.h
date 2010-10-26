@@ -53,7 +53,7 @@ namespace Oxygen
         typedef std::vector< BaseEngine* > List;
 
         //! enable state
-        void setEnabled( bool value )
+        virtual void setEnabled( bool value )
         { _enabled = value; }
 
         //! enable state

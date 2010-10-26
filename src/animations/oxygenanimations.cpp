@@ -96,6 +96,16 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
+    void Animations::setEnabled( bool value )
+    {
+        if( value == _enabled ) return;
+        _enabled = value;
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
+        { (*iter)->setEnabled( value ); }
+
+    }
+
+    //____________________________________________________________________________________________
     gboolean Animations::destroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
         static_cast<Animations*>(data)->unregisterWidget( widget );

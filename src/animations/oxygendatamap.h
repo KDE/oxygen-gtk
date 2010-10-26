@@ -109,6 +109,21 @@ namespace Oxygen
 
         }
 
+        //! connect all widgets in map
+        void connectAll( void )
+        {
+            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
+            { iter->second.connect( iter->first ); }
+        }
+
+
+        //! connect all widgets in map
+        void disconnectAll( void )
+        {
+            for( typename Map::iterator iter = _map.begin(); iter != _map.end(); iter++ )
+            { iter->second.disconnect( iter->first ); }
+        }
+
         protected:
 
         //! copy constructor is private
