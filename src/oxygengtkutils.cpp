@@ -365,6 +365,13 @@ namespace Oxygen
     }
 
     //____________________________________________________________
+    int Gtk::gtk_notebook_get_current_tab(GtkNotebook* notebook)
+    {
+        if( notebook && notebook->children && notebook->cur_page ) return g_list_index( notebook->children, notebook->cur_page );
+        else return -1;
+    }
+
+    //____________________________________________________________
     gboolean Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
         // cast to notebook and check against number of pages

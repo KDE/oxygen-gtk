@@ -144,6 +144,9 @@ namespace Oxygen
         //! returns index of first visible tab
         int gtk_notebook_find_first_tab( GtkWidget* );
 
+        //! index of current page
+        int gtk_notebook_get_current_tab( GtkNotebook* );
+
         // make all the buttons on the tabs normal
         gboolean gtk_notebook_update_close_buttons( GtkNotebook*);
 
