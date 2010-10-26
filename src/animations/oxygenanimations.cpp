@@ -28,7 +28,8 @@ namespace Oxygen
 {
 
     //_________________________________________
-    Animations::Animations( void )
+    Animations::Animations( void ):
+        _enabled( true )
     {
 
         // create engines

@@ -56,6 +56,14 @@ namespace Oxygen
         //! unregister widget
         void unregisterWidget( GtkWidget* );
 
+        //! enabled state
+        void setEnabled( bool value )
+        { _enabled = value; }
+
+        //! enabled state
+        bool enabled( void ) const
+        { return _enabled; }
+
         //! comboboxengine
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
@@ -105,6 +113,9 @@ namespace Oxygen
         static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
 
         private:
+
+        //! enabled state
+        bool _enabled;
 
         //! list of engines
         BaseEngine::List _engines;

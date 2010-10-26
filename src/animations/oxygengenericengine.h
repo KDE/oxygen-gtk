@@ -51,8 +51,13 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             if( _data.contains( widget ) ) return false;
-            T& data = _data.registerWidget( widget );
-            data.connect( widget );
+            if( enabled() )
+            {
+
+                T& data( _data.registerWidget( widget ) );
+                data.connect( widget );
+
+            } else _data.registerWidget( widget );
 
             BaseEngine::registerWidget( widget );
             return true;
@@ -62,11 +67,9 @@ namespace Oxygen
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* widget )
         {
-
             if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
+            if( enabled() ) _data.value( widget ).disconnect( widget );
             _data.erase( widget );
-
         }
 
         //! true if widget is included
