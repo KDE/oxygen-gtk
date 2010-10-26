@@ -28,7 +28,8 @@ namespace Oxygen
 {
 
     //_________________________________________
-    Animations::Animations( void )
+    Animations::Animations( void ):
+        _enabled( true )
     {
 
         // create engines
@@ -91,6 +92,16 @@ namespace Oxygen
         // erase from all maps
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->unregisterWidget( widget ); }
+
+    }
+
+    //____________________________________________________________________________________________
+    void Animations::setEnabled( bool value )
+    {
+        if( value == _enabled ) return;
+        _enabled = value;
+        for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
+        { (*iter)->setEnabled( value ); }
 
     }
 

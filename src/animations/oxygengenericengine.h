@@ -51,8 +51,13 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             if( _data.contains( widget ) ) return false;
-            T& data = _data.registerWidget( widget );
-            data.connect( widget );
+            if( enabled() )
+            {
+
+                T& data( _data.registerWidget( widget ) );
+                data.connect( widget );
+
+            } else _data.registerWidget( widget );
 
             BaseEngine::registerWidget( widget );
             return true;
@@ -62,12 +67,13 @@ namespace Oxygen
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* widget )
         {
-
             if( !_data.contains( widget ) ) return;
-            _data.value( widget ).disconnect( widget );
+            if( enabled() ) _data.value( widget ).disconnect( widget );
             _data.erase( widget );
-
         }
+
+        //! enabled state
+        inline virtual void setEnabled( bool value );
 
         //! true if widget is included
         virtual bool contains( GtkWidget* widget )
@@ -85,6 +91,15 @@ namespace Oxygen
         DataMap<T> _data;
 
     };
+
+    //________________________________________________________________________
+    template< typename T> void GenericEngine<T>::setEnabled( bool value )
+    {
+        if( enabled() == value ) return;
+        BaseEngine::setEnabled( value );
+        if( enabled() ) _data.connectAll();
+        else _data.disconnectAll();
+    }
 
 }
 
