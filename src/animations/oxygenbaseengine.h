@@ -37,7 +37,8 @@ namespace Oxygen
 
         //! constructor
         BaseEngine( Animations* parent ):
-            _parent( parent )
+            _parent( parent ),
+            _enabled( true )
         {}
 
         virtual ~BaseEngine(){}
@@ -51,6 +52,14 @@ namespace Oxygen
         //! engine list
         typedef std::vector< BaseEngine* > List;
 
+        //! enable state
+        void setEnabled( bool value )
+        { _enabled = value; }
+
+        //! enable state
+        bool enabled( void ) const
+        { return _enabled; }
+
         protected:
 
         //! returns parent
@@ -61,6 +70,9 @@ namespace Oxygen
 
         //! parent
         Animations* _parent;
+
+        //! enable flag
+        bool _enabled;
 
     };
 
