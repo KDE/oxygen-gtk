@@ -501,6 +501,10 @@ namespace Oxygen
 
             } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
+                // get the state from the combobox
+                /* this fixes rendering issues when the arrow is disabled, but not the entry */
+                state = gtk_widget_get_state(parent);
+
                 /*
                 editable combobox button get a hole (with left corner hidden), and a background
                 that match the corresponding text entry background.
@@ -513,8 +517,6 @@ namespace Oxygen
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
-
-                state = gtk_widget_get_state(parent);
 
                 if( style )
                 {
