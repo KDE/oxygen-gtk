@@ -1823,9 +1823,14 @@ namespace Oxygen
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
+            bool drag(  widget && (window != widget->window ) &&
+                !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isOpenOffice() );
+
             // render tabbar base if current tab
-            if( ( tabOptions & CurrentTab ) )
+            if( ( tabOptions & CurrentTab ) && !drag )
             {
+
                 int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
                 int xBase( widget->allocation.x + borderWidth );
                 int yBase( widget->allocation.y + borderWidth );
