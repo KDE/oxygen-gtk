@@ -62,11 +62,32 @@ namespace Oxygen
 
         if( !widget ) return false;
 
-        GdkScreen *screen( gtk_widget_get_screen (widget) );
+        GdkScreen *screen( gtk_widget_get_screen( widget ) );
         if( gdk_screen_is_composited( screen ) )
         {
 
-            GdkVisual *visual = gtk_widget_get_visual (widget);
+            GdkVisual *visual( gtk_widget_get_visual (widget) );
+            return
+                visual->depth == 32 &&
+                visual->red_mask   == 0xff0000 &&
+                visual->green_mask == 0x00ff00 &&
+                visual->blue_mask  == 0x0000ff;
+
+        } else return false;
+
+    }
+
+    //________________________________________________________
+    bool Gtk::gdk_window_has_rgba( GdkWindow* window )
+    {
+
+        if( !window ) return false;
+
+        GdkScreen *screen( gdk_drawable_get_screen( GDK_DRAWABLE( window ) ) );
+        if( gdk_screen_is_composited( screen ) )
+        {
+
+            GdkVisual *visual( gdk_drawable_get_visual( GDK_DRAWABLE( window ) ) );
             return
                 visual->depth == 32 &&
                 visual->red_mask   == 0xff0000 &&

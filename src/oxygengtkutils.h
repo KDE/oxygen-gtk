@@ -48,6 +48,9 @@ namespace Oxygen
         //! returns true if widget supports rgba
         bool gtk_widget_has_rgba( GtkWidget* );
 
+        //! returns true if window supports rgba
+        bool gdk_window_has_rgba( GdkWindow* );
+
         //! true if object match a given type
         bool gtk_object_is_a( const GObject*, const gchar* );
 
