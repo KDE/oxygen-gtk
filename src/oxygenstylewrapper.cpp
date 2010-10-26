@@ -1794,11 +1794,17 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             TabOptions tabOptions( widget, state, position, x, y, w, h );
 
+            const bool isCurrentTab( tabOptions & CurrentTab );
+            bool drawTabBarBase( isCurrentTab );
+            bool dragInProgress( false );
+
             /*
             see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
-            app, because the latter do not pass the actual tab rect as argument
+            (or open office) app, because the latter do not pass the actual tab rect as argument
             */
-            if( GTK_IS_NOTEBOOK( widget ) && !Style::instance().settings().applicationName().isMozilla() )
+            const bool isMozilla( Style::instance().settings().applicationName().isMozilla() );
+            const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
+            if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice ) )
             {
 
                 // make sure widget is registered
@@ -1818,17 +1824,27 @@ namespace Oxygen
                 const int current( gtk_notebook_get_current_page( notebook ) );
                 if( tabIndex == current-1 ) tabOptions |= LeftOfSelected;
                 else if( tabIndex == current+1 ) tabOptions |= RightOfSelected;
+
+                // update drag in progress flag
+                if( isCurrentTab )
+                {
+                    bool drag( widget && (window != widget->window ) );
+                    Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
+                }
+
+                dragInProgress = Style::instance().animations().tabWidgetEngine().dragInProgress( widget );
+
+                // this does not work when the first tab is being grabbed
+                if( dragInProgress )
+                { drawTabBarBase = (tabOptions & FirstTab) && !isCurrentTab; }
+
             }
 
             // render
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
-            bool drag(  widget && (window != widget->window ) &&
-                !Style::instance().settings().applicationName().isMozilla() &&
-                !Style::instance().settings().applicationName().isOpenOffice() );
-
             // render tabbar base if current tab
-            if( ( tabOptions & CurrentTab ) && !drag )
+            if( drawTabBarBase )
             {
 
                 int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
@@ -1842,14 +1858,14 @@ namespace Oxygen
                 {
                     case GTK_POS_BOTTOM:
                     case GTK_POS_TOP:
-                    gap = Gtk::Gap( x - xBase + 5, w - 6, position );
+                    if( !dragInProgress ) gap = Gtk::Gap( x - xBase + 5, w - 6, position );
                     yBase = y;
                     hBase = h;
                     break;
 
                     case GTK_POS_LEFT:
                     case GTK_POS_RIGHT:
-                    gap = Gtk::Gap( y - yBase + 5, h - 6, position );
+                    if( !dragInProgress ) gap = Gtk::Gap( y - yBase + 5, h - 6, position );
                     xBase = x;
                     wBase = w;
                     break;
@@ -1859,6 +1875,7 @@ namespace Oxygen
                 }
 
                 gap.setHeight( 8 );
+
                 Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
 
             }

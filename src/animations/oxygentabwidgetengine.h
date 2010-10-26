@@ -70,6 +70,14 @@ namespace Oxygen
         void updateHoveredTab( GtkWidget* widget )
         { return data().value( widget ).updateHoveredTab( widget ); }
 
+        //! true when drag is in progress
+        void setDragInProgress( GtkWidget* widget, bool value )
+        { data().value( widget ).setDragInProgress( value ); }
+
+        //! true when drag is in progress
+        bool dragInProgress( GtkWidget* widget )
+        { return data().value( widget ).dragInProgress(); }
+
     };
 
 }

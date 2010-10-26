@@ -39,7 +39,8 @@ namespace Oxygen
             _motionId(-1),
             _leaveId(-1),
             _pageAddedId(-1),
-            _hoveredTab( -1 )
+            _hoveredTab( -1 ),
+            _dragInProgress( false )
         {}
 
         //! destructor
@@ -59,9 +60,17 @@ namespace Oxygen
         //! update hovered tab
         void updateHoveredTab( GtkWidget* = 0L );
 
+        //! true when drag is in progress
+        void setDragInProgress( bool value )
+        { _dragInProgress = value; }
+
         //! true if hovered
         int hoveredTab( void ) const
         { return _hoveredTab; }
+
+        //! true when drag is in progress
+        bool dragInProgress( void ) const
+        { return _dragInProgress; }
 
         protected:
 
@@ -109,6 +118,9 @@ namespace Oxygen
 
         //! index of currently hovered tab
         int _hoveredTab;
+
+        //! true when there is a drag in progress
+        bool _dragInProgress;
 
         //! store rectangles matching tabs
         typedef std::vector<GdkRectangle> RectangleList;
