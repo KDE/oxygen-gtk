@@ -334,6 +334,9 @@ namespace Oxygen
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
             GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
 
+            if(!tabLabel)
+                return tab;
+
             // get allocted size and compare to position
             const GtkAllocation& allocation( tabLabel->allocation );
 
