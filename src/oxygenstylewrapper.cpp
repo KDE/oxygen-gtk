@@ -1836,7 +1836,10 @@ namespace Oxygen
 
                 // this does not work when the first tab is being grabbed
                 if( dragInProgress )
-                { drawTabBarBase = (tabOptions & FirstTab) && !isCurrentTab; }
+                {
+                    drawTabBarBase = ((tabOptions & FirstTab) && !isCurrentTab) ||
+                        ((tabOptions & LastTab) && Gtk::gtk_notebook_get_current_tab( notebook ) == 0 );
+                }
 
             }
 
