@@ -1830,6 +1830,7 @@ namespace Oxygen
                 {
                     bool drag( widget && (window != widget->window ) );
                     Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
+                    if( drag ) tabOptions |= Dragged;
                 }
 
                 dragInProgress = Style::instance().animations().tabWidgetEngine().dragInProgress( widget );

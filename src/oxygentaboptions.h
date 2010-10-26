@@ -41,7 +41,10 @@ namespace Oxygen
         FirstTabAligned = 1<<3,
         LastTabAligned = 1<<4,
         LeftOfSelected = 1<<5,
-        RightOfSelected = 1<<6
+        RightOfSelected = 1<<6,
+
+        //! true if tab is being dragged
+        Dragged = 1<<7
 
     };
 
