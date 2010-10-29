@@ -1828,7 +1828,7 @@ namespace Oxygen
             see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
             app, because the latter do not pass the actual tab rect as argument
             */
-            if( GTK_IS_NOTEBOOK( widget ) && !Style::instance().settings().applicationName().isMozilla() )
+            if( GTK_IS_NOTEBOOK( widget ) && !Style::instance().settings().applicationName().isMozilla() && !Style::instance().settings().applicationName().isOpenOffice() )
             {
 
                 // make sure widget is registered
@@ -1848,6 +1848,15 @@ namespace Oxygen
                 const int current( gtk_notebook_get_current_page( notebook ) );
                 if( tabIndex == current-1 ) tabOptions |= LeftOfSelected;
                 else if( tabIndex == current+1 ) tabOptions |= RightOfSelected;
+            }
+
+            if( Style::instance().settings().applicationName().isOpenOffice() )
+            {
+                // draw background since OOo won't draw it as it should
+                Cairo::Context context(window,clipRect);
+                cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+                cairo_rectangle(context,x-1,y,w+2,h+1); // in addition, it passes wrong rectangle to the theme
+                cairo_fill(context);
             }
 
             // render
