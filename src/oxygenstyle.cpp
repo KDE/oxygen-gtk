@@ -87,9 +87,21 @@ namespace Oxygen
     //__________________________________________________________________
     bool Style::renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
+        // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
 
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+
+        // draw flat background for OpenOffice
+        if( Style::instance().settings().applicationName().isOpenOffice() )
+        {
+            Cairo::Context context(window,clipRect);
+            cairo_set_source(context,base);
+            cairo_rectangle(context,x,y,w,h);
+            cairo_fill(context);
+            return true;
+        }
+
 
         // get window dimension and position
         gint ww, wh;
