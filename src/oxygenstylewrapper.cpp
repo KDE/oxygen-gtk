@@ -475,6 +475,17 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
+        // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
+        // FIXME: if draw_box is disabled in style class, steppers look like slabs - they get drawn somewhere and overdrawn here
+        if(d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
+        {
+            Cairo::Context context(window,clipRect);
+            cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+            cairo_rectangle(context,x,y,w-2,h-1); // make it not overdraw scrollbar hole...
+            cairo_fill(context);
+            return;
+        }
+
         GtkWidget* parent(0L);
         if( d.isButton() || d.isOptionMenu() || d.isToggleButton() )
         {
@@ -713,11 +724,29 @@ namespace Oxygen
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
+                // TODO: put this into separate function since this code is duplicated many times
+                if(Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    // OpenOffice doesn't call draw_box to draw background
+                    Cairo::Context context(window,clipRect);
+                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+                    cairo_paint(context);
+                }
                 Style::instance().adjustScrollBarHole( x, y, w, h, Vertical );
                 Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
 
             } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
+                if(Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    // OpenOffice doesn't call draw_box to draw background
+                    Cairo::Context context(window,clipRect);
+                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+                    cairo_paint(context);
+
+                    // adjust scrollbar hole since it has wrong geometry in OOo
+                    x-=2; w+=1;
+                }
                 Style::instance().adjustScrollBarHole( x, y, w, h, StyleOptions() );
                 Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, StyleOptions() );
 
