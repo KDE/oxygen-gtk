@@ -476,13 +476,11 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
-        // FIXME: if draw_box is disabled in style class, steppers look like slabs - they get drawn somewhere and overdrawn here
+        // FIXME: if draw_box is disabled in style class, steppers look like slabs
+        //  in all apps - this must mean that they get drawn somewhere and overdrawn here
         if(d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
         {
-            Cairo::Context context(window,clipRect);
-            cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
-            cairo_rectangle(context,x,y,w-2,h-1); // make it not overdraw scrollbar hole...
-            cairo_fill(context);
+            Style::instance().renderWindowBackground(window,widget,clipRect,x,y,w-2,h-1);
             return;
         }
 
@@ -728,6 +726,7 @@ namespace Oxygen
                 if(Style::instance().settings().applicationName().isOpenOffice() )
                 {
                     // OpenOffice doesn't call draw_box to draw background
+                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
                     Cairo::Context context(window,clipRect);
                     cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
                     cairo_paint(context);
@@ -743,6 +742,7 @@ namespace Oxygen
                 if(Style::instance().settings().applicationName().isOpenOffice() )
                 {
                     // OpenOffice doesn't call draw_box to draw background
+                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
                     Cairo::Context context(window,clipRect);
                     cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
                     cairo_paint(context);
@@ -1853,10 +1853,8 @@ namespace Oxygen
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
                 // draw background since OOo won't draw it as it should
-                Cairo::Context context(window,clipRect);
-                cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
-                cairo_rectangle(context,x-1,y,w+2,h+1); // in addition, it passes wrong rectangle to the theme
-                cairo_fill(context);
+                // in addition, it passes wrong rectangle to the theme
+                Style::instance().renderWindowBackground(window,widget,clipRect,x-1,y,w+2,h+1);
             }
 
             // render
