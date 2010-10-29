@@ -731,6 +731,9 @@ namespace Oxygen
                     Cairo::Context context(window,clipRect);
                     cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
                     cairo_paint(context);
+
+                    // adjust scrollbar hole since it has wrong geometry in OOo
+                    y-=1; h+=1;
                 }
                 Style::instance().adjustScrollBarHole( x, y, w, h, Vertical );
                 Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
