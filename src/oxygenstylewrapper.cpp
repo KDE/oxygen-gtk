@@ -475,6 +475,15 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
+        // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
+        // FIXME: if draw_box is disabled in style class, steppers look like slabs
+        //  in all apps - this must mean that they get drawn somewhere and overdrawn here
+        if(d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
+        {
+            Style::instance().renderWindowBackground(window,widget,clipRect,x,y,w-2,h-1);
+            return;
+        }
+
         GtkWidget* parent(0L);
         if( d.isButton() || d.isOptionMenu() || d.isToggleButton() )
         {
@@ -715,11 +724,34 @@ namespace Oxygen
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
+                // TODO: put this into separate function since this code is duplicated many times
+                if(Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    // OpenOffice doesn't call draw_box to draw background
+                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
+                    Cairo::Context context(window,clipRect);
+                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+                    cairo_paint(context);
+
+                    // adjust scrollbar hole since it has wrong geometry in OOo
+                    y-=1; h+=1;
+                }
                 Style::instance().adjustScrollBarHole( x, y, w, h, Vertical );
                 Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
 
             } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
+                if(Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    // OpenOffice doesn't call draw_box to draw background
+                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
+                    Cairo::Context context(window,clipRect);
+                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
+                    cairo_paint(context);
+
+                    // adjust scrollbar hole since it has wrong geometry in OOo
+                    x-=2; w+=1;
+                }
                 Style::instance().adjustScrollBarHole( x, y, w, h, StyleOptions() );
                 Style::instance().renderScrollBarHole( window, clipRect, x+1, y, w-2, h-1, StyleOptions() );
 
@@ -1042,7 +1074,7 @@ namespace Oxygen
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
             // default shadow_in frame
-            Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+//            Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
             Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
 
         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
@@ -1404,6 +1436,24 @@ namespace Oxygen
             // need to render background behind arrows from calendar
             // offsets are empirical
             Style::instance().renderWindowBackground( window, clipRect, x-2, y-3, w+4, h+6 );
+
+        } else if( GTK_IS_SCROLLBAR( widget ) ) {
+
+            GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkStateType widgetState=gtk_widget_get_state(widget);
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
 
         }
 
@@ -1842,6 +1892,13 @@ namespace Oxygen
                         ((tabOptions & LastTab) && Gtk::gtk_notebook_get_current_tab( notebook ) == 0 );
                 }
 
+            }
+
+            if( Style::instance().settings().applicationName().isOpenOffice() )
+            {
+                // draw background since OOo won't draw it as it should
+                // in addition, it passes wrong rectangle to the theme
+                Style::instance().renderWindowBackground(window,widget,clipRect,x-1,y,w+2,h+1);
             }
 
             // render
