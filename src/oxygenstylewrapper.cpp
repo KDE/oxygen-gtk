@@ -1880,7 +1880,6 @@ namespace Oxygen
                 {
                     bool drag( widget && (window != widget->window ) );
                     Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
-                    if( drag ) tabOptions |= Dragged;
                 }
 
                 dragInProgress = Style::instance().animations().tabWidgetEngine().dragInProgress( widget );
@@ -2220,7 +2219,14 @@ namespace Oxygen
 
 //_______________________________________________________________________________________________________________
 extern "C" void instance_init( OxygenStyle* self )
-{ Oxygen::Style::instance(); }
+{
+
+    // this should move somewhere else
+    Oxygen::Style::instance();
+    if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
+    { Oxygen::Style::instance().animations().setEnabled( false ); }
+
+}
 
 //_______________________________________________________________________________________________________________
 static void class_init( OxygenStyleClass* klass )
