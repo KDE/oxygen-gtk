@@ -2819,7 +2819,7 @@ namespace Oxygen
     void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions options ) const
     {
 
-        const int buttonSize( 15 );
+        const int buttonSize( 14 );
         const int subLineOffset( buttonSize*settings().scrollBarSubLineButtons() );
         const int addLineOffset( buttonSize*settings().scrollBarAddLineButtons() );
         if( options&Vertical )
