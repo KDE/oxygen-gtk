@@ -1435,6 +1435,13 @@ namespace Oxygen
             // offsets are empirical
             Style::instance().renderWindowBackground( window, clipRect, x-2, y-3, w+4, h+6 );
 
+        } else if( GTK_IS_SCROLLBAR( widget ) ) {
+
+            if( gtk_range_get_lower_stepper_sensitivity(GTK_RANGE(widget))==GTK_SENSITIVITY_AUTO )
+                gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),(gtk_widget_get_state(widget)==GTK_STATE_INSENSITIVE)?GTK_SENSITIVITY_OFF:GTK_SENSITIVITY_ON);
+            if( gtk_range_get_upper_stepper_sensitivity(GTK_RANGE(widget))==GTK_SENSITIVITY_AUTO )
+                gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),(gtk_widget_get_state(widget)==GTK_STATE_INSENSITIVE)?GTK_SENSITIVITY_OFF:GTK_SENSITIVITY_ON);
+
         }
 
         // render arrow
