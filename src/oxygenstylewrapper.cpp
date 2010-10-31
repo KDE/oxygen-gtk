@@ -1437,10 +1437,17 @@ namespace Oxygen
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
-            if( gtk_range_get_lower_stepper_sensitivity(GTK_RANGE(widget))==GTK_SENSITIVITY_AUTO )
-                gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),(gtk_widget_get_state(widget)==GTK_STATE_INSENSITIVE)?GTK_SENSITIVITY_OFF:GTK_SENSITIVITY_ON);
-            if( gtk_range_get_upper_stepper_sensitivity(GTK_RANGE(widget))==GTK_SENSITIVITY_AUTO )
-                gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),(gtk_widget_get_state(widget)==GTK_STATE_INSENSITIVE)?GTK_SENSITIVITY_OFF:GTK_SENSITIVITY_ON);
+            GtkSensitivityType lowerOld=gtk_range_get_lower_stepper_sensitivity(GTK_RANGE(widget)),
+                                upperOld=gtk_range_get_upper_stepper_sensitivity(GTK_RANGE(widget));
+            GtkStateType widgetState=gtk_widget_get_state(widget);
+            if( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON && widgetState==GTK_STATE_INSENSITIVE)
+                gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF);
+            if( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF && widgetState!=GTK_STATE_INSENSITIVE)
+                gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON);
+            if( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON && widgetState==GTK_STATE_INSENSITIVE)
+                gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF);
+            if( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF && widgetState!=GTK_STATE_INSENSITIVE)
+                gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON);
 
         }
 
