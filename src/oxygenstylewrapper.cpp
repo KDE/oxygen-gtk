@@ -1194,12 +1194,19 @@ namespace Oxygen
 
         } else if( d.isOption() ) {
 
-            // load options and disable hove
+            // load options and disable hover
             StyleOptions options( widget, state, shadow );
             if( !Gtk::gtk_parent_tree_view( widget ) )
             {
                 options |= Blend;
-                if( Gtk::gtk_parent_menu( widget ) ) options|=Menu;
+                if( Gtk::gtk_parent_menu( widget ) )
+                {
+
+                    options|=Menu;
+                    x-=1;
+                    y-=1;
+                }
+
             }
             options &= ~Hover;
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
