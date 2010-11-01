@@ -32,26 +32,51 @@ namespace Oxygen
         public:
 
         //! constructor
-        Timer( void );
+        Timer( void ):
+            _timerId( 0 ),
+            _func( 0L ),
+            _data( 0L )
+        {}
 
         //! copy constructor
         /*! actually does not copy anything, and prints a warning if the other timer is running */
-        Timer( const Timer& );
+        Timer( const Timer& other ):
+            _timerId( 0 ),
+            _func( 0L ),
+            _data( 0L )
+        {
+            if( other.isRunning() )
+            { g_warning( "Oxygen::Timer::Timer - Copy constructor on running timer called." ); }
+
+        }
 
         //! destructor
-        virtual ~Timer( void );
+        virtual ~Timer( void )
+        { if( _timerId ) g_source_remove( _timerId ); }
 
         //! start
         void start( int, GSourceFunc, gpointer );
 
         //! stop
-        void stop( void );
+        void stop( void )
+        {
+            if( _timerId ) g_source_remove( _timerId );
+            reset();
+        }
 
         //! true if running
         bool isRunning( void ) const
         { return _timerId != 0; }
 
         protected:
+
+        //! reset
+        void reset( void )
+        {
+            _timerId = 0;
+            _data = 0;
+            _func = 0;
+        }
 
         //! delayed update
         static gboolean timeOut( gpointer );

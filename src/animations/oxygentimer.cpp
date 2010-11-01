@@ -27,43 +27,6 @@ namespace Oxygen
 {
 
     //____________________________________________________
-    Timer::Timer( void ):
-        _timerId( 0 ),
-        _func( 0L ),
-        _data( 0L )
-    {
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::Timer::Timer" << std::endl;
-        #endif
-    }
-
-    //____________________________________________________
-    Timer::Timer( const Timer& other ):
-        _timerId( 0 ),
-        _func( 0L ),
-        _data( 0L )
-    {
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::Timer::Timer (copy)" << std::endl;
-        #endif
-
-        if( other.isRunning() )
-        { g_warning( "Oxygen::Timer::Timer - Copy constructor on running timer called." ); }
-
-    }
-
-    //____________________________________________________
-    Timer::~Timer( void )
-    {
-
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::Timer::~Timer" << std::endl;
-        #endif
-
-        stop();
-    }
-
-    //____________________________________________________
     void Timer::start( int delay, GSourceFunc func, gpointer data )
     {
 
@@ -77,15 +40,6 @@ namespace Oxygen
     }
 
     //____________________________________________________
-    void Timer::stop( void )
-    {
-        if( _timerId ) g_source_remove( _timerId );
-        _timerId = 0;
-        _func = 0L;
-        _data = 0L;
-    }
-
-    //____________________________________________________
     gboolean Timer::timeOut( gpointer data )
     {
 
@@ -94,13 +48,7 @@ namespace Oxygen
         gboolean result = (timer._func)( timer._data );
 
         // make sure timerId is properly reset if the embedded function returns false
-        if( !result )
-        {
-            timer._timerId = 0;
-            timer._data = 0;
-            timer._func = 0;
-        }
-
+        if( !result ) timer.reset();
         return result;
 
     }
