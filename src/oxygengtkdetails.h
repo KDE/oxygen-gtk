@@ -60,6 +60,8 @@ namespace Oxygen
 
             //@}
 
+            bool isDragAndDrop( void ) const { return _value == "dnd"; }
+
             //!@name scrollbars
             //@{
             bool isHScrollBar( void ) const { return _value == "hscrollbar"; }
