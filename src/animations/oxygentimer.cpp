@@ -49,6 +49,7 @@ namespace Oxygen
 
         if( other.isRunning() )
         { g_warning( "Oxygen::Timer::Timer - Copy constructor on running timer called." ); }
+
     }
 
     //____________________________________________________
@@ -93,7 +94,13 @@ namespace Oxygen
         gboolean result = (timer._func)( timer._data );
 
         // make sure timerId is properly reset if the embedded function returns false
-        if( !result ) timer._timerId = 0;
+        if( !result )
+        {
+            timer._timerId = 0;
+            timer._data = 0;
+            timer._func = 0;
+        }
+
         return result;
 
     }
