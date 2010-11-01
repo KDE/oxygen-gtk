@@ -80,11 +80,7 @@ namespace Oxygen
 
             //! equal to operator
             bool operator == (const CellInfo& other ) const
-            {
-                if( _column != other._column ) return false;
-                else if( _path ) return other._path && !gtk_tree_path_compare( _path, other._path );
-                else return !other._path;
-            }
+            { return sameColumn( other ) && samePath( other ); }
 
             //! clear
             void clear( void )
@@ -120,6 +116,17 @@ namespace Oxygen
             //! return path depth
             unsigned int depth( void ) const
             { return _path ? (unsigned int) gtk_tree_path_get_depth( _path ):0;  }
+
+            //! true if column match
+            bool sameColumn( const CellInfo& other ) const
+            { return _column == other._column; }
+
+            //! true if path match
+            bool samePath( const CellInfo& other ) const
+            {
+                if( _path ) return other._path && !gtk_tree_path_compare( _path, other._path );
+                else return !other._path;
+            }
 
             //! background rect
             GdkRectangle backgroundRect( GtkTreeView* ) const;

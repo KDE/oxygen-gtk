@@ -48,8 +48,6 @@ namespace Oxygen
         if( GTK_IS_TREE_VIEW( widget ) )
         {
             gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
-            GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
-            _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", G_CALLBACK( rowDeletedEvent ), this );
 
             // on connection, needs to check whether mouse pointer is in widget or not
             // to have the proper initial value of the hover flag
@@ -81,13 +79,6 @@ namespace Oxygen
 
         // motion handler
         g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
-
-        // TODO: this should really get handled at model deletion
-        if( _rowDeletedId >= 0 && GTK_IS_TREE_VIEW( widget ) )
-        {
-            GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
-            g_signal_handler_disconnect( G_OBJECT(model), _rowDeletedId );
-        }
 
         // also free path if valid
         _cellInfo.clear();
@@ -126,19 +117,8 @@ namespace Oxygen
 
         // get new rectangle and update position
         GdkRectangle newRect( cellInfo.backgroundRect( treeView ) );
-        if( cellInfo.isValid() )
-        {
-
-            _x = newRect.x + newRect.width/2;
-            _y = newRect.y + newRect.height/2;
-
-            if( _fullWidth ) { newRect.x = 0; newRect.width = widget->allocation.width; }
-
-        } else {
-
-            _x = -1;
-            _y = -1;
-        }
+        if( cellInfo.isValid() && _fullWidth )
+        { newRect.x = 0; newRect.width = widget->allocation.width; }
 
         // take the union of both rectangles
         GdkRectangle updateRect;
@@ -162,10 +142,6 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::clearPosition( GtkWidget* widget )
     {
-
-        // clear stored position
-        _x = -1;
-        _y = -1;
 
         // check widget
         if( !widget ) widget = _target;
@@ -264,10 +240,6 @@ namespace Oxygen
         static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y );
         return FALSE;
     }
-
-    //________________________________________________________________________________
-    void TreeViewData::rowDeletedEvent( GtkTreeModel*, GtkTreePath* path, gpointer data )
-    { static_cast<TreeViewData*>( data )->clearPosition(); }
 
     //____________________________________________________________________________________________
     void TreeViewData::ScrollBarData::disconnect( void )

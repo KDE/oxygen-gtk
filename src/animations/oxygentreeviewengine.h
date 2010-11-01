@@ -77,11 +77,11 @@ namespace Oxygen
         { return data().value( widget ).hovered(); }
 
         //! true if given cell is hovered
-        bool isCellHovered( GtkWidget* widget, int x, int y, int w, int h )
-        { return data().value( widget ).isCellHovered( x, y, w, h ); }
+        bool isCellHovered( GtkWidget* widget, const Gtk::CellInfo& info )
+        { return data().value( widget ).isCellHovered( info ); }
 
-        bool isCellHovered( GtkWidget* widget, int x, int y, int w, int h, bool fullWidth )
-        { return data().value( widget ).isCellHovered( x, y, w, h, fullWidth ); }
+        bool isCellHovered( GtkWidget* widget, const Gtk::CellInfo& info, bool fullWidth )
+        { return data().value( widget ).isCellHovered( info, fullWidth ); }
 
     };
 

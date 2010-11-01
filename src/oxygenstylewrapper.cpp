@@ -196,12 +196,12 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
-                    Style::instance().animations().treeViewEngine().registerWidget( widget );
-                    if(  Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h ) )
-                    { options |= Hover; }
-
                     GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+
+                    Style::instance().animations().treeViewEngine().registerWidget( widget );
+                    if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
+                    { options |= Hover; }
 
                     if( cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ) )
                     {
@@ -1131,13 +1131,18 @@ namespace Oxygen
 
             if( d.isCellCheck() )
             {
-                options &= ~Focus;
-                if(
-                    Style::instance().animations().treeViewEngine().contains( widget ) &&
-                    Style::instance().animations().treeViewEngine().isCellHovered( widget, x, y, w, h, false ) )
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                options &= ~(Focus|Hover);
+                if( GTK_IS_TREE_VIEW( widget ) )
                 {
-                    options |= Hover;
-                } else options &= ~Hover;
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                    if( cellInfo.isValid() &&
+                        Style::instance().animations().treeViewEngine().contains( widget ) &&
+                        Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                    { options |= Hover; }
+                }
 
             }
 

@@ -38,10 +38,7 @@ namespace Oxygen
         TreeViewData( void ):
             _target(0L),
             _motionId(-1),
-            _rowDeletedId(-1),
-            _fullWidth( false ),
-            _x(-1),
-            _y(-1)
+            _fullWidth( false )
         {}
 
         //! destructor
@@ -58,17 +55,13 @@ namespace Oxygen
         void setFullWidth( bool value )
         { _fullWidth = value; }
 
-        //! true if current position is contained int rect
-        bool isCellHovered( int x, int y, int w, int h ) const
-        { return isCellHovered( x, y, w, h, _fullWidth ); }
+        //! true if cell info is hovered
+        bool isCellHovered( const Gtk::CellInfo& cellInfo ) const
+        { return isCellHovered( cellInfo, _fullWidth ); }
 
-        //! true if current position is contained int rect
-        bool isCellHovered( int x, int y, int w, int h, bool fullWidth ) const
-        {
-            if( !( _cellInfo.isValid() && hovered() ) ) return false;
-            if( fullWidth ) return ( _y >= y ) && ( _y < y+h );
-            else return (_x >= x) && (_x < x+w ) && ( _y >= y ) && ( _y < y+h );
-        }
+        //! true if cell info is hovered
+        bool isCellHovered( const Gtk::CellInfo& cellInfo, bool fullWidth ) const
+        { return ( fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
 
         protected:
 
@@ -117,45 +110,31 @@ namespace Oxygen
 
         //!@name child (scrollbars) handling
         //@{
-
-
         void registerScrollBars( GtkWidget* );
         void registerChild( GtkWidget*, ScrollBarData& );
         void unregisterChild( GtkWidget* );
-        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
-        static void childValueChanged( GtkRange*, gpointer );
         //@}
 
         //!@name static callbacks
         //@{
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        static void childValueChanged( GtkRange*, gpointer );
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
-        static void rowActivatedEvent( GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gpointer );
-        static void cursorChangedEvent( GtkTreeView*, gpointer );
-        static void rowDeletedEvent( GtkTreeModel*, GtkTreePath*, gpointer );
         //@}
 
         private:
 
         GtkWidget* _target;
 
-        //!@name callbacks ids
-        //@{
+        //! callbacks ids
         int _motionId;
-        int _rowDeletedId;
-        //@}
 
         //! true if hover works on full width
         bool _fullWidth;
 
         //!@name keep track of the hovered path and column
         Gtk::CellInfo _cellInfo;
-
-        //!@name position
-        //@{
-        int _x;
-        int _y;
-        //@}
 
         //! vertical scrollbar data
         ScrollBarData _vScrollBar;
