@@ -35,14 +35,15 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cout << "Oxygen::HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         // on connection, needs to check whether mouse pointer is in widget or not
         // to have the proper initial value of the hover flag
         gint xPointer,yPointer;
         gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
-        setHovered( widget, Gtk::gdk_rectangle_contains( &widget->allocation, xPointer, yPointer ) );
+        GdkRectangle rect = { 0, 0, widget->allocation.width, widget->allocation.height };
+        setHovered( widget, Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) );
 
         // register callbacks
         _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
@@ -75,7 +76,7 @@ namespace Oxygen
     gboolean HoverData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         #if OXYGEN_DEBUG
-        std::cout << "HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cout << "Oxygen::HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         static_cast<HoverData*>( data )->setHovered( widget, false );
