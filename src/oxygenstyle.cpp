@@ -1013,7 +1013,7 @@ namespace Oxygen
 
         }
 
-        cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, 3.5, isMozilla ? CornersNone:CornersAll );
+        cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, 3.5, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
 
         cairo_set_source( context, pattern );
         cairo_set_line_width( context, 0.8 );
