@@ -43,7 +43,8 @@ namespace Oxygen
 
         //! destructor
         virtual ~MainWindowData( void )
-        {}
+        { if( _timeOutId > 0 ) g_source_remove( _timeOutId ); }
+
 
         //! setup connections
         void connect( GtkWidget* );
