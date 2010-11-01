@@ -34,7 +34,8 @@ namespace Oxygen
         //! constructor
         MainWindowData( void ):
             _target(0L),
-            _timeOutCount(0),
+            _timeOutId(0),
+            _locked(false),
             _configureId(-1),
             _width(-1),
             _height(-1)
@@ -66,8 +67,11 @@ namespace Oxygen
         //! pointer to associated widget
         GtkWidget* _target;
 
-        //! keep track of how many timeouts are running
-        int _timeOutCount;
+        //! timeout id
+        int _timeOutId;
+
+        //! true if next update must be delayed
+        bool _locked;
 
         //! configure signal id
         int _configureId;
