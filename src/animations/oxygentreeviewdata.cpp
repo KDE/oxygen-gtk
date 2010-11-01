@@ -34,6 +34,10 @@ namespace Oxygen
     void TreeViewData::connect( GtkWidget* widget )
     {
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TreeViewData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         // store target
         _target = widget;
 
@@ -46,6 +50,15 @@ namespace Oxygen
             gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
             GtkTreeModel* model( gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) ) );
             _rowDeletedId = g_signal_connect( G_OBJECT( model ), "row-deleted", G_CALLBACK( rowDeletedEvent ), this );
+
+            // on connection, needs to check whether mouse pointer is in widget or not
+            // to have the proper initial value of the hover flag
+            GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+            gint xPointer,yPointer;
+            gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+            gtk_tree_view_convert_widget_to_bin_window_coords( treeView, xPointer, yPointer, &xPointer, &yPointer );
+            updatePosition( widget, xPointer, yPointer );
+
         }
 
         _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
@@ -58,6 +71,10 @@ namespace Oxygen
     //________________________________________________________________________________
     void TreeViewData::disconnect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TreeViewData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
 
         // reset target
         _target = 0L;
@@ -82,6 +99,10 @@ namespace Oxygen
         // base class
         HoverData::disconnect( widget );
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TreeViewData::disconnect - done." << std::endl;
+        #endif
+
     }
 
     //________________________________________________________________________________
@@ -89,6 +110,7 @@ namespace Oxygen
     {
 
         if( !GTK_IS_TREE_VIEW( widget ) ) return;
+
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
 
         // get cellInfo at x and y
