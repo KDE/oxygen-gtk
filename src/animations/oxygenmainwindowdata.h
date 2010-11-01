@@ -23,6 +23,8 @@
 
 #include <gtk/gtk.h>
 
+#include "oxygentimer.h"
+
 namespace Oxygen
 {
     // track main window resize events
@@ -34,7 +36,6 @@ namespace Oxygen
         //! constructor
         MainWindowData( void ):
             _target(0L),
-            _timeOutId(0),
             _locked(false),
             _configureId(-1),
             _width(-1),
@@ -43,7 +44,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~MainWindowData( void )
-        { if( _timeOutId > 0 ) g_source_remove( _timeOutId ); }
+        {}
 
         //! setup connections
         void connect( GtkWidget* );
@@ -67,8 +68,8 @@ namespace Oxygen
         //! pointer to associated widget
         GtkWidget* _target;
 
-        //! timeout id
-        int _timeOutId;
+        //! timer
+        Timer _timer;
 
         //! true if next update must be delayed
         bool _locked;

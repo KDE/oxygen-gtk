@@ -31,7 +31,6 @@ namespace Oxygen
     void MainWindowData::connect( GtkWidget* widget )
     {
         _target = widget;
-        _timeOutId = 0;
         _locked = false;
         _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", G_CALLBACK( configureNotifyEvent ), this);
     }
@@ -42,8 +41,7 @@ namespace Oxygen
         _target = 0L;
 
         // reset timeout and locked flag
-        if( _timeOutId > 0 ) g_source_remove( _timeOutId );
-        _timeOutId = 0;
+        _timer.stop();
         _locked = false;
 
         g_signal_handler_disconnect( G_OBJECT(widget), _configureId );
@@ -58,10 +56,10 @@ namespace Oxygen
         _height = height;
 
         // schedule delayed timeOut
-        if( !_timeOutId )
+        if( !_timer.isRunning() )
         {
 
-            _timeOutId = g_timeout_add( 50, (GSourceFunc)delayedUpdate, this );
+            _timer.start( 50, (GSourceFunc)delayedUpdate, this );
             _locked = false;
 
         } else _locked = true;
@@ -84,7 +82,6 @@ namespace Oxygen
         {
 
             // if target is invalid, reset timeout and return
-            data._timeOutId = 0;
             data._locked = false;
             return FALSE;
 
@@ -98,7 +95,6 @@ namespace Oxygen
 
             // otherwise, trigger update
             gtk_widget_queue_draw( data._target );
-            data._timeOutId = 0;
             return FALSE;
 
         }
