@@ -1435,30 +1435,30 @@ namespace Oxygen
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        const ColorUtils::Rgba fill( options&NoFill ? ColorUtils::Rgba() : settings().palette().color( Palette::Base ) );
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
 
-        const bool fill( !(options&NoFill) );
         const bool enabled( !(options&Disabled ) );
 
-        if( fill ) tiles |= TileSet::Center;
+        if( fill.isValid() ) tiles |= TileSet::Center;
 
         if( enabled && (options & Focus) )
         {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else if( enabled && (options & Hover) ) {
 
             const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            helper().holeFocused( base, glow, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            helper().hole( base, 0, 7, fill ).render( context, x, y, w, h, tiles );
+            helper().hole( base, fill, 0, 7 ).render( context, x, y, w, h, tiles );
 
         }
 

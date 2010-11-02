@@ -344,10 +344,10 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    const TileSet& StyleHelper::hole( const ColorUtils::Rgba &base, double shade, int size, bool fill )
+    const TileSet& StyleHelper::hole( const ColorUtils::Rgba &base, const ColorUtils::Rgba& fill, double shade, int size )
     {
 
-        const HoleKey key( base, shade, size, fill );
+        const HoleKey key( base, fill, shade, size );
         TileSet* tileSet( m_holeCache.value( key ) );
         if( !tileSet )
         {
@@ -367,10 +367,10 @@ namespace Oxygen
                 cairo_scale( context, 10.0/w, 10.0/h );
 
                 // inside
-                if( fill )
+                if( fill.isValid() )
                 {
                     cairo_ellipse( context, 4, 3, 6, 7 );
-                    cairo_set_source( context, ColorUtils::Rgba::white() );
+                    cairo_set_source( context, fill );
                     cairo_fill( context );
                 }
 
@@ -384,6 +384,50 @@ namespace Oxygen
             g_object_unref( pixbuf );
 
             m_holeCache.insert( key, tileSet );
+        }
+
+        return *tileSet;
+
+    }
+
+    //______________________________________________________________________________
+    const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow, double shade, int size )
+    {
+
+        const HoleFocusedKey key( base, fill, glow, shade, size );
+        TileSet* tileSet( m_holeFocusedCache.value( key ) );
+        if( !tileSet )
+        {
+            // create pixbuf and initialize
+            const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
+            const int w( 2*rsize );
+            const int h( 2*rsize );
+
+            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            {
+
+                Cairo::Context context( pixbuf );
+                const TileSet& holeTileSet = hole( base, fill, shade, size );
+
+                // hole
+                holeTileSet.render( context, 0, 0, w, h );
+
+                // glow
+                cairo_translate( context, -2, -2 );
+                cairo_scale( context, 10.0/w, 10.0/h );
+
+                drawInverseGlow( context, glow, 3, 8, size );
+                context.updateGdkPixbuf();
+
+            }
+
+            tileSet = new TileSet(pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1);
+            g_object_unref( pixbuf );
+
+            m_holeFocusedCache.insert( key, tileSet );
+
         }
 
         return *tileSet;
@@ -426,50 +470,6 @@ namespace Oxygen
             tileSet = new TileSet( pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
             g_object_unref( pixbuf );
             m_holeFlatCache.insert( key, tileSet );
-
-        }
-
-        return *tileSet;
-
-    }
-
-    //______________________________________________________________________________
-    const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &glow, double shade, int size, bool fill )
-    {
-
-        const HoleFocusedKey key( base, glow, shade, size, fill );
-        TileSet* tileSet( m_holeFocusedCache.value( key ) );
-        if( !tileSet )
-        {
-            // create pixbuf and initialize
-            const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
-            const int w( 2*rsize );
-            const int h( 2*rsize );
-
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
-
-            {
-
-                Cairo::Context context( pixbuf );
-                const TileSet& holeTileSet = hole( base, shade, size, fill );
-
-                // hole
-                holeTileSet.render( context, 0, 0, w, h );
-
-                // glow
-                cairo_translate( context, -2, -2 );
-                cairo_scale( context, 10.0/w, 10.0/h );
-
-                drawInverseGlow( context, glow, 3, 8, size );
-                context.updateGdkPixbuf();
-
-            }
-
-            tileSet = new TileSet(pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1);
-            g_object_unref( pixbuf );
-
-            m_holeFocusedCache.insert( key, tileSet );
 
         }
 
