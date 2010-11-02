@@ -34,14 +34,20 @@ style "oxygen-default"
     GtkCheckButton::indicator-size = 18
     GtkComboBox::appears-as-list = 1
     GtkEntry::honors-transparent-bg-hint = 1
+
+    GtkExpander::expander-size = 15
+
     GtkMenu::horizontal-padding = 3
     GtkMenu::vertical-padding = 5
     GtkMenu::horizontal-offset = -7
+
     GtkScale::slider-width = 23
     GtkScale::slider-length = 15
+
     GtkScrollbar::trough-border=1
     GtkScrolledWindow::scrollbar-spacing=1
     GtkStatusbar::has-resize-grip = FALSE
+
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
     GtkTreeView::expander-size = 15
