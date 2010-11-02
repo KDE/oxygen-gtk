@@ -369,7 +369,7 @@ namespace Oxygen
                 // inside
                 if( fill )
                 {
-                    cairo_ellipse( context, 3, 3, 8, 8 );
+                    cairo_ellipse( context, 4, 3, 6, 7 );
                     cairo_set_source( context, ColorUtils::Rgba::white() );
                     cairo_fill( context );
                 }
