@@ -26,6 +26,8 @@
 #include "oxygenapplicationname.h"
 #include "config.h"
 
+#include <iostream>
+
 namespace Oxygen
 {
 
@@ -41,6 +43,7 @@ namespace Oxygen
         else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _name = Thunderbird;
         else if( appName == "soffice" ) _name = OpenOffice;
         else if( appName == "gimp" ) _name = Gimp;
+        else if( appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;
         else _name = Unknown;
     }
 
