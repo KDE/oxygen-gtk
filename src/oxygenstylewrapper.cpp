@@ -880,11 +880,17 @@ namespace Oxygen
         GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
 
+        // make sure that scrolled windows containing a treeView have sunken frame
+        if( d.isScrolledWindow() &&
+            GTK_IS_SCROLLED_WINDOW( widget ) &&
+            GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
+        { shadow = GTK_SHADOW_IN; }
+
         // check if it's combobox list window
         if( Gtk::gtk_combobox_is_scrolled_window( widget ) && GTK_IS_WINDOW( parent = gtk_widget_get_parent( widget ) ) )
         {
 
-            // now make it look like in Oxygen-Qt - with float frame and round edges
+            // make it look like in Oxygen-Qt, with float frame and round edges
             GtkAllocation allocation(parent->allocation);
             StyleOptions options;
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
