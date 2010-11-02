@@ -1014,6 +1014,9 @@ namespace Oxygen
 
             } else {
 
+                if( Style::instance().settings().applicationName().isGoogleChrome() && GTK_IS_HBOX( widget ) )
+                { options &= ~NoFill; }
+
                 // register to hover engine
                 if( GTK_IS_ENTRY( widget ) && !Style::instance().settings().applicationName().isOpenOffice() )
                 {
