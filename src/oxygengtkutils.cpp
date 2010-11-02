@@ -99,12 +99,12 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_object_is_a( const GObject* object, const gchar * type_name )
+    bool Gtk::gtk_object_is_a( const GObject* object, const std::string& type_name )
     {
 
         if( object )
         {
-            const GType tmp( g_type_from_name( type_name ) );
+            const GType tmp( g_type_from_name( type_name.c_str() ) );
             if( tmp )
             { return g_type_check_instance_is_a( (GTypeInstance*) object, tmp ); }
         }
