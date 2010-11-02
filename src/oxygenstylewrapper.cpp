@@ -55,27 +55,6 @@ static GtkStyleClass* oxygen_style_parent_class = 0L;
 namespace Oxygen
 {
 
-    // forward declarations
-    static void draw_flat_box( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const char*, gint, gint, gint, gint );
-    static void draw_box( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint);
-    static void draw_shadow( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint );
-    static void draw_check( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint );
-    static void draw_option( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint );
-    static void draw_hline( GtkStyle*, GdkWindow*, GtkStateType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint );
-    static void draw_vline( GtkStyle*, GdkWindow*, GtkStateType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint );
-    static void draw_arrow( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, GtkArrowType arrow, gboolean fill, gint, gint, gint, gint );
-    static void draw_expander( GtkStyle*, GdkWindow*, GtkStateType, GdkRectangle*, GtkWidget*, const char* detail, gint, gint, GtkExpanderStyle );
-    static void draw_diamond( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const char* detail, gint, gint, gint, gint );
-    static void draw_tab( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const char* detail, gint, gint, gint, gint );
-    static void draw_shadow_gap( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint, GtkPositionType, gint, gint );
-    static void draw_box_gap( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint, GtkPositionType position, gint, gint );
-    static void draw_slider( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint, GtkOrientation );
-    static void draw_extension( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint, GtkPositionType );
-    static void draw_focus( GtkStyle*, GdkWindow*, GtkStateType, GdkRectangle*, GtkWidget*, const char*, gint, gint, gint, gint );
-    static void draw_handle( GtkStyle*, GdkWindow*, GtkStateType, GtkShadowType, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, gint, gint, GtkOrientation );
-    static void draw_resize_grip( GtkStyle*, GdkWindow*, GtkStateType, GdkRectangle*, GtkWidget*, const char*, GdkWindowEdge, gint, gint, gint, gint );
-    static void draw_layout( GtkStyle*, GdkWindow*, GtkStateType, gboolean, GdkRectangle*, GtkWidget*, const gchar*, gint, gint, PangoLayout* );
-
     //___________________________________________________________________________________________________________
     static void draw_flat_box(
         GtkStyle* style,
