@@ -3,6 +3,7 @@ include_directories( animations )
 
 # Sources
 set( OXYGEN-GTK-SOURCES
+    oxygenapplicationname.cpp
     oxygencairocontext.cpp
     oxygencairopattern.cpp
     oxygencairoutils.cpp

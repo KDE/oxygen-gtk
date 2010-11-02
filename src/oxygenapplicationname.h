@@ -25,6 +25,8 @@
 * MA 02110-1301, USA.
 */
 
+#include <string>
+
 namespace Oxygen
 {
 
@@ -35,7 +37,8 @@ namespace Oxygen
         Firefox,
         Thunderbird,
         Gimp,
-        OpenOffice
+        OpenOffice,
+        GoogleChrome
     };
 
     //! stores application name and provides some utility functions
@@ -48,6 +51,9 @@ namespace Oxygen
         ApplicationName( AppName name = Unknown ):
             _name( name )
         {}
+
+        //! constructor
+        ApplicationName( const std::string& );
 
         //! assignment
         ApplicationName& operator = ( const AppName& name )

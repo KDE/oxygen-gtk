@@ -205,13 +205,7 @@ namespace Oxygen
         std::cout << "Oxygen::QtSettings::initApplicationName - " << applicationName << std::endl;
         #endif
 
-        std::string appName( applicationName );
-
-        if( appName == "firefox-bin" || appName == "firefox" ) _applicationName = Firefox;
-        else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _applicationName = Thunderbird;
-        else if( appName == "soffice" ) _applicationName = OpenOffice;
-        else if( appName == "gimp" ) _applicationName = Gimp;
-        else appName = Unknown;
+        _applicationName = ApplicationName( applicationName );
 
     }
 
