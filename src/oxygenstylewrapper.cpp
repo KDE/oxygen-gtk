@@ -1093,6 +1093,11 @@ namespace Oxygen
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
             // default shadow_in frame
+            // hole background is needed for some special cases
+            if( GTK_IS_CALENDAR( widget ) )
+            { Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 ); }
+
+            // hole
             Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
 
         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
