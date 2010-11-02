@@ -1342,7 +1342,18 @@ namespace Oxygen
     {
 
         // define checkbox rect
-        const gint cbw = CheckBox_Size;
+        gint cbw( CheckBox_Size );
+        gint tileSize( CheckBox_Size/3 );
+        gint scale( 1.0 );
+
+        if( settings().applicationName().isOpenOffice() )
+        {
+            const gint dimension = std::min( w, h );
+            cbw = std::min( 3*( 1 + dimension/3 ), (int)CheckBox_Size );
+            scale = double(cbw)/CheckBox_Size;
+            tileSize = cbw/3;
+        }
+
         GdkRectangle parent = {x, y, w, h };
         GdkRectangle child = {0, 0, cbw, cbw };
         centerRect( &parent, &child );
@@ -1370,7 +1381,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options ) );
 
         // get the pixmap
-        GdkPixbuf* pixbuf( glow.isValid() ? helper().roundSlabFocused( base, glow, 0 ):helper().roundSlab( base, 0 ) );
+        GdkPixbuf* pixbuf( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
 
         // create context
         Cairo::Context context( window, clipRect );
@@ -1383,7 +1394,8 @@ namespace Oxygen
 
         if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
         {
-            const double radius( shadow == GTK_SHADOW_IN ? 2.6:1.4 );
+            double radius( shadow == GTK_SHADOW_IN ? 2.6:1.4 );
+            radius *= scale;
 
             const double dx( 0.5*child.width - radius );
             const double dy( 0.5*child.height - radius );
