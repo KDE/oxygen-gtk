@@ -92,9 +92,15 @@ namespace Oxygen
         //!@name holes
         //@{
 
-        const TileSet& hole( const ColorUtils::Rgba&, double shade, int size = 7, bool fill = false );
+        const TileSet& hole( const ColorUtils::Rgba& base, const ColorUtils::Rgba& fill, double shade, int size = 7);
+        const TileSet& hole( const ColorUtils::Rgba& base, double shade, int size = 7)
+        { return hole( base, ColorUtils::Rgba(), shade, size ); }
+
+        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, double shade, int size = 7 );
+        const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, double shade, int size = 7 )
+        { return holeFocused( base, ColorUtils::Rgba(), glow, shade, size ); }
+
         const TileSet& holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 );
-        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba &glowColor, double shade, int size = 7, bool fill = false );
         const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
 
         //@}

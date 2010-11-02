@@ -969,7 +969,7 @@ namespace Oxygen
         } else if( ( d.isEntry() || d.isViewport() || d.isScrolledWindow() ) && shadow == GTK_SHADOW_IN ) {
 
             StyleOptions options( widget, state, shadow );
-            if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
+            options |= NoFill;
 
             if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
             {
@@ -1014,6 +1014,9 @@ namespace Oxygen
 
             } else {
 
+                if( Style::instance().settings().applicationName().isGoogleChrome() && GTK_IS_HBOX( widget ) )
+                { options &= ~NoFill; }
+
                 // register to hover engine
                 if( GTK_IS_ENTRY( widget ) && !Style::instance().settings().applicationName().isOpenOffice() )
                 {
@@ -1031,6 +1034,8 @@ namespace Oxygen
                     options &= ~(Hover|Focus);
 
                 }
+
+                if( Style::instance().settings().applicationName().isOpenOffice() ) options &= ~NoFill;
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );

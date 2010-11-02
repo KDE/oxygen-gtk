@@ -124,11 +124,12 @@ namespace Oxygen
         public:
 
         //! constructor
-        HoleKey( const ColorUtils::Rgba& color, double shade, int size, bool fill ):
+        HoleKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, double shade, int size ):
             _color( color.toInt() ),
+            _fill( fill.toInt() ),
             _shade( shade ),
             _size( size ),
-            _fill( fill )
+            _filled( fill.isValid() )
         {}
 
         //! equal to operator
@@ -138,7 +139,8 @@ namespace Oxygen
                 _color == other._color &&
                 _shade == other._shade &&
                 _size == other._size &&
-                _fill == other._fill;
+                _filled == other._filled &&
+                (_fill == other._fill || !_filled );
         }
 
         //! less than operator
@@ -147,20 +149,23 @@ namespace Oxygen
             if( _color != other._color ) return _color < other._color;
             else if( _shade != other._shade ) return _shade < other._shade;
             else if( _size != other._size ) return _size < other._size;
-            else return _fill != other._fill;
+            else if( _filled != other._filled ) return !_filled;
+            else if( _filled && _fill != other._fill ) return _fill < other._fill;
+            else return false;
         }
 
         private:
 
         guint32 _color;
+        guint32 _fill;
         double _shade;
         int _size;
-        bool _fill;
+        bool _filled;
 
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const HoleKey& key )
         {
-            out << "HoleKey - color: " << key._color << " shade: " << key._shade << " size: " << key._size << " fill: " << key._fill;
+            out << "HoleKey - color: " << key._color << " fill: " << key._fill << " shade: " << key._shade << " size: " << key._size << " filled: " << key._filled;
             return out;
         }
 
@@ -172,12 +177,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size, bool fill ):
+        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, const ColorUtils::Rgba& glow, double shade, int size ):
             _color( color.toInt() ),
+            _fill( fill.toInt() ),
             _glow( glow.toInt() ),
             _shade( shade ),
             _size( size ),
-            _fill( fill )
+            _filled( fill.isValid() )
         {}
 
         //! equal to operator
@@ -188,7 +194,8 @@ namespace Oxygen
                 _glow == other._glow &&
                 _shade == other._shade &&
                 _size == other._size &&
-                _fill == other._fill;
+                _filled == other._filled &&
+                (_fill == other._fill || !_filled );
         }
 
         //! less than operator
@@ -198,21 +205,24 @@ namespace Oxygen
             if( _glow != other._glow ) return _glow < other._glow;
             else if( _shade != other._shade ) return _shade < other._shade;
             else if( _size != other._size ) return _size < other._size;
-            else return _fill != other._fill;
+            else if( _filled != other._filled ) return !_filled;
+            else if( _filled && _fill != other._fill ) return _fill < other._fill;
+            else return false;
         }
 
         private:
 
         guint32 _color;
+        guint32 _fill;
         guint32 _glow;
         double _shade;
         int _size;
-        bool _fill;
+        bool _filled;
 
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const HoleFocusedKey& key )
         {
-            out << "HoleFocusedKey - color: " << key._color << " glow:" << key._glow << " shade: " << key._shade << " size: " << key._size << " fill: " << key._fill;
+            out << "HoleFocusedKey - color: " << key._color << " glow: " << key._glow << " fill: " << key._fill << " shade: " << key._shade << " size: " << key._size << " filled: " << key._filled;
             return out;
         }
 
