@@ -1433,15 +1433,21 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return;
 
+        // enable state
+        const bool enabled( !(options&Disabled ) );
+
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        const ColorUtils::Rgba fill( options&NoFill ? ColorUtils::Rgba() : settings().palette().color( Palette::Base ) );
+        ColorUtils::Rgba fill;
+        if( !( options&NoFill ) )
+        {
+            const Palette::Group group( enabled ? Palette::Active : Palette::Disabled );
+            fill = settings().palette().color( group, Palette::Base );
+        }
 
         // create context, add mask, and render hole
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-
-        const bool enabled( !(options&Disabled ) );
 
         if( fill.isValid() ) tiles |= TileSet::Center;
 
