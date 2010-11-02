@@ -580,6 +580,13 @@ namespace Oxygen
 
             } else {
 
+                // for google chrome, make GtkChromeButton appear as flat
+                if(
+                    Style::instance().settings().applicationName().isGoogleChrome() &&
+                    !Gtk::gtk_button_is_flat( widget ) &&
+                    Gtk::gtk_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
+                { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
+
                 StyleOptions options( Blend );
                 options |= StyleOptions( widget, state, shadow );
 
