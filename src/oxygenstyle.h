@@ -148,6 +148,9 @@ namespace Oxygen
 
         //@}
 
+        //! info bar
+        void renderInfoBar( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& );
+
         //!@name hole
         //@{
 

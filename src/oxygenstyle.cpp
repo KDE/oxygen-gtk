@@ -1158,6 +1158,40 @@ namespace Oxygen
 
     }
 
+
+    //__________________________________________________________________
+    void Style::renderInfoBar(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        const ColorUtils::Rgba& glow )
+    {
+
+        // define colors
+        gint wh, wy;
+        Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+        const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
+
+        // create context
+        Cairo::Context context( window, clipRect );
+
+        // fill
+        {
+            Cairo::Pattern pattern;
+            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
+            pattern.set( cairo_pattern_create_linear( 0, y-h, 0, y+h ) );
+            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::lightColor( base ) );
+            cairo_pattern_add_color_stop( pattern, 1.0, base );
+
+            cairo_set_source( context, pattern );
+            helper().fillSlab( context, x, y, w, h );
+        }
+
+        // slab
+        helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+    }
+
     //__________________________________________________________________
     void Style::renderCheckBox(
         GdkWindow* window,

@@ -506,8 +506,13 @@ namespace Oxygen
         }
 
         GtkWidget* parent(0L);
-        if( d.isButton() || d.isOptionMenu() || d.isToggleButton() )
+        if( d.isInfoBar() )
         {
+
+            Style::instance().renderInfoBar( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+
+
+        } else if( d.isButton() || d.isOptionMenu() || d.isToggleButton() ) {
 
             // check if it's PathBar toggle button
             if( Gtk::gtk_button_is_in_path_bar(widget) )
