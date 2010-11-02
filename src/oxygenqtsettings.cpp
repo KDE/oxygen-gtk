@@ -199,13 +199,7 @@ namespace Oxygen
     void QtSettings::initApplicationName( void )
     {
         const char* applicationName = g_get_prgname();
-        if( !applicationName ) return;
-
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::initApplicationName - " << applicationName << std::endl;
-        #endif
-
-        _applicationName = ApplicationName( applicationName );
+        if( applicationName ) { _applicationName.parse( applicationName ); }
 
     }
 

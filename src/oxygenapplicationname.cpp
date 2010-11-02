@@ -24,13 +24,18 @@
 */
 
 #include "oxygenapplicationname.h"
+#include "config.h"
 
 namespace Oxygen
 {
 
     //__________________________________________________________________________
-    ApplicationName::ApplicationName( const std::string& appName )
+    void ApplicationName::parse( const std::string& appName )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "ApplicationName::parse - " << appName << std::endl;
+        #endif
 
         if( appName == "firefox-bin" || appName == "firefox" ) _name = Firefox;
         else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _name = Thunderbird;

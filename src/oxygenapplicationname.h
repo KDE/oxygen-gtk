@@ -53,7 +53,9 @@ namespace Oxygen
         {}
 
         //! constructor
-        ApplicationName( const std::string& );
+        ApplicationName( const std::string& appName ):
+            _name( Unknown )
+        { parse( appName ); }
 
         //! assignment
         ApplicationName& operator = ( const AppName& name )
@@ -65,6 +67,9 @@ namespace Oxygen
         //! cast
         operator const AppName& ( void ) const
         { return _name; }
+
+        //! get type from string
+        void parse( const std::string& );
 
         //!@name utilities
         //@{
