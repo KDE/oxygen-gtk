@@ -1035,10 +1035,27 @@ namespace Oxygen
 
                 }
 
-                if( Style::instance().settings().applicationName().isOpenOffice() ) options &= ~NoFill;
+                if( Style::instance().settings().applicationName().isOpenOffice() )
+                {
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+                    if( d.isEntry() )
+                    {
+
+                        options &= ~NoFill;
+                        Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                        Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+                    } else {
+
+                        Style::instance().renderHole( window, clipRect, x, y, w, h, options );
+
+                    }
+
+                } else {
+
+                    Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                    Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+                }
 
             }
 
