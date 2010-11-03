@@ -60,7 +60,7 @@ exec_program(
 	ARGS --variable=gtk_binary_version gtk+-2.0
 	OUTPUT_VARIABLE GTK_VERSION )
 
-set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib/gtk-2.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
+set( INSTALL_PATH_GTK_ENGINES "${GTK_LIB_DIR}/gtk-2.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 message( STATUS "Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
 
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
