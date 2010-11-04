@@ -45,7 +45,7 @@ namespace Oxygen
         HoverData::connect( widget );
 
         // get full-width flag
-        if( GTK_IS_TREE_VIEW( widget ) )
+        if( GTK_IS_TREE_VIEW( widget ) && hovered() )
         {
             gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
 
