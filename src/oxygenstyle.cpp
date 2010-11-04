@@ -1344,7 +1344,7 @@ namespace Oxygen
         // define checkbox rect
         gint cbw( CheckBox_Size );
         gint tileSize( CheckBox_Size/3 );
-        gint scale( 1.0 );
+        double scale( 1.0 );
 
         if( settings().applicationName().isOpenOffice() )
         {
