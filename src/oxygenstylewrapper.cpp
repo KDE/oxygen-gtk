@@ -1055,6 +1055,7 @@ namespace Oxygen
 
                     Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
                     Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+
                 }
 
             }
