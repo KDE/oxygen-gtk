@@ -45,17 +45,20 @@ namespace Oxygen
         HoverData::connect( widget );
 
         // get full-width flag
-        if( GTK_IS_TREE_VIEW( widget ) && hovered() )
+        if( GTK_IS_TREE_VIEW( widget ) )
         {
             gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
 
-            // on connection, needs to check whether mouse pointer is in widget or not
-            // to have the proper initial value of the hover flag
-            GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-            gint xPointer,yPointer;
-            gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
-            gtk_tree_view_convert_widget_to_bin_window_coords( treeView, xPointer, yPointer, &xPointer, &yPointer );
-            updatePosition( widget, xPointer, yPointer );
+            if( hovered() )
+            {
+                // on connection, needs to check whether mouse pointer is in widget or not
+                // to have the proper initial value of the hover flag
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                gint xPointer,yPointer;
+                gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+                gtk_tree_view_convert_widget_to_bin_window_coords( treeView, xPointer, yPointer, &xPointer, &yPointer );
+                updatePosition( widget, xPointer, yPointer );
+            }
 
         }
 
