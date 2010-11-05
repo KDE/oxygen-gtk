@@ -25,6 +25,7 @@
 #include "config.h"
 #include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
+#include "oxygenstyle.h"
 
 #include <gmodule.h>
 #include <gtk/gtk.h>
@@ -39,6 +40,8 @@ extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
 extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
+
+extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, gboolean, GtkStateType,gint,gint,gint,gint);
 
 //_________________________________________________
 void theme_init( GTypeModule* module )
@@ -120,3 +123,10 @@ G_MODULE_EXPORT const gchar* g_module_check_init( GModule *module )
         GTK_MINOR_VERSION,
         GTK_MICRO_VERSION - GTK_INTERFACE_AGE );
 }
+
+//_________________________________________________
+G_MODULE_EXPORT void drawWindowDecoration(cairo_t* c, gboolean hasAlpha, GtkStateType s,gint x,gint y,gint w,gint h)
+{
+    Oxygen::Style::instance().drawWindowDecoration(c,hasAlpha,s,x,y,w,h);
+}
+
