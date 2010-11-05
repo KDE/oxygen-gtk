@@ -977,7 +977,6 @@ namespace Oxygen
         }
 
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
-        cairo_pattern_add_color_stop( pattern, 0, light );
 
         // add vertical offset
         if( isMenu && !( isMozilla || isOpenOffice ) )
@@ -1058,6 +1057,8 @@ namespace Oxygen
                 cairo_stroke( context );
             }
         }
+
+        cairo_pattern_add_color_stop( pattern, 0, light );
 
         if( isMozilla || isOpenOffice )
         {
