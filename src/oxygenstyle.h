@@ -34,6 +34,18 @@
 
 #include <gdk/gdk.h>
 
+namespace WinDeco
+{
+    enum Options
+    {
+        isMaximized=1<<0,
+        isShaded=1<<2,
+        isResizable=1<<3,
+        isActive=1<<4,
+        hasAlpha=1<<5,
+    };
+};
+
 namespace Oxygen
 {
 
@@ -43,7 +55,11 @@ namespace Oxygen
 
         public:
 
-        void drawWindowDecoration(cairo_t*,gboolean,GtkStateType,gint,gint,gint,gint);
+        //! draw resize handles for window decoration
+        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
+
+        //! draw window decorations
+        void drawWindowDecoration(cairo_t*,WinDeco::Options,gint,gint,gint,gint);
 
         //! return singleton
         static Style& instance( void );

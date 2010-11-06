@@ -41,7 +41,7 @@ extern "C" G_MODULE_EXPORT void theme_exit( void );
 extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
 
-extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, gboolean, GtkStateType,gint,gint,gint,gint);
+extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, WinDeco::Options,gint,gint,gint,gint);
 
 //_________________________________________________
 void theme_init( GTypeModule* module )
@@ -125,8 +125,8 @@ G_MODULE_EXPORT const gchar* g_module_check_init( GModule *module )
 }
 
 //_________________________________________________
-G_MODULE_EXPORT void drawWindowDecoration(cairo_t* c, gboolean hasAlpha, GtkStateType s,gint x,gint y,gint w,gint h)
+G_MODULE_EXPORT void drawWindowDecoration(cairo_t* c, WinDeco::Options o,gint x,gint y,gint w,gint h)
 {
-    Oxygen::Style::instance().drawWindowDecoration(c,hasAlpha,s,x,y,w,h);
+    Oxygen::Style::instance().drawWindowDecoration(c,o,x,y,w,h);
 }
 

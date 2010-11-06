@@ -2981,18 +2981,57 @@ namespace Oxygen
 
     }
 
-    void Style::drawWindowDecoration(cairo_t* context, gboolean hasAlpha, GtkStateType state,gint x, gint y, gint w,gint h)
+    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
     {
+        // if( frameBorder >= BorderTiny )
+        {
+            if( !isMaximized )
+            {
+                // Draw right side 3-dots resize handles
+                int cenY = int(h/2+y);
+                int posX = int(w+x-3);
+                helper().renderDot(context,color,posX, cenY-3);
+                helper().renderDot(context,color,posX, cenY);
+                helper().renderDot(context,color,posX, cenY+3);
+            }
+
+            // Draw bottom-right corner 3-dots resize handles
+            // if( !config.drawSizeGrip )
+            {
+                cairo_save(context);
+                cairo_translate(context,x+w-9,y+h-9);
+                helper().renderDot(context,color,2,6);
+                helper().renderDot(context,color,5,5);
+                helper().renderDot(context,color,6,2);
+                cairo_restore(context);
+            }
+        }
+    }
+
+    void Style::drawWindowDecoration(cairo_t* context, WinDeco::Options wopt,gint x, gint y, gint w,gint h)
+    {
+        bool hasAlpha( wopt & WinDeco::hasAlpha );
+        bool drawResizeHandle( !(wopt & WinDeco::isShaded) && (wopt & WinDeco::isResizable) );
+        bool isMaximized( wopt & WinDeco::isMaximized );
+
         // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
         cairo_surface_t* cs=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
         cairo_t* cr=cairo_create(cs);
         renderWindowBackground(cr,0L,0L,0L,x,y,w,h);
 
         StyleOptions options(hasAlpha?Alpha:Blend);
-        if(state==GTK_STATE_ACTIVE)
+        if(wopt & WinDeco::isActive)
             options|=Focus;
 
-        drawFloatFrame(cr,0L,0L,x,y,w,h,options);
+        if( !isMaximized )
+            drawFloatFrame(cr,0L,0L,x,y,w,h,options);
+
+        if( drawResizeHandle )
+        {
+            ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+            Cairo::Context cont(cairo_get_target(cr));
+            renderWindowDots(cont,x,y,w,h,base, isMaximized);
+        }
 
         cairo_save(context);
         cairo_set_source_rgba(context,0,0,0,0);
