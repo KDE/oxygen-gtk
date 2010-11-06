@@ -2983,6 +2983,7 @@ namespace Oxygen
 
     void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
     {
+        // FIXME: where to get the following config settings?
         // if( frameBorder >= BorderTiny )
         {
             if( !isMaximized )
