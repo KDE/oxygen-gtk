@@ -1000,6 +1000,8 @@ namespace Oxygen
             w-=2;
             h-=2;
 
+            cairo_set_line_width(context,1);
+
             if( options&Focus ) // window is active - it's a glow, not a shadow
             {
                 ColorUtils::Rgba frameColor(0x54/255.,0xa7/255.,0xf0/255.); // FIXME: where should this color be taken from?
