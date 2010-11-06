@@ -132,6 +132,7 @@ namespace Oxygen
                 cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
                 cairo_clip(context);
             }
+            cairo_save(context);
             cairo_translate( context, -wx, -wy );
         }
         else
@@ -139,6 +140,10 @@ namespace Oxygen
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
+            cairo_save(context);
+            cairo_translate(context,x,y);
+            x=0;
+            y=0;
             // wx and wy aren't set since clipRect will be 0L if we are here, and wx and wy are only used with clipRect
         }
 
@@ -213,6 +218,7 @@ namespace Oxygen
 
         }
 
+        cairo_restore(context);
         return true;
 
     }
