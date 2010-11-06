@@ -2975,13 +2975,34 @@ namespace Oxygen
 
     void Style::drawWindowDecoration(cairo_t* context, gboolean hasAlpha, GtkStateType state,gint x, gint y, gint w,gint h)
     {
-        renderWindowBackground(context,0L,0L,0L,x,y,w,h);
+        // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
+        cairo_surface_t* cs=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
+        cairo_t* cr=cairo_create(cs);
+        renderWindowBackground(cr,0L,0L,0L,x,y,w,h);
 
         StyleOptions options(hasAlpha?Alpha:Blend);
         if(state==GTK_STATE_ACTIVE)
             options|=Focus;
 
-        drawFloatFrame(context,0L,0L,x,y,w,h,options);
+        drawFloatFrame(cr,0L,0L,x,y,w,h,options);
+
+        cairo_save(context);
+        cairo_set_source_rgba(context,0,0,0,0);
+        cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
+        cairo_paint(context);
+        cairo_set_operator(context,CAIRO_OPERATOR_OVER);
+        if( hasAlpha )
+        {
+            // cut round corners using alpha
+            cairo_rounded_rectangle(context,x,y,w,h,3.5);
+            cairo_clip(context);
+        }
+        cairo_set_source_surface(context,cs,0,0);
+        cairo_paint(context);
+        cairo_restore(context);
+
+        cairo_destroy(cr);
+        cairo_surface_destroy(cs);
     }
 
 }
