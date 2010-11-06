@@ -3033,6 +3033,7 @@ namespace Oxygen
             renderWindowDots(cont,x,y,w,h,base, isMaximized);
         }
 
+        // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
         cairo_save(context);
         cairo_set_source_rgba(context,0,0,0,0);
         cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
