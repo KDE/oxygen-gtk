@@ -28,7 +28,10 @@ namespace Oxygen
 
     //__________________________________________________________________
     void cairo_pattern_add_color_stop( cairo_pattern_t* pattern, double x, const ColorUtils::Rgba& color )
-    { cairo_pattern_add_color_stop_rgba( pattern, x, color.red(), color.green(), color.blue(), color.alpha() ); }
+    {
+        if( x > 0.99999 ) x = 0.99999;
+        cairo_pattern_add_color_stop_rgba( pattern, x, color.red(), color.green(), color.blue(), color.alpha() );
+    }
 
     //__________________________________________________________________
     void cairo_set_source( cairo_t* context, const ColorUtils::Rgba& color )
