@@ -29,7 +29,12 @@ namespace Oxygen
     //__________________________________________________________________
     void cairo_pattern_add_color_stop( cairo_pattern_t* pattern, double x, const ColorUtils::Rgba& color )
     {
-        if( x > 0.99999 ) x = 0.99999;
+        /*
+        for some reason passing 1.0 for the upperbound on some gradients
+        breaks the gradient definition internally with some compilers
+        this is fixed by passing a value close to (but smaller than) unity.
+        */
+        x = std::min(0.99999,x);
         cairo_pattern_add_color_stop_rgba( pattern, x, color.red(), color.green(), color.blue(), color.alpha() );
     }
 
