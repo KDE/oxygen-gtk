@@ -828,6 +828,11 @@ namespace Oxygen
 
             return;
 
+        } else if( d.isEntryProgress() ) {
+
+            StyleOptions options( widget, state, shadow );
+            Style::instance().renderProgressBarHandle( window, clipRect, x-1, y+1, w+2, h-2, options );
+
         } else {
 
             oxygen_style_parent_class->draw_box( style, window, state,

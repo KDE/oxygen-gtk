@@ -83,6 +83,7 @@ namespace Oxygen
             bool isInfoBar( void ) const { return _value.find( "infobar" ) == 0; }
             bool isEntry( void ) const { return _value == "entry"; }
             bool isEntryBg( void ) const { return _value == "entry_bg"; }
+            bool isEntryProgress( void ) const { return _value == "entry-progress"; }
             bool isEventBox( void ) const { return _value == "eventbox"; }
             bool isExpander( void ) const { return _value == "expander"; }
             bool isFrame( void ) const { return _value == "frame"; }
@@ -98,6 +99,7 @@ namespace Oxygen
             bool isPaned( void ) const { return _value == "paned"; }
             bool isRadioButton( void ) const { return _value == "radiobutton"; }
             bool isProgressBar( void) const { return _value == "progressbar"; }
+
             //!@name rulers
             //@{
             bool isRuler( void ) const { return _value == "vruler" || _value == "hruler"; }
