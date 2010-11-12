@@ -251,6 +251,15 @@ namespace Oxygen
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
 
+        // check show icons on push buttons kde option
+        std::string showIconsOnPushButton = _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true");
+
+        // add option
+        //if( showIconsOnPushButton == "false" )
+        {
+            _rc.addToHeaderSection( "gtk-button-images = 0\n" );
+        }
+
         // create icon translator, for stock icons
         GtkIcons icons;
 
