@@ -662,6 +662,10 @@ namespace Oxygen
 
                     }
 
+                } else if( style ) {
+
+                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, TileSet::Ring, Gtk::gdk_get_color( style->bg[state] ) );
+
                 } else {
 
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );

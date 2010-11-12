@@ -1024,7 +1024,9 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles )
+        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles,
+        const ColorUtils::Rgba& color
+        )
     {
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
@@ -1035,7 +1037,7 @@ namespace Oxygen
             {
 
                 Cairo::Context context( window, clipRect );
-                ColorUtils::Rgba base( settings().palette().color( group, Palette::Window ) );
+                ColorUtils::Rgba base( color.isValid() ? color : settings().palette().color( group, Palette::Window ) );
 
                 if( options & Hover )
                 {
@@ -1067,11 +1069,11 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( color.isValid() ? color : settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( group, Palette::Button );
+            base = color.isValid() ? color : settings().palette().color( group, Palette::Button );
 
         }
 
