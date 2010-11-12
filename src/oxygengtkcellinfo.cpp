@@ -33,14 +33,17 @@ namespace Oxygen
         _column(0L)
     {
 
-        std::vector<Point> points;
-        points.push_back( Point( x+1, y+1 ) );
-        points.push_back( Point( x+1, y+h-1 ) );
-        points.push_back( Point( x+w-1, y+1 ) );
-        points.push_back( Point( x+w, y+h-1 ) );
+        //std::vector<Point> points;
+        Point points[4] =
+        {
+            Point( x+1, y+1 ),
+            Point( x+1, y+h-1 ),
+            Point( x+w-1, y+1 ),
+            Point( x+w, y+h-1 )
+        };
 
-        for( std::vector<Point>::iterator iter  = points.begin(); iter != points.end() && !_path; iter++ )
-        { gtk_tree_view_get_path_at_pos( treeView, iter->x(), iter->y(), &_path, &_column, 0L, 0L ); }
+        for( int i=0; i < 4 && !_path; i++ )
+        { gtk_tree_view_get_path_at_pos( treeView, points[i].x(), points[i].y(), &_path, &_column, 0L, 0L ); }
 
     }
 
