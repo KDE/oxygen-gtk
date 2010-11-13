@@ -203,14 +203,13 @@ namespace Oxygen
     void TileSet::copyPixmap( Cairo::Context& context, int x, int y, GdkPixbuf* pixbuf, int sx, int sy, int sw, int sh, cairo_extend_t extend ) const
     {
         if( !pixbuf ) return;
-        cairo_save( context );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, sw, sh );
 
         gdk_cairo_set_source_pixbuf( context, pixbuf, -sx, -sy );
         cairo_pattern_set_extend( cairo_get_source( context ), extend );
         cairo_fill( context );
-        cairo_restore( context );
+        cairo_translate( context, -x, -y );
     }
 
 }
