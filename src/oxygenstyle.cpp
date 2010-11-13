@@ -89,6 +89,7 @@ namespace Oxygen
     {
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
 
+        bool needToDestroyContext;
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
 
@@ -127,12 +128,13 @@ namespace Oxygen
             // create context and translate to toplevel coordinates
             // make it the old good way since context is cairo_t* instead Cairo::Context
             context=gdk_cairo_create(window);
+            needToDestroyContext=true;
             if(clipRect)
             {
                 cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
                 cairo_clip(context);
             }
-            cairo_save(context);
+            // no sense in context saving since it will be destroyed
             cairo_translate( context, -wx, -wy );
         }
         else
@@ -140,6 +142,7 @@ namespace Oxygen
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
+            needToDestroyContext=false;
             cairo_save(context);
             cairo_translate(context,x,y);
             x=0;
@@ -218,7 +221,10 @@ namespace Oxygen
 
         }
 
-        cairo_restore(context);
+        if(needToDestroyContext)
+            cairo_destroy(context);
+        else
+            cairo_restore(context);
         return true;
 
     }
