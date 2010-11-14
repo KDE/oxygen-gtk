@@ -59,12 +59,12 @@ namespace Oxygen
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return false;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::Animations::registerWidget - " << widget << std::endl;
+        std::cout << "Oxygen::Animations::registerWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         WidgetData data;
-        data._destroyId = g_signal_connect( widget, "destroy", G_CALLBACK( destroyNotifyEvent ), this );
-        data._styleChangeId = g_signal_connect( widget, "style-set", G_CALLBACK( styleChangeNotifyEvent ), this );
+        data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( destroyNotifyEvent ), this );
+        data._styleChangeId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( styleChangeNotifyEvent ), this );
         _allWidgets.insert( std::make_pair( widget, data ) );
         return true;
 
@@ -75,7 +75,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::Animations::unregisterWidget - " << widget << std::endl;
+        std::cout << "Oxygen::Animations::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         // find in map
@@ -83,8 +83,8 @@ namespace Oxygen
         assert( iter != _allWidgets.end() );
 
         // disconnect signal
-        g_signal_handler_disconnect( G_OBJECT(widget), iter->second._destroyId );
-        g_signal_handler_disconnect( G_OBJECT(widget), iter->second._styleChangeId );
+        iter->second._destroyId.disconnect();
+        iter->second._styleChangeId.disconnect();
 
         // erase from map
         _allWidgets.erase( widget );

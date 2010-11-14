@@ -28,6 +28,7 @@
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
 #include "oxygenscrollbarengine.h"
+#include "oxygensignal.h"
 #include "oxygentabwidgetengine.h"
 #include "oxygentreeviewengine.h"
 #include "oxygenwidgetsizeengine.h"
@@ -157,13 +158,11 @@ namespace Oxygen
             public:
 
             //! constructor
-            WidgetData( void ):
-                _destroyId(-1),
-                _styleChangeId(-1)
+            WidgetData( void )
             {}
 
-            int _destroyId;
-            int _styleChangeId;
+            Signal _destroyId;
+            Signal _styleChangeId;
         };
 
         //! keep track of all registered widgets, and associated destroy callback
