@@ -46,7 +46,7 @@ namespace Oxygen
         {}
 
         //! destructor
-        ~StyleHelper( void )
+        virtual ~StyleHelper( void )
         {}
 
         //! separators

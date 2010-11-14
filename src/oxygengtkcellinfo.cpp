@@ -37,15 +37,15 @@ namespace Oxygen
         four attempts are made to get the path from any corner of the rectangle passed in arguments.
         This is necessary to handle half-hidden cells
         */
-        gtk_tree_view_get_path_at_pos( treeView, x+1, y+1, &_path, &_column, 0L, 0L );
+        gtk_tree_view_get_path_at_pos( treeView, (gint)x+1, (gint)y+1, &_path, &_column, 0L, 0L );
 
-        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, x+1, y+h-1, &_path, &_column, 0L, 0L );
+        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, (gint)x+1, (gint)y+h-1, &_path, &_column, 0L, 0L );
         else return;
 
-        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, x+w-1, y+1, &_path, &_column, 0L, 0L );
+        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, (gint)x+w-1, (gint)y+1, &_path, &_column, 0L, 0L );
         else return;
 
-        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, x+w-1, y+h-1, &_path, &_column, 0L, 0L );
+        if( !_path ) gtk_tree_view_get_path_at_pos( treeView, (gint)x+w-1, (gint)y+h-1, &_path, &_column, 0L, 0L );
         else return;
 
     }

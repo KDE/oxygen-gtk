@@ -85,43 +85,70 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    bool Style::renderWindowBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
 
+        bool needToDestroyContext;
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
-
-        // draw flat background for OpenOffice
-        if( Style::instance().settings().applicationName().isOpenOffice() )
-        {
-            Cairo::Context context(window,clipRect);
-            cairo_set_source(context,base);
-            cairo_rectangle(context,x,y,w,h);
-            cairo_fill(context);
-            return true;
-        }
-
-
-        // get window dimension and position
-        gint ww, wh;
-        gint wx, wy;
-        if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
-        { return false; }
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
         // vertical shift to account for window decoration
         const int yShift = 23;
-        wy += yShift;
 
-        // translate to toplevel coordinates
-        x+=wx;
-        y+=wy;
+        gint ww, wh;
+        gint wx, wy;
 
-        // create context and translate to toplevel coordinates
-        Cairo::Context context( window, clipRect );
-        cairo_translate( context, -wx, -wy );
+        // if we aren't going to draw window decorations...
+        if(!context)
+        {
+            // draw flat background for OpenOffice
+            if( Style::instance().settings().applicationName().isOpenOffice() )
+            {
+                Cairo::Context context(window,clipRect);
+                cairo_set_source(context,base);
+                cairo_rectangle(context,x,y,w,h);
+                cairo_fill(context);
+                return true;
+            }
+
+
+            // get window dimension and position
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            { return false; }
+
+            wy += yShift;
+
+            // translate to toplevel coordinates
+            x+=wx;
+            y+=wy;
+
+            // create context and translate to toplevel coordinates
+            // make it the old good way since context is cairo_t* instead Cairo::Context
+            context=gdk_cairo_create(window);
+            needToDestroyContext=true;
+            if(clipRect)
+            {
+                cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+                cairo_clip(context);
+            }
+            // no sense in context saving since it will be destroyed
+            cairo_translate( context, -wx, -wy );
+        }
+        else
+        {
+            // drawing window decorations, so logic is simplified
+            ww=w;
+            wh=h;
+            needToDestroyContext=false;
+            cairo_save(context);
+            cairo_translate(context,x,y);
+            x=0;
+            y=0;
+            // wx and wy aren't set since clipRect will be 0L if we are here, and wx and wy are only used with clipRect
+        }
 
         // split
         const int splitY( std::min(300, 3*wh/4 ) );
@@ -194,6 +221,10 @@ namespace Oxygen
 
         }
 
+        if(needToDestroyContext)
+            cairo_destroy(context);
+        else
+            cairo_restore(context);
         return true;
 
     }
@@ -930,7 +961,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawFloatFrame( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
 
         // define colors
@@ -944,11 +975,20 @@ namespace Oxygen
         const bool isOpenOffice( settings().applicationName().isOpenOffice() );
         const bool drawUglyShadow( !( hasAlpha || isMozilla || isOpenOffice ) );
 
-        // create context
-        Cairo::Context context( window, clipRect );
+        // if we aren't drawing window decoration
+        if( !context )
+        {
+            // create context
+            // make it the old good way since context is cairo_t* instead Cairo::Context
+            context=gdk_cairo_create(window);
+            if(clipRect)
+            {
+                cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+                cairo_clip(context);
+            }
+        }
 
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
-        cairo_pattern_add_color_stop( pattern, 0, light );
 
         // add vertical offset
         if( isMenu && !( isMozilla || isOpenOffice ) )
@@ -966,37 +1006,73 @@ namespace Oxygen
             w-=2;
             h-=2;
 
-            ColorUtils::Rgba shadow( ColorUtils::darken( base, 0., 0. ) );
+            cairo_set_line_width(context,1);
 
-            const double radius( 11*0.5 );
-            ColorUtils::Rgba sh2=ColorUtils::darken( shadow, 0.2 );
-            cairo_set_source( context, sh2 );
-            cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
-            cairo_stroke( context );
+            if( options&Focus ) // window is active - it's a glow, not a shadow
+            {
+                ColorUtils::Rgba frameColor(0x54/255.,0xa7/255.,0xf0/255.); // FIXME: where should this color be taken from?
+                ColorUtils::Rgba glow=ColorUtils::mix(ColorUtils::Rgba(0.5,0.5,0.5),frameColor,0.7);
+                cairo_set_source(context,glow);
 
-            cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
-            cairo_stroke( context );
-            cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
-            cairo_stroke( context );
+                const double radius( 11*0.5 );
+                cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
+                cairo_stroke( context );
 
-            sh2=ColorUtils::darken( shadow, 0.35 );
-            cairo_set_source( context, sh2 );
-            cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
-            cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
-            cairo_stroke( context );
+                cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
+                cairo_stroke( context );
+                cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
+                cairo_stroke( context );
 
-            sh2=ColorUtils::darken( shadow, 0.45 );
-            cairo_set_source( context, sh2 );
-            cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
-            cairo_stroke( context );
-            cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );//-1.5*M_PI, -2*M_PI );
-            cairo_stroke( context );
+                cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
+                cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
+                cairo_stroke( context );
 
-            sh2=ColorUtils::darken( shadow, 0.6 );
-            cairo_set_source( context, sh2 );
-            cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
-            cairo_stroke( context );
+                cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
+                cairo_stroke( context );
+                cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );
+                cairo_stroke( context );
+
+                cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
+                cairo_stroke( context );
+
+
+                light=ColorUtils::mix(light, frameColor);
+                dark=ColorUtils::mix(dark,frameColor);
+            }
+            else
+            {
+                // window inactive - draw something resembling shadow
+                // fully desaturate
+                ColorUtils::Rgba shadow( ColorUtils::darken( base, 0., 0. ) );
+
+                const double radius( 11*0.5 );
+                cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
+                cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
+                cairo_stroke( context );
+
+                cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
+                cairo_stroke( context );
+                cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
+                cairo_stroke( context );
+
+                cairo_set_source( context, ColorUtils::darken( shadow, 0.35 ));
+                cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
+                cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
+                cairo_stroke( context );
+
+                cairo_set_source( context, ColorUtils::darken( shadow, 0.45 ));
+                cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
+                cairo_stroke( context );
+                cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );
+                cairo_stroke( context );
+
+                cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
+                cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
+                cairo_stroke( context );
+            }
         }
+
+        cairo_pattern_add_color_stop( pattern, 0, light );
 
         if( isMozilla || isOpenOffice )
         {
@@ -2963,6 +3039,81 @@ namespace Oxygen
 
         return;
 
+    }
+
+    //__________________________________________________________________
+    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
+    {
+        // FIXME: where to get the following config settings?
+        // if( frameBorder >= BorderTiny )
+        {
+            if( !isMaximized )
+            {
+                // Draw right side 3-dots resize handles
+                int cenY = int(h/2+y);
+                int posX = int(w+x-3);
+                helper().renderDot(context,color,posX, cenY-3);
+                helper().renderDot(context,color,posX, cenY);
+                helper().renderDot(context,color,posX, cenY+3);
+            }
+
+            // Draw bottom-right corner 3-dots resize handles
+            // if( !config.drawSizeGrip )
+            {
+                cairo_save(context);
+                cairo_translate(context,x+w-9,y+h-9);
+                helper().renderDot(context,color,2,6);
+                helper().renderDot(context,color,5,5);
+                helper().renderDot(context,color,6,2);
+                cairo_restore(context);
+            }
+        }
+    }
+
+    //__________________________________________________________________
+    void Style::drawWindowDecoration(cairo_t* context, WinDeco::Options wopt,gint x, gint y, gint w,gint h)
+    {
+        bool hasAlpha( wopt & WinDeco::hasAlpha );
+        bool drawResizeHandle( !(wopt & WinDeco::isShaded) && (wopt & WinDeco::isResizable) );
+        bool isMaximized( wopt & WinDeco::isMaximized );
+
+        // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
+        cairo_surface_t* cs=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
+        cairo_t* cr=cairo_create(cs);
+        renderWindowBackground(cr,0L,0L,0L,x,y,w,h);
+
+        StyleOptions options(hasAlpha?Alpha:Blend);
+        if(wopt & WinDeco::isActive)
+            options|=Focus;
+
+        if( !isMaximized )
+            drawFloatFrame(cr,0L,0L,x,y,w,h,options);
+
+        if( drawResizeHandle )
+        {
+            ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+            Cairo::Context cont(cairo_get_target(cr));
+            renderWindowDots(cont,x,y,w,h,base, isMaximized);
+        }
+
+        // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
+        cairo_save(context);
+        cairo_set_source_rgba(context,0,0,0,0);
+        cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
+        cairo_paint(context);
+        cairo_set_operator(context,CAIRO_OPERATOR_OVER);
+        if( hasAlpha )
+        {
+            // cut round corners using alpha
+            cairo_rounded_rectangle(context,x,y,w,h,3.5);
+            cairo_clip(context);
+        }
+        cairo_set_source_surface(context,cs,0,0);
+        cairo_paint(context);
+        cairo_restore(context);
+
+        cairo_destroy(cr);
+        cairo_surface_destroy(cs);
     }
 
 }

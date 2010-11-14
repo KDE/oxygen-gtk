@@ -34,6 +34,18 @@
 
 #include <gdk/gdk.h>
 
+namespace WinDeco
+{
+    enum Options
+    {
+        isMaximized=1<<0,
+        isShaded=1<<2,
+        isResizable=1<<3,
+        isActive=1<<4,
+        hasAlpha=1<<5,
+    };
+};
+
 namespace Oxygen
 {
 
@@ -42,6 +54,12 @@ namespace Oxygen
     {
 
         public:
+
+        //! draw resize handles for window decoration
+        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
+
+        //! draw window decorations
+        void drawWindowDecoration(cairo_t*,WinDeco::Options,gint,gint,gint,gint);
 
         //! return singleton
         static Style& instance( void );
@@ -85,9 +103,11 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint ) const;
         bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h ) const
         { return renderWindowBackground( window, 0L, r, x, y, w, h ); }
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint ) const;
+        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h ) const
+        { return renderWindowBackground( 0L,window,widget,r,x,y,w,h ); }
 
         //! window background
         void renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
@@ -127,7 +147,9 @@ namespace Oxygen
         void renderToolBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! frame
-        void drawFloatFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions opt) const
+        { drawFloatFrame( 0L, window, r, x, y, w, h, opt ); }
 
         //! button slab
         // void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring );
