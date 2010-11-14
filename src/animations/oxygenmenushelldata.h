@@ -27,6 +27,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignal.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -37,9 +39,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        MenuShellData( void ):
-            _motionId(-1),
-            _leaveId(-1)
+        MenuShellData( void )
         {}
 
         //! destructor
@@ -61,10 +61,10 @@ namespace Oxygen
         private:
 
         //! motion signal id
-        int _motionId;
+        Signal _motionId;
 
         //! leave signal id
-        int _leaveId;
+        Signal _leaveId;
 
     };
 
