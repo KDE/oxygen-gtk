@@ -741,16 +741,20 @@ namespace Oxygen
         Cairo::Context context( window );
 
         // validate rect
-        if(w<0 || h<0)
-            return;
+        if(w<0 || h<0) return;
 
-        // get pixbuf
-        GdkPixbuf* pixbuf( helper().progressBarIndicator( base, glow, w, h ) );
-        cairo_translate( context, -1, -2 );
-        cairo_translate( context, x, y );
-        cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
-        gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
-        cairo_fill( context );
+        // make sure that width is large enough
+        const int indicatorSize( (options&Vertical ? h:w ) );
+        if( indicatorSize >= 4 )
+        {
+            // get pixbuf
+            GdkPixbuf* pixbuf( helper().progressBarIndicator( base, glow, w, h ) );
+            cairo_translate( context, -1, -2 );
+            cairo_translate( context, x, y );
+            cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
+            gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+            cairo_fill( context );
+        }
 
     }
 
