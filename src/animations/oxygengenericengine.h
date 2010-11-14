@@ -68,7 +68,7 @@ namespace Oxygen
         virtual void unregisterWidget( GtkWidget* widget )
         {
             if( !_data.contains( widget ) ) return;
-            if( enabled() ) _data.value( widget ).disconnect( widget );
+            _data.value( widget ).disconnect( widget );
             _data.erase( widget );
         }
 
