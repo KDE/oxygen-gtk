@@ -339,7 +339,7 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Window ) ) );
 
-        if( applicationName().isMozilla() )
+        if( applicationName().isMozilla() || applicationName().isGoogleChrome() )
         {
 
             _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[ACTIVE]", _palette.color( Palette::Window ) ) );
