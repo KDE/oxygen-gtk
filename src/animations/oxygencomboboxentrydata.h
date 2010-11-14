@@ -21,6 +21,8 @@
 */
 
 #include "oxygenhoverdata.h"
+#include "oxygensignal.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -120,11 +122,7 @@ namespace Oxygen
             Data( void ):
                 _widget( 0L ),
                 _focus( false ),
-                _hovered( false ),
-                _destroyId(-1),
-                _styleChangeId(-1),
-                _enterId(-1),
-                _leaveId(-1)
+                _hovered( false )
             {}
 
             //! disconnect
@@ -136,10 +134,10 @@ namespace Oxygen
 
             //!@name callback ids
             //@{
-            int _destroyId;
-            int _styleChangeId;
-            int _enterId;
-            int _leaveId;
+            Signal _destroyId;
+            Signal _styleChangeId;
+            Signal _enterId;
+            Signal _leaveId;
             //@}
 
         };
