@@ -21,9 +21,10 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtk.h>
-
+#include "oxygensignal.h"
 #include "oxygentimer.h"
+
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
@@ -37,7 +38,6 @@ namespace Oxygen
         MainWindowData( void ):
             _target(0L),
             _locked(false),
-            _configureId(-1),
             _width(-1),
             _height(-1)
         {}
@@ -75,7 +75,7 @@ namespace Oxygen
         bool _locked;
 
         //! configure signal id
-        int _configureId;
+        Signal _configureId;
 
         //! old width
         int _width;

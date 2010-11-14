@@ -32,7 +32,7 @@ namespace Oxygen
     {
         _target = widget;
         _locked = false;
-        _configureId = g_signal_connect( G_OBJECT(widget), "configure-event", G_CALLBACK( configureNotifyEvent ), this);
+        _configureId.connect( G_OBJECT(widget), "configure-event", G_CALLBACK( configureNotifyEvent ), this);
     }
 
     //________________________________________________________________________________
@@ -44,7 +44,7 @@ namespace Oxygen
         _timer.stop();
         _locked = false;
 
-        g_signal_handler_disconnect( G_OBJECT(widget), _configureId );
+        _configureId.disconnect();
     }
 
     //________________________________________________________________________________
