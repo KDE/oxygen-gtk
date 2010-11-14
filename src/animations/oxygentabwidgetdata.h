@@ -38,6 +38,7 @@ namespace Oxygen
         //! constructor
         TabWidgetData( void ):
             _target(0L),
+            _hoveredTab(-1),
             _dragInProgress( false )
         {}
 
