@@ -20,6 +20,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignal.h"
+
 #include <gtk/gtk.h>
 #include <vector>
 #include <map>
@@ -36,10 +38,6 @@ namespace Oxygen
         //! constructor
         TabWidgetData( void ):
             _target(0L),
-            _motionId(-1),
-            _leaveId(-1),
-            _pageAddedId(-1),
-            _hoveredTab( -1 ),
             _dragInProgress( false )
         {}
 
@@ -111,9 +109,9 @@ namespace Oxygen
 
         //!@name callbacks IDs
         //@{
-        int _motionId;
-        int _leaveId;
-        int _pageAddedId;
+        Signal _motionId;
+        Signal _leaveId;
+        Signal _pageAddedId;
         //@}
 
         //! index of currently hovered tab
@@ -138,12 +136,7 @@ namespace Oxygen
             public:
 
             //! constructor
-            ChildData( void ):
-                _destroyId( -1 ),
-                _styleChangeId( -1 ),
-                _addId( -1 ),
-                _enterId( -1 ),
-                _leaveId( -1 )
+            ChildData( void )
             {}
 
             //! destructor
@@ -151,13 +144,13 @@ namespace Oxygen
             {}
 
             //! disconnect all signals
-            void disconnect( GtkWidget* );
+            void disconnect( void );
 
-            int _destroyId;
-            int _styleChangeId;
-            int _addId;
-            int _enterId;
-            int _leaveId;
+            Signal _destroyId;
+            Signal _styleChangeId;
+            Signal _addId;
+            Signal _enterId;
+            Signal _leaveId;
         };
 
         //! map registered children and corresponding data

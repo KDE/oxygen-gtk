@@ -40,9 +40,9 @@ namespace Oxygen
         #endif
 
         _target = widget;
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
-        _pageAddedId = g_signal_connect( G_OBJECT(widget), "page-added", G_CALLBACK( pageAddedEvent ), this );
+        _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+        _pageAddedId.connect( G_OBJECT(widget), "page-added", G_CALLBACK( pageAddedEvent ), this );
 
         updateRegisteredChildren( widget );
 
@@ -57,13 +57,13 @@ namespace Oxygen
         #endif
 
         _target = 0L;
-        g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
-        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
-        g_signal_handler_disconnect( G_OBJECT(widget), _pageAddedId );
+        _motionId.disconnect();
+        _leaveId.disconnect();
+        _pageAddedId.disconnect();
 
         // disconnect all children
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
-        { iter->second.disconnect( iter->first ); }
+        { iter->second.disconnect(); }
         _childrenData.clear();
 
     }
@@ -186,13 +186,13 @@ namespace Oxygen
 
             // allocate new ChildData
             ChildData data;
-            data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-            data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
-            data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
+            data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+            data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
+            data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
 
             if( GTK_IS_CONTAINER( widget ) )
-            { data._addId = g_signal_connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
+            { data._addId.connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
 
             // and insert in map
             _childrenData.insert( std::make_pair( widget, data ) );
@@ -221,7 +221,7 @@ namespace Oxygen
 
         ChildDataMap::iterator iter( _childrenData.find( widget ) );
         if( iter == _childrenData.end() ) return;
-        iter->second.disconnect( widget );
+        iter->second.disconnect();
         _childrenData.erase( iter );
 
     }
@@ -256,19 +256,14 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void TabWidgetData::ChildData::disconnect( GtkWidget* widget )
+    void TabWidgetData::ChildData::disconnect( void )
     {
 
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::ChildData::disconnect - " << widget << std::endl;
-        #endif
-
-        g_signal_handler_disconnect(G_OBJECT(widget), _destroyId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _enterId );
-        g_signal_handler_disconnect(G_OBJECT(widget), _leaveId );
-
-        if( _addId >= 0 ) g_signal_handler_disconnect(G_OBJECT(widget), _addId );
+        _destroyId.disconnect();
+        _styleChangeId.disconnect();
+        _enterId.disconnect();
+        _leaveId.disconnect();
+        _addId.disconnect();
 
     }
 

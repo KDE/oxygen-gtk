@@ -23,6 +23,7 @@
 #include "../oxygengtkcellinfo.h"
 #include "../oxygengtkutils.h"
 #include "oxygenhoverdata.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
 #include <algorithm>
@@ -37,7 +38,6 @@ namespace Oxygen
         //! constructor
         TreeViewData( void ):
             _target(0L),
-            _motionId(-1),
             _fullWidth( false )
         {}
 
@@ -89,10 +89,7 @@ namespace Oxygen
 
             //! constructor
             ScrollBarData( void ):
-                _widget( 0L ),
-                _destroyId( -1 ),
-                _styleChangeId( -1 ),
-                _valueChangedId( -1 )
+                _widget( 0L )
             {}
 
             //! destructor
@@ -103,9 +100,9 @@ namespace Oxygen
             void disconnect( void );
 
             GtkWidget* _widget;
-            int _destroyId;
-            int _styleChangeId;
-            int _valueChangedId;
+            Signal _destroyId;
+            Signal _styleChangeId;
+            Signal _valueChangedId;
         };
 
         //!@name child (scrollbars) handling
@@ -128,7 +125,7 @@ namespace Oxygen
         GtkWidget* _target;
 
         //! callbacks ids
-        int _motionId;
+        Signal _motionId;
 
         //! true if hover works on full width
         bool _fullWidth;
