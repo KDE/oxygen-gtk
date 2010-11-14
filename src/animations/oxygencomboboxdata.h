@@ -20,9 +20,12 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignal.h"
+
 #include <gtk/gtk.h>
 #include <algorithm>
 #include <map>
+#include <iostream>
 
 namespace Oxygen
 {
@@ -128,7 +131,7 @@ namespace Oxygen
         //! target widget
         GtkWidget* _target;
 
-        int _stateChangeId;
+        Signal _stateChangeId;
 
         // handle child registration
         class ChildData
@@ -138,9 +141,7 @@ namespace Oxygen
 
             //! constructor
             explicit ChildData( void ):
-                _widget(0L),
-                _destroyId(-1),
-                _styleChangeId(-1)
+                _widget(0L)
             {}
 
             //! destructor
@@ -155,8 +156,8 @@ namespace Oxygen
 
             //!@name callback ids
             //@{
-            int _destroyId;
-            int _styleChangeId;
+            Signal _destroyId;
+            Signal _styleChangeId;
             //@}
 
         };
@@ -170,8 +171,7 @@ namespace Oxygen
             //! constructor
             explicit ButtonData( void ):
                 _pressed( false ),
-                _focus( false ),
-                _toggledId(-1)
+                _focus( false )
             {}
 
             //! destructor
@@ -188,7 +188,7 @@ namespace Oxygen
             bool _focus;
 
             //! toggled callback Id
-            int _toggledId;
+            Signal _toggledId;
 
         };
 
@@ -198,9 +198,7 @@ namespace Oxygen
 
             //! constructor
             explicit HoverData( void ):
-                _hovered( false ),
-                _enterId(-1),
-                _leaveId(-1)
+                _hovered( false )
             {}
 
             //! destructor
@@ -215,8 +213,8 @@ namespace Oxygen
 
             //!@name callback ids
             //@{
-            int _enterId;
-            int _leaveId;
+            Signal _enterId;
+            Signal _leaveId;
             //@}
 
         };
