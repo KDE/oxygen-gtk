@@ -107,7 +107,7 @@ namespace Oxygen
 
             bool isScrolledWindow( void ) const { return _value == "scrolled_window"; }
             bool isSlider( void ) const { return _value == "slider"; }
-            bool isSliderLevel( void) const { return _value == "trough-fill-level"; }
+            bool isSliderLevel( void ) const { return _value == "trough-fill-level"; }
 
             //!@name spinbuttons
             //@{
