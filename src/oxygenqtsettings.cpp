@@ -252,7 +252,7 @@ namespace Oxygen
         _rc.addToHeaderSection( themeNameStr.str() );
 
         // check show icons on push buttons kde option
-        std::string showIconsOnPushButton = _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true");
+        const std::string showIconsOnPushButton( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) );
 
         // add option
         if( showIconsOnPushButton == "false" )
