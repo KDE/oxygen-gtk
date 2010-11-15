@@ -358,7 +358,7 @@ namespace Oxygen
             }
 
             accepted = true;
-            
+
             // Revert gtk dialog button order
             GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
             if( toplevel && GTK_IS_DIALOG( toplevel ) && !g_object_get_data( G_OBJECT( toplevel ), "OXYGEN_BUTTON_ORDER_HACK_SET" ) )
@@ -865,10 +865,10 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
             Style::instance().renderProgressBarHandle( window, clipRect, x-1, y+1, w+2, h-2, options );
-            
-        } else if( d.isSliderLevel () ) {
+
+        } else if( d.isTroughFillLevel () ) {
             return;
-        
+
         } else {
 
             oxygen_style_parent_class->draw_box( style, window, state,
