@@ -32,17 +32,25 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::connect( GtkWidget* widget )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
+        #endif
+
         _target = widget;
-        _stateChangeId = g_signal_connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
+        _stateChangeId.connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
         gtk_widget_add_events( widget, GDK_ALL_EVENTS_MASK );
         initializeCellView( widget );
+
     }
 
     //________________________________________________________________________________
     void ComboBoxData::disconnect( GtkWidget* widget )
     {
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::ComboBoxData::disconnect - widget: " << widget << std::endl;
+        #endif
 
-        g_signal_handler_disconnect( G_OBJECT(widget), _stateChangeId );
+        _stateChangeId.disconnect();
 
         _target = 0L;
         _button.disconnect();
@@ -62,7 +70,7 @@ namespace Oxygen
         if( _button._widget == widget ) return;
         assert( !_button._widget );
 
-        _button._toggledId = g_signal_connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
+        _button._toggledId.connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
         _button._widget = widget;
 
         registerChild( widget, false );
@@ -85,8 +93,8 @@ namespace Oxygen
             assert( !_cell._widget );
 
             _cell._widget = GTK_WIDGET( child->data );
-            _cell._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            _cell._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+            _cell._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            _cell._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
 
             updateCellViewColor();
 
@@ -196,10 +204,10 @@ namespace Oxygen
             // allocate new Hover data
             HoverData data;
             data._widget = widget;
-            data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-            data._enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
-            data._leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+            data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+            data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
+            data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
 
             // and insert in map
             _hoverData.insert( std::make_pair( widget, data ) );
@@ -226,6 +234,13 @@ namespace Oxygen
     void ComboBoxData::unregisterChild( GtkWidget* widget )
     {
 
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::ComboBoxData::unregisterChild -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
         // see if widget is button or cell
         if( widget == _button._widget ) _button.disconnect();
         if( widget == _cell._widget ) _cell.disconnect();
@@ -242,20 +257,26 @@ namespace Oxygen
     //________________________________________________________________________________
     void ComboBoxData::ChildData::disconnect( void )
     {
+
         if( !_widget ) return;
 
-        if( _destroyId >= 0 ) g_signal_handler_disconnect( G_OBJECT(_widget), _destroyId );
-        if( _styleChangeId >= 0 ) g_signal_handler_disconnect( G_OBJECT(_widget), _styleChangeId );
-        _destroyId = -1;
-        _styleChangeId = -1;
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::ComboBoxData::ChildData::disconnect -"
+            << " " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")"
+            << std::endl;
+        #endif
+
+        _destroyId.disconnect();
+        _styleChangeId.disconnect();
+        _widget = 0L;
     }
 
     //________________________________________________________________________________
     void ComboBoxData::ButtonData::disconnect( void )
     {
         if( !_widget ) return;
-        if( _toggledId >= 0 ) g_signal_handler_disconnect( G_OBJECT(_widget), _toggledId );
-        _toggledId = -1;
+        _toggledId.disconnect();
         _pressed = false;
         _focus = false;
 
@@ -269,15 +290,13 @@ namespace Oxygen
         if( !_widget ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::HoverData::ChildData::disconnect -"
+        std::cout << "Oxygen::ComboBoxData::HoverData::disconnect -"
             << " " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")"
             << std::endl;
         #endif
 
-        g_signal_handler_disconnect( G_OBJECT(_widget), _enterId );
-        g_signal_handler_disconnect( G_OBJECT(_widget), _leaveId );
-        _enterId = -1;
-        _leaveId = -1;
+        _enterId.disconnect();
+        _leaveId.disconnect();
         _hovered = false;
 
         // base class
@@ -287,6 +306,12 @@ namespace Oxygen
     //____________________________________________________________________________________________
     gboolean ComboBoxData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::ComboBoxData::childDestroyNotifyEvent -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
         static_cast<ComboBoxData*>(data)->unregisterChild( widget );
         return FALSE;
     }

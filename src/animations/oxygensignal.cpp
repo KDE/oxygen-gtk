@@ -1,9 +1,7 @@
-#ifndef oxygenscrollbardata_h
-#define oxygenscrollbardata_h
+
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
-* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -23,40 +21,31 @@
 
 #include "oxygensignal.h"
 
-#include <gtk/gtk.h>
-
 namespace Oxygen
 {
-    // track scrollbars
-    class ScrollBarData
+
+    //____________________________________________________________________
+    void Signal::connect( GObject* object, const std::string& signal, GCallback callback, gpointer data )
+    {
+        // make sure that signal is not already connected
+        assert( _object == 0 && _id < 0 );
+
+        // store attributes and create connection
+        _object = object;
+        _id = g_signal_connect( object, signal.c_str(), callback, data );
+    }
+
+    //____________________________________________________________________
+    void Signal::disconnect( void )
     {
 
-        public:
+        // disconnect signal
+        if( _object && _id >= 0 ) g_signal_handler_disconnect( _object, _id );
 
-        //! constructor
-        ScrollBarData( void )
-        {}
+        // reset members
+        _object = 0L;
+        _id = -1;
 
-        //! destructor
-        virtual ~ScrollBarData( void )
-        {}
-
-        //! setup connections
-        void connect( GtkWidget* );
-
-        //! disconnect
-        void disconnect( GtkWidget* );
-
-        protected:
-
-        static void valueChanged( GtkRange*, gpointer );
-
-        private:
-
-        Signal _valueChangedId;
-
-    };
+    }
 
 }
-
-#endif

@@ -21,6 +21,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignal.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -32,8 +34,6 @@ namespace Oxygen
 
         //! constructor
         HoverData( void ):
-            _enterId(-1),
-            _leaveId(-1),
             _hovered( false ),
             _updateOnHover( false )
         {}
@@ -80,10 +80,10 @@ namespace Oxygen
         private:
 
         //! enter signal id
-        int _enterId;
+        Signal _enterId;
 
         //! leave signal id
-        int _leaveId;
+        Signal _leaveId;
 
         //! true if hovered
         bool _hovered;

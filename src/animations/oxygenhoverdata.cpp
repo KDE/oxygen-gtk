@@ -57,19 +57,19 @@ namespace Oxygen
         }
 
         // register callbacks
-        _enterId = g_signal_connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
-        _leaveId = g_signal_connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+        _enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
+        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
     }
 
     //________________________________________________________________________________
     void HoverData::disconnect( GtkWidget* widget )
     {
         #if OXYGEN_DEBUG
-        std::cout << "HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cout << "Oxygen::HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
-        g_signal_handler_disconnect( G_OBJECT(widget), _enterId );
-        g_signal_handler_disconnect( G_OBJECT(widget), _leaveId );
+        _enterId.disconnect();
+        _leaveId.disconnect();
     }
 
     //________________________________________________________________________________

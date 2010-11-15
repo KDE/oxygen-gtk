@@ -62,7 +62,7 @@ namespace Oxygen
 
         }
 
-        _motionId = g_signal_connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+        _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
 
         // also register scrollbars from parent scrollWindow
         registerScrollBars( widget );
@@ -81,7 +81,7 @@ namespace Oxygen
         _target = 0L;
 
         // motion handler
-        g_signal_handler_disconnect( G_OBJECT(widget), _motionId );
+        _motionId.disconnect();
 
         // also free path if valid
         _cellInfo.clear();
@@ -92,10 +92,6 @@ namespace Oxygen
 
         // base class
         HoverData::disconnect( widget );
-
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TreeViewData::disconnect - done." << std::endl;
-        #endif
 
     }
 
@@ -206,9 +202,9 @@ namespace Oxygen
 
         // make sure widget is not already in map
         data._widget = widget;
-        data._destroyId = g_signal_connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        data._styleChangeId = g_signal_connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-        data._valueChangedId = g_signal_connect( G_OBJECT(widget), "value-changed", G_CALLBACK( childValueChanged ), this );
+        data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+        data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
+        data._valueChangedId.connect( G_OBJECT(widget), "value-changed", G_CALLBACK( childValueChanged ), this );
 
     }
 
@@ -254,9 +250,9 @@ namespace Oxygen
         std::cout << "Oxygen::TreeViewData::ScrollBarData::disconnect - " << _widget << std::endl;
         #endif
 
-        g_signal_handler_disconnect(G_OBJECT(_widget), _destroyId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _styleChangeId );
-        g_signal_handler_disconnect(G_OBJECT(_widget), _valueChangedId );
+        _destroyId.disconnect();
+        _styleChangeId.disconnect();
+        _valueChangedId.disconnect();
         _widget = 0L;
 
     }

@@ -844,6 +844,11 @@ namespace Oxygen
             if(GTK_IS_PROGRESS_BAR(widget))
             {
 
+                // get orientation
+                const GtkProgressBarOrientation orientation( gtk_progress_bar_get_orientation( GTK_PROGRESS_BAR( widget ) ) );
+                if( orientation == GTK_PROGRESS_TOP_TO_BOTTOM || orientation == GTK_PROGRESS_BOTTOM_TO_TOP )
+                { options |= Vertical; }
+
                 Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
 
             } else {
