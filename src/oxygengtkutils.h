@@ -227,7 +227,6 @@ namespace Oxygen
         //! gtk error handler, do nothing
         inline void oxygen_log_handler( const gchar*, GLogLevelFlags, const gchar*, gpointer )
         {}
-
         //@}
 
     }
