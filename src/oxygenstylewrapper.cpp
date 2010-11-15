@@ -841,7 +841,10 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
             Style::instance().renderProgressBarHandle( window, clipRect, x-1, y+1, w+2, h-2, options );
-
+            
+        } else if( d.isSliderLevel () ) {
+            return;
+        
         } else {
 
             oxygen_style_parent_class->draw_box( style, window, state,
