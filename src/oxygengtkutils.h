@@ -225,14 +225,8 @@ namespace Oxygen
         }
 
         //! gtk error handler, do nothing
-        inline void oxygen_log_handler( const gchar *domain, GLogLevelFlags level, const gchar *msg, gpointer data )
-        {
-            ( void ) domain;
-            ( void ) level;
-            ( void ) msg;
-            ( void ) data;
-
-        }
+        inline void oxygen_log_handler( const gchar*, GLogLevelFlags, const gchar*, gpointer )
+        {}
 
         //@}
 
