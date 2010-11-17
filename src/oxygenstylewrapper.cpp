@@ -99,7 +99,7 @@ namespace Oxygen
                 Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent );
 
             }
-            
+
             // Revert gtk dialog button order
             GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
             if( toplevel && GTK_IS_DIALOG( toplevel ) && !g_object_get_data( G_OBJECT( toplevel ), "OXYGEN_BUTTON_ORDER_HACK_SET" ) )
@@ -382,30 +382,6 @@ namespace Oxygen
             }
 
             accepted = true;
-
-            // Revert gtk dialog button order
-            GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
-            if( toplevel && GTK_IS_DIALOG( toplevel ) && !g_object_get_data( G_OBJECT( toplevel ), "OXYGEN_BUTTON_ORDER_HACK_SET" ) )
-            {
-                //gtk_dialog_set_alternative_button_order will cause errors to be logged, but dont want these
-                //so register or own error handler, and then unregister afterwards...
-                unsigned int id = g_log_set_handler("Gtk", G_LOG_LEVEL_CRITICAL, Gtk::oxygen_log_handler, NULL);
-                g_object_set_data( G_OBJECT( toplevel ), "OXYGEN_BUTTON_ORDER_HACK_SET", ( gpointer )1 );
-                gtk_dialog_set_alternative_button_order( GTK_DIALOG( toplevel ),
-                                                         GTK_RESPONSE_HELP,
-                                                         GTK_RESPONSE_OK,
-                                                         GTK_RESPONSE_YES,
-                                                         GTK_RESPONSE_ACCEPT,
-                                                         GTK_RESPONSE_APPLY,
-                                                         GTK_RESPONSE_REJECT,
-                                                         GTK_RESPONSE_CLOSE,
-                                                         GTK_RESPONSE_NO,
-                                                         GTK_RESPONSE_CANCEL,
-                                                         -1 );
-                g_log_remove_handler( "Gtk", id );
-                g_log_set_handler( "Gtk", G_LOG_LEVEL_CRITICAL, g_log_default_handler, NULL );
-
-            }
 
         }
 
