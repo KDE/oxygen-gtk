@@ -23,6 +23,10 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# global settings
+gtk-alternative-button-order = 1
+
+# oxygen's generic style options
 style "oxygen-default"
 {
 
