@@ -41,6 +41,7 @@ namespace Oxygen
         const double scale( (21.0*settings().buttonSize())/22.0 );
 
         // draw shadow
+        // FIXME: change shadow color depending on button state
         GdkPixbuf *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
         gdk_cairo_set_source_pixbuf( context, windecoButtonGlow, 0, 0 );
         cairo_rectangle( context, 0, 0, w, h );
@@ -63,6 +64,8 @@ namespace Oxygen
         drawIcon( context, w, h );
 
         cairo_translate( context, 0, -1.5 );
+
+        // FIXME: change icon color depending on button state
         cairo_set_source( context, settings().palette().color( Palette::WindowText ) );
         drawIcon( context, w, h );
         cairo_restore( context );
