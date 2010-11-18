@@ -2098,7 +2098,7 @@ namespace Oxygen
                     WinDeco::Button button( settings(), helper(), types[i] );
                     button.setState( wopt & WinDeco::Active ? WinDeco::Normal : WinDeco::Disabled );
                     button.render( context, xbutton, ybutton, settings().buttonSize(), settings().buttonSize() );
-                    xbutton+=settings().buttonSize()+2;
+                    xbutton+=settings().buttonSize()+4;
                 }
 
             }

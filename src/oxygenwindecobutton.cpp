@@ -55,6 +55,9 @@ namespace Oxygen
 
         // draw icon
         cairo_set_line_width( context, 1.2 );
+        cairo_set_line_cap( context, CAIRO_LINE_CAP_ROUND );
+        cairo_set_line_join( context, CAIRO_LINE_JOIN_ROUND );
+
         cairo_scale( context, double(w)/22.0, double(h)/22.0 );
         Oxygen::cairo_set_source( context, ColorUtils::lightColor( base ) );
         drawIcon( context, w, h );
