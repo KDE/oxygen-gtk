@@ -1,5 +1,5 @@
-#ifndef oxygentilesetkey_h
-#define oxygentilesetkey_h
+#ifndef oxygencachekey_h
+#define oxygencachekey_h
 
 /*
 * this file is part of the oxygen gtk engine
@@ -442,6 +442,93 @@ namespace Oxygen
             return out;
         }
     };
+
+    //! key for windeco buttons
+    /*! keys are used to store tilesets into cache */
+    class WindecoButtonKey
+    {
+        public:
+
+        //! constructor
+        WindecoButtonKey( const ColorUtils::Rgba& color, int size, bool pressed ):
+            _color( color.toInt() ),
+            _size( size ),
+            _pressed( pressed )
+        {}
+
+        //! equal to operator
+        bool operator == (const WindecoButtonKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _size == other._size &&
+                _pressed == other._pressed;
+        }
+
+        //! less than operator
+        bool operator < (const WindecoButtonKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _size != other._size ) return _size < other._size;
+            else return _pressed < other._pressed;
+        }
+
+        private:
+
+        guint32 _color;
+        int _size;
+        bool _pressed;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const WindecoButtonKey& key )
+        {
+            out << "WindecoButtonKey - color: " << key._color << " size: " << key._size << " pressed: " << key._pressed;
+            return out;
+        }
+
+    };
+
+    //! key for windeco buttons
+    /*! keys are used to store tilesets into cache */
+    class WindecoButtonGlowKey
+    {
+        public:
+
+        //! constructor
+        WindecoButtonGlowKey( const ColorUtils::Rgba& color, int size ):
+            _color( color.toInt() ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const WindecoButtonGlowKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const WindecoButtonGlowKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const WindecoButtonGlowKey& key )
+        {
+            out << "WindecoButtonGlowKey - color: " << key._color << " size: " << key._size;
+            return out;
+        }
+
+    };
+
 
 }
 

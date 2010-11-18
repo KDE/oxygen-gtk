@@ -64,7 +64,9 @@ namespace Oxygen
         _viewDrawTreeBranchLines( true ),
         _viewDrawTriangularExpander( true ),
         _viewTriangularExpanderSize( ArrowSmall ),
-        _menuHighlightMode( MM_DARK )
+        _menuHighlightMode( MM_DARK ),
+        _buttonSize( ButtonDefault ),
+        _frameBorder( BorderDefault )
     {}
 
     //_________________________________________________________
@@ -599,6 +601,26 @@ namespace Oxygen
         // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+
+        // window decoration button size
+        std::string buttonSize( _oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
+        if( buttonSize == "Small" ) _buttonSize = ButtonSmall;
+        else if( buttonSize == "Large" ) _buttonSize = ButtonLarge;
+        else if( buttonSize == "Very Large" ) _buttonSize = ButtonVeryLarge;
+        else if( buttonSize == "Huge" ) _buttonSize = ButtonHuge;
+        else _buttonSize = ButtonDefault;
+
+        // window decoration frame border size
+        std::string frameBorder(  _oxygen.getValue( "[Windeco]", "FrameBorder", "Normal") );
+        if( frameBorder == "No Border" ) _frameBorder = BorderNone;
+        else if( frameBorder == "No Side Border" ) _frameBorder = BorderNoSide;
+        else if( frameBorder == "Tiny" ) _frameBorder = BorderTiny;
+        else if( frameBorder == "Large" ) _frameBorder = BorderLarge;
+        else if( frameBorder == "Very Large" ) _frameBorder = BorderVeryLarge;
+        else if( frameBorder == "Huge" ) _frameBorder = BorderHuge;
+        else if( frameBorder == "Very Huge" ) _frameBorder = BorderVeryHuge;
+        else if( frameBorder == "Oversized" ) _frameBorder = BorderOversized;
+        else _frameBorder = BorderDefault;
 
     }
 

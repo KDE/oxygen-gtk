@@ -156,6 +156,41 @@ namespace Oxygen
 
         //@}
 
+        //!@name window decoration options
+        //@{
+
+        //! button size enumeration
+        enum ButtonSize {
+            ButtonSmall = 18,
+            ButtonDefault = 20,
+            ButtonLarge = 24,
+            ButtonVeryLarge = 32,
+            ButtonHuge = 48
+        };
+
+        //! button size
+        ButtonSize buttonSize( void ) const
+        { return _buttonSize; }
+
+        //! frame border enumeration
+        enum FrameBorder {
+            BorderNone = 0,
+            BorderNoSide = 1,
+            BorderTiny = 2,
+            BorderDefault = 4,
+            BorderLarge = 8,
+            BorderVeryLarge = 12,
+            BorderHuge = 18,
+            BorderVeryHuge = 27,
+            BorderOversized = 40
+        };
+
+        //! frame border
+        FrameBorder frameBorder( void ) const
+        { return _frameBorder; }
+
+        //@}
+
         protected:
 
         // get home directory
@@ -300,6 +335,17 @@ namespace Oxygen
 
         //! menu highlight mode
         MenuHighlightMode _menuHighlightMode;
+
+        //@}
+
+        //!@name window decoration options
+        //@{
+
+        //! button size
+        ButtonSize _buttonSize;
+
+        //! frame border
+        FrameBorder _frameBorder;
 
         //@}
 
