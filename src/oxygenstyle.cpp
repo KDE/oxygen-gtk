@@ -2008,6 +2008,146 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    void Style::renderTreeExpander(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        GtkExpanderStyle style,
+        StyleOptions options
+        ) const
+    {
+
+        // retrieve colors
+        ColorUtils::Rgba base;
+        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::ButtonText );
+        else if( options&Hover ) base = settings().palette().color( Palette::Hover );
+        else base = settings().palette().color( Palette::Active, Palette::ButtonText );
+
+        const int xcenter = x + w/2;
+        const int ycenter = y + h/2;
+
+        // expander 'radius' (copied from oxygen-qt)
+        const int radius( ( 9 - 4 ) / 2 );
+
+        // create context and translate to center
+        Cairo::Context context( window, clipRect );
+        cairo_translate( context, xcenter, ycenter );
+
+        cairo_set_line_width( context, 1.0 );
+        cairo_set_source( context, base );
+
+        // horizontal line
+        cairo_move_to( context, 0.5-radius, 0.5 );
+        cairo_line_to( context, 0.5+radius, 0.5 );
+
+        // vertical line
+        if( style == GTK_EXPANDER_COLLAPSED || style == GTK_EXPANDER_SEMI_COLLAPSED )
+        {
+            cairo_move_to( context, 0.5, 0.5-radius );
+            cairo_line_to( context, 0.5, 0.5+radius );
+        }
+
+        cairo_stroke( context );
+
+    }
+
+    //__________________________________________________________________
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    {
+        bool hasAlpha( wopt & WinDeco::hasAlpha );
+        bool drawResizeHandle( !(wopt & WinDeco::isShaded) && (wopt & WinDeco::isResizable) );
+        bool isMaximized( wopt & WinDeco::isMaximized );
+
+        // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
+        cairo_surface_t* surface = cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h );
+        {
+            // create context to paint on surface
+            Cairo::Context context( surface );
+            renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
+
+            StyleOptions options( hasAlpha ? Alpha : Blend );
+
+            // focus
+            if(wopt & WinDeco::isActive) options|=Focus;
+
+            if( !isMaximized )
+            { drawFloatFrame( context, 0L, 0L, x, y, w, h, options); }
+
+            if( drawResizeHandle )
+            {
+                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+                renderWindowDots( context, x, y, w, h, base, isMaximized );
+            }
+
+            // draw buttons
+            {
+                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+                const int button_width( 23 );
+                int xbutton( x+4 );
+                int ybutton( y+2 );
+                for( int i=0; i<3; ++i )
+                {
+                    renderWindecoButton( context, xbutton, ybutton, 22, 22, base, false );
+                    xbutton+=button_width;
+                }
+
+            }
+
+        }
+
+        // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
+        cairo_save( context );
+        cairo_set_source_rgba( context, 0, 0, 0, 0 );
+        cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
+        cairo_paint( context );
+        cairo_set_operator( context, CAIRO_OPERATOR_OVER );
+        if( hasAlpha )
+        {
+            // cut round corners using alpha
+            cairo_rounded_rectangle(context,x,y,w,h,3.5);
+            cairo_clip(context);
+        }
+        cairo_set_source_surface( context, surface, 0, 0 );
+        cairo_paint( context );
+        cairo_restore( context );
+
+        // destroy surface
+        cairo_surface_destroy(surface);
+    }
+
+    //__________________________________________________________________
+    void Style::sanitizeSize( GdkWindow* window, gint& w, gint& h ) const
+    {
+        if( w < 0 && h < 0 ) gdk_drawable_get_size( window, &w, &h );
+        else if( w < 0 ) gdk_drawable_get_size( window, &w, 0L );
+        else if( h < 0 ) gdk_drawable_get_size( window, 0L, &h );
+    }
+
+    //__________________________________________________________________
+    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions options ) const
+    {
+
+        const int buttonSize( 14 );
+        const int subLineOffset( buttonSize*settings().scrollBarSubLineButtons() );
+        const int addLineOffset( buttonSize*settings().scrollBarAddLineButtons() );
+        if( options&Vertical )
+        {
+
+            y += subLineOffset;
+            h -= (subLineOffset+addLineOffset);
+
+        } else {
+
+            x += subLineOffset;
+            w -= (subLineOffset+addLineOffset);
+
+        }
+
+        return;
+
+    }
+
+    //____________________________________________________________________________________
     void Style::renderActiveTab(
         GdkWindow* window,
         GdkRectangle* clipRect,
@@ -2736,58 +2876,6 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderTreeExpander(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h,
-        GtkExpanderStyle style,
-        StyleOptions options
-        ) const
-    {
-
-        // retrieve colors
-        ColorUtils::Rgba base;
-        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::ButtonText );
-        else if( options&Hover ) base = settings().palette().color( Palette::Hover );
-        else base = settings().palette().color( Palette::Active, Palette::ButtonText );
-
-        const int xcenter = x + w/2;
-        const int ycenter = y + h/2;
-
-        // expander 'radius' (copied from oxygen-qt)
-        const int radius( ( 9 - 4 ) / 2 );
-
-        // create context and translate to center
-        Cairo::Context context( window, clipRect );
-        cairo_translate( context, xcenter, ycenter );
-
-        cairo_set_line_width( context, 1.0 );
-        cairo_set_source( context, base );
-
-        // horizontal line
-        cairo_move_to( context, 0.5-radius, 0.5 );
-        cairo_line_to( context, 0.5+radius, 0.5 );
-
-        // vertical line
-        if( style == GTK_EXPANDER_COLLAPSED || style == GTK_EXPANDER_SEMI_COLLAPSED )
-        {
-            cairo_move_to( context, 0.5, 0.5-radius );
-            cairo_line_to( context, 0.5, 0.5+radius );
-        }
-
-        cairo_stroke( context );
-
-    }
-
-    //__________________________________________________________________
-    void Style::sanitizeSize( GdkWindow* window, gint& w, gint& h ) const
-    {
-        if( w < 0 && h < 0 ) gdk_drawable_get_size( window, &w, &h );
-        else if( w < 0 ) gdk_drawable_get_size( window, &w, 0L );
-        else if( h < 0 ) gdk_drawable_get_size( window, 0L, &h );
-    }
-
-    //____________________________________________________________________________________
     ColorUtils::Rgba Style::slabShadowColor( StyleOptions options ) const
     {
 
@@ -2950,26 +3038,55 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions options ) const
+    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
+    {
+        if( settings().frameBorder() >= QtSettings::BorderTiny )
+        {
+            if( !isMaximized )
+            {
+                // Draw right side 3-dots resize handles
+                int cenY = int(h/2+y);
+                int posX = int(w+x-3) + 1;
+                helper().renderDot(context,color,posX, cenY-3);
+                helper().renderDot(context,color,posX, cenY);
+                helper().renderDot(context,color,posX, cenY+3);
+            }
+
+            // Draw bottom-right corner 3-dots resize handles
+            // if( !config.drawSizeGrip )
+            {
+                cairo_save(context);
+                cairo_translate(context,x+w-8,y+h-8);
+                helper().renderDot(context,color,2,6);
+                helper().renderDot(context,color,5,5);
+                helper().renderDot(context,color,6,2);
+                cairo_restore(context);
+            }
+        }
+    }
+
+    //__________________________________________________________________
+    void Style::renderWindecoButton( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool pressed )
     {
 
-        const int buttonSize( 14 );
-        const int subLineOffset( buttonSize*settings().scrollBarSubLineButtons() );
-        const int addLineOffset( buttonSize*settings().scrollBarAddLineButtons() );
-        if( options&Vertical )
-        {
+        cairo_save( context );
+        cairo_translate( context, x, y );
 
-            y += subLineOffset;
-            h -= (subLineOffset+addLineOffset);
+        const ColorUtils::Rgba shadow( ColorUtils::Rgba::black() );
+        const double scale( (21.0*settings().buttonSize())/22.0 );
 
-        } else {
+        // draw shadow
+        GdkPixbuf *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
+        gdk_cairo_set_source_pixbuf( context, windecoButtonGlow, 0, 0 );
+        cairo_rectangle( context, 0, 0, w, h );
+        cairo_fill( context );
 
-            x += subLineOffset;
-            w -= (subLineOffset+addLineOffset);
+        GdkPixbuf* windecoButton( helper().windecoButton( base, pressed, int(scale) ) );
+        gdk_cairo_set_source_pixbuf( context, windecoButton, 0, 0 );
+        cairo_rectangle( context, 0, 0, w, h );
+        cairo_fill( context );
 
-        }
-
-        return;
+        cairo_restore( context );
 
     }
 
@@ -3043,81 +3160,6 @@ namespace Oxygen
 
         return;
 
-    }
-
-    //__________________________________________________________________
-    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
-    {
-        // FIXME: where to get the following config settings?
-        // if( frameBorder >= BorderTiny )
-        {
-            if( !isMaximized )
-            {
-                // Draw right side 3-dots resize handles
-                int cenY = int(h/2+y);
-                int posX = int(w+x-3) + 1;
-                helper().renderDot(context,color,posX, cenY-3);
-                helper().renderDot(context,color,posX, cenY);
-                helper().renderDot(context,color,posX, cenY+3);
-            }
-
-            // Draw bottom-right corner 3-dots resize handles
-            // if( !config.drawSizeGrip )
-            {
-                cairo_save(context);
-                cairo_translate(context,x+w-8,y+h-8);
-                helper().renderDot(context,color,2,6);
-                helper().renderDot(context,color,5,5);
-                helper().renderDot(context,color,6,2);
-                cairo_restore(context);
-            }
-        }
-    }
-
-    //__________________________________________________________________
-    void Style::drawWindowDecoration(cairo_t* context, WinDeco::Options wopt,gint x, gint y, gint w,gint h)
-    {
-        bool hasAlpha( wopt & WinDeco::hasAlpha );
-        bool drawResizeHandle( !(wopt & WinDeco::isShaded) && (wopt & WinDeco::isResizable) );
-        bool isMaximized( wopt & WinDeco::isMaximized );
-
-        // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
-        cairo_surface_t* cs=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
-        cairo_t* cr=cairo_create(cs);
-        renderWindowBackground(cr,0L,0L,0L,x,y,w,h);
-
-        StyleOptions options(hasAlpha?Alpha:Blend);
-        if(wopt & WinDeco::isActive)
-            options|=Focus;
-
-        if( !isMaximized )
-            drawFloatFrame(cr,0L,0L,x,y,w,h,options);
-
-        if( drawResizeHandle )
-        {
-            ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-            Cairo::Context cont(cairo_get_target(cr));
-            renderWindowDots(cont,x,y,w,h,base, isMaximized);
-        }
-
-        // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
-        cairo_save(context);
-        cairo_set_source_rgba(context,0,0,0,0);
-        cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
-        cairo_paint(context);
-        cairo_set_operator(context,CAIRO_OPERATOR_OVER);
-        if( hasAlpha )
-        {
-            // cut round corners using alpha
-            cairo_rounded_rectangle(context,x,y,w,h,3.5);
-            cairo_clip(context);
-        }
-        cairo_set_source_surface(context,cs,0,0);
-        cairo_paint(context);
-        cairo_restore(context);
-
-        cairo_destroy(cr);
-        cairo_surface_destroy(cs);
     }
 
 }

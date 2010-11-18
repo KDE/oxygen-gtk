@@ -104,6 +104,131 @@ namespace Oxygen
 
     }
 
+
+    //______________________________________________________________________________
+    GdkPixbuf* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
+    {
+
+        WindecoButtonKey key( base, size, pressed );
+        GdkPixbuf *pixbuf( m_windecoButtonCache.value(key) );
+
+        if( !pixbuf )
+        {
+
+            // create pixbuf
+            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            // calculate colors
+            ColorUtils::Rgba light = ColorUtils::lightColor(base);
+            ColorUtils::Rgba dark = ColorUtils::darkColor(base);
+
+            // create cairo context
+            Cairo::Context context( pixbuf );
+            const double u = double(size)/18.0;
+            cairo_translate( context, 0.5*u, (0.5-0.668)*u );
+
+            {
+
+                // plain background
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(12.33+1.665) ) );
+                if( pressed )
+                {
+                    cairo_pattern_add_color_stop( pattern, 1, light );
+                    cairo_pattern_add_color_stop( pattern, 0, dark );
+                } else {
+                    cairo_pattern_add_color_stop( pattern, 0, light );
+                    cairo_pattern_add_color_stop( pattern, 1, dark );
+                }
+
+                cairo_ellipse( context, u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
+                cairo_set_source( context, pattern );
+                cairo_fill( context );
+
+            }
+
+            {
+                // outline circle
+                const double penWidth( 0.7 );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(2.0*12.33+1.665) ) );
+                cairo_pattern_add_color_stop( pattern, 0, light );
+                cairo_pattern_add_color_stop( pattern, 1, dark );
+
+                cairo_ellipse( context, u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
+                cairo_set_source( context, pattern );
+                cairo_set_line_width( context, penWidth );
+                cairo_stroke( context );
+            }
+
+            context.updateGdkPixbuf();
+            m_windecoButtonCache.insert( key, pixbuf );
+
+        }
+
+        return pixbuf;
+    }
+
+    //_______________________________________________________________________
+    GdkPixbuf* StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
+    {
+
+        const WindecoButtonGlowKey key( base, size );
+        GdkPixbuf *pixbuf( m_windecoButtonGlowCache.value(key) );
+
+        if( !pixbuf )
+        {
+            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            // right now the same color is used for the two shadows
+            const ColorUtils::Rgba& light( base );
+            const ColorUtils::Rgba& dark( base );
+
+            Cairo::Context context( pixbuf );
+            const double u = double(size)/18.0;
+            cairo_translate( context, 0.5*u, (0.5-0.668)*u );
+
+            {
+
+                // outer shadow
+                Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
+
+                static const int nPoints( 5 );
+                double x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
+                double values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
+                ColorUtils::Rgba c = dark;
+                for( int i = 0; i<nPoints; i++ )
+                { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
+
+                cairo_set_source( context, pattern );
+                cairo_rectangle( context, 0, 0, size, size );
+                cairo_fill( context );
+            }
+
+            {
+                // inner shadow
+                Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
+
+                static const int nPoints(6);
+                const double x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
+                const double values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
+                ColorUtils::Rgba c( light );
+                for( int i = 0; i<nPoints; i++ )
+                { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
+
+                cairo_set_source( context, pattern );
+                cairo_rectangle( context, 0, 0, size, size );
+                cairo_fill( context );
+            }
+
+            context.updateGdkPixbuf();
+            m_windecoButtonGlowCache.insert( key, pixbuf );
+
+        }
+
+        return pixbuf;
+    }
+
     //_________________________________________________
     const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, double shade, int size)
     {

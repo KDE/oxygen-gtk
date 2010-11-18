@@ -20,10 +20,10 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygencachekey.h"
 #include "oxygengdkpixbufcache.h"
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
-#include "oxygentilesetkey.h"
 
 #include <gdk/gdk.h>
 
@@ -69,7 +69,17 @@ namespace Oxygen
             m_roundSlabCache.clear();
             m_roundSlabFocusedCache.clear();
             m_progressBarIndicatorCache.clear();
+            m_windecoButtonCache.clear();
+            m_windecoButtonGlowCache.clear();
         }
+
+
+        //!@name decoration specific helper functions
+        //!
+        //@{
+        virtual GdkPixbuf* windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
+        virtual GdkPixbuf* windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        //@}
 
         //!@name slabs
         //@{
@@ -202,6 +212,13 @@ namespace Oxygen
 
         //! progressbar indicators
         GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
+
+        //! decoration button
+        GdkPixbufCache<WindecoButtonKey> m_windecoButtonCache;
+
+        //! decoration glow
+        GdkPixbufCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+
 
         //@}
 

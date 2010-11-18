@@ -55,12 +55,6 @@ namespace Oxygen
 
         public:
 
-        //! draw resize handles for window decoration
-        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
-
-        //! draw window decorations
-        void drawWindowDecoration(cairo_t*,WinDeco::Options,gint,gint,gint,gint);
-
         //! return singleton
         static Style& instance( void );
 
@@ -219,6 +213,9 @@ namespace Oxygen
 
         //@}
 
+        //! draw window decorations
+        void drawWindowDecoration(cairo_t*,WinDeco::Options,gint,gint,gint,gint);
+
         // adjust scrollbar hole, depending on orientation and buttons settings
         void adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions ) const;
 
@@ -264,6 +261,9 @@ namespace Oxygen
         //! constructor
         explicit Style( void );
 
+        //@name internal rendering
+        //@{
+
         //! tab
         void renderActiveTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
 
@@ -272,9 +272,6 @@ namespace Oxygen
 
         //! tab
         void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
-
-        //@name internal rendering
-        //@{
 
         //! slab glowing color
         ColorUtils::Rgba slabShadowColor( StyleOptions ) const;
@@ -294,6 +291,17 @@ namespace Oxygen
 
         //! radial window background gradient
         cairo_pattern_t* radialGradient( const ColorUtils::Rgba&, int, int, int ) const;
+
+        //@}
+
+        //!@name window decoration rendering
+        //@{
+
+        //! draw resize handles for window decoration
+        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
+
+        //! draw window decoration button
+        void renderWindecoButton(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
 
         //@}
 
@@ -342,7 +350,6 @@ namespace Oxygen
             typedef std::vector<SlabRect> List;
 
         };
-
 
         private:
 
