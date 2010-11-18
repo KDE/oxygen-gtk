@@ -3055,7 +3055,7 @@ namespace Oxygen
             {
                 // Draw right side 3-dots resize handles
                 int cenY = int(h/2+y);
-                int posX = int(w+x-3);
+                int posX = int(w+x-3) + 1;
                 helper().renderDot(context,color,posX, cenY-3);
                 helper().renderDot(context,color,posX, cenY);
                 helper().renderDot(context,color,posX, cenY+3);
@@ -3065,7 +3065,7 @@ namespace Oxygen
             // if( !config.drawSizeGrip )
             {
                 cairo_save(context);
-                cairo_translate(context,x+w-9,y+h-9);
+                cairo_translate(context,x+w-8,y+h-8);
                 helper().renderDot(context,color,2,6);
                 helper().renderDot(context,color,5,5);
                 helper().renderDot(context,color,6,2);
