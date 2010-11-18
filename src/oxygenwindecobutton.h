@@ -81,6 +81,9 @@ namespace Oxygen
 
             protected:
 
+            //! icon
+            void drawIcon( Cairo::Context&, gint w, gint h ) const;
+
             //! settings
             const QtSettings& settings( void ) const
             { return _settings; }

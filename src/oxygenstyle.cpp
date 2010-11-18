@@ -2082,16 +2082,23 @@ namespace Oxygen
 
             // draw buttons
             {
-                WinDeco::ButtonType types[3] = { WinDeco::ButtonClose, WinDeco::ButtonMin, WinDeco::ButtonMax };
-                const int button_width( 23 );
+                WinDeco::ButtonType types[6] = {
+                    WinDeco::ButtonClose,
+                    WinDeco::ButtonMin,
+                    WinDeco::ButtonMax,
+                    WinDeco::ButtonAbove,
+                    WinDeco::ButtonBelow,
+                    WinDeco::ButtonShade
+                };
+
                 int xbutton( x+4 );
                 int ybutton( y+2 );
-                for( int i=0; i<3; ++i )
+                for( int i=0; i<6; ++i )
                 {
                     WinDeco::Button button( settings(), helper(), types[i] );
                     button.setState( wopt & WinDeco::Active ? WinDeco::Normal : WinDeco::Disabled );
-                    button.render( context, xbutton, ybutton, 22, 22 );
-                    xbutton+=button_width;
+                    button.render( context, xbutton, ybutton, settings().buttonSize(), settings().buttonSize() );
+                    xbutton+=settings().buttonSize()+2;
                 }
 
             }
