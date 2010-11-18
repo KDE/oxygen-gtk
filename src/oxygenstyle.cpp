@@ -24,6 +24,7 @@
 #include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
 #include "oxygengtkutils.h"
+#include "oxygenwindecobutton.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2054,9 +2055,9 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
     {
-        bool hasAlpha( wopt & WinDeco::hasAlpha );
-        bool drawResizeHandle( !(wopt & WinDeco::isShaded) && (wopt & WinDeco::isResizable) );
-        bool isMaximized( wopt & WinDeco::isMaximized );
+        bool hasAlpha( wopt & WinDeco::Alpha );
+        bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
+        bool isMaximized( wopt & WinDeco::Maximized );
 
         // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
         cairo_surface_t* surface = cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h );
@@ -2068,7 +2069,7 @@ namespace Oxygen
             StyleOptions options( hasAlpha ? Alpha : Blend );
 
             // focus
-            if(wopt & WinDeco::isActive) options|=Focus;
+            if(wopt & WinDeco::Active) options|=Focus;
 
             if( !isMaximized )
             { drawFloatFrame( context, 0L, 0L, x, y, w, h, options); }
@@ -2081,13 +2082,15 @@ namespace Oxygen
 
             // draw buttons
             {
-                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+                WinDeco::ButtonType types[3] = { WinDeco::ButtonClose, WinDeco::ButtonMin, WinDeco::ButtonMax };
                 const int button_width( 23 );
                 int xbutton( x+4 );
                 int ybutton( y+2 );
                 for( int i=0; i<3; ++i )
                 {
-                    renderWindecoButton( context, xbutton, ybutton, 22, 22, base, false );
+                    WinDeco::Button button( settings(), helper(), types[i] );
+                    button.setState( wopt & WinDeco::Active ? WinDeco::Normal : WinDeco::Disabled );
+                    button.render( context, xbutton, ybutton, 22, 22 );
                     xbutton+=button_width;
                 }
 
@@ -3063,31 +3066,6 @@ namespace Oxygen
                 cairo_restore(context);
             }
         }
-    }
-
-    //__________________________________________________________________
-    void Style::renderWindecoButton( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool pressed )
-    {
-
-        cairo_save( context );
-        cairo_translate( context, x, y );
-
-        const ColorUtils::Rgba shadow( ColorUtils::Rgba::black() );
-        const double scale( (21.0*settings().buttonSize())/22.0 );
-
-        // draw shadow
-        GdkPixbuf *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
-        gdk_cairo_set_source_pixbuf( context, windecoButtonGlow, 0, 0 );
-        cairo_rectangle( context, 0, 0, w, h );
-        cairo_fill( context );
-
-        GdkPixbuf* windecoButton( helper().windecoButton( base, pressed, int(scale) ) );
-        gdk_cairo_set_source_pixbuf( context, windecoButton, 0, 0 );
-        cairo_rectangle( context, 0, 0, w, h );
-        cairo_fill( context );
-
-        cairo_restore( context );
-
     }
 
     //__________________________________________________________________

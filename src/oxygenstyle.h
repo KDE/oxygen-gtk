@@ -31,20 +31,9 @@
 #include "oxygenstyleoptions.h"
 #include "oxygentaboptions.h"
 #include "oxygentileset.h"
+#include "oxygenwindecooptions.h"
 
 #include <gdk/gdk.h>
-
-namespace WinDeco
-{
-    enum Options
-    {
-        isMaximized=1<<0,
-        isShaded=1<<2,
-        isResizable=1<<3,
-        isActive=1<<4,
-        hasAlpha=1<<5,
-    };
-};
 
 namespace Oxygen
 {
@@ -214,7 +203,7 @@ namespace Oxygen
         //@}
 
         //! draw window decorations
-        void drawWindowDecoration(cairo_t*,WinDeco::Options,gint,gint,gint,gint);
+        void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint);
 
         // adjust scrollbar hole, depending on orientation and buttons settings
         void adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions ) const;
@@ -299,9 +288,6 @@ namespace Oxygen
 
         //! draw resize handles for window decoration
         void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
-
-        //! draw window decoration button
-        void renderWindecoButton(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
 
         //@}
 
