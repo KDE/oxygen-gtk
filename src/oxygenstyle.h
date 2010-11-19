@@ -206,8 +206,11 @@ namespace Oxygen
         //! draw window decorations
         void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint);
 
-	//! draw windeco button
-	void drawWindecoButton(cairo_t*,WinDeco::ButtonType,WinDeco::ButtonStatus,WinDeco::Options, gint,gint,gint,gint);
+        //! render XShape window decoration mask
+        void drawWindecoShapeMask( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
+
+    	//! draw windeco button
+	    void drawWindecoButton(cairo_t*,WinDeco::ButtonType,WinDeco::ButtonStatus,WinDeco::Options, gint,gint,gint,gint);
 
         // adjust scrollbar hole, depending on orientation and buttons settings
         void adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions ) const;

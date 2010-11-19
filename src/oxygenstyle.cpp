@@ -2116,6 +2116,21 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    void Style::drawWindecoShapeMask( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    {
+        cairo_save(context);
+        cairo_set_source_rgba(context,0,0,0,0);
+        cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
+        cairo_paint(context);
+        cairo_set_source_rgba(context,1,1,1,1);
+        cairo_set_operator(context,CAIRO_OPERATOR_OVER);
+        cairo_set_antialias(context,CAIRO_ANTIALIAS_NONE);
+        cairo_rounded_rectangle(context,x,y,w,h,6);
+        cairo_fill(context);
+        cairo_restore(context);
+    }
+
+    //__________________________________________________________________
     void Style::sanitizeSize( GdkWindow* window, gint& w, gint& h ) const
     {
         if( w < 0 && h < 0 ) gdk_drawable_get_size( window, &w, &h );
