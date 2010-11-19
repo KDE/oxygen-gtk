@@ -33,6 +33,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void WinDeco::Button::render( cairo_t* context, gint x, gint y, gint w, gint h ) const
     {
+        if( _type==ButtonMenu )
+            return; // menu button isn't drawn - an app icon should be drawn instead
 
         cairo_save( context );
         cairo_translate( context, x, y );

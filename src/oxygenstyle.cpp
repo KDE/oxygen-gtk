@@ -2079,30 +2079,6 @@ namespace Oxygen
                 ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
                 renderWindowDots( context, x, y, w, h, base, isMaximized );
             }
-/*
-            // draw buttons
-            {
-                WinDeco::ButtonType types[6] = {
-                    WinDeco::ButtonClose,
-                    WinDeco::ButtonMin,
-                    WinDeco::ButtonMax,
-                    WinDeco::ButtonAbove,
-                    WinDeco::ButtonBelow,
-                    WinDeco::ButtonShade
-                };
-
-                int xbutton( x+4 );
-                int ybutton( y+2 );
-                for( int i=0; i<6; ++i )
-                {
-                    WinDeco::Button button( settings(), helper(), types[i] );
-                    button.setState( wopt & WinDeco::Active ? WinDeco::Normal : WinDeco::Disabled );
-                    button.render( context, xbutton, ybutton, settings().buttonSize(), settings().buttonSize() );
-                    xbutton+=settings().buttonSize()+4;
-                }
-
-            }
-*/
         }
 
         // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
