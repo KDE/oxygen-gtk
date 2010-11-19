@@ -23,6 +23,7 @@
 #include "oxygenflags.h"
 
 #include <vector>
+#include <iostream>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
@@ -140,6 +141,19 @@ namespace Oxygen
 
             //! column
             GtkTreeViewColumn* _column;
+
+            //! streamer
+            friend std::ostream& operator << (std::ostream& out, const CellInfo& info )
+            {
+
+                if( info.isValid() )
+                {
+                    gchar* path( gtk_tree_path_to_string( info._path ) );
+                    out << path;
+                    g_free( path );
+                } else out << "invalid";
+                return out;
+            }
 
         };
 
