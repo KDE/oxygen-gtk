@@ -96,11 +96,22 @@ namespace Oxygen
             break;
 
             case ButtonMax:
-            // FIXME: implement 'un-maximize' button
             cairo_move_to( context, 7.5, 11.5 );
             cairo_line_to( context, 10.5, 8.5 );
             cairo_line_to( context, 13.5, 11.5 );
             cairo_stroke( context );
+            break;
+
+            case ButtonUnmax:
+            cairo_save( context );
+            cairo_translate( context, 1.5,1.5 );
+            cairo_move_to( context, 9,6 );
+            cairo_line_to( context, 12,9 );
+            cairo_line_to( context, 9,12 );
+            cairo_line_to( context, 6,9 );
+            cairo_line_to( context, 9,6 );
+            cairo_stroke( context );
+            cairo_restore( context );
             break;
 
             case ButtonClose:
