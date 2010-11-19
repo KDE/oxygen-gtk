@@ -62,7 +62,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options )
     {
 
         // define colors
