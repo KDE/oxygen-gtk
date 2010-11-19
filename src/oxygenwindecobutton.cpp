@@ -30,7 +30,7 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void WinDeco::Button::render( Cairo::Context& context, gint x, gint y, gint w, gint h ) const
+    void WinDeco::Button::render( cairo_t* context, gint x, gint y, gint w, gint h ) const
     {
 
         cairo_save( context );
@@ -73,7 +73,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void WinDeco::Button::drawIcon( Cairo::Context& context, int w, int h ) const
+    void WinDeco::Button::drawIcon( cairo_t* context, int w, int h ) const
     {
 
         switch( _type )

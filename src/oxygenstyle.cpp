@@ -2079,7 +2079,7 @@ namespace Oxygen
                 ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
                 renderWindowDots( context, x, y, w, h, base, isMaximized );
             }
-
+/*
             // draw buttons
             {
                 WinDeco::ButtonType types[6] = {
@@ -2102,7 +2102,7 @@ namespace Oxygen
                 }
 
             }
-
+*/
         }
 
         // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
@@ -2123,6 +2123,20 @@ namespace Oxygen
 
         // destroy surface
         cairo_surface_destroy(surface);
+    }
+
+    //__________________________________________________________________
+    void Style::drawWindecoButton( cairo_t* context, WinDeco::ButtonType type, WinDeco::ButtonStatus buttonState, WinDeco::Options windowState, gint x, gint y, gint w,gint h)
+    {
+        // validate arguments
+        if(type>=WinDeco::ButtonTypeCount || buttonState>=WinDeco::ButtonStatusCount)
+            return;
+        if( (windowState & ~WinDeco::Active) && buttonState == WinDeco::Normal )
+            buttonState=WinDeco::Disabled; // draw Oxygen-way disabled button on inactive window
+        WinDeco::Button button( settings(), helper(), type );
+        button.setState(buttonState);
+        int buttonSize=settings().buttonSize();
+        button.render( context, x+(w-buttonSize)/2,y, buttonSize, buttonSize );
     }
 
     //__________________________________________________________________
