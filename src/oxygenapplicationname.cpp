@@ -39,8 +39,9 @@ namespace Oxygen
         std::cout << "ApplicationName::parse - " << appName << std::endl;
         #endif
 
-        if( appName == "firefox-bin" || appName == "firefox" ) _name = Firefox;
-        else if( appName == "thunderbird-bin" || appName == "thunderbird" ) _name = Thunderbird;
+        if( appName.find("firefox") == 0 ) _name = Firefox;
+        else if( appName.find("thunderbird") == 0 ) _name = Thunderbird;
+        else if( appName.find("seamonkey" ) == 0 ) _name = Seamonkey;
         else if( appName == "soffice" ) _name = OpenOffice;
         else if( appName == "gimp" ) _name = Gimp;
         else if( appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;

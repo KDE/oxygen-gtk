@@ -35,6 +35,7 @@ namespace Oxygen
     {
         Unknown,
         Firefox,
+        Seamonkey,
         Thunderbird,
         Gimp,
         OpenOffice,
@@ -76,7 +77,8 @@ namespace Oxygen
 
         bool isFirefox( void ) const { return _name == Firefox; }
         bool isThunderbird( void ) const { return _name == Thunderbird; }
-        bool isMozilla( void ) const { return isFirefox() || isThunderbird(); }
+        bool isSeamonkey( void ) const { return _name == Seamonkey; }
+        bool isMozilla( void ) const { return isFirefox() || isThunderbird() || isSeamonkey(); }
         bool isGimp( void ) const { return _name == Gimp; }
         bool isOpenOffice( void ) const { return _name == OpenOffice; }
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }

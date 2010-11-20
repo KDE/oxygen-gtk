@@ -70,32 +70,37 @@ void theme_init( GTypeModule* module )
 
     // load options into a string
     std::string contents;
-    std::getline( in, contents, '\n' );
-
-    // split string using ":" as a delimiter
-    std::vector<std::string> appNames;
-    size_t position( std::string::npos );
-    while( ( position = contents.find( ':' ) ) != std::string::npos )
-    {
-        std::string appName( contents.substr(0, position ) );
-        if( !appName.empty() ) { appNames.push_back( appName ); }
-        contents = contents.substr( position+1 );
-    }
-
-    if( !contents.empty() ) appNames.push_back( contents );
-    if( appNames.empty() ) return;
-
     bool useRgba( false );
-    const bool allBut( appNames.front() == "allbut" );
-    if( allBut ) useRgba = true;
-
-    for( std::vector<std::string>::const_iterator iter = appNames.begin(); iter != appNames.end(); ++iter )
+    bool found( false );
+    while( std::getline( in, contents, '\n' ) && !found )
     {
-        if( *iter == progname )
+        if( contents.empty() || contents[0] == '#' ) continue;
+
+        // split string using ":" as a delimiter
+        std::vector<std::string> appNames;
+        size_t position( std::string::npos );
+        while( ( position = contents.find( ':' ) ) != std::string::npos )
         {
-            useRgba = !allBut;
-            break;
+            std::string appName( contents.substr(0, position ) );
+            if( !appName.empty() ) { appNames.push_back( appName ); }
+            contents = contents.substr( position+1 );
         }
+
+        if( !contents.empty() ) appNames.push_back( contents );
+        if( appNames.empty() ) continue;
+
+        const bool allBut( appNames.front() == "allbut" );
+        if( allBut ) useRgba = true;
+        for( std::vector<std::string>::const_iterator iter = appNames.begin(); iter != appNames.end(); ++iter )
+        {
+            if( *iter == progname )
+            {
+                found = true;
+                useRgba = !allBut;
+                break;
+            }
+        }
+
     }
 
     #if OXYGEN_DEBUG
@@ -135,7 +140,7 @@ G_MODULE_EXPORT void drawWindowDecoration(cairo_t* context, unsigned long option
 }
 G_MODULE_EXPORT void drawWindecoButton(cairo_t* context, unsigned long buttonType,unsigned long buttonState, unsigned long windowState, gint x,gint y,gint w,gint h)
 {
-    Oxygen::Style::instance().drawWindecoButton( context, (Oxygen::WinDeco::ButtonType)buttonType, 
+    Oxygen::Style::instance().drawWindecoButton( context, (Oxygen::WinDeco::ButtonType)buttonType,
             (Oxygen::WinDeco::ButtonStatus)buttonState, (Oxygen::WinDeco::Options) windowState, x, y, w, h);
 }
 G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
