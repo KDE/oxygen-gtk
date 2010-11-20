@@ -76,6 +76,14 @@ namespace Oxygen
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
 
+        //! true if treeview data is dirty
+        bool isDirty( GtkWidget* widget )
+        { return data().value( widget ).isDirty(); }
+
+        //! update hovered cell for given widget
+        void updateHoveredCell( GtkWidget* widget )
+        { return data().value( widget ).updateHoveredCell(); }
+
         //! true if given cell is hovered
         bool isCellHovered( GtkWidget* widget, const Gtk::CellInfo& info )
         { return data().value( widget ).isCellHovered( info ); }

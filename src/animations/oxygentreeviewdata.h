@@ -38,7 +38,10 @@ namespace Oxygen
         //! constructor
         TreeViewData( void ):
             _target(0L),
-            _fullWidth( false )
+            _fullWidth( false ),
+            _x(-1),
+            _y(-1),
+            _dirty( false )
         {}
 
         //! destructor
@@ -55,6 +58,13 @@ namespace Oxygen
         void setFullWidth( bool value )
         { _fullWidth = value; }
 
+        //! true when hovered cell needs update
+        bool isDirty( void ) const
+        { return _dirty; }
+
+        //! update hovered cell using stored position
+        void updateHoveredCell( void );
+
         //! true if cell info is hovered
         bool isCellHovered( const Gtk::CellInfo& cellInfo ) const
         { return isCellHovered( cellInfo, _fullWidth ); }
@@ -65,6 +75,15 @@ namespace Oxygen
 
         protected:
 
+        //! mark as dirty
+        /* returns true if dirty state changed */
+        bool setDirty( bool value )
+        {
+            if( _dirty == value ) return false;
+            _dirty = value;
+            return true;
+        }
+
         //! set mouse over state
         virtual bool setHovered( GtkWidget* widget, bool value )
         {
@@ -73,8 +92,12 @@ namespace Oxygen
             return true;
         }
 
-        //! update pointer position
+        //! update hovered cell based on pointer position
         void updatePosition( GtkWidget*, int x, int y );
+
+        //! update hovered cell based on previous pointer position
+        void updatePosition( GtkWidget* widget )
+        { updatePosition( widget, _x, _y ); }
 
         //! update pointer position
         void clearPosition( GtkWidget* = 0L );
@@ -122,6 +145,7 @@ namespace Oxygen
 
         private:
 
+        //! target widget
         GtkWidget* _target;
 
         //! callbacks ids
@@ -130,8 +154,18 @@ namespace Oxygen
         //! true if hover works on full width
         bool _fullWidth;
 
-        //!@name keep track of the hovered path and column
+        //! keep track of the hovered path and column
         Gtk::CellInfo _cellInfo;
+
+        /*!
+        keep last position (window_bin coordinates) used to find
+        hovered cell
+        */
+        int _x;
+        int _y;
+
+        //! true when hovered cell needs to be updated
+        bool _dirty;
 
         //! vertical scrollbar data
         ScrollBarData _vScrollBar;

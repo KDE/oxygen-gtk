@@ -96,12 +96,24 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void TreeViewData::updateHoveredCell( void )
+    {
+        if( !( isDirty() && GTK_IS_TREE_VIEW( _target ) ) ) return;
+        _cellInfo = Gtk::CellInfo( GTK_TREE_VIEW( _target ), _x, _y );
+        setDirty( false );
+    }
+
+    //________________________________________________________________________________
     void TreeViewData::updatePosition( GtkWidget* widget, int x, int y )
     {
 
+        // check type and cast to treeview
         if( !GTK_IS_TREE_VIEW( widget ) ) return;
-
         GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+
+        // store position
+        _x = x;
+        _y = y;
 
         // get cellInfo at x and y
         Gtk::CellInfo cellInfo( treeView, x, y );
@@ -168,7 +180,7 @@ namespace Oxygen
     void TreeViewData::triggerRepaint( void )
     {
         if( !( _target && hovered() ) ) return;
-        Gtk::gtk_widget_queue_draw( _target );
+        if( setDirty( true ) ) Gtk::gtk_widget_queue_draw( _target );
     }
 
     //________________________________________________________________________________

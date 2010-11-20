@@ -200,6 +200,9 @@ namespace Oxygen
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
+                    if( Style::instance().animations().treeViewEngine().isDirty( widget ) )
+                    { Style::instance().animations().treeViewEngine().updateHoveredCell( widget ); }
+
                     if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
                     { options |= Hover; }
 
