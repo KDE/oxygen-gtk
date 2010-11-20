@@ -25,21 +25,20 @@
 namespace Oxygen
 {
 
-
     //__________________________________________________________________
     void cairo_arc_qt(cairo_t* context, double x, double y, double diam, double a, double alen)
     {
-        double xc=x+diam/2;
-        double yc=y+diam/2;
-        double angle1=-a*M_PI/180;
-        double angle2=-(alen+a)*M_PI/180;
-        double min=std::min(angle1,angle2);
-        double max=std::max(angle1,angle2);
-        angle1=min;
-        angle2=max;
-        double radius=diam/2;
 
+        const double xc( x+diam/2 );
+        const double yc( y+diam/2 );
+        const double radius( diam/2 );
+
+        double angle1( -a );
+        double angle2( -(alen+a) );
+
+        if( angle1 > angle2 ) std::swap( angle1, angle2 );
         cairo_arc(context, xc,yc,radius,angle1,angle2);
+
     }
 
     //__________________________________________________________________

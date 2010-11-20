@@ -36,7 +36,7 @@ namespace Oxygen
 {
 
     //! draw arc with the parameters similar to those of QPainter::drawArc() (but using diameter instead of width&height). Also, angles are specified in degrees, not in 16ths of degrees
-    void cairo_arc_qt(cairo_t*, double, double, double, double, double);
+    void cairo_arc_qt( cairo_t*, double, double, double, double, double );
 
     //!@name color handling
     //@{

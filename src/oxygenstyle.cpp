@@ -2024,8 +2024,8 @@ namespace Oxygen
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
         else base = settings().palette().color( Palette::Active, Palette::ButtonText );
 
-        const int xcenter = x + w/2;
-        const int ycenter = y + h/2;
+        const int xcenter( x + w/2 );
+        const int ycenter( y + h/2 );
 
         // expander 'radius' (copied from oxygen-qt)
         const int radius( ( 9 - 4 ) / 2 );
@@ -2062,6 +2062,7 @@ namespace Oxygen
         // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
         cairo_surface_t* surface = cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h );
         {
+
             // create context to paint on surface
             Cairo::Context context( surface );
             renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
@@ -2079,6 +2080,7 @@ namespace Oxygen
                 ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
                 renderWindowDots( context, x, y, w, h, base, isMaximized );
             }
+
         }
 
         // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
@@ -2106,9 +2108,14 @@ namespace Oxygen
     {
         // validate arguments
         if(type>=WinDeco::ButtonTypeCount || buttonState>=WinDeco::ButtonStatusCount)
-            return;
+        { return; }
+
         if( (windowState & ~WinDeco::Active) && buttonState == WinDeco::Normal )
-            buttonState=WinDeco::Disabled; // draw Oxygen-way disabled button on inactive window
+        {
+            // draw Oxygen-way disabled button on inactive window
+            buttonState=WinDeco::Disabled;
+        }
+
         WinDeco::Button button( settings(), helper(), type );
         button.setState(buttonState);
         int buttonSize=settings().buttonSize();
@@ -2122,12 +2129,14 @@ namespace Oxygen
         cairo_set_source_rgba(context,0,0,0,0);
         cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
         cairo_paint(context);
+
         cairo_set_source_rgba(context,1,1,1,1);
         cairo_set_operator(context,CAIRO_OPERATOR_OVER);
         cairo_set_antialias(context,CAIRO_ANTIALIAS_NONE);
         cairo_rounded_rectangle(context,x,y,w,h,6);
         cairo_fill(context);
         cairo_restore(context);
+
     }
 
     //__________________________________________________________________
@@ -2314,7 +2323,6 @@ namespace Oxygen
 
         }
 
-        cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::alphaColor( light, 0.5 ) );
         cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::alphaColor( light, 0.5 ) );
         cairo_pattern_add_color_stop( pattern, 0.25, ColorUtils::alphaColor( light, 0.3 ) );
         cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.2 ) );
