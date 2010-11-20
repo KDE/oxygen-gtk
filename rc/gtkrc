@@ -32,6 +32,8 @@ style "oxygen-default"
 
     GtkButton::child_displacement_x = 0
     GtkButton::child_displacement_y = 0
+    GtkButton::default_border = { 0, 0, 0, 0 }
+    GtkButton::default_outside_border = { 0, 0, 0, 0 }
 
     GtkCalendar::inner-border = 0
     GtkCalendar::horizontal-separation = 0
