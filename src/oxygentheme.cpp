@@ -70,7 +70,7 @@ void theme_init( GTypeModule* module )
 
     // load options into a string
     std::string contents;
-    bool useRgba( false );
+    bool useRgba( true );
     bool found( false );
     while( std::getline( in, contents, '\n' ) && !found )
     {
@@ -89,14 +89,12 @@ void theme_init( GTypeModule* module )
         if( !contents.empty() ) appNames.push_back( contents );
         if( appNames.empty() ) continue;
 
-        const bool allBut( appNames.front() == "allbut" );
-        if( allBut ) useRgba = true;
         for( std::vector<std::string>::const_iterator iter = appNames.begin(); iter != appNames.end(); ++iter )
         {
             if( *iter == progname )
             {
                 found = true;
-                useRgba = !allBut;
+                useRgba = false;
                 break;
             }
         }
