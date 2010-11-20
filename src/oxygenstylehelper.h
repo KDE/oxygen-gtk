@@ -50,11 +50,12 @@ namespace Oxygen
         {}
 
         //! separators
-        void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical ) const;
+        void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
 
         //! clear caches
         void clearCaches( void )
         {
+            m_separatorCache.clear();
             m_slabCache.clear();
             m_slabFocusedCache.clear();
             m_slabSunkenCache.clear();
@@ -73,6 +74,8 @@ namespace Oxygen
             m_windecoButtonGlowCache.clear();
         }
 
+        // separator
+        virtual GdkPixbuf* separator(const ColorUtils::Rgba &color, bool vertical, int size );
 
         //!@name decoration specific helper functions
         //!
@@ -170,6 +173,9 @@ namespace Oxygen
 
         //!@name caches
         //@{
+
+        //! round slabs
+        GdkPixbufCache<SeparatorKey> m_separatorCache;
 
         //! slabs
         TileSetCache<SlabKey> m_slabCache;

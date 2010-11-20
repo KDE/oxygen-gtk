@@ -34,7 +34,6 @@ namespace Oxygen
         breaks the gradient definition internally with some compilers
         this is fixed by passing a value close to (but smaller than) unity.
         */
-        x = std::min(0.99999,x);
         cairo_pattern_add_color_stop_rgba( pattern, x, color.red(), color.green(), color.blue(), color.alpha() );
     }
 

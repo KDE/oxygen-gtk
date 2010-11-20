@@ -26,6 +26,51 @@
 namespace Oxygen
 {
 
+    //! key for separators
+    /*! keys are used to store tilesets into cache */
+    class SeparatorKey
+    {
+        public:
+
+        //! constructor
+        SeparatorKey( const ColorUtils::Rgba& color, bool vertical, int size ):
+            _color( color.toInt() ),
+            _vertical( vertical ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const SeparatorKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _vertical == other._vertical &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const SeparatorKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _vertical != other._vertical ) return _vertical < other._vertical;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        bool _vertical;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SeparatorKey& key )
+        {
+            out << "SeparatorKey - color: " << key._color << " shade: " << key._vertical << " size: " << key._size;
+            return out;
+        }
+
+    };
+
     //! key for slabs
     /*! keys are used to store tilesets into cache */
     class SlabKey

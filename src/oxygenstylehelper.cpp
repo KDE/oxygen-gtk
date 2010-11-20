@@ -36,80 +36,120 @@ namespace Oxygen
     const double StyleHelper::_glowBias = 0.6;
 
     //__________________________________________________________________
-    void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical ) const
+    void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
     {
 
+        // get pixbuf
+        GdkPixbuf* pixbuf( separator( base, vertical, vertical ? h:w ) );
+
+        // translate
         cairo_save( context );
-        cairo_set_line_width( context, 1.0 );
+        if( vertical ) cairo_translate( context, x+w/2-1, y );
+        else cairo_translate( context, x, y+h/2 );
 
-        // compute limits
-        int xStart( vertical ? x+w/2-1 : x );
-        int yStart( vertical ? y : y+h/2-1 );
-        int xStop( vertical ? x+w/2-1 : x+w );
-        int yStop( vertical ? y+h : y+h/2-1 );
-        int xOffset( vertical ? 1:0 );
-        int yOffset( vertical ? 0:1 );
-
-        if( vertical ) cairo_translate( context, 0.5, 0 );
-        else cairo_translate( context, 0, 1.5 );
-
-
-        {
-            ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-            Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
-            if( vertical ) light.setAlpha( 0.7 );
-            cairo_pattern_add_color_stop( pattern, 0.3, light );
-            cairo_pattern_add_color_stop( pattern, 0.7, light );
-            light.setAlpha( 0 );
-            cairo_pattern_add_color_stop( pattern, 0, light );
-            cairo_pattern_add_color_stop( pattern, 1, light );
-            cairo_set_source( context, pattern );
-
-            if( vertical )
-            {
-                cairo_move_to( context, xStart, yStart );
-                cairo_line_to( context, xStop, yStop );
-                cairo_move_to( context, xStart+2*xOffset, yStart+2*yOffset );
-                cairo_line_to( context, xStop+2*xOffset, yStop+2*yOffset );
-            } else {
-                cairo_move_to( context, xStart+xOffset, yStart+yOffset );
-                cairo_line_to( context, xStop+xOffset, yStop+yOffset );
-            }
-
-            cairo_stroke( context );
-        }
-
-        {
-            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-            Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
-            cairo_pattern_add_color_stop( pattern, 0.3, dark );
-            cairo_pattern_add_color_stop( pattern, 0.7, dark );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( dark ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( dark ) );
-            cairo_set_source( context, pattern );
-
-            if( vertical )
-            {
-                cairo_move_to( context, xStart+xOffset, yStart+yOffset );
-                cairo_line_to( context, xStop+xOffset, yStop+yOffset );
-            } else {
-                cairo_move_to( context, xStart, yStart );
-                cairo_line_to( context, xStop, yStop );
-            }
-
-            cairo_stroke( context );
-        }
-
+        cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
+        gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+        cairo_fill( context );
         cairo_restore( context );
 
     }
 
 
+    //__________________________________________________________________
+    GdkPixbuf* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
+    {
+        const SeparatorKey key( base, vertical, size );
+        GdkPixbuf *pixbuf( m_separatorCache.value(key) );
+
+        if( !pixbuf )
+        {
+            pixbuf = vertical ?
+                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, 3, size ):
+                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, 2 );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            int xStart( 0 );
+            int yStart( 0 );
+            int xStop( vertical ? 0 : size );
+            int yStop( vertical ? size : 0 );
+            int xOffset( vertical ? 1:0 );
+            int yOffset( vertical ? 0:1 );
+
+            Cairo::Context context( pixbuf );
+            cairo_set_line_width( context, 1.0 );
+
+            if( vertical ) cairo_translate( context, 0.5, 0 );
+            else cairo_translate( context, 0, 0.5 );
+
+            {
+                ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
+                if( vertical ) light.setAlpha( 0.7 );
+
+                cairo_pattern_add_color_stop( pattern, 0.3, light );
+                cairo_pattern_add_color_stop( pattern, 0.7, light );
+                light.setAlpha( 0 );
+                cairo_pattern_add_color_stop( pattern, 0, light );
+                cairo_pattern_add_color_stop( pattern, 1, light );
+                cairo_set_source( context, pattern );
+
+                if( vertical )
+                {
+                    cairo_move_to( context, xStart, yStart );
+                    cairo_line_to( context, xStop, yStop );
+                    cairo_move_to( context, xStart+2*xOffset, yStart+2*yOffset );
+                    cairo_line_to( context, xStop+2*xOffset, yStop+2*yOffset );
+
+                } else {
+
+                    cairo_move_to( context, xStart+xOffset, yStart+yOffset );
+                    cairo_line_to( context, xStop+xOffset, yStop+yOffset );
+
+                }
+
+                cairo_stroke( context );
+            }
+
+            {
+                ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+                Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
+                cairo_pattern_add_color_stop( pattern, 0.3, dark );
+                cairo_pattern_add_color_stop( pattern, 0.7, dark );
+                dark.setAlpha(0);
+                cairo_pattern_add_color_stop( pattern, 0, dark );
+                cairo_pattern_add_color_stop( pattern, 1, dark );
+                cairo_set_source( context, pattern );
+
+                if( vertical )
+                {
+
+                    cairo_move_to( context, xStart+xOffset, yStart+yOffset );
+                    cairo_line_to( context, xStop+xOffset, yStop+yOffset );
+
+                } else {
+
+                    cairo_move_to( context, xStart, yStart );
+                    cairo_line_to( context, xStop, yStop );
+                }
+
+                cairo_stroke( context );
+            }
+
+
+            context.updateGdkPixbuf();
+            m_separatorCache.insert( key, pixbuf );
+
+        }
+
+        return pixbuf;
+    }
+
     //______________________________________________________________________________
     GdkPixbuf* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
     {
 
-        WindecoButtonKey key( base, size, pressed );
+        const WindecoButtonKey key( base, size, pressed );
         GdkPixbuf *pixbuf( m_windecoButtonCache.value(key) );
 
         if( !pixbuf )

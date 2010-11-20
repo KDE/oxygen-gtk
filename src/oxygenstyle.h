@@ -82,7 +82,7 @@ namespace Oxygen
         void fill( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
         //! separators
-        void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
 
         //! window background
         /*! returns true if window gradient could be rendered */
