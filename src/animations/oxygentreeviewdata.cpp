@@ -180,7 +180,7 @@ namespace Oxygen
     void TreeViewData::triggerRepaint( void )
     {
         if( !( _target && hovered() ) ) return;
-        if( setDirty( true ) ) Gtk::gtk_widget_queue_draw( _target );
+        setDirty( true );
     }
 
     //________________________________________________________________________________
