@@ -25,6 +25,21 @@
 namespace Oxygen
 {
 
+    //__________________________________________________________________
+    void cairo_arc_qt(cairo_t* context, double x, double y, double diam, double a, double alen)
+    {
+
+        const double xc( x+diam/2 );
+        const double yc( y+diam/2 );
+        const double radius( diam/2 );
+
+        double angle1( -a );
+        double angle2( -(alen+a) );
+
+        if( angle1 > angle2 ) std::swap( angle1, angle2 );
+        cairo_arc(context, xc,yc,radius,angle1,angle2);
+
+    }
 
     //__________________________________________________________________
     void cairo_pattern_add_color_stop( cairo_pattern_t* pattern, double x, const ColorUtils::Rgba& color )
