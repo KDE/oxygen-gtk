@@ -35,9 +35,10 @@ namespace Oxygen
         //! button status
         enum ButtonStatus {
             Normal,
-            Disabled,
+            Disabled, // this shouldn't be specified by WMs unless button is really insensitive
             Hovered,
-            Pressed
+            Pressed,
+	    ButtonStatusCount
         };
 
         //! buttons
@@ -51,6 +52,7 @@ namespace Oxygen
             ButtonAbove,
             ButtonBelow,
             ButtonShade,
+            ButtonUnmax,
             ButtonTypeCount
         };
 
@@ -77,12 +79,12 @@ namespace Oxygen
             { _state = state; }
 
             //! render
-            void render( Cairo::Context&, gint x, gint y, gint w, gint h ) const;
+            void render( cairo_t*, gint x, gint y, gint w, gint h ) const;
 
             protected:
 
             //! icon
-            void drawIcon( Cairo::Context&, gint w, gint h ) const;
+            void drawIcon( cairo_t*, gint w, gint h ) const;
 
             //! settings
             const QtSettings& settings( void ) const

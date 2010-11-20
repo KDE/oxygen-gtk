@@ -25,13 +25,16 @@
 #include "oxygencolorutils.h"
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
+#include <cmath>
 
 namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void WinDeco::Button::render( Cairo::Context& context, gint x, gint y, gint w, gint h ) const
+    void WinDeco::Button::render( cairo_t* context, gint x, gint y, gint w, gint h ) const
     {
+        if( _type==ButtonMenu )
+            return; // menu button isn't drawn - an app icon should be drawn instead
 
         cairo_save( context );
         cairo_translate( context, x, y );
@@ -73,7 +76,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void WinDeco::Button::drawIcon( Cairo::Context& context, int w, int h ) const
+    void WinDeco::Button::drawIcon( cairo_t* context, int w, int h ) const
     {
 
         switch( _type )
@@ -85,7 +88,17 @@ namespace Oxygen
             break;
 
             case ButtonHelp:
-            // FIXME: implement
+            cairo_save( context );
+            cairo_translate( context, 1.5,1.5 );
+
+            cairo_arc_qt( context, 7,5,4, 135, -180 );
+            cairo_stroke(context);
+            cairo_arc_qt( context, 9,8,4, 135, 45 );
+            cairo_move_to( context, 9,12 );
+            cairo_close_path( context );
+            cairo_stroke( context );
+
+            cairo_restore( context );
             break;
 
             case ButtonMin:
@@ -96,11 +109,22 @@ namespace Oxygen
             break;
 
             case ButtonMax:
-            // FIXME: implement 'un-maximize' button
             cairo_move_to( context, 7.5, 11.5 );
             cairo_line_to( context, 10.5, 8.5 );
             cairo_line_to( context, 13.5, 11.5 );
             cairo_stroke( context );
+            break;
+
+            case ButtonUnmax:
+            cairo_save( context );
+            cairo_translate( context, 1.5,1.5 );
+            cairo_move_to( context, 9,6 );
+            cairo_line_to( context, 12,9 );
+            cairo_line_to( context, 9,12 );
+            cairo_line_to( context, 6,9 );
+            cairo_line_to( context, 9,6 );
+            cairo_stroke( context );
+            cairo_restore( context );
             break;
 
             case ButtonClose:
