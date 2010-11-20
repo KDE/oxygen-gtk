@@ -92,6 +92,8 @@ namespace Oxygen
             cairo_translate( context, 1.5,1.5 );
 
             cairo_arc_qt( context, 7,5,4, 135.0*M_PI/180, -M_PI );
+            cairo_stroke(context);
+
             cairo_arc_qt( context, 9,8,4, 135*M_PI/180, -M_PI/4 );
             cairo_move_to( context, 9,12 );
             cairo_close_path( context );
@@ -117,11 +119,11 @@ namespace Oxygen
             case ButtonUnmax:
             cairo_save( context );
             cairo_translate( context, 1.5,1.5 );
-            cairo_move_to( context, 9,6 );
-            cairo_line_to( context, 12,9 );
-            cairo_line_to( context, 9,12 );
-            cairo_line_to( context, 6,9 );
-            cairo_line_to( context, 9,6 );
+            cairo_move_to( context, 9, 6 );
+            cairo_line_to( context, 12, 9 );
+            cairo_line_to( context, 9, 12 );
+            cairo_line_to( context, 6, 9 );
+            cairo_line_to( context, 9, 6 );
             cairo_stroke( context );
             cairo_restore( context );
             break;
