@@ -562,7 +562,12 @@ namespace Oxygen
 
                 return;
 
-            } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) && !Style::instance().settings().applicationName().isMozilla() ) {
+            } else if(
+                ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
+                !Style::instance().settings().applicationName().isMozilla() &&
+                Gtk::gtk_combobox_appears_as_list( parent )
+                )
+            {
 
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
