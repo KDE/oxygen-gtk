@@ -46,6 +46,9 @@ namespace Oxygen
         // set all buttons in the container to state NORMAL
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
+        //! print some widget information
+        void gtk_widget_print_tree( GtkWidget* );
+
         //! returns true if widget supports rgba
         bool gtk_widget_has_rgba( GtkWidget* );
 
