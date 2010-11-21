@@ -39,6 +39,7 @@ namespace Oxygen
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
+        registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );

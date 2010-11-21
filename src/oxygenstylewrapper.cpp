@@ -1050,12 +1050,17 @@ namespace Oxygen
                     if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
 
+                } else if( GTK_IS_SCROLLED_WINDOW( widget ) ) {
+
+                    Style::instance().animations().scrolledWindowEngine().registerWidget( widget );
+
+                    options &= ~(Hover|Focus);
+                    if( Style::instance().animations().scrolledWindowEngine().focused( widget ) ) options |= Focus;
+                    if( Style::instance().animations().scrolledWindowEngine().hovered( widget ) ) options |= Hover;
+
+
                 } else {
 
-                    /*
-                    for now, hover and focus highlight
-                    is not supported in anything but entries
-                    */
                     options &= ~(Hover|Focus);
 
                 }
