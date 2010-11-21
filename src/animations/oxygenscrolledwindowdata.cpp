@@ -52,19 +52,6 @@ namespace Oxygen
 
             registerChild( child );
 
-            // loop over columns, register headers
-            GList* columns(  gtk_tree_view_get_columns( GTK_TREE_VIEW( child ) ) );
-            for( GList* child = g_list_first(columns); child; child = g_list_next(child) )
-            {
-                GtkTreeViewColumn* column( GTK_TREE_VIEW_COLUMN( child->data ) );
-                if( !column ) continue;
-                GtkWidget* header(  gtk_tree_view_column_get_widget( column ) );
-                if( header ) registerChild( header );
-            }
-
-            if( columns ) g_list_free( columns );
-
-
         } else {
 
             // list widget types for which scrolled window needs register
