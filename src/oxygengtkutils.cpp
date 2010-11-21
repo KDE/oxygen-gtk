@@ -333,9 +333,9 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
     {
-        bool appearsAsList;
+        gboolean appearsAsList;
         gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
-        return appearsAsList;
+        return (bool) appearsAsList;
     }
 
     //________________________________________________________
