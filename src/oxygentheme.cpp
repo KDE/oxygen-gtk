@@ -54,7 +54,7 @@ void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     // read blacklist
-    const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
+    const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-blacklist.conf" );
     std::ifstream in( configFile.c_str() );
     if( !in )
     {
