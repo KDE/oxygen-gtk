@@ -71,7 +71,7 @@ namespace Oxygen
 
         //! true if cell info is hovered
         bool isCellHovered( const Gtk::CellInfo& cellInfo, bool fullWidth ) const
-        { return ( fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
+        { return hovered() && (fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
 
         protected:
 
