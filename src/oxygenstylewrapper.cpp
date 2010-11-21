@@ -1145,6 +1145,28 @@ namespace Oxygen
 
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
+            if( GTK_IS_FRAME( widget ) )
+            {
+
+                /*
+                check for scrolled windows embedded in frames, that contain a treeview.
+                if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
+                this should improve rendering of most mandriva drake tools
+                */
+                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                GtkScrolledWindow* scrolledWindow(0L);
+                if(
+                    GTK_IS_SCROLLED_WINDOW( child ) &&
+                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) &&
+                    gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( child ) ) ) == GTK_SHADOW_NONE )
+                {
+                    gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_NONE );
+                    gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
+                    return;
+                }
+
+            }
+
             // default shadow_in frame
             // hole background is needed for some special cases
             if( GTK_IS_CALENDAR( widget ) )
