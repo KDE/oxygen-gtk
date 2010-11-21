@@ -38,7 +38,6 @@ namespace Oxygen
 
         _target = widget;
         _stateChangeId.connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
-        gtk_widget_add_events( widget, GDK_ALL_EVENTS_MASK );
         initializeCellView( widget );
 
     }
