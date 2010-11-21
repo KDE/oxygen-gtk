@@ -38,6 +38,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
+#include "oxygenwindowmanager.h"
 
 #include <iostream>
 
@@ -98,6 +99,12 @@ namespace Oxygen
 
                 Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent );
 
+            }
+
+            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            if( !wm->isValid() )
+            {
+                delete wm;
             }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
@@ -660,6 +667,12 @@ namespace Oxygen
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
 
+            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            if( !wm->isValid() )
+            {
+                delete wm;
+            }
+            
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
