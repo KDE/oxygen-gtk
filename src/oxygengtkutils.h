@@ -133,6 +133,9 @@ namespace Oxygen
         //! true if widget is the treeview of a combobox
         bool gtk_combobox_is_frame( GtkWidget* );
 
+        //! true if combobox must appear as list
+        bool gtk_combobox_appears_as_list( GtkWidget* );
+
         //@}
 
         //!@name notebook utilities

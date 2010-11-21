@@ -319,6 +319,14 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
+    {
+        bool appearsAsList;
+        gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
+        return appearsAsList;
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_notebook_tab_contains( GtkWidget* widget, int tab, int x, int y )
     {
 
