@@ -40,25 +40,21 @@ namespace Oxygen
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
 
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::ScrolledWindowData::connect -"
+            << " child: " << child << " (" << G_OBJECT_TYPE_NAME( child ) << ")"
+            << std::endl;
+        #endif
+
         if( GTK_IS_TREE_VIEW( child ) )
         {
 
             registerChild( child );
 
-            // also find header widgets
-            GList* children( gtk_container_get_children( GTK_CONTAINER( child ) ) );
-            for( GList* child = g_list_first(children); child; child = g_list_next(child) )
-            {
-
-                std::cout << "Oxygen::ScrolledWindowData::connect - child: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
-                if( GTK_IS_BUTTON( child->data ) )
-                { registerChild( GTK_WIDGET( child->data ) ); }
-            }
-
-            if( children ) g_list_free( children );
-
         } else {
 
+            // list widget types for which scrolled window needs register
             static const char* widgetTypes[] = { "ExoIconView", "GeditView", "FMIconContainer", 0L };
             for( unsigned int i = 0; widgetTypes[i]; i++ )
             {
@@ -125,6 +121,9 @@ namespace Oxygen
                 << std::endl;
             #endif
 
+            // adjust event mask
+            gtk_widget_add_events( widget, GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK );
+
             // allocate new Hover data
             ChildData data;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
@@ -133,9 +132,6 @@ namespace Oxygen
             data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
             data._focusInId.connect( G_OBJECT(widget), "focus-in-event", G_CALLBACK( focusInNotifyEvent ), this );
             data._focusOutId.connect( G_OBJECT(widget), "focus-out-event", G_CALLBACK( focusOutNotifyEvent ), this );
-
-            if( GTK_IS_CONTAINER( widget ) )
-            { data._addId.connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
 
             // and insert in map
             _childrenData.insert( std::make_pair( widget, data ) );
@@ -191,8 +187,8 @@ namespace Oxygen
         _leaveId.disconnect();
         _focusInId.disconnect();
         _focusOutId.disconnect();
-        _addId.disconnect();
         _hovered = false;
+        _focused = false;
 
     }
 
@@ -267,13 +263,6 @@ namespace Oxygen
 
         static_cast<ScrolledWindowData*>( data )->setFocused( widget, false );
         return FALSE;
-    }
-
-    //____________________________________________________________________________________________
-    void ScrolledWindowData::childAddedEvent( GtkContainer* parent, GtkWidget* widget, gpointer data )
-    {
-        std::cout << "ScrolledWindowData::childAddedEvent - " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
-        return;
     }
 
 }
