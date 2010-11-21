@@ -85,12 +85,7 @@ namespace Oxygen
         }
 
         //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value )
-        {
-            if( !HoverData::setHovered( widget, value ) ) return false;
-            if( !value ) clearPosition();
-            return true;
-        }
+        virtual bool setHovered( GtkWidget* widget, bool value );
 
         //! update hovered cell based on pointer position
         void updatePosition( GtkWidget*, int x, int y );
