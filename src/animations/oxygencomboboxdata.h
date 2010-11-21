@@ -118,10 +118,10 @@ namespace Oxygen
 
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static void childToggledEvent( GtkWidget*, gpointer);
+        static void childToggledEvent( GtkWidget*, gpointer );
 
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static void stateChangeEvent( GtkWidget*, GtkStateType, gpointer );
 
         //@}

@@ -77,10 +77,11 @@ namespace Oxygen
         //@{
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean focusInNotifyEvent( GtkWidget*, GdkEvent*, gpointer);
-        static gboolean focusOutNotifyEvent( GtkWidget*, GdkEvent*, gpointer);
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static gboolean focusInNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
+        static gboolean focusOutNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
+        static void childAddedEvent( GtkContainer* parent, GtkWidget*, gpointer );
         //@}
 
         private:
@@ -116,6 +117,7 @@ namespace Oxygen
             Signal _leaveId;
             Signal _focusInId;
             Signal _focusOutId;
+            Signal _addId;
 
         };
 

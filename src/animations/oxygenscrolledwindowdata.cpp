@@ -20,6 +20,7 @@
 */
 
 #include "oxygenscrolledwindowdata.h"
+#include "../oxygengtkutils.h"
 
 #include <cassert>
 #include <iostream>
@@ -33,15 +34,43 @@ namespace Oxygen
         assert( GTK_IS_SCROLLED_WINDOW( widget ) );
         assert( !_target );
 
-        // cast
-        // GtkScrolledWindow* window( GTK_SCROLLED_WINDOW( widget ) );
+        // store target
+        _target = widget;
 
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-        if( !GTK_IS_TREE_VIEW( child ) ) return;
 
-        _target = widget;
-        registerChild( child );
+        if( GTK_IS_TREE_VIEW( child ) )
+        {
+
+            registerChild( child );
+
+            // also find header widgets
+            GList* children( gtk_container_get_children( GTK_CONTAINER( child ) ) );
+            for( GList* child = g_list_first(children); child; child = g_list_next(child) )
+            {
+
+                std::cout << "Oxygen::ScrolledWindowData::connect - child: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
+                if( GTK_IS_BUTTON( child->data ) )
+                { registerChild( GTK_WIDGET( child->data ) ); }
+            }
+
+            if( children ) g_list_free( children );
+
+        } else {
+
+            static const char* widgetTypes[] = { "ExoIconView", "GeditView", "FMIconContainer", 0L };
+            for( unsigned int i = 0; widgetTypes[i]; i++ )
+            {
+                if( Gtk::gtk_object_is_a( G_OBJECT( child ), widgetTypes[i] ) )
+                {
+                    registerChild( child );
+                    break;
+                }
+            }
+
+        }
+
     }
 
     //_____________________________________________
@@ -105,8 +134,28 @@ namespace Oxygen
             data._focusInId.connect( G_OBJECT(widget), "focus-in-event", G_CALLBACK( focusInNotifyEvent ), this );
             data._focusOutId.connect( G_OBJECT(widget), "focus-out-event", G_CALLBACK( focusOutNotifyEvent ), this );
 
+            if( GTK_IS_CONTAINER( widget ) )
+            { data._addId.connect( G_OBJECT(widget), "add", G_CALLBACK( childAddedEvent ), this ); }
+
             // and insert in map
             _childrenData.insert( std::make_pair( widget, data ) );
+
+            // set initial focus
+            setFocused( widget, gtk_widget_has_focus( widget ) );
+
+            // set initial hover
+            const bool enabled( gtk_widget_get_state( widget ) != GTK_STATE_INSENSITIVE );
+
+            // on connection, needs to check whether mouse pointer is in widget or not
+            // to have the proper initial value of the hover flag
+            if( enabled )
+            {
+
+                gint xPointer,yPointer;
+                gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+                GdkRectangle rect = { 0, 0, widget->allocation.width, widget->allocation.height };
+                setHovered( widget, Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) );
+            }
 
         }
 
@@ -142,7 +191,7 @@ namespace Oxygen
         _leaveId.disconnect();
         _focusInId.disconnect();
         _focusOutId.disconnect();
-
+        _addId.disconnect();
         _hovered = false;
 
     }
@@ -196,11 +245,11 @@ namespace Oxygen
     gboolean ScrolledWindowData::focusInNotifyEvent( GtkWidget* widget, GdkEvent*, gpointer data )
     {
 
-        //#if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cout << "Oxygen::ScrolledWindowData::focusInNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
-        //#endif
+        #endif
 
         static_cast<ScrolledWindowData*>( data )->setFocused( widget, true );
         return FALSE;
@@ -210,14 +259,21 @@ namespace Oxygen
     gboolean ScrolledWindowData::focusOutNotifyEvent( GtkWidget* widget, GdkEvent*, gpointer data )
     {
 
-        //#if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cout << "Oxygen::ScrolledWindowData::focusOutNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
-        //#endif
+        #endif
 
         static_cast<ScrolledWindowData*>( data )->setFocused( widget, false );
         return FALSE;
+    }
+
+    //____________________________________________________________________________________________
+    void ScrolledWindowData::childAddedEvent( GtkContainer* parent, GtkWidget* widget, gpointer data )
+    {
+        std::cout << "ScrolledWindowData::childAddedEvent - " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
+        return;
     }
 
 }

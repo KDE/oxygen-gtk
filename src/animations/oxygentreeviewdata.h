@@ -140,7 +140,7 @@ namespace Oxygen
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static void childValueChanged( GtkRange*, gpointer );
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
         //@}
 
         private:
