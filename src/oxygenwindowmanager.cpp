@@ -139,7 +139,7 @@ namespace Oxygen
         bool WindowManager::useEvent( GtkWidget *widget, GdkEventButton *event )
         {
             bool usable = true;
-            
+
             // check if there is an hovered tab
             if( GE_IS_NOTEBOOK( widget ) )
             {
@@ -174,28 +174,30 @@ namespace Oxygen
                                 usable = false;
                             }
                             // if event happen in widget
-                            else if( GE_IS_WIDGET( child->data ) && event && withinWidget( GTK_WIDGET( child->data ), event ) )
+                            // check not a notebook: event in but notebook don't get it...
+                            else if( GE_IS_WIDGET( child->data ) && !GE_IS_NOTEBOOK ( child->data ) && 
+                                     event && withinWidget( GTK_WIDGET( child->data ), event ) )
                             {
-                                // widget listening to press event
-                                if( gtk_widget_get_events ( GTK_WIDGET( child->data ) ) & GDK_BUTTON_PRESS_MASK )
+                                // here deal with notebook: widget may be not visible
+                                GdkWindow *window = gtk_widget_get_window( GTK_WIDGET ( child->data ) );
+                                if( window && gdk_window_is_visible ( window ) )
                                 {
-                                    // here deal with notebook: widget may be not visible
-                                    GdkWindow *window = gtk_widget_get_window( GTK_WIDGET ( child->data ) );
-                                    if( window && gdk_window_is_visible ( window ) ) 
+                                    // widget listening to press event
+                                    if( gtk_widget_get_events ( GTK_WIDGET( child->data ) ) & GDK_BUTTON_PRESS_MASK )
                                     {
                                         usable = false;
                                     }
-                                }
-                                // deal with menu item, GtkMenuItem only listen to
-                                // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
-                                // so previous check are invalids :(
-                                //
-                                // same for ScrolledWindow, they do not send motion events
-                                // to parents so not usable
-                                else if( GE_IS_MENUITEM( G_OBJECT( child->data ) ) ||
-                                         GE_IS_SCROLL( G_OBJECT( child->data ) ) )
-                                {
-                                    usable = false;
+                                    // deal with menu item, GtkMenuItem only listen to
+                                    // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
+                                    // so previous check are invalids :(
+                                    //
+                                    // same for ScrolledWindow, they do not send motion events
+                                    // to parents so not usable
+                                    else if( GE_IS_MENUITEM( G_OBJECT( child->data ) ) ||
+                                             GE_IS_SCROLL( G_OBJECT( child->data ) ) )
+                                    {
+                                        usable = false;
+                                    }
                                 }
                             }
                         }
