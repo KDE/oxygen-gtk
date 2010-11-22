@@ -124,6 +124,16 @@ namespace Oxygen
             { iter->second.disconnect( iter->first ); }
         }
 
+        //! erase
+        virtual void clear( void )
+        {
+
+            _lastWidget = 0L;
+            _lastData = 0L;
+            _map.clear();
+
+        }
+
         protected:
 
         //! copy constructor is private
