@@ -81,8 +81,10 @@ namespace Oxygen
         
         //! move widget at position
         static bool wmMove( GtkWidget *widget, int x, int y );
-         
+        
         GtkWidget *_widget;
+        static bool _drag;
+        
         Signal _leaveId;
         Signal _destroyId;
         Signal _pressId;

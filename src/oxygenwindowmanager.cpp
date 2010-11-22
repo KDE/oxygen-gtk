@@ -35,7 +35,7 @@
 
 namespace Oxygen
 {
-    static bool drag = false;
+    bool WindowManager::_drag = false;
     
     //_________________________________________________
     WindowManager::WindowManager( GtkWidget *widget )
@@ -223,7 +223,7 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::wmMotion( GtkWidget *widget, GdkEventMotion *event, gpointer user_data )
     {
-        if( drag )
+        if( _drag )
         {
             wmMove( widget, event->x_root, event->y_root );
             return true;
@@ -237,7 +237,7 @@ namespace Oxygen
         if( event->type == GDK_BUTTON_PRESS && event->button == 1  &&
             isWindowDragWidget( widget, event ) )
         {  
-            drag = true;
+            _drag = true;
             return true;
         }
         return false;
@@ -246,11 +246,11 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton *event, gpointer user_data )
     {
-        if( drag )
+        if( _drag )
         {
             gtk_grab_remove(widget);
             gdk_pointer_ungrab( CurrentTime );
-            drag = false;
+            _drag = false;
             return true;
         }
         return false;
