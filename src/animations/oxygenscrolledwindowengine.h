@@ -55,6 +55,11 @@ namespace Oxygen
         bool focused( GtkWidget* widget )
         { return data().value( widget ).focused(); }
 
+        //! register child
+        void registerChild( GtkWidget* widget, GtkWidget* child )
+        { data().value( widget ).registerChild( child ); }
+
+
     };
 
 }
