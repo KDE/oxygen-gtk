@@ -52,19 +52,7 @@ namespace Oxygen
         //! return if object is correctly constructed, if not, you need to delete it
         bool isValid();
 
-        private:
-            
-        //! return true if window is dragable
-        static bool isWindowDragWidget( GtkWidget *widget, GdkEventButton *event );
-        
-        //! return true if event happen in widget
-        static bool withinWidget( GtkWidget *widget, GdkEventButton *event );
-                    
-        //! return true if event is a usable drag event
-        static bool useEvent( GtkWidget *widget, GdkEventButton *event );
-        
-        //! move widget at position
-        static bool wmMove( GtkWidget *widget, int x, int y );
+        protected:
         
         //! on motion event
         static bool wmMotion( GtkWidget *widget, GdkEventMotion *event, gpointer user_data );
@@ -81,6 +69,20 @@ namespace Oxygen
         //! on window destroy
         static bool wmDestroy( GtkWidget *widget, GtkStyle *style, gpointer user_data );
 
+        private:
+        
+        //! return true if window is dragable
+        static bool isWindowDragWidget( GtkWidget *widget, GdkEventButton *event );
+        
+        //! return true if event happen in widget
+        static bool withinWidget( GtkWidget *widget, GdkEventButton *event );
+                    
+        //! return true if event is a usable drag event
+        static bool useEvent( GtkWidget *widget, GdkEventButton *event );
+        
+        //! move widget at position
+        static bool wmMove( GtkWidget *widget, int x, int y );
+         
         GtkWidget *_widget;
         Signal _leaveId;
         Signal _destroyId;
