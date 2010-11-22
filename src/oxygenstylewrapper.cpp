@@ -112,6 +112,7 @@ namespace Oxygen
 
         } else if( d.isViewportBin() ) {
 
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635508
             Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
             if( !wm->isValid() )
             {
