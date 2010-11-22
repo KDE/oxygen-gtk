@@ -30,11 +30,13 @@
 #include <string>
 
 #include "oxygenwindowmanager.h"
+#include "oxygenstyle.h"
 
 #define GE_IS_CONTAINER(object) ((object)  && objectIsA((GObject*)(object), "GtkContainer"))
 #define GE_IS_WIDGET(object) ((object)  && objectIsA((GObject*)(object), "GtkWidget"))
 #define GE_IS_MENUITEM(object) ((object)  && objectIsA((GObject*)(object), "GtkMenuItem"))
 #define GE_IS_SCROLL(object) ((object)  && objectIsA((GObject*)(object), "GtkScrolledWindow"))
+#define GE_IS_NOTEBOOK(object) ((object)  && objectIsA((GObject*)(object), "GtkNotebook"))
 
 namespace Oxygen
 {
@@ -61,7 +63,7 @@ namespace Oxygen
             // setup window management
             if( !g_object_get_data( G_OBJECT( widget ), "OXYGEN_WM_MOVE_HACK_SET" ) ) 
             {
-                            
+
                 // Force widget to listen to events
                 gtk_widget_add_events( widget, GDK_BUTTON_RELEASE_MASK | 
                                                GDK_BUTTON_PRESS_MASK   |
@@ -137,12 +139,21 @@ namespace Oxygen
         bool WindowManager::useEvent( GtkWidget *widget, GdkEventButton *event )
         {
             bool usable = true;
-            if(GE_IS_CONTAINER( widget ) )
+            
+            // check if there is an hovered tab
+            if( GE_IS_NOTEBOOK( widget ) )
+            {
+                if( Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) != -1 )
+                {
+                    usable = false;
+                }
+            }
+            // need to check all children that may be listening to event
+            else if(GE_IS_CONTAINER( widget ) )
             {
                 GList *containers = NULL;
                 containers = g_list_prepend( containers, widget );
                 
-                // Check all widget children for event
                 while( g_list_length( containers ) )
                 {
                     GtkContainer *c = GTK_CONTAINER( g_list_nth_data(containers, 0) );

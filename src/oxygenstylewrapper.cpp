@@ -1780,6 +1780,12 @@ namespace Oxygen
         if( d.isNotebook() )
         {
 
+            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            if( !wm->isValid() )
+            {
+                delete wm;
+            }
+
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
             options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
