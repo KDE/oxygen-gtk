@@ -32,28 +32,9 @@
 #include "oxygenwindowmanager.h"
 #include "oxygenstyle.h"
 
-#define GE_IS_CONTAINER(object) ((object)  && objectIsA((GObject*)(object), "GtkContainer"))
-#define GE_IS_WIDGET(object) ((object)  && objectIsA((GObject*)(object), "GtkWidget"))
-#define GE_IS_MENUITEM(object) ((object)  && objectIsA((GObject*)(object), "GtkMenuItem"))
-#define GE_IS_SCROLL(object) ((object)  && objectIsA((GObject*)(object), "GtkScrolledWindow"))
-#define GE_IS_NOTEBOOK(object) ((object)  && objectIsA((GObject*)(object), "GtkNotebook"))
-
 namespace Oxygen
 {
     static bool drag = FALSE;
-    
-    // check object type
-    static bool objectIsA( const GObject * object, const gchar * type_name )
-    {
-        if( ( object ) ) 
-        {
-            GType tmp = g_type_from_name( type_name );
-
-            if( tmp )
-                return g_type_check_instance_is_a( ( GTypeInstance * ) object, tmp );
-        }
-        return false;
-    }
     
     //_________________________________________________
     WindowManager::WindowManager( GtkWidget *widget )
@@ -139,7 +120,7 @@ namespace Oxygen
         bool usable = true;
 
         // check if there is an hovered tab
-        if( GE_IS_NOTEBOOK( widget ) )
+        if( GTK_IS_NOTEBOOK( widget ) )
         {
             if( Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) != -1 )
             {
@@ -147,7 +128,7 @@ namespace Oxygen
             }
         }
         // need to check all children that may be listening to event
-        else if(GE_IS_CONTAINER( widget ) )
+        else if(GTK_IS_CONTAINER( widget ) )
         {
             GList *containers = NULL;
             containers = g_list_prepend( containers, widget );
@@ -160,7 +141,7 @@ namespace Oxygen
                 {
                     if( child->data )
                     {
-                        if( GE_IS_CONTAINER( child->data ) )
+                        if( GTK_IS_CONTAINER( child->data ) )
                         {
                             containers = g_list_prepend( containers, child->data );
                         }
@@ -173,7 +154,7 @@ namespace Oxygen
                         }
                         // if event happen in widget
                         // check not a notebook: event in but notebook don't get it...
-                        else if( GE_IS_WIDGET( child->data ) && !GE_IS_NOTEBOOK ( child->data ) && 
+                        else if( GTK_IS_WIDGET( child->data ) && !GTK_IS_NOTEBOOK ( child->data ) && 
                                     event && withinWidget( GTK_WIDGET( child->data ), event ) )
                         {
                             // here deal with notebook: widget may be not visible
@@ -191,8 +172,8 @@ namespace Oxygen
                                 //
                                 // same for ScrolledWindow, they do not send motion events
                                 // to parents so not usable
-                                else if( GE_IS_MENUITEM( G_OBJECT( child->data ) ) ||
-                                            GE_IS_SCROLL( G_OBJECT( child->data ) ) )
+                                else if( GTK_IS_MENU_ITEM( G_OBJECT( child->data ) ) ||
+                                            GTK_IS_SCROLLED_WINDOW( G_OBJECT( child->data ) ) )
                                 {
                                     usable = false;
                                 }
