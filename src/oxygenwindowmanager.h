@@ -38,59 +38,56 @@
 #include "animations/oxygensignal.h"
 
 namespace Oxygen
-{
-    namespace Gtk
-    {        
-        class WindowManager
-        {
-            public:
-                
-            //! constructor, will delete itself, don't try to delete if isValid()
-            WindowManager( GtkWidget *widget );
+{      
+    class WindowManager
+    {
+        public:
             
-            //! destructor
-            ~WindowManager();
+        //! constructor, will delete itself, don't try to delete if isValid()
+        WindowManager( GtkWidget *widget );
+        
+        //! destructor
+        ~WindowManager();
 
-            //! return if object is correctly constructed, if not, you need to delete it
-            bool isValid();
+        //! return if object is correctly constructed, if not, you need to delete it
+        bool isValid();
 
-            private:
-                
-            //! return true if window is dragable
-            static bool isWindowDragWidget( GtkWidget *widget, GdkEventButton *event );
+        private:
             
-            //! return true if event happen in widget
-            static bool withinWidget( GtkWidget *widget, GdkEventButton *event );
-                       
-            //! return true if event is a usable drag event
-            static bool useEvent( GtkWidget *widget, GdkEventButton *event );
-            
-            //! move widget at position
-            static bool wmMove( GtkWidget *widget, int x, int y );
-           
-            //! on motion event
-            static bool wmMotion( GtkWidget *widget, GdkEventMotion *event, gpointer user_data );
-            
-            //! on button press
-            static bool wmButtonPress( GtkWidget *widget, GdkEventButton *event, gpointer user_data );
-            
-            //! on button release
-            static bool wmButtonRelease(GtkWidget *widget, GdkEventButton *event, gpointer user_data );
-            
-            //! on style change
-            static bool wmStyleSet( GtkWidget *widget, GtkStyle *style, gpointer user_data );
-            
-            //! on window destroy
-            static bool wmDestroy( GtkWidget *widget, GtkStyle *style, gpointer user_data );
+        //! return true if window is dragable
+        static bool isWindowDragWidget( GtkWidget *widget, GdkEventButton *event );
+        
+        //! return true if event happen in widget
+        static bool withinWidget( GtkWidget *widget, GdkEventButton *event );
+                    
+        //! return true if event is a usable drag event
+        static bool useEvent( GtkWidget *widget, GdkEventButton *event );
+        
+        //! move widget at position
+        static bool wmMove( GtkWidget *widget, int x, int y );
+        
+        //! on motion event
+        static bool wmMotion( GtkWidget *widget, GdkEventMotion *event, gpointer user_data );
+        
+        //! on button press
+        static bool wmButtonPress( GtkWidget *widget, GdkEventButton *event, gpointer user_data );
+        
+        //! on button release
+        static bool wmButtonRelease(GtkWidget *widget, GdkEventButton *event, gpointer user_data );
+        
+        //! on style change
+        static bool wmStyleSet( GtkWidget *widget, GtkStyle *style, gpointer user_data );
+        
+        //! on window destroy
+        static bool wmDestroy( GtkWidget *widget, GtkStyle *style, gpointer user_data );
 
-            GtkWidget *_widget;
-            Signal _leaveId;
-            Signal _destroyId;
-            Signal _pressId;
-            Signal _releaseId;
-            Signal _motionId;
-            Signal _styleId;
-        };
-    }
+        GtkWidget *_widget;
+        Signal _leaveId;
+        Signal _destroyId;
+        Signal _pressId;
+        Signal _releaseId;
+        Signal _motionId;
+        Signal _styleId;
+    };
 }
 #endif

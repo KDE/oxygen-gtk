@@ -101,7 +101,7 @@ namespace Oxygen
 
             }
 
-            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            WindowManager *wm = new WindowManager( widget );
             if( !wm->isValid() )
             {
                 delete wm;
@@ -113,7 +113,7 @@ namespace Oxygen
         } else if( d.isViewportBin() ) {
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635508
-            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            WindowManager *wm = new WindowManager( widget );
             if( !wm->isValid() )
             {
                 delete wm;
@@ -519,7 +519,7 @@ namespace Oxygen
                 if( name == "GtkPathBar" )
                 {
                     GtkWidget *parent = gtk_widget_get_parent( widget );
-                    Gtk::WindowManager *wm = new Gtk::WindowManager( parent );
+                    WindowManager *wm = new WindowManager( parent );
                     if( !wm->isValid() )
                     {
                         delete wm;
@@ -695,7 +695,7 @@ namespace Oxygen
         } else if( d.isMenuBar() || d.isToolBar() ) {
             
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            WindowManager *wm = new WindowManager( widget );
             if( !wm->isValid() )
             {
                 delete wm;
@@ -1836,7 +1836,7 @@ namespace Oxygen
         {
             
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            WindowManager *wm = new WindowManager( widget );
             if( !wm->isValid() )
             {
                 delete wm;
