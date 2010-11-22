@@ -78,9 +78,9 @@ namespace Oxygen
 
         //!@name static callbacks
         //@{
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer);
+        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer );
         //@}
 
         //! child registration and callback
@@ -92,7 +92,7 @@ namespace Oxygen
 
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static gboolean childCrossingNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean childCrossingNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static void childAddedEvent( GtkContainer*, GtkWidget*, gpointer );
         //@}
 

@@ -27,6 +27,7 @@
 #include <cmath>
 #include <cstring>
 #include <gtk/gtk.h>
+#include <iostream>
 
 namespace Oxygen
 {
@@ -53,6 +54,17 @@ namespace Oxygen
 
         if(GTK_IS_CONTAINER(container))
         { gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,0L); }
+
+    }
+
+    //____________________________________________________________
+    void Gtk::gtk_widget_print_tree( GtkWidget* widget )
+    {
+
+        if( !widget ) return;
+        std::cout << "Oxygen::Gtk::gtk_widget_print_tree - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        while( ( widget = gtk_widget_get_parent( widget ) ) )
+        { std::cout << "    parent: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl; }
 
     }
 
@@ -321,9 +333,9 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
     {
-        bool appearsAsList;
+        gboolean appearsAsList;
         gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
-        return appearsAsList;
+        return (bool) appearsAsList;
     }
 
     //________________________________________________________

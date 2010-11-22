@@ -71,7 +71,7 @@ namespace Oxygen
 
         //! true if cell info is hovered
         bool isCellHovered( const Gtk::CellInfo& cellInfo, bool fullWidth ) const
-        { return ( fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
+        { return hovered() && (fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
 
         protected:
 
@@ -85,12 +85,7 @@ namespace Oxygen
         }
 
         //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value )
-        {
-            if( !HoverData::setHovered( widget, value ) ) return false;
-            if( !value ) clearPosition();
-            return true;
-        }
+        virtual bool setHovered( GtkWidget* widget, bool value );
 
         //! update hovered cell based on pointer position
         void updatePosition( GtkWidget*, int x, int y );
@@ -140,7 +135,7 @@ namespace Oxygen
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static void childValueChanged( GtkRange*, gpointer );
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
         //@}
 
         private:

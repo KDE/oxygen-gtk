@@ -221,6 +221,11 @@ namespace Oxygen
 
         ChildDataMap::iterator iter( _childrenData.find( widget ) );
         if( iter == _childrenData.end() ) return;
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
+        #endif
+
         iter->second.disconnect();
         _childrenData.erase( iter );
 

@@ -519,8 +519,16 @@ namespace Oxygen
                     Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
 
                 }
-            } else if( Gtk::gtk_parent_tree_view( widget ) ) {
+            } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
 
+                // register to scrolled window engine if any
+                if(
+                    GTK_IS_SCROLLED_WINDOW( parent = gtk_widget_get_parent( parent ) ) &&
+                    Style::instance().animations().scrolledWindowEngine().contains( parent )
+                    )
+                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
+
+                // treevew header
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
 
             } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
@@ -1063,12 +1071,17 @@ namespace Oxygen
                     if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
 
+                } else if( GTK_IS_SCROLLED_WINDOW( widget ) ) {
+
+                    Style::instance().animations().scrolledWindowEngine().registerWidget( widget );
+
+                    options &= ~(Hover|Focus);
+                    if( Style::instance().animations().scrolledWindowEngine().focused( widget ) ) options |= Focus;
+                    if( Style::instance().animations().scrolledWindowEngine().hovered( widget ) ) options |= Hover;
+
+
                 } else {
 
-                    /*
-                    for now, hover and focus highlight
-                    is not supported in anything but entries
-                    */
                     options &= ~(Hover|Focus);
 
                 }
@@ -1152,6 +1165,28 @@ namespace Oxygen
             Style::instance().renderProgressBarHole(window,clipRect,x-2,y,w+4,h,options);
 
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
+
+            if( GTK_IS_FRAME( widget ) )
+            {
+
+                /*
+                check for scrolled windows embedded in frames, that contain a treeview.
+                if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
+                this should improve rendering of most mandriva drake tools
+                */
+                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                GtkScrolledWindow* scrolledWindow(0L);
+                if(
+                    GTK_IS_SCROLLED_WINDOW( child ) &&
+                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) &&
+                    gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( child ) ) ) == GTK_SHADOW_NONE )
+                {
+                    gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_NONE );
+                    gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
+                    return;
+                }
+
+            }
 
             // default shadow_in frame
             // hole background is needed for some special cases

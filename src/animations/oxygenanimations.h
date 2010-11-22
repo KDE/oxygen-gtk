@@ -28,6 +28,7 @@
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
 #include "oxygenscrollbarengine.h"
+#include "oxygenscrolledwindowengine.h"
 #include "oxygensignal.h"
 #include "oxygentabwidgetengine.h"
 #include "oxygentreeviewengine.h"
@@ -84,9 +85,13 @@ namespace Oxygen
         HoverEngine& hoverEngine( void ) const
         { return *_hoverEngine; }
 
-        //! scrolled window engine
+        //! scrollbar engine
         ScrollBarEngine& scrollBarEngine( void ) const
         { return *_scrollBarEngine; }
+
+        //! scrolled window engine
+        ScrolledWindowEngine& scrolledWindowEngine( void ) const
+        { return *_scrolledWindowEngine; }
 
         //! tab widget engine
         TabWidgetEngine& tabWidgetEngine( void ) const
@@ -135,8 +140,11 @@ namespace Oxygen
         //! menushell engine
         MenuShellEngine* _menuShellEngine;
 
-        //! scrolled window engine
+        //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;
+
+        //! scrolled window engine
+        ScrolledWindowEngine* _scrolledWindowEngine;
 
         //! tab widget engine
         TabWidgetEngine* _tabWidgetEngine;

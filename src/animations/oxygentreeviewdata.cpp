@@ -104,6 +104,14 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    bool TreeViewData::setHovered( GtkWidget* widget, bool value )
+    {
+        if( !HoverData::setHovered( widget, value ) ) return false;
+        if( !value ) clearPosition();
+        return true;
+    }
+
+    //________________________________________________________________________________
     void TreeViewData::updatePosition( GtkWidget* widget, int x, int y )
     {
 

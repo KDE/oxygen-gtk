@@ -73,8 +73,8 @@ namespace Oxygen
 
         //!@name static callbacks
         //@{
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         //@}
 
         private:
