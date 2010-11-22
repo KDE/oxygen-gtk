@@ -59,6 +59,10 @@ namespace Oxygen
         bool focused( void ) const
         { return std::find_if( _childrenData.begin(), _childrenData.end(), FocusedFTor() ) != _childrenData.end(); }
 
+        //! register child
+        /*! needed to track enter/leave events in treeview headers */
+        void registerChild( GtkWidget* );
+
         protected:
 
         //! set mouse over state
@@ -67,11 +71,8 @@ namespace Oxygen
         //! set focus state
         virtual void setFocused( GtkWidget* widget, bool value );
 
-        //!@name child handling
-        //@{
-        void registerChild( GtkWidget* );
+        //! unregister child
         void unregisterChild( GtkWidget* );
-        //@}
 
         //!@ callbacks
         //@{
