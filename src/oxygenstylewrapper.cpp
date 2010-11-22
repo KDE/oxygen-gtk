@@ -112,6 +112,12 @@ namespace Oxygen
 
         } else if( d.isViewportBin() ) {
 
+            Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
+            if( !wm->isValid() )
+            {
+                delete wm;
+            }
+            
             GdkColor bg=style->bg[state];
             GdkColor defbg=gtk_widget_get_default_style()->bg[state];
 
