@@ -34,7 +34,7 @@
 
 namespace Oxygen
 {
-    static bool drag = FALSE;
+    static bool drag = false;
     
     //_________________________________________________
     WindowManager::WindowManager( GtkWidget *widget )
