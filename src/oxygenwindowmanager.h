@@ -31,11 +31,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "animations/oxygensignal.h"
+
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
-#include "animations/oxygensignal.h"
 
 namespace Oxygen
 {      

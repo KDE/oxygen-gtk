@@ -27,10 +27,11 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-
 #include "oxygenwindowmanager.h"
 #include "oxygenstyle.h"
+
+#include <string>
+#include <gdk/gdkx.h>
 
 namespace Oxygen
 {
