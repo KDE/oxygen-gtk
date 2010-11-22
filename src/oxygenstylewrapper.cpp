@@ -101,24 +101,17 @@ namespace Oxygen
 
             }
 
-            WindowManager *wm = new WindowManager( widget );
-            if( !wm->isValid() )
-            {
-                delete wm;
-            }
+            if( !Style::instance().settings().applicationName().isMozilla() )
+            { Style::instance().windowManager().registerWidget( widget ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
         } else if( d.isViewportBin() ) {
 
-            // https://bugzilla.gnome.org/show_bug.cgi?id=635508
-            WindowManager *wm = new WindowManager( widget );
-            if( !wm->isValid() )
-            {
-                delete wm;
-            }
-            
+            if( !Style::instance().settings().applicationName().isMozilla() )
+            { Style::instance().windowManager().registerWidget( widget ); }
+
             GdkColor bg=style->bg[state];
             GdkColor defbg=gtk_widget_get_default_style()->bg[state];
 
@@ -515,17 +508,11 @@ namespace Oxygen
             {
                 // https://bugzilla.gnome.org/show_bug.cgi?id=635511
                 std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
+
                 // NautilusPathBar doesn't have any problem so only for GtkPathBar
-                if( name == "GtkPathBar" )
-                {
-                    GtkWidget *parent = gtk_widget_get_parent( widget );
-                    WindowManager *wm = new WindowManager( parent );
-                    if( !wm->isValid() )
-                    {
-                        delete wm;
-                    }
-                }
-                
+                if( !Style::instance().settings().applicationName().isMozilla() && name == "GtkPathBar" )
+                { Style::instance().windowManager().registerWidget( widget ); }
+
                 Style::instance().animations().hoverEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
@@ -693,14 +680,10 @@ namespace Oxygen
             }
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
-            
+
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            WindowManager *wm = new WindowManager( widget );
-            if( !wm->isValid() )
-            {
-                delete wm;
-            }
-            
+            if( !Style::instance().settings().applicationName().isMozilla() )
+            { Style::instance().windowManager().registerWidget( widget ); }
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
@@ -1834,13 +1817,10 @@ namespace Oxygen
         const Gtk::Detail d( detail );
         if( d.isNotebook() )
         {
-            
+
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            WindowManager *wm = new WindowManager( widget );
-            if( !wm->isValid() )
-            {
-                delete wm;
-            }
+            if( !Style::instance().settings().applicationName().isMozilla() )
+            { Style::instance().windowManager().registerWidget( widget ); }
 
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
