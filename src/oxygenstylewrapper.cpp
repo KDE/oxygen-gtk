@@ -513,7 +513,19 @@ namespace Oxygen
             // check if it's PathBar toggle button
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
-
+                // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+                std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
+                // NautilusPathBar doesn't have any problem so only for GtkPathBar
+                if( name == "GtkPathBar" )
+                {
+                    GtkWidget *parent = gtk_widget_get_parent( widget );
+                    Gtk::WindowManager *wm = new Gtk::WindowManager( parent );
+                    if( !wm->isValid() )
+                    {
+                        delete wm;
+                    }
+                }
+                
                 Style::instance().animations().hoverEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
