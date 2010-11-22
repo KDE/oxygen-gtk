@@ -65,6 +65,8 @@ namespace Oxygen
         _viewDrawTriangularExpander( true ),
         _viewTriangularExpanderSize( ArrowSmall ),
         _menuHighlightMode( MM_DARK ),
+        _windowDragEnabled( true ),
+        _windowDragMode( WD_FULL ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault )
     {}
@@ -587,6 +589,13 @@ namespace Oxygen
         if( highlightMode == "MM_SUBTLE" ) _menuHighlightMode = MM_SUBTLE;
         else if( highlightMode == "MM_STRONG" ) _menuHighlightMode = MM_STRONG;
         else _menuHighlightMode = MM_DARK;
+
+        // window drag mode
+        _windowDragEnabled = _oxygen.getOption( "[Style]", "WindowDragEnabled" ).toVariant<std::string>("true") == "true";
+
+        std::string windowDragMode( _oxygen.getOption( "[Style]", "WindowDragMode" ).toVariant<std::string>("WD_FULL") );
+        if( windowDragMode == "WD_MINIMAL" ) _windowDragMode = WD_MINIMAL;
+        else _windowDragMode = WD_FULL;
 
         // copy relevant options to to gtk
         // scrollbar width

@@ -154,6 +154,21 @@ namespace Oxygen
         MenuHighlightMode menuHighlightMode( void ) const
         { return _menuHighlightMode; }
 
+        //! window drag mode
+        bool windowDragEnabled( void ) const
+        { return _windowDragEnabled; }
+
+        //! window drag mode
+        enum WindowDragMode
+        {
+            WD_MINIMAL,
+            WD_FULL
+        };
+
+        //! window drag mode
+        WindowDragMode windowDragMode( void ) const
+        { return _windowDragMode; }
+
         //@}
 
         //!@name window decoration options
@@ -335,6 +350,12 @@ namespace Oxygen
 
         //! menu highlight mode
         MenuHighlightMode _menuHighlightMode;
+
+        //! window drag mode
+        bool _windowDragEnabled;
+
+        //! window drag mode
+        WindowDragMode _windowDragMode;
 
         //@}
 
