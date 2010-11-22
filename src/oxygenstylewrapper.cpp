@@ -681,7 +681,8 @@ namespace Oxygen
             }
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
-
+            
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
             if( !wm->isValid() )
             {
@@ -1821,7 +1822,8 @@ namespace Oxygen
         const Gtk::Detail d( detail );
         if( d.isNotebook() )
         {
-
+            
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             Gtk::WindowManager *wm = new Gtk::WindowManager( widget );
             if( !wm->isValid() )
             {
