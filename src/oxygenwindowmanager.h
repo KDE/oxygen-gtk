@@ -83,6 +83,8 @@ namespace Oxygen
         static bool wmMove( GtkWidget *widget, int x, int y );
         
         GtkWidget *_widget;
+        
+        //! true if in drag mode
         static bool _drag;
         
         Signal _leaveId;
