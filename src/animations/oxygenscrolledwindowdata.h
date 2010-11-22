@@ -106,7 +106,7 @@ namespace Oxygen
             {}
 
             //! disconnect all signals
-            void disconnect( void );
+            void disconnect( GtkWidget* );
 
             //! true if widget is hovered
             bool _hovered;

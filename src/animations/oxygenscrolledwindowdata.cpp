@@ -21,6 +21,7 @@
 
 #include "oxygenscrolledwindowdata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <cassert>
 #include <iostream>
@@ -74,7 +75,7 @@ namespace Oxygen
     {
         _target = 0;
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); iter++ )
-        { iter->second.disconnect(); }
+        { iter->second.disconnect( iter->first ); }
 
         _childrenData.clear();
     }
@@ -161,6 +162,10 @@ namespace Oxygen
     void ScrolledWindowData::unregisterChild( GtkWidget* widget )
     {
 
+        // loopup in hover map
+        ChildDataMap::iterator iter( _childrenData.find( widget ) );
+        if( iter == _childrenData.end() ) return;
+
         #if OXYGEN_DEBUG
         std::cout
             << "Oxygen::ScrolledWindowData::unregisterChild -"
@@ -168,18 +173,25 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // loopup in hover map
-        ChildDataMap::iterator iter( _childrenData.find( widget ) );
-        if( iter == _childrenData.end() ) return;
-
-        iter->second.disconnect();
+        iter->second.disconnect( widget );
         _childrenData.erase( iter );
 
     }
 
     //________________________________________________________________________________
-    void ScrolledWindowData::ChildData::disconnect( void )
+    #if OXYGEN_DEBUG
+    void ScrolledWindowData::ChildData::disconnect( GtkWidget* widget )
+    #else
+    void ScrolledWindowData::ChildData::disconnect( GtkWidget* )
+    #endif
     {
+
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::ScrolledWindowData::ChildData::disconnect -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
 
         _destroyId.disconnect();
         _styleChangeId.disconnect();
