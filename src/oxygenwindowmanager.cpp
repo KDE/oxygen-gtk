@@ -199,7 +199,7 @@ namespace Oxygen
 
         GdkWindow *window( gtk_widget_get_parent_window( widget ) );
 
-        // TODO: check this. I would have expected return false (hugo)
+        // Some widgets aren't realized (GeditWindow for exemple) ...
         if( !window ) return true;
 
         GtkAllocation allocation;
