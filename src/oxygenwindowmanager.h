@@ -48,10 +48,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        WindowManager( void ):
-            _mode( Full ),
-            _drag( false )
-        {}
+        WindowManager( void );
 
         //! destructor
         virtual ~WindowManager();
@@ -73,9 +70,13 @@ namespace Oxygen
         //! window grab mode
         void setMode( Mode mode );
 
-        //! window grab mode
-        const Mode& mode( void ) const
-        { return _mode; }
+        //! drag distance
+        void setDragDistance( int value )
+        { _dragDistance = value; }
+
+        //! drag delay
+        void setDragDelay( int value )
+        { _dragDelay = value; }
 
         protected:
 
@@ -160,6 +161,12 @@ namespace Oxygen
 
         //! true if in drag mode
         bool _drag;
+
+        //! drag distance
+        int _dragDistance;
+
+        //! drag delay
+        int _dragDelay;
 
         //! map widgets to data structure
         DataMap<Data> _map;

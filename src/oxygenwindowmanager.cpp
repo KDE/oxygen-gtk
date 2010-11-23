@@ -41,6 +41,14 @@ namespace Oxygen
 
 
     //_________________________________________________
+    WindowManager::WindowManager( void ):
+        _mode( Full ),
+        _drag( false ),
+        _dragDistance( 4 ),
+        _dragDelay( 500 )
+    {}
+
+    //_________________________________________________
     WindowManager::~WindowManager( void )
     {
         _map.disconnectAll();
@@ -68,7 +76,7 @@ namespace Oxygen
         Data& data( _map.registerWidget( widget ) );
 
         // connect signals
-        if( mode() != Disabled ) connect( widget, data );
+        if( _mode != Disabled ) connect( widget, data );
 
     }
 
@@ -146,7 +154,7 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
     {
-        if( mode() == Disabled ) return false;
+        if( _mode == Disabled ) return false;
         else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
 
@@ -240,8 +248,8 @@ namespace Oxygen
     bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event )
     {
 
-        if( mode() == Disabled ) return false;
-        else if( mode() == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+        if( _mode == Disabled ) return false;
+        else if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
 
         bool usable( true );
         if( GTK_IS_NOTEBOOK( widget ) )

@@ -59,6 +59,10 @@ namespace Oxygen
         else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
         else windowManager().setMode( WindowManager::Full );
 
+        // pass drag distance and delay to window manager
+        windowManager().setDragDistance( settings().startDragDist() );
+        windowManager().setDragDelay( settings().startDragTime() );
+
     }
 
     //__________________________________________________________________
