@@ -99,6 +99,8 @@ widgetStyle=oxygen
 
 [KDE]
 contrast=10
+StartDragDist=4
+StartDragTime=500
 
 [Toolbar style]
 ToolButtonStyle=TextBesideIcon

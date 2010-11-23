@@ -169,6 +169,14 @@ namespace Oxygen
         WindowDragMode windowDragMode( void ) const
         { return _windowDragMode; }
 
+        //! drag distance
+        int startDragDist( void ) const
+        { return _startDragDist; }
+
+        //! drag delay
+        int startDragTime( void ) const
+        { return _startDragTime; }
+
         //@}
 
         //!@name window decoration options
@@ -356,6 +364,12 @@ namespace Oxygen
 
         //! window drag mode
         WindowDragMode _windowDragMode;
+
+        //! drag distance
+        int _startDragDist;
+
+        //! drag delay
+        int _startDragTime;
 
         //@}
 

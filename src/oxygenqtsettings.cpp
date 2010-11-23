@@ -67,6 +67,8 @@ namespace Oxygen
         _menuHighlightMode( MM_DARK ),
         _windowDragEnabled( true ),
         _windowDragMode( WD_FULL ),
+        _startDragDist( 4 ),
+        _startDragTime( 500 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault )
     {}
@@ -536,6 +538,10 @@ namespace Oxygen
         else if( toolbarTextPosition == "TextBesideIcon" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH_HORIZ" ) );
         else if( toolbarTextPosition == "NoText" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_ICONS" ) );
         else _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH" ) );
+
+        // start drag time and distance
+        _startDragDist = _kdeGlobals.getOption( "[KDE]", "StartDragDist" ).toVariant<int>( 4 );
+        _startDragTime = _kdeGlobals.getOption( "[KDE]", "StartDragTime" ).toVariant<int>( 500 );
 
     }
 
