@@ -46,7 +46,7 @@ style "oxygen-default"
     GtkMenu::horizontal-padding = 3
     GtkMenu::vertical-padding = 5
     GtkMenu::horizontal-offset = -7
-    GtkCheckMenuItem::indicator-size = 18
+    GtkCheckMenuItem::indicator-size = 16
 
     GtkScale::slider-width = 23
     GtkScale::slider-length = 15
