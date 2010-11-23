@@ -7,7 +7,7 @@ src/animations/ contains code needed for hover/focus effects, and will contain c
 it connects to various widgets signals and events to setup and trigger widget updates when adequate conditions are fullfilled.
 
 2/ some details on some files in src/
---------------------------------
+-------------------------------------
 
 oxygenrcstyle:
 oxygenstylewrapper: 
@@ -25,13 +25,16 @@ they can be cached.
 
 oxygentilesetcache: caches tilesets, for optimization
 
+oxygenwindowmanager: handles window grabbing
+
 oxygenrgba:
 stores rgba color representation and has some conversion utility functions
 
 oxygencolorutils:
 all color handling, used to shade, mix, blend, etc. It is based on code in oxygen-qt and kde/kdelibs/kdeui kcolorutils and kcolorscheme.
 
-oxygenpalette: internal storage of colors. It extends the colors used by gdk and passed via gtkstyle
+oxygenpalette: 
+internal storage of colors. It extends the colors used by gdk and passed via gtkstyle
 
 oxygenqtsettings:
 does all the handling of Qt/Kde options, and conversion to gtk options where needed
@@ -50,3 +53,17 @@ oxygengtkutils: some widget/window ancestry tree navigation utility functions.
 oxygenflags: generic utility class to handle enumeration based bit patterns.
 oxygentaboptions: stores options relevant for tab rendering in notebooks
 oxygenstyleoptions: stores generic options for widget rendering, based on their state, shadow, etc.
+
+3/ some details on some files in animations/
+--------------------------------------------
+
+All types of animations (mostly mouse-over effects for the moment) have two classes:
+- a Data class, that stores widget specific information on a per widget bases
+- an Engine class, that collects all Data objects and map them to their matching GtkWidget. When a GtkWidget is destroyed, the corresponding entry in the map is removed. 
+
+All engine are stored inside the oxygenanimations class.
+All engines must derive from Oxygen::BaseEngine, to be stored inside Animations.
+For convenience and to minimize redundant code, an Oxygen::GenericEngine class is used as a base class for most engines.
+
+For a "Data" object to be used in an engine, it must contain a "::connect(GtkWidget*)" and a "::disconnect(GtkWidget*)" class. 
+These two methods are responsible for the initialization and clean-up of the Data object.
