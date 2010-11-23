@@ -219,45 +219,32 @@ namespace Oxygen
             for( i = 0; i < width; i++ )
             {
                 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
-                /* Pixbuf:  RGB(A)
-                * Surface: BGRA */
-                gdouble alpha_factor;
-                
-                if( !s_iter[3] )
-                    alpha_factor = (gdouble)0xff;
-                else
-                    alpha_factor = (gdouble)0xff / s_iter[3];
 
-                p_iter[0] = (guchar)( s_iter[2] * alpha_factor + .5 );
-                p_iter[1] = (guchar)( s_iter[1] * alpha_factor + .5 );
-                p_iter[2] = (guchar)( s_iter[0] * alpha_factor + .5 );
-                if( p_n_channels == 4 )
-                    p_iter[3] = s_iter[3];
+                // Pixbuf:  RGB(A); Surface: BGRA
+                const gdouble alpha( s_iter[3] ? (gdouble)0xff / s_iter[3] : (gdouble)0xff );
+                p_iter[0] = (guchar)( s_iter[2] * alpha + .5 );
+                p_iter[1] = (guchar)( s_iter[1] * alpha + .5 );
+                p_iter[2] = (guchar)( s_iter[0] * alpha + .5 );
+                if( p_n_channels == 4 ) p_iter[3] = s_iter[3];
+
                 #elif G_BYTE_ORDER == G_BIG_ENDIAN
-                /* Pixbuf:  RGB(A)
-                * Surface: ARGB */
-                gdouble alpha_factor;
-                
-                if( !s_iter[3] )
-                    alpha_factor = (gdouble)0xff;
-                else
-                    alpha_factor = (gdouble)0xff / s_iter[0];
 
-                p_iter[0] = (guchar)( s_iter[1] * alpha_factor + .5 );
-                p_iter[1] = (guchar)( s_iter[2] * alpha_factor + .5 );
-                p_iter[2] = (guchar)( s_iter[3] * alpha_factor + .5 );
-                if( p_n_channels == 4 )
-                    p_iter[3] = s_iter[0];
+                // Pixbuf:  RGB(A), Surface: ARGB
+                const gdouble alpha( s_iter[0] ? (gdouble)0xff / s_iter[0] : (gdouble)0xff );
+                p_iter[0] = (guchar)( s_iter[1] * alpha + .5 );
+                p_iter[1] = (guchar)( s_iter[2] * alpha + .5 );
+                p_iter[2] = (guchar)( s_iter[3] * alpha + .5 );
+                if( p_n_channels == 4 ) p_iter[3] = s_iter[0];
+
                 #else /* PDP endianness */
-                /* Pixbuf:  RGB(A)
-                * Surface: RABG */
-                gdouble alpha_factor = (gdouble)0xff / s_iter[1];
 
-                p_iter[0] = (guchar)( s_iter[0] * alpha_factor + .5 );
-                p_iter[1] = (guchar)( s_iter[3] * alpha_factor + .5 );
-                p_iter[2] = (guchar)( s_iter[2] * alpha_factor + .5 );
-                if( p_n_channels == 4 )
-                    p_iter[3] = s_iter[1];
+                // Pixbuf:  RGB(A) Surface: RABG
+                const gdouble alpha( s_iter[1] ? (gdouble)0xff / s_iter[1] : (gdouble)0xff );
+                p_iter[0] = (guchar)( s_iter[0] * alpha + .5 );
+                p_iter[1] = (guchar)( s_iter[3] * alpha + .5 );
+                p_iter[2] = (guchar)( s_iter[2] * alpha + .5 );
+                if( p_n_channels == 4 ) p_iter[3] = s_iter[1];
+
                 #endif
                 s_iter += 4;
                 p_iter += p_n_channels;
