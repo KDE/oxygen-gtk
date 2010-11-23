@@ -23,7 +23,7 @@ oxygentileset:
 stores 3x3 pixmap array to handle scalable widgets, similar to what kde/plasma does (as well as oxygen-qt)
 they can be cached.
 
-oxygentilesetcache: caches tilesets, for optimization
+oxygentilesetcache: MRU tilesets cache, for optimization
 
 oxygenwindowmanager: handles window grabbing
 
