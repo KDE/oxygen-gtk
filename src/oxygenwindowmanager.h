@@ -1,0 +1,149 @@
+#ifndef oxygenwindowmanager_h
+#define oxygenwindowmanager_h
+
+/*
+* oxygenwindowmanager.h
+* pass some window mouse press/release/move event actions to window manager
+* -------------------
+*
+* Copyright (c) 2010 Cédric Bellegarde <gnumdk@gmail.com>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+*
+* Largely inspired from Qtcurve style
+* Copyright (C) Craig Drummond, 2003 - 2010 craig.p.drummond@gmail.com
+*
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to
+* deal in the Software without restriction, including without limitation the
+* rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+* sell copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+* IN THE SOFTWARE.
+*/
+
+#include "animations/oxygensignal.h"
+#include "animations/oxygendatamap.h"
+
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <map>
+
+namespace Oxygen
+{
+
+    class WindowManager
+    {
+
+        public:
+
+        //! constructor
+        WindowManager( void ):
+            _drag( false )
+        {}
+
+        //! destructor
+        virtual ~WindowManager();
+
+        //! register widget
+        virtual void registerWidget( GtkWidget* );
+
+        //! unregister widget
+        virtual void unregisterWidget( GtkWidget* );
+
+        protected:
+
+        //!@name callbacks
+        //@{
+
+        //! on motion event
+        static bool wmMotion( GtkWidget*, GdkEventMotion*, gpointer );
+
+        //! on button press
+        static bool wmButtonPress( GtkWidget*, GdkEventButton*, gpointer );
+
+        //! on button release
+        static bool wmButtonRelease(GtkWidget*, GdkEventButton*, gpointer );
+
+        //! on mouse leave
+        static bool wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
+
+        //! on style change
+        static bool wmStyleSet( GtkWidget*, GtkStyle*, gpointer );
+
+        //! on window destroy
+        static bool wmDestroy( GtkWidget*, gpointer );
+
+        //@}
+
+        //! start dragging widget
+        bool startDrag( GtkWidget*, GdkEventMotion* );
+
+        //! finish dragging widget
+        bool finishDrag( GtkWidget* );
+
+        //! return true if window is dragable
+        bool isWindowDragWidget( GtkWidget*, GdkEventButton* );
+
+        //! return true if event happen in widget
+        bool withinWidget( GtkWidget*, GdkEventButton* );
+
+        //! return true if event is a usable drag event
+        bool useEvent( GtkWidget*, GdkEventButton* );
+
+        private:
+
+        //! stores connections
+        class Data
+        {
+            public:
+
+            //! constructor
+            Data( void )
+            {}
+
+            //! destructor
+            virtual ~Data( void )
+            {}
+
+            //! connect
+            /*! it is needed to insert in DataMap, but does nothing */
+            virtual void connect( GtkWidget* )
+            {}
+
+            //! disconnect
+            virtual void disconnect( GtkWidget* );
+
+            //!@name signals
+            //@{
+            Signal _leaveId;
+            Signal _destroyId;
+            Signal _pressId;
+            Signal _releaseId;
+            Signal _motionId;
+            Signal _styleId;
+            //@}
+
+        };
+
+        //! map widgets to data structure
+        DataMap<Data> _map;
+
+        //! true if in drag mode
+        bool _drag;
+
+    };
+
+}
+
+#endif

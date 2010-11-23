@@ -27,6 +27,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentheme.cpp
     oxygentileset.cpp
     oxygenwindecobutton.cpp
+    oxygenwindowmanager.cpp
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
     animations/oxygencomboboxdata.cpp
