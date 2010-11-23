@@ -19,6 +19,7 @@
 
 #include "oxygentileset.h"
 #include "oxygencairocontext.h"
+#include "oxygencolorutils.h"
 
 #include <algorithm>
 #include <iostream>
@@ -44,17 +45,24 @@ namespace Oxygen
 
         _w3 = gdk_pixbuf_get_width( pix ) - (w1 + w2);
         _h3 = gdk_pixbuf_get_height( pix ) - (h1 + h2);
+        int w = w2; while (w < 32 && w2 > 0) w += w2;
+        int h = h2; while (h < 32 && h2 > 0) h += h2;
 
         // initialise pixmap array
-        initPixmap( _pixmaps, pix, 0, 0, _w1, _h1 );
-        initPixmap( _pixmaps, pix, _w1, 0, w2, _h1 );
-        initPixmap( _pixmaps, pix, _w1+w2, 0, _w3, _h1 );
-        initPixmap( _pixmaps, pix, 0, _h1, _w1, h2 );
-        initPixmap( _pixmaps, pix, w1, _h1, w2, h2 );
-        initPixmap( _pixmaps, pix, _w1+w2, _h1, _w3, h2 );
-        initPixmap( _pixmaps, pix, 0, _h1+h2, _w1, _h3 );
-        initPixmap( _pixmaps, pix, _w1, _h1+h2, w2, _h3 );
-        initPixmap( _pixmaps, pix, _w1+w2, _h1+h2, _w3, _h3 );
+        // top
+        initPixmap( _pixmaps, pix, _w1, _h1, 0, 0, _w1, _h1 );
+        initPixmap( _pixmaps, pix, w, _h1, _w1, 0, w2, _h1 );
+        initPixmap( _pixmaps, pix, _w3, _h1, _w1+w2, 0, _w3, _h1 );
+
+        // center
+        initPixmap( _pixmaps, pix, _w1, h, 0, _h1, _w1, h2 );
+        initPixmap( _pixmaps, pix, w, h, w1, _h1, w2, h2 );
+        initPixmap( _pixmaps, pix, _w3, h, _w1+w2, _h1, _w3, h2 );
+
+        // bottom
+        initPixmap( _pixmaps, pix, _w1, _h3, 0, _h1+h2, _w1, _h3 );
+        initPixmap( _pixmaps, pix, w, _h3, _w1, _h1+h2, w2, _h3 );
+        initPixmap( _pixmaps, pix, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
     }
 
     //______________________________________________________________
@@ -66,17 +74,24 @@ namespace Oxygen
 
         int x2 = gdk_pixbuf_get_width( pix ) - _w3;
         int y2 = gdk_pixbuf_get_height( pix ) - _h3;
+        int w = w2; while (w < 32 && w2 > 0) w += w2;
+        int h = h2; while (h < 32 && h2 > 0) h += h2;
 
         // initialise pixmap array
-        initPixmap( _pixmaps, pix, 0, 0, _w1, _h1 );
-        initPixmap( _pixmaps, pix, x1, 0, w2, _h1 );
-        initPixmap( _pixmaps, pix, x2, 0, _w3, _h1 );
-        initPixmap( _pixmaps, pix, 0, y1, _w1, h2 );
-        initPixmap( _pixmaps, pix, x1, y1, w2, h2 );
-        initPixmap( _pixmaps, pix, x2, y1, _w3, h2 );
-        initPixmap( _pixmaps, pix, 0, y2, _w1, _h3 );
-        initPixmap( _pixmaps, pix, x1, y2, w2, _h3 );
-        initPixmap( _pixmaps, pix, x2, y2, _w3, _h3 );
+        // top
+        initPixmap( _pixmaps, pix, _w1, _h1, 0, 0, _w1, _h1 );
+        initPixmap( _pixmaps, pix, w, _h1, x1, 0, w2, _h1 );
+        initPixmap( _pixmaps, pix, _w3, h1, x2, 0, _w3, _h1 );
+
+        // center
+        initPixmap( _pixmaps, pix, _w1, h, 0, y1, _w1, h2 );
+        initPixmap( _pixmaps, pix, w, h, x1, y1, w2, h2 );
+        initPixmap( _pixmaps, pix, _w3, h, x2, y1, _w3, h2 );
+
+        // bottom
+        initPixmap( _pixmaps, pix, _w1, _h3, 0, y2, _w1, _h3 );
+        initPixmap( _pixmaps, pix, w, _h3, x1, y2, w2, _h3 );
+        initPixmap( _pixmaps, pix, _w3, _h3, x2, y2, _w3, _h3 );
 
     }
 
@@ -193,10 +208,26 @@ namespace Oxygen
 
 
     //______________________________________________________________
-    void TileSet::initPixmap( PixbufList& pixmaps, GdkPixbuf *pix, int x, int y, int w, int h )
+    void TileSet::initPixmap( PixbufList& pixmaps, GdkPixbuf *pix, int w, int h, int sx, int sy, int sw, int sh )
     {
-        if( w>0 && h>0 ) pixmaps.push_back( gdk_pixbuf_new_subpixbuf( pix, x, y, w, h ) );
-        else pixmaps.push_back( 0L );
+        if( sw <= 0 || sh<= 0 || w <=0 || h <= 0 ) pixmaps.push_back( 0L );
+        else if( sw == w && sh == h ) pixmaps.push_back( gdk_pixbuf_new_subpixbuf( pix, sx, sy, sw, sh ) );
+        else {
+
+            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+            Cairo::Context context( pixbuf );
+
+            GdkPixbuf* tile( gdk_pixbuf_new_subpixbuf( pix, sx, sy, sw, sh ) );
+            gdk_cairo_set_source_pixbuf( context, tile, 0, 0 );
+            cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
+            cairo_rectangle( context, 0, 0, w, h );
+            cairo_fill( context );
+            context.updateGdkPixbuf();
+            pixmaps.push_back( pixbuf );
+            g_object_unref( tile );
+
+        }
     }
 
     //______________________________________________________________

@@ -132,7 +132,7 @@ namespace Oxygen
         typedef std::vector< GdkPixbuf* > PixbufList;
 
         //! initialize pixmap
-        void initPixmap( PixbufList&, GdkPixbuf*, int x, int y, int w, int h );
+        void initPixmap( PixbufList&, GdkPixbuf*, int w, int h, int sx, int sy, int sw, int sh );
 
         //! copy pixmap
         void copyPixmap( Cairo::Context&, int x, int y, GdkPixbuf*, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
