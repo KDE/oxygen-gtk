@@ -67,3 +67,13 @@ For convenience and to minimize redundant code, an Oxygen::GenericEngine class i
 
 For a "Data" object to be used in an engine, it must contain a "::connect(GtkWidget*)" and a "::disconnect(GtkWidget*)" class. 
 These two methods are responsible for the initialization and clean-up of the Data object.
+
+utility files/classes:
+oxygendatamap: 
+keeps track of association between widgets and data objects. It also keep track of the last accessed widget, in case it is re-used immediately; for optimization.
+
+oxygentimer:
+a convenience class to handle delayed actions.
+
+oxygensignal: 
+a convenience class to handle signal/callback connections.
