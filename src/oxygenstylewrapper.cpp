@@ -925,6 +925,10 @@ namespace Oxygen
             GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
         { shadow = GTK_SHADOW_IN; }
 
+        // make sure that entry shadows are drawn
+        if( d.isEntry() )
+        { shadow = GTK_SHADOW_IN; }
+
         // check if it's combobox list window
         if( Gtk::gtk_combobox_is_scrolled_window( widget ) && GTK_IS_WINDOW( parent = gtk_widget_get_parent( widget ) ) )
         {
