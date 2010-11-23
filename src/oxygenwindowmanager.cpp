@@ -66,13 +66,9 @@ namespace Oxygen
 
         // allocate new Data object
         Data& data( _map.registerWidget( widget ) );
-        data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( wmDestroy ), this );
-        data._styleId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( wmStyleSet ), this );
 
-        data._pressId.connect( G_OBJECT( widget ), "button-press-event", G_CALLBACK( wmButtonPress ), this );
-        data._releaseId.connect( G_OBJECT( widget ), "button-release-event", G_CALLBACK( wmButtonRelease ), this );
-        data._leaveId.connect( G_OBJECT( widget ), "leave-notify-event", G_CALLBACK( wmLeave ), this );
-        data._motionId.connect( G_OBJECT( widget ), "motion-notify-event", G_CALLBACK( wmMotion ), this );
+        // connect signals
+        if( mode() != Disabled ) connect( widget, data );
 
     }
 
@@ -87,6 +83,25 @@ namespace Oxygen
 
         _map.value( widget ).disconnect( widget );
         _map.erase( widget );
+    }
+
+    //_________________________________________________
+    void WindowManager::setMode( WindowManager::Mode mode )
+    {
+        if( mode == _mode ) return;
+
+        // connect/disconnect all data in map, based on new and old mode
+        if( mode == Disabled ) { _map.disconnectAll(); }
+        else if( _mode == Disabled )
+        {
+            DataMap<Data>::Map& map( _map.map() );
+            for( DataMap<Data>::Map::iterator iter = map.begin(); iter != map.end(); iter++ )
+            { connect( iter->first, iter->second ); }
+        }
+
+        // assign new mode
+        _mode = mode;
+
     }
 
     //_________________________________________________
@@ -300,6 +315,18 @@ namespace Oxygen
             }
         }
         return usable;
+    }
+
+    //________________________________________________________________________________
+    void WindowManager::connect( GtkWidget* widget, WindowManager::Data& data )
+    {
+        data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( wmDestroy ), this );
+        data._styleId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( wmStyleSet ), this );
+
+        data._pressId.connect( G_OBJECT( widget ), "button-press-event", G_CALLBACK( wmButtonPress ), this );
+        data._releaseId.connect( G_OBJECT( widget ), "button-release-event", G_CALLBACK( wmButtonRelease ), this );
+        data._leaveId.connect( G_OBJECT( widget ), "leave-notify-event", G_CALLBACK( wmLeave ), this );
+        data._motionId.connect( G_OBJECT( widget ), "motion-notify-event", G_CALLBACK( wmMotion ), this );
     }
 
     //_________________________________________________

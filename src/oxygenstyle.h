@@ -53,8 +53,7 @@ namespace Oxygen
         { _instance = 0L; }
 
         //! initialize
-        void initialize( void )
-        { _settings.initialize(); }
+        void initialize( void );
 
         //! settings
         const QtSettings& settings( void ) const

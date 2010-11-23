@@ -49,6 +49,7 @@ namespace Oxygen
 
         //! constructor
         WindowManager( void ):
+            _mode( Full ),
             _drag( false )
         {}
 
@@ -60,6 +61,21 @@ namespace Oxygen
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
+
+        //! window grab mode
+        enum Mode
+        {
+            Disabled,
+            Minimal,
+            Full
+        };
+
+        //! window grab mode
+        void setMode( Mode mode );
+
+        //! window grab mode
+        const Mode& mode( void ) const
+        { return _mode; }
 
         protected:
 
@@ -101,8 +117,6 @@ namespace Oxygen
         //! return true if event is a usable drag event
         bool useEvent( GtkWidget*, GdkEventButton* );
 
-        private:
-
         //! stores connections
         class Data
         {
@@ -136,11 +150,19 @@ namespace Oxygen
 
         };
 
-        //! map widgets to data structure
-        DataMap<Data> _map;
+        //! perform connections between widget and data
+        void connect( GtkWidget*, Data& );
+
+        private:
+
+        //! drag mode
+        Mode _mode;
 
         //! true if in drag mode
         bool _drag;
+
+        //! map widgets to data structure
+        DataMap<Data> _map;
 
     };
 

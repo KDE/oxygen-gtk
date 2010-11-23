@@ -50,6 +50,18 @@ namespace Oxygen
     {}
 
     //__________________________________________________________________
+    void Style::initialize( void )
+    {
+        _settings.initialize();
+
+        // pass window drag mode to window manager
+        if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
+        else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
+        else windowManager().setMode( WindowManager::Full );
+
+    }
+
+    //__________________________________________________________________
     void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
