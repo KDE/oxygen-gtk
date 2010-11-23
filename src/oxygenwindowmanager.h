@@ -106,6 +106,9 @@ namespace Oxygen
         //! start dragging widget
         bool startDrag( GtkWidget*, GdkEventMotion* );
 
+        //! start dragging widget
+        bool startDrag( GtkWidget*, int, int );
+
         //! finish dragging widget
         bool finishDrag( GtkWidget* );
 
@@ -167,6 +170,10 @@ namespace Oxygen
 
         //! drag delay
         int _dragDelay;
+
+        //! drag position
+        int _x;
+        int _y;
 
         //! map widgets to data structure
         DataMap<Data> _map;

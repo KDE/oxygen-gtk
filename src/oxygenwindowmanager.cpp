@@ -45,7 +45,9 @@ namespace Oxygen
         _mode( Full ),
         _drag( false ),
         _dragDistance( 4 ),
-        _dragDelay( 500 )
+        _dragDelay( 500 ),
+        _x(-1),
+        _y(-1)
     {}
 
     //_________________________________________________
@@ -158,6 +160,11 @@ namespace Oxygen
         else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
 
+            // store event position
+            _x = event->x_root;
+            _y = event->y_root;
+
+            // enable drag and accept
             _drag = true;
             return true;
 
@@ -168,8 +175,22 @@ namespace Oxygen
     bool WindowManager::startDrag( GtkWidget* widget, GdkEventMotion* event )
     {
 
+        // make sure drag is enabled
         if( !_drag ) return false;
 
+        // check displacement with respect to drag start
+        const int distance( abs( _x - event->x_root ) + abs( _y - event->y_root ) );
+        if( distance < _dragDistance ) return false;
+
+        // start drag from current position
+        return startDrag( widget, event->x_root, event->y_root );
+
+    }
+
+    //_________________________________________________________________
+    bool WindowManager::startDrag( GtkWidget* widget, int x, int y )
+    {
+        // create xevent and send.
         XEvent     xev;
         GtkWindow  *topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
         GdkWindow  *window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
@@ -181,8 +202,8 @@ namespace Oxygen
         xev.xclient.display = GDK_DISPLAY_XDISPLAY(display);
         xev.xclient.window = GDK_WINDOW_XID(window);
         xev.xclient.format = 32;
-        xev.xclient.data.l[0] = event->x_root;
-        xev.xclient.data.l[1] = event->y_root;
+        xev.xclient.data.l[0] = x;
+        xev.xclient.data.l[1] = y;
         xev.xclient.data.l[2] = 8; // NET::Move
         xev.xclient.data.l[3] = Button1;
         xev.xclient.data.l[4] = 0;
@@ -197,9 +218,7 @@ namespace Oxygen
 
         // force a release as some widgets miss it...
         wmButtonRelease( widget, 0L, this );
-
         return true;
-
     }
 
     //_________________________________________________
@@ -210,6 +229,8 @@ namespace Oxygen
 
             gtk_grab_remove(widget);
             gdk_pointer_ungrab( CurrentTime );
+            _x = -1;
+            _y = -1;
             _drag = false;
             return true;
 
