@@ -319,54 +319,53 @@ namespace Oxygen
                 GList *children = gtk_container_get_children( GTK_CONTAINER( c ) );
                 for( GList *child = g_list_first( children ); child && usable ; child = g_list_next( child ) )
                 {
-                    if( child->data )
-                    {
-                        if( GTK_IS_CONTAINER( child->data ) )
-                        { containers = g_list_prepend( containers, child->data ); }
+
+                    // check child
+                    if( !GTK_IS_WIDGET( child->data ) ) continue;
+
+                    if( GTK_IS_CONTAINER( child->data ) )
+                    { containers = g_list_prepend( containers, child->data ); }
+
+                    GtkWidget* childWidget( GTK_WIDGET( child->data ) );
+                    if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT ) {
 
                         // if widget is prelight, we don't need to check where event happen,
                         // any prelight widget indicate we can't do a move
-                        if( GTK_WIDGET_STATE( GTK_WIDGET( child->data ) ) == GTK_STATE_PRELIGHT )
+                        usable = false;
+
+                    } else if(
+                        !GTK_IS_NOTEBOOK ( childWidget ) &&
+                        event &&
+                        withinWidget( childWidget, event ) )
+                    {
+
+                        GdkWindow *window = gtk_widget_get_window( childWidget );
+                        if( window && gdk_window_is_visible ( window ) )
                         {
 
-                            usable = false;
+                            // TODO: one could probably check here whether widget is enabled or not,
+                            // and accept if widget is disabled.
 
-                        } else if(
-                            GTK_IS_WIDGET( child->data ) &&
-                            !GTK_IS_NOTEBOOK ( child->data ) &&
-                            event &&
-                            withinWidget( GTK_WIDGET( child->data ), event ) ) {
-
-                            // if event happen in widget
-                            // check not a notebook: event in but notebook don't get it...
-                            GdkWindow *window = gtk_widget_get_window( GTK_WIDGET ( child->data ) );
-                            if( window && gdk_window_is_visible ( window ) )
+                            if( gtk_widget_get_events ( childWidget ) & GDK_BUTTON_PRESS_MASK )
                             {
 
-                                // TODO: one could probably check here whether widget is enabled or not,
-                                // and accept if widget is disabled.
+                                // widget listening to press event
+                                usable = false;
 
-                                if( gtk_widget_get_events ( GTK_WIDGET( child->data ) ) & GDK_BUTTON_PRESS_MASK )
-                                {
-
-                                    // widget listening to press event
-                                    usable = false;
-
-                                } else if(
-                                    GTK_IS_MENU_ITEM( G_OBJECT( child->data ) ) ||
-                                    GTK_IS_SCROLLED_WINDOW( G_OBJECT( child->data ) ) )
-                                {
-                                    // deal with menu item, GtkMenuItem only listen to
-                                    // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
-                                    // so previous check are invalids :(
-                                    //
-                                    // same for ScrolledWindow, they do not send motion events
-                                    // to parents so not usable
-                                    usable = false;
-
-                                }
+                            } else if(
+                                GTK_IS_MENU_ITEM( G_OBJECT( child->data ) ) ||
+                                GTK_IS_SCROLLED_WINDOW( G_OBJECT( child->data ) ) )
+                            {
+                                // deal with menu item, GtkMenuItem only listen to
+                                // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
+                                // so previous check are invalids :(
+                                //
+                                // same for ScrolledWindow, they do not send motion events
+                                // to parents so not usable
+                                usable = false;
 
                             }
+
                         }
                     }
                 }
