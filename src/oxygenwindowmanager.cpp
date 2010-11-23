@@ -46,6 +46,7 @@ namespace Oxygen
         _drag( false ),
         _dragDistance( 4 ),
         _dragDelay( 500 ),
+        _widget( 0L ),
         _x(-1),
         _y(-1)
     {}
@@ -93,6 +94,15 @@ namespace Oxygen
 
         _map.value( widget ).disconnect( widget );
         _map.erase( widget );
+
+        if( _widget == widget )
+        {
+            _widget = 0L;
+            _x = -1;
+            _y = -1;
+            _drag = false;
+        }
+
     }
 
     //_________________________________________________
@@ -115,21 +125,21 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::wmStyleSet( GtkWidget* widget, GtkStyle* , gpointer data )
+    gboolean WindowManager::wmStyleSet( GtkWidget* widget, GtkStyle* , gpointer data )
     {
         static_cast<WindowManager*>(data)->unregisterWidget( widget );
         return false;
     }
 
     //_________________________________________________
-    bool WindowManager::wmDestroy( GtkWidget* widget, gpointer data )
+    gboolean WindowManager::wmDestroy( GtkWidget* widget, gpointer data )
     {
         static_cast<WindowManager*>(data)->unregisterWidget( widget );
         return false;
     }
 
     //_________________________________________________
-    bool WindowManager::wmButtonPress(GtkWidget *widget, GdkEventButton* event, gpointer data )
+    gboolean WindowManager::wmButtonPress(GtkWidget *widget, GdkEventButton* event, gpointer data )
     {
 
         if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
@@ -142,16 +152,23 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton*, gpointer data )
+    gboolean WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton*, gpointer data )
     { return static_cast<WindowManager*>( data )->finishDrag( widget ); }
 
     //_________________________________________________
-    bool WindowManager::wmLeave(GtkWidget *widget, GdkEventCrossing*, gpointer data )
+    gboolean WindowManager::wmLeave(GtkWidget *widget, GdkEventCrossing*, gpointer data )
     { return static_cast<WindowManager*>( data )->finishDrag( widget ); }
 
     //_________________________________________________
-    bool WindowManager::wmMotion( GtkWidget *widget, GdkEventMotion* event, gpointer data )
+    gboolean WindowManager::wmMotion( GtkWidget *widget, GdkEventMotion* event, gpointer data )
     { return static_cast<WindowManager*>(data)->startDrag( widget, event ); }
+
+    //_________________________________________________________________
+    gboolean WindowManager::startDelayedDrag( gpointer data )
+    {
+        static_cast<WindowManager*>( data )->startDrag();
+        return FALSE;
+    }
 
     //_________________________________________________
     bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
@@ -160,9 +177,14 @@ namespace Oxygen
         else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
 
-            // store event position
+            // store widget and event position
+            _widget = widget;
             _x = event->x_root;
             _y = event->y_root;
+
+            // start timer
+            if( _timer.isRunning() ) _timer.stop();
+            _timer.start( _dragDelay, (GSourceFunc)startDelayedDrag, this );
 
             // enable drag and accept
             _drag = true;
@@ -180,6 +202,8 @@ namespace Oxygen
 
         // check displacement with respect to drag start
         const int distance( abs( _x - event->x_root ) + abs( _y - event->y_root ) );
+
+        if( distance > 0 && _timer.isRunning() ) _timer.stop();
         if( distance < _dragDistance ) return false;
 
         // start drag from current position
@@ -224,13 +248,16 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::finishDrag( GtkWidget* widget )
     {
+
+        _widget = 0L;
+        _x = -1;
+        _y = -1;
+
         if( _drag )
         {
 
             gtk_grab_remove(widget);
             gdk_pointer_ungrab( CurrentTime );
-            _x = -1;
-            _y = -1;
             _drag = false;
             return true;
 

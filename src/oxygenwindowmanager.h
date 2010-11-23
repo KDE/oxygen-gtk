@@ -32,8 +32,9 @@
 * IN THE SOFTWARE.
 */
 
-#include "animations/oxygensignal.h"
-#include "animations/oxygendatamap.h"
+#include "oxygensignal.h"
+#include "oxygentimer.h"
+#include "oxygendatamap.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -84,22 +85,25 @@ namespace Oxygen
         //@{
 
         //! on motion event
-        static bool wmMotion( GtkWidget*, GdkEventMotion*, gpointer );
+        static gboolean wmMotion( GtkWidget*, GdkEventMotion*, gpointer );
 
         //! on button press
-        static bool wmButtonPress( GtkWidget*, GdkEventButton*, gpointer );
+        static gboolean wmButtonPress( GtkWidget*, GdkEventButton*, gpointer );
 
         //! on button release
-        static bool wmButtonRelease(GtkWidget*, GdkEventButton*, gpointer );
+        static gboolean wmButtonRelease(GtkWidget*, GdkEventButton*, gpointer );
 
         //! on mouse leave
-        static bool wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
+        static gboolean wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
 
         //! on style change
-        static bool wmStyleSet( GtkWidget*, GtkStyle*, gpointer );
+        static gboolean wmStyleSet( GtkWidget*, GtkStyle*, gpointer );
 
         //! on window destroy
-        static bool wmDestroy( GtkWidget*, gpointer );
+        static gboolean wmDestroy( GtkWidget*, gpointer );
+
+        //! delayed drag
+        static gboolean startDelayedDrag( gpointer );
 
         //@}
 
@@ -108,6 +112,10 @@ namespace Oxygen
 
         //! start dragging widget
         bool startDrag( GtkWidget*, int, int );
+
+        //! start dragging widget
+        void startDrag( void )
+        { if( _drag && _widget ) startDrag( _widget, _x, _y ); }
 
         //! finish dragging widget
         bool finishDrag( GtkWidget* );
@@ -162,6 +170,9 @@ namespace Oxygen
         //! drag mode
         Mode _mode;
 
+        //! timer
+        Timer _timer;
+
         //! true if in drag mode
         bool _drag;
 
@@ -170,6 +181,9 @@ namespace Oxygen
 
         //! drag delay
         int _dragDelay;
+
+        //! active widget
+        GtkWidget* _widget;
 
         //! drag position
         int _x;
