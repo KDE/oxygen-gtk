@@ -134,6 +134,11 @@ namespace Oxygen
 
         }
 
+        //! retrieve internal map
+        typedef std::map<GtkWidget*, T> Map;
+        Map& map( void )
+        { return _map; }
+
         protected:
 
         //! copy constructor is private
@@ -156,7 +161,6 @@ namespace Oxygen
         T* _lastData;
 
         //! internal map between widget and data
-        typedef std::map<GtkWidget*, T> Map;
         Map _map;
 
     };
