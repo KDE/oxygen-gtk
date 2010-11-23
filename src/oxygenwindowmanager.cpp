@@ -146,7 +146,8 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
     {
-        if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
+        if( mode() == Disabled ) return false;
+        else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
 
             _drag = true;
@@ -239,6 +240,9 @@ namespace Oxygen
     bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event )
     {
 
+        if( mode() == Disabled ) return false;
+        else if( mode() == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+
         bool usable( true );
         if( GTK_IS_NOTEBOOK( widget ) )
         {
@@ -279,11 +283,12 @@ namespace Oxygen
 
                             // if event happen in widget
                             // check not a notebook: event in but notebook don't get it...
-
-                            // here deal with notebook: widget may be not visible
                             GdkWindow *window = gtk_widget_get_window( GTK_WIDGET ( child->data ) );
                             if( window && gdk_window_is_visible ( window ) )
                             {
+
+                                // TODO: one could probably check here whether widget is enabled or not,
+                                // and accept if widget is disabled.
 
                                 if( gtk_widget_get_events ( GTK_WIDGET( child->data ) ) & GDK_BUTTON_PRESS_MASK )
                                 {
