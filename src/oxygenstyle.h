@@ -33,7 +33,7 @@
 #include "oxygentileset.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindecobutton.h"
-
+#include "oxygenwindowmanager.h"
 #include <gdk/gdk.h>
 
 namespace Oxygen
@@ -75,6 +75,10 @@ namespace Oxygen
         //! animations
         Animations& animations( void )
         { return _animations; }
+
+        //! window manager
+        WindowManager& windowManager( void )
+        { return _windowManager; }
 
         //!@name primitives
         //@{
@@ -354,6 +358,9 @@ namespace Oxygen
 
         // animations
         Animations _animations;
+
+        //! window manager
+        WindowManager _windowManager;
 
         //! singleton
         static Style* _instance;

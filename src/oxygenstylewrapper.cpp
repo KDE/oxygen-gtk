@@ -38,6 +38,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
+#include "oxygenwindowmanager.h"
 
 #include <iostream>
 
@@ -100,10 +101,18 @@ namespace Oxygen
 
             }
 
+            if( !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isOpenOffice() )
+            { Style::instance().windowManager().registerWidget( widget ); }
+
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
         } else if( d.isViewportBin() ) {
+
+            if( !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isOpenOffice() )
+            { Style::instance().windowManager().registerWidget( widget ); }
 
             GdkColor bg=style->bg[state];
             GdkColor defbg=gtk_widget_get_default_style()->bg[state];
@@ -499,6 +508,13 @@ namespace Oxygen
             // check if it's PathBar toggle button
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
+                // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+                std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
+
+                // NautilusPathBar doesn't have any problem so only for GtkPathBar
+                if( !Style::instance().settings().applicationName().isMozilla() &&
+                    !Style::instance().settings().applicationName().isOpenOffice() && name == "GtkPathBar" )
+                { Style::instance().windowManager().registerWidget( widget ); }
 
                 Style::instance().animations().hoverEngine().registerWidget( widget );
 
@@ -668,6 +684,10 @@ namespace Oxygen
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
 
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+            if( !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isOpenOffice() )
+            { Style::instance().windowManager().registerWidget( widget ); }
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
@@ -1801,6 +1821,11 @@ namespace Oxygen
         const Gtk::Detail d( detail );
         if( d.isNotebook() )
         {
+
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+            if( !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isOpenOffice() )
+            { Style::instance().windowManager().registerWidget( widget ); }
 
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
