@@ -38,7 +38,7 @@ namespace Oxygen
             Disabled, // this shouldn't be specified by WMs unless button is really insensitive
             Hovered,
             Pressed,
-	    ButtonStatusCount
+            ButtonStatusCount
         };
 
         //! buttons

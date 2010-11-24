@@ -51,6 +51,9 @@ namespace Oxygen
             TooltipText,
             Focus,
             Hover,
+            // negative text & view hover are used by windeco code
+            NegativeText,
+            ViewHover,
             NumColors
         };
 

@@ -43,11 +43,20 @@ namespace Oxygen
         cairo_translate( context, x, y );
 
         const ColorUtils::Rgba base( settings().palette().color( _state == Disabled ? Palette::Disabled : Palette::Active, Palette::Window ) );
-        const ColorUtils::Rgba shadow( ColorUtils::Rgba::black() );
+        ColorUtils::Rgba shadow( settings().palette().color( Palette::WindowText ) );
+        ColorUtils::Rgba icon(shadow);
         const double scale( (21.0*settings().buttonSize())/22.0 );
 
         // draw shadow
-        // FIXME: change shadow color depending on button state
+        if(_state==Hovered)
+        {
+            shadow=(_type==ButtonClose)?
+                ColorUtils::Rgba( settings().palette().color( Palette::NegativeText ) ):
+                ColorUtils::Rgba( settings().palette().color( Palette::ViewHover ) );
+            shadow=darkColor(shadow);
+            icon=shadow;
+        }
+
         GdkPixbuf *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
         gdk_cairo_set_source_pixbuf( context, windecoButtonGlow, 0, 0 );
         cairo_rectangle( context, 0, 0, w, h );
@@ -71,8 +80,12 @@ namespace Oxygen
 
         cairo_translate( context, 0, -1.5 );
 
-        // FIXME: change icon color depending on button state
-        cairo_set_source( context, settings().palette().color( Palette::WindowText ) );
+        if(_state==Disabled)
+        {
+            icon=ColorUtils::Rgba( settings().palette().color( Palette::Disabled, Palette::WindowText ) );
+        }
+        cairo_set_source( context, icon );
+
         drawIcon( context, w, h );
         cairo_restore( context );
 
