@@ -133,7 +133,7 @@ namespace Oxygen
 
             // adjust event mask
             if( !GTK_IS_TREE_VIEW( widget ) )
-            { gtk_widget_add_events( widget, GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK ); }
+            { gtk_widget_add_events( widget, GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK|GDK_FOCUS_CHANGE_MASK ); }
 
             // allocate new Hover data
             ChildData data;
@@ -232,7 +232,7 @@ namespace Oxygen
     { static_cast<ScrolledWindowData*>(data)->unregisterChild( widget ); }
 
     //________________________________________________________________________________
-    gboolean ScrolledWindowData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ScrolledWindowData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing* event, gpointer data )
     {
 
         #if OXYGEN_DEBUG
@@ -241,12 +241,14 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        static_cast<ScrolledWindowData*>( data )->setHovered( widget, true );
+        if( !(event->state & (GDK_BUTTON1_MASK|GDK_BUTTON2_MASK) ) )
+        { static_cast<ScrolledWindowData*>( data )->setHovered( widget, true ); }
+
         return FALSE;
     }
 
     //________________________________________________________________________________
-    gboolean ScrolledWindowData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ScrolledWindowData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing* event, gpointer data )
     {
 
         #if OXYGEN_DEBUG
@@ -255,7 +257,9 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        static_cast<ScrolledWindowData*>( data )->setHovered( widget, false );
+        if( !(event->state & (GDK_BUTTON1_MASK|GDK_BUTTON2_MASK) ) )
+        { static_cast<ScrolledWindowData*>( data )->setHovered( widget, false ); }
+
         return FALSE;
     }
 
