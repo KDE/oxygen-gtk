@@ -179,8 +179,8 @@ namespace Oxygen
 
             // store widget and event position
             _widget = widget;
-            _x = event->x_root;
-            _y = event->y_root;
+            _x = int(event->x_root);
+            _y = int(event->y_root);
 
             // start timer
             if( _timer.isRunning() ) _timer.stop();
@@ -201,13 +201,13 @@ namespace Oxygen
         if( !_drag ) return false;
 
         // check displacement with respect to drag start
-        const int distance( abs( _x - event->x_root ) + abs( _y - event->y_root ) );
+        const int distance( abs( _x - int(event->x_root) ) + abs( _y - int(event->y_root) ) );
 
         if( distance > 0 && _timer.isRunning() ) _timer.stop();
         if( distance < _dragDistance ) return false;
 
         // start drag from current position
-        return startDrag( widget, event->x_root, event->y_root );
+        return startDrag( widget, int(event->x_root), int(event->y_root) );
 
     }
 
@@ -288,7 +288,7 @@ namespace Oxygen
         allocation.x += nx;
         allocation.y += ny;
 
-        return Gtk::gdk_rectangle_contains( &allocation, event->x_root, event->y_root );
+        return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
 
     }
 
