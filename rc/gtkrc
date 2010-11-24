@@ -92,13 +92,14 @@ class "GtkMenuBar" style "oxygen-menubar"
 style "oxygen-menubaritem" = "oxygen-default"
 {
     xthickness = 3
-    ythickness = 1
+#    ythickness = 1
 }
 
 style "oxygen-menuitem" = "oxygen-default"
 {
     xthickness = 1
-    ythickness = 3
+#    ythickness = 3
+    ythickness = 5
 }
 
 style "oxygen-separator-menuitem" = "oxygen-default"
