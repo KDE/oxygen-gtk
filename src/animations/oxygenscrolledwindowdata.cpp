@@ -38,6 +38,15 @@ namespace Oxygen
         // store target
         _target = widget;
 
+        // register scrollbars
+        GtkScrolledWindow* scrolledWindow( GTK_SCROLLED_WINDOW( widget ) );
+
+        if( GtkWidget* hScrollBar = gtk_scrolled_window_get_hscrollbar( scrolledWindow ) )
+        { registerChild( hScrollBar ); }
+
+        if( GtkWidget* vScrollBar = gtk_scrolled_window_get_vscrollbar( scrolledWindow ) )
+        { registerChild( vScrollBar ); }
+
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
 
