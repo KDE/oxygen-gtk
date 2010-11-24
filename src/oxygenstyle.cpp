@@ -2125,7 +2125,7 @@ namespace Oxygen
         if(type>=WinDeco::ButtonTypeCount || buttonState>=WinDeco::ButtonStatusCount)
         { return; }
 
-        if( (windowState & ~WinDeco::Active) && buttonState == WinDeco::Normal )
+        if( !(windowState & WinDeco::Active) && buttonState == WinDeco::Normal )
         {
             // draw Oxygen-way disabled button on inactive window
             buttonState=WinDeco::Disabled;
