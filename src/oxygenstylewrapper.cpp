@@ -920,14 +920,14 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         if( d.isScrolledWindow() &&
+            shadow != GTK_SHADOW_IN &&
             GTK_IS_SCROLLED_WINDOW( widget ) &&
             GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
         {
 
             // make sure that scrolled windows containing a treeView have sunken frame
-            // FIXME: this does not work for scrolled-windows with which no shadow is set,
-            // because the method is simply not called.
             shadow = GTK_SHADOW_IN;
+            gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
 
         } else if( d.isEntry() && shadow != GTK_SHADOW_IN ) {
 
@@ -1193,14 +1193,17 @@ namespace Oxygen
                 this should improve rendering of most mandriva drake tools
                 */
                 GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-                GtkScrolledWindow* scrolledWindow(0L);
                 if(
                     GTK_IS_SCROLLED_WINDOW( child ) &&
-                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) &&
-                    gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( child ) ) ) == GTK_SHADOW_NONE )
+                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) )
                 {
                     gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_NONE );
-                    gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
+
+                    // also change scrolled window shadow if needed
+                    GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
+                    if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
+                    { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
+
                     return;
                 }
 

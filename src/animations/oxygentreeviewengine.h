@@ -52,25 +52,7 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* widget )
-        {
-            if( GenericEngine<TreeViewData>::registerWidget( widget ) )
-            {
-                if( GTK_IS_TREE_VIEW( widget ) )
-                {
-
-                    // always enable expander, and disable treelines.
-                    /* tree lines are rendered by the style, in order to be able to draw them with custom color */
-                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                    gtk_tree_view_set_show_expanders( treeView, true );
-                    gtk_tree_view_set_enable_tree_lines( treeView, false );
-                }
-
-                return true;
-
-            } else return false;
-
-        }
+        virtual bool registerWidget( GtkWidget* widget );
 
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )
