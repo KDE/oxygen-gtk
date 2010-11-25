@@ -1624,19 +1624,14 @@ namespace Oxygen
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
         const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
-        if( isInMenu )
+        if( wh > 0 )
         {
-
-            if( wh > 0 ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-            else base = ColorUtils::alphaColor( ColorUtils::darkColor( settings().palette().color( Palette::Window ) ), 0.3 );
-
-        } else if( wh > 0 ) {
-
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            if( isInMenu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
 
-            base = ColorUtils::backgroundTopColor( settings().palette().color( Palette::Window ) );
+            base = settings().palette().color( Palette::Window );
 
         }
 
@@ -1653,7 +1648,7 @@ namespace Oxygen
             if( (options & Sunken) || isInMenu ) color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Selected ), 0.6 ) );
             else color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Hover ), 0.6 ) );
 
-        } else if( !( isInMenu && wh<= 0 ) ) color = ColorUtils::midColor( color );
+        } else color = ColorUtils::midColor( color );
 
         // adjust vertical extent of the rect in menus
         if( isInMenu )
