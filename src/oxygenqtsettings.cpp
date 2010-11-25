@@ -481,9 +481,9 @@ namespace Oxygen
             defaultFont = FontInfo::fromKdeOption( _kdeGlobals.getValue( "[General]", "font", "" ) );
 
         } else {
-
+#if OXYGEN_DEBUG
             std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load default font" << std::endl;
-
+#endif
         }
 
         fonts[FontInfo::Default] = defaultFont;
@@ -504,8 +504,9 @@ namespace Oxygen
                 local = FontInfo::fromKdeOption( _kdeGlobals.getValue( "[General]", iter->second, "" ) );
 
             } else {
-
+#if OXYGEN_DEBUG
                 std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load font named " << iter->second << std::endl;
+#endif
                 local = defaultFont;
 
             }
