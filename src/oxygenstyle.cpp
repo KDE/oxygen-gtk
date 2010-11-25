@@ -104,9 +104,11 @@ namespace Oxygen
     //__________________________________________________________________
     bool Style::renderWindowBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
+
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
 
         bool needToDestroyContext;
+
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
 
@@ -1650,12 +1652,9 @@ namespace Oxygen
 
         } else color = ColorUtils::midColor( color );
 
-        // adjust vertical extent of the rect in menus
-        if( isInMenu )
-        {
-            y+=1;
-            h-=2;
-        }
+        // adjust vertical extent
+        y+=1;
+        h-=2;
 
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )
