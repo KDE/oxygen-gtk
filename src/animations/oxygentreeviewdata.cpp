@@ -256,7 +256,14 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
-        static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y );
+
+        // check event
+        if( !( event && event->window ) ) return FALSE;
+
+        // make sure event window is treeview's bin window
+        if( GTK_IS_TREE_VIEW( widget ) && gtk_tree_view_get_bin_window( GTK_TREE_VIEW( widget ) ) == event->window )
+        { static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y ); }
+
         return FALSE;
     }
 

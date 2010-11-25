@@ -132,8 +132,7 @@ namespace Oxygen
             #endif
 
             // adjust event mask
-            if( !GTK_IS_TREE_VIEW( widget ) )
-            { gtk_widget_add_events( widget, GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK|GDK_FOCUS_CHANGE_MASK ); }
+            gtk_widget_add_events( widget, GDK_ENTER_NOTIFY_MASK|GDK_LEAVE_NOTIFY_MASK|GDK_FOCUS_CHANGE_MASK );
 
             // allocate new Hover data
             ChildData data;
