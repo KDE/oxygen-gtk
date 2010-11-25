@@ -1652,8 +1652,8 @@ namespace Oxygen
         } else color = ColorUtils::midColor( color );
 
 
-        // we force ytickness in gtkrc to emulate Qt menuitem space separation
-        // so adjust vertical extent of the rect in menus
+        // we force ytickness in gtkrc to emulate Qt menubar/menu space separation
+        // so adjust vertical extent of the rect in menubar
         if( isInMenuBar )
         {
             if( settings().applicationName().isMozilla() )
@@ -1667,16 +1667,18 @@ namespace Oxygen
                 h-=2;
             }
         }
+        // we force ytickness to 5 in gtkrc to emulate Qt menuitems space separation
+        // so adjust vertical extent of the rect in menus to 21 (size with standard ytickness)
         else if ( isInMenu )
-        {   
-            if( h > 26 )
+        {
+            if( h > 27 )
             {
-                y+=3;
-                h-=6;
+                y+=4;
+                h-=7;
             }
             else
             {
-                y+=(h-20)/2;
+                y+=(h-21)/2;
                 h=21;
             }
         }
