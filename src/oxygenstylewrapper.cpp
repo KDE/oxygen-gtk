@@ -920,6 +920,8 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         // make sure that scrolled windows containing a treeView have sunken frame
+        // FIXME: this does not work for scrolled-windows with which no shadow is set,
+        // because the method is simply not called.
         if( d.isScrolledWindow() &&
             GTK_IS_SCROLLED_WINDOW( widget ) &&
             GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
