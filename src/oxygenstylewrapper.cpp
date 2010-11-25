@@ -1225,7 +1225,9 @@ namespace Oxygen
         } else if( shadow == GTK_SHADOW_OUT ) {
 
             // default shadow_out frame
-            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,Blend);
+            StyleOptions options( Blend );
+            options |= NoFill;
+            Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
 
         }
 
