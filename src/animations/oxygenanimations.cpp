@@ -35,6 +35,7 @@ namespace Oxygen
         // create engines
         registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
         registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
+        registerEngine( _dialogEngine = new DialogEngine( this ) );
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
