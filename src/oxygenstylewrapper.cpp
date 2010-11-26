@@ -87,9 +87,14 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox())
         {
 
+            // no background in openoffice toolbars
             if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
             { return; }
 
+            // no background in comboboxes windows
+            if( Gtk::gtk_combobox_is_window( widget ) ) return;
+
+            // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )
             {
 
