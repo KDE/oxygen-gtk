@@ -92,7 +92,7 @@ namespace Oxygen
             { return; }
 
             // Only for movable base window
-            if( Gtk::gdk_window_is_movable( window ) ) return;
+            if( !Gtk::gdk_window_is_movable( window ) ) return;
 
             // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )
