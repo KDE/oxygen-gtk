@@ -57,7 +57,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_TEXT_VIEW( child ) )
+        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_TEXT_VIEW( child ) || GTK_IS_ICON_VIEW( child ) )
         {
 
             registerChild( child );
@@ -65,7 +65,7 @@ namespace Oxygen
         } else {
 
             // list widget types for which scrolled window needs register
-            static const char* widgetTypes[] = { "ExoIconView", "GeditView", "FMIconContainer", 0L };
+            static const char* widgetTypes[] = { "ExoIconView", "FMIconContainer", 0L };
             for( unsigned int i = 0; widgetTypes[i]; i++ )
             {
                 if( Gtk::gtk_object_is_a( G_OBJECT( child ), widgetTypes[i] ) )
