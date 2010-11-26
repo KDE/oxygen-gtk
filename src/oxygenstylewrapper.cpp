@@ -86,7 +86,7 @@ namespace Oxygen
         bool accepted( false );
         if( d.isBase() || d.isEventBox())
         {
-            
+
             // no background in openoffice toolbars
             if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
             { return; }
