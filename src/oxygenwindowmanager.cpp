@@ -278,7 +278,7 @@ namespace Oxygen
     {
 
         // get widget window
-        GdkWindow *window( gtk_widget_get_window( widget ) );
+        GdkWindow *window( gtk_widget_get_parent_window( widget ) );
 
         // Some widgets aren't realized (GeditWindow for exemple) ...
         if( !window ) return true;
