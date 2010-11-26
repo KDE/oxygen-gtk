@@ -266,7 +266,7 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::withinWidget( GtkWidget* widget, GdkEventButton* event )
+    bool WindowManager::withinWidget( GtkWidget* widget, GdkEventButton* event ) const
     {
 
         GdkWindow *window( gtk_widget_get_parent_window( widget ) );
@@ -293,7 +293,7 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event )
+    bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event ) const
     {
 
         // check against mode
@@ -305,8 +305,19 @@ namespace Oxygen
 
         // if widget is a notebook, accept if there is no hovered tab
         if( GTK_IS_NOTEBOOK( widget ) )
-        { return Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1; }
+        {
+            return
+                Style::instance().animations().tabWidgetEngine().contains( widget ) &&
+                Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1;
+        }
 
+        return childrenUseEvent( widget, event );
+
+    }
+
+    //_________________________________________________
+    bool WindowManager::childrenUseEvent( GtkWidget* widget, GdkEventButton* event ) const
+    {
         // accept, by default
         bool usable = true;
 
@@ -359,7 +370,7 @@ namespace Oxygen
 
             // if child is a container and event has been accepted so far, also check it, recursively
             if( usable && GTK_IS_CONTAINER( childWidget ) )
-            { usable = useEvent( childWidget, event ); }
+            { usable = childrenUseEvent( childWidget, event ); }
 
         }
 

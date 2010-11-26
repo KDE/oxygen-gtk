@@ -124,14 +124,14 @@ namespace Oxygen
         bool isWindowDragWidget( GtkWidget*, GdkEventButton* );
 
         //! return true if event happen in widget
-        bool withinWidget( GtkWidget*, GdkEventButton* );
+        bool withinWidget( GtkWidget*, GdkEventButton* ) const;
 
         //! return true if event is a usable drag event
-        bool useEvent( GtkWidget*, GdkEventButton* );
+        bool useEvent( GtkWidget*, GdkEventButton* ) const;
 
         //! return true if event is a usable drag event
         /*! for containers, children are also checked. The method is recursive */
-        bool childrenUseEvent( GtkWidget*, GdkEventButton* );
+        bool childrenUseEvent( GtkWidget*, GdkEventButton* ) const;
 
         //! stores connections
         class Data
