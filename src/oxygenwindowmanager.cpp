@@ -309,9 +309,6 @@ namespace Oxygen
         if( _mode == Disabled ) return false;
         if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
 
-        // check that button press is inside widget
-        if( !withinWidget( widget, event ) ) return false;
-
         // always accept if widget is not a container
         if( !GTK_IS_CONTAINER( widget ) ) return true;
 
