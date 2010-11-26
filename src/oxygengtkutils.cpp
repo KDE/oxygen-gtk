@@ -90,7 +90,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gdk_window_is_movable( GdkWindow* window )
+    bool Gtk::gdk_window_is_base( GdkWindow* window )
     {
         GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
         return( hint == GDK_WINDOW_TYPE_HINT_NORMAL || hint == GDK_WINDOW_TYPE_HINT_DIALOG );

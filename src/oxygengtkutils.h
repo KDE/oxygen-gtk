@@ -64,8 +64,8 @@ namespace Oxygen
         //! returns true if window supports rgba
         bool gdk_window_has_rgba( GdkWindow* );
 
-        //! returns true if window is a movable window
-        bool gdk_window_is_movable( GdkWindow* );
+        //! returns true if window is a base window
+        bool gdk_window_is_base( GdkWindow* );
         
         //! true if object match a given type
         bool gtk_object_is_a( const GObject*, const std::string& );
