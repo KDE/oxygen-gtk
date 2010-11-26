@@ -129,6 +129,10 @@ namespace Oxygen
         //! return true if event is a usable drag event
         bool useEvent( GtkWidget*, GdkEventButton* );
 
+        //! return true if event is a usable drag event
+        /*! for containers, children are also checked. The method is recursive */
+        bool childrenUseEvent( GtkWidget*, GdkEventButton* );
+
         //! stores connections
         class Data
         {

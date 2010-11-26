@@ -296,84 +296,76 @@ namespace Oxygen
     bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event )
     {
 
+        // check against mode
         if( _mode == Disabled ) return false;
-        else if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+        if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
 
-        bool usable( true );
+        // always accept if widget is not a container
+        if( !GTK_IS_CONTAINER( widget ) ) return true;
+
+        // if widget is a notebook, accept if there is no hovered tab
         if( GTK_IS_NOTEBOOK( widget ) )
+        { return Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1; }
+
+        // accept, by default
+        bool usable = true;
+
+        // get children and check
+        GList *children = gtk_container_get_children( GTK_CONTAINER( widget ) );
+        for( GList *child = g_list_first( children ); child && usable ; child = g_list_next( child ) )
         {
-            // check if there is an hovered tab
-            if( Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) != -1 )
-            { usable = false; }
 
-        } else if(GTK_IS_CONTAINER( widget ) ) {
+            // cast child to GtkWidget
+            if( !GTK_IS_WIDGET( child->data ) ) continue;
+            GtkWidget* childWidget( GTK_WIDGET( child->data ) );
 
-            // need to check all children that may be listening to event
-            GList *containers(0L);
-            containers = g_list_prepend( containers, widget );
+            // check widget state and type
+            if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT ) {
 
-            while( g_list_length( containers ) )
-            {
+                // if widget is prelight, we don't need to check where event happen,
+                // any prelight widget indicate we can't do a move
+                usable = false;
 
-                GtkContainer *c = GTK_CONTAINER( g_list_nth_data(containers, 0) );
-                GList *children = gtk_container_get_children( GTK_CONTAINER( c ) );
-                for( GList *child = g_list_first( children ); child && usable ; child = g_list_next( child ) )
+            } else if( !GTK_IS_NOTEBOOK ( childWidget ) && event && withinWidget( childWidget, event ) ) {
+
+                GdkWindow *window = gtk_widget_get_window( childWidget );
+                if( window && gdk_window_is_visible ( window ) )
                 {
 
-                    // check child
-                    if( !GTK_IS_WIDGET( child->data ) ) continue;
+                    // TODO: one could probably check here whether widget is enabled or not,
+                    // and accept if widget is disabled.
 
-                    if( GTK_IS_CONTAINER( child->data ) )
-                    { containers = g_list_prepend( containers, child->data ); }
+                    if( gtk_widget_get_events ( childWidget ) & GDK_BUTTON_PRESS_MASK )
+                    {
 
-                    GtkWidget* childWidget( GTK_WIDGET( child->data ) );
-                    if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT ) {
-
-                        // if widget is prelight, we don't need to check where event happen,
-                        // any prelight widget indicate we can't do a move
+                        // widget listening to press event
                         usable = false;
 
                     } else if(
-                        !GTK_IS_NOTEBOOK ( childWidget ) &&
-                        event &&
-                        withinWidget( childWidget, event ) )
+                        GTK_IS_MENU_ITEM( childWidget ) ||
+                        GTK_IS_SCROLLED_WINDOW( childWidget ) )
                     {
+                        // deal with menu item, GtkMenuItem only listen to
+                        // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
+                        // so previous check are invalids :(
+                        //
+                        // same for ScrolledWindow, they do not send motion events
+                        // to parents so not usable
+                        usable = false;
 
-                        GdkWindow *window = gtk_widget_get_window( childWidget );
-                        if( window && gdk_window_is_visible ( window ) )
-                        {
-
-                            // TODO: one could probably check here whether widget is enabled or not,
-                            // and accept if widget is disabled.
-
-                            if( gtk_widget_get_events ( childWidget ) & GDK_BUTTON_PRESS_MASK )
-                            {
-
-                                // widget listening to press event
-                                usable = false;
-
-                            } else if(
-                                GTK_IS_MENU_ITEM( G_OBJECT( child->data ) ) ||
-                                GTK_IS_SCROLLED_WINDOW( G_OBJECT( child->data ) ) )
-                            {
-                                // deal with menu item, GtkMenuItem only listen to
-                                // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
-                                // so previous check are invalids :(
-                                //
-                                // same for ScrolledWindow, they do not send motion events
-                                // to parents so not usable
-                                usable = false;
-
-                            }
-
-                        }
                     }
                 }
-
-                if( children ) g_list_free( children );
-                containers = g_list_remove( containers, c );
             }
+
+            // if child is a container and event has been accepted so far, also check it, recursively
+            if( usable && GTK_IS_CONTAINER( childWidget ) )
+            { usable = useEvent( childWidget, event ); }
+
         }
+
+        // free list
+        if( children ) g_list_free( children );
+
         return usable;
     }
 
