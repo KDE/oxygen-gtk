@@ -68,7 +68,7 @@ namespace Oxygen
             else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
 
             if( shadow == GTK_SHADOW_IN ) (*this) |= Sunken;
-            if( gtk_widget_has_focus(widget) ) (*this)|=Focus;
+            if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
         }
 
         //! destructor
