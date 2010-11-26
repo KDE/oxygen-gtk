@@ -86,8 +86,7 @@ namespace Oxygen
         bool accepted( false );
         if( d.isBase() || d.isEventBox())
         {
-            GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
-
+            
             // no background in openoffice toolbars
             if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
             { return; }
