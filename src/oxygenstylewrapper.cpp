@@ -86,13 +86,14 @@ namespace Oxygen
         bool accepted( false );
         if( d.isBase() || d.isEventBox())
         {
+            GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
 
             // no background in openoffice toolbars
             if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
             { return; }
 
-            // no background in comboboxes windows
-            if( Gtk::gtk_combobox_is_window( widget ) ) return;
+            // Only for movable base window
+            if( Gtk::gdk_window_is_movable( window ) ) return;
 
             // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )

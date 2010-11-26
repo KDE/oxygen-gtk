@@ -64,6 +64,9 @@ namespace Oxygen
         //! returns true if window supports rgba
         bool gdk_window_has_rgba( GdkWindow* );
 
+        //! returns true if window is a movable window
+        bool gdk_window_is_movable( GdkWindow* );
+        
         //! true if object match a given type
         bool gtk_object_is_a( const GObject*, const std::string& );
 
@@ -147,10 +150,6 @@ namespace Oxygen
 
         //! true if widget is the treeview of a combobox
         bool gtk_combobox_is_frame( GtkWidget* );
-
-        //! true if widget is the treeview of a combobox
-        inline bool gtk_combobox_is_window( GtkWidget* widget )
-        { return std::string( gtk_widget_get_name( widget ) ) == "gtk-combobox-popup-window"; }
 
         //! true if combobox must appear as list
         bool gtk_combobox_appears_as_list( GtkWidget* );
