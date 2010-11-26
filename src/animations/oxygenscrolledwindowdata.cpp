@@ -57,7 +57,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if( GTK_IS_TREE_VIEW( child ) )
+        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_TEXT_VIEW( child ) )
         {
 
             registerChild( child );
