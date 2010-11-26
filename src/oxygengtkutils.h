@@ -148,6 +148,10 @@ namespace Oxygen
         //! true if widget is the treeview of a combobox
         bool gtk_combobox_is_frame( GtkWidget* );
 
+        //! true if widget is the treeview of a combobox
+        inline bool gtk_combobox_is_window( GtkWidget* widget )
+        { return std::string( gtk_widget_get_name( widget ) ) == "gtk-combobox-popup-window"; }
+
         //! true if combobox must appear as list
         bool gtk_combobox_appears_as_list( GtkWidget* );
 
