@@ -92,8 +92,10 @@ namespace Oxygen
     }
 
     //_________________________________________
-    void GtkIcons::generate( Gtk::RC& rc, const std::vector<std::string>& pathList ) const
+    Gtk::RC GtkIcons::generate( const std::vector<std::string>& pathList ) const
     {
+
+        Gtk::RC rc;
 
         // generate icon size string
         std::ostringstream iconSizesStr;
@@ -148,7 +150,7 @@ namespace Oxygen
             rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
         }
 
-        return;
+        return rc;
 
     }
 

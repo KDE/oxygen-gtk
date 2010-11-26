@@ -32,6 +32,27 @@ namespace Oxygen
     const std::string Gtk::RC::_defaultSectionName = "oxygen-default-internal";
 
     //_________________________________________________
+    void Gtk::RC::merge( const Gtk::RC& other )
+    {
+
+        // loop over sections in other
+        for( Section::List::const_iterator iter = other._sections.begin(); iter != other._sections.end(); iter++ )
+        {
+            Section::List::iterator sectionIter = std::find_if( _sections.begin(), _sections.end(), Section::SameNameFTor( *iter ) );
+            if( sectionIter == _sections.end() ) _sections.push_back( *iter );
+            else {
+
+                assert( sectionIter->_parent == iter->_parent );
+                sectionIter->add( iter->_content );
+
+            }
+
+        }
+
+        return;
+    }
+
+    //_________________________________________________
     void Gtk::RC::addSection( const std::string& name, const std::string& parent )
     {
         if( std::find( _sections.begin(), _sections.end(), name ) != _sections.end() )

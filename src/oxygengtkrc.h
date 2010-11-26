@@ -76,6 +76,9 @@ namespace Oxygen
             }
 
 
+            //! merge
+            void merge( const RC& );
+
             //! create new section and set as current
             void addSection( const std::string& name, const std::string& parent = std::string() );
 
@@ -163,6 +166,28 @@ namespace Oxygen
 
                 //! content
                 std::string _content;
+
+                //! used to find section with matching name
+                class SameNameFTor
+                {
+                    public:
+
+                    //! constructor
+                    SameNameFTor( const Section& section ):
+                        _name( section._name )
+                        {}
+
+                    //! predicate
+                    bool operator() ( const Section& other ) const
+                    { return _name == other._name; }
+
+                    private:
+
+                    //! prediction
+                    std::string _name;
+
+                };
+
 
             };
 

@@ -50,7 +50,7 @@ namespace Oxygen
         void loadTranslations( const std::string& filename );
 
         //! generate rc file
-        void generate( Gtk::RC&, const std::vector<std::string>& pathList ) const;
+        Gtk::RC generate( const std::vector<std::string>& pathList ) const;
 
         //! set icon size
         void setIconSize( const std::string&, int value );

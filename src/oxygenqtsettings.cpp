@@ -296,7 +296,7 @@ namespace Oxygen
         addIconTheme( iconThemeList, _kdeIconTheme );
         addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
-        icons.generate( _rc, iconThemeList );
+        _rc.merge( icons.generate( iconThemeList ) );
 
     }
 
