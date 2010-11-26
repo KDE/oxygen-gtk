@@ -43,7 +43,16 @@ namespace Oxygen
     namespace Gtk
     {
 
-        // set all buttons in the container to state NORMAL
+        //! mouse button enumeration
+        enum MouseButton
+        {
+            NoButton = 0,
+            LeftButton = 1,
+            RightButton = 2,
+            MidButton = 3
+        };
+
+        //! set all buttons in the container to state NORMAL
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
         //! print some widget information
@@ -73,7 +82,7 @@ namespace Oxygen
 
         //! return parent menu if any
         GtkWidget* gtk_parent_menubar( GtkWidget* );
-        
+
         //! return parent menu if any
         GtkWidget* gtk_parent_menu( GtkWidget* );
 
