@@ -1909,7 +1909,7 @@ namespace Oxygen
                 }
 
                 gap.setHeight( 8 );
-                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
+                Style::instance().renderTabBarFrame( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 
             }
 

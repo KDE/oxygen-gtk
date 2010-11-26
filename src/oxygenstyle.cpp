@@ -1259,7 +1259,6 @@ namespace Oxygen
 
     }
 
-
     //__________________________________________________________________
     void Style::renderInfoBar(
         GdkWindow* window,
@@ -2047,6 +2046,23 @@ namespace Oxygen
         // render
         helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
         return;
+
+    }
+
+    //__________________________________________________________________
+    void Style::renderTabBarFrame(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
+    {
+
+        // define colors
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+
+        // create context
+        Cairo::Context context( window, clipRect );
+        generateGapMask( context, x, y, w, h, gap );
+        renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
 
     }
 
