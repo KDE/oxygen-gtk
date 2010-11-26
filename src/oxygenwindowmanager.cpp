@@ -142,8 +142,16 @@ namespace Oxygen
     gboolean WindowManager::wmButtonPress(GtkWidget *widget, GdkEventButton* event, gpointer data )
     {
 
-        if( event->type == GDK_BUTTON_PRESS && event->button == 1 )
+        if( event->type == GDK_BUTTON_PRESS && event->button == Gtk::LeftButton )
         {
+
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::WindowManager::wmButtonPress - "
+                << widget
+                << "(" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " " << gtk_widget_get_name( widget )
+                << std::endl;
+            #endif
 
             return static_cast<WindowManager*>(data)->isWindowDragWidget( widget, event );
 
@@ -269,7 +277,8 @@ namespace Oxygen
     bool WindowManager::withinWidget( GtkWidget* widget, GdkEventButton* event ) const
     {
 
-        GdkWindow *window( gtk_widget_get_parent_window( widget ) );
+        // get widget window
+        GdkWindow *window( gtk_widget_get_window( widget ) );
 
         // Some widgets aren't realized (GeditWindow for exemple) ...
         if( !window ) return true;
@@ -299,6 +308,9 @@ namespace Oxygen
         // check against mode
         if( _mode == Disabled ) return false;
         if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+
+        // check that button press is inside widget
+        if( !withinWidget( widget, event ) ) return false;
 
         // always accept if widget is not a container
         if( !GTK_IS_CONTAINER( widget ) ) return true;
