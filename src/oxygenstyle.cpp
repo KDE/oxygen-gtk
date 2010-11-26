@@ -1621,11 +1621,12 @@ namespace Oxygen
         GtkWidget* widget,
         gint x, gint y, gint w, gint h, StyleOptions options )
     {
-
         ColorUtils::Rgba base;
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
         const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
+        const bool isInMenuBar( Gtk::gtk_parent_menubar( widget ) );
+
         if( wh > 0 )
         {
             if( isInMenu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
@@ -1652,9 +1653,41 @@ namespace Oxygen
 
         } else color = ColorUtils::midColor( color );
 
-        // adjust vertical extent
-        y+=1;
-        h-=2;
+        if( isInMenuBar )
+        {
+
+            // we force ytickness in gtkrc to emulate Qt menubar/menu space separation
+            // so adjust vertical extent of the rect in menubar
+            if( settings().applicationName().isMozilla() )
+            {
+
+                y+=3;
+                h-=6;
+
+            } else {
+
+                y+=1;
+                h-=2;
+
+            }
+        } else if ( isInMenu ) {
+
+            // we force ytickness to 5 in gtkrc to emulate Qt menuitems space separation
+            // so adjust vertical extent of the rect in menus to 21 (size with standard ytickness)
+            if( h > 27 )
+            {
+
+                y+=4;
+                h-=7;
+
+            } else {
+
+                y+=(h-21)/2;
+                h=21;
+
+            }
+
+        }
 
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )

@@ -72,6 +72,9 @@ namespace Oxygen
         GtkWidget* gtk_parent_button( GtkWidget* );
 
         //! return parent menu if any
+        GtkWidget* gtk_parent_menubar( GtkWidget* );
+        
+        //! return parent menu if any
         GtkWidget* gtk_parent_menu( GtkWidget* );
 
         //! return parent treeview if any.
