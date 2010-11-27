@@ -91,8 +91,8 @@ namespace Oxygen
             if( Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_TOOLBAR( widget ) )
             { return; }
 
-            // Only for base window
-            if( !Gtk::gdk_window_is_base( window ) ) return;
+            // no background in comboboxes windows
+            if( Gtk::gtk_combobox_is_window( widget ) ) return;
 
             // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )
@@ -107,7 +107,8 @@ namespace Oxygen
             }
 
             // register to window manager
-            if( !Style::instance().settings().applicationName().isMozilla() &&
+            if( Gtk::gdk_window_is_base( window ) &&
+                !Style::instance().settings().applicationName().isMozilla() &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
