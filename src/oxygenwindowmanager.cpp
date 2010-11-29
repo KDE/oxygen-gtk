@@ -346,7 +346,8 @@ namespace Oxygen
                 // any prelight widget indicate we can't do a move
                 usable = false;
 
-            } else if( !GTK_IS_NOTEBOOK ( childWidget ) && event && withinWidget( childWidget, event ) ) {
+            } 
+            else if( !GTK_IS_NOTEBOOK( childWidget ) && event && withinWidget( childWidget, event ) ) {
 
                 GdkWindow *window = gtk_widget_get_window( childWidget );
                 if( window && gdk_window_is_visible ( window ) )
@@ -361,16 +362,11 @@ namespace Oxygen
                         // widget listening to press event
                         usable = false;
 
-                    } else if(
-                        GTK_IS_MENU_ITEM( childWidget ) ||
-                        GTK_IS_SCROLLED_WINDOW( childWidget ) )
+                    } else if( GTK_IS_MENU_ITEM( childWidget ) )
                     {
                         // deal with menu item, GtkMenuItem only listen to
                         // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
                         // so previous check are invalids :(
-                        //
-                        // same for ScrolledWindow, they do not send motion events
-                        // to parents so not usable
                         usable = false;
 
                     }
