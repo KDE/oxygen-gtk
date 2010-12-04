@@ -54,7 +54,7 @@ void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     // read blacklist
-    const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-blacklist.conf" );
+    const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
     std::ifstream in( configFile.c_str() );
     if( !in )
     {
@@ -65,16 +65,28 @@ void theme_init( GTypeModule* module )
         return;
     }
 
-    const char* progname = g_get_prgname();
-    if( !progname ) return;
+    const char* appName = g_get_prgname();
+    if( !appName ) return;
+
+    // by default argb support is enabled
+    bool useRgba( true );
 
     // load options into a string
     std::string contents;
-    bool useRgba( true );
-    bool found( false );
-    while( std::getline( in, contents, '\n' ) && !found )
+    std::vector<std::string> lines;
+    while( std::getline( in, contents, '\n' ) )
     {
         if( contents.empty() || contents[0] == '#' ) continue;
+        lines.push_back( contents );
+    }
+
+    // true if application was found in one of the lines
+    bool found( false );
+    for( std::vector<std::string>::const_reverse_iterator iter = lines.rbegin(); iter != lines.rend() && !found; iter++ )
+    {
+
+        // store line locally
+        std::string contents( *iter );
 
         // split string using ":" as a delimiter
         std::vector<std::string> appNames;
@@ -89,12 +101,19 @@ void theme_init( GTypeModule* module )
         if( !contents.empty() ) appNames.push_back( contents );
         if( appNames.empty() ) continue;
 
-        for( std::vector<std::string>::const_iterator iter = appNames.begin(); iter != appNames.end(); ++iter )
+        // check line type
+        bool enabled( true );
+        if( appNames[0] == "enable" ) enabled = true;
+        else if( appNames[0] == "disable" ) enabled = false;
+        else continue;
+
+        // compare application names to this application
+        for( unsigned int i = 1; i < appNames.size(); i++ )
         {
-            if( *iter == progname )
+            if( appNames[i] == "all" || appNames[i] == appName )
             {
                 found = true;
-                useRgba = false;
+                useRgba = enabled;
                 break;
             }
         }
