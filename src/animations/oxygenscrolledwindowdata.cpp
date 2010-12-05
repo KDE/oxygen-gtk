@@ -49,6 +49,7 @@ namespace Oxygen
 
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+        if( !child ) return;
 
         #if OXYGEN_DEBUG
         std::cout
