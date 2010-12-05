@@ -121,7 +121,7 @@ void theme_init( GTypeModule* module )
     }
 
     #if OXYGEN_DEBUG
-    std::cout << "Oxygen::init_theme - program: " << progname << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
+    std::cout << "Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
     #endif
 
     if(useRgba)
