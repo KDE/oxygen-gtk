@@ -66,10 +66,10 @@ namespace Oxygen
 
         //! returns true if window is a base window
         bool gdk_window_is_base( GdkWindow* );
-        
+
         //! returns true if window is a base window that do not need painting
         bool gdk_window_nobackground( GdkWindow* );
-        
+
         //! true if object match a given type
         bool gtk_object_is_a( const GObject*, const std::string& );
 
@@ -115,6 +115,9 @@ namespace Oxygen
 
         //! returns true if potentialParent is (maybe indirect) parent of widget
         bool gtk_is_parent( GtkWidget*, GtkWidget* potentialParent );
+
+        //! returns true if one of the parent widgets has a sunken shadow
+        bool gtk_parent_is_shadow_in( GtkWidget* );
 
         //@}
 

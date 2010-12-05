@@ -260,6 +260,19 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_parent_is_shadow_in( GtkWidget* widget )
+    {
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        {
+            if( GTK_IS_FRAME( parent ) && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_IN ) return true;
+            if( GTK_IS_SCROLLED_WINDOW( parent ) && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( parent ) ) == GTK_SHADOW_IN ) return true;
+        }
+
+        return false;
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_button_is_flat( GtkWidget* widget )
     {
         if( !GTK_IS_BUTTON( widget ) ) return false;

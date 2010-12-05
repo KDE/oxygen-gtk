@@ -39,7 +39,10 @@ namespace Oxygen
 
             GtkWidget* parent( gtk_widget_get_parent( widget ) );
             GtkScrolledWindow* scrolledWindow(0);
-            if( GTK_IS_SCROLLED_WINDOW( parent ) && gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( parent ) ) ) != GTK_SHADOW_IN )
+            if(
+                GTK_IS_SCROLLED_WINDOW( parent ) &&
+                gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( parent ) ) ) != GTK_SHADOW_IN &&
+                !Gtk::gtk_parent_is_shadow_in( parent ) )
             { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
 
         }
