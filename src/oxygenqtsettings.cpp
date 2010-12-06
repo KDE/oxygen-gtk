@@ -126,12 +126,16 @@ namespace Oxygen
         // gtk colors
         generateGtkColors();
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
+        std::cout << _rc << std::endl;
+        #endif
+
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
-        std::cout << _rc << std::endl;
+        std::cout << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
 
     }
@@ -349,6 +353,10 @@ namespace Oxygen
     void QtSettings::generateGtkColors( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::generateGtkColors" << std::endl;
+        #endif
+
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
@@ -481,9 +489,11 @@ namespace Oxygen
             defaultFont = FontInfo::fromKdeOption( _kdeGlobals.getValue( "[General]", "font", "" ) );
 
         } else {
-#if OXYGEN_DEBUG
+
+            #if OXYGEN_DEBUG
             std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load default font" << std::endl;
-#endif
+            #endif
+
         }
 
         fonts[FontInfo::Default] = defaultFont;
@@ -504,9 +514,10 @@ namespace Oxygen
                 local = FontInfo::fromKdeOption( _kdeGlobals.getValue( "[General]", iter->second, "" ) );
 
             } else {
-#if OXYGEN_DEBUG
+
+                #if OXYGEN_DEBUG
                 std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load font named " << iter->second << std::endl;
-#endif
+                #endif
                 local = defaultFont;
 
             }
@@ -530,11 +541,19 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
         _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
 
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
+        #endif
+
     }
 
     //_________________________________________________________
     void QtSettings::loadKdeGlobalsOptions( void )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::loadKdeGlobalsOptions" << std::endl;
+        #endif
 
         // toolbar style
         std::string toolbarTextPosition( _kdeGlobals.getOption( "[Toolbar style]", "ToolButtonStyle" ).toVariant<std::string>( "TextBelowIcon" ) );
@@ -552,6 +571,10 @@ namespace Oxygen
     //_________________________________________________________
     void QtSettings::loadOxygenOptions( void )
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::QtSettings::loadOxygenOptions" << std::endl;
+        #endif
 
         // contrast
         ColorUtils::setContrast( _kdeGlobals.getOption( "[KDE]", "contrast" ).toVariant<double>( 7 ) / 10 );
