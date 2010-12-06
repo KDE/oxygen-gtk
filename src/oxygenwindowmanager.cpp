@@ -346,7 +346,7 @@ namespace Oxygen
                 // any prelight widget indicate we can't do a move
                 usable = false;
 
-            } 
+            }
             else if( !GTK_IS_NOTEBOOK( childWidget ) && event && withinWidget( childWidget, event ) ) {
 
                 GdkWindow *window = gtk_widget_get_window( childWidget );
@@ -356,7 +356,7 @@ namespace Oxygen
                     // TODO: one could probably check here whether widget is enabled or not,
                     // and accept if widget is disabled.
 
-                    if( gtk_widget_get_events ( childWidget ) & GDK_BUTTON_PRESS_MASK )
+                    if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) )
                     {
 
                         // widget listening to press event
