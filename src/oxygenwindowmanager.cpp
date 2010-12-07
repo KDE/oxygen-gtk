@@ -358,8 +358,12 @@ namespace Oxygen
 
                     // TODO: one could probably check here whether widget is enabled or not,
                     // and accept if widget is disabled.
-
-                    if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) )
+                    
+                    if( Gtk::gtk_object_is_a( G_OBJECT( childWidget ), "GtkPizza" ) )
+                    {
+                        usable = false;
+                        
+                    } else if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) )
                     {
 
                         // widget listening to press event
