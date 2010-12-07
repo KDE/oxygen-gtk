@@ -3,7 +3,10 @@ include( UsePkgConfig )
 
 cmake_minimum_required(VERSION 2.4)
 
+###########################
 # Define package generation
+###########################
+
 set( CPACK_PACKAGE_NAME "oxygen-gtk" )
 set( CPACK_SOURCE_PACKAGE_NAME "oxygen-gtk" )
 set( CPACK_SOURCE_GENERATOR TGZ )
@@ -15,8 +18,20 @@ set( CPACK_PACKAGE_VERSION_PATCH "4" )
 set( CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}" )
 include( CPack )
 
+########################
+# Package specific flags
+########################
+
 # Debugging information
 set( OXYGEN_DEBUG 0 )
+
+# Replace gtk stock icons with oxygen-icons
+# if set to 1
+set( OXIGEN_ICON_HACK 1 )
+
+##############
+# Requirements
+##############
 
 # X11
 find_package( X11 REQUIRED )
@@ -35,7 +50,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-# Find GTK
+# GTK
 pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
 
 if( NOT GTK_INCLUDE_DIR )
@@ -45,7 +60,7 @@ endif( NOT GTK_INCLUDE_DIR )
 message( STATUS "Found gtk include dir: ${GTK_INCLUDE_DIR}" )
 message( STATUS "Found gtk library dir: ${GTK_LIB_DIR}" )
 
-# Find cairo
+# Cairo
 pkgconfig( cairo CAIRO_INCLUDE_DIR CAIRO_LIB_DIR CAIRO_LINK_FLAGS CAIRO_CFLAGS )
 if( NOT CAIRO_INCLUDE_DIR )
 	message( FATAL_ERROR "Cairo was not found.  Ensure you have the Cairo development libraries installed, and Cairo's pkgconfig files are in your pkgconfig search path." )
@@ -54,7 +69,9 @@ endif( NOT CAIRO_INCLUDE_DIR )
 message( STATUS "Found cairo include dir: ${CAIRO_INCLUDE_DIR}" )
 message( STATUS "Found cairo library dir: ${CAIRO_LIB_DIR}" )
 
+##########################
 # installation directories
+##########################
 exec_program(
 	${PKGCONFIG_EXECUTABLE}
 	ARGS --variable=gtk_binary_version gtk+-2.0
@@ -67,14 +84,20 @@ set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 message( STATUS "Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
 
+######################################################################
 # Setup definitions and directories to be used for linking and include
+######################################################################
 link_directories( ${GTK_LIB_DIR} ${CAIRO_LIB_DIR} ${QT_LIBRARY_DIR} )
 include_directories( ${GTK_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH} )
 
+#############################
 # generate configuration file
+#############################
 configure_file( config.h.cmake ${CMAKE_BINARY_DIR}/config.h )
 
+################
 # Subdirectories
+################
 add_subdirectory( src )
 add_subdirectory( rc )
 add_subdirectory( special-icons )

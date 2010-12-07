@@ -111,8 +111,10 @@ namespace Oxygen
         loadKdePalette();
 
         // reload icons
+        #if OXYGEN_ICON_HACK
         _kdeIconPathList = kdeIconPathList();
         loadKdeIcons();
+        #endif
 
         // reload fonts
         loadKdeFonts();
