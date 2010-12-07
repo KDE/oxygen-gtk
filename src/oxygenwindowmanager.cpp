@@ -362,11 +362,15 @@ namespace Oxygen
                         // widget listening to press event
                         usable = false;
 
-                    } else if( GTK_IS_MENU_ITEM( childWidget ) )
+                    } else if( GTK_IS_MENU_ITEM( childWidget ) ||
+                               GTK_IS_SCROLLED_WINDOW( childWidget ) )
                     {
                         // deal with menu item, GtkMenuItem only listen to
                         // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
                         // so previous check are invalids :(
+                        //
+                        // same for ScrolledWindow, they do not send release events
+                        // to parents so not usable
                         usable = false;
 
                     }
