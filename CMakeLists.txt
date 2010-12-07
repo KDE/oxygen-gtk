@@ -27,7 +27,7 @@ set( OXYGEN_DEBUG 0 )
 
 # Replace gtk stock icons with oxygen-icons
 # if set to 1
-set( OXIGEN_ICON_HACK 1 )
+set( OXYGEN_ICON_HACK 1 )
 
 ##############
 # Requirements
