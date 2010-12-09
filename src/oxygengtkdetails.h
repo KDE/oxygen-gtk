@@ -58,6 +58,7 @@ namespace Oxygen
             bool isCellEnd( void ) const { return isCell() && _value.find( "_end" ) != std::string::npos; }
             bool isCellMiddle( void ) const { return isCell() && _value.find( "_middle" ) != std::string::npos; }
 
+            bool isCellRadio( void ) const { return _value == "cellradio"; }
             //@}
 
             bool isDragAndDrop( void ) const { return _value == "dnd"; }

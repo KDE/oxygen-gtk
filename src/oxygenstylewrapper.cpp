@@ -1353,11 +1353,11 @@ namespace Oxygen
             if( !Gtk::gtk_parent_tree_view( widget ) ) options |= Blend;
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
 
-        } else if( d.isOption() ) {
+        } else if( d.isOption() || d.isCellRadio() ) {
 
             // load options and disable hover
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_tree_view( widget ) )
+            if( !( d.isCellRadio() || Gtk::gtk_parent_tree_view( widget ) ) )
             {
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) )
@@ -1369,7 +1369,24 @@ namespace Oxygen
                 }
 
             }
-            options &= ~Hover;
+
+            if( d.isCellRadio() )
+            {
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                options &= ~(Focus|Hover);
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                    if( cellInfo.isValid() &&
+                        Style::instance().animations().treeViewEngine().contains( widget ) &&
+                        Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                    { options |= Hover; }
+                }
+
+            }
+
             Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
 
         } else {
