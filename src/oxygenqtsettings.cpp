@@ -354,7 +354,7 @@ namespace Oxygen
 
         // default colors
         _rc.setCurrentSection( Gtk::RC::defaultSection() );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", backgroundBottomColor( _palette.color( Palette::Window ) ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Window ) ) );
 
         if( applicationName().isMozilla() || applicationName().isGoogleChrome() )
