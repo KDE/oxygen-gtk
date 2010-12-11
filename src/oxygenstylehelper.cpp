@@ -41,8 +41,7 @@ namespace Oxygen
 
         // get pixbuf
         GdkPixbuf* pixbuf( separator( base, vertical, vertical ? h:w ) );
-        if(!pixbuf)
-            return;
+        if(!pixbuf) return;
 
         // translate
         cairo_save( context );
@@ -60,8 +59,9 @@ namespace Oxygen
     //__________________________________________________________________
     GdkPixbuf* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
     {
-        if(size<=0)
-            return 0L;
+
+        if(size<=0) return 0L;
+
         const SeparatorKey key( base, vertical, size );
         GdkPixbuf *pixbuf( m_separatorCache.value(key) );
 
