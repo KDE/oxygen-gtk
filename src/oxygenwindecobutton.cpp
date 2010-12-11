@@ -63,7 +63,7 @@ namespace Oxygen
         cairo_fill( context );
 
         // draw button slab
-        const bool pressed( _state == Pressed );
+        const bool pressed( _state == Pressed || _type==ButtonUnstick );
         GdkPixbuf* windecoButton( helper().windecoButton( base, pressed, int(scale) ) );
         gdk_cairo_set_source_pixbuf( context, windecoButton, 0, 0 );
         cairo_rectangle( context, 0, 0, w, h );
@@ -97,7 +97,8 @@ namespace Oxygen
 
         switch( _type )
         {
-            case ButtonSticky:
+            case ButtonStick:
+            case ButtonUnstick:
             cairo_move_to( context, 10.5, 10.5 );
             cairo_close_path( context );
             cairo_stroke( context );
