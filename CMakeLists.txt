@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 2.4)
 
 set( CPACK_PACKAGE_NAME "oxygen-gtk" )
 set( CPACK_SOURCE_PACKAGE_NAME "oxygen-gtk" )
-set( CPACK_SOURCE_GENERATOR TGZ )
+set( CPACK_SOURCE_GENERATOR TBZ2 )
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Oxygen Gtk Cairo theme" )
 set( CPACK_PACKAGE_VENDOR "hugo.pereira@free.fr" )
 set( CPACK_PACKAGE_VERSION_MAJOR "1" )
