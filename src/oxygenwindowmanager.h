@@ -35,10 +35,14 @@
 #include "oxygensignal.h"
 #include "oxygentimer.h"
 #include "oxygendatamap.h"
+#include "oxygengtkutils.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <algorithm>
 #include <map>
+#include <string>
+#include <vector>
 
 namespace Oxygen
 {
@@ -133,6 +137,35 @@ namespace Oxygen
         /*! for containers, children are also checked. The method is recursive */
         bool childrenUseEvent( GtkWidget*, GdkEventButton*, bool ) const;
 
+        //! used to decide whether a widget is black-listed
+        class BlackListFTor
+        {
+            public:
+
+            //! constructor
+            BlackListFTor( GObject* object ):
+                _object( object )
+                {}
+
+            //! predicate
+            bool operator() (const std::string& objectName ) const
+            { return Gtk::gtk_object_is_a( _object, objectName ); }
+
+            private:
+
+            //! object
+            GObject* _object;
+
+        };
+
+        //! initialize black list
+        /*! stores list of widgets for which you do not want the window to be grabbed */
+        void initializeBlackList( void );
+
+        //! return true if widget is black listed for grabbing
+        bool widgetIsBlackListed( GtkWidget* widget ) const
+        { return std::find_if( _blackList.begin(), _blackList.end(), BlackListFTor( G_OBJECT( widget ) ) ) != _blackList.end(); }
+
         //! stores connections
         class Data
         {
@@ -192,6 +225,9 @@ namespace Oxygen
         //! drag position
         int _x;
         int _y;
+
+        //! widget black list
+        std::vector<std::string> _blackList;
 
         //! map widgets to data structure
         DataMap<Data> _map;

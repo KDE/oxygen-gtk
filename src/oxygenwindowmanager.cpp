@@ -30,7 +30,6 @@
 */
 
 #include "oxygenwindowmanager.h"
-#include "oxygengtkutils.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -49,7 +48,7 @@ namespace Oxygen
         _widget( 0L ),
         _x(-1),
         _y(-1)
-    {}
+    { initializeBlackList(); }
 
     //_________________________________________________
     WindowManager::~WindowManager( void )
@@ -352,15 +351,22 @@ namespace Oxygen
 
             } else if( event && withinWidget( childWidget, event ) ) {
 
+                #if OXYGEN_DEBUG
+                std::cout << "Oxygen::WindowManager::childrenUseEvent - "
+                    << widget
+                    << "(" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
+                    << " " << gtk_widget_get_name( childWidget )
+                    << std::endl;
+                #endif
+
                 GdkWindow *window = gtk_widget_get_window( childWidget );
                 if( window && gdk_window_is_visible ( window ) )
                 {
 
-                    // TODO: one could probably check here whether widget is enabled or not,
-                    // and accept if widget is disabled.
-
-                    if( Gtk::gtk_object_is_a( G_OBJECT( childWidget ), "GtkPizza" ) )
+                    // check against black-list
+                    if( widgetIsBlackListed( childWidget ) )
                     {
+
                         usable = false;
 
                     } else if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) {
@@ -395,6 +401,15 @@ namespace Oxygen
         if( children ) g_list_free( children );
 
         return usable;
+    }
+
+    //_________________________________________________
+    void WindowManager::initializeBlackList( void )
+    {
+        // clear list
+        _blackList.clear();
+        _blackList.push_back( "GtkPizza" );
+        _blackList.push_back( "GladeDesignLayout" );
     }
 
     //________________________________________________________________________________
