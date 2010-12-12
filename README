@@ -12,6 +12,7 @@ III.3 Window background
 III.4 GtkComboBox
 III.5 GtkTreeView
 III.6 GtkScrolledWindow
+III.7 Button order in dialogs
 
 IV. Technical details.
 IV.1 Directories
@@ -85,11 +86,15 @@ Tree-lines are rendered by default on all tree-views (unless it is disabled in o
 However, in order to have 'solid' grey lines instead of dotted black lines (that Gtk provides, with no way for the style to change it), we completely rewrote the tree-line drawing code (and disabled Gtk's equivalent code). This also allowed us to change the placement of the tree expander and the line, so that they match Qt, and not Gtk. 
 So far we have encountered no issue with this feature.
 
-III.5 GtkScrolledWindow
+III.6 GtkScrolledWindow
 -----------------------
 
 For scrolled windows that contain a GtkTreeView, we force the frame to be sunken. This is consistent with Qt, and allows us to properly render mouse-over and focus effects on such lists. There might be some specific widget's layouts however for which this results in rendering glitches (for instance, two sunken frames one embedded in the other). If you observe such things, please report and we'll fix. 
 
+III.7 Button order in dialogs
+-----------------------------
+
+We changed the button order in dialogs so that it match the Qt convention. Notably "accept" buttons are usually located 'left-of' "cancel" buttons. This choice was driven to improve consistency accross applications, although it might disorient GNome users.
 
 IV. Technical details
 ---------------------
