@@ -346,11 +346,11 @@ namespace Oxygen
                 // any prelight widget indicate we can't do a move
                 usable = false;
 
-            }else if( GTK_IS_NOTEBOOK( childWidget ) )
-            {
+            } else if( GTK_IS_NOTEBOOK( childWidget ) ) {
+
                 inNoteBook = true;
-            }
-            else if( event && withinWidget( childWidget, event ) ) {
+
+            } else if( event && withinWidget( childWidget, event ) ) {
 
                 GdkWindow *window = gtk_widget_get_window( childWidget );
                 if( window && gdk_window_is_visible ( window ) )
@@ -358,29 +358,29 @@ namespace Oxygen
 
                     // TODO: one could probably check here whether widget is enabled or not,
                     // and accept if widget is disabled.
-                    
+
                     if( Gtk::gtk_object_is_a( G_OBJECT( childWidget ), "GtkPizza" ) )
                     {
                         usable = false;
-                        
-                    } else if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) )
-                    {
+
+                    } else if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) {
 
                         // widget listening to press event
                         usable = false;
 
-                    } else if( GTK_IS_MENU_ITEM( childWidget ) )
-                    {
+                    } else if( GTK_IS_MENU_ITEM( childWidget ) ) {
+
                         // deal with menu item, GtkMenuItem only listen to
                         // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
                         // so previous check are invalids :(
                         usable = false;
 
-                    } else if( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) )
-                    {
+                    } else if( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) {
+
                         // Scrolled do not send release events
                         // to parents so not usable
                         usable = false;
+
                     }
                 }
             }
