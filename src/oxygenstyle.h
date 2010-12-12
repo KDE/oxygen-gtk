@@ -300,7 +300,7 @@ namespace Oxygen
         //@{
 
         //! draw resize handles for window decoration
-        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, bool);
+        void renderWindowDots(Cairo::Context&, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, WinDeco::Options);
 
         //@}
 

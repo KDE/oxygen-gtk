@@ -2136,7 +2136,7 @@ namespace Oxygen
             if( drawResizeHandle )
             {
                 ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-                renderWindowDots( context, x, y, w, h, base, isMaximized );
+                renderWindowDots( context, x, y, w, h, base, wopt);
             }
 
         }
@@ -3119,8 +3119,11 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, bool isMaximized)
+    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, WinDeco::Options wopt)
     {
+        bool isMaximized( wopt & WinDeco::Maximized );
+        bool hasAlpha( wopt & WinDeco::Alpha );
+        int offset( hasAlpha ? 0 : -1 );
         if( settings().frameBorder() >= QtSettings::BorderTiny )
         {
             if( !isMaximized )
@@ -3128,9 +3131,9 @@ namespace Oxygen
                 // Draw right side 3-dots resize handles
                 int cenY = int(h/2+y);
                 int posX = int(w+x-3) + 1;
-                helper().renderDot(context,color,posX, cenY-3);
-                helper().renderDot(context,color,posX, cenY);
-                helper().renderDot(context,color,posX, cenY+3);
+                helper().renderDot(context,color,posX+offset, cenY-3);
+                helper().renderDot(context,color,posX+offset, cenY);
+                helper().renderDot(context,color,posX+offset, cenY+3);
             }
 
             // Draw bottom-right corner 3-dots resize handles
@@ -3138,9 +3141,9 @@ namespace Oxygen
             {
                 cairo_save(context);
                 cairo_translate(context,x+w-8,y+h-8);
-                helper().renderDot(context,color,2,6);
-                helper().renderDot(context,color,5,5);
-                helper().renderDot(context,color,6,2);
+                helper().renderDot(context,color,2+offset,6+offset);
+                helper().renderDot(context,color,5+offset,5+offset);
+                helper().renderDot(context,color,6+offset,2+offset);
                 cairo_restore(context);
             }
         }
