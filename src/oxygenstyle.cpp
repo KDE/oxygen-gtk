@@ -2173,6 +2173,8 @@ namespace Oxygen
             // draw Oxygen-way disabled button on inactive window
             buttonState=WinDeco::Disabled;
         }
+        if( !(windowState & WinDeco::Alpha) && !(windowState & WinDeco::Maximized) )
+        { y++; }
 
         WinDeco::Button button( settings(), helper(), type );
         button.setState(buttonState);
