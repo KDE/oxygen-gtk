@@ -3,11 +3,18 @@ Basic instructions for compiling:
   cd oxygen-gtk
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=`pkg-config --variable=prefix gtk+-2.0` ../
+  cmake ../
   make -j2
   sudo make install
 
-Warning - on 64 bits machine an extra flag is needed at the CMake stage:
+Notes:
 
-  cmake -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=`pkg-config --variable=prefix gtk+-2.0` ../
+1/ using cmake alone (with no argument) should usually work (that is: select the right path for installing the theme)
+If one wants to customize this path, on can manually set the CMAKE_INSTALL_PREFIX flag when running CMake. 
+The default is equivalent to:
 
+  cmake -DCMAKE_INSTALL_PREFIX=`pkg-config --variable=prefix gtk+-2.0` ../
+
+2/ on 64 bits machine an extra flag is needed at the CMake stage:
+
+  cmake -DLIB_SUFFIX=64 ../
