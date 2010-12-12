@@ -128,9 +128,8 @@ namespace Oxygen
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
-            GtkRcStyle* st=gtk_widget_get_modifier_style(widget);
             // if the app hasn't modified bg, draw background gradient
-            if(!(st->color_flags[state]&GTK_RC_BG))
+            if( !( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG ) )
             {
 
                 // make sure that widget is registered to scrolledBarEngine,
