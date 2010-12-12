@@ -44,7 +44,7 @@ These details are given here because:
 III.1 ARGB support
 ------------------
 
-By default, the style turns on transparency (ARGB) support in the default colormap used for all widgets. This is needed for menus (GtkMenu) and tooltips to have nice non-pixelated rounded corners, as in Oxygen-Qt, and semi-transparent background for tooltips, when compositing is enabled. 
+By default, the style turns on transparency (ARGB) support in the default colormap used for all widgets. This is needed for menus (GtkMenu), drop-down combobox lists and tooltips to have nice non-pixelated rounded corners, as in Oxygen-Qt, and semi-transparent background for tooltips, when compositing is enabled. 
 
 This feature does work well for some applications (for instance: gimp, pidgin, mandriva configuration tools, gedit, etc.), but results in a number of other applications to crash or display garbage (e.g. nautilus, pgadmin, banshee, etc.)
 
@@ -103,6 +103,9 @@ III.8 Mouse-over support
 ------------------------
 
 We added mouse-over support (that is: highlight when mouse pointer enters the widget) for a number of widgets for which gtk did not support it. This is notably the case for: GtkTreeView, GtkEntry, GtkNoteBook. This is achieved by watching enter/leave and mouse-move events for such widgets and some of their children. To our knowledge there is no remaining issue with this feature.
+
+III.9 Tab close buttons
+GTK notebook doesn't provide a standard way for apps to put close buttons on tabs. Because of this, close buttons in different apps are implemented differently. Oxygen-gtk hides such buttons' icons/text, and draws Qt close button images instead. But there's no way of detecting if the button is really _close_ one. So, current implementation may break apps which have some additional buttons in the tabs. If you find such apps with multiple buttons on single tab (which all look like close buttons) when using oxygen-gtk, file a bug report.
 
 IV. Technical details
 ---------------------
