@@ -48,11 +48,13 @@ namespace Oxygen
             ButtonMin,
             ButtonClose,
             ButtonMenu,
-            ButtonSticky,
+            ButtonStick,
             ButtonAbove,
             ButtonBelow,
             ButtonShade,
             ButtonUnmax,
+            ButtonUnstick,
+            ButtonUnshade,
             ButtonTypeCount
         };
 
