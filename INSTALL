@@ -18,3 +18,4 @@ The default is equivalent to:
 2/ on 64 bits machine an extra flag is needed at the CMake stage:
 
   cmake -DLIB_SUFFIX=64 ../
+3/ make -jX uses X parallel jobs so that compilation would speed up on SMP machines with X cores/CPUs/threads
