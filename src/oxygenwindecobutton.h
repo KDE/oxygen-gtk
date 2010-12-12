@@ -54,6 +54,7 @@ namespace Oxygen
             ButtonShade,
             ButtonUnmax,
             ButtonUnstick,
+            ButtonUnshade,
             ButtonTypeCount
         };
 

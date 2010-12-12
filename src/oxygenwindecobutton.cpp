@@ -174,29 +174,23 @@ namespace Oxygen
             break;
 
             case ButtonShade:
-            if( _state != Pressed )
-            {
+            cairo_move_to( context, 7.5, 7.5 );
+            cairo_line_to( context, 10.5, 10.5 );
+            cairo_line_to( context, 13.5, 7.5 );
 
-                cairo_move_to( context, 7.5, 7.5 );
-                cairo_line_to( context, 10.5, 10.5 );
-                cairo_line_to( context, 13.5, 7.5 );
+            cairo_move_to( context, 7.5, 13.0 );
+            cairo_line_to( context, 13.5, 13.0 );
+            cairo_stroke( context );
+            break;
 
-                cairo_move_to( context, 7.5, 13.0 );
-                cairo_line_to( context, 13.5, 13.0 );
-                cairo_stroke( context );
+            case ButtonUnshade:
+            cairo_move_to( context, 7.5, 10.5 );
+            cairo_line_to( context, 10.5, 7.5 );
+            cairo_line_to( context, 13.5, 10.5 );
 
-            } else {
-
-                cairo_move_to( context, 7.5, 10.5 );
-                cairo_line_to( context, 10.5, 7.5 );
-                cairo_line_to( context, 13.5, 10.5 );
-
-                cairo_move_to( context, 7.5, 13 );
-                cairo_line_to( context, 13.5, 13 );
-                cairo_stroke( context );
-
-            }
-
+            cairo_move_to( context, 7.5, 13 );
+            cairo_line_to( context, 13.5, 13 );
+            cairo_stroke( context );
             break;
 
             default:
