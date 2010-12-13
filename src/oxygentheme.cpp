@@ -138,15 +138,15 @@ void theme_init( GTypeModule* module )
 }
 
 //_________________________________________________
-G_MODULE_EXPORT void theme_exit( void )
+void theme_exit( void )
 {}
 
 //_________________________________________________
-G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void )
+GtkRcStyle* theme_create_rc_style( void )
 { return GTK_RC_STYLE( g_object_new( OXYGEN_TYPE_RC_STYLE, NULL ) ); }
 
 //_________________________________________________
-G_MODULE_EXPORT const gchar* g_module_check_init( GModule *module )
+const gchar* g_module_check_init( GModule *module )
 {
     return gtk_check_version(
         GTK_MAJOR_VERSION,
@@ -155,16 +155,21 @@ G_MODULE_EXPORT const gchar* g_module_check_init( GModule *module )
 }
 
 //_________________________________________________
-G_MODULE_EXPORT void drawWindowDecoration(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
+void drawWindowDecoration(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
 {
     Oxygen::Style::instance().drawWindowDecoration( context, (Oxygen::WinDeco::Options) options, x, y, w, h);
 }
-G_MODULE_EXPORT void drawWindecoButton(cairo_t* context, unsigned long buttonType,unsigned long buttonState, unsigned long windowState, gint x,gint y,gint w,gint h)
+
+//_________________________________________________
+void drawWindecoButton(cairo_t* context, unsigned long buttonType,unsigned long buttonState, unsigned long windowState, gint x,gint y,gint w,gint h)
 {
-    Oxygen::Style::instance().drawWindecoButton( context, (Oxygen::WinDeco::ButtonType)buttonType,
-            (Oxygen::WinDeco::ButtonStatus)buttonState, (Oxygen::WinDeco::Options) windowState, x, y, w, h);
+    Oxygen::Style::instance().drawWindecoButton(
+        context, (Oxygen::WinDeco::ButtonType)buttonType,
+        (Oxygen::WinDeco::ButtonStatus)buttonState, (Oxygen::WinDeco::Options) windowState, x, y, w, h);
 }
-G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
+
+//_________________________________________________
+void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
 {
     Oxygen::Style::instance().drawWindecoShapeMask( context, (Oxygen::WinDeco::Options) options, x, y, w, h);
 }
