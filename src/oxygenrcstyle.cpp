@@ -105,12 +105,13 @@ void oxygen_rc_style_register_type( GTypeModule *module )
             sizeof(OxygenRcStyleClass ),
             0L,
             0L,
-(            GClassInitFunc ) class_init,
+            (GClassInitFunc) class_init,
             0L,    /* class_finalize */
             0L,    /* class_data */
             sizeof( OxygenRcStyle ),
             0,    /* n_preallocs */
-(            GInstanceInitFunc ) instance_init,
+            (GInstanceInitFunc) instance_init,
+            0L
         };
 
         oxygen_rc_style_type = g_type_module_register_type( module, GTK_TYPE_RC_STYLE, "OxygenRcStyle", &info, GTypeFlags(0 ) );

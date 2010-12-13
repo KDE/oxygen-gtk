@@ -2462,12 +2462,13 @@ void oxygen_style_register_type( GTypeModule* module )
             sizeof( OxygenStyleClass ),
             0L,
             0L,
-            ( GClassInitFunc ) class_init,
+            (GClassInitFunc) class_init,
             0L,          /* class_finalize */
             0L,          /* class_data */
             sizeof( OxygenStyle ),
             0,           /* n_preallocs */
-            ( GInstanceInitFunc ) instance_init,
+            (GInstanceInitFunc) instance_init,
+            0L
         };
 
         oxygen_style_type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &info, GTypeFlags(0 ) );
