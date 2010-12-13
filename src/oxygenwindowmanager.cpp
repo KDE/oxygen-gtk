@@ -345,6 +345,10 @@ namespace Oxygen
                 // any prelight widget indicate we can't do a move
                 usable = false;
 
+            } else if( GTK_IS_BUTTON( childWidget ) &&  gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) {
+                
+                usable = false;
+            
             } else if( GTK_IS_NOTEBOOK( childWidget ) ) {
 
                 inNoteBook = true;
