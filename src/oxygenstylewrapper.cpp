@@ -276,6 +276,7 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
             if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
+            if( !Style::instance().settings().applicationName().isGoogleChrome() ) options &= ~NoFill;
 
             // calculate proper offsets so that the glow/shadow match parent frame
             const int xOffset( style ? style->xthickness + 1 : 3);
