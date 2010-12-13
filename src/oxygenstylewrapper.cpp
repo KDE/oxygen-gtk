@@ -613,10 +613,12 @@ namespace Oxygen
                 tiles &= ~TileSet::Left;
                 Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
 
+            #if GTK_CHECK_VERSION(2, 20, 0)
             } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
                 return;
 
+            #endif
             } else {
 
                 // for google chrome, make GtkChromeButton appear as flat
