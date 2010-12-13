@@ -428,7 +428,7 @@ namespace Oxygen
         _rc.addToRootSection( "class \"GtkRadioButton\" style \"oxygen-buttons\"" );
 
         // menu items
-        _rc.addSection( "oxygen-menubar-item", Gtk::RC::defaultSection() );
+        _rc.addSection( "oxygen-menubar-item", "oxygen-menu-font" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
 
