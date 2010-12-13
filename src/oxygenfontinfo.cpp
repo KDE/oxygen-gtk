@@ -27,10 +27,6 @@ namespace Oxygen
 {
 
     //_____________________________________________
-    const double FontInfo::_defaultKdeFontSize = 9;
-    const std::string FontInfo::_defaultKdeFontFamily = "Sans Serif";
-
-    //_____________________________________________
     FontInfo::operator std::string ( void ) const
     {
         std::ostringstream out;

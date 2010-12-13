@@ -60,9 +60,12 @@ namespace Oxygen
             _weight( Normal ),
             _italic( false ),
             _fixed( false ),
-            _size( _defaultKdeFontSize ),
-            _family( _defaultKdeFontFamily )
+            _size( 0 )
         {}
+
+        //! true if font is valid
+        bool isValid( void ) const
+        { return _size > 0 && !_family.empty(); }
 
         //! weight
         FontWeight weight( void ) const
@@ -93,12 +96,7 @@ namespace Oxygen
         std::string weightString( void ) const;
         std::string italicString( void ) const;
 
-        //! default kde size
-        static const double _defaultKdeFontSize;
-        static const std::string _defaultKdeFontFamily;
-
-        //! default font
-        static FontInfo _defaultFont;
+        private:
 
         //! font weight
         FontWeight _weight;

@@ -540,18 +540,28 @@ namespace Oxygen
         }
 
         // pass fonts to RC
-        _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default] ) );
+        if( fonts[FontInfo::Default].isValid() )
+        { _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default] ) ); }
 
-        _rc.setCurrentSection( Gtk::RC::defaultSection() );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Default] ) );
+        if( fonts[FontInfo::Default].isValid() )
+        {
+            _rc.setCurrentSection( Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Default] ) );
+        }
 
-        _rc.addSection( "oxygen-menu-font", Gtk::RC::defaultSection() );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
-        _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
+        if( fonts[FontInfo::Menu].isValid() )
+        {
+            _rc.addSection( "oxygen-menu-font", Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
+            _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
+        }
 
-        _rc.addSection( "oxygen-toolbar-font", Gtk::RC::defaultSection() );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
-        _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
+        if( fonts[FontInfo::ToolBar].isValid() )
+        {
+            _rc.addSection( "oxygen-toolbar-font", Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
+            _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
+        }
 
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
