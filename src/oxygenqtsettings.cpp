@@ -364,17 +364,7 @@ namespace Oxygen
 
         // default colors
         _rc.setCurrentSection( Gtk::RC::defaultSection() );
-        if( applicationName().isMozilla() || applicationName().isGoogleChrome() || applicationName().isOpenOffice() )
-        {
-
-            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
-
-        } else {
-
-            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", backgroundBottomColor( _palette.color( Palette::Window ) ) ) );
-
-        }
-
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", backgroundBottomColor( _palette.color( Palette::Window ) ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Window ) ) );
 
         if( applicationName().isMozilla() || applicationName().isGoogleChrome() )
