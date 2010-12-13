@@ -44,7 +44,7 @@ namespace Oxygen
         else if( appName.find("seamonkey" ) == 0 ) _name = Seamonkey;
         else if( appName == "soffice" ) _name = OpenOffice;
         else if( appName == "gimp" ) _name = Gimp;
-        else if( appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;
+        else if( appName == "chromium" || appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;
         else _name = Unknown;
     }
 
