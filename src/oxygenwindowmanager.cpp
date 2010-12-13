@@ -360,12 +360,16 @@ namespace Oxygen
                 #endif
 
                 GdkWindow *window = gtk_widget_get_window( childWidget );
-                if( window && gdk_window_is_visible ( window ) )
+                if( window && gdk_window_is_visible( window ) )
                 {
 
                     // check against black-list
                     if( widgetIsBlackListed( childWidget ) )
                     {
+
+                        usable = false;
+
+                    } else if( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) {
 
                         usable = false;
 
