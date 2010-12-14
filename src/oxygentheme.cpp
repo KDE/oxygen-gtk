@@ -131,6 +131,10 @@ void theme_init( GTypeModule* module )
         gtk_widget_set_default_colormap(cmap);
     }
 
+    Oxygen::Style::instance();
+    if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
+    { Oxygen::Style::instance().animations().setEnabled( false ); }
+
 }
 
 //_________________________________________________

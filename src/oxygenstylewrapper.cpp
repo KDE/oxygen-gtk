@@ -2405,12 +2405,6 @@ namespace Oxygen
 //_______________________________________________________________________________________________________________
 extern "C" void oxygen_style_instance_init( OxygenStyle* self )
 {
-
-    // this should move somewhere else
-    Oxygen::Style::instance();
-    if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
-    { Oxygen::Style::instance().animations().setEnabled( false ); }
-
 }
 
 //_______________________________________________________________________________________________________________
