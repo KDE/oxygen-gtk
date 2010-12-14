@@ -26,6 +26,7 @@
 #endif
 
 #include "oxygenrcstyle.h"
+#include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
 
 #include <gtk/gtk.h>
@@ -38,7 +39,6 @@ struct _OxygenRcStyle
 struct _OxygenRcStyleClass
 { GtkRcStyleClass parent; };
 
-static GType oxygen_rc_style_type = 0;
 static GtkRcStyleClass *oxygen_rc_style_parent_class = 0L;
 
 //______________________________________________________________________
@@ -77,13 +77,12 @@ static guint parse(
 static void merge( GtkRcStyle *dst, GtkRcStyle *src )
 { oxygen_rc_style_parent_class->merge( dst, src ); }
 
-
 //______________________________________________________________________
-static void instance_init( OxygenRcStyle *self )
+extern "C" void oxygen_rc_style_instance_init( OxygenRcStyle *self )
 {}
 
 //______________________________________________________________________
-static void class_init( OxygenRcStyleClass *klass )
+extern "C" void oxygen_rc_style_class_init( OxygenRcStyleClass *klass )
 {
     GtkRcStyleClass *rc_style_class = GTK_RC_STYLE_CLASS( klass );
 
@@ -95,6 +94,7 @@ static void class_init( OxygenRcStyleClass *klass )
 }
 
 //______________________________________________________________________
+static GType oxygen_rc_style_type = 0;
 void oxygen_rc_style_register_type( GTypeModule *module )
 {
 
@@ -105,12 +105,13 @@ void oxygen_rc_style_register_type( GTypeModule *module )
             sizeof(OxygenRcStyleClass ),
             0L,
             0L,
-(            GClassInitFunc ) class_init,
+            (GClassInitFunc) oxygen_rc_style_class_init,
             0L,    /* class_finalize */
             0L,    /* class_data */
             sizeof( OxygenRcStyle ),
             0,    /* n_preallocs */
-(            GInstanceInitFunc ) instance_init,
+            (GInstanceInitFunc) oxygen_rc_style_instance_init,
+            0L
         };
 
         oxygen_rc_style_type = g_type_module_register_type( module, GTK_TYPE_RC_STYLE, "OxygenRcStyle", &info, GTypeFlags(0 ) );

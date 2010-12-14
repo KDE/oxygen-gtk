@@ -2403,12 +2403,12 @@ namespace Oxygen
 }
 
 //_______________________________________________________________________________________________________________
-extern "C" void instance_init( OxygenStyle* self )
+extern "C" void oxygen_style_instance_init( OxygenStyle* self )
 {
 }
 
 //_______________________________________________________________________________________________________________
-static void class_init( OxygenStyleClass* klass )
+extern "C" void oxygen_style_class_init( OxygenStyleClass* klass )
 {
     GtkStyleClass* style_class;
 
@@ -2458,12 +2458,13 @@ void oxygen_style_register_type( GTypeModule* module )
             sizeof( OxygenStyleClass ),
             0L,
             0L,
-            ( GClassInitFunc ) class_init,
+            (GClassInitFunc) oxygen_style_class_init,
             0L,          /* class_finalize */
             0L,          /* class_data */
             sizeof( OxygenStyle ),
             0,           /* n_preallocs */
-            ( GInstanceInitFunc ) instance_init,
+            (GInstanceInitFunc) oxygen_style_instance_init,
+            0L
         };
 
         oxygen_style_type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &info, GTypeFlags(0 ) );
