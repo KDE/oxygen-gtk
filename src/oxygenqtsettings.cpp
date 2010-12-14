@@ -437,9 +437,7 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Text ) ) );
-        _rc.addToRootSection( "class \"GtkButton\" style \"oxygen-buttons\"" );
-        _rc.addToRootSection( "class \"GtkToggleButton\" style \"oxygen-buttons\"" );
-        _rc.addToRootSection( "class \"GtkRadioButton\" style \"oxygen-buttons\"" );
+        _rc.addToRootSection( "class \"*Button\" style \"oxygen-buttons\"" );
 
         // menu items
         _rc.addSection( "oxygen-menubar-item", "oxygen-menu-font" );
