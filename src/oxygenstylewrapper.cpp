@@ -2191,8 +2191,18 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( GTK_IS_VPANED( widget ) ) options |= Vertical;
-            Style::instance().renderSplitter( window, clipRect, x, y, w, h, options );
+            if( GTK_IS_VPANED( widget ) )
+            {
+                options |= Vertical;
+
+            } else if( Gtk::gtk_object_is_a( G_OBJECT( widget ), "GtkPizza" ) ) {
+
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+                if( w>h ) options |= Vertical;
+
+            }
+
+            Style::instance().renderSplitter( window, 0L, x, y, w, h, options );
 
         } else if( d.isHandleBox() ) {
 
