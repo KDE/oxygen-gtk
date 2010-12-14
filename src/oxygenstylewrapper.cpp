@@ -2405,6 +2405,11 @@ namespace Oxygen
 //_______________________________________________________________________________________________________________
 extern "C" void oxygen_style_instance_init( OxygenStyle* self )
 {
+    /*
+    need to initialize the colors here even if done already
+    elsewhere, to fix some overwritting that occurs with some distros
+    */
+    Oxygen::Style::instance().settings().initializeColors();
 }
 
 //_______________________________________________________________________________________________________________

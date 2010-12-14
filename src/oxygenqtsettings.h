@@ -54,7 +54,10 @@ namespace Oxygen
         {}
 
         //! initialize
-        void initialize( void );
+        bool initialize( void );
+
+        //! initialize colors
+        bool initializeColors( void );
 
         //! palette
         const Palette& palette( void ) const
@@ -383,6 +386,10 @@ namespace Oxygen
         FrameBorder _frameBorder;
 
         //@}
+
+        //! initialization flags
+        bool _initialized;
+        bool _colorsInitialized;
 
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;
