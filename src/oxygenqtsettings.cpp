@@ -70,12 +70,17 @@ namespace Oxygen
         _startDragDist( 4 ),
         _startDragTime( 500 ),
         _buttonSize( ButtonDefault ),
-        _frameBorder( BorderDefault )
+        _frameBorder( BorderDefault ),
+        _initialized( false ),
+        _colorsInitialized( false )
     {}
 
     //_________________________________________________________
-    void QtSettings::initialize( void )
+    bool QtSettings::initialize( void )
     {
+
+        if( _initialized ) return false;
+        _initialized = true;
 
         // clear RC
         _rc.clear();
@@ -107,9 +112,6 @@ namespace Oxygen
         std::cout << _oxygen << std::endl;
         #endif
 
-        // reload palette
-        loadKdePalette();
-
         // reload icons
         #if OXYGEN_ICON_HACK
         _kdeIconPathList = kdeIconPathList();
@@ -125,9 +127,6 @@ namespace Oxygen
         // oxygen options
         loadOxygenOptions();
 
-        // gtk colors
-        generateGtkColors();
-
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
         std::cout << _rc << std::endl;
@@ -139,6 +138,31 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
+
+        return true;
+
+    }
+
+    //_________________________________________________________
+    bool QtSettings::initializeColors( void )
+    {
+
+        if( _colorsInitialized ) return false;
+        _colorsInitialized = true;
+
+        // clear RC
+        _rc.clear();
+
+        // reload palette
+        loadKdePalette();
+
+        // gtk colors
+        generateGtkColors();
+
+        // pass all resources to gtk
+        gtk_rc_parse_string( _rc.toString().c_str() );
+
+        return true;
 
     }
 
