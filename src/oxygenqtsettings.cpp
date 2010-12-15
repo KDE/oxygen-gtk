@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -227,7 +228,10 @@ namespace Oxygen
         if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
         { out.split( path ); }
 
-        out.push_back( _defaultKdeIconPath );
+        // make sure defaultKdeIconPath is included in the list
+        if( std::find( out.begin(), out.end(), _defaultKdeIconPath ) == out.end() )
+        { out.push_back( _defaultKdeIconPath ); }
+
         return out;
 
     }
