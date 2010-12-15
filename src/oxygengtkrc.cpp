@@ -36,7 +36,7 @@ namespace Oxygen
     {
 
         // loop over sections in other
-        for( Section::List::const_iterator iter = other._sections.begin(); iter != other._sections.end(); iter++ )
+        for( Section::List::const_iterator iter = other._sections.begin(); iter != other._sections.end(); ++iter )
         {
             Section::List::iterator sectionIter = std::find_if( _sections.begin(), _sections.end(), Section::SameNameFTor( *iter ) );
             if( sectionIter == _sections.end() ) _sections.push_back( *iter );

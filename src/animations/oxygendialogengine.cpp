@@ -29,8 +29,10 @@ namespace Oxygen
     {
         if( contains( widget ) ) return false;
 
-        //gtk_dialog_set_alternative_button_order will cause errors to be logged, but dont want these
-        //so register or own error handler, and then unregister afterwards...
+        /*
+        gtk_dialog_set_alternative_button_order will cause errors to be logged, but don't want these
+        so register or own error handler, and then unregister afterwards...
+        */
         const unsigned int id( g_log_set_handler("Gtk", G_LOG_LEVEL_CRITICAL, Gtk::oxygen_log_handler, NULL) );
 
         // change order

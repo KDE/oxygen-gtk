@@ -23,8 +23,8 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygencache.h"
 #include "oxygencolorutils.h"
+#include "oxygencache.h"
 #include "oxygenrgba.h"
 
 #include <algorithm>
