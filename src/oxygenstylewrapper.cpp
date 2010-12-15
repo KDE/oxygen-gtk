@@ -92,8 +92,9 @@ namespace Oxygen
             { return; }
 
             // no background in comboboxes popup and tooltips windows
-            if( Gtk::gdk_window_nobackground( window ) ) return;
-
+            if( Gtk::gdk_window_nobackground( window ) ) 
+            { return; }
+            
             // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )
             {
@@ -118,7 +119,7 @@ namespace Oxygen
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
 
             // render window background
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 
             return;
 
@@ -137,7 +138,7 @@ namespace Oxygen
                 if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
                 { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
                 accepted = true;
             }
 
@@ -697,7 +698,7 @@ namespace Oxygen
             if( !Style::instance().settings().applicationName().isMozilla() &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
             return;
 
         } else if( d.isMenu() ) {
@@ -705,7 +706,7 @@ namespace Oxygen
             if( GTK_IS_MENU( widget ) && GTK_MENU( widget )->torn_off )
             {
 
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 
             } else {
 
@@ -1146,7 +1147,7 @@ namespace Oxygen
 
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
-            Style::instance().renderWindowBackground(window,clipRect,x-4,y-4,w+8,h+8);
+            Style::instance().renderWindowBackground(window,widget,clipRect,x-4,y-4,w+8,h+8);
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
@@ -1155,7 +1156,7 @@ namespace Oxygen
             if( style )
             {
                 Style::instance().fill( window,clipRect,x-2,y-2,w+4,h+4, Gtk::gdk_get_color( style->base[state] ) );
-                Style::instance().renderWindowBackground( window,clipRect,x+2,y+2,w-4,h-6 );
+                Style::instance().renderWindowBackground( window, widget, clipRect,x+2,y+2,w-4,h-6 );
             }
 
             StyleOptions options( Blend );
@@ -1434,7 +1435,7 @@ namespace Oxygen
                 if( widget && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
                 {
 
-                    Style::instance().renderWindowBackground( window, clipRect, x1-4, y-7, x2-x1+10, 20 );
+                    Style::instance().renderWindowBackground( window, widget, clipRect, x1-4, y-7, x2-x1+10, 20 );
 
                 } else {
 
@@ -1554,7 +1555,7 @@ namespace Oxygen
             if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
             {
 
-                Style::instance().renderWindowBackground( window, clipRect, x-8, y-8, w+16, h+16);
+                Style::instance().renderWindowBackground( window, widget, clipRect, x-8, y-8, w+16, h+16);
 
             }
 
@@ -1615,7 +1616,7 @@ namespace Oxygen
 
             // need to render background behind arrows from calendar
             // offsets are empirical
-            Style::instance().renderWindowBackground( window, clipRect, x-2, y-3, w+4, h+6 );
+            Style::instance().renderWindowBackground( window, widget, clipRect, x-2, y-3, w+4, h+6 );
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
@@ -2197,7 +2198,7 @@ namespace Oxygen
 
             } else if( Gtk::gtk_object_is_a( G_OBJECT( widget ), "GtkPizza" ) ) {
 
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
                 if( w>h ) options |= Vertical;
 
             }
@@ -2208,7 +2209,7 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
             if( orientation == GTK_ORIENTATION_VERTICAL ) options |= Vertical;
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
             Style::instance().renderToolBarHandle( window, clipRect, x, y, w, h, options );
 
         } else {
