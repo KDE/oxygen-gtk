@@ -57,6 +57,7 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________
     bool Gtk::gtk_is_panel_applet( GtkWidget* widget )
     {
         std::string name( G_OBJECT_TYPE_NAME( widget ) );
