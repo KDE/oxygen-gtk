@@ -113,15 +113,15 @@ namespace Oxygen
         if( widget )
         {
             // external applets
-            if( Gtk::gtk_is_panel_applet( widget ) )
+            if( Gtk::gtk_widget_is_panel_applet( widget ) )
             { return false; }
 
             // internal applets
             GtkWidget *parent = gtk_widget_get_parent( widget );
-            if( parent && Gtk::gtk_is_panel_applet( parent ) )
+            if( parent && Gtk::gtk_widget_is_panel_applet( parent ) )
             { return false; }
         }
-        
+
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
 

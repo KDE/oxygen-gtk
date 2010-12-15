@@ -56,8 +56,8 @@ namespace Oxygen
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
         //! returns true if is an Gnome applet
-        bool gtk_is_panel_applet( GtkWidget* );
-        
+        bool gtk_widget_is_panel_applet( GtkWidget* );
+
         //! print some widget information
         void gtk_widget_print_tree( GtkWidget* );
 
@@ -117,7 +117,7 @@ namespace Oxygen
         GtkWidget* gtk_parent_notebook( GtkWidget* );
 
         //! returns true if potentialParent is (maybe indirect) parent of widget
-        bool gtk_is_parent( GtkWidget*, GtkWidget* potentialParent );
+        bool gtk_widget_is_parent( GtkWidget*, GtkWidget* potentialParent );
 
         //! returns true if one of the parent widgets has a sunken shadow
         bool gtk_parent_is_shadow_in( GtkWidget* );

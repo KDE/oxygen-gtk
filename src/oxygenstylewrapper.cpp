@@ -92,9 +92,9 @@ namespace Oxygen
             { return; }
 
             // no background in comboboxes popup and tooltips windows
-            if( Gtk::gdk_window_nobackground( window ) ) 
+            if( Gtk::gdk_window_nobackground( window ) )
             { return; }
-            
+
             // register to relevant engines
             if( GTK_IS_WINDOW( widget ) )
             {
@@ -416,7 +416,7 @@ namespace Oxygen
                 GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
                 GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
                 GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
-                if( !Gtk::gtk_is_parent( widget, tabLabel ) )
+                if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) )
                 {
                     pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
                     gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
