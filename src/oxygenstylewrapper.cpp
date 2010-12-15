@@ -698,7 +698,10 @@ namespace Oxygen
             if( !Style::instance().settings().applicationName().isMozilla() &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
-            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+
+            if( !Style::instance().settings().applicationName().isMozilla() )
+            { Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h ); }
+
             return;
 
         } else if( d.isMenu() ) {
