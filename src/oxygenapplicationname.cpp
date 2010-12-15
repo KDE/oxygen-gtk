@@ -40,6 +40,7 @@ namespace Oxygen
         #endif
 
         if( appName.find("firefox") == 0 ) _name = Firefox;
+        else if( appName.find("xulrunner") == 0 ) _name = Xul;
         else if( appName.find("thunderbird") == 0 ) _name = Thunderbird;
         else if( appName.find("seamonkey" ) == 0 ) _name = Seamonkey;
         else if( appName == "soffice" ) _name = OpenOffice;
