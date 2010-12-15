@@ -58,7 +58,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________
-    bool Gtk::gtk_is_panel_applet( GtkWidget* widget )
+    bool Gtk::gtk_widget_is_panel_applet( GtkWidget* widget )
     {
         std::string name( G_OBJECT_TYPE_NAME( widget ) );
         return name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0;
@@ -256,7 +256,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
+    bool Gtk::gtk_widget_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
     {
 
         GtkWidget *parent( widget );
@@ -491,29 +491,27 @@ namespace Oxygen
         {
             // check if the button resides on tab label, not anywhere on the tab
             bool tabLabelIsParent=false;
-            for(int i=0;i<gtk_notebook_get_n_pages(nb);++i)
+            for( int i=0; i < gtk_notebook_get_n_pages(nb); ++i )
             {
-                GtkWidget* tabLabel=gtk_notebook_get_tab_label(nb,gtk_notebook_get_nth_page(nb,i));
-                if(gtk_is_parent(widget,GTK_WIDGET(tabLabel)))
-                {
-                    tabLabelIsParent=true;
-                }
+                GtkWidget* tabLabel( gtk_notebook_get_tab_label(nb,gtk_notebook_get_nth_page( nb, i ) ) );
+                if( gtk_widget_is_parent( widget, GTK_WIDGET(tabLabel) ) )
+                { tabLabelIsParent=true; }
             }
 
-            if(!tabLabelIsParent) return false;
+            if( !tabLabelIsParent ) return false;
 
             // make sure button has no text and some image (for now, just hope it's a close icon)
-            if(!gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)))
+            if( !gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)) )
             {
                 // check for pidgin 'x' close button
                 GtkWidget* label;
                 if(!(label=gtk_button_find_label(widget))) return false;
                 else {
 
-                    const gchar* labelText=gtk_label_get_text(GTK_LABEL(label));
+                    const gchar* labelText=gtk_label_get_text( GTK_LABEL(label) );
                     if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
                     {
-                        gtk_widget_hide(label);
+                        gtk_widget_hide( label );
                         return true;
                     } else return false;
                 }
