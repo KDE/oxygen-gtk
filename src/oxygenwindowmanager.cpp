@@ -57,7 +57,7 @@ namespace Oxygen
     void WindowManager::registerWidget( GtkWidget* widget )
     {
 
-        if( _map.contains( widget ) ) return;
+        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
 
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::WindowManager::registerWidget - " << widget << "(" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
@@ -409,6 +409,7 @@ namespace Oxygen
         // clear list
         _blackList.clear();
         _blackList.push_back( "GtkPizza" );
+        _blackList.push_back( "MetaFrames" );
         _blackList.push_back( "GladeDesignLayout" );
     }
 
