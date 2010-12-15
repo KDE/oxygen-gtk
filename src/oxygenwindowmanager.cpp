@@ -58,9 +58,14 @@ namespace Oxygen
     {
 
         if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
-        
+
         // Window with no decorations (set by app), let window manage it self
         if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return;
+
+        // widgets used in tabs also must be ignored (happens, unfortunately)
+        GtkWidget* parent( gtk_widget_get_parent( widget ) );
+        if( GTK_IS_NOTEBOOK( parent ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( parent ), widget ) )
+        { return; }
 
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::WindowManager::registerWidget - " << widget << "(" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
@@ -148,6 +153,7 @@ namespace Oxygen
                 << widget
                 << "(" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " " << gtk_widget_get_name( widget )
+                << "(" << G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) << ")"
                 << std::endl;
             #endif
 

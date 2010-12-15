@@ -454,6 +454,22 @@ namespace Oxygen
     }
 
     //____________________________________________________________
+    bool Gtk::gtk_notebook_is_tab_label(GtkNotebook* notebook, GtkWidget* widget )
+    {
+
+        for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+        {
+            // retrieve page and tab label
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if( widget == tabLabel ) return true;
+        }
+
+        return false;
+
+    }
+
+    //____________________________________________________________
     int Gtk::gtk_notebook_get_current_tab(GtkNotebook* notebook)
     {
         if( notebook && notebook->children && notebook->cur_page ) return g_list_index( notebook->children, notebook->cur_page );
@@ -461,7 +477,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________
-    gboolean Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
+    bool Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( notebook ) )
