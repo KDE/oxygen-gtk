@@ -58,6 +58,9 @@ namespace Oxygen
     {
 
         if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
+        
+        // Window with no decorations (set by app), let window manage it self
+        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return;
 
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::WindowManager::registerWidget - " << widget << "(" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
