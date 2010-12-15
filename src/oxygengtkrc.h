@@ -24,6 +24,7 @@
 #include <list>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace Oxygen
 {
@@ -120,7 +121,7 @@ namespace Oxygen
                 addSection( _headerSectionName );
                 addSection( _rootSectionName );
                 addSection( _defaultSectionName, "oxygen-default" );
-                addToRootSection( "class \"*\" style \"oxygen-default-internal\"" );
+                addToRootSection( std::string("class \"*\" style \"")+_defaultSectionName+"\"" );
             }
 
             //! describes each style section in resource list
@@ -144,11 +145,20 @@ namespace Oxygen
 
                 //! clear
                 void clear( void )
-                { _content = std::string(); }
+                { _content.clear(); }
 
                 //! add to content
                 void add( const std::string& content )
-                { _content += content + "\n"; }
+                {
+                    if( !content.empty() )
+                    _content.push_back( content );
+                }
+
+                //! contents list shortcut
+                typedef std::vector<std::string> ContentList;
+
+                //! add to content
+                void add( const ContentList& );
 
                 //! equal operator. Based on name only
                 bool operator == (const Section& other ) const
@@ -165,7 +175,7 @@ namespace Oxygen
                 std::string _parent;
 
                 //! content
-                std::string _content;
+                ContentList _content;
 
                 //! used to find section with matching name
                 class SameNameFTor
