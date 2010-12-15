@@ -36,6 +36,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <sys/stat.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -256,7 +257,13 @@ namespace Oxygen
         for( PathList::const_iterator iter = _kdeIconPathList.begin(); iter != _kdeIconPathList.end(); ++iter )
         {
 
-            pathList.push_back( sanitizePath( *iter + '/' + theme ) );
+            // create path and check for existence
+            std::string path( sanitizePath( *iter + '/' + theme ) );
+            struct stat st;
+            if( stat( path.c_str(), &st ) != 0 ) continue;
+
+            // add to path list
+            pathList.push_back( path );
             if( parentTheme.empty() )
             {
                 const std::string index( sanitizePath( *iter + '/' + theme + "/index.theme" ) );
@@ -268,7 +275,12 @@ namespace Oxygen
 
         // add parent if needed
         if( !parentTheme.empty() )
-        { addIconTheme( pathList, parentTheme ); }
+        {
+            // split using "," as a separator
+            PathList parentThemes( parentTheme, "," );
+            for( PathList::const_iterator iter = parentThemes.begin(); iter != parentThemes.end(); ++iter )
+            { addIconTheme( pathList, *iter ); }
+        }
 
         return;
 

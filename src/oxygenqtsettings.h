@@ -225,7 +225,16 @@ namespace Oxygen
         //! path list
         class PathList: public std::vector<std::string>
         {
+
             public:
+
+            //! empty constructor
+            PathList( void )
+            {}
+
+            //! splitting constructor
+            PathList( const std::string& path, const std::string& separator = ":" )
+            { split( path, separator ); }
 
             //! split string using provided separator and store
             void split( const std::string&, const std::string& = ":" );
