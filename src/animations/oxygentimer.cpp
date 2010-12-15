@@ -43,7 +43,7 @@ namespace Oxygen
     gboolean Timer::timeOut( gpointer data )
     {
 
-        // cast to timer, and execute relevent function
+        // cast to timer, and execute relevant function
         Timer& timer( *static_cast<Timer*>( data ) );
         gboolean result = (timer._func)( timer._data );
 

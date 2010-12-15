@@ -110,7 +110,7 @@ namespace Oxygen
         else if( _mode == Disabled )
         {
             DataMap<Data>::Map& map( _map.map() );
-            for( DataMap<Data>::Map::iterator iter = map.begin(); iter != map.end(); iter++ )
+            for( DataMap<Data>::Map::iterator iter = map.begin(); iter != map.end(); ++iter )
             { connect( iter->first, iter->second ); }
         }
 

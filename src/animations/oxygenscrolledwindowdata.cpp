@@ -84,7 +84,7 @@ namespace Oxygen
     void ScrolledWindowData::disconnect( GtkWidget* widget )
     {
         _target = 0;
-        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); iter++ )
+        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
         { iter->second.disconnect( iter->first ); }
 
         _childrenData.clear();

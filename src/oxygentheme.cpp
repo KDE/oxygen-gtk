@@ -82,7 +82,7 @@ void theme_init( GTypeModule* module )
 
     // true if application was found in one of the lines
     bool found( false );
-    for( std::vector<std::string>::const_reverse_iterator iter = lines.rbegin(); iter != lines.rend() && !found; iter++ )
+    for( std::vector<std::string>::const_reverse_iterator iter = lines.rbegin(); iter != lines.rend() && !found; ++iter )
     {
 
         // store line locally

@@ -1,4 +1,4 @@
-#ifndef oxygengdkpixbfgcache_h
+#ifndef oxygengdkpixbufcache_h
 #define oxygengdkpixbufcache_h
 
 /*

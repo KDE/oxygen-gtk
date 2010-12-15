@@ -158,7 +158,7 @@ namespace Oxygen
         };
 
         //! cell info flags
-        /*! stores relevent information from cell info needed for painting */
+        /*! stores relevant information from cell info needed for painting */
         class CellInfoFlags
         {
 

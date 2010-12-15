@@ -117,7 +117,7 @@ namespace Oxygen
         _hoveredTab = index;
 
         GdkRectangle updateRect( Gtk::gdk_rectangle() );
-        for( RectangleList::const_iterator iter = _tabRects.begin(); iter != _tabRects.end(); iter++ )
+        for( RectangleList::const_iterator iter = _tabRects.begin(); iter != _tabRects.end(); ++iter )
         { gdk_rectangle_union( &(*iter), &updateRect, &updateRect ); }
 
         gtk_widget_queue_draw_area( widget, updateRect.x-4, updateRect.y-4, updateRect.width+8, updateRect.height+8 );
