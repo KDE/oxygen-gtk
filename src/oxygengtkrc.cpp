@@ -99,6 +99,16 @@ namespace Oxygen
         }
     }
 
+    //_________________________________________________
+    void Gtk::RC::Section::add( const Gtk::RC::Section::ContentList& content )
+    {
+        for( ContentList::const_iterator iter = content.begin(); iter != content.end(); ++iter )
+        {
+            if( std::find( _content.begin(), _content.end(), *iter ) == _content.end() )
+            { _content.push_back( *iter ); }
+        }
+    }
+
     namespace Gtk
     {
         //_______________________________________________________________________
@@ -107,7 +117,9 @@ namespace Oxygen
             if( section._name == RC::_rootSectionName || section._name == RC::_headerSectionName )
             {
 
-                out << section._content;
+                // add contents
+                for( RC::Section::ContentList::const_iterator iter = section._content.begin(); iter != section._content.end(); ++iter )
+                { out << *iter << std::endl; }
 
             } else {
 
@@ -115,7 +127,11 @@ namespace Oxygen
                 if( !section._parent.empty() ) out << " = \"" << section._parent << "\"";
                 out << std::endl;
                 out << "{" << std::endl;
-                out << section._content;
+
+                // add contents
+                for( RC::Section::ContentList::const_iterator iter = section._content.begin(); iter != section._content.end(); ++iter )
+                { out << *iter << std::endl; }
+
                 out << "}" << std::endl;
 
             }
