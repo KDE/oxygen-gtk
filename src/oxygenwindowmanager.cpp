@@ -153,7 +153,6 @@ namespace Oxygen
                 << widget
                 << "(" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " " << gtk_widget_get_name( widget )
-                << "(" << G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) << ")"
                 << std::endl;
             #endif
 
