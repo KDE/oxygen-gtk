@@ -199,15 +199,7 @@ namespace Oxygen
 
             // enable drag and accept
             _drag = true;
-
-            /*
-            always return false for GtkNotebook to avoid conflicts
-            note: in principle it should be safe to return false anyway
-            since window drag is supposed to occur on events for which
-            nothing else is done (Hugo)
-            */
-            if( GTK_IS_NOTEBOOK( widget ) ) return false;
-            else return true;
+            return true;
 
         } else return false;
     }
@@ -278,15 +270,7 @@ namespace Oxygen
             gtk_grab_remove(widget);
             gdk_pointer_ungrab( CurrentTime );
             _drag = false;
-
-            /*
-            always return false for GtkNotebook to avoid conflicts
-            note: in principle it should be safe to return false anyway
-            since window drag is supposed to occur on events for which
-            nothing else is done (Hugo)
-            */
-            if( GTK_IS_NOTEBOOK( widget ) ) return false;
-            else return true;
+            return true;
 
         } else return false;
 
