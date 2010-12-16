@@ -551,6 +551,9 @@ namespace Oxygen
 
             } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
+                // keep track of whether button is active (pressed-down) or pre-lighted
+                const bool buttonActive( state == GTK_STATE_ACTIVE || state == GTK_STATE_PRELIGHT );
+
                 // get the state from the combobox
                 /* this fixes rendering issues when the arrow is disabled, but not the entry */
                 state = gtk_widget_get_state(parent);
@@ -582,7 +585,9 @@ namespace Oxygen
                     if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
                     else options &= ~Focus;
 
-                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    // properly set button hover state. Pressed-down buttons are marked hovered, consistently with Qt
+                    Style::instance().animations().comboBoxEntryEngine().setButtonHovered( parent, buttonActive );
+                    if( Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
                     else options &= ~Hover;
 
                 }
