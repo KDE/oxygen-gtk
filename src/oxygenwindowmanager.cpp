@@ -346,6 +346,7 @@ namespace Oxygen
         {
 
             return
+                ( !Gtk::gtk_notebook_has_visible_arrows( GTK_NOTEBOOK( widget ) ) ) &&
                 Style::instance().animations().tabWidgetEngine().contains( widget ) &&
                 Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1;
         }
