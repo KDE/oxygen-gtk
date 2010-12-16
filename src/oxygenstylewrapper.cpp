@@ -1554,6 +1554,9 @@ namespace Oxygen
         StyleOptions options( Contrast );
         options |= StyleOptions( widget, state );
 
+        // Arrows which are active are painted as hovered
+        if( state == GTK_STATE_ACTIVE ) options |= Hover;
+
         if( d.isTearOffMenuItem() )
         {
             if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
