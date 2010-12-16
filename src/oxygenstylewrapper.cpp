@@ -110,7 +110,8 @@ namespace Oxygen
             // register to window manager
             if( Gtk::gdk_window_is_base( window ) &&
                 !Style::instance().settings().applicationName().isMozilla() &&
-                !Style::instance().settings().applicationName().isOpenOffice() )
+                !Style::instance().settings().applicationName().isOpenOffice() &&
+                !( GTK_IS_EVENT_BOX( widget ) && !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
             { Style::instance().windowManager().registerWidget( widget ); }
 
             // change gtk dialog button order
