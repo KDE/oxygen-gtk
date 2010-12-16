@@ -303,11 +303,21 @@ namespace Oxygen
         if( !window ) return true;
 
         GtkAllocation allocation;
-        #if GTK_CHECK_VERSION(2, 18, 0)
-        gtk_widget_get_allocation( widget, &allocation );
-        #else
-        allocation = widget->allocation;
-        #endif
+
+        if( GTK_IS_NOTEBOOK( widget ) )
+        {
+
+            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
+
+        } else {
+
+            #if GTK_CHECK_VERSION(2, 18, 0)
+            gtk_widget_get_allocation( widget, &allocation );
+            #else
+            allocation = widget->allocation;
+            #endif
+
+        }
 
         // Need to get absolute coordinates
         int nx(0);
@@ -334,6 +344,7 @@ namespace Oxygen
         // if widget is a notebook, accept if there is no hovered tab
         if( GTK_IS_NOTEBOOK( widget ) )
         {
+
             return
                 Style::instance().animations().tabWidgetEngine().contains( widget ) &&
                 Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1;
