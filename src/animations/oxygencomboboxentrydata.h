@@ -67,6 +67,15 @@ namespace Oxygen
             return;
         }
 
+       //! button focus
+        void setButtonHovered( bool value )
+        {
+            if( _button._hovered == value ) return;
+            if( _button._widget )
+            { setHovered( _button._widget, value ); }
+            return;
+        }
+
         //! entry focus
         void setEntryFocus( bool value )
         {

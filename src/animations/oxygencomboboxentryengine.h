@@ -66,6 +66,10 @@ namespace Oxygen
         void setButtonFocus( GtkWidget* widget, bool value )
         { data().value( widget ).setButtonFocus( value ); }
 
+         //! button focus
+        void setButtonHovered( GtkWidget* widget, bool value )
+        { data().value( widget ).setButtonHovered( value ); }
+
         //! entry focus
         void setEntryFocus( GtkWidget* widget, bool value )
         { data().value( widget ).setEntryFocus( value ); }
