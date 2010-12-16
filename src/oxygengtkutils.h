@@ -181,6 +181,9 @@ namespace Oxygen
         //! returns true if widget is one of the notebook's tab labels
         bool gtk_notebook_is_tab_label( GtkNotebook*, GtkWidget* );
 
+        //! returns tabbar rect in notebook
+        void gtk_notebook_get_tabbar_rect( GtkNotebook*, GdkRectangle* );
+
         //! index of current page
         int gtk_notebook_get_current_tab( GtkNotebook* );
 

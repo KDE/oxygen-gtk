@@ -469,6 +469,73 @@ namespace Oxygen
 
     }
 
+
+    //____________________________________________________________
+    void Gtk::gtk_notebook_get_tabbar_rect( GtkNotebook* notebook, GdkRectangle* rect )
+    {
+        // check notebook and rect
+        if( !( notebook && rect ) ) return;
+
+        // check tab visibility
+        if( !( gtk_notebook_get_show_tabs( notebook ) && gtk_container_get_children( GTK_CONTAINER( notebook ) ) ) )
+        {
+            *rect = gdk_rectangle();
+            return;
+        }
+
+        // get full rect
+        gtk_widget_get_allocation( GTK_WIDGET( notebook ), rect );
+
+        // adjust to account for borderwidth
+        guint borderWidth( gtk_container_get_border_width( GTK_CONTAINER( notebook ) ) );
+        rect->x += borderWidth;
+        rect->y += borderWidth;
+        rect->height -= 2*borderWidth;
+        rect->width -= 2*borderWidth;
+
+        // get current page
+        int pageIndex( gtk_notebook_get_current_page( notebook ) );
+        if( !( pageIndex >= 0 && pageIndex < gtk_notebook_get_n_pages( notebook ) ) )
+        {
+            *rect = gdk_rectangle();
+            return;
+        }
+
+        GtkWidget* page( gtk_notebook_get_nth_page( notebook, pageIndex ) );
+        if( !page )
+        {
+            *rect = gdk_rectangle();
+            return;
+        }
+
+        // removes page allocated size from rect, based on tabwidget orientation
+        const GtkAllocation& pageAllocation( page->allocation );
+        switch( gtk_notebook_get_tab_pos( notebook ) )
+        {
+            case GTK_POS_BOTTOM:
+            rect->y += pageAllocation.height;
+            rect->height -= pageAllocation.height;
+            break;
+
+            case GTK_POS_TOP:
+            rect->height -= pageAllocation.height;
+            break;
+
+            case GTK_POS_RIGHT:
+            rect->x += pageAllocation.width;
+            rect->width -= pageAllocation.width;
+            break;
+
+            case GTK_POS_LEFT:
+            rect->width -= pageAllocation.width;
+            break;
+        }
+
+        return;
+
+    }
+
+
     //____________________________________________________________
     int Gtk::gtk_notebook_get_current_tab(GtkNotebook* notebook)
     {
