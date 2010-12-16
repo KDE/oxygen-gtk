@@ -184,6 +184,10 @@ namespace Oxygen
         //! returns tabbar rect in notebook
         void gtk_notebook_get_tabbar_rect( GtkNotebook*, GdkRectangle* );
 
+        //! returns true if notebook has visible scrollbar arrows
+        /*! arrows are dimmed visible if at least one of the child tab_labels is unmapped */
+        bool gtk_notebook_has_visible_arrows( GtkNotebook* );
+
         //! index of current page
         int gtk_notebook_get_current_tab( GtkNotebook* );
 

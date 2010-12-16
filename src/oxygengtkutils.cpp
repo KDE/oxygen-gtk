@@ -535,6 +535,27 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________
+    bool Gtk::gtk_notebook_has_visible_arrows( GtkNotebook* notebook )
+    {
+
+        if( !gtk_notebook_get_show_tabs( notebook ) ) return false;
+
+        // loop over pages
+        for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
+        {
+
+            // retrieve page and tab label
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            GtkWidget* label( gtk_notebook_get_tab_label( notebook, page ) );
+            if( label && !gtk_widget_get_mapped( label ) ) return true;
+
+        }
+
+        return false;
+
+    }
+
 
     //____________________________________________________________
     int Gtk::gtk_notebook_get_current_tab(GtkNotebook* notebook)
