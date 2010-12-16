@@ -348,14 +348,10 @@ namespace Oxygen
             return
                 ( !Gtk::gtk_notebook_has_visible_arrows( GTK_NOTEBOOK( widget ) ) ) &&
                 Style::instance().animations().tabWidgetEngine().contains( widget ) &&
-                Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1 &&
-                childrenUseEvent( widget, event, inNoteBook );
-
-        } else {
-
-            return childrenUseEvent( widget, event, false );
-
+                Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1;
         }
+
+        return childrenUseEvent( widget, event, false );
 
     }
 
