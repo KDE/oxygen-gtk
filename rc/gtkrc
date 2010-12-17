@@ -110,6 +110,18 @@ class "GtkMenuItem" style "oxygen-menubaritem"
 widget_class "*<GtkMenu>.<GtkMenuItem>" style "oxygen-menuitem"
 widget_class "*<GtkMenu>.<GtkSeparatorMenuItem>" style "oxygen-separator-menuitem"
 
+# toolbuttons with menu
+style "oxygen-menutoolbutton" = "oxygen-default"
+{
+    xthickness=1
+    ythickness=1
+    GtkButton::focus-padding=0
+    GtkWidget::focus-line-width=0
+}
+
+class "*GtkMenuToolButton" style "oxygen-menutoolbutton"
+widget_class "*.GtkMenuToolButton.*Box.GtkToggleButton" style "oxygen-menutoolbutton"
+
 # notebook settings
 style "oxygen-notebook" = "oxygen-default"
 {
