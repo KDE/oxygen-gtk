@@ -74,7 +74,8 @@ namespace Oxygen
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _initialized( false ),
-        _colorsInitialized( false )
+        _colorsInitialized( false ),
+        _KDESession( false )
     {}
 
     //_________________________________________________________
@@ -84,6 +85,9 @@ namespace Oxygen
         if( _initialized ) return false;
         _initialized = true;
 
+        if( g_getenv( "KDE_FULL_SESSION" ) )
+            _KDESession = true;
+        
         // clear RC
         _rc.clear();
 
@@ -114,15 +118,19 @@ namespace Oxygen
         std::cout << _oxygen << std::endl;
         #endif
 
-        // reload icons
-        #if OXYGEN_ICON_HACK
-        _kdeIconPathList = kdeIconPathList();
-        loadKdeIcons();
-        #endif
+        // TODO: Add support for gtk schemes when not _KDESession
+        if( _KDESession )
+        {
+            // reload icons
+            #if OXYGEN_ICON_HACK
+            _kdeIconPathList = kdeIconPathList();
+            loadKdeIcons();
+            #endif
 
-        // reload fonts
-        loadKdeFonts();
-
+            // reload fonts
+            loadKdeFonts();
+        }
+        
         // kde globals options
         loadKdeGlobalsOptions();
 

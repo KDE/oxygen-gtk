@@ -400,6 +400,9 @@ namespace Oxygen
         bool _initialized;
         bool _colorsInitialized;
 
+        //! KDE running flags
+        bool _KDESession;
+        
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;
 
