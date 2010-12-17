@@ -37,6 +37,7 @@ namespace Oxygen
             //! true when no valid value was passed
             bool isNull( void ) const { return _value.empty(); }
 
+            bool isArrow( void ) const { return _value == "arrow"; }
             bool isBar( void ) const { return _value == "bar"; }
             bool isBase( void ) const { return _value == "base"; }
             bool isButton( void ) const { return _value == "button"; }
