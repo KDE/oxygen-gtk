@@ -124,11 +124,15 @@ void theme_init( GTypeModule* module )
     std::cout << "Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
     #endif
 
-    if(useRgba)
-    {
-        GdkColormap* cmap=gdk_screen_get_rgba_colormap(gdk_screen_get_default());
-        gtk_widget_push_colormap(cmap);
-        gtk_widget_set_default_colormap(cmap);
+    if( useRgba ) {
+        
+        GdkScreen* screen = gdk_screen_get_default();
+        if( screen ) 
+        {
+            GdkColormap* cmap=gdk_screen_get_rgba_colormap( screen );
+            gtk_widget_push_colormap( cmap );
+            gtk_widget_set_default_colormap( cmap );
+        }
     }
 
     Oxygen::Style::instance();
