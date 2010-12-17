@@ -298,14 +298,11 @@ namespace Oxygen
     //________________________________________________________
     GtkWidget* Gtk::gtk_button_find_image(GtkWidget* button)
     {
-        if(!GTK_IS_CONTAINER(button))
-            return 0L;
+        if( !GTK_IS_CONTAINER(button) ) return 0L;
         for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
         {
-            if(GTK_IS_IMAGE(children->data))
-                return GTK_WIDGET(children->data);
-            else if(GTK_IS_CONTAINER(children->data))
-                return gtk_button_find_image(GTK_WIDGET(children->data));
+            if( GTK_IS_IMAGE(children->data) ) return GTK_WIDGET(children->data);
+            else if( GTK_IS_CONTAINER(children->data) ) return gtk_button_find_image(GTK_WIDGET(children->data));
         }
         return 0L;
     }
@@ -317,10 +314,8 @@ namespace Oxygen
             return 0L;
         for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
         {
-            if(GTK_IS_LABEL(children->data))
-                return GTK_WIDGET(children->data);
-            else if(GTK_IS_CONTAINER(children->data))
-                return gtk_button_find_image(GTK_WIDGET(children->data));
+            if( GTK_IS_LABEL(children->data) ) return GTK_WIDGET(children->data);
+            else if( GTK_IS_CONTAINER(children->data) ) return gtk_button_find_image(GTK_WIDGET(children->data));
         }
         return 0L;
     }
