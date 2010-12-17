@@ -118,8 +118,10 @@ namespace Oxygen
         std::cout << _oxygen << std::endl;
         #endif
 
+#if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
         // TODO: Add support for gtk schemes when not _KDESession
         if( _KDESession )
+#endif
         {
             // reload icons
             #if OXYGEN_ICON_HACK
