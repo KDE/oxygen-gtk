@@ -127,7 +127,7 @@ namespace Oxygen
         bool withinWidget( GtkWidget*, GdkEventButton* ) const;
 
         //! return true if event is a usable drag event
-        bool useEvent( GtkWidget*, GdkEventButton* ) const;
+        bool useEvent( GtkWidget*, GdkEventButton* );
 
         //! return true if event is a usable drag event
         /*! for containers, children are also checked. The method is recursive */
@@ -217,6 +217,10 @@ namespace Oxygen
 
         //! active widget
         GtkWidget* _widget;
+
+        //! keep track of the last rejected button event to reject it again if passed to some parent widget
+        /*! this spares some time (by not processing the same event twice), and prevents some bugs */
+        GdkEventButton* _lastRejectedEvent;
 
         //! drag position
         int _x;

@@ -42,6 +42,7 @@ namespace Oxygen
         _dragDistance( 4 ),
         _dragDelay( 500 ),
         _widget( 0L ),
+        _lastRejectedEvent( 0L ),
         _x(-1),
         _y(-1)
     { initializeBlackList(); }
@@ -262,6 +263,7 @@ namespace Oxygen
     {
 
         _widget = 0L;
+        _lastRejectedEvent = 0L;
         _x = -1;
         _y = -1;
 
@@ -316,21 +318,23 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event ) const
+    bool WindowManager::useEvent( GtkWidget* widget, GdkEventButton* event )
     {
 
         // check against mode
         if( _mode == Disabled ) return false;
         if( _mode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+        if( _lastRejectedEvent && event == _lastRejectedEvent ) return false;
 
         // always accept if widget is not a container
         if( !GTK_IS_CONTAINER( widget ) ) return true;
 
         // if widget is a notebook, accept if there is no hovered tab
+        bool useEvent( true );
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
-            return
+            useEvent =
                 ( !Gtk::gtk_notebook_has_visible_arrows( GTK_NOTEBOOK( widget ) ) ) &&
                 Style::instance().animations().tabWidgetEngine().contains( widget ) &&
                 Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1 &&
@@ -338,9 +342,12 @@ namespace Oxygen
 
         } else {
 
-            return childrenUseEvent( widget, event, false );
+            useEvent = childrenUseEvent( widget, event, false );
 
         }
+
+        if( !useEvent ) _lastRejectedEvent = event;
+        return useEvent;
 
     }
 
