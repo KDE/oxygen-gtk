@@ -149,8 +149,9 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::wmButtonPress - "
-                << widget
+            std::cout << "Oxygen::WindowManager::wmButtonPress -"
+                << " event: " << event
+                << " widget: " << widget
                 << "(" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " " << gtk_widget_get_name( widget )
                 << std::endl;
