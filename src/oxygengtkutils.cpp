@@ -591,7 +591,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_notebook_is_close_button(GtkWidget* widget)
     {
-        if(GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget)))
+        if( GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget) ) )
         {
             // check if the button resides on tab label, not anywhere on the tab
             bool tabLabelIsParent=false;
@@ -605,24 +605,24 @@ namespace Oxygen
             if( !tabLabelIsParent ) return false;
 
             // make sure button has no text and some image (for now, just hope it's a close icon)
-            if( !gtk_button_find_image(widget) || gtk_button_get_label(GTK_BUTTON(widget)) )
+            if( gtk_button_find_image(widget) && !gtk_button_get_label( GTK_BUTTON(widget) ) )
+            { return true; }
+
+            // check for pidgin 'x' close button
+            if( GtkWidget* label = gtk_button_find_label(widget) )
             {
-                // check for pidgin 'x' close button
-                GtkWidget* label;
-                if(!(label=gtk_button_find_label(widget))) return false;
-                else {
 
-                    const gchar* labelText=gtk_label_get_text( GTK_LABEL(label) );
-                    if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
-                    {
-                        gtk_widget_hide( label );
-                        return true;
-                    } else return false;
-                }
+                const gchar* labelText=gtk_label_get_text( GTK_LABEL(label) );
+                if(!strcmp(labelText,"×")) // It's not letter 'x' - it's a special symbol
+                {
+                    gtk_widget_hide( label );
+                    return true;
+                } else return false;
 
-            } else return true;
+            } else return false;
 
         } else return false;
+
     }
 
     //________________________________________________________
