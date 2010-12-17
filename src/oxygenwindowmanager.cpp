@@ -389,7 +389,11 @@ namespace Oxygen
 
                         usable = false;
 
-                    } else if( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) {
+                    } else if( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) {
+
+                        usable = false;
+
+                   } else if( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) {
 
                         usable = false;
 
