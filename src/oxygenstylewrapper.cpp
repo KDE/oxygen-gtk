@@ -670,8 +670,8 @@ namespace Oxygen
 
                         // hide previous image
                         // show ours instead
-                        GtkWidget* image=Gtk::gtk_button_find_image(widget);
-                        gtk_widget_hide(image);
+                        if( GtkWidget* image = Gtk::gtk_button_find_image(widget) )
+                        { gtk_widget_hide(image); }
 
                         // center the button image
                         const int height( gdk_pixbuf_get_height( pixbuf ) );
