@@ -1009,7 +1009,8 @@ namespace Oxygen
         const bool isMenu( options&Menu );
         const bool isMozilla( settings().applicationName().isMozilla() );
         const bool isOpenOffice( settings().applicationName().isOpenOffice() );
-        const bool drawUglyShadow( !( hasAlpha || isMozilla || isOpenOffice ) );
+        const bool drawUglyShadow( !hasAlpha );
+        const bool rounded( !(isMozilla||isOpenOffice) );
 
         // if we aren't drawing window decoration
         if( !context )
@@ -1027,7 +1028,7 @@ namespace Oxygen
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
 
         // add vertical offset
-        if( isMenu && !( isMozilla || isOpenOffice ) )
+        if( isMenu && rounded )
         {
             y += Menu_VerticalOffset;
             h -= 2*Menu_VerticalOffset;
@@ -1081,36 +1082,54 @@ namespace Oxygen
                 // fully desaturate
                 ColorUtils::Rgba shadow( ColorUtils::darken( base, 0., 0. ) );
 
-                const double radius( 11*0.5 );
-                cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
-                cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
-                cairo_stroke( context );
+                if(rounded)
+                {
+                    const double radius( 11*0.5 );
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
+                    cairo_move_to( context, x+4, y-0.5 ); cairo_line_to( context, x+w-4, y-0.5 );
+                    cairo_stroke( context );
 
-                cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
-                cairo_stroke( context );
-                cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
-                cairo_stroke( context );
+                    cairo_arc_negative( context, x-0.5+radius, y-0.5+radius, radius, -0.5*M_PI, -M_PI );
+                    cairo_stroke( context );
+                    cairo_arc_negative( context, x+w-11+0.5+radius, y-0.5+radius, radius, 0, -0.5*M_PI );
+                    cairo_stroke( context );
 
-                cairo_set_source( context, ColorUtils::darken( shadow, 0.35 ));
-                cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
-                cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
-                cairo_stroke( context );
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.35 ));
+                    cairo_move_to( context, x-0.5, y+4 ); cairo_line_to( context, x-0.5, y+h-4 );
+                    cairo_move_to( context, x+w+0.5, y+4 ); cairo_line_to( context, x+w+0.5, y+h-4 );
+                    cairo_stroke( context );
 
-                cairo_set_source( context, ColorUtils::darken( shadow, 0.45 ));
-                cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
-                cairo_stroke( context );
-                cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );
-                cairo_stroke( context );
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.45 ));
+                    cairo_arc_negative( context, x-0.5+radius, y+h-11+0.5+radius, radius, -M_PI, -1.5*M_PI );
+                    cairo_stroke( context );
+                    cairo_arc_negative( context, x+w-11+0.5+radius, y+h-11+0.5+radius, radius, 0.5*M_PI, 0 );
+                    cairo_stroke( context );
 
-                cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
-                cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
-                cairo_stroke( context );
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
+                    cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
+                    cairo_stroke( context );
+                }
+                else
+                {
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
+                    cairo_move_to( context, x-0.5, y-0.5 ); cairo_line_to( context, x+w+0.5, y-0.5 );
+                    cairo_stroke( context );
+
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.35 ));
+                    cairo_move_to( context, x-0.5, y-0.5 ); cairo_line_to( context, x-0.5, y+h+0.5 );
+                    cairo_move_to( context, x+w+0.5, y-0.5 ); cairo_line_to( context, x+w+0.5, y+h+0.5 );
+                    cairo_stroke( context );
+
+                    cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
+                    cairo_move_to( context, x-0.5, y+h+0.5 ); cairo_line_to( context, x+w+0.5, y+h+0.5 );
+                    cairo_stroke( context );
+                }
             }
         }
 
         cairo_pattern_add_color_stop( pattern, 0, light );
 
-        if( isMozilla || isOpenOffice )
+        if( !rounded )
         {
 
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
@@ -1125,7 +1144,7 @@ namespace Oxygen
 
         }
 
-        cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, 3.5, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
+        cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, 3.5, rounded ? CornersAll : CornersNone );
 
         cairo_set_source( context, pattern );
         cairo_set_line_width( context, 0.8 );
