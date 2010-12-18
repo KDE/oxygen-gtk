@@ -18,4 +18,18 @@ The default is equivalent to:
 2/ on 64 bits machine an extra flag is needed at the CMake stage:
 
   cmake -DLIB_SUFFIX=64 ../
+
 3/ make -jX uses X parallel jobs so that compilation would speed up on SMP machines with X cores/CPUs/threads
+
+4/ There are some build settings available in /CMakeLists.txt:
+
+    * OXYGEN_DEBUG:
+set this to 1 to enable a large amount of debug information to be printed to terminal
+
+    * OXYGEN_ICON_HACK:
+set this to 0 to disable oxygen-gtk from forcing KDE icons for GTK apps (regardless of DE)
+
+    * OXYGEN_FORCE_KDE_ICONS_AND_FONTS:
+set this to 0 to disable forcing KDE icons and fonts (and use the ones set in GTK) - makes sense only when
+KDE is not running. Doesn't change anything when KDE is running.
+

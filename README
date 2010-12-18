@@ -56,7 +56,7 @@ The full list of black-listed applications is in rc/argb-apps.conf, and is usual
 
 It can be edited by the user to add (or remove) new applications in case we overlooked some. 
 The syntax used to add/remove an application in the black-list is described in the argb-apps.conf file.
-When there is a need to add new applications, user should also file a bug report so that it also gets added in the distributed code.
+When there is a need to add new applications, user should also post it in this bug: https://bugs.kde.org/show_bug.cgi?id=260640 so that it also gets added in the distributed code.
 
 III.2 Window grabbing
 ---------------------
