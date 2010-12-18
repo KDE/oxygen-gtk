@@ -30,7 +30,6 @@
 #include "config.h"
 
 #include <gdk/gdkx.h>
-
 namespace Oxygen
 {
 
@@ -429,6 +428,8 @@ namespace Oxygen
         _blackList.push_back( "GtkPizza" );
         _blackList.push_back( "MetaFrames" );
         _blackList.push_back( "GladeDesignLayout" );
+        _blackList.push_back( "SPHRuler" );
+        _blackList.push_back( "SPVRuler" );
     }
 
     //________________________________________________________________________________
