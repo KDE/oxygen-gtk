@@ -30,7 +30,6 @@
 #include "config.h"
 
 #include <gdk/gdkx.h>
-
 namespace Oxygen
 {
 
@@ -284,7 +283,7 @@ namespace Oxygen
     {
 
         // get widget window
-        GdkWindow *window( gtk_widget_get_parent_window( widget ) );
+        GdkWindow *window( gtk_widget_get_window( widget ) );
 
         // Some widgets aren't realized (GeditWindow for exemple) ...
         if( !window ) return true;
@@ -306,9 +305,14 @@ namespace Oxygen
 
         }
 
-        // Need to get absolute coordinates
+        // translate to current window
         int nx(0);
         int ny(0);
+        gdk_window_get_geometry( window, &nx, &ny, 0L, 0L, 0L );
+        allocation.x -= nx;
+        allocation.y -= ny;
+
+        // translate absolute coordinates
         gdk_window_get_origin(window, &nx, &ny );
         allocation.x += nx;
         allocation.y += ny;
@@ -367,65 +371,42 @@ namespace Oxygen
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
 
             // check widget state and type
-            if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT ) {
+            if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT )
+            {
 
                 // if widget is prelight, we don't need to check where event happen,
                 // any prelight widget indicate we can't do a move
                 usable = false;
+                continue;
 
-            } else if( GTK_IS_NOTEBOOK( childWidget ) ) {
-
-                inNoteBook = true;
-
-            } else if( event && withinWidget( childWidget, event ) ) {
-
-                #if OXYGEN_DEBUG
-                std::cout << "Oxygen::WindowManager::childrenUseEvent - "
-                    << widget
-                    << "(" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
-                    << " " << gtk_widget_get_name( childWidget )
-                    << std::endl;
-                #endif
-
-                GdkWindow *window = gtk_widget_get_window( childWidget );
-                if( window && gdk_window_is_visible( window ) )
-                {
-
-                    // check against black-list
-                    if( widgetIsBlackListed( childWidget ) )
-                    {
-
-                        usable = false;
-
-                    } else if( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) {
-
-                        usable = false;
-
-                   } else if( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) {
-
-                        usable = false;
-
-                    } else if( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) {
-
-                        // widget listening to press event
-                        usable = false;
-
-                    } else if( GTK_IS_MENU_ITEM( childWidget ) ) {
-
-                        // deal with menu item, GtkMenuItem only listen to
-                        // GDK_BUTTON_PRESS_MASK when state == GTK_STATE_PRELIGHT
-                        // so previous check are invalids :(
-                        usable = false;
-
-                    } else if( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) {
-
-                        // Scrolled do not send release events
-                        // to parents so not usable
-                        usable = false;
-
-                    }
-                }
             }
+
+            GdkWindow *window = gtk_widget_get_window( childWidget );
+            if( !( window && gdk_window_is_visible( window ) ) )
+            { continue; }
+
+            if( GTK_IS_NOTEBOOK( childWidget ) ) inNoteBook = true;
+
+            if( !( event && withinWidget( childWidget, event ) ) )
+            { continue; }
+
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::WindowManager::childrenUseEvent - "
+                << widget
+                << "(" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
+                << " " << gtk_widget_get_name( childWidget )
+                << std::endl;
+            #endif
+
+            // check special cases for which grab should not be enabled
+            if(
+                ( widgetIsBlackListed( childWidget ) ) ||
+                ( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) ||
+                ( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) ||
+                ( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) ||
+                ( GTK_IS_MENU_ITEM( childWidget ) ) ||
+                ( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) )
+            { usable = false; }
 
             // if child is a container and event has been accepted so far, also check it, recursively
             if( usable && GTK_IS_CONTAINER( childWidget ) )
@@ -447,6 +428,8 @@ namespace Oxygen
         _blackList.push_back( "GtkPizza" );
         _blackList.push_back( "MetaFrames" );
         _blackList.push_back( "GladeDesignLayout" );
+        _blackList.push_back( "SPHRuler" );
+        _blackList.push_back( "SPVRuler" );
     }
 
     //________________________________________________________________________________
