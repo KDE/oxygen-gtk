@@ -54,15 +54,28 @@ void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     // read blacklist
+    // system-wide
     const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
-    std::ifstream in( configFile.c_str() );
-    if( !in )
+    std::ifstream systemIn( configFile.c_str() );
+
+    // and user-defined
+    const std::string userConfig( std::string( getenv("HOME") ) + std::string("/.oxygen-gtk/argb-apps.conf") );
+    std::ifstream userIn( userConfig.c_str() );
+
+    if( !systemIn )
     {
         #if OXYGEN_DEBUG
         std::cout << "Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl;
         #endif
 
         return;
+    }
+
+    if( !userIn )
+    {
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl;
+        #endif
     }
 
     const char* appName = g_get_prgname();
@@ -74,7 +87,13 @@ void theme_init( GTypeModule* module )
     // load options into a string
     std::string contents;
     std::vector<std::string> lines;
-    while( std::getline( in, contents, '\n' ) )
+    while( std::getline( systemIn, contents, '\n' ) )
+    {
+        if( contents.empty() || contents[0] == '#' ) continue;
+        lines.push_back( contents );
+    }
+
+    while( std::getline( userIn, contents, '\n' ) )
     {
         if( contents.empty() || contents[0] == '#' ) continue;
         lines.push_back( contents );
