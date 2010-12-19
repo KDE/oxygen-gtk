@@ -54,6 +54,8 @@ The full list of black-listed applications is in rc/argb-apps.conf, and is usual
 
   /usr/share/themes/oxygen-gtk/gtk-2.0/argb-apps.conf
 
+There is also a per-user config file: $HOME/.oxygen-gtk/argb-apps.conf
+
 It can be edited by the user to add (or remove) new applications in case we overlooked some. 
 The syntax used to add/remove an application in the black-list is described in the argb-apps.conf file.
 When there is a need to add new applications, user should also post it in this bug: https://bugs.kde.org/show_bug.cgi?id=260640 so that it also gets added in the distributed code.
