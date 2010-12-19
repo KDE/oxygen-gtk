@@ -529,7 +529,7 @@ namespace Oxygen
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options(Hover);
-                if(state!=GTK_STATE_NORMAL)
+                if(state!=GTK_STATE_NORMAL && state!=GTK_STATE_INSENSITIVE)
                 {
                     if(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) )
                     { return; }
