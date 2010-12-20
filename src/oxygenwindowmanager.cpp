@@ -30,6 +30,7 @@
 #include "config.h"
 
 #include <gdk/gdkx.h>
+
 namespace Oxygen
 {
 
@@ -68,7 +69,11 @@ namespace Oxygen
         { return; }
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::registerWidget - " << widget << "(" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cout
+            << "Oxygen::WindowManager::registerWidget -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " " << gtk_widget_get_name( widget )
+            << std::endl;
         #endif
 
         // Force widget to listen to relevant events
@@ -92,7 +97,7 @@ namespace Oxygen
         if( !_map.contains( widget ) ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::unregisterWidget - " << widget << "(" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cout << "Oxygen::WindowManager::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         _map.value( widget ).disconnect( widget );
@@ -152,7 +157,7 @@ namespace Oxygen
             std::cout << "Oxygen::WindowManager::wmButtonPress -"
                 << " event: " << event
                 << " widget: " << widget
-                << "(" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " " << gtk_widget_get_name( widget )
                 << std::endl;
             #endif
@@ -164,8 +169,20 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    gboolean WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton*, gpointer data )
-    { return static_cast<WindowManager*>( data )->finishDrag( widget ); }
+    gboolean WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton* event, gpointer data )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::WindowManager::wmButtonRelease -"
+            << " event: " << event
+            << " widget: " << widget
+            << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " " << gtk_widget_get_name( widget )
+            << std::endl;
+        #endif
+
+        return static_cast<WindowManager*>( data )->finishDrag( widget );
+    }
 
     //_________________________________________________
     gboolean WindowManager::wmLeave(GtkWidget *widget, GdkEventCrossing*, gpointer data )
@@ -253,7 +270,7 @@ namespace Oxygen
             &xev);
 
         // force a release as some widgets miss it...
-        wmButtonRelease( widget, 0L, this );
+        // wmButtonRelease( widget, 0L, this );
         return true;
     }
 
@@ -390,14 +407,6 @@ namespace Oxygen
             if( !( event && withinWidget( childWidget, event ) ) )
             { continue; }
 
-            #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::childrenUseEvent - "
-                << widget
-                << "(" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
-                << " " << gtk_widget_get_name( childWidget )
-                << std::endl;
-            #endif
-
             // check special cases for which grab should not be enabled
             if(
                 ( widgetIsBlackListed( childWidget ) ) ||
@@ -411,6 +420,15 @@ namespace Oxygen
             // if child is a container and event has been accepted so far, also check it, recursively
             if( usable && GTK_IS_CONTAINER( childWidget ) )
             { usable = childrenUseEvent( childWidget, event, inNoteBook); }
+
+            #if OXYGEN_DEBUG
+            std::cout << "Oxygen::WindowManager::childrenUseEvent - "
+                << widget
+                << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
+                << " " << gtk_widget_get_name( childWidget )
+                << " usable: " << usable
+                << std::endl;
+            #endif
 
         }
 
