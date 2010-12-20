@@ -24,6 +24,7 @@
 */
 
 #include "oxygenapplicationname.h"
+#include "oxygengtkutils.h"
 #include "config.h"
 
 #include <iostream>
@@ -47,6 +48,26 @@ namespace Oxygen
         else if( appName == "gimp" ) _name = Gimp;
         else if( appName == "chromium" || appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;
         else _name = Unknown;
+    }
+
+    //__________________________________________________________________________
+    bool ApplicationName::isMozilla( GtkWidget* widget ) const
+    {
+        if( !isMozilla() ) return false;
+
+        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
+
+        #if OXYGEN_DEBUG
+        if( parent ) std::cout << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
+        #endif
+
+        if( parent && (
+            Gtk::gtk_object_is_a( G_OBJECT( parent ), "GtkFileChooserDialog" ) ||
+            Gtk::gtk_object_is_a( G_OBJECT( parent ), "GtkPrintUnixDialog" ) ) )
+            { return false; }
+
+        return true;
+
     }
 
 }
