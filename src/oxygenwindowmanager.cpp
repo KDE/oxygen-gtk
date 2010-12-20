@@ -152,16 +152,18 @@ namespace Oxygen
         if( event->type == GDK_BUTTON_PRESS && event->button == Gtk::LeftButton )
         {
 
+            const bool accepted( static_cast<WindowManager*>(data)->isWindowDragWidget( widget, event ) );
             #if OXYGEN_DEBUG
             std::cout << "Oxygen::WindowManager::wmButtonPress -"
                 << " event: " << event
                 << " widget: " << widget
                 << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " " << gtk_widget_get_name( widget )
+                << " accepted: " << accepted
                 << std::endl;
             #endif
 
-            return static_cast<WindowManager*>(data)->isWindowDragWidget( widget, event );
+            return accepted;
 
         } else return false;
 
@@ -218,7 +220,13 @@ namespace Oxygen
             _drag = true;
             return true;
 
-        } else return false;
+        } else {
+
+            // mark event as rejected
+            _lastRejectedEvent = event;
+            return false;
+        }
+
     }
 
     //_________________________________________________________________
@@ -366,7 +374,6 @@ namespace Oxygen
 
         }
 
-        if( !useEvent ) _lastRejectedEvent = event;
         return useEvent;
 
     }
@@ -421,8 +428,9 @@ namespace Oxygen
             { usable = childrenUseEvent( childWidget, event, inNoteBook); }
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::childrenUseEvent - "
-                << widget
+            std::cout << "Oxygen::WindowManager::childrenUseEvent -"
+                << " event: " << event
+                << " widget: " << widget
                 << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
                 << " " << gtk_widget_get_name( childWidget )
                 << " usable: " << usable
