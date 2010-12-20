@@ -2100,6 +2100,7 @@ namespace Oxygen
             }
 
             // render
+            if( Style::instance().settings().applicationName().isMozilla( widget ) ) tabOptions |= Mozilla;
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
             // render tabbar base if current tab
