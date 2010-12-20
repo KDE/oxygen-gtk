@@ -54,7 +54,11 @@ The full list of black-listed applications is in rc/argb-apps.conf, and is usual
 
   /usr/share/themes/oxygen-gtk/gtk-2.0/argb-apps.conf
 
-There is also a per-user config file: $HOME/.oxygen-gtk/argb-apps.conf . This file will be parsed AFTER the system-wide one, thus allowing the user to override SOME or ALL of the rules set in the system-wide file. I.e., using "disable:all" as a first statement in the per-user config file will make system-wide one inactive.
+There is also a per-user config file usually in 
+
+  $HOME/.config/oxygen-gtk/argb-apps.conf
+
+This file will be parsed AFTER the system-wide one, thus allowing the user to override SOME or ALL of the rules set in the system-wide file. I.e., using "disable:all" as a first statement in the per-user config file will make system-wide one inactive.
 
 It can be edited by the user to add (or remove) new applications in case we overlooked some. 
 The syntax used to add/remove an application in the black-list is described in the argb-apps.conf file.
