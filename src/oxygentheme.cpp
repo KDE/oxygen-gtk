@@ -142,8 +142,8 @@ void theme_init( GTypeModule* module )
     std::cout << "Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
     #endif
 
-    if( useRgba ) {
-
+    if( useRgba )
+    {
         GdkScreen* screen = gdk_screen_get_default();
         if( screen )
         {
