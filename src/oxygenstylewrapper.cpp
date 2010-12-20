@@ -720,14 +720,25 @@ namespace Oxygen
             } else {
 
                 StyleOptions options( Menu );
-                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+                // set alpha flag. Special handling is needed for mozilla and openoffice.
+                if( Style::instance().settings().applicationName().isMozilla( widget ) ||
+                    Style::instance().settings().applicationName().isOpenOffice() )
+                {
+
+                    GdkScreen* screen( gdk_screen_get_default() );
+                    if( screen && gdk_screen_is_composited( screen ) ) options |= Alpha;
+
+                } else  if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+                // add mask if needed
                 if( !( (options&Alpha) ||
                     Style::instance().settings().applicationName().isMozilla( widget ) ||
                     Style::instance().settings().applicationName().isOpenOffice() ) &&
                     GTK_IS_MENU(widget) )
                 {
 
-                    // make tooltips appear rounded using XShape extension if screen isn't composited
+                    // make menus appear rounded using XShape extension if screen isn't composited
                     Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const GtkAllocation& allocation( widget->allocation );
                     if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
