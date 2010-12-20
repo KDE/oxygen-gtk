@@ -1075,9 +1075,9 @@ namespace Oxygen
 
                 light=ColorUtils::mix(light, frameColor);
                 dark=ColorUtils::mix(dark,frameColor);
-            }
-            else
-            {
+
+            } else {
+
                 // window inactive - draw something resembling shadow
                 // fully desaturate
                 ColorUtils::Rgba shadow( ColorUtils::darken( base, 0., 0. ) );
@@ -1108,9 +1108,8 @@ namespace Oxygen
                     cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
                     cairo_move_to( context, x+4, y+h+0.5 ); cairo_line_to( context, x+w-4, y+h+0.5 );
                     cairo_stroke( context );
-                }
-                else
-                {
+
+                } else {
                     cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
                     cairo_move_to( context, x-0.5, y-0.5 ); cairo_line_to( context, x+w+0.5, y-0.5 );
                     cairo_stroke( context );

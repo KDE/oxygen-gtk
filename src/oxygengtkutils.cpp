@@ -82,7 +82,7 @@ namespace Oxygen
         if( !widget ) return false;
 
         GdkScreen *screen( gtk_widget_get_screen( widget ) );
-        if( gdk_screen_is_composited( screen ) )
+        if( screen && gdk_screen_is_composited( screen ) )
         {
 
             GdkVisual *visual( gtk_widget_get_visual (widget) );
