@@ -44,7 +44,10 @@ namespace Oxygen
         RightOfSelected = 1<<6,
 
         //! true if tab is being dragged
-        Dragged = 1<<7
+        Dragged = 1<<7,
+
+        //! true if tabs are drawn for mozilla application
+        Mozilla = 1<<8
 
     };
 
