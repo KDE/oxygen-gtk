@@ -109,7 +109,7 @@ namespace Oxygen
 
             // register to window manager
             if( Gtk::gdk_window_is_base( window ) &&
-                !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() &&
                 !( GTK_IS_EVENT_BOX( widget ) && !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
             { Style::instance().windowManager().registerWidget( widget ); }
@@ -126,7 +126,7 @@ namespace Oxygen
 
         } else if( d.isViewportBin() ) {
 
-            if( !Style::instance().settings().applicationName().isMozilla() &&
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
@@ -153,7 +153,7 @@ namespace Oxygen
             StyleOptions options;
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
             if( !( (options&Alpha) ||
-                Style::instance().settings().applicationName().isMozilla() ||
+                Style::instance().settings().applicationName().isMozilla( widget ) ||
                 Style::instance().settings().applicationName().isOpenOffice() )  )
             {
 
@@ -274,7 +274,7 @@ namespace Oxygen
 
             return;
 
-        } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla() ) {
+        } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
             if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
@@ -302,7 +302,7 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // plain background
-                if( style && !Style::instance().settings().applicationName().isMozilla() )
+                if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
@@ -521,7 +521,7 @@ namespace Oxygen
                 std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
 
                 // NautilusPathBar doesn't have any problem so only for GtkPathBar
-                if( !Style::instance().settings().applicationName().isMozilla() &&
+                if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
                     !Style::instance().settings().applicationName().isOpenOffice() && name == "GtkPathBar" )
                 { Style::instance().windowManager().registerWidget( widget ); }
 
@@ -602,7 +602,7 @@ namespace Oxygen
 
             } else if(
                 ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
-                !Style::instance().settings().applicationName().isMozilla() &&
+                !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 Gtk::gtk_combobox_appears_as_list( parent )
                 )
             {
@@ -701,11 +701,11 @@ namespace Oxygen
         } else if( d.isMenuBar() || d.isToolBar() ) {
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            if( !Style::instance().settings().applicationName().isMozilla() &&
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
-            if( !Style::instance().settings().applicationName().isMozilla() )
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) )
             { Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h ); }
 
             return;
@@ -722,7 +722,7 @@ namespace Oxygen
                 StyleOptions options( Menu );
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
                 if( !( (options&Alpha) ||
-                    Style::instance().settings().applicationName().isMozilla() ||
+                    Style::instance().settings().applicationName().isMozilla( widget ) ||
                     Style::instance().settings().applicationName().isOpenOffice() ) &&
                     GTK_IS_MENU(widget) )
                 {
@@ -778,7 +778,7 @@ namespace Oxygen
             if( GTK_IS_PROGRESS_BAR( widget ) )
             {
 
-                if( !Style::instance().settings().applicationName().isMozilla() )
+                if( !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
                     /*
                     need to call the parent style implementation here,
@@ -839,7 +839,7 @@ namespace Oxygen
                 // get background color from widget state
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
 
-                if( Style::instance().settings().applicationName().isMozilla() )
+                if( Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
 
                     /*
@@ -1084,7 +1084,7 @@ namespace Oxygen
                     { options |= Hover; }
                 }
 
-                if( style && !Style::instance().settings().applicationName().isMozilla() )
+                if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
@@ -1175,7 +1175,7 @@ namespace Oxygen
         } else if(
             (parent = Gtk::gtk_parent_combobox( widget )) &&
             !GTK_IS_CELL_VIEW( widget ) &&
-            !Style::instance().settings().applicationName().isMozilla() ) {
+            !Style::instance().settings().applicationName().isMozilla( widget ) ) {
 
             Style::instance().animations().comboBoxEngine().registerWidget( parent );
             Style::instance().animations().comboBoxEngine().initializeCellLayout( parent );
@@ -1553,7 +1553,7 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
-        if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla() )
+        if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla( widget ) )
         { arrowSize = QtSettings::ArrowTiny; }
 
         StyleOptions options( Contrast );
@@ -1879,7 +1879,7 @@ namespace Oxygen
         {
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            if( !Style::instance().settings().applicationName().isMozilla() &&
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
@@ -1888,7 +1888,7 @@ namespace Oxygen
             options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
             options &= ~(Hover|Focus);
 
-            if( Style::instance().settings().applicationName().isMozilla() )
+            if( Style::instance().settings().applicationName().isMozilla( widget ) )
             {
 
                 Gtk::Gap gap( gap_x, gap_w, position );
@@ -2051,7 +2051,7 @@ namespace Oxygen
             see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
             (or open office) app, because the latter do not pass the actual tab rect as argument
             */
-            const bool isMozilla( Style::instance().settings().applicationName().isMozilla() );
+            const bool isMozilla( Style::instance().settings().applicationName().isMozilla( widget ) );
             const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
             if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice ) )
             {
