@@ -54,14 +54,9 @@ void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     // read blacklist
-    // system-wide
+    // system-wide configuration file
     const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
     std::ifstream systemIn( configFile.c_str() );
-
-    // and user-defined
-    const std::string userConfig( std::string( getenv("HOME") ) + std::string("/.oxygen-gtk/argb-apps.conf") );
-    std::ifstream userIn( userConfig.c_str() );
-
     if( !systemIn )
     {
         #if OXYGEN_DEBUG
@@ -71,6 +66,9 @@ void theme_init( GTypeModule* module )
         return;
     }
 
+    // user-defined configuration file
+    const std::string userConfig( std::string( g_get_user_config_dir() ) + "/oxygen-gtk/argb-apps.conf");
+    std::ifstream userIn( userConfig.c_str() );
     if( !userIn )
     {
         #if OXYGEN_DEBUG
@@ -78,6 +76,7 @@ void theme_init( GTypeModule* module )
         #endif
     }
 
+    // get program name
     const char* appName = g_get_prgname();
     if( !appName ) return;
 
@@ -144,9 +143,9 @@ void theme_init( GTypeModule* module )
     #endif
 
     if( useRgba ) {
-        
+
         GdkScreen* screen = gdk_screen_get_default();
-        if( screen ) 
+        if( screen )
         {
             GdkColormap* cmap=gdk_screen_get_rgba_colormap( screen );
             gtk_widget_push_colormap( cmap );
