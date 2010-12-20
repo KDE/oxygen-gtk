@@ -25,6 +25,7 @@
 * MA 02110-1301, USA.
 */
 
+#include <gtk/gtk.h>
 #include <string>
 
 namespace Oxygen
@@ -85,6 +86,10 @@ namespace Oxygen
         bool isOpenOffice( void ) const { return _name == OpenOffice; }
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }
         bool isUnknown( void ) const { return _name == Unknown; }
+
+        //! special case for mozilla that also check the type of the top level widget
+        /*! this allows to prevent false positive for open and print dialogs */
+        bool isMozilla( GtkWidget* ) const;
 
         //@}
 
