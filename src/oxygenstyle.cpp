@@ -1659,12 +1659,12 @@ namespace Oxygen
 
         if( wh > 0 )
         {
-            if( isInMenu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-            else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            if( isInMenu ) base = ColorUtils::menuBackgroundColor( ColorUtils::midColor( settings().palette().color( Palette::Window ) ), wh, y+wy+h/2 );
+            else base = ColorUtils::backgroundColor( ColorUtils::midColor( settings().palette().color( Palette::Window ) ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Window );
+            base = ColorUtils::midColor( settings().palette().color( Palette::Window ) );
 
         }
 
@@ -1681,7 +1681,7 @@ namespace Oxygen
             if( (options & Sunken) || isInMenu ) color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Selected ), 0.6 ) );
             else color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Hover ), 0.6 ) );
 
-        } else color = ColorUtils::midColor( color );
+        }
 
         if( isInMenuBar )
         {
