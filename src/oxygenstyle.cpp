@@ -239,7 +239,6 @@ namespace Oxygen
             Cairo::Pattern pattern( radialGradient( base, 64, patternHeight - 64, 64 ) );
 
             // add matrix transformation
-            // TODO: possibly pass that also in ::radialGradient
             cairo_matrix_t transformation;
             cairo_matrix_init_identity( &transformation );
             cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
@@ -643,19 +642,13 @@ namespace Oxygen
             Cairo::Pattern pattern( radialGradient( base, 64, patternHeight - 64, 64 ) );
 
             // add matrix transformation
-            // TODO: possibly pass that also in ::radialGradient
             cairo_matrix_t transformation;
             cairo_matrix_init_identity( &transformation );
             cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
             cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
             cairo_pattern_set_matrix( pattern, &transformation );
 
-            cairo_save( context );
-            GdkRectangle local = { (ww - radialW)/2, 0, radialW, patternHeight };
-            gdk_cairo_rectangle( context, &local );
-            cairo_clip( context );
-
-            gdk_cairo_rectangle( context, &local );
+            gdk_cairo_rectangle( context, &radialRect );
             gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
             cairo_set_source( context, pattern );
             cairo_fill( context );
