@@ -23,6 +23,8 @@
 */
 
 #include "oxygengtkutils.h"
+#include "oxygengtktypenames.h"
+#include "config.h"
 
 #include <cmath>
 #include <cstring>
@@ -100,6 +102,11 @@ namespace Oxygen
     bool Gtk::gdk_window_is_base( GdkWindow* window )
     {
         GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
+
+        #ifdef OXYGEN_DEBUG
+        std::cout << "Gtk::gdk_window_si_base - " << TypeNames::windowTypeHint( hint ) << std::endl;
+        #endif
+
         return(
             hint == GDK_WINDOW_TYPE_HINT_NORMAL ||
             hint == GDK_WINDOW_TYPE_HINT_DIALOG ||
