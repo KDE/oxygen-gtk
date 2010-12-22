@@ -652,9 +652,6 @@ namespace Oxygen
             gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
             cairo_set_source( context, pattern );
             cairo_fill( context );
-
-            cairo_restore( context );
-
         }
 
         return true;
