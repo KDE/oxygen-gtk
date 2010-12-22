@@ -50,6 +50,8 @@ namespace Oxygen
 
             static const char* windowEdge( GdkWindowEdge );
 
+            static const char* windowTypeHint( GdkWindowTypeHint );
+
             static const char* orientation( GtkOrientation );
 
             static const char* expanderStyle( GtkExpanderStyle );
@@ -120,6 +122,7 @@ namespace Oxygen
             static GtkArrowType matchArrow( const char* );
             static GtkPositionType matchPosition( const char* );
             static GdkWindowEdge matchWindowEdge	( const char* );
+            static GdkWindowTypeHint matchWindowTypeHint( const char* );
             static GtkOrientation matchOrientation( const char* );
             static GtkExpanderStyle	matchExpanderStyle( const char* );
 
