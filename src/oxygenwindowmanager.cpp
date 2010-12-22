@@ -30,6 +30,7 @@
 #include "config.h"
 
 #include <gdk/gdkx.h>
+
 namespace Oxygen
 {
 
@@ -54,18 +55,18 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    void WindowManager::registerWidget( GtkWidget* widget )
+    bool WindowManager::registerWidget( GtkWidget* widget )
     {
 
-        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
+        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return false;
 
         // Window with no decorations (set by app), let window manage it self
-        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return;
+        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return false;
 
         // widgets used in tabs also must be ignored (happens, unfortunately)
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
         if( GTK_IS_NOTEBOOK( parent ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( parent ), widget ) )
-        { return; }
+        { return false; }
 
         #if OXYGEN_DEBUG
         std::cout
@@ -87,6 +88,8 @@ namespace Oxygen
 
         // connect signals
         if( _mode != Disabled ) connect( widget, data );
+
+        return true;
 
     }
 

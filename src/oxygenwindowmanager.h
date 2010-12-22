@@ -55,7 +55,8 @@ namespace Oxygen
         virtual ~WindowManager();
 
         //! register widget
-        virtual void registerWidget( GtkWidget* );
+        /*! returns true if widget is effictively registered */
+        virtual bool registerWidget( GtkWidget* );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
