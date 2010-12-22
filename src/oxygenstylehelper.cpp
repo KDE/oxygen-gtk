@@ -26,6 +26,10 @@
 
 #include <cmath>
 #include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 namespace Oxygen
 {
@@ -34,6 +38,33 @@ namespace Oxygen
     const double StyleHelper::_slabThickness = 0.45;
     const double StyleHelper::_shadowGain = 1.5;
     const double StyleHelper::_glowBias = 0.6;
+
+    //__________________________________________________________________
+    StyleHelper::StyleHelper( void )
+    {
+
+        // create background gradient atom
+        GdkDisplay *display( gdk_display_get_default () );
+        if( display ) _backgroundGradientAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
+        else _backgroundGradientAtom = None;
+    }
+
+    //____________________________________________________________________
+    void StyleHelper::setHasBackgroundGradient( XID id, bool value ) const
+    {
+
+        if( !id ) return;
+        GdkDisplay *display( gdk_display_get_default () );
+        if( display && _backgroundGradientAtom )
+        {
+            unsigned long uLongValue( value );
+            XChangeProperty(
+                GDK_DISPLAY_XDISPLAY( display ), id, _backgroundGradientAtom, XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<const unsigned char *>(&uLongValue), 1 );
+        }
+
+        return;
+    }
 
     //__________________________________________________________________
     void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
