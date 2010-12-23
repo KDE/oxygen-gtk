@@ -55,16 +55,26 @@ namespace Oxygen
     {
         if( !isMozilla() ) return false;
 
+        // store class names for which native gtk widgets are used
+        static const char* classNames[] =
+        {
+            "GtkFileChooserDialog",
+            "GtkPrintUnixDialog",
+            0
+        };
+
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         #if OXYGEN_DEBUG
         if( parent ) std::cout << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
         #endif
 
-        if( parent && (
-            Gtk::gtk_object_is_a( G_OBJECT( parent ), "GtkFileChooserDialog" ) ||
-            Gtk::gtk_object_is_a( G_OBJECT( parent ), "GtkPrintUnixDialog" ) ) )
-            { return false; }
+        // check parent
+        if( !parent ) return true;
+
+        // loop over class names
+        for( unsigned int i = 0; classNames[i]; ++i )
+        { if( Gtk::gtk_object_is_a( G_OBJECT( parent ), classNames[i] ) ) return false; }
 
         return true;
 
