@@ -55,14 +55,6 @@ namespace Oxygen
     {
         if( !isMozilla() ) return false;
 
-        // store class names for which native gtk widgets are used
-        static const char* classNames[] =
-        {
-            "GtkFileChooserDialog",
-            "GtkPrintUnixDialog",
-            0
-        };
-
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         #if OXYGEN_DEBUG
@@ -70,13 +62,8 @@ namespace Oxygen
         #endif
 
         // check parent
-        if( !parent ) return true;
-
-        // loop over class names
-        for( unsigned int i = 0; classNames[i]; ++i )
-        { if( Gtk::gtk_object_is_a( G_OBJECT( parent ), classNames[i] ) ) return false; }
-
-        return true;
+        if( parent && GTK_IS_DIALOG( parent ) ) return false;
+        else return true;
 
     }
 
