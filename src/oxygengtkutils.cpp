@@ -104,7 +104,7 @@ namespace Oxygen
         GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
 
         #if OXYGEN_DEBUG
-        std::cout << "Gtk::gdk_window_si_base - " << TypeNames::windowTypeHint( hint ) << std::endl;
+        std::cout << "Gtk::gdk_window_is_base - " << TypeNames::windowTypeHint( hint ) << std::endl;
         #endif
 
         return(
