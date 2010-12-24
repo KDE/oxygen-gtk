@@ -148,6 +148,9 @@ namespace Oxygen
         //!@name combobox utilities
         //@{
 
+        //! returns true if combobox has frame
+        bool gtk_combobox_has_frame( GtkWidget* );
+
         //! true if widget is the treeview of a combobox
         bool gtk_combobox_is_tree_view( GtkWidget* );
 
