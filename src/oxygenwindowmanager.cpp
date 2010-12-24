@@ -280,7 +280,7 @@ namespace Oxygen
             &xev);
 
         // force a release as some widgets miss it...
-        // wmButtonRelease( widget, 0L, this );
+        wmButtonRelease( widget, 0L, this );
         return true;
     }
 
