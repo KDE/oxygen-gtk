@@ -98,9 +98,16 @@ namespace Oxygen
             bool isValid( void ) const
             { return _path && _column; }
 
+            //! returns true if column is the first one
+            bool isFirstColumn( GtkTreeView* tree_view ) const
+            { return _column && _column == gtk_tree_view_get_column( tree_view, 0 ); }
+
             //! returns true if column is the one that contains expander
-            bool isExpanderColumn( GtkTreeView* tree_view ) const
-            { return _column == gtk_tree_view_get_expander_column( tree_view ); }
+            bool isExpanderColumn( GtkTreeView* treeView ) const
+            { return _column == gtk_tree_view_get_expander_column( treeView ); }
+
+            //! returs true if column is let of expander column
+            bool isLeftOfExpanderColumn( GtkTreeView* ) const;
 
             //! returns true if path has parent
             bool hasParent( GtkTreeView* ) const;
