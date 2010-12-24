@@ -372,6 +372,17 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_combobox_has_frame( GtkWidget* widget )
+    {
+
+        GValue val = { 0, };
+        g_value_init(&val, G_TYPE_BOOLEAN);
+        g_object_get_property( G_OBJECT( widget ), "has-frame", &val );
+        return (bool) g_value_get_boolean( &val );
+
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
     {
         // check types
