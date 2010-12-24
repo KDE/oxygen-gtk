@@ -763,6 +763,11 @@ namespace Oxygen
 
             return;
 
+        } else if( d.isDockItem() ) {
+
+            // force window background for dock-items. Fixes inkscape docks
+            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
         } else if( d.isMenuItem() ) {
 
             StyleOptions options = StyleOptions( widget, state, shadow );
