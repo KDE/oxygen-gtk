@@ -87,7 +87,7 @@ namespace Oxygen
 
         if( g_getenv( "KDE_FULL_SESSION" ) )
             _KDESession = true;
-        
+
         // clear RC
         _rc.clear();
 
@@ -132,7 +132,7 @@ namespace Oxygen
             // reload fonts
             loadKdeFonts();
         }
-        
+
         // kde globals options
         loadKdeGlobalsOptions();
 
@@ -338,7 +338,7 @@ namespace Oxygen
         icons.setIconSize( "panel", panelIconSize );
         icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
         icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
-        icons.setIconSize( "gtk-dnd", desktopIconSize );
+        icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
         icons.setIconSize( "gtk-button", smallIconSize );
         icons.setIconSize( "gtk-menu", smallIconSize );
         icons.setIconSize( "gtk-dialog", dialogIconSize );
