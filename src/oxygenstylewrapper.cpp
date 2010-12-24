@@ -191,7 +191,7 @@ namespace Oxygen
 
             // render background
             ColorUtils::Rgba background;
-            if( d.isCellEven() ) background = Style::instance().settings().palette().color( group, Palette::Base );
+            if( d.isCellEven() || Gtk::gtk_combobox_is_tree_view( widget ) ) background = Style::instance().settings().palette().color( group, Palette::Base );
             else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
