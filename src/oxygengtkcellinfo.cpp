@@ -81,7 +81,7 @@ namespace Oxygen
 
         }
 
-        g_list_free( columns );
+        if( columns ) g_list_free( columns );
         return isLeft;
 
     }
