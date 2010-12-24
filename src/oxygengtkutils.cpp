@@ -320,7 +320,7 @@ namespace Oxygen
 
         GtkWidget* result( 0L );
         GList* children( gtk_container_get_children( GTK_CONTAINER( button ) ) );
-        for( GList *child = g_list_first( children ); child; child = g_list_next( children ) )
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
         {
             if( GTK_IS_IMAGE( child->data ) )
             {
@@ -350,7 +350,7 @@ namespace Oxygen
 
         GtkWidget* result( 0L );
         GList* children( gtk_container_get_children( GTK_CONTAINER( button ) ) );
-        for( GList *child = g_list_first( children ); child; child = g_list_next( children ) )
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
         {
 
             if( GTK_IS_LABEL( child->data) )

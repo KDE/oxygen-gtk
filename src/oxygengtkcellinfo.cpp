@@ -62,7 +62,7 @@ namespace Oxygen
 
         // get all columns
         GList* columns( gtk_tree_view_get_columns( treeView ) );
-        for( GList *child = g_list_first( columns ); child; child = g_list_next( columns ) )
+        for( GList *child = g_list_first( columns ); child; child = g_list_next( child ) )
         {
             if( !GTK_IS_TREE_VIEW_COLUMN( child->data ) ) continue;
             GtkTreeViewColumn* column( GTK_TREE_VIEW_COLUMN( child->data ) );
