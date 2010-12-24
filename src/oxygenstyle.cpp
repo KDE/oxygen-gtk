@@ -464,7 +464,7 @@ namespace Oxygen
         cairo_set_line_width( context, 1.0 );
 
         int cellIndent( cellFlags._levelIndent + cellFlags._expanderSize + 4 );
-        int xStart( cellIndent/2 );
+        int xStart( x + cellIndent/2 );
         for( unsigned int i=0; i< cellFlags._depth; ++i  )
         {
 
