@@ -210,6 +210,7 @@ namespace Oxygen
                 // draw rounded selection in normal list,
                 // and detect hover
                 bool forceCellStart( false );
+                bool forceCellEnd( false );
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
@@ -227,7 +228,6 @@ namespace Oxygen
                     {
 
                         // tree lines
-                        forceCellStart = true;
                         if( Style::instance().settings().viewDrawTreeBranchLines() )
                         {
                             StyleOptions options( widget, state, shadow );
@@ -235,6 +235,7 @@ namespace Oxygen
                         }
 
                         // change selection rect so that it does not overlap with expander
+                        forceCellStart = true;
                         if( options & (Selected|Hover) )
                         {
 
@@ -250,6 +251,9 @@ namespace Oxygen
 
                         }
 
+                    } else if( cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
+
+                        forceCellEnd = true;
 
                     }
 
@@ -264,6 +268,7 @@ namespace Oxygen
                     else if( !d.isCellMiddle() ) tiles = TileSet::Horizontal;
 
                     if( forceCellStart ) tiles |= TileSet::Left;
+                    if( forceCellEnd ) tiles |= TileSet::Right;
 
                     Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
 
