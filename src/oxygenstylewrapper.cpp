@@ -1386,7 +1386,7 @@ namespace Oxygen
 
         } else if( d.isOption() || d.isCellRadio() ) {
 
-            // load options and disable hover
+            // load options
             StyleOptions options( widget, state, shadow );
             if( !( d.isCellRadio() || Gtk::gtk_parent_tree_view( widget ) ) )
             {
@@ -1394,7 +1394,9 @@ namespace Oxygen
                 if( Gtk::gtk_parent_menu( widget ) )
                 {
 
+                    // add menu flag and disable Hover/Focus
                     options|=Menu;
+                    options &= ~(Hover|Focus);
                     x-=1;
                     y-=1;
                 }
