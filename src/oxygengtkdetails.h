@@ -83,7 +83,6 @@ namespace Oxygen
             bool isCheckButton( void ) const { return _value == "checkbutton"; }
             bool isDefaultButton( void ) const { return _value == "buttondefault"; }
             bool isDockItem( void ) const { return _value == "dockitem"; }
-
             bool isInfoBar( void ) const { return _value.find( "infobar" ) == 0; }
             bool isEntry( void ) const { return _value == "entry"; }
             bool isEntryBg( void ) const { return _value == "entry_bg"; }
