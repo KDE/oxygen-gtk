@@ -70,23 +70,18 @@ namespace Oxygen
             {
                 if( found )
                 {
+
                     isLeft = true;
                     break;
+
                 } else break;
 
-            } else if( found ) {
-
-                break;
-
-            } else if( column == _column ) {
-
-                found = true;
-
-            }
+            } else if( found ) break;
+            else if( column == _column ) found = true;
 
         }
 
-        g_list_free( columns );
+        if( columns ) g_list_free( columns );
         return isLeft;
 
     }

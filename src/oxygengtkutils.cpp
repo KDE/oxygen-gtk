@@ -314,26 +314,62 @@ namespace Oxygen
     //________________________________________________________
     GtkWidget* Gtk::gtk_button_find_image(GtkWidget* button)
     {
-        if( !GTK_IS_CONTAINER(button) ) return 0L;
-        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+
+        // check widget type
+        if(!GTK_IS_CONTAINER(button)) return 0L;
+
+        GtkWidget* result( 0L );
+        GList* children( gtk_container_get_children( GTK_CONTAINER( button ) ) );
+        for( GList *child = g_list_first( children ); child; child = g_list_next( children ) )
         {
-            if( GTK_IS_IMAGE(children->data) ) return GTK_WIDGET(children->data);
-            else if( GTK_IS_CONTAINER(children->data) ) return gtk_button_find_image(GTK_WIDGET(children->data));
+            if( GTK_IS_IMAGE( child->data ) )
+            {
+                result = GTK_WIDGET( child->data );
+                break;
+
+            } else if( GTK_IS_CONTAINER( child->data ) ) {
+
+                result = gtk_button_find_image( GTK_WIDGET(child->data ) );
+                break;
+
+            }
+
         }
-        return 0L;
+
+        if( children ) g_list_free( children );
+        return result;
+
     }
 
     //________________________________________________________
     GtkWidget* Gtk::gtk_button_find_label(GtkWidget* button)
     {
-        if(!GTK_IS_CONTAINER(button))
-            return 0L;
-        for(GList* children=gtk_container_get_children(GTK_CONTAINER(button)); children; children=children->next)
+
+        // check widget type
+        if( !GTK_IS_CONTAINER(button) ) return 0L;
+
+        GtkWidget* result( 0L );
+        GList* children( gtk_container_get_children( GTK_CONTAINER( button ) ) );
+        for( GList *child = g_list_first( children ); child; child = g_list_next( children ) )
         {
-            if( GTK_IS_LABEL(children->data) ) return GTK_WIDGET(children->data);
-            else if( GTK_IS_CONTAINER(children->data) ) return gtk_button_find_image(GTK_WIDGET(children->data));
+
+            if( GTK_IS_LABEL( child->data) )
+            {
+                result = GTK_WIDGET( child->data );
+                break;
+
+            } else if( GTK_IS_CONTAINER( child->data ) ) {
+
+                result = gtk_button_find_image(GTK_WIDGET(child->data));
+                break;
+
+            }
+
         }
-        return 0L;
+
+        if( children ) g_list_free( children );
+        return result;
+
     }
 
     //________________________________________________________
@@ -488,11 +524,16 @@ namespace Oxygen
         if( !( notebook && rect ) ) return;
 
         // check tab visibility
-        if( !( gtk_notebook_get_show_tabs( notebook ) && gtk_container_get_children( GTK_CONTAINER( notebook ) ) ) )
+        GList* children( gtk_container_get_children( GTK_CONTAINER( notebook ) ) );
+        if( !( gtk_notebook_get_show_tabs( notebook ) && children ) )
         {
+            if( children ) g_list_free( children );
             *rect = gdk_rectangle();
             return;
         }
+
+        // free children
+        if( children ) g_list_free( children );
 
         // get full rect
         gtk_widget_get_allocation( GTK_WIDGET( notebook ), rect );
