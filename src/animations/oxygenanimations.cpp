@@ -33,6 +33,7 @@ namespace Oxygen
     {
 
         // create engines
+        registerEngine( _backgroundHintEngine = new BackgroundHintEngine( this ) );
         registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
         registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
         registerEngine( _dialogEngine = new DialogEngine( this ) );
@@ -104,7 +105,6 @@ namespace Oxygen
         _enabled = value;
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->setEnabled( value ); }
-
     }
 
     //____________________________________________________________________________________________

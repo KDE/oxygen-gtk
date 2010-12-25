@@ -21,6 +21,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenbackgroundhintengine.h"
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
@@ -78,6 +79,10 @@ namespace Oxygen
         DialogEngine& dialogEngine( void ) const
         { return *_dialogEngine; }
 
+        //! background hint
+        BackgroundHintEngine& backgroundHintEngine( void ) const
+        { return *_backgroundHintEngine; }
+
         //! main window engine
         MainWindowEngine& mainWindowEngine( void ) const
         { return *_mainWindowEngine; }
@@ -129,6 +134,9 @@ namespace Oxygen
 
         //! list of engines
         BaseEngine::List _engines;
+
+        //! background hint engine
+        BackgroundHintEngine* _backgroundHintEngine;
 
         //! combobox engine
         ComboBoxEngine* _comboBoxEngine;
