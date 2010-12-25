@@ -41,7 +41,6 @@
 #include "oxygenwindowmanager.h"
 
 #include <iostream>
-#include <gdk/gdkx.h>
 
 //_______________________________________________________________________________________________________________
 struct _OxygenStyle
@@ -115,8 +114,8 @@ namespace Oxygen
                 !( GTK_IS_EVENT_BOX( widget ) && !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
             {
                 // register to window manager and set Background Gradient hint, when registered
-                if( Style::instance().windowManager().registerWidget( widget ) && GDK_IS_WINDOW( window ) )
-                { Style::instance().helper().setHasBackgroundGradient( GDK_WINDOW_XID( window ), true ); }
+                Style::instance().windowManager().registerWidget( widget );
+                Style::instance().animations().backgroundHintEngine().registerWidget( widget, &Style::instance().helper() );
             }
 
             // change gtk dialog button order
