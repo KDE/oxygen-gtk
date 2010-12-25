@@ -56,7 +56,7 @@ namespace Oxygen
 
         //! register widget
         /*! returns true if widget is effictively registered */
-        virtual bool registerWidget( GtkWidget* );
+        virtual void registerWidget( GtkWidget* );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );

@@ -55,18 +55,18 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::registerWidget( GtkWidget* widget )
+    void WindowManager::registerWidget( GtkWidget* widget )
     {
 
-        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return false;
+        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
 
         // Window with no decorations (set by app), let window manage it self
-        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return false;
+        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return;
 
         // widgets used in tabs also must be ignored (happens, unfortunately)
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
         if( GTK_IS_NOTEBOOK( parent ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( parent ), widget ) )
-        { return false; }
+        { return; }
 
         #if OXYGEN_DEBUG
         std::cout
@@ -89,7 +89,7 @@ namespace Oxygen
         // connect signals
         if( _mode != Disabled ) connect( widget, data );
 
-        return true;
+        return;
 
     }
 
