@@ -1006,6 +1006,11 @@ namespace Oxygen
         } else if( d.isTroughFillLevel () ) {
             return;
 
+        } else if( GTK_IS_RULER(widget) )
+        {
+
+            Style::instance().renderWindowBackground(window,widget,clipRect,x,y,w,h);
+
         } else {
 
             StyleWrapper::parentClass()->draw_box( style, window, state,
