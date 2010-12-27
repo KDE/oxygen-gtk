@@ -1004,10 +1004,10 @@ namespace Oxygen
             Style::instance().renderProgressBarHandle( window, clipRect, x-1, y+1, w+2, h-2, options );
 
         } else if( d.isTroughFillLevel () ) {
+
             return;
 
-        } else if( GTK_IS_RULER(widget) )
-        {
+        } else if( d.isRuler() ) {
 
             Style::instance().renderWindowBackground(window,widget,clipRect,x,y,w,h);
 
