@@ -84,6 +84,18 @@ namespace Oxygen
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
 
+        //! return GtkWidget* of currently popped up combobox
+        GtkWidget* getPoppedUpWidget()
+        { return poppedUpWidget; }
+
+        //! save GtkWidget* of currently popped up combobox
+        void setPoppedUpWidget(GtkWidget* widget)
+        { poppedUpWidget=widget; }
+
+        private:
+
+        GtkWidget* poppedUpWidget;
+
     };
 
 }

@@ -32,6 +32,9 @@ set( OXYGEN_ICON_HACK 1 )
 # Force KDE icons and fonts when running in non-KDE
 set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
 
+# Resize combobox list to compensate for combobox button glow width (may result in flicker on combo popup)
+set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
+
 ##############
 # Requirements
 ##############
