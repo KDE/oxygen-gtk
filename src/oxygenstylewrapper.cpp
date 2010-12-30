@@ -1085,16 +1085,19 @@ namespace Oxygen
 #if ENABLE_COMBOBOX_LIST_RESIZE
             // resize the list to match combobox width (taking into account its lesser width because of button glow)
             GtkWidget* combo=Style::instance().animations().comboBoxEngine().getPoppedUpWidget();
-            combo=gtk_widget_get_parent(combo);
-            int X,Y,W,H;
-            GtkWindow* wind=GTK_WINDOW(parent);
-            gtk_window_get_size(wind,&W,&H);
-            if( combo->allocation.width-6 != W )
+            if(combo)
             {
-                printf("setting width of %d instead of previous %d\n",combo->allocation.width-6,W);
-                gtk_widget_set_size_request(parent,combo->allocation.width-6,H);
-                gtk_window_get_position(wind,&X,&Y);
-                gtk_window_move(wind,X+3,Y);
+                combo=gtk_widget_get_parent(combo);
+                int X,Y,W,H;
+                GtkWindow* wind=GTK_WINDOW(parent);
+                gtk_window_get_size(wind,&W,&H);
+                if( combo->allocation.width-6 != W )
+                {
+                    printf("setting width of %d instead of previous %d\n",combo->allocation.width-6,W);
+                    gtk_widget_set_size_request(parent,combo->allocation.width-6,H);
+                    gtk_window_get_position(wind,&X,&Y);
+                    gtk_window_move(wind,X+3,Y);
+                }
             }
 #endif
             return;
