@@ -173,11 +173,6 @@ void enableARGB()
             gtk_widget_set_default_colormap( cmap );
         }
     }
-
-    Oxygen::Style::instance();
-    if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
-    { Oxygen::Style::instance().animations().setEnabled( false ); }
-
 }
 
 //_________________________________________________
@@ -187,6 +182,9 @@ void theme_init( GTypeModule* module )
     oxygen_style_register_type( module );
 
     enableARGB();
+
+    if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
+    { Oxygen::Style::instance().animations().setEnabled( false ); }
 }
 
 //_________________________________________________
