@@ -863,16 +863,17 @@ namespace Oxygen
         } else if( d.isSpinButton()) {
 
             StyleOptions options( widget, state, shadow );
-            //if( !Style::instance().settings().applicationName().isOpenOffice() )
-            options |= NoFill;
             options |= Blend;
 
             // adjust rect for openoffice
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
+
                 x-=1;
                 w+=1;
-            }
+
+            } else options |= NoFill;
+
 
             if( style )
             {
