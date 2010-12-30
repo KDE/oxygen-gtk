@@ -49,10 +49,8 @@ extern "C" G_MODULE_EXPORT void drawWindecoButton(cairo_t*, unsigned long,unsign
 extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gint,gint,gint,gint);
 
 //_________________________________________________
-void theme_init( GTypeModule* module )
+void enableARGB()
 {
-    oxygen_rc_style_register_type( module );
-    oxygen_style_register_type( module );
 
     // get program name
     const char* appName = g_get_prgname();
@@ -180,6 +178,15 @@ void theme_init( GTypeModule* module )
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
 
+}
+
+//_________________________________________________
+void theme_init( GTypeModule* module )
+{
+    oxygen_rc_style_register_type( module );
+    oxygen_style_register_type( module );
+
+    enableARGB();
 }
 
 //_________________________________________________
