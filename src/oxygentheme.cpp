@@ -53,15 +53,18 @@ void theme_init( GTypeModule* module )
     oxygen_rc_style_register_type( module );
     oxygen_style_register_type( module );
 
+    const bool OXYGEN_ARGB_DEBUG=g_getenv("OXYGEN_ARGB_DEBUG");
+
+#define ARGB_DEBUG if(G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG))
+
     // read blacklist
     // system-wide configuration file
     const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
     std::ifstream systemIn( configFile.c_str() );
     if( !systemIn )
     {
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl;
-        #endif
+        ARGB_DEBUG
+        { std::cout << "ARGB: Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl; }
 
         return;
     }
@@ -71,9 +74,8 @@ void theme_init( GTypeModule* module )
     std::ifstream userIn( userConfig.c_str() );
     if( !userIn )
     {
-        #if OXYGEN_DEBUG
-        std::cout << "Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl;
-        #endif
+        ARGB_DEBUG
+        { std::cout << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
     }
 
     // get program name
@@ -138,9 +140,8 @@ void theme_init( GTypeModule* module )
 
     }
 
-    #if OXYGEN_DEBUG
-    std::cout << "Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl;
-    #endif
+    ARGB_DEBUG
+    { std::cout << "ARGB: Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl; }
 
     if( useRgba )
     {
