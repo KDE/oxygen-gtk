@@ -307,7 +307,7 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // plain background
-                if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
+                if( style )
                 {
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
