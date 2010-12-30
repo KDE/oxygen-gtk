@@ -305,13 +305,23 @@ namespace Oxygen
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
 
+                // for openoffice only draw solid window background
+                // the rest of the spinbutton is painted on top, in draw_box and draw_shadow
+                if( Style::instance().settings().applicationName().isOpenOffice() )
+                {
+
+                    ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Window ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                    return;
+                }
+
                 if(
                     Style::instance().animations().hoverEngine().contains( widget ) &&
                     Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
                 // plain background
-                if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
+                if( style )
                 {
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
@@ -867,27 +877,48 @@ namespace Oxygen
         } else if( d.isSpinButton()) {
 
             StyleOptions options( widget, state, shadow );
-            if( !Style::instance().settings().applicationName().isOpenOffice() ) options |= NoFill;
             options |= Blend;
 
-            if( style )
+            // adjust rect for openoffice
+            if( Style::instance().settings().applicationName().isOpenOffice() )
             {
-                // get background color from widget state
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
 
-                if( Style::instance().settings().applicationName().isMozilla( widget ) )
+                // adjust rect
+                y+=1;
+                h-=2;
+                x-=1;
+                w+=1;
+
+                // also first draw solid window background
+                ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Window ) );
+                Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+            } else {
+
+                // disable hole filling
+                options |= NoFill;
+
+                if( style )
                 {
 
-                    /*
-                    for firefox on has to mask out the corners manually,
-                    because renderholebackground fails
-                    */
-                    Cairo::Context context( window, clipRect );
-                    cairo_rounded_rectangle( context, x-1, y+2, w-1, h-4, 2, CornersRight );
-                    cairo_set_source( context, background );
-                    cairo_fill( context );
+                    // get background color from widget state
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
 
-                } else Style::instance().fill( window, clipRect, x, y, w, h, background );
+                    if( Style::instance().settings().applicationName().isMozilla( widget ) )
+                    {
+
+                        /*
+                        for firefox on has to mask out the corners manually,
+                        because renderholebackground fails
+                        */
+                        Cairo::Context context( window, clipRect );
+                        cairo_rounded_rectangle( context, x-1, y+2, w, h-4, 2, CornersRight );
+                        cairo_set_source( context, background );
+                        cairo_fill( context );
+
+                    } else Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+                }
 
             }
 
@@ -1133,18 +1164,37 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
-                {
-                    // register to hover engine
-                    Style::instance().animations().hoverEngine().registerWidget( widget, true );
-                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
-                    { options |= Hover; }
-                }
+                // register to hover engine
+                Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                { options |= Hover; }
 
                 if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
-                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+                    if( Style::instance().settings().applicationName().isOpenOffice() )
+                    {
+
+                        // adjust rect
+                        y+=1;
+                        h-=2;
+
+                        /*
+                        for open-office on has to mask out the corners manually,
+                        because renderholebackground fails
+                        */
+                        Cairo::Context context( window, clipRect );
+                        cairo_rounded_rectangle( context, x+1, y, w-1, h-1, 2, CornersLeft );
+                        cairo_set_source( context, background );
+                        cairo_fill( context );
+
+                    } else {
+
+                        Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+                    }
+
                 }
 
                 TileSet::Tiles tiles( TileSet::Ring );
@@ -1645,9 +1695,13 @@ namespace Oxygen
             TODO: this should be made more robust. What one really want is an arrow that is
             one pixel away from the centerline, no matter what
             */
-            if( arrow == GTK_ARROW_UP ) y += 1;
-            if( arrow == GTK_ARROW_DOWN ) y -= 1;
             x-=1;
+            if( arrow == GTK_ARROW_UP && !Style::instance().settings().applicationName().isOpenOffice() )
+            {
+
+                y+= 1;
+
+            } else if( arrow == GTK_ARROW_DOWN ) y -= 1;
 
             // disable contrast
             options &= ~Contrast;
