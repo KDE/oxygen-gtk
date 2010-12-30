@@ -680,9 +680,20 @@ namespace Oxygen
                     /*
                     make button flat; disable focus and hover
                     (this is handled when rendering the arrow
+                    This doesn't work for OpenOffice.
                     */
-                    options |= Flat;
-                    options &= ~(Hover|Focus);
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    {
+                        options |= Flat;
+                        options &= ~(Hover|Focus);
+                    }
+                    else
+                    {
+                        // Hover doesn't work correctly in OpenOffice, so disable it
+                        options &= ~(Hover|Focus);
+                        Style::instance().renderHole(window,clipRect,x-8,y-1,w+9,h+2,options,(TileSet::Tile)(TileSet::Full & (~TileSet::Left)));
+                        return;
+                    }
 
                 }
 
