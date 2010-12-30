@@ -1134,7 +1134,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    void StyleHelper::renderDot( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y ) const
+    void StyleHelper::renderDot( cairo_t* context, const ColorUtils::Rgba& base, int x, int y ) const
     {
 
         const double diameter( 1.8 );

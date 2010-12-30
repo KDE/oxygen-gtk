@@ -137,7 +137,7 @@ namespace Oxygen
         const TileSet& selection( const ColorUtils::Rgba&, int, bool custom );
 
         //! dots
-        void renderDot( Cairo::Context&, const ColorUtils::Rgba&, int x, int y ) const;
+        void renderDot( cairo_t*, const ColorUtils::Rgba&, int x, int y ) const;
 
         protected:
 

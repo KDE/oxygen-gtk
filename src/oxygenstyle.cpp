@@ -2138,48 +2138,33 @@ namespace Oxygen
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
         bool isMaximized( wopt & WinDeco::Maximized );
 
-        // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
-        cairo_surface_t* surface = cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h );
-        {
-
-            // create context to paint on surface
-            Cairo::Context context( surface );
-            renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
-
-            StyleOptions options( hasAlpha ? Alpha : Blend );
-
-            // focus
-            if(wopt & WinDeco::Active) options|=Focus;
-
-            if( !isMaximized )
-            { drawFloatFrame( context, 0L, 0L, x, y, w, h, options); }
-
-            if( drawResizeHandle )
-            {
-                ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-                renderWindowDots( context, x, y, w, h, base, wopt);
-            }
-
-        }
-
-        // now that everything is rendered, prepare transparent background, clip the rounded rect, then blit the windeco to context
         cairo_save( context );
         cairo_set_source_rgba( context, 0, 0, 0, 0 );
         cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
         cairo_paint( context );
         cairo_set_operator( context, CAIRO_OPERATOR_OVER );
+
         if( hasAlpha )
         {
             // cut round corners using alpha
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
         }
-        cairo_set_source_surface( context, surface, 0, 0 );
-        cairo_paint( context );
-        cairo_restore( context );
+        renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
 
-        // destroy surface
-        cairo_surface_destroy(surface);
+        StyleOptions options( hasAlpha ? Alpha : Blend );
+
+        // focus
+        if(wopt & WinDeco::Active) options|=Focus;
+
+        if( !isMaximized )
+        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options); }
+
+        if( drawResizeHandle )
+        {
+            ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+            renderWindowDots( context, x, y, w, h, base, wopt);
+        }
     }
 
     //__________________________________________________________________
@@ -3142,7 +3127,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDots(Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, WinDeco::Options wopt)
+    void Style::renderWindowDots(cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color, WinDeco::Options wopt)
     {
         bool isMaximized( wopt & WinDeco::Maximized );
         bool hasAlpha( wopt & WinDeco::Alpha );
