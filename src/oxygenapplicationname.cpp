@@ -37,7 +37,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "ApplicationName::parse - " << appName << std::endl;
+        std::cerr << "ApplicationName::parse - " << appName << std::endl;
         #endif
 
         if( appName.find("firefox") == 0 ) _name = Firefox;
@@ -58,7 +58,7 @@ namespace Oxygen
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         #if OXYGEN_DEBUG
-        if( parent ) std::cout << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
+        if( parent ) std::cerr << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
         #endif
 
         // check parent

@@ -76,8 +76,8 @@ void theme_init( GTypeModule* module )
 
     if(g_getenv("OXYGEN_DISABLE_ARGB_HACK"))
     {
-        std::cout << "Oxygen: ARGB hack is disabled; program name: " << appName << std::endl;
-        std::cout << "Oxygen: if disabling ARGB hack helps, please add this string:\n\ndisable:" << appName << "\n\nto ~/.config/oxygen-gtk/argb-apps.conf\nand report it here: https://bugs.kde.org/show_bug.cgi?id=260640" << std::endl;
+        std::cerr << "Oxygen: ARGB hack is disabled; program name: " << appName << std::endl;
+        std::cerr << "Oxygen: if disabling ARGB hack helps, please add this string:\n\ndisable:" << appName << "\n\nto ~/.config/oxygen-gtk/argb-apps.conf\nand report it here: https://bugs.kde.org/show_bug.cgi?id=260640" << std::endl;
         return;
     }
 
@@ -92,7 +92,7 @@ void theme_init( GTypeModule* module )
     if( !systemIn )
     {
         ARGB_DEBUG
-        { std::cout << "ARGB: Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl; }
+        { std::cerr << "ARGB: Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl; }
 
         return;
     }
@@ -101,7 +101,7 @@ void theme_init( GTypeModule* module )
     if( !userIn )
     {
         ARGB_DEBUG
-        { std::cout << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
+        { std::cerr << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
     }
 
     // by default argb support is enabled
@@ -163,7 +163,7 @@ void theme_init( GTypeModule* module )
     }
 
     ARGB_DEBUG
-    { std::cout << "ARGB: Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl; }
+    { std::cerr << "ARGB: Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl; }
 
     if( useRgba )
     {

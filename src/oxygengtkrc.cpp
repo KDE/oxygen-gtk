@@ -58,7 +58,7 @@ namespace Oxygen
         if( std::find( _sections.begin(), _sections.end(), name ) != _sections.end() )
         {
 
-            std::cout << "Gtk::RC::addSection - section named " << name << " already exists" << std::endl;
+            std::cerr << "Gtk::RC::addSection - section named " << name << " already exists" << std::endl;
 
         } else {
 
@@ -76,7 +76,7 @@ namespace Oxygen
         Section::List::iterator iter( std::find( _sections.begin(), _sections.end(), name ) );
         if( iter == _sections.end() )
         {
-            std::cout << "Gtk::RC::addToSection - unable to find section named " << name << std::endl;
+            std::cerr << "Gtk::RC::addToSection - unable to find section named " << name << std::endl;
             return;
         }
 
@@ -89,7 +89,7 @@ namespace Oxygen
         if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
         {
 
-            std::cout << "Gtk::RC::setCurrentSection - unable to find section named " << name << std::endl;
+            std::cerr << "Gtk::RC::setCurrentSection - unable to find section named " << name << std::endl;
             return;
 
         } else {

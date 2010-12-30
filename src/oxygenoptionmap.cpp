@@ -80,7 +80,7 @@ namespace Oxygen
         if( iter == end() )
         {
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::OptionMap::getOption - could not find section " << section << std::endl;
+            std::cerr << "Oxygen::OptionMap::getOption - could not find section " << section << std::endl;
             #endif
 
             return Option();
@@ -91,7 +91,7 @@ namespace Oxygen
         if( optionIter == iter->second.end() )
         {
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::OptionMap::getOption - could not find tag " << tag << std::endl;
+            std::cerr << "Oxygen::OptionMap::getOption - could not find tag " << tag << std::endl;
             #endif
 
             return Option();
