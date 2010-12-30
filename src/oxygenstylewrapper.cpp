@@ -1093,7 +1093,6 @@ namespace Oxygen
                 gtk_window_get_size(wind,&W,&H);
                 if( combo->allocation.width-6 != W )
                 {
-                    printf("setting width of %d instead of previous %d\n",combo->allocation.width-6,W);
                     gtk_widget_set_size_request(parent,combo->allocation.width-6,H);
                     gtk_window_get_position(wind,&X,&Y);
                     gtk_window_move(wind,X+3,Y);
