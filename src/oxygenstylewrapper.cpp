@@ -1095,23 +1095,26 @@ namespace Oxygen
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
 
-#if ENABLE_COMBOBOX_LIST_RESIZE
+            #if ENABLE_COMBOBOX_LIST_RESIZE
             // resize the list to match combobox width (taking into account its lesser width because of button glow)
-            GtkWidget* combo=Style::instance().animations().comboBoxEngine().getPoppedUpWidget();
-            if(combo)
+            if( GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox() )
             {
-                combo=gtk_widget_get_parent(combo);
-                int X,Y,W,H;
-                GtkWindow* wind=GTK_WINDOW(parent);
-                gtk_window_get_size(wind,&W,&H);
-                if( combo->allocation.width-6 != W )
+
+                int w, h;
+                GtkWindow* window( GTK_WINDOW( parent ) );
+                gtk_window_get_size( window, &w, &h );
+                if( combobox->allocation.width-6 != w )
                 {
-                    gtk_widget_set_size_request(parent,combo->allocation.width-6,H);
-                    gtk_window_get_position(wind,&X,&Y);
-                    gtk_window_move(wind,X+3,Y);
+                    gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
+
+                    int x, y;
+                    gtk_window_get_position( window, &x, &y );
+                    gtk_window_move( window, x+3, y );
                 }
+
             }
-#endif
+            #endif
+
             return;
 
         } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {

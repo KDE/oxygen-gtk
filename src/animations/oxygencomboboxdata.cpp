@@ -170,12 +170,6 @@ namespace Oxygen
 
         if( oldPressed != pressed() && _target ) gtk_widget_queue_draw( _target );
 
-        // save the combobox as currently popped up if pressed, and none as popped up if not
-        if( pressed() )
-            Style::instance().animations().comboBoxEngine().setPoppedUpWidget(widget);
-        else
-            Style::instance().animations().comboBoxEngine().setPoppedUpWidget(NULL);
-
     }
 
     //________________________________________________________________________________
