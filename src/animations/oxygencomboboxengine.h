@@ -72,6 +72,15 @@ namespace Oxygen
 
         //@}
 
+        //! returns pressed combobox if any
+        GtkWidget* pressedComboBox( void )
+        {
+            const DataMap<ComboBoxData>::Map& dataMap( data().map() );
+            for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+            { if( iter->second.pressed() ) return iter->first; }
+            return 0L;
+        }
+
         //! true if either button or is pressed
         bool pressed( GtkWidget* widget )
         { return data().value( widget ).pressed(); }
@@ -83,18 +92,6 @@ namespace Oxygen
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
-
-        //! return GtkWidget* of currently popped up combobox
-        GtkWidget* getPoppedUpWidget()
-        { return poppedUpWidget; }
-
-        //! save GtkWidget* of currently popped up combobox
-        void setPoppedUpWidget(GtkWidget* widget)
-        { poppedUpWidget=widget; }
-
-        private:
-
-        GtkWidget* poppedUpWidget;
 
     };
 
