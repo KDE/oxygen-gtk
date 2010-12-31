@@ -21,6 +21,7 @@
 #include "oxygencomboboxdata.h"
 #include "../oxygengtkutils.h"
 #include "../config.h"
+#include "../oxygenstyle.h"
 
 #include <gtk/gtk.h>
 #include <iostream>
@@ -168,6 +169,12 @@ namespace Oxygen
         else return;
 
         if( oldPressed != pressed() && _target ) gtk_widget_queue_draw( _target );
+
+        // save the combobox as currently popped up if pressed, and none as popped up if not
+        if( pressed() )
+            Style::instance().animations().comboBoxEngine().setPoppedUpWidget(widget);
+        else
+            Style::instance().animations().comboBoxEngine().setPoppedUpWidget(NULL);
 
     }
 
