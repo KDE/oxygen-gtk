@@ -56,21 +56,28 @@ void enableARGB()
     const char* appName = g_get_prgname();
     if( !appName ) return;
 
-    const std::string configDir( g_get_user_config_dir() );
-    // user-defined configuration file
-    const std::string userConfig( std::string( configDir ) + "/oxygen-gtk/argb-apps.conf");
+    // user configuration directory
+    const std::string userConfigDir( std::string( g_get_user_config_dir() ) + "/oxygen-gtk" );
 
     // create config directory and config file if they don't exist
-    const char* user_config( userConfig.c_str() );
-    mkdir((configDir+"/oxygen-gtk").c_str(),S_IRWXU|S_IRWXG|S_IRWXO); // FIXME: permissions will be masked by umask, right?
+    // FIXME: one must first check for existance of directory before creating
+    mkdir( userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO );
 
-    std::ofstream newconfig(user_config,std::ios::app);
+    // user-defined configuration file
+    const std::string userConfig( userConfigDir + "/argb-apps.conf");
 
-    // if the file is empty (newly created), put a hint there
-    if( !newconfig.tellp() )
-    { newconfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n"; }
-    newconfig.close();
+    // make sure user configuration file exists
+    std::ofstream newConfig( userConfig.c_str(), std::ios::app );
+    if( newConfig )
+    {
+        // if the file is empty (newly created), put a hint there
+        if( !newConfig.tellp() )
+        { newConfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n"; }
+        newConfig.close();
 
+    }
+
+    // check for ARGB hack being disabled
     if(g_getenv("OXYGEN_DISABLE_ARGB_HACK"))
     {
         std::cerr << "Oxygen: ARGB hack is disabled; program name: " << appName << std::endl;
@@ -78,7 +85,8 @@ void enableARGB()
         return;
     }
 
-    const bool OXYGEN_ARGB_DEBUG=g_getenv("OXYGEN_ARGB_DEBUG");
+    // get debug flag from environement
+    const bool OXYGEN_ARGB_DEBUG = g_getenv("OXYGEN_ARGB_DEBUG");
 
     // read blacklist
     // system-wide configuration file
@@ -90,20 +98,7 @@ void enableARGB()
         if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
         { std::cerr << "ARGB: Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl; }
 
-        return;
     }
-
-    std::ifstream userIn( userConfig.c_str() );
-    if( !userIn )
-    {
-
-        if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
-        { std::cerr << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
-
-    }
-
-    // by default argb support is enabled
-    bool useRgba( true );
 
     // load options into a string
     std::string contents;
@@ -114,11 +109,25 @@ void enableARGB()
         lines.push_back( contents );
     }
 
+    // user specific blacklist
+    std::ifstream userIn( userConfig.c_str() );
+    if( !userIn )
+    {
+
+        if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
+        { std::cerr << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
+
+    }
+
+    // load options into a string
     while( std::getline( userIn, contents, '\n' ) )
     {
         if( contents.empty() || contents[0] == '#' ) continue;
         lines.push_back( contents );
     }
+
+    // by default argb support is enabled
+    bool useRgba( true );
 
     // true if application was found in one of the lines
     bool found( false );
@@ -163,6 +172,7 @@ void enableARGB()
     if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
     { std::cerr << "ARGB: Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl; }
 
+    // change default colormap when argb is enabled
     if( useRgba )
     {
         GdkScreen* screen = gdk_screen_get_default();
