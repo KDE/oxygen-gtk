@@ -65,11 +65,10 @@ void enableARGB()
     mkdir((configDir+"/oxygen-gtk").c_str(),S_IRWXU|S_IRWXG|S_IRWXO); // FIXME: permissions will be masked by umask, right?
 
     std::ofstream newconfig(user_config,std::ios::app);
+
     // if the file is empty (newly created), put a hint there
     if( !newconfig.tellp() )
-    {
-        newconfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n";
-    }
+    { newconfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n"; }
     newconfig.close();
 
     if(g_getenv("OXYGEN_DISABLE_ARGB_HACK"))
@@ -81,15 +80,14 @@ void enableARGB()
 
     const bool OXYGEN_ARGB_DEBUG=g_getenv("OXYGEN_ARGB_DEBUG");
 
-#define ARGB_DEBUG if(G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG))
-
     // read blacklist
     // system-wide configuration file
     const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
     std::ifstream systemIn( configFile.c_str() );
     if( !systemIn )
     {
-        ARGB_DEBUG
+
+        if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
         { std::cerr << "ARGB: Oxygen::theme_init - ARGB config file \"" << configFile << "\" not found" << std::endl; }
 
         return;
@@ -98,8 +96,10 @@ void enableARGB()
     std::ifstream userIn( userConfig.c_str() );
     if( !userIn )
     {
-        ARGB_DEBUG
+
+        if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
         { std::cerr << "ARGB: Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
+
     }
 
     // by default argb support is enabled
@@ -160,7 +160,7 @@ void enableARGB()
 
     }
 
-    ARGB_DEBUG
+    if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
     { std::cerr << "ARGB: Oxygen::init_theme - program: " << appName << " ARGB visual is " << (useRgba ? "":"not ") << "used" << std::endl; }
 
     if( useRgba )
@@ -223,4 +223,3 @@ void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y
 {
     Oxygen::Style::instance().drawWindecoShapeMask( context, (Oxygen::WinDeco::Options) options, x, y, w, h);
 }
-
