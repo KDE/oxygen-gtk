@@ -69,7 +69,7 @@ namespace Oxygen
         { return; }
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::WindowManager::registerWidget -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << " " << gtk_widget_get_name( widget )
@@ -97,7 +97,7 @@ namespace Oxygen
         if( !_map.contains( widget ) ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::WindowManager::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         _map.value( widget ).disconnect( widget );
@@ -155,7 +155,7 @@ namespace Oxygen
 
             const bool accepted( static_cast<WindowManager*>(data)->isWindowDragWidget( widget, event ) );
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::wmButtonPress -"
+            std::cerr << "Oxygen::WindowManager::wmButtonPress -"
                 << " event: " << event
                 << " widget: " << widget
                 << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
@@ -175,7 +175,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::wmButtonRelease -"
+        std::cerr << "Oxygen::WindowManager::wmButtonRelease -"
             << " event: " << event
             << " widget: " << widget
             << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
@@ -433,7 +433,7 @@ namespace Oxygen
             { usable = childrenUseEvent( childWidget, event, inNoteBook); }
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::childrenUseEvent -"
+            std::cerr << "Oxygen::WindowManager::childrenUseEvent -"
                 << " event: " << event
                 << " widget: " << childWidget
                 << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
