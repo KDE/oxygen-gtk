@@ -27,6 +27,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenwindecooptions.h"
+#include "oxygenwindowshadow.h"
 
 #include <gmodule.h>
 #include <gtk/gtk.h>
@@ -47,6 +48,7 @@ extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
 extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindecoButton(cairo_t*, unsigned long,unsigned long, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gint,gint,gint,gint);
+extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options, gint x, gint y, gint w, gint h);
 
 //_________________________________________________
 void enableARGB()
@@ -232,4 +234,10 @@ void drawWindecoButton(cairo_t* context, unsigned long buttonType,unsigned long 
 void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
 {
     Oxygen::Style::instance().drawWindecoShapeMask( context, (Oxygen::WinDeco::Options) options, x, y, w, h);
+}
+
+//_________________________________________________
+void drawWindowShadow(cairo_t* context, unsigned long options, gint x, gint y, gint w, gint h)
+{
+    Oxygen::Style::instance().drawWindowShadow(context,(Oxygen::WinDeco::Options) options, x, y, w, h);
 }

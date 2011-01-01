@@ -216,6 +216,9 @@ namespace Oxygen
         //! draw window decorations
         void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint);
 
+        //! draw window shadow
+        void drawWindowShadow( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
+
         //! render XShape window decoration mask
         void drawWindecoShapeMask( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
 

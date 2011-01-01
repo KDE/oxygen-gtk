@@ -148,7 +148,7 @@ namespace Oxygen
     { return (flags & testFlags) == testFlags; }
 
     //______________________________________________________________
-    void TileSet::render( Cairo::Context& context, int x0, int y0, int w, int h, unsigned int t ) const
+    void TileSet::render( cairo_t* context, int x0, int y0, int w, int h, unsigned int t ) const
     {
 
         // check initialization
@@ -232,7 +232,7 @@ namespace Oxygen
     }
 
     //______________________________________________________________
-    void TileSet::copyPixmap( Cairo::Context& context, int x, int y, GdkPixbuf* pixbuf, int sx, int sy, int sw, int sh, cairo_extend_t extend ) const
+    void TileSet::copyPixmap( cairo_t* context, int x, int y, GdkPixbuf* pixbuf, int sx, int sy, int sw, int sh, cairo_extend_t extend ) const
     {
         if( !pixbuf ) return;
         cairo_translate( context, x, y );

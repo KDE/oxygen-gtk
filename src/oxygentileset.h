@@ -117,7 +117,7 @@ namespace Oxygen
         directions. Partial tiles are used as needed so that the entire rect is
         perfectly filled. Filling is performed as if all chunks are being drawn.
         */
-        void render( Cairo::Context&, int x, int y, int w, int h, unsigned int = Ring) const;
+        void render( cairo_t*, int x, int y, int w, int h, unsigned int = Ring) const;
 
         protected:
 
@@ -136,7 +136,7 @@ namespace Oxygen
         void initPixmap( PixbufList&, GdkPixbuf*, int w, int h, int sx, int sy, int sw, int sh );
 
         //! copy pixmap
-        void copyPixmap( Cairo::Context&, int x, int y, GdkPixbuf*, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
+        void copyPixmap( cairo_t*, int x, int y, GdkPixbuf*, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
 
         private:
 
