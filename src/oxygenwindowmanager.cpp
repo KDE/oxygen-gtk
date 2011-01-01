@@ -330,17 +330,14 @@ namespace Oxygen
 
         }
 
-        // translate to current window
-        int nx(0);
-        int ny(0);
-        gdk_window_get_geometry( window, &nx, &ny, 0L, 0L, 0L );
-        allocation.x -= nx;
-        allocation.y -= ny;
-
-        // translate absolute coordinates
-        gdk_window_get_origin(window, &nx, &ny );
-        allocation.x += nx;
-        allocation.y += ny;
+        // translate to absolute coordinates
+        {
+            int nx(0);
+            int ny(0);
+            gdk_window_get_origin(window, &nx, &ny );
+            allocation.x += nx;
+            allocation.y += ny;
+        }
 
         return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
 
