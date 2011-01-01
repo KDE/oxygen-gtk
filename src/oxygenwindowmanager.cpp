@@ -431,7 +431,7 @@ namespace Oxygen
             #if OXYGEN_DEBUG
             std::cout << "Oxygen::WindowManager::childrenUseEvent -"
                 << " event: " << event
-                << " widget: " << widget
+                << " widget: " << childWidget
                 << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
                 << " " << gtk_widget_get_name( childWidget )
                 << " usable: " << usable
