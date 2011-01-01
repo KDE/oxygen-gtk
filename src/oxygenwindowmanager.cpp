@@ -69,7 +69,7 @@ namespace Oxygen
         { return; }
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::WindowManager::registerWidget -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << " " << gtk_widget_get_name( widget )
@@ -89,6 +89,8 @@ namespace Oxygen
         // connect signals
         if( _mode != Disabled ) connect( widget, data );
 
+        return;
+
     }
 
     //_________________________________________________
@@ -97,7 +99,7 @@ namespace Oxygen
         if( !_map.contains( widget ) ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::WindowManager::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         _map.value( widget ).disconnect( widget );
@@ -155,7 +157,7 @@ namespace Oxygen
 
             const bool accepted( static_cast<WindowManager*>(data)->isWindowDragWidget( widget, event ) );
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::wmButtonPress -"
+            std::cerr << "Oxygen::WindowManager::wmButtonPress -"
                 << " event: " << event
                 << " widget: " << widget
                 << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
@@ -175,7 +177,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::WindowManager::wmButtonRelease -"
+        std::cerr << "Oxygen::WindowManager::wmButtonRelease -"
             << " event: " << event
             << " widget: " << widget
             << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
@@ -307,38 +309,45 @@ namespace Oxygen
     bool WindowManager::withinWidget( GtkWidget* widget, GdkEventButton* event ) const
     {
 
-        // get widget window
-        GdkWindow *window( gtk_widget_get_window( widget ) );
+        // get top level widget
+        GtkWidget* topLevel( gtk_widget_get_toplevel( widget ) );
+        if( !topLevel ) return true;
 
-        // Some widgets aren't realized (GeditWindow for exemple) ...
+        // get top level window;
+        GdkWindow *window( gtk_widget_get_window( topLevel ) );
         if( !window ) return true;
 
-        GtkAllocation allocation;
+        // translate widget position to topLevel
+        int wx(0);
+        int wy(0);
+        gtk_widget_translate_coordinates( widget, topLevel, wx, wy, &wx, &wy );
 
+        // translate to absolute coordinates
+        int nx(0);
+        int ny(0);
+        gdk_window_get_origin( window, &nx, &ny );
+        wx += nx;
+        wy += ny;
+
+        // get widget size.
+        // for notebooks, only consider the tabbar rect
+        GtkAllocation allocation;
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
+            allocation.x += wx - widget->allocation.x;
+            allocation.y += wy - widget->allocation.y;
 
         } else {
 
-            #if GTK_CHECK_VERSION(2, 18, 0)
-            gtk_widget_get_allocation( widget, &allocation );
-            #else
             allocation = widget->allocation;
-            #endif
+            allocation.x = wx;
+            allocation.y = wy;
 
         }
 
-        // translate to absolute coordinates
-        {
-            int nx(0);
-            int ny(0);
-            gdk_window_get_origin(window, &nx, &ny );
-            allocation.x += nx;
-            allocation.y += ny;
-        }
-
+        // compare to event root position
         return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
 
     }
@@ -426,7 +435,7 @@ namespace Oxygen
             { usable = childrenUseEvent( childWidget, event, inNoteBook); }
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::WindowManager::childrenUseEvent -"
+            std::cerr << "Oxygen::WindowManager::childrenUseEvent -"
                 << " event: " << event
                 << " widget: " << childWidget
                 << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
