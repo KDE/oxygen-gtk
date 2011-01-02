@@ -1831,7 +1831,7 @@ namespace Oxygen
             if( d.isTreeView() ) arrowSize = Style::instance().settings().viewTriangularExpanderSize();
             else options |= Contrast;
 
-            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options );
+            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, Palette::Text );
 
         } else {
 
