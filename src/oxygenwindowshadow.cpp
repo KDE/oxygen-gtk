@@ -40,7 +40,7 @@ namespace Oxygen
         // TODO: implement real opacity to get animated transition from active to inactive
         // For now, opacity==0 means inactive, otherwise active
 
-        double size( 29 ); // TODO: shadowSize()
+        double size( shadowSize() );
 
         GdkPixbuf* shadow = shadowPixmap(color,opacity);
         TileSet* tileSet = new TileSet(shadow,int(size),int(size),1,1);
@@ -50,11 +50,11 @@ namespace Oxygen
     //________________________________________________________________________________
     GdkPixbuf* WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, bool active)
     {
-        const double verticalOffset=0;
+        ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
         static const double fixedSize=25.5;
-        double size( 29 ); // TODO: shadowSize() as in Kwin Oxygen
-        double shadowSize( 29 ); // TODO: shadowConfiguration.shadowSize() and shadowConfiguration.isEnabled()
+        double size( shadowSize() );
+        double shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize() : 0 );
 
         GdkPixbuf* shadow( gdk_pixbuf_new( GDK_COLORSPACE_RGB, TRUE, 8, int(size*2), int(size*2) ) );
         gdk_pixbuf_fill( shadow, ColorUtils::Rgba::transparent().toInt() );
@@ -62,7 +62,7 @@ namespace Oxygen
         Cairo::Context p(shadow);
 
         // some gradients rendering are different at bottom corners if client has no border
-        bool hasBorder( true ); // TODO: true -> ( hasBorder || isShade )
+        bool hasBorder( true || _wopt&WinDeco::Shaded ); // TODO: true -> hasBorder
 
         if( shadowSize )
         {
@@ -71,8 +71,8 @@ namespace Oxygen
                 {
                     // inner (shark) gradient
                     const double gradientSize = std::min( shadowSize, (shadowSize+fixedSize)/2 );
-                    const double hoffset = 0; // TODO: shadowConfiguration.horizontalOffset()*gradientSize/fixedSize
-                    const double voffset = verticalOffset*gradientSize/fixedSize; // TODO: similarly to hoffset
+                    const double hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                    const double voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     Cairo::Pattern rg( cairo_pattern_create_radial( size+12.0*hoffset, size+12.0*voffset, gradientSize ) );
                     cairo_pattern_add_color_stop( rg, 1, ColorUtils::Rgba::transparent() );
@@ -80,7 +80,7 @@ namespace Oxygen
                     // gaussian shadow is used
                     int nPoints( int( (10*gradientSize)/fixedSize ) );
                     Gaussian f( 0.85, 0.17 );
-                    ColorUtils::Rgba c(0x70/255.,0xf1/255.,0xff/255.); // TODO: shadowConfiguration.innerColor()
+                    ColorUtils::Rgba c(shadowConfiguration.innerColor());
                     for( double i=0; i < nPoints; i++ )
                     {
                         double x = i/nPoints;
@@ -96,8 +96,8 @@ namespace Oxygen
                 {
                     // outer (spread) gradient
                     const double gradientSize = shadowSize;
-                    const double hoffset = 0; // TODO: shadowConfiguration.horizontalOffset()*gradientSize/fixedSize
-                    const double voffset = verticalOffset*gradientSize/fixedSize; // TODO: similarly to hoffset
+                    const double hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                    const double voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     Cairo::Pattern rg( cairo_pattern_create_radial( size+12.0*hoffset, size+12.0*voffset, gradientSize ) );
                     cairo_pattern_add_color_stop( rg, 1, ColorUtils::Rgba::transparent() );
@@ -105,7 +105,7 @@ namespace Oxygen
                     // gaussian shadow is used
                     int nPoints( int( (10*gradientSize)/fixedSize ) );
                     Gaussian f( 0.46, 0.34 );
-                    ColorUtils::Rgba c(0x54/255.,0xa7/255.,0xf0/255.); // TODO: shadowConfiguration.outerColor()
+                    ColorUtils::Rgba c(shadowConfiguration.outerColor());
                     for( double i=0; i < nPoints; i++ )
                     {
                         double x = i/nPoints;
@@ -122,8 +122,8 @@ namespace Oxygen
                 {
                     // inner (sharp) gradient
                     const double gradientSize = std::min( shadowSize, fixedSize );
-                    const double hoffset = 0; // TODO: shadowConfiguration.horizontalOffset()*gradientSize/fixedSize
-                    const double voffset = verticalOffset*gradientSize/fixedSize; // TODO: similarly to hoffset
+                    const double hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                    const double voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     Cairo::Pattern rg( cairo_pattern_create_radial( size+hoffset, size+voffset, gradientSize ) );
                     cairo_pattern_add_color_stop( rg, 1, ColorUtils::Rgba::transparent() );
@@ -131,7 +131,7 @@ namespace Oxygen
                     // parabolic shadow is used
                     int nPoints( int( (10*gradientSize)/fixedSize ) );
                     Parabolic f( 1, 0.22 );
-                    ColorUtils::Rgba c(0,0,0); // TODO: shadowConfiguration.outerColor()
+                    ColorUtils::Rgba c(shadowConfiguration.outerColor());
                     for( double i=0; i < nPoints; i++ )
                     {
                         double x = i/nPoints;
@@ -147,8 +147,8 @@ namespace Oxygen
                 {
                     // mid gradient
                     const double gradientSize = std::min( shadowSize, (shadowSize+2*fixedSize)/3 );
-                    const double hoffset = 0; // TODO: shadowConfiguration.horizontalOffset()*gradientSize/fixedSize
-                    const double voffset = verticalOffset*gradientSize/fixedSize; // TODO: similarly to hoffset
+                    const double hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                    const double voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     Cairo::Pattern rg( cairo_pattern_create_radial( size+8.0*hoffset, size+8.0*voffset, gradientSize ) );
                     cairo_pattern_add_color_stop( rg, 1, ColorUtils::Rgba::transparent() );
@@ -156,7 +156,7 @@ namespace Oxygen
                     // gaussian shadow is used
                     int nPoints( int( (10*gradientSize)/fixedSize ) );
                     Gaussian f( 0.54, 0.21 );
-                    ColorUtils::Rgba c(0,0,0); // TODO: shadowConfiguration.outerColor()
+                    ColorUtils::Rgba c(shadowConfiguration.outerColor());
                     for( double i=0; i < nPoints; i++ )
                     {
                         double x = i/nPoints;
@@ -172,8 +172,8 @@ namespace Oxygen
                 {
                     // outer (spread) gradient
                     const double gradientSize = shadowSize;
-                    const double hoffset = 0; // TODO: shadowConfiguration.horizontalOffset()*gradientSize/fixedSize
-                    const double voffset = verticalOffset*gradientSize/fixedSize; // TODO: similarly to hoffset
+                    const double hoffset = shadowConfiguration.horizontalOffset()*gradientSize/fixedSize;
+                    const double voffset = shadowConfiguration.verticalOffset()*gradientSize/fixedSize;
 
                     Cairo::Pattern rg( cairo_pattern_create_radial( size+20.0*hoffset, size+20.0*voffset, gradientSize ) );
                     cairo_pattern_add_color_stop( rg, 1, ColorUtils::Rgba::transparent() );
@@ -181,7 +181,7 @@ namespace Oxygen
                     // gaussian shadow is used
                     int nPoints( int( (20*gradientSize)/fixedSize ) );
                     Gaussian f( 0.155, 0.445 );
-                    ColorUtils::Rgba c(0,0,0); // TODO: shadowConfiguration.outerColor()
+                    ColorUtils::Rgba c(shadowConfiguration.outerColor());
                     for( double i=0; i < nPoints; i++ )
                     {
                         double x = i/nPoints;

@@ -25,6 +25,7 @@
 #include "oxygenqtsettings.h"
 #include "oxygenstylehelper.h"
 #include "oxygenwindecooptions.h"
+#include "oxygenshadowconfiguration.h"
 #include <cmath>
 
 namespace Oxygen
@@ -37,7 +38,9 @@ namespace Oxygen
         //! constructor
         WindowShadow( const QtSettings& settings, StyleHelper& helper ):
             _settings(settings),
-            _helper(helper)
+            _helper(helper),
+            inactiveShadowConfiguration_(ShadowConfiguration(Palette::Inactive)),
+            activeShadowConfiguration_(ShadowConfiguration(Palette::Active))
         {}
 
         //! destructor
@@ -53,6 +56,18 @@ namespace Oxygen
 
         void setWindowState(WinDeco::Options wopt)
         { _wopt=wopt; }
+
+        //! shadow size
+        double shadowSize()
+        {
+            double activeSize( activeShadowConfiguration_.isEnabled() ? activeShadowConfiguration_.shadowSize() : 0 );
+            double inactiveSize( inactiveShadowConfiguration_.isEnabled() ? inactiveShadowConfiguration_.shadowSize() : 0 );
+            double size( std::max( activeSize, inactiveSize ) );
+
+            // even if shadows are disabled,
+            // you need a minimum size to allow corner rendering
+            return std::max(size,5.0);
+        }
 
         protected:
 
@@ -134,6 +149,12 @@ namespace Oxygen
 
         //! window state
         WinDeco::Options _wopt;
+
+        //! inactive shadow configuration
+        ShadowConfiguration inactiveShadowConfiguration_;
+
+        //! active shadow configuration
+        ShadowConfiguration activeShadowConfiguration_;
 
     };
 

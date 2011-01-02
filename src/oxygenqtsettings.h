@@ -215,6 +215,10 @@ namespace Oxygen
         FrameBorder frameBorder( void ) const
         { return _frameBorder; }
 
+        // let other config classes read oxygenrc without reinventing the wheel
+        OptionMap& oxygen()
+        { return _oxygen; }
+
         //@}
 
         protected:

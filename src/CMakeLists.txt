@@ -3,6 +3,7 @@ include_directories( animations )
 
 # Sources
 set( OXYGEN-GTK-SOURCES
+    oxygenshadowconfiguration.cpp
     oxygenwindowshadow.cpp
     oxygenapplicationname.cpp
     oxygencairocontext.cpp
