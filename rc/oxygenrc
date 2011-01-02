@@ -1,3 +1,16 @@
+[ActiveShadow]
+InnerColor=112,241,255
+OuterColor=84,167,240
+Size=29
+UseOuterColor=true
+VerticalOffset=0.1
+
+[InactiveShadow]
+InnerColor=0,0,0
+OuterColor=0,0,0
+Size=25
+UseOuterColor=false
+VerticalOffset=0.2
 
 [Style]
 CacheEnabled=true
