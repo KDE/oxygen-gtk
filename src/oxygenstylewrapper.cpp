@@ -1683,6 +1683,10 @@ namespace Oxygen
         if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla( widget ) )
         { arrowSize = QtSettings::ArrowTiny; }
 
+        // define default color role
+        Palette::Role role( Palette::ButtonText );
+
+        // define options
         StyleOptions options( Contrast );
         options |= StyleOptions( widget, state );
 
@@ -1706,6 +1710,7 @@ namespace Oxygen
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
+            role = Palette::WindowText;
 
         } else if( d.isSpinButton() ) {
 
@@ -1724,6 +1729,8 @@ namespace Oxygen
             // disable contrast
             options &= ~Contrast;
 
+            role = Palette::Text;
+
         } else if( d.isNotebook() ) {
 
             if( GTK_IS_NOTEBOOK( widget ) )
@@ -1739,14 +1746,22 @@ namespace Oxygen
                 }
             }
 
+            role = Palette::WindowText;
+
         } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
+            role = Palette::Text;
+
+        } else if( Gtk::gtk_parent_combo( widget ) ) {
+
+            role = Palette::WindowText;
 
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
             options &= ~( Focus|Hover );
             y+= 1;
+            role = Palette::ButtonText;
 
         } else if(
             Gtk::gtk_parent_button( widget ) &&
@@ -1762,12 +1777,14 @@ namespace Oxygen
             // need to render background behind arrows from calendar
             // offsets are empirical
             Style::instance().renderWindowBackground( window, widget, clipRect, x-2, y-3, w+4, h+6 );
+            role = Palette::WindowText;
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
             GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
             GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
             GtkStateType widgetState=gtk_widget_get_state(widget);
+            role = Palette::WindowText;
 
             if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
             { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
@@ -1784,7 +1801,7 @@ namespace Oxygen
         }
 
         // render arrow
-        Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
+        Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options, role );
 
     }
 
