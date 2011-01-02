@@ -2100,9 +2100,9 @@ namespace Oxygen
 
         // retrieve colors
         ColorUtils::Rgba base;
-        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::ButtonText );
+        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::Text );
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
-        else base = settings().palette().color( Palette::Active, Palette::ButtonText );
+        else base = settings().palette().color( Palette::Active, Palette::Text );
 
         const int xcenter( x + w/2 );
         const int ycenter( y + h/2 );
