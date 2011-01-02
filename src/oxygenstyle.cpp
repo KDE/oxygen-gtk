@@ -1265,11 +1265,11 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( Palette::Window );
 
         }
 
