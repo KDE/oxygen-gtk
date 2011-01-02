@@ -1266,11 +1266,11 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( Palette::Window );
 
         }
 
@@ -1374,8 +1374,8 @@ namespace Oxygen
             if( shadow == GTK_SHADOW_IN ) cairo_set_line_width( context, 2.0 );
 
             Palette::Group group( (options&Disabled) ? Palette::Disabled : Palette::Active );
-            const ColorUtils::Rgba& color( settings().palette().color( group, ( options&Sunken ) ? Palette::WindowText : Palette::ButtonText ) );
-            const ColorUtils::Rgba& background( settings().palette().color( ( options&Sunken ) ? Palette::Window : Palette::Button ) );
+            const ColorUtils::Rgba& color( settings().palette().color( group, ( options&Flat ) ? Palette::WindowText : Palette::ButtonText ) );
+            const ColorUtils::Rgba& background( settings().palette().color( ( options&Flat ) ? Palette::Window : Palette::Button ) );
             const ColorUtils::Rgba& base( ColorUtils::decoColor( background, color ) );
             const ColorUtils::Rgba& contrast( ColorUtils::lightColor( background ) );
 
@@ -1621,11 +1621,11 @@ namespace Oxygen
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
 
-            base = settings().palette().color( Palette::Button );
+            base = settings().palette().color( Palette::Window );
 
         }
 
