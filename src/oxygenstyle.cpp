@@ -1776,7 +1776,9 @@ namespace Oxygen
         GdkRectangle* clipRect,
         GtkArrowType orientation,
         gint x, gint y, gint w, gint h,
-        QtSettings::ArrowSize arrowSize, StyleOptions options ) const
+        QtSettings::ArrowSize arrowSize,
+        StyleOptions options,
+        Palette::Role role ) const
     {
 
         // get polygon
@@ -1784,9 +1786,9 @@ namespace Oxygen
 
         // retrieve colors
         ColorUtils::Rgba base;
-        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::ButtonText );
+        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, role );
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
-        else base = settings().palette().color( Palette::Active, Palette::ButtonText );
+        else base = settings().palette().color( Palette::Active, role );
 
         // need odd width and height
         if( !(w%2) ) w--;
@@ -1801,7 +1803,6 @@ namespace Oxygen
         switch( orientation )
         {
             case GTK_ARROW_UP:
-            //cairo_translate( context, 0., -0.5 );
             break;
 
             case GTK_ARROW_DOWN:
