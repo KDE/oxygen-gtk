@@ -53,7 +53,6 @@ namespace Oxygen
             Hover,
             // negative text & view hover are used by windeco code
             NegativeText,
-            ViewHover,
             NumColors
         };
 
@@ -135,7 +134,6 @@ namespace Oxygen
                 case Focus: return "Focus";
                 case Hover: return "Hover";
                 case NegativeText: return "NegativeText";
-                case ViewHover: return "ViewHover";
                 default: return "unknown";
             }
         }
