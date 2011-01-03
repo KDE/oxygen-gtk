@@ -2100,15 +2100,16 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkExpanderStyle style,
-        StyleOptions options
+        StyleOptions options,
+        Palette::Role role
         ) const
     {
 
         // retrieve colors
         ColorUtils::Rgba base;
-        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, Palette::Text );
+        if( options&Disabled ) base = settings().palette().color( Palette::Disabled, role );
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
-        else base = settings().palette().color( Palette::Active, Palette::Text );
+        else base = settings().palette().color( Palette::Active, role );
 
         const int xcenter( x + w/2 );
         const int ycenter( y + h/2 );
@@ -2118,20 +2119,20 @@ namespace Oxygen
 
         // create context and translate to center
         Cairo::Context context( window, clipRect );
-        cairo_translate( context, xcenter, ycenter );
-
         cairo_set_line_width( context, 1.0 );
         cairo_set_source( context, base );
 
+        cairo_translate( context, -0.5+xcenter, -0.5+ycenter );
+
         // horizontal line
-        cairo_move_to( context, 0.5-radius, 0.5 );
-        cairo_line_to( context, 0.5+radius, 0.5 );
+        cairo_move_to( context, -radius, 0 );
+        cairo_line_to( context, radius, 0 );
 
         // vertical line
         if( style == GTK_EXPANDER_COLLAPSED || style == GTK_EXPANDER_SEMI_COLLAPSED )
         {
-            cairo_move_to( context, 0.5, 0.5-radius );
-            cairo_line_to( context, 0.5, 0.5+radius );
+            cairo_move_to( context, 0, -radius );
+            cairo_line_to( context, 0, radius );
         }
 
         cairo_stroke( context );
