@@ -520,8 +520,8 @@ namespace Oxygen
         */
         _rc.addSection( "oxygen-entry", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
-        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
         _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
         _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
