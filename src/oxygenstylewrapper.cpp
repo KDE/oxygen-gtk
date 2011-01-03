@@ -812,26 +812,21 @@ namespace Oxygen
             StyleOptions options = StyleOptions( widget, state, shadow );
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
 
-        } else if( d.isTroughAny() && GTK_IS_SCALE( widget ) ) {
+        } else if( d.isTroughAny() && GTK_IS_VSCALE( widget ) ) {
 
-            const bool vertical( gtk_orientable_get_orientation( GTK_ORIENTABLE( widget ) ) == GTK_ORIENTATION_VERTICAL );
+            // TODO: calculate this value from the style "slider-width" property
             const int offset( 6 );
-            if( vertical ) {
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h - 2*offset, Vertical );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h, Vertical );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h - offset, Vertical );
 
-                // TODO: calculate this value from the style "slider-width" property
-                if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h - 2*offset, Vertical );
-                else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x, y + offset, w, h, Vertical );
-                else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w, h - offset, Vertical );
+        } else if( d.isTroughAny() && GTK_IS_HSCALE( widget ) ) {
 
-            } else {
-
-                // TODO: calculate this value from the style "slider-width" property
-                const int offset( 6 );
-                if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w - 2*offset, h, StyleOptions() );
-                else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w, h, StyleOptions() );
-                else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w - offset, h, StyleOptions() );
-
-            }
+            // TODO: calculate this value from the style "slider-width" property
+            const int offset( 6 );
+            if( d.isTrough() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w - 2*offset, h, StyleOptions() );
+            else if( d.isTroughLower() ) Style::instance().renderSliderGroove( window, clipRect, x + offset, y, w, h, StyleOptions() );
+            else if( d.isTroughUpper() ) Style::instance().renderSliderGroove( window, clipRect, x, y, w - offset, h, StyleOptions() );
 
         } else if( d.isTrough() && shadow == GTK_SHADOW_IN ) {
 
@@ -1829,6 +1824,8 @@ namespace Oxygen
         #endif
 
         StyleOptions options( widget, state );
+        const Gtk::Detail d( detail );
+        const Palette::Role role( d.isTreeView() ? Palette::Text : Palette::WindowText );
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
 
@@ -1840,11 +1837,11 @@ namespace Oxygen
             if( d.isTreeView() ) arrowSize = Style::instance().settings().viewTriangularExpanderSize();
             else options |= Contrast;
 
-            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, Palette::Text );
+            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, role );
 
         } else {
 
-            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, role );
 
         }
 

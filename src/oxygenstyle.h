@@ -209,7 +209,7 @@ namespace Oxygen
         void renderTabBarFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
 
         //! tree 'standard' expanders (that is: +!-)
-        void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions ) const;
+        void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions, Palette::Role ) const;
 
         //@}
 
