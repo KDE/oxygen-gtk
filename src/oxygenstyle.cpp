@@ -1035,9 +1035,12 @@ namespace Oxygen
 
             cairo_set_line_width(context,1);
 
-            if( options&Focus ) // window is active - it's a glow, not a shadow
+            if( options&Focus )
             {
-                ColorUtils::Rgba frameColor(0x54/255.,0xa7/255.,0xf0/255.); // FIXME: where should this color be taken from?
+
+                // window is active - it's a glow, not a shadow
+                // FIXME: where should this color be taken from?
+                ColorUtils::Rgba frameColor(0x54/255.,0xa7/255.,0xf0/255.);
                 ColorUtils::Rgba glow=ColorUtils::mix(ColorUtils::Rgba(0.5,0.5,0.5),frameColor,0.7);
                 cairo_set_source(context,glow);
 
@@ -1100,6 +1103,7 @@ namespace Oxygen
                     cairo_stroke( context );
 
                 } else {
+
                     cairo_set_source( context, ColorUtils::darken( shadow, 0.2 ));
                     cairo_move_to( context, x-0.5, y-0.5 ); cairo_line_to( context, x+w+0.5, y-0.5 );
                     cairo_stroke( context );
@@ -1112,6 +1116,7 @@ namespace Oxygen
                     cairo_set_source( context, ColorUtils::darken( shadow, 0.6 ));
                     cairo_move_to( context, x-0.5, y+h+0.5 ); cairo_line_to( context, x+w+0.5, y+h+0.5 );
                     cairo_stroke( context );
+
                 }
             }
         }
