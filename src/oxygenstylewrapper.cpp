@@ -1775,7 +1775,11 @@ namespace Oxygen
         {
 
             options &= ~( Focus|Hover );
-            if( d.isArrow() && GTK_IS_ARROW( widget ) ) x += 1;
+            if( d.isArrow() && GTK_IS_ARROW( widget ) )
+            {
+                x += 1;
+                role = Palette::WindowText;
+            }
 
         } else if( GTK_IS_CALENDAR( widget ) ) {
 
