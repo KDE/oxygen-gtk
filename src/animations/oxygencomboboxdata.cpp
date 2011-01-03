@@ -144,7 +144,10 @@ namespace Oxygen
             gtk_cell_renderer_get_size( r, _cell._widget, 0L, 0L, 0L, &xsize, &ysize );
 
             gtk_cell_renderer_set_padding( r, std::max( 6, xpad ), ypadmax );
-            gtk_cell_renderer_set_fixed_size( r, xsize+6, ysize + ypadmax );
+
+            if( GTK_IS_CELL_RENDERER_PIXBUF( r ) )
+            { gtk_cell_renderer_set_fixed_size( r, xsize+6, ysize + ypadmax ); }
+
         }
 
         if( renderers ) g_list_free( renderers );
