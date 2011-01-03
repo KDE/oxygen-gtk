@@ -138,9 +138,9 @@ namespace Oxygen
         void renderToolBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! frame
-        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
-        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions opt) const
-        { drawFloatFrame( 0L, window, r, x, y, w, h, opt ); }
+        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, Palette::Role = Palette::Window ) const;
+        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions opt, Palette::Role role = Palette::Window) const
+        { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
         // void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring );

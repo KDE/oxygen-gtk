@@ -45,15 +45,18 @@ namespace Oxygen
             Window,
             Tooltip,
             Text,
+            NegativeText,
             ButtonText,
             SelectedText,
             WindowText,
             TooltipText,
             Focus,
             Hover,
-            // negative text & view hover are used by windeco code
-            NegativeText,
-            ViewHover,
+
+            // these two are use for drawFloatFrame
+            ActiveWindowBackground,
+            InactiveWindowBackground,
+
             NumColors
         };
 
@@ -128,14 +131,15 @@ namespace Oxygen
                 case Window: return "Window";
                 case Tooltip: return "Tooltip";
                 case Text: return "Text";
+                case NegativeText: return "NegativeText";
                 case ButtonText: return "ButtonText";
                 case SelectedText: return "SelectedText";
                 case WindowText: return "WindowText";
                 case TooltipText: return "TooltipText";
                 case Focus: return "Focus";
                 case Hover: return "Hover";
-                case NegativeText: return "NegativeText";
-                case ViewHover: return "ViewHover";
+                case ActiveWindowBackground: return "ActiveWindowBackground";
+                case InactiveWindowBackground: return "InactiveWindowBackground";
                 default: return "unknown";
             }
         }

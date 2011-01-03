@@ -52,7 +52,7 @@ namespace Oxygen
         {
             shadow=(_type==ButtonClose)?
                 ColorUtils::Rgba( settings().palette().color( Palette::NegativeText ) ):
-                ColorUtils::Rgba( settings().palette().color( Palette::ViewHover ) );
+                ColorUtils::Rgba( settings().palette().color( Palette::Hover ) );
             shadow=darkColor(shadow);
             icon=shadow;
         }

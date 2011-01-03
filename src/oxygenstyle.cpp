@@ -988,11 +988,11 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options, Palette::Role role ) const
     {
 
         // define colors
-        ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        ColorUtils::Rgba base(settings().palette().color( role ) );
         ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         ColorUtils::Rgba dark( ColorUtils::darkColor( ColorUtils::backgroundBottomColor( base ) ) );
 
@@ -1040,8 +1040,7 @@ namespace Oxygen
             {
 
                 // window is active - it's a glow, not a shadow
-                // FIXME: where should this color be taken from?
-                ColorUtils::Rgba frameColor(0x54/255.,0xa7/255.,0xf0/255.);
+                ColorUtils::Rgba frameColor( settings().palette().color( Palette::ActiveWindowBackground ) );
                 ColorUtils::Rgba glow=ColorUtils::mix(ColorUtils::Rgba(0.5,0.5,0.5),frameColor,0.7);
                 cairo_set_source(context,glow);
 
@@ -2160,7 +2159,7 @@ namespace Oxygen
         if(wopt & WinDeco::Active) options|=Focus;
 
         if( !isMaximized )
-        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options); }
+        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options, Palette::InactiveWindowBackground ); }
 
         if( drawResizeHandle )
         {
