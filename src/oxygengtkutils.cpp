@@ -610,8 +610,12 @@ namespace Oxygen
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
             GtkWidget* label( gtk_notebook_get_tab_label( notebook, page ) );
-            if( label && !gtk_widget_get_mapped( label ) ) return true;
 
+            #if GTK_CHECK_VERSION(2, 20, 0)
+            if( label && !gtk_widget_get_mapped( label ) ) return true;
+            #else
+            if( label && !GTK_WIDGET_MAPPED( label ) ) return true;
+            #endif
         }
 
         return false;
