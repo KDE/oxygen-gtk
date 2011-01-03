@@ -378,10 +378,10 @@ namespace Oxygen
         _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( Palette::Inactive, _kdeGlobals ), _inactiveChangeSelectionColor );
         _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( Palette::Disabled, _kdeGlobals ) );
 
-//        #if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cout << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
         std::cout << _palette << std::endl;
-//        #endif
+        #endif
 
     }
 
