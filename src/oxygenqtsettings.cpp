@@ -392,6 +392,7 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
         std::cerr << _palette << std::endl;
         #endif
+
     }
 
     //_________________________________________________________
