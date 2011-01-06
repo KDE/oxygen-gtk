@@ -35,6 +35,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
@@ -53,6 +54,37 @@ void theme_init( GTypeModule* module )
     oxygen_rc_style_register_type( module );
     oxygen_style_register_type( module );
 
+    // get program name
+    const char* appName = g_get_prgname();
+    if( !appName ) return;
+
+    const std::string configDir( g_get_user_config_dir() );
+    // user-defined configuration file
+    const std::string userConfig( std::string( configDir ) + "/oxygen-gtk/argb-apps.conf");
+
+    // create config directory and config file if they don't exist
+    const char* user_config( userConfig.c_str() );
+    mkdir((configDir+"/oxygen-gtk").c_str(),S_IRWXU|S_IRWXG|S_IRWXO); // FIXME: permissions will be masked by umask, right?
+
+    std::ofstream newconfig(user_config,std::ios::app);
+    // if the file is empty (newly created), put a hint there
+    if( !newconfig.tellp() )
+    {
+        newconfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n";
+    }
+    newconfig.close();
+
+    if(g_getenv("OXYGEN_DISABLE_ARGB_HACK"))
+    {
+        std::cout << "Oxygen: ARGB hack is disabled; program name: " << appName << std::endl;
+        std::cout << "Oxygen: if disabling ARGB hack helps, please add this string:\n\ndisable:" << appName << "\n\nto ~/.config/oxygen-gtk/argb-apps.conf\nand report it here: https://bugs.kde.org/show_bug.cgi?id=260640" << std::endl;
+        return;
+    }
+
+    const bool OXYGEN_ARGB_DEBUG=g_getenv("OXYGEN_ARGB_DEBUG");
+
+#define ARGB_DEBUG if(G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG))
+
     // read blacklist
     // system-wide configuration file
     const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
@@ -66,8 +98,6 @@ void theme_init( GTypeModule* module )
         return;
     }
 
-    // user-defined configuration file
-    const std::string userConfig( std::string( g_get_user_config_dir() ) + "/oxygen-gtk/argb-apps.conf");
     std::ifstream userIn( userConfig.c_str() );
     if( !userIn )
     {
@@ -75,10 +105,6 @@ void theme_init( GTypeModule* module )
         std::cout << "Oxygen::theme_init - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl;
         #endif
     }
-
-    // get program name
-    const char* appName = g_get_prgname();
-    if( !appName ) return;
 
     // by default argb support is enabled
     bool useRgba( true );
