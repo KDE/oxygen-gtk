@@ -62,8 +62,17 @@ void enableARGB()
     const std::string userConfigDir( std::string( g_get_user_config_dir() ) + "/oxygen-gtk" );
 
     // create config directory and config file if they don't exist
-    // FIXME: one must first check for existance of directory before creating
-    mkdir( userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO );
+    {
+
+        // try create directory
+        struct stat st;
+        if( stat( userConfigDir.c_str(), &st ) != 0 )
+        { mkdir( userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO ); }
+
+        // note: in some cases, the target might exist and not be a directory
+        // nothing we can do about it. We won't overwrite the file to prevent dataloss
+
+    }
 
     // user-defined configuration file
     const std::string userConfig( userConfigDir + "/argb-apps.conf");
