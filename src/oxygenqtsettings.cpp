@@ -98,7 +98,7 @@ namespace Oxygen
         for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
         {
             #if OXYGEN_DEBUG
-            std::cout << "QtSettings::initialize - reading config from: " << *iter << std::endl;
+            std::cerr << "QtSettings::initialize - reading config from: " << *iter << std::endl;
             #endif
 
             _kdeGlobals.merge( readOptions( sanitizePath( *iter + "/kdeglobals" ) ) );
@@ -107,11 +107,11 @@ namespace Oxygen
         }
 
         #if OXYGEN_DEBUG
-        std::cout << "QtSettings::initialize - Kdeglobals: " << std::endl;
-        std::cout << _kdeGlobals << std::endl;
+        std::cerr << "QtSettings::initialize - Kdeglobals: " << std::endl;
+        std::cerr << _kdeGlobals << std::endl;
 
-        std::cout << "QtSettings::initialize - Oxygenrc: " << std::endl;
-        std::cout << _oxygen << std::endl;
+        std::cerr << "QtSettings::initialize - Oxygenrc: " << std::endl;
+        std::cerr << _oxygen << std::endl;
         #endif
 
         // reload icons
@@ -130,15 +130,15 @@ namespace Oxygen
         loadOxygenOptions();
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
-        std::cout << _rc << std::endl;
+        std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
+        std::cerr << _rc << std::endl;
         #endif
 
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::initialize - done. " << std::endl;
+        std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
 
         return true;
@@ -253,7 +253,7 @@ namespace Oxygen
         _iconThemes.insert( theme );
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::addIconTheme - adding " << theme << std::endl;
+        std::cerr << "Oxygen::QtSettings::addIconTheme - adding " << theme << std::endl;
         #endif
 
         // add all possible path (based on _kdeIconPathList) and look for possible parent
@@ -379,8 +379,8 @@ namespace Oxygen
         _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( Palette::Disabled, _kdeGlobals ) );
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
-        std::cout << _palette << std::endl;
+        std::cerr << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
+        std::cerr << _palette << std::endl;
         #endif
 
     }
@@ -390,7 +390,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::generateGtkColors" << std::endl;
+        std::cerr << "Oxygen::QtSettings::generateGtkColors" << std::endl;
         #endif
 
         // customize gtk palette
@@ -546,7 +546,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load default font" << std::endl;
+            std::cerr << "Oxygen::QtSettings::loadKdeFonts - cannot load default font" << std::endl;
             #endif
 
         }
@@ -571,7 +571,7 @@ namespace Oxygen
             } else {
 
                 #if OXYGEN_DEBUG
-                std::cout << "Oxygen::QtSettings::loadKdeFonts - cannot load font named " << iter->second << std::endl;
+                std::cerr << "Oxygen::QtSettings::loadKdeFonts - cannot load font named " << iter->second << std::endl;
                 #endif
                 local = defaultFont;
 
@@ -607,7 +607,7 @@ namespace Oxygen
         }
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
+        std::cerr << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
         #endif
 
     }
@@ -617,7 +617,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::loadKdeGlobalsOptions" << std::endl;
+        std::cerr << "Oxygen::QtSettings::loadKdeGlobalsOptions" << std::endl;
         #endif
 
         // toolbar style
@@ -638,7 +638,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::QtSettings::loadOxygenOptions" << std::endl;
+        std::cerr << "Oxygen::QtSettings::loadOxygenOptions" << std::endl;
         #endif
 
         // contrast

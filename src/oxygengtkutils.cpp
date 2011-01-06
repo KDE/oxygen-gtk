@@ -71,9 +71,9 @@ namespace Oxygen
     {
 
         if( !widget ) return;
-        std::cout << "Oxygen::Gtk::gtk_widget_print_tree - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::Gtk::gtk_widget_print_tree - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         while( ( widget = gtk_widget_get_parent( widget ) ) )
-        { std::cout << "    parent: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl; }
+        { std::cerr << "    parent: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl; }
 
     }
 
@@ -107,7 +107,7 @@ namespace Oxygen
         GdkWindowTypeHint hint = gdk_window_get_type_hint( window );
 
         #if OXYGEN_DEBUG
-        std::cout << "Gtk::gdk_window_is_base - " << TypeNames::windowTypeHint( hint ) << std::endl;
+        std::cerr << "Gtk::gdk_window_is_base - " << TypeNames::windowTypeHint( hint ) << std::endl;
         #endif
 
         return(

@@ -57,7 +57,7 @@ namespace Oxygen
         SizeMap::iterator iter( std::find_if( _sizes.begin(), _sizes.end(), SameTagFTor( tag ) ) );
         if( iter == _sizes.end() ) {
 
-            std::cout << "GtkIcons::setIconSize - no match for" << tag << "," << value << std::endl;
+            std::cerr << "GtkIcons::setIconSize - no match for" << tag << "," << value << std::endl;
 
         } else iter->second = value;
     }
@@ -69,7 +69,7 @@ namespace Oxygen
         std::ifstream in( filename.c_str() );
         if( !in )
         {
-            std::cout << "Oxygen::GtkIcons::loadTranslations - could not open " << filename << std::endl;
+            std::cerr << "Oxygen::GtkIcons::loadTranslations - could not open " << filename << std::endl;
             return;
         }
 
@@ -117,7 +117,7 @@ namespace Oxygen
         for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
         {
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::GtkIcons::generate - adding path: " << *iter << std::endl;
+            std::cerr << "Oxygen::GtkIcons::generate - adding path: " << *iter << std::endl;
             #endif
 
             if( iter != pathList.begin() ) pixmapPathStr << ":";
