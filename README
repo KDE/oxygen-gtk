@@ -118,10 +118,10 @@ We added mouse-over support (that is: highlight when mouse pointer enters the wi
 
 III.9 Tab close buttons
 -----------------------
+
 GTK notebook doesn't provide a standard way for apps to put close buttons on tabs. Because of this, close buttons in different apps are implemented differently. Oxygen-gtk hides such buttons' icons/text, and draws Qt close button images instead. But there's no way of detecting if the button is really _close_ one. So, current implementation may break apps which have some additional buttons in the tabs. If you find such apps with multiple buttons on single tab (which all look like close buttons) when using oxygen-gtk, file a bug report.
 
 III.10 Combobox list resize
----------------------------
 We haven't figured out any way to draw combobox button glow outside of the button widget, so the button is drawn reduced by glow dimensions. This leads to combobox list not match button in size (it's 6px wider than the button). To make popped-up combobox look nicer, we resize it on each popup.
 This may result in flicker, so if it's undesirable, this hack can be disabled this in CMakeLists.txt: set ENABLE_COMBOBOX_LIST_RESIZE to 0 instead of default 1.
 
