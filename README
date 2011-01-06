@@ -24,9 +24,9 @@ IV.3 Some details on some files in animations
 I. introduction
 ---------------
 
-Oxygen-Gtk is a port of the default KDE widget theme (Oxygen), to gtk.
+Oxygen-Gtk is a port of the default KDE widget theme (Oxygen) to GTK.
 
-It's primary goal is to ensure visual consistency between gtk-based and qt-based applications running under KDE. A secondary objective is to also have a stand-alone nice looking gtk theme that would behave well on other Desktop Environments.
+Its primary goal is to ensure visual consistency between gtk-based and qt-based applications running under KDE. A secondary objective is to also have a stand-alone nice looking gtk theme that would behave well on other Desktop Environments.
 
 Unlike other attempts made to port the KDE oxygen theme to gtk, this attempt does not depend on Qt (via some Qt to Gtk conversion engine), nor does render the widget appearance via hard coded pixmaps, which otherwise breaks everytime some setting is changed in KDE.
 
@@ -63,6 +63,11 @@ This file will be parsed AFTER the system-wide one, thus allowing the user to ov
 It can be edited by the user to add (or remove) new applications in case we overlooked some. 
 The syntax used to add/remove an application in the black-list is described in the argb-apps.conf file.
 When there is a need to add new applications, user should also post it in this bug: https://bugs.kde.org/show_bug.cgi?id=260640 so that it also gets added in the distributed code.
+
+There are some environment variables to help debug ARGB hack:
+
+  OXYGEN_DISABLE_ARGB_HACK - set it to 1 to check if app will crash without the hack. Oxygen-GTK will print app name to report.
+  OXYGEN_ARGB_DEBUG - set it to 1 to print all debug information concerning ARGB hack (mainly to debug blacklist logic).
 
 III.2 Window grabbing
 ---------------------
