@@ -290,9 +290,6 @@ namespace Oxygen
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
 
-        // read all options from kdeglobals
-        OptionMap readOptions( const std::string& ) const;
-
         private:
 
         //! application
