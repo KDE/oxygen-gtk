@@ -61,13 +61,9 @@ find_package(PkgConfig REQUIRED )
 
 # GTK
 pkg_check_modules( GTK REQUIRED gtk+-2.0 )
-message( STATUS "Found gtk include dir: ${GTK_INCLUDEDIR}" )
-message( STATUS "Found gtk library dir: ${GTK_LIBDIR}" )
 
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
-message( STATUS "Found cairo include dir: ${CAIRO_INCLUDEDIR}" )
-message( STATUS "Found cairo library dir: ${CAIRO_LIBDIR}" )
 
 ##########################
 # installation directories
