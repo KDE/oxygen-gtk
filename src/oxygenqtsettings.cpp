@@ -123,19 +123,26 @@ namespace Oxygen
         // reload fonts
         loadKdeFonts();
 
+        // color palette
+        loadKdePalette();
+
         // kde globals options
         loadKdeGlobalsOptions();
 
         // oxygen options
         loadOxygenOptions();
 
+        // gtk colors
+        generateGtkColors();
+
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
         std::cerr << _rc << std::endl;
         #endif
 
-        // pass all resources to gtk
+        // pass all resources to gtk and clear
         gtk_rc_parse_string( _rc.toString().c_str() );
+        _rc.clear();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
@@ -170,8 +177,9 @@ namespace Oxygen
         std::cerr << _rc << std::endl;
         #endif
 
-        // pass all resources to gtk
+        // pass all resources to gtk and clear
         gtk_rc_parse_string( _rc.toString().c_str() );
+        _rc.clear();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
