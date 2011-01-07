@@ -74,15 +74,16 @@ namespace Oxygen
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _initialized( false ),
-        _colorsInitialized( false ),
+        _kdeColorsInitialized( false ),
+        _gtkColorsInitialized( false ),
         _KDESession( false )
     {}
 
     //_________________________________________________________
-    bool QtSettings::initialize( void )
+    void QtSettings::initialize( void )
     {
 
-        if( _initialized ) return false;
+        if( _initialized ) return;
         _initialized = true;
 
         if( g_getenv( "KDE_FULL_SESSION" ) )
@@ -133,48 +134,67 @@ namespace Oxygen
             loadKdeFonts();
         }
 
+        // color palette
+        loadKdePalette();
+
         // kde globals options
         loadKdeGlobalsOptions();
 
         // oxygen options
         loadOxygenOptions();
 
+        // gtk colors
+        generateGtkColors();
+
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
         std::cerr << _rc << std::endl;
         #endif
 
-        // pass all resources to gtk
+        // pass all resources to gtk and clear
         gtk_rc_parse_string( _rc.toString().c_str() );
+        _rc.clear();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
 
-        return true;
+        return;
 
     }
 
     //_________________________________________________________
-    bool QtSettings::initializeColors( void )
+    void QtSettings::initializeColors( void )
     {
 
-        if( _colorsInitialized ) return false;
-        _colorsInitialized = true;
-
-        // clear RC
-        _rc.clear();
-
-        // reload palette
+        // reload palette, if needed
         loadKdePalette();
 
-        // gtk colors
+        if( _gtkColorsInitialized ) return;
+        _gtkColorsInitialized = true;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
+        #endif
+
+        // clear rc and generate gtk colors
+        _rc.clear();
         generateGtkColors();
 
-        // pass all resources to gtk
-        gtk_rc_parse_string( _rc.toString().c_str() );
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors - Gtkrc: " << std::endl;
+        std::cerr << _rc << std::endl;
+        #endif
 
-        return true;
+        // pass all resources to gtk and clear
+        gtk_rc_parse_string( _rc.toString().c_str() );
+        _rc.clear();
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
+        #endif
+
+        return;
 
     }
 
@@ -359,6 +379,10 @@ namespace Oxygen
     //_________________________________________________________
     void QtSettings::loadKdePalette( void )
     {
+
+        if( _kdeColorsInitialized ) return;
+        _kdeColorsInitialized = true;
+
         _palette.clear();
         _palette.setColor( Palette::Active, Palette::Window, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "BackgroundNormal" ) ) );
         _palette.setColor( Palette::Active, Palette::WindowText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "ForegroundNormal" ) ) );

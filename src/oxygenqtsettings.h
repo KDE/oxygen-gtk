@@ -54,10 +54,10 @@ namespace Oxygen
         {}
 
         //! initialize
-        bool initialize( void );
+        void initialize( void );
 
         //! initialize colors
-        bool initializeColors( void );
+        void initializeColors( void );
 
         //! palette
         const Palette& palette( void ) const
@@ -402,7 +402,8 @@ namespace Oxygen
 
         //! initialization flags
         bool _initialized;
-        bool _colorsInitialized;
+        bool _kdeColorsInitialized;
+        bool _gtkColorsInitialized;
 
         //! KDE running flags
         bool _KDESession;
