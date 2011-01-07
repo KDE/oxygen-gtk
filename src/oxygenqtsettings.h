@@ -26,7 +26,6 @@
 */
 
 #include "oxygenapplicationname.h"
-#include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -426,9 +425,6 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
-
-        //! rc options (passed to gtk at the end of init
-        Gtk::RC _rc;
 
     };
 
