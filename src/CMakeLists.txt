@@ -54,6 +54,6 @@ add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
 set( CMAKE_CXX_FLAGS " -Wall ${CMAKE_CXX_FLAGS} -g" )
 set( CMAKE_C_FLAGS " -Wall ${CMAKE_C_FLAGS} -g" )
 
-target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} )
+target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${DBUS_LIBRARIES} ${X11_X11_LIB} )
 
 install( TARGETS oxygen-gtk DESTINATION ${INSTALL_PATH_GTK_ENGINES} )

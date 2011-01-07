@@ -65,6 +65,9 @@ pkg_check_modules( GTK REQUIRED gtk+-2.0 )
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
 
+# DBus
+pkg_check_modules( DBUS dbus-glib-1 )
+
 ##########################
 # installation directories
 ##########################
@@ -83,8 +86,8 @@ message( STATUS "Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
 ######################################################################
 # Setup definitions and directories to be used for linking and include
 ######################################################################
-link_directories( ${GTK_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} )
-include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRD} ${X11_X11_INCLUDE_PATH} )
+link_directories( ${GTK_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${DBUS_LIBRARY_DIRS} )
+include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRD} ${DBUS_INCLUDE_DIRS} ${X11_X11_INCLUDE_PATH} )
 
 #############################
 # generate configuration file
