@@ -1,5 +1,4 @@
 project( oxygen-gtk )
-include( UsePkgConfig )
 
 cmake_minimum_required(VERSION 2.4)
 
@@ -40,6 +39,7 @@ set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 find_package( X11 REQUIRED )
 
 # install prefix
+include( UsePkgConfig )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
     exec_program(
@@ -54,23 +54,15 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 # GTK
-pkgconfig( gtk+-2.0 GTK_INCLUDE_DIR GTK_LIB_DIR GTK_LINK_FLAGS GTK_CFLAGS )
-
-if( NOT GTK_INCLUDE_DIR )
-	message( FATAL_ERROR "GTK was not found.  Ensure you have the GTK development libraries installed, and GTK's pkgconfig files are in your pkgconfig search path." )
-endif( NOT GTK_INCLUDE_DIR )
-
-message( STATUS "Found gtk include dir: ${GTK_INCLUDE_DIR}" )
-message( STATUS "Found gtk library dir: ${GTK_LIB_DIR}" )
+find_package(PkgConfig)
+pkg_check_modules( GTK REQUIRED gtk+-2.0 )
+message( STATUS "Found gtk include dir: ${GTK_INCLUDEDIR}" )
+message( STATUS "Found gtk library dir: ${GTK_LIBDIR}" )
 
 # Cairo
-pkgconfig( cairo CAIRO_INCLUDE_DIR CAIRO_LIB_DIR CAIRO_LINK_FLAGS CAIRO_CFLAGS )
-if( NOT CAIRO_INCLUDE_DIR )
-	message( FATAL_ERROR "Cairo was not found.  Ensure you have the Cairo development libraries installed, and Cairo's pkgconfig files are in your pkgconfig search path." )
-endif( NOT CAIRO_INCLUDE_DIR )
-
-message( STATUS "Found cairo include dir: ${CAIRO_INCLUDE_DIR}" )
-message( STATUS "Found cairo library dir: ${CAIRO_LIB_DIR}" )
+pkg_check_modules( CAIRO REQUIRED cairo )
+message( STATUS "Found cairo include dir: ${CAIRO_INCLUDEDIR}" )
+message( STATUS "Found cairo library dir: ${CAIRO_LIBDIR}" )
 
 ##########################
 # installation directories
@@ -90,8 +82,8 @@ message( STATUS "Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
 ######################################################################
 # Setup definitions and directories to be used for linking and include
 ######################################################################
-link_directories( ${GTK_LIB_DIR} ${CAIRO_LIB_DIR} ${QT_LIBRARY_DIR} )
-include_directories( ${GTK_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH} )
+link_directories( ${GTK_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} )
+include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRD} ${X11_X11_INCLUDE_PATH} )
 
 #############################
 # generate configuration file
