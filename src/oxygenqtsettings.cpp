@@ -99,22 +99,8 @@ namespace Oxygen
 
         _kdeConfigPathList = kdeConfigPathList();
 
-        // reload kdeGlobals and oxygen
-        _kdeGlobals.clear();
-        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
-        {
-            #if OXYGEN_DEBUG
-            std::cerr << "QtSettings::initialize - reading config from: " << *iter << std::endl;
-            #endif
-
-            _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) );
-
-        }
-
-        #if OXYGEN_DEBUG
-        std::cerr << "QtSettings::initialize - Kdeglobals: " << std::endl;
-        std::cerr << _kdeGlobals << std::endl;
-        #endif
+        // load kdeglobals
+        loadKdeGlobals();
 
         #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
         // TODO: Add support for gtk schemes when not _KDESession
@@ -239,6 +225,12 @@ namespace Oxygen
         { out.split( path ); };
 
         out.push_back( GTK_THEME_DIR );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::kdeConfigPathList - loading configuration from path: " << std::endl;
+        std::cerr << out << std::endl;
+        #endif
+
         return out;
 
     }
@@ -258,14 +250,6 @@ namespace Oxygen
         { out.push_back( _defaultKdeIconPath ); }
 
         return out;
-
-    }
-
-    //_________________________________________________________
-    void QtSettings::initApplicationName( void )
-    {
-        const char* applicationName = g_get_prgname();
-        if( applicationName ) { _applicationName.parse( applicationName ); }
 
     }
 
@@ -312,6 +296,29 @@ namespace Oxygen
         }
 
         return;
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::initApplicationName( void )
+    {
+        const char* applicationName = g_get_prgname();
+        if( applicationName ) { _applicationName.parse( applicationName ); }
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::loadKdeGlobals( void )
+    {
+
+        _kdeGlobals.clear();
+        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
+        { _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) ); }
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::loadKdeGlobals - kdeglobals: " << std::endl;
+        std::cerr << _kdeGlobals << std::endl;
+        #endif
 
     }
 
@@ -675,7 +682,7 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Oxygenrc: " << std::endl;
-        std::cerr << _oxygen << std::endl;
+        std::cerr << oxygen << std::endl;
         #endif
 
         // checkbox style
