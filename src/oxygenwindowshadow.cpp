@@ -29,7 +29,8 @@ namespace Oxygen
     //________________________________________________________________________________
     void WindowShadow::render(cairo_t* cr, gint x, gint y, gint w, gint h)
     {
-        ColorUtils::Rgba background=settings().palette().color(Palette::Window); // FIXME: is this correct color?
+        // FIXME: is this correct color
+        ColorUtils::Rgba background = settings().palette().color(Palette::Window);
         TileSet* tileset=tileSet(background, _wopt&WinDeco::Active);
         tileset->render(cr,x,y,w,h,TileSet::Full);
     }

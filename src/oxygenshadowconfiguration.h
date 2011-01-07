@@ -25,6 +25,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
 
 namespace Oxygen
@@ -66,7 +67,11 @@ namespace Oxygen
             //! outer color
             ColorUtils::Rgba outerColor()
             { return outerColor_; }
-        private:
+
+            //! initialize from options
+            void initialize( const OptionMap& );
+
+            private:
 
             //! color group
             Palette::Group colorGroup_;

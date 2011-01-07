@@ -73,6 +73,8 @@ namespace Oxygen
         _startDragTime( 500 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
+        _activeShadowConfiguration( Palette::Active ),
+        _inactiveShadowConfiguration( Palette::Inactive ),
         _initialized( false ),
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
@@ -99,7 +101,6 @@ namespace Oxygen
 
         // reload kdeGlobals and oxygen
         _kdeGlobals.clear();
-        _oxygen.clear();
         for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
         {
             #if OXYGEN_DEBUG
@@ -107,16 +108,12 @@ namespace Oxygen
             #endif
 
             _kdeGlobals.merge( readOptions( sanitizePath( *iter + "/kdeglobals" ) ) );
-            _oxygen.merge( readOptions( sanitizePath( *iter + "/oxygenrc" ) ) );
 
         }
 
         #if OXYGEN_DEBUG
         std::cerr << "QtSettings::initialize - Kdeglobals: " << std::endl;
         std::cerr << _kdeGlobals << std::endl;
-
-        std::cerr << "QtSettings::initialize - Oxygenrc: " << std::endl;
-        std::cerr << _oxygen << std::endl;
         #endif
 
         #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
@@ -663,67 +660,72 @@ namespace Oxygen
         _startDragDist = _kdeGlobals.getOption( "[KDE]", "StartDragDist" ).toVariant<int>( 4 );
         _startDragTime = _kdeGlobals.getOption( "[KDE]", "StartDragTime" ).toVariant<int>( 500 );
 
+        // contrast
+        ColorUtils::setContrast( _kdeGlobals.getOption( "[KDE]", "contrast" ).toVariant<double>( 7 ) / 10 );
+
     }
 
     //_________________________________________________________
     void QtSettings::loadOxygenOptions( void )
     {
 
+        OptionMap oxygen;
+        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
+        { oxygen.merge( readOptions( sanitizePath( *iter + "/oxygenrc" ) ) ); }
+
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::loadOxygenOptions" << std::endl;
+        std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Oxygenrc: " << std::endl;
+        std::cerr << _oxygen << std::endl;
         #endif
 
-        // contrast
-        ColorUtils::setContrast( _kdeGlobals.getOption( "[KDE]", "contrast" ).toVariant<double>( 7 ) / 10 );
+        // checkbox style
+        _checkBoxStyle = (oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
 
         // checkbox style
-        _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
-
-        // checkbox style
-        _tabStyle = (_oxygen.getValue( "[Style]", "TabStyle", "TS_SINGLE" ) == "TS_SINGLE") ? TS_SINGLE:TS_PLAIN;
+        _tabStyle = (oxygen.getValue( "[Style]", "TabStyle", "TS_SINGLE" ) == "TS_SINGLE") ? TS_SINGLE:TS_PLAIN;
 
         // colored scrollbars
-        _scrollBarColored = _oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
+        _scrollBarColored = oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
 
         // colored scrollbars
-        _scrollBarBevel = _oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("false") == "true";
+        _scrollBarBevel = oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("false") == "true";
 
         // scrollbar buttons
-        _scrollBarAddLineButtons = _oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );
-        _scrollBarSubLineButtons = _oxygen.getOption( "[Style]", "ScrollBarSubLineButtons" ).toVariant<int>( 1 );
+        _scrollBarAddLineButtons = oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );
+        _scrollBarSubLineButtons = oxygen.getOption( "[Style]", "ScrollBarSubLineButtons" ).toVariant<int>( 1 );
 
         // toolbar separators
-        _toolBarDrawItemSeparator = _oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
+        _toolBarDrawItemSeparator = oxygen.getOption( "[Style]", "ToolBarDrawItemSeparator" ).toVariant<std::string>("true") == "true";
 
         // tooltips
-        _tooltipTransparent = _oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
-        _tooltipDrawStyledFrames = _oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
+        _tooltipTransparent = oxygen.getOption( "[Style]", "ToolTipTransparent" ).toVariant<std::string>("true") == "true";
+        _tooltipDrawStyledFrames = oxygen.getOption( "[Style]", "ToolTipDrawStyledFrames" ).toVariant<std::string>("true") == "true";
 
         // focus indicator in views
-        _viewDrawFocusIndicator = _oxygen.getOption( "[Style]", "ViewDrawFocusIndicator" ).toVariant<std::string>("true") == "true";
+        _viewDrawFocusIndicator = oxygen.getOption( "[Style]", "ViewDrawFocusIndicator" ).toVariant<std::string>("true") == "true";
 
         // tree branch lines
-        _viewDrawTreeBranchLines = _oxygen.getOption( "[Style]", "ViewDrawTreeBranchLines" ).toVariant<std::string>("true") == "true";
+        _viewDrawTreeBranchLines = oxygen.getOption( "[Style]", "ViewDrawTreeBranchLines" ).toVariant<std::string>("true") == "true";
 
         // triangular expanders
-        _viewDrawTriangularExpander = _oxygen.getOption( "[Style]", "ViewDrawTriangularExpander" ).toVariant<std::string>("true") == "true";
+        _viewDrawTriangularExpander = oxygen.getOption( "[Style]", "ViewDrawTriangularExpander" ).toVariant<std::string>("true") == "true";
 
         // triangular expander (arrow) size
-        std::string expanderSize( _oxygen.getOption( "[Style]", "ViewTriangularExpanderSize" ).toVariant<std::string>("TE_SMALL") );
+        std::string expanderSize( oxygen.getOption( "[Style]", "ViewTriangularExpanderSize" ).toVariant<std::string>("TE_SMALL") );
         if( expanderSize == "TE_NORMAL" ) _viewTriangularExpanderSize = ArrowNormal;
         else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;
         else _viewTriangularExpanderSize = ArrowSmall;
 
         // menu highlight mode
-        std::string highlightMode( _oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
+        std::string highlightMode( oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
         if( highlightMode == "MM_SUBTLE" ) _menuHighlightMode = MM_SUBTLE;
         else if( highlightMode == "MM_STRONG" ) _menuHighlightMode = MM_STRONG;
         else _menuHighlightMode = MM_DARK;
 
         // window drag mode
-        _windowDragEnabled = _oxygen.getOption( "[Style]", "WindowDragEnabled" ).toVariant<std::string>("true") == "true";
+        _windowDragEnabled = oxygen.getOption( "[Style]", "WindowDragEnabled" ).toVariant<std::string>("true") == "true";
 
-        std::string windowDragMode( _oxygen.getOption( "[Style]", "WindowDragMode" ).toVariant<std::string>("WD_FULL") );
+        std::string windowDragMode( oxygen.getOption( "[Style]", "WindowDragMode" ).toVariant<std::string>("WD_FULL") );
         if( windowDragMode == "WD_MINIMAL" ) _windowDragMode = WD_MINIMAL;
         else _windowDragMode = WD_FULL;
 
@@ -732,7 +734,7 @@ namespace Oxygen
         _rc.setCurrentSection( Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<int>(
             "  GtkScrollbar::slider-width",
-            _oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
 
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
@@ -742,11 +744,11 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
 
         // mnemonics
-        const bool showMnemonics( _oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
+        const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
         _rc.addToHeaderSection( Gtk::RCOption<int>( "gtk-auto-mnemonics", !showMnemonics ) );
 
         // window decoration button size
-        std::string buttonSize( _oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
+        std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
         if( buttonSize == "Small" ) _buttonSize = ButtonSmall;
         else if( buttonSize == "Large" ) _buttonSize = ButtonLarge;
         else if( buttonSize == "Very Large" ) _buttonSize = ButtonVeryLarge;
@@ -754,7 +756,7 @@ namespace Oxygen
         else _buttonSize = ButtonDefault;
 
         // window decoration frame border size
-        std::string frameBorder(  _oxygen.getValue( "[Windeco]", "FrameBorder", "Normal") );
+        std::string frameBorder(  oxygen.getValue( "[Windeco]", "FrameBorder", "Normal") );
         if( frameBorder == "No Border" ) _frameBorder = BorderNone;
         else if( frameBorder == "No Side Border" ) _frameBorder = BorderNoSide;
         else if( frameBorder == "Tiny" ) _frameBorder = BorderTiny;
@@ -764,6 +766,10 @@ namespace Oxygen
         else if( frameBorder == "Very Huge" ) _frameBorder = BorderVeryHuge;
         else if( frameBorder == "Oversized" ) _frameBorder = BorderOversized;
         else _frameBorder = BorderDefault;
+
+        // shadow configurations
+        _activeShadowConfiguration.initialize( oxygen );
+        _inactiveShadowConfiguration.initialize( oxygen );
 
     }
 
