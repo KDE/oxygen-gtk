@@ -20,6 +20,7 @@
 
 #include "oxygengtkrc.h"
 
+#include <gtk/gtk.h>
 #include <algorithm>
 #include <cassert>
 
@@ -30,6 +31,13 @@ namespace Oxygen
     const std::string Gtk::RC::_headerSectionName = "__head__";
     const std::string Gtk::RC::_rootSectionName = "__root__";
     const std::string Gtk::RC::_defaultSectionName = "oxygen-default-internal";
+
+    //_________________________________________________
+    void Gtk::RC::commit( bool clear )
+    {
+        gtk_rc_parse_string( toString().c_str() );
+        if( clear ) this->clear();
+    }
 
     //_________________________________________________
     void Gtk::RC::merge( const Gtk::RC& other )
