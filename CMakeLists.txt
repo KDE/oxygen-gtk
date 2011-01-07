@@ -38,9 +38,6 @@ set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 # Requirements
 ##############
 
-# X11
-find_package( X11 REQUIRED )
-
 # install prefix
 include( UsePkgConfig )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -56,8 +53,13 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
+# X11
+find_package( X11 REQUIRED )
+
+# PKG_CONFIG
+find_package(PkgConfig REQUIRED )
+
 # GTK
-find_package(PkgConfig)
 pkg_check_modules( GTK REQUIRED gtk+-2.0 )
 message( STATUS "Found gtk include dir: ${GTK_INCLUDEDIR}" )
 message( STATUS "Found gtk library dir: ${GTK_LIBDIR}" )
