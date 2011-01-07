@@ -31,6 +31,8 @@
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
 
+#include <dbus/dbus-glib-lowlevel.h>
+
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -285,6 +287,17 @@ namespace Oxygen
         // read all options from kdeglobals
         OptionMap readOptions( const std::string& ) const;
 
+        //!@name dbus
+        //@{
+
+        //! setup connections
+        void setupDBusConnection( void );
+
+        //! callback
+        static DBusHandlerResult dBusSignalFilter( DBusConnection*, DBusMessage*, gpointer );
+
+        //@}
+
         private:
 
         //! application
@@ -407,7 +420,7 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
-        
+
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;
 

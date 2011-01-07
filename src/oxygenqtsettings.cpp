@@ -77,7 +77,7 @@ namespace Oxygen
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
         _KDESession( false )
-    {}
+    { setupDBusConnection(); }
 
     //_________________________________________________________
     void QtSettings::initialize( void )
@@ -827,6 +827,65 @@ namespace Oxygen
         }
 
         return out;
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::setupDBusConnection( void )
+    {
+
+        // dbus error
+        DBusError error;
+        dbus_error_init( &error );
+
+        // connect to session bus and check
+        DBusConnection *bus( dbus_bus_get( DBUS_BUS_SESSION, &error ) );
+        if( !bus )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::QtSettings::setupDBusConnection -"
+                << " connection failed."
+                << " Error: " << error.message
+                << std::endl;
+            #endif
+
+            dbus_error_free( &error );
+            return;
+        }
+        dbus_connection_setup_with_g_main( bus, 0L );
+
+        // install signal filter
+        dbus_bus_add_match( bus, "type='signal',interface='org.kde.Oxygen.Style',path='/OxygenStyle'", &error );
+        dbus_bus_add_match( bus, "type='signal',interface='org.kde.KGlobalSettings',path='/KGlobalSettings'", &error );
+        dbus_connection_add_filter( bus, dBusSignalFilter, this, 0L );
+
+    }
+
+    //_________________________________________________________
+    DBusHandlerResult Oxygen::QtSettings::dBusSignalFilter( DBusConnection*, DBusMessage* message, gpointer data )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cout
+            << "Oxygen::QtSettings::dBusSignalFilter - recieved signal"
+            << " type: " << dbus_message_get_type( message )
+            << " path: " << dbus_message_get_path( message )
+            << " interface: " << dbus_message_get_interface( message )
+            << std::endl;
+        #endif
+
+        if( dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) )
+        {
+
+            return DBUS_HANDLER_RESULT_HANDLED;
+
+        } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
+
+            return DBUS_HANDLER_RESULT_HANDLED;
+
+        } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
     }
 
