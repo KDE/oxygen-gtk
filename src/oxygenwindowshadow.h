@@ -37,10 +37,10 @@ namespace Oxygen
 
         //! constructor
         WindowShadow( const QtSettings& settings, StyleHelper& helper ):
-            _settings(settings),
+            _settings( settings ),
             _helper(helper),
-            inactiveShadowConfiguration_(ShadowConfiguration(Palette::Inactive)),
-            activeShadowConfiguration_(ShadowConfiguration(Palette::Active))
+            inactiveShadowConfiguration_(settings.shadowConfiguration(Palette::Inactive)),
+            activeShadowConfiguration_(settings.shadowConfiguration(Palette::Active))
         {}
 
         //! destructor

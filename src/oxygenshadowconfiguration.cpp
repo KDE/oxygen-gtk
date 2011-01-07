@@ -25,7 +25,8 @@
 */
 
 #include "oxygenshadowconfiguration.h"
-#include "oxygenstyle.h"
+
+#include <cassert>
 
 namespace Oxygen
 {
@@ -37,36 +38,55 @@ namespace Oxygen
     {
         assert(group==Palette::Active||group==Palette::Inactive);
 
-        // load values not present in oxygenrc
-        if( group==Palette::Active )
+        if( colorGroup_ == Palette::Active )
         {
-            horizontalOffset_=0;
-        } else
-        {
-            horizontalOffset_=0;
+
+            shadowSize_ = 40;
+            horizontalOffset_ = 0;
+            verticalOffset_ = 0.1;
+
+            innerColor_ = ColorUtils::Rgba( 0.44, 0.94, 1.0 );
+            outerColor_ = ColorUtils::Rgba( 0.33, 0.64, 0.94 );
+            useOuterColor_ = true;
+
+        } else {
+
+            shadowSize_ = 40;
+            horizontalOffset_ = 0;
+            verticalOffset_ = 0.2;
+
+            innerColor_ = ColorUtils::Rgba::black();
+            outerColor_ = innerColor_;
+            useOuterColor_ = false;
+
         }
 
-        // now load config file
-        OptionMap& oxygen=Style::instance().settings().oxygen();
+    }
 
-        if(group==Palette::Active)
+
+    //_________________________________________________________
+    void ShadowConfiguration::initialize( const OptionMap& options )
+    {
+
+        if( colorGroup_ == Palette::Active)
         {
 
-            innerColor_=ColorUtils::Rgba::fromKdeOption( oxygen.getValue( "[ActiveShadow]", "InnerColor", "112,241,255" ) );
-            outerColor_=ColorUtils::Rgba::fromKdeOption( oxygen.getValue( "[ActiveShadow]", "OuterColor", "84,167,240" ) );
+            innerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "InnerColor", "112,241,255" ) );
+            outerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "OuterColor", "84,167,240" ) );
 
-            shadowSize_=oxygen.getOption( "[ActiveShadow]","Size" ).toVariant<double>(40);
-            verticalOffset_=oxygen.getOption( "[ActiveShadow]","VerticalOffset" ).toVariant<double>(0.1);
-            useOuterColor_=oxygen.getOption( "[ActiveShadow]","UseOuterColor" ).toVariant<std::string>("true") == "true";
+            shadowSize_ = options.getOption( "[ActiveShadow]","Size" ).toVariant<double>(40);
+            verticalOffset_ = options.getOption( "[ActiveShadow]","VerticalOffset" ).toVariant<double>(0.1);
+            useOuterColor_ = options.getOption( "[ActiveShadow]","UseOuterColor" ).toVariant<std::string>("true") == "true";
 
-        } else
-        {
-            innerColor_=ColorUtils::Rgba::fromKdeOption( oxygen.getValue( "[InactiveShadow]", "InnerColor", "0,0,0" ) );
-            outerColor_=ColorUtils::Rgba::fromKdeOption( oxygen.getValue( "[InactiveShadow]", "OuterColor", "0,0,0" ) );
+        } else {
 
-            shadowSize_=oxygen.getOption( "[InactiveShadow]","Size" ).toVariant<double>(40);
-            verticalOffset_=oxygen.getOption( "[InactiveShadow]","VerticalOffset" ).toVariant<double>(0.2);
-            useOuterColor_=oxygen.getOption( "[InactiveShadow]", "UseOuterColor" ).toVariant<std::string>("false") == "true";
+            innerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "InnerColor", "0,0,0" ) );
+            outerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "OuterColor", "0,0,0" ) );
+
+            shadowSize_ = options.getOption( "[InactiveShadow]","Size" ).toVariant<double>(40);
+            verticalOffset_ = options.getOption( "[InactiveShadow]","VerticalOffset" ).toVariant<double>(0.2);
+            useOuterColor_ = options.getOption( "[InactiveShadow]", "UseOuterColor" ).toVariant<std::string>("false") == "true";
+
         }
 
     }

@@ -30,6 +30,7 @@
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
+#include "oxygenshadowconfiguration.h"
 
 #include <iostream>
 #include <sstream>
@@ -215,9 +216,16 @@ namespace Oxygen
         FrameBorder frameBorder( void ) const
         { return _frameBorder; }
 
-        // let other config classes read oxygenrc without reinventing the wheel
-        OptionMap& oxygen()
-        { return _oxygen; }
+        //! shadow configuration
+        const ShadowConfiguration& shadowConfiguration( Palette::Group group ) const
+        {
+            switch( group )
+            {
+                default:
+                case Palette::Inactive: return _inactiveShadowConfiguration;
+                case Palette::Active: return _activeShadowConfiguration;
+            }
+        }
 
         //@}
 
@@ -293,9 +301,6 @@ namespace Oxygen
 
         //! kde global options
         OptionMap _kdeGlobals;
-
-        //! kde oxygen options
-        OptionMap _oxygen;
 
         //!@name icons
         //@{
@@ -398,6 +403,12 @@ namespace Oxygen
         //! frame border
         FrameBorder _frameBorder;
 
+        //! active shadows
+        ShadowConfiguration _activeShadowConfiguration;
+
+        //! inactive shadows
+        ShadowConfiguration _inactiveShadowConfiguration;
+
         //@}
 
         //! initialization flags
@@ -407,7 +418,7 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
-        
+
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;
 
