@@ -42,6 +42,9 @@ namespace Oxygen
         OptionMap( void )
         {}
 
+        //! constructor from filename
+        OptionMap( const std::string& );
+
         //! destructor
         virtual ~OptionMap( void )
         {}

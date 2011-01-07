@@ -107,7 +107,7 @@ namespace Oxygen
             std::cerr << "QtSettings::initialize - reading config from: " << *iter << std::endl;
             #endif
 
-            _kdeGlobals.merge( readOptions( sanitizePath( *iter + "/kdeglobals" ) ) );
+            _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) );
 
         }
 
@@ -296,7 +296,7 @@ namespace Oxygen
             if( parentTheme.empty() )
             {
                 const std::string index( sanitizePath( *iter + '/' + theme + "/index.theme" ) );
-                OptionMap themeOptions( readOptions( index ) );
+                OptionMap themeOptions( index );
                 parentTheme = themeOptions.getValue( "[Icon Theme]", "Inherits" );
             }
 
@@ -671,7 +671,7 @@ namespace Oxygen
 
         OptionMap oxygen;
         for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
-        { oxygen.merge( readOptions( sanitizePath( *iter + "/oxygenrc" ) ) ); }
+        { oxygen.merge( OptionMap( sanitizePath( *iter + "/oxygenrc" ) ) ); }
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Oxygenrc: " << std::endl;
@@ -783,55 +783,6 @@ namespace Oxygen
         { out.replace( position, 2, "/" ); }
 
         return out;
-    }
-
-    //_________________________________________________________
-    OptionMap QtSettings::readOptions( const std::string& filename ) const
-    {
-
-        OptionMap out;
-
-        std::ifstream in( filename.c_str() );
-        if( !in ) return out;
-
-        std::string currentSection;
-        std::string currentLine;
-        while( std::getline( in, currentLine, '\n' ) )
-        {
-
-            if( currentLine.empty() ) continue;
-
-            // check if line is a section
-            if( currentLine[0] == '[' )
-            {
-
-                size_t end( currentLine.rfind( ']' ) );
-                if( end == std::string::npos ) continue;
-                currentSection = currentLine.substr( 0, end+1 );
-
-            } else if( currentSection.empty() ) {
-
-                continue;
-
-            }
-
-            // check if line is a valid option
-            size_t mid( currentLine.find( '=' ) );
-            if( mid == std::string::npos ) continue;
-
-            // insert new option in map
-            Option option( currentLine.substr( 0, mid ), currentLine.substr( mid+1 ) );
-
-            #if OXYGEN_DEBUG
-            option.setFile( filename );
-            #endif
-
-            out[currentSection].insert( option );
-
-        }
-
-        return out;
-
     }
 
     //_________________________________________________________
