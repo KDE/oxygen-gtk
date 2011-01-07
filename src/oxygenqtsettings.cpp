@@ -74,14 +74,15 @@ namespace Oxygen
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _initialized( false ),
-        _colorsInitialized( false )
+        _kdeColorsInitialized( false ),
+        _gtkColorsInitialized( false )
     {}
 
     //_________________________________________________________
-    bool QtSettings::initialize( void )
+    void QtSettings::initialize( void )
     {
 
-        if( _initialized ) return false;
+        if( _initialized ) return;
         _initialized = true;
 
         // clear RC
@@ -148,28 +149,26 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
 
-        return true;
+        return;
 
     }
 
     //_________________________________________________________
-    bool QtSettings::initializeColors( void )
+    void QtSettings::initializeColors( void )
     {
 
-        if( _colorsInitialized ) return false;
-        _colorsInitialized = true;
+        // reload palette, if needed
+        loadKdePalette();
+
+        if( _gtkColorsInitialized ) return;
+        _gtkColorsInitialized = true;
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
         #endif
 
-        // clear RC
+        // clear rc and generate gtk colors
         _rc.clear();
-
-        // reload palette
-        loadKdePalette();
-
-        // gtk colors
         generateGtkColors();
 
         #if OXYGEN_DEBUG
@@ -185,7 +184,7 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
         #endif
 
-        return true;
+        return;
 
     }
 
@@ -370,6 +369,10 @@ namespace Oxygen
     //_________________________________________________________
     void QtSettings::loadKdePalette( void )
     {
+
+        if( _kdeColorsInitialized ) return;
+        _kdeColorsInitialized = true;
+
         _palette.clear();
         _palette.setColor( Palette::Active, Palette::Window, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "BackgroundNormal" ) ) );
         _palette.setColor( Palette::Active, Palette::WindowText, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[Colors:Window]", "ForegroundNormal" ) ) );
