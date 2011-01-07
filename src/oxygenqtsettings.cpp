@@ -119,10 +119,10 @@ namespace Oxygen
         std::cerr << _oxygen << std::endl;
         #endif
 
-#if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
+        #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
         // TODO: Add support for gtk schemes when not _KDESession
         if( _KDESession )
-#endif
+        #endif
         {
             // reload icons
             #if OXYGEN_ICON_HACK
@@ -152,8 +152,7 @@ namespace Oxygen
         #endif
 
         // pass all resources to gtk and clear
-        gtk_rc_parse_string( _rc.toString().c_str() );
-        _rc.clear();
+        _rc.commit();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
@@ -187,8 +186,7 @@ namespace Oxygen
         #endif
 
         // pass all resources to gtk and clear
-        gtk_rc_parse_string( _rc.toString().c_str() );
-        _rc.clear();
+        _rc.commit();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
