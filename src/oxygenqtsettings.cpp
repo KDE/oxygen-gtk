@@ -152,6 +152,10 @@ namespace Oxygen
         if( _colorsInitialized ) return false;
         _colorsInitialized = true;
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
+        #endif
+
         // clear RC
         _rc.clear();
 
@@ -161,8 +165,17 @@ namespace Oxygen
         // gtk colors
         generateGtkColors();
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors - Gtkrc: " << std::endl;
+        std::cerr << _rc << std::endl;
+        #endif
+
         // pass all resources to gtk
         gtk_rc_parse_string( _rc.toString().c_str() );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
+        #endif
 
         return true;
 
