@@ -866,7 +866,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::QtSettings::dBusSignalFilter - recieved signal"
             << " type: " << dbus_message_get_type( message )
             << " path: " << dbus_message_get_path( message )
@@ -880,6 +880,25 @@ namespace Oxygen
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
+
+            // load argument
+            DBusError error;
+            dbus_error_init( &error );
+            int type(0);
+            if( !dbus_message_get_args( message, &error, DBUS_TYPE_INT32, &type, DBUS_TYPE_INVALID ) )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::QtSettings::dBusSignalFilter - " << error.message << std::endl;
+                #endif
+                dbus_error_free (&error);
+                return DBUS_HANDLER_RESULT_HANDLED;
+
+            }
+
+            // check type
+            enum { PaletteChanged = 0 };
+            if( type != PaletteChanged ) return DBUS_HANDLER_RESULT_HANDLED;
 
             return DBUS_HANDLER_RESULT_HANDLED;
 
