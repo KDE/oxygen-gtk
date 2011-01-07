@@ -152,11 +152,6 @@ namespace Oxygen
         generateGtkColors();
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initializeColors - Gtkrc: " << std::endl;
-        std::cerr << _rc << std::endl;
-        #endif
-
-        #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
         #endif
 
@@ -364,13 +359,13 @@ namespace Oxygen
 
         rc.merge( icons.generate( iconThemeList ) );
 
-        // commit to gtk
-        rc.commit();
-
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadKdeIcons - Gtkrc: " << std::endl;
         std::cerr << rc << std::endl;
         #endif
+
+        // pass all options to gtk
+        rc.commit();
 
     }
 
@@ -568,12 +563,13 @@ namespace Oxygen
         rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
         rc.addToRootSection( "widget \"gtk-tooltip*\" style \"oxygen-tooltips\"" );
 
-        rc.commit();
-
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::generateGtkColors - Gtkrc: " << std::endl;
         std::cerr << rc << std::endl;
         #endif
+
+        // commit to gtk
+        rc.commit();
 
     }
 
@@ -655,13 +651,13 @@ namespace Oxygen
             rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
         }
 
-        // pass all resources to gtk and clear
-        rc.commit();
-
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadKdeFonts - Gtkrc: " << std::endl;
         std::cerr << rc << std::endl;
         #endif
+
+        // pass all resources to gtk and clear
+        rc.commit();
 
     }
 
@@ -687,13 +683,13 @@ namespace Oxygen
         _startDragDist = _kdeGlobals.getOption( "[KDE]", "StartDragDist" ).toVariant<int>( 4 );
         _startDragTime = _kdeGlobals.getOption( "[KDE]", "StartDragTime" ).toVariant<int>( 500 );
 
-        // pass all resources to gtk and clear
-        rc.commit();
-
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadKdeGlobalsOptions - Gtkrc: " << std::endl;
         std::cerr << rc << std::endl;
         #endif
+
+        // pass all resources to gtk and clear
+        rc.commit();
 
     }
 
@@ -761,35 +757,6 @@ namespace Oxygen
         if( windowDragMode == "WD_MINIMAL" ) _windowDragMode = WD_MINIMAL;
         else _windowDragMode = WD_FULL;
 
-        // local gtkrc
-        Gtk::RC rc;
-
-        // copy relevant options to to gtk
-        // scrollbar width
-        rc.setCurrentSection( Gtk::RC::defaultSection() );
-        rc.addToCurrentSection( Gtk::RCOption<int>(
-            "  GtkScrollbar::slider-width",
-            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
-
-        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
-        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
-
-        // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
-        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
-        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
-
-        // mnemonics
-        const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
-        rc.addToHeaderSection( Gtk::RCOption<int>( "gtk-auto-mnemonics", !showMnemonics ) );
-
-        // pass all resources to gtk and clear
-        rc.commit();
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Gtkrc: " << std::endl;
-        std::cerr << rc << std::endl;
-        #endif
-
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
         if( buttonSize == "Small" ) _buttonSize = ButtonSmall;
@@ -813,6 +780,35 @@ namespace Oxygen
         // shadow configurations
         _activeShadowConfiguration.initialize( oxygen );
         _inactiveShadowConfiguration.initialize( oxygen );
+
+        // local gtkrc
+        Gtk::RC rc;
+
+        // copy relevant options to to gtk
+        // scrollbar width
+        rc.setCurrentSection( Gtk::RC::defaultSection() );
+        rc.addToCurrentSection( Gtk::RCOption<int>(
+            "  GtkScrollbar::slider-width",
+            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+
+        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
+        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
+
+        // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
+        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
+        rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+
+        // mnemonics
+        const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
+        rc.addToHeaderSection( Gtk::RCOption<int>( "gtk-auto-mnemonics", !showMnemonics ) );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Gtkrc: " << std::endl;
+        std::cerr << rc << std::endl;
+        #endif
+
+        // pass all resources to gtk and clear
+        rc.commit();
 
     }
 
