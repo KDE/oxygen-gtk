@@ -164,7 +164,8 @@ namespace Oxygen
                 // make tooltips appear rounded using XShape extension if screen isn't composited
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 const GtkAllocation& allocation( widget->allocation );
-                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) &&
+                        ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( window, mask, x, y );
