@@ -22,6 +22,7 @@
 */
 
 #include "oxygendbus.h"
+#include "oxygencolorutils.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -71,9 +72,14 @@ namespace Oxygen
     //_________________________________________________________
     void DBus::resetStyle( void )
     {
-        GtkSettings *settings( gtk_settings_get_default() );
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::DBus::resetStyle" << std::endl;
+        #endif
+
         Style::instance().settings().initialize( true );
-        gtk_rc_reset_styles(settings);
+        Style::instance().helper().clearCaches();
+        ColorUtils::clearCaches();
+        gtk_rc_reset_styles( gtk_settings_get_default() );
     }
 
     //_________________________________________________________
