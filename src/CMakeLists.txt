@@ -2,6 +2,7 @@ include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BIN
 include_directories( animations )
 
 # Sources
+# please keep this list alphabetically sorted for clarity
 set( OXYGEN-GTK-SOURCES
     animations/oxygenanimations.cpp
     animations/oxygenbaseengine.cpp
