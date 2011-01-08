@@ -23,8 +23,11 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 */
+#include "config.h"
 
+#if HAVE_DBUS
 #include <dbus/dbus-glib-lowlevel.h>
+#endif
 
 namespace Oxygen
 {
@@ -46,8 +49,10 @@ namespace Oxygen
         //! repaint all toplevel widgets
         static void repaintTopLevelWindows( void );
 
+        #if HAVE_DBUS
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );
+        #endif
 
     };
 

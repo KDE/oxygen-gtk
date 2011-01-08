@@ -40,6 +40,7 @@ namespace Oxygen
         std::cerr << "Oxygen::DBus::setupConnection" << std::endl;
         #endif
 
+        #if HAVE_DBUS
         // dbus error
         DBusError error;
         dbus_error_init( &error );
@@ -66,7 +67,7 @@ namespace Oxygen
         dbus_bus_add_match( bus, "type='signal',interface='org.kde.Oxygen.Style',path='/OxygenStyle'", &error );
         dbus_bus_add_match( bus, "type='signal',interface='org.kde.KGlobalSettings',path='/KGlobalSettings'", &error );
         dbus_connection_add_filter( bus, signalFilter, 0L, 0L );
-
+        #endif
     }
 
     //_________________________________________________________
@@ -100,6 +101,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    #if HAVE_DBUS
     DBusHandlerResult DBus::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
     {
 
@@ -124,5 +126,6 @@ namespace Oxygen
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
     }
+    #endif
 
 }
