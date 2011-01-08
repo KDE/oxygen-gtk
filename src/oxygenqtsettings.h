@@ -26,7 +26,6 @@
 */
 
 #include "oxygenapplicationname.h"
-#include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -256,6 +255,14 @@ namespace Oxygen
             //! concatenate using provided separator
             std::string join( const std::string& = ":" ) const;
 
+            friend std::ostream& operator << ( std::ostream& out, const PathList& pathList )
+            {
+                for( PathList::const_iterator iter = pathList.begin(); iter != pathList.end(); iter++ )
+                { out << "    " << *iter << std::endl; }
+
+                return out;
+            }
+
         };
 
         //! icon path
@@ -269,6 +276,9 @@ namespace Oxygen
 
         //! init application name
         void initApplicationName( void );
+
+        //! load kdeglobals settings into optionMap
+        void loadKdeGlobals( void );
 
         //! load kde icons
         void loadKdeIcons( void );
@@ -428,9 +438,6 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
-
-        //! rc options (passed to gtk at the end of init
-        Gtk::RC _rc;
 
     };
 
