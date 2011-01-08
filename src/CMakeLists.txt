@@ -3,6 +3,21 @@ include_directories( animations )
 
 # Sources
 set( OXYGEN-GTK-SOURCES
+    animations/oxygenanimations.cpp
+    animations/oxygenbaseengine.cpp
+    animations/oxygencomboboxdata.cpp
+    animations/oxygencomboboxentrydata.cpp
+    animations/oxygendialogengine.cpp
+    animations/oxygenhoverdata.cpp
+    animations/oxygenmainwindowdata.cpp
+    animations/oxygenmenushelldata.cpp
+    animations/oxygensignal.cpp
+    animations/oxygenscrollbardata.cpp
+    animations/oxygenscrolledwindowdata.cpp
+    animations/oxygentabwidgetdata.cpp
+    animations/oxygentimer.cpp
+    animations/oxygentreeviewdata.cpp
+    animations/oxygentreeviewengine.cpp
     oxygenapplicationname.cpp
     oxygencairocontext.cpp
     oxygencairopattern.cpp
@@ -28,22 +43,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentileset.cpp
     oxygenwindecobutton.cpp
     oxygenwindowmanager.cpp
-    animations/oxygenanimations.cpp
-    animations/oxygenbaseengine.cpp
-    animations/oxygencomboboxdata.cpp
-    animations/oxygencomboboxentrydata.cpp
-    animations/oxygendialogengine.cpp
-    animations/oxygenhoverdata.cpp
-    animations/oxygenmainwindowdata.cpp
-    animations/oxygenmenushelldata.cpp
-    animations/oxygensignal.cpp
-    animations/oxygenscrollbardata.cpp
-    animations/oxygenscrolledwindowdata.cpp
-    animations/oxygentabwidgetdata.cpp
-    animations/oxygentimer.cpp
-    animations/oxygentreeviewdata.cpp
-    animations/oxygentreeviewengine.cpp
- )
+)
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
 
