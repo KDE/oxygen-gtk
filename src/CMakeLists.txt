@@ -2,9 +2,24 @@ include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BIN
 include_directories( animations )
 
 # Sources
+# please keep this list alphabetically sorted for clarity
 set( OXYGEN-GTK-SOURCES
-    oxygenshadowconfiguration.cpp
-    oxygenwindowshadow.cpp
+    animations/oxygenanimations.cpp
+    animations/oxygenbackgroundhintengine.cpp
+    animations/oxygenbaseengine.cpp
+    animations/oxygencomboboxdata.cpp
+    animations/oxygencomboboxentrydata.cpp
+    animations/oxygendialogengine.cpp
+    animations/oxygenhoverdata.cpp
+    animations/oxygenmainwindowdata.cpp
+    animations/oxygenmenushelldata.cpp
+    animations/oxygensignal.cpp
+    animations/oxygenscrollbardata.cpp
+    animations/oxygenscrolledwindowdata.cpp
+    animations/oxygentabwidgetdata.cpp
+    animations/oxygentimer.cpp
+    animations/oxygentreeviewdata.cpp
+    animations/oxygentreeviewengine.cpp
     oxygenapplicationname.cpp
     oxygencairocontext.cpp
     oxygencairopattern.cpp
@@ -22,6 +37,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenqtsettings.cpp
     oxygenrcstyle.cpp
     oxygenrgba.cpp
+    oxygenshadowconfiguration.cpp
     oxygenstyle.cpp
     oxygenstylehelper.cpp
     oxygenstylewrapper.cpp
@@ -30,23 +46,8 @@ set( OXYGEN-GTK-SOURCES
     oxygentileset.cpp
     oxygenwindecobutton.cpp
     oxygenwindowmanager.cpp
-    animations/oxygenanimations.cpp
-    animations/oxygenbackgroundhintengine.cpp
-    animations/oxygenbaseengine.cpp
-    animations/oxygencomboboxdata.cpp
-    animations/oxygencomboboxentrydata.cpp
-    animations/oxygendialogengine.cpp
-    animations/oxygenhoverdata.cpp
-    animations/oxygenmainwindowdata.cpp
-    animations/oxygenmenushelldata.cpp
-    animations/oxygensignal.cpp
-    animations/oxygenscrollbardata.cpp
-    animations/oxygenscrolledwindowdata.cpp
-    animations/oxygentabwidgetdata.cpp
-    animations/oxygentimer.cpp
-    animations/oxygentreeviewdata.cpp
-    animations/oxygentreeviewengine.cpp
- )
+    oxygenwindowshadow.cpp
+)
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
 

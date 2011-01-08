@@ -33,10 +33,10 @@ namespace Oxygen
     const std::string Gtk::RC::_defaultSectionName = "oxygen-default-internal";
 
     //_________________________________________________
-    void Gtk::RC::commit( bool clear )
+    void Gtk::RC::commit( void )
     {
         gtk_rc_parse_string( toString().c_str() );
-        if( clear ) this->clear();
+        clear();
     }
 
     //_________________________________________________
