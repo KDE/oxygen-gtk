@@ -22,13 +22,22 @@
 */
 
 #include "oxygendbus.h"
+#include "oxygenstyle.h"
+#include "config.h"
+
+#include <gtk/gtk.h>
+#include <iostream>
 
 namespace Oxygen
 {
 
     //_________________________________________________________
-    void DBus::setupDBusConnection( void )
+    void DBus::setupConnection( void )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::DBus::setupConnection" << std::endl;
+        #endif
 
         // dbus error
         DBusError error;
@@ -41,7 +50,7 @@ namespace Oxygen
 
             #if OXYGEN_DEBUG
             std::cerr
-                << "Oxygen::DBus::setupDBusConnection -"
+                << "Oxygen::DBus::setupConnection -"
                 << " connection failed."
                 << " Error: " << error.message
                 << std::endl;
@@ -55,22 +64,39 @@ namespace Oxygen
         // install signal filter
         dbus_bus_add_match( bus, "type='signal',interface='org.kde.Oxygen.Style',path='/OxygenStyle'", &error );
         dbus_bus_add_match( bus, "type='signal',interface='org.kde.KGlobalSettings',path='/KGlobalSettings'", &error );
-        dbus_connection_add_filter( bus, signalFilter, this, 0L );
+        dbus_connection_add_filter( bus, signalFilter, 0L, 0L );
 
     }
 
     //_________________________________________________________
-    DBusHandlerResult Oxygen::DBud::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
+    void DBus::repaintTopLevelWindows( void )
     {
 
-        #if OXYGEN_DEBUG
+        // get all GtkWindows
+        GList* windows( gtk_window_list_toplevels() );
+        for( GList *window = g_list_first( windows ); window; window = g_list_next( window ) )
+        {
+            if( GTK_IS_WIDGET( window->data ) )
+            { gtk_widget_queue_draw( GTK_WIDGET( window->data ) ); }
+        }
+
+        if( windows )
+        { g_list_free( windows ); }
+
+    }
+
+    //_________________________________________________________
+    DBusHandlerResult DBus::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
+    {
+
+        //#if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::DBus::signalFilter - recieved signal"
             << " type: " << dbus_message_get_type( message )
             << " path: " << dbus_message_get_path( message )
             << " interface: " << dbus_message_get_interface( message )
             << std::endl;
-        #endif
+        //#endif
 
         if( dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) )
         {
@@ -98,12 +124,15 @@ namespace Oxygen
             enum { PaletteChanged = 0 };
             if( type == PaletteChanged )
             {
+                Style::instance().settings().loadKdeGlobals();
+                Style::instance().settings().initializeColors( true );
+                repaintTopLevelWindows();
+            }
 
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
     }
-
 
 }

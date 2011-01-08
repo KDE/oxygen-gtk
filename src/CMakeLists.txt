@@ -26,6 +26,7 @@ set( OXYGEN-GTK-SOURCES
     oxygencairoutils.cpp
     oxygencoloreffect.cpp
     oxygencolorutils.cpp
+    oxygendbus.cpp
     oxygenfontinfo.cpp
     oxygengtkcellinfo.cpp
     oxygengtkicons.cpp

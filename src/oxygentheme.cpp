@@ -23,6 +23,7 @@
 */
 
 #include "config.h"
+#include "oxygendbus.h"
 #include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
@@ -199,13 +200,19 @@ void enableARGB()
 //_________________________________________________
 void theme_init( GTypeModule* module )
 {
+
     oxygen_rc_style_register_type( module );
     oxygen_style_register_type( module );
 
     enableARGB();
 
+    // initialize oxygen style
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
+
+    // setup dbus connection
+    Oxygen::DBus::setupConnection();
+
 }
 
 //_________________________________________________

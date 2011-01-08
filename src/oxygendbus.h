@@ -36,12 +36,12 @@ namespace Oxygen
         public:
 
         //! setup connections
-        static void setupConnections( void );
+        static void setupConnection( void );
 
         protected:
 
         //! repaint all toplevel widgets
-        static void repaintAll( void );
+        static void repaintTopLevelWindows( void );
 
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );
