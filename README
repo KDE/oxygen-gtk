@@ -7,14 +7,15 @@ II. Install
 
 III. Hacks
 III.1 ARGB support
-III.2 Window grabbing
-III.3 Window background
-III.4 GtkComboBox
-III.5 GtkTreeView
-III.6 GtkScrolledWindow
-III.7 Button order in dialogs
-III.8 Mouse-over support
-III.9 Tab close buttons
+III.2 DBus support
+III.3 Window grabbing
+III.4 Window background
+III.5 GtkComboBox
+III.6 GtkTreeView
+III.7 GtkScrolledWindow
+III.8 Button order in dialogs
+III.9 Mouse-over support
+III.10 Tab close buttons
 
 IV. Technical details
 IV.1 Directories
@@ -69,7 +70,19 @@ There are some environment variables to help debug ARGB hack:
   OXYGEN_DISABLE_ARGB_HACK - set it to 1 to check if app will crash without the hack. Oxygen-GTK will print app name to report.
   OXYGEN_ARGB_DEBUG - set it to 1 to print all debug information concerning ARGB hack (mainly to debug blacklist logic).
 
-III.2 Window grabbing
+III.2 DBus support
+------------------
+Provided that dbus-glib-1 is found on the system, oxygen-gtk is compiled with DBus support. This allows gtk applications to be updated automatically when kde (or oxygen) configuration is changed. This covers:
+- changing the color scheme
+- changing icon theme and sizes
+- changing oxygen style options, like the number and position of scrollbar arrows
+- ...
+
+The style still compiles (and runs) when dbus support is not found, but the feature above is missing, naturally.
+
+So far we have encountered no issue with this feature.
+
+III.3 Window grabbing
 ---------------------
 
 Oxygen-gtk supports the oxygen-qt feature that one can grab a window from any empty area and move it around as one usually does from the window decoration. The detection of 'empty' areas is quite tedious, but works well for all the applications we have tested so far. It is based mostly on main windows (or dialogs) recieving mouse button press/release events, assuming that no other child widget had any use of such events and thus allowing oxygen-gtk to use such events for moving the window.
@@ -80,44 +93,44 @@ If this happens, user should
 - disable window-grab (using the oxygen-qt's configuration tool; called 'oxygen-settings'), to be able to still use the faulty application
 - file a bug report and wait for the bug to be fixed.
 
-III.3 Window background
+III.4 Window background
 -----------------------
 
 Oxygen uses gradients for windows and menus background (there is a linear vertical gradient, and a radial gradient at the center of the window's top part) that match the window decoration's background. Some widgets however, paint their own flat background, without any possibility for the style to overwrite these, which results in plain flat squares being painted in the middle of the otherwise well-matched background. 
 
 Unfortunately in most cases, there is not much we can do about it. This is most likely either a missing feature on the gtk style (letting the style render the widget's background), or an ill-design of the widget itself.
 
-III.4 GtkComboBox
+III.5 GtkComboBox
 -----------------
 
 We have seriously hacked the GtkComboBox painting code so that it matches oxygen-qt. The GtkComboBox::appears-as-list flag is set in gtkrc, in order to have the drop-down list look consistent with Qt, but the resulting GtkEntry that is used to display the selected item is painted in such a way that it looks like a button. This all works well to our knowledge, but there might be some cases, notably whith complex drop-down models (e.g. when text and/or icons and/or subelements are used), that result in rendering artifacts.
 
 If such things happen, file a bug report and we'll try to fix.
 
-III.5 GtkTreeView
+III.6 GtkTreeView
 -----------------
 
 Tree-lines are rendered by default on all tree-views (unless it is disabled in oxygen-qt's configuration tool).
 However, in order to have 'solid' grey lines instead of dotted black lines (provided by Gtk, with no way for the style to change it), we completely rewrote the tree-line drawing code (and disabled Gtk's equivalent code). This also allowed us to change the placement of the tree expander and the lines, so that they match Qt. 
 So far we have encountered no issue with this feature.
 
-III.6 GtkScrolledWindow
+III.7 GtkScrolledWindow
 -----------------------
 
 For scrolled windows that contain a GtkTreeView, we force the frame to be sunken. This is consistent with Qt, and allows us to properly render mouse-over and focus effects on such lists. There might be some specific widget's layouts however for which this results in rendering glitches (for instance, two sunken frames one embedded in the other). If you observe such things, please report and we'll fix. 
 
-III.7 Button order in dialogs
+III.8 Button order in dialogs
 -----------------------------
 
 We changed the button order in dialogs so that it matches the Qt convention. Notably, "accept" buttons are usually located 'left-of' "cancel" buttons. This choice was driven to improve consistency accross applications, although it might disorient Gnome users.
 
-III.8 Mouse-over support
+III.9 Mouse-over support
 ------------------------
 
 We added mouse-over support (that is: highlight when mouse pointer enters the widget) for a number of widgets for which gtk did not support it. This is notably the case for: GtkTreeView, GtkEntry, GtkNoteBook. This is achieved by watching enter/leave and mouse-move events for such widgets and some of their children. To our knowledge there is no remaining issue with this feature.
 
-III.9 Tab close buttons
------------------------
+III.10 Tab close buttons
+------------------------
 
 GTK notebook doesn't provide a standard way for apps to put close buttons on tabs. Because of this, close buttons in different apps are implemented differently. Oxygen-gtk hides such buttons' icons/text, and draws Qt close button images instead. But there's no way of detecting if the button is really _close_ one. So, current implementation may break apps which have some additional buttons in the tabs. If you find such apps with multiple buttons on single tab (which all look like close buttons) when using oxygen-gtk, file a bug report.
 
