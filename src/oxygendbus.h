@@ -43,12 +43,6 @@ namespace Oxygen
 
         protected:
 
-        //! reset style
-        static void resetStyle( void );
-
-        //! repaint all toplevel widgets
-        static void repaintTopLevelWindows( void );
-
         #if HAVE_DBUS
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );

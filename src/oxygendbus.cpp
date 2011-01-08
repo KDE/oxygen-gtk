@@ -71,36 +71,6 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void DBus::resetStyle( void )
-    {
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::DBus::resetStyle" << std::endl;
-        #endif
-
-        Style::instance().settings().initialize( true );
-        Style::instance().helper().clearCaches();
-        ColorUtils::clearCaches();
-        gtk_rc_reset_styles( gtk_settings_get_default() );
-    }
-
-    //_________________________________________________________
-    void DBus::repaintTopLevelWindows( void )
-    {
-
-        // get all GtkWindows
-        GList* windows( gtk_window_list_toplevels() );
-        for( GList *window = g_list_first( windows ); window; window = g_list_next( window ) )
-        {
-            if( GTK_IS_WIDGET( window->data ) )
-            { gtk_widget_queue_draw( GTK_WIDGET( window->data ) ); }
-        }
-
-        if( windows )
-        { g_list_free( windows ); }
-
-    }
-
-    //_________________________________________________________
     #if HAVE_DBUS
     DBusHandlerResult DBus::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
     {
@@ -119,8 +89,10 @@ namespace Oxygen
             dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) )
         {
 
-            resetStyle();
-            repaintTopLevelWindows();
+            Style::instance().settings().initialize( true );
+            Style::instance().helper().clearCaches();
+            ColorUtils::clearCaches();
+            gtk_rc_reset_styles( gtk_settings_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
