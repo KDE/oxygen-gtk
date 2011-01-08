@@ -163,7 +163,7 @@ namespace Oxygen
                 if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_mask( window, mask, 0, 0 );
+                    gdk_window_shape_combine_mask( window, mask, x, y );
                     gdk_pixmap_unref( mask );
 
                 }
