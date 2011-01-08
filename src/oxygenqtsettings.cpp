@@ -420,9 +420,9 @@ namespace Oxygen
     void QtSettings::generateGtkColors( void )
     {
 
-        //#if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::generateGtkColors" << std::endl;
-        //#endif
+        #endif
 
         // customize gtk palette
         _palette.setGroup( Palette::Active );
