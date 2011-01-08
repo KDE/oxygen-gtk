@@ -80,7 +80,7 @@ namespace Oxygen
         ColorFlags m_lowThreshold;
 
         // clear caches
-        static inline void clearCaches( void )
+        void clearCaches( void )
         {
             m_decoColorCache.clear();
             m_lightColorCache.clear();

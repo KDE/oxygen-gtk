@@ -35,6 +35,9 @@ namespace Oxygen
         //! set contrast values
         void setContrast( double );
 
+        //! clear caches
+        void clearCaches( void );
+
         //! contrast
         const double& contrast( void );
 
