@@ -57,7 +57,7 @@ namespace Oxygen
         void loadKdeGlobals( void );
 
         //! initialize
-        void initialize( void );
+        void initialize( bool forced = false );
 
         //! initialize colors
         void initializeColors( bool forced = false );
