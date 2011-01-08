@@ -53,11 +53,14 @@ namespace Oxygen
         virtual ~QtSettings( void )
         {}
 
+        //! load kdeglobals settings into optionMap
+        void loadKdeGlobals( void );
+
         //! initialize
         void initialize( void );
 
         //! initialize colors
-        void initializeColors( void );
+        void initializeColors( bool forced = false );
 
         //! palette
         const Palette& palette( void ) const
@@ -275,14 +278,11 @@ namespace Oxygen
         //! init application name
         void initApplicationName( void );
 
-        //! load kdeglobals settings into optionMap
-        void loadKdeGlobals( void );
-
         //! load kde icons
         void loadKdeIcons( void );
 
         //! load palette from kdeglobals
-        void loadKdePalette( void );
+        void loadKdePalette( bool forced = false );
 
         //! update gtk colors
         /*! generates an RC string and pass it to gtk */

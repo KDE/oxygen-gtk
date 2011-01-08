@@ -83,6 +83,21 @@ namespace Oxygen
     {}
 
     //_________________________________________________________
+    void QtSettings::loadKdeGlobals( void )
+    {
+
+        _kdeGlobals.clear();
+        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
+        { _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) ); }
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::loadKdeGlobals - kdeglobals: " << std::endl;
+        std::cerr << _kdeGlobals << std::endl;
+        #endif
+
+    }
+
+    //_________________________________________________________
     void QtSettings::initialize( void )
     {
 
@@ -136,13 +151,13 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::initializeColors( void )
+    void QtSettings::initializeColors( bool forced )
     {
 
         // reload palette, if needed
-        loadKdePalette();
+        loadKdePalette( forced );
 
-        if( _gtkColorsInitialized ) return;
+        if( _gtkColorsInitialized && !forced ) return;
         _gtkColorsInitialized = true;
 
         #if OXYGEN_DEBUG
@@ -288,21 +303,6 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::loadKdeGlobals( void )
-    {
-
-        _kdeGlobals.clear();
-        for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
-        { _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) ); }
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::loadKdeGlobals - kdeglobals: " << std::endl;
-        std::cerr << _kdeGlobals << std::endl;
-        #endif
-
-    }
-
-    //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
 
@@ -370,10 +370,10 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::loadKdePalette( void )
+    void QtSettings::loadKdePalette( bool forced )
     {
 
-        if( _kdeColorsInitialized ) return;
+        if( _kdeColorsInitialized && !forced ) return;
         _kdeColorsInitialized = true;
 
         // contrast
