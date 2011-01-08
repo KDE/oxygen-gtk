@@ -47,7 +47,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenwindecobutton.cpp
     oxygenwindowmanager.cpp
     oxygenwindowshadow.cpp
- )
+)
 
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
 
