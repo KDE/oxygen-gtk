@@ -1108,9 +1108,10 @@ namespace Oxygen
                 {
                     gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
 
-                    int x, y;
-                    gtk_window_get_position( window, &x, &y );
-                    gtk_window_move( window, x+3, y );
+                    gint targetX, dummy, y;
+                    gtk_window_get_position( window, &dummy, &y );
+                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
+                    gtk_window_move( window, targetX+combobox->allocation.x+3, y );
                 }
 
             }
