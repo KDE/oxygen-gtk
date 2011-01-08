@@ -31,8 +31,6 @@
 #include "oxygenpalette.h"
 #include "oxygenshadowconfiguration.h"
 
-#include <dbus/dbus-glib-lowlevel.h>
-
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -301,17 +299,6 @@ namespace Oxygen
 
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
-
-        //!@name dbus
-        //@{
-
-        //! setup connections
-        void setupDBusConnection( void );
-
-        //! callback
-        static DBusHandlerResult dBusSignalFilter( DBusConnection*, DBusMessage*, gpointer );
-
-        //@}
 
         private:
 
