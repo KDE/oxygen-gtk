@@ -40,6 +40,9 @@ namespace Oxygen
 
         protected:
 
+        //! reset style
+        static void resetStyle( void );
+
         //! repaint all toplevel widgets
         static void repaintTopLevelWindows( void );
 

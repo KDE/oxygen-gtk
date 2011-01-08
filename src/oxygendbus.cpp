@@ -69,6 +69,14 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    void DBus::resetStyle( void )
+    {
+        GtkSettings *settings( gtk_settings_get_default() );
+        Style::instance().settings().initialize( true );
+        gtk_rc_reset_styles(settings);
+    }
+
+    //_________________________________________________________
     void DBus::repaintTopLevelWindows( void )
     {
 
@@ -89,46 +97,22 @@ namespace Oxygen
     DBusHandlerResult DBus::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
     {
 
-        //#if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::DBus::signalFilter - recieved signal"
             << " type: " << dbus_message_get_type( message )
             << " path: " << dbus_message_get_path( message )
             << " interface: " << dbus_message_get_interface( message )
             << std::endl;
-        //#endif
+        #endif
 
-        if( dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) )
+        if(
+            dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) ||
+            dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) )
         {
 
-            return DBUS_HANDLER_RESULT_HANDLED;
-
-        } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
-
-            // load argument
-            DBusError error;
-            dbus_error_init( &error );
-            int type(0);
-            if( !dbus_message_get_args( message, &error, DBUS_TYPE_INT32, &type, DBUS_TYPE_INVALID ) )
-            {
-
-                #if OXYGEN_DEBUG
-                std::cerr << "Oxygen::DBus::signalFilter - " << error.message << std::endl;
-                #endif
-                dbus_error_free (&error);
-                return DBUS_HANDLER_RESULT_HANDLED;
-
-            }
-
-            // check type
-            enum { PaletteChanged = 0 };
-            if( type == PaletteChanged )
-            {
-                Style::instance().settings().loadKdeGlobals();
-                Style::instance().settings().initializeColors( true );
-                repaintTopLevelWindows();
-            }
-
+            resetStyle();
+            repaintTopLevelWindows();
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
