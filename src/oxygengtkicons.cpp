@@ -116,6 +116,7 @@ namespace Oxygen
         // #endif
 
         _pathList = pathList;
+        _rc.clear();
 
         // generate icon size string
         std::ostringstream iconSizesStr;
