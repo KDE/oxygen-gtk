@@ -108,7 +108,13 @@ namespace Oxygen
 
             }
 
-            unsigned int flags(0);
+
+            // always regenerate icons
+            /*
+            this does not cost much extra overhead when icon options are actually unchanged
+            besides, it is necessary to get the proper icon re-mapping after 'any' config is changed
+            */
+            unsigned int flags( QtSettings::Icons );
             switch( type )
             {
                 case PaletteChanged:
