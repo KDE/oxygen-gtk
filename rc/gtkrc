@@ -75,7 +75,7 @@ class "*" style "oxygen-default"
 style "oxygen-pathbutton" = "oxygen-default"
 {
     #add some spacing to have centered text
-    GtkButton::inner-border = { 4, 4, 1, 0 }
+    GtkButton::inner-border = { 2, 2, 1, 0 }
 }
 widget_class "*PathBar.<GtkButton>" style "oxygen-pathbutton"
 
