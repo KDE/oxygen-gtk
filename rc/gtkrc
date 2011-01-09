@@ -137,8 +137,8 @@ class "GtkNotebook" style "oxygen-notebook"
 style "oxygen-entry" = "oxygen-default"
 {
     xthickness = 2
-    ythickness = 2
-    GtkEntry::inner-border = { 2, 2, 2, 2 }
+    ythickness = 1
+    GtkEntry::inner-border = { 1, 1, 1, 1 }
 }
 
 class "GtkEntry" style "oxygen-entry"
@@ -165,7 +165,7 @@ widget_class "*<GtkComboBox>.<GtkFrame>" style "oxygen-combobox-frame"
 style "oxygen-combobox-entry" = "oxygen-default"
 {
     xthickness = 1
-    ythickness = 1
+    ythickness = 0
 }
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
 widget_class "*<GtkComboBoxEntry>.<GtkButton>" style "oxygen-combobox-entry"
