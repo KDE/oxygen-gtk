@@ -89,7 +89,7 @@ namespace Oxygen
             dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) )
         {
 
-            Style::instance().settings().initialize( true );
+            Style::instance().settings().initialize( QtSettings::All|QtSettings::Forced );
             Style::instance().helper().clearCaches();
             ColorUtils::clearCaches();
             gtk_rc_reset_styles( gtk_settings_get_default() );

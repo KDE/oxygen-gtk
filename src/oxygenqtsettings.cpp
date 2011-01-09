@@ -98,8 +98,10 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::initialize( bool forced )
+    void QtSettings::initialize( unsigned int flags )
     {
+
+        const bool forced( flags&Forced );
 
         if( _initialized && !forced ) return;
         _initialized = true;
@@ -108,8 +110,10 @@ namespace Oxygen
         { _KDESession = true; }
 
         // init application name
-        initApplicationName();
+        if( flags & AppName )
+        { initApplicationName(); }
 
+        // configuration path
         _kdeConfigPathList = kdeConfigPathList();
 
         // load kdeglobals
@@ -122,25 +126,33 @@ namespace Oxygen
         {
             // reload icons
             #if OXYGEN_ICON_HACK
-            _kdeIconPathList = kdeIconPathList();
-            loadKdeIcons();
+            if( flags & Icons )
+            {
+                _kdeIconPathList = kdeIconPathList();
+                loadKdeIcons();
+            }
             #endif
 
             // reload fonts
-            loadKdeFonts();
+            if( flags & Fonts )
+            { loadKdeFonts(); }
+
         }
 
         // kde globals options
-        loadKdeGlobalsOptions();
+        if( flags & KdeGlobals )
+        { loadKdeGlobalsOptions(); }
 
         // oxygen options
-        loadOxygenOptions();
+        if( flags & Oxygen )
+        { loadOxygenOptions(); }
 
         // color palette
-        loadKdePalette( forced );
-
-        // gtk colors
-        generateGtkColors();
+        if( flags & Colors )
+        {
+            loadKdePalette( forced );
+            generateGtkColors();
+        }
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;

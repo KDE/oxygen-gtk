@@ -56,8 +56,21 @@ namespace Oxygen
         //! load kdeglobals settings into optionMap
         void loadKdeGlobals( void );
 
+        //! initialization flags
+        enum Flags
+        {
+            AppName = 1<<0,
+            Icons = 1<<1,
+            Fonts = 1<<2,
+            KdeGlobals = 1<<3,
+            Oxygen = 1<<4,
+            Colors = 1<<5,
+            All = AppName|Icons|Fonts|KdeGlobals|Oxygen|Colors,
+            Forced = 1<<6
+        };
+
         //! initialize
-        void initialize( bool forced = false );
+        void initialize( unsigned int flags = All );
 
         //! initialize colors
         void initializeColors( bool forced = false );
