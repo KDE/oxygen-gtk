@@ -111,9 +111,9 @@ namespace Oxygen
 
         if( (!_dirty) && _pathList == pathList ) return _rc;
 
-        // #if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr << "Oxygen::GtkIcons::generate - regenerating translation tables" << std::endl;
-        // #endif
+        #endif
 
         _pathList = pathList;
         _rc.clear();
