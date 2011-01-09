@@ -27,6 +27,7 @@
 
 #include "oxygenapplicationname.h"
 #include "oxygengtkicons.h"
+#include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -413,6 +414,9 @@ namespace Oxygen
 
         //! gtk icons generator
         GtkIcons _icons;
+
+        //! gtkrc
+        Gtk::RC _rc;
 
     };
 
