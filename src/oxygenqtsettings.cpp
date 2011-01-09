@@ -187,41 +187,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::PathList::split( const std::string& path, const std::string& separator )
-    {
-
-        clear();
-        std::string local( path );
-        if( local.empty() ) return;
-        if( local[local.size()-1] == '\n' ) local = local.substr( 0, local.size()-1 );
-
-        size_t position( std::string::npos );
-        while( ( position = local.find( separator ) ) != std::string::npos )
-        {
-            push_back( local.substr(0, position ) );
-            local = local.substr( position + separator.length() );
-        }
-
-        if( !local.empty() ) push_back( local );
-        return;
-
-    }
-
-    //_________________________________________________________
-    std::string QtSettings::PathList::join( const std::string& separator ) const
-    {
-        std::ostringstream out;
-        for( const_iterator iter = begin(); iter != end(); ++iter )
-        {
-            if( iter != begin() ) out << separator;
-            out << *iter;
-        }
-
-        return out.str();
-    }
-
-    //_________________________________________________________
-    QtSettings::PathList QtSettings::kdeConfigPathList( void ) const
+    PathList QtSettings::kdeConfigPathList( void ) const
     {
 
         PathList out;
@@ -248,7 +214,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    QtSettings::PathList QtSettings::kdeIconPathList( void ) const
+    PathList QtSettings::kdeIconPathList( void ) const
     {
 
         // load icon install prefix
