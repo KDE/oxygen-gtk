@@ -1774,8 +1774,13 @@ namespace Oxygen
             options &= ~( Focus|Hover );
             if( d.isArrow() && GTK_IS_ARROW( widget ) )
             {
-                x += 1;
                 role = Palette::WindowText;
+
+                // adjust centering
+                x += 1;
+                if( Gtk::gtk_button_is_in_path_bar(widget) )
+                { y+=1; }
+
             }
 
         } else if( GTK_IS_CALENDAR( widget ) ) {
