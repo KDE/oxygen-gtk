@@ -1750,7 +1750,6 @@ namespace Oxygen
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
             role = Palette::Text;
-            y+=1;
 
         } else if( Gtk::gtk_parent_combo( widget ) ) {
 
