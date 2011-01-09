@@ -231,7 +231,12 @@ namespace Oxygen
         // load icon install prefix
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
-        { out.split( path ); };
+        {
+            out.split( path );
+        } else {
+            const std::string userConfigDir( std::string( g_get_user_config_dir() ) + "/oxygen-gtk" );
+            out.push_back( userConfigDir );
+        }
 
         out.push_back( GTK_THEME_DIR );
         return out;
