@@ -35,7 +35,8 @@ namespace Oxygen
 {
 
     //_________________________________________
-    GtkIcons::GtkIcons( void )
+    GtkIcons::GtkIcons( void ):
+        _dirty( true )
     {
 
         // initialize sizes
@@ -52,19 +53,32 @@ namespace Oxygen
     }
 
     //_________________________________________
-    void GtkIcons::setIconSize( const std::string& tag, int value )
+    void GtkIcons::setIconSize( const std::string& tag, unsigned int value )
     {
         SizeMap::iterator iter( std::find_if( _sizes.begin(), _sizes.end(), SameTagFTor( tag ) ) );
         if( iter == _sizes.end() ) {
 
             std::cerr << "GtkIcons::setIconSize - no match for" << tag << "," << value << std::endl;
 
-        } else iter->second = value;
+        } else if( iter->second != value ) {
+
+            iter->second = value;
+            _dirty = true;
+
+        }
+
     }
 
     //_________________________________________
     void GtkIcons::loadTranslations( const std::string& filename )
     {
+
+        if( filename == _filename )
+        { return; }
+
+        _filename = filename;
+        _dirty = true;
+        _icons.clear();
 
         std::ifstream in( filename.c_str() );
         if( !in )
@@ -92,10 +106,16 @@ namespace Oxygen
     }
 
     //_________________________________________
-    Gtk::RC GtkIcons::generate( const PathList& pathList ) const
+    Gtk::RC GtkIcons::generate( const PathList& pathList )
     {
 
-        Gtk::RC rc;
+        if( (!_dirty) && _pathList == pathList ) return _rc;
+
+        // #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::GtkIcons::generate - regenerating translation tables" << std::endl;
+        // #endif
+
+        _pathList = pathList;
 
         // generate icon size string
         std::ostringstream iconSizesStr;
@@ -107,7 +127,7 @@ namespace Oxygen
             iconSizesStr << iter->first << " = " << iter->second << "," << iter->second;
         }
         iconSizesStr << "\"";
-        rc.addToHeaderSection( iconSizesStr.str() );
+        _rc.addToHeaderSection( iconSizesStr.str() );
 
         // generate pixmap path
         // this must be passed to gtk before any icon settings, otherwise
@@ -124,33 +144,34 @@ namespace Oxygen
             pixmapPathStr << *iter;
         }
         pixmapPathStr << "\"";
-        rc.addToHeaderSection( pixmapPathStr.str() );
+        _rc.addToHeaderSection( pixmapPathStr.str() );
 
         // loop over icons
-        rc.setCurrentSection( Gtk::RC::defaultSection() );
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
         std::ostringstream notFoundOut;
         for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
         {
 
             std::string stock( generate( iconIter->first, iconIter->second, pathList ) );
             if( stock.empty() ) notFoundOut << "#  stock[\"" << iconIter->first << "\"]=<No matching KDE icon>" << std::endl;
-            else rc.addToCurrentSection( stock );
+            else _rc.addToCurrentSection( stock );
 
         }
 
         // add list of not found icons to the bottom of the list
-        rc.addToCurrentSection( notFoundOut.str() );
+        _rc.addToCurrentSection( notFoundOut.str() );
 
         // extra settings for entries
         std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
         if( !stock.empty() )
         {
-            rc.addSection( "oxygen-icons-editor", Gtk::RC::defaultSection() );
-            rc.addToCurrentSection( stock );
-            rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
+            _rc.addSection( "oxygen-icons-editor", Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( stock );
+            _rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
         }
 
-        return rc;
+        _dirty = false;
+        return _rc;
 
     }
 

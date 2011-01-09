@@ -51,10 +51,10 @@ namespace Oxygen
         void loadTranslations( const std::string& filename );
 
         //! generate rc file
-        Gtk::RC generate( const PathList& pathList ) const;
+        Gtk::RC generate( const PathList& pathList );
 
         //! set icon size
-        void setIconSize( const std::string&, int value );
+        void setIconSize( const std::string&, unsigned int value );
 
         protected:
 
@@ -98,6 +98,24 @@ namespace Oxygen
         };
 
         //@}
+
+        //!@name local storage, to prevent unnecessary reloading
+        //@{
+
+        //! local translations filename
+        std::string _filename;
+
+        //! local path list
+        PathList _pathList;
+
+        //! local GtkRC
+        Gtk::RC _rc;
+
+        //! dirty flag. Set to true when gtkrc needs regenerating
+        bool _dirty;
+
+        //@}
+
 
     };
 
