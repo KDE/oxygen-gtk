@@ -114,18 +114,6 @@ namespace Oxygen
         std::cerr << _oxygen << std::endl;
         #endif
 
-        // reload icons
-        #if OXYGEN_ICON_HACK
-        _kdeIconPathList = kdeIconPathList();
-        loadKdeIcons();
-        #endif
-
-        // reload fonts
-        loadKdeFonts();
-
-        // color palette
-        loadKdePalette();
-
         // kde globals options
         loadKdeGlobalsOptions();
 
@@ -134,6 +122,18 @@ namespace Oxygen
 
         // gtk colors
         generateGtkColors();
+
+        // reload fonts
+        loadKdeFonts();
+
+        // color palette
+        loadKdePalette();
+
+        // reload icons
+        #if OXYGEN_ICON_HACK
+        _kdeIconPathList = kdeIconPathList();
+        loadKdeIcons();
+        #endif
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
