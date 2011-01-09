@@ -1136,10 +1136,10 @@ namespace Oxygen
     //____________________________________________________________________
     void StyleHelper::renderDot( cairo_t* context, const ColorUtils::Rgba& base, int x, int y ) const
     {
-
-        const double diameter( 1.8 );
+        // Reduce diameter to make dots look more like in Oxygen-Qt
+        const double diameter( 1.8 - 0.35 );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ).dark(130).setAlpha( 0.65 ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ).dark(130) );
 
         cairo_ellipse( context, double(x) + 1.0 - diameter/2, double(y) + 1.0 - diameter/2.0, diameter, diameter );
         cairo_set_source( context, light );
