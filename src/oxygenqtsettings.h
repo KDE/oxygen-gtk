@@ -26,6 +26,7 @@
 */
 
 #include "oxygenapplicationname.h"
+#include "oxygengtkicons.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -409,6 +410,9 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
+
+        //! gtk icons generator
+        GtkIcons _icons;
 
     };
 

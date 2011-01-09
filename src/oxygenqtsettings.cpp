@@ -119,6 +119,21 @@ namespace Oxygen
         // load kdeglobals
         loadKdeGlobals();
 
+        // kde globals options
+        if( flags & KdeGlobals )
+        { loadKdeGlobalsOptions(); }
+
+        // oxygen options
+        if( flags & Oxygen )
+        { loadOxygenOptions(); }
+
+        // color palette
+        if( flags & Colors )
+        {
+            loadKdePalette( forced );
+            generateGtkColors();
+        }
+
         #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
         // TODO: Add support for gtk schemes when not _KDESession
         if( _KDESession )
@@ -137,21 +152,6 @@ namespace Oxygen
             if( flags & Fonts )
             { loadKdeFonts(); }
 
-        }
-
-        // kde globals options
-        if( flags & KdeGlobals )
-        { loadKdeGlobalsOptions(); }
-
-        // oxygen options
-        if( flags & Oxygen )
-        { loadOxygenOptions(); }
-
-        // color palette
-        if( flags & Colors )
-        {
-            loadKdePalette( forced );
-            generateGtkColors();
         }
 
         #if OXYGEN_DEBUG
@@ -176,7 +176,11 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
         #endif
 
+        // generate gtk colors
         generateGtkColors();
+
+        // for some reason one also needs to rewrite the icon part
+        loadKdeIcons();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
@@ -306,12 +310,7 @@ namespace Oxygen
 
         // add option
         if( showIconsOnPushButton == "false" )
-        {
-            rc.addToHeaderSection( "gtk-button-images = 0\n" );
-        }
-
-        // create icon translator, for stock icons
-        GtkIcons icons;
+        {   rc.addToHeaderSection( "gtk-button-images = 0\n" );  }
 
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
@@ -322,25 +321,25 @@ namespace Oxygen
         const int toolbarIconSize( _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 22 ) );
 
         // set gtk icon sizes
-        icons.setIconSize( "panel-menu", smallIconSize );
-        icons.setIconSize( "panel", panelIconSize );
-        icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
-        icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
-        icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
-        icons.setIconSize( "gtk-button", smallIconSize );
-        icons.setIconSize( "gtk-menu", smallIconSize );
-        icons.setIconSize( "gtk-dialog", dialogIconSize );
-        icons.setIconSize( "", smallIconSize );
+        _icons.setIconSize( "panel-menu", smallIconSize );
+        _icons.setIconSize( "panel", panelIconSize );
+        _icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
+        _icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-button", smallIconSize );
+        _icons.setIconSize( "gtk-menu", smallIconSize );
+        _icons.setIconSize( "gtk-dialog", dialogIconSize );
+        _icons.setIconSize( "", smallIconSize );
 
         // load translation table, generate full translation list, and path to gtk
-        icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
+        _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
         // generate full path list
         PathList iconThemeList;
         addIconTheme( iconThemeList, _kdeIconTheme );
         addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
-        rc.merge( icons.generate( iconThemeList ) );
+        rc.merge( _icons.generate( iconThemeList ) );
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadKdeIcons - Gtkrc: " << std::endl;
