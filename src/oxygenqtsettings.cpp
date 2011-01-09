@@ -120,14 +120,14 @@ namespace Oxygen
         // oxygen options
         loadOxygenOptions();
 
-        // gtk colors
-        generateGtkColors();
-
         // reload fonts
         loadKdeFonts();
 
         // color palette
         loadKdePalette();
+
+        // gtk colors
+        generateGtkColors();
 
         // reload icons
         #if OXYGEN_ICON_HACK
