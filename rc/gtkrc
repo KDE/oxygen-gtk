@@ -34,8 +34,8 @@ style "oxygen-default"
     GtkButton::child_displacement_y = 0
     GtkButton::default_border = { 0, 0, 0, 0 }
     GtkButton::default_outside_border = { 0, 0, 0, 0 }
-
     GtkButton::inner-border = { 2, 2, 1, 0 }
+
     GtkToggleButton::inner-border = { 0, 0, 1, 1 }
 
     GtkCalendar::inner-border = 0
@@ -148,8 +148,9 @@ class "GtkSpinButton" style "oxygen-entry"
 # comboboxes
 style "oxygen-combobox" = "oxygen-default"
 {
+    # must set combobox frame x thickness to 0, otherwise there
+    # is a dead area between combobox text and button
     xthickness = 0
-    ythickness = 2
 }
 
 style "oxygen-combobox-frame" = "oxygen-default"
@@ -175,8 +176,8 @@ widget_class "*<GtkCombo>.<GtkButton>" style "oxygen-combobox-entry"
 # option menu
 style "oxygen-option-menu" = "oxygen-default"
 {
-    ythickness = 0
     xthickness = 4
+    ythickness = 0
 }
 
 class "GtkOptionMenu" style "oxygen-option-menu"
