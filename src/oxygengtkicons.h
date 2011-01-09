@@ -26,6 +26,7 @@
 */
 
 #include "oxygengtkrc.h"
+#include "oxygenpathlist.h"
 
 #include <string>
 #include <map>
@@ -50,7 +51,7 @@ namespace Oxygen
         void loadTranslations( const std::string& filename );
 
         //! generate rc file
-        Gtk::RC generate( const std::vector<std::string>& pathList ) const;
+        Gtk::RC generate( const PathList& pathList ) const;
 
         //! set icon size
         void setIconSize( const std::string&, int value );
@@ -58,7 +59,7 @@ namespace Oxygen
         protected:
 
         //! generate rc code for given option
-        std::string generate( const std::string& gtkIconName, const std::string& kdeIconName, const std::vector<std::string>& pathList ) const;
+        std::string generate( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
 
         private:
 

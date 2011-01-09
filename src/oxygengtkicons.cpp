@@ -92,7 +92,7 @@ namespace Oxygen
     }
 
     //_________________________________________
-    Gtk::RC GtkIcons::generate( const std::vector<std::string>& pathList ) const
+    Gtk::RC GtkIcons::generate( const PathList& pathList ) const
     {
 
         Gtk::RC rc;
@@ -114,7 +114,7 @@ namespace Oxygen
         // other icons are not recognized
         std::ostringstream pixmapPathStr;
         pixmapPathStr << "pixmap_path \"";
-        for( std::vector<std::string>::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
+        for( PathList::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
         {
             #if OXYGEN_DEBUG
             std::cerr << "Oxygen::GtkIcons::generate - adding path: " << *iter << std::endl;
@@ -158,7 +158,7 @@ namespace Oxygen
     std::string GtkIcons::generate(
         const std::string& gtkIconName,
         const std::string& kdeIconName,
-        const std::vector<std::string>& pathList ) const
+        const PathList& pathList ) const
     {
 
 
@@ -180,7 +180,7 @@ namespace Oxygen
 
             // loop over provided path to see if at least one icon is found
             bool found( false );
-            for( std::vector<std::string>::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); ++pathIter )
+            for( PathList::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); ++pathIter )
             {
                 std::string filename( *pathIter + '/' + iconFileStream.str() );
                 if( !std::ifstream( filename.c_str() ) ) continue;
