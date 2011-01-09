@@ -1762,7 +1762,6 @@ namespace Oxygen
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
             options &= ~( Focus|Hover );
-            y+= 1;
             role = Palette::ButtonText;
 
         } else if(
@@ -1774,7 +1773,10 @@ namespace Oxygen
             options &= ~( Focus|Hover );
             if( d.isArrow() && GTK_IS_ARROW( widget ) )
             {
-                x += 1;
+
+                //if( arrow == GTK_ARROW_DOWN || arrow == GTK_ARROW_UP )
+                { x += 1; }
+
                 role = Palette::WindowText;
             }
 
