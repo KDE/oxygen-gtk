@@ -84,15 +84,76 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if(
-            dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) ||
-            dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) )
+        if( dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) )
         {
 
-            Style::instance().settings().initialize( QtSettings::All|QtSettings::Forced );
-            Style::instance().helper().clearCaches();
-            ColorUtils::clearCaches();
-            gtk_rc_reset_styles( gtk_settings_get_default() );
+            resetStyle( QtSettings::Oxygen );
+            return DBUS_HANDLER_RESULT_HANDLED;
+
+        } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
+
+            // get argument to check which flags have to be reset
+            // load argument
+            DBusError error;
+            dbus_error_init( &error );
+            int type(0);
+            if( !dbus_message_get_args( message, &error, DBUS_TYPE_INT32, &type, DBUS_TYPE_INVALID ) )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::DBus::signalFilter - " << error.message << std::endl;
+                #endif
+                dbus_error_free (&error);
+                return DBUS_HANDLER_RESULT_HANDLED;
+
+            }
+
+            // copied from kdelibs/kdeui/kernel/kglobalsettings
+            enum ChangeType
+            {
+                PaletteChanged = 0,
+                FontChanged,
+                StyleChanged,
+                SettingsChanged,
+                IconChanged,
+                CursorChanged,
+                ToolbarStyleChanged,
+                ClipboardConfigChanged,
+                BlockShortcuts,
+                NaturalSortingChanged
+            };
+
+            unsigned int flags(0);
+            switch( type )
+            {
+                case PaletteChanged:
+                flags |= QtSettings::Colors;
+                break;
+
+                case FontChanged:
+                flags |= QtSettings::Fonts;
+                break;
+
+                case IconChanged:
+                flags |= QtSettings::Icons;
+                break;
+
+                case SettingsChanged:
+                case ToolbarStyleChanged:
+                flags |= QtSettings::KdeGlobals;
+                break;
+
+                default: break;
+            }
+
+            // reset caches if colors have changed
+            if( flags&QtSettings::Colors )
+            {
+                Style::instance().helper().clearCaches();
+                ColorUtils::clearCaches();
+            }
+
+            resetStyle( flags );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -100,4 +161,10 @@ namespace Oxygen
     }
     #endif
 
+    //_________________________________________________________
+    void DBus::resetStyle( unsigned int flags )
+    {
+        Style::instance().settings().initialize( flags|QtSettings::Forced );
+        gtk_rc_reset_styles( gtk_settings_get_default() );
+    }
 }

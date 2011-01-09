@@ -48,6 +48,9 @@ namespace Oxygen
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );
         #endif
 
+        //! reset style, passing flags to QtSettings
+        static void resetStyle( unsigned int flags );
+
     };
 
 }
