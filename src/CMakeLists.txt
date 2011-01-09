@@ -33,6 +33,7 @@ set( OXYGEN-GTK-SOURCES
     oxygengtkutils.cpp
     oxygenoptionmap.cpp
     oxygenpalette.cpp
+    oxygenpathlist.cpp
     oxygenqtsettings.cpp
     oxygenrcstyle.cpp
     oxygenrgba.cpp

@@ -30,6 +30,7 @@
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
+#include "oxygenpathlist.h"
 
 #include <iostream>
 #include <sstream>
@@ -221,28 +222,6 @@ namespace Oxygen
 
         // get home directory
         std::string home( void ) const;
-
-        //! path list
-        class PathList: public std::vector<std::string>
-        {
-
-            public:
-
-            //! empty constructor
-            PathList( void )
-            {}
-
-            //! splitting constructor
-            PathList( const std::string& path, const std::string& separator = ":" )
-            { split( path, separator ); }
-
-            //! split string using provided separator and store
-            void split( const std::string&, const std::string& = ":" );
-
-            //! concatenate using provided separator
-            std::string join( const std::string& = ":" ) const;
-
-        };
 
         //! icon path
         PathList kdeConfigPathList( void ) const;
