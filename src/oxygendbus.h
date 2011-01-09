@@ -43,6 +43,24 @@ namespace Oxygen
 
         protected:
 
+        /*!
+        copied from kdelibs/kdeui/kernel/kglobalsettings
+        used to only update relevant parts on kglobalconfig changes
+        */
+        enum ChangeType
+        {
+            PaletteChanged = 0,
+            FontChanged,
+            StyleChanged,
+            SettingsChanged,
+            IconChanged,
+            CursorChanged,
+            ToolbarStyleChanged,
+            ClipboardConfigChanged,
+            BlockShortcuts,
+            NaturalSortingChanged
+        };
+
         #if HAVE_DBUS
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );

@@ -108,21 +108,6 @@ namespace Oxygen
 
             }
 
-            // copied from kdelibs/kdeui/kernel/kglobalsettings
-            enum ChangeType
-            {
-                PaletteChanged = 0,
-                FontChanged,
-                StyleChanged,
-                SettingsChanged,
-                IconChanged,
-                CursorChanged,
-                ToolbarStyleChanged,
-                ClipboardConfigChanged,
-                BlockShortcuts,
-                NaturalSortingChanged
-            };
-
             unsigned int flags(0);
             switch( type )
             {
