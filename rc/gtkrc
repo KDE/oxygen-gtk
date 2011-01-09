@@ -35,6 +35,8 @@ style "oxygen-default"
     GtkButton::default_border = { 0, 0, 0, 0 }
     GtkButton::default_outside_border = { 0, 0, 0, 0 }
 
+    GtkButton::inner-border = { 0, 0, 1, 0 }
+
     GtkCalendar::inner-border = 0
     GtkCalendar::horizontal-separation = 0
     GtkCheckButton::indicator-size = 18
@@ -170,17 +172,10 @@ class "GtkComboBoxEntry" style "oxygen-combobox-entry"
 widget_class "*<GtkComboBoxEntry>.<GtkButton>" style "oxygen-combobox-entry"
 widget_class "*<GtkCombo>.<GtkButton>" style "oxygen-combobox-entry"
 
-# style "oxygen-combo-entry" = "oxygen-default"
-# {
-#     xthickness = 2
-#     ythickness = 2
-# }
-# widget_class "*<GtkCombo>.<GtkEntry>" style "oxygen-combo-entry"
-
 # option menu
 style "oxygen-option-menu" = "oxygen-default"
 {
-    ythickness = 1
+    ythickness = 0
     xthickness = 4
 }
 
