@@ -53,8 +53,8 @@ set( OXYGEN-GTK-SOURCES
 add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
 
 # Add GTK's cflags
-set( CMAKE_CXX_FLAGS " -Wall ${CMAKE_CXX_FLAGS} -g" )
-set( CMAKE_C_FLAGS " -Wall ${CMAKE_C_FLAGS} -g" )
+set( CMAKE_CXX_FLAGS " -Wall ${CMAKE_CXX_FLAGS}" )
+set( CMAKE_C_FLAGS " -Wall ${CMAKE_C_FLAGS}" )
 
 target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${DBUS_LIBRARIES} ${X11_X11_LIB} )
 
