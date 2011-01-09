@@ -51,18 +51,33 @@ namespace Oxygen
     {}
 
     //__________________________________________________________________
-    void Style::initialize( void )
+    void Style::initialize( unsigned int flags )
     {
-        _settings.initialize();
 
-        // pass window drag mode to window manager
-        if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
-        else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
-        else windowManager().setMode( WindowManager::Full );
+        // reset caches if colors have changed
+        if( flags&QtSettings::Colors )
+        {
+            helper().clearCaches();
+            ColorUtils::clearCaches();
+        }
 
-        // pass drag distance and delay to window manager
-        windowManager().setDragDistance( settings().startDragDist() );
-        windowManager().setDragDelay( settings().startDragTime() );
+        // reinitialize settings
+        _settings.initialize( flags );
+
+        if( flags&QtSettings::Oxygen )
+        {
+            // pass window drag mode to window manager
+            if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
+            else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
+            else windowManager().setMode( WindowManager::Full );
+        }
+
+        if( flags&QtSettings::KdeGlobals )
+        {
+            // pass drag distance and delay to window manager
+            windowManager().setDragDistance( settings().startDragDist() );
+            windowManager().setDragDelay( settings().startDragTime() );
+        }
 
     }
 
