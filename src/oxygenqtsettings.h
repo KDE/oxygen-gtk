@@ -26,6 +26,7 @@
 */
 
 #include "oxygenapplicationname.h"
+#include "oxygengtkicons.h"
 #include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
@@ -379,6 +380,9 @@ namespace Oxygen
         bool _initialized;
         bool _kdeColorsInitialized;
         bool _gtkColorsInitialized;
+
+        //! gtk icons generator
+        GtkIcons _icons;
 
         //! rc options (passed to gtk at the end of init
         Gtk::RC _rc;

@@ -28,7 +28,6 @@
 #include "oxygencoloreffect.h"
 #include "oxygencolorutils.h"
 #include "oxygenfontinfo.h"
-#include "oxygengtkicons.h"
 #include "config.h"
 
 #include <gtk/gtk.h>
@@ -169,6 +168,11 @@ namespace Oxygen
 
         // clear rc and generate gtk colors
         _rc.clear();
+
+        // for some reason one also needs to rewrite the icon part
+        loadKdeIcons();
+
+        // generate gtk colors
         generateGtkColors();
 
         #if OXYGEN_DEBUG
@@ -299,12 +303,7 @@ namespace Oxygen
 
         // add option
         if( showIconsOnPushButton == "false" )
-        {
-            _rc.addToHeaderSection( "gtk-button-images = 0\n" );
-        }
-
-        // create icon translator, for stock icons
-        GtkIcons icons;
+        { _rc.addToHeaderSection( "gtk-button-images = 0\n" ); }
 
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
@@ -315,25 +314,25 @@ namespace Oxygen
         const int toolbarIconSize( _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 22 ) );
 
         // set gtk icon sizes
-        icons.setIconSize( "panel-menu", smallIconSize );
-        icons.setIconSize( "panel", panelIconSize );
-        icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
-        icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
-        icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
-        icons.setIconSize( "gtk-button", smallIconSize );
-        icons.setIconSize( "gtk-menu", smallIconSize );
-        icons.setIconSize( "gtk-dialog", dialogIconSize );
-        icons.setIconSize( "", smallIconSize );
+        _icons.setIconSize( "panel-menu", smallIconSize );
+        _icons.setIconSize( "panel", panelIconSize );
+        _icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
+        _icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-button", smallIconSize );
+        _icons.setIconSize( "gtk-menu", smallIconSize );
+        _icons.setIconSize( "gtk-dialog", dialogIconSize );
+        _icons.setIconSize( "", smallIconSize );
 
         // load translation table, generate full translation list, and path to gtk
-        icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
+        _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
         // generate full path list
         PathList iconThemeList;
         addIconTheme( iconThemeList, _kdeIconTheme );
         addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
-        _rc.merge( icons.generate( iconThemeList ) );
+        _rc.merge( _icons.generate( iconThemeList ) );
 
     }
 
