@@ -149,18 +149,13 @@ namespace Oxygen
 
         // loop over icons
         _rc.setCurrentSection( Gtk::RC::defaultSection() );
-        std::ostringstream notFoundOut;
         for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
         {
 
             std::string stock( generate( iconIter->first, iconIter->second, pathList ) );
-            if( stock.empty() ) notFoundOut << "#  stock[\"" << iconIter->first << "\"]=<No matching KDE icon>" << std::endl;
-            else _rc.addToCurrentSection( stock );
+            if( !stock.empty() ) _rc.addToCurrentSection( stock );
 
         }
-
-        // add list of not found icons to the bottom of the list
-        _rc.addToCurrentSection( notFoundOut.str() );
 
         // extra settings for entries
         std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
