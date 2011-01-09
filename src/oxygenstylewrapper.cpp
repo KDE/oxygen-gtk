@@ -1793,10 +1793,12 @@ namespace Oxygen
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
             role = Palette::Text;
+            y+=1;
 
         } else if( Gtk::gtk_parent_combo( widget ) ) {
 
             role = Palette::WindowText;
+            y-=1;
 
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
@@ -1813,9 +1815,7 @@ namespace Oxygen
             if( d.isArrow() && GTK_IS_ARROW( widget ) )
             {
 
-                //if( arrow == GTK_ARROW_DOWN || arrow == GTK_ARROW_UP )
-                { x += 1; }
-
+                x += 1;
                 role = Palette::WindowText;
             }
 
