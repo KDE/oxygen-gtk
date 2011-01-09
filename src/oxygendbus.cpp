@@ -22,7 +22,6 @@
 */
 
 #include "oxygendbus.h"
-#include "oxygencolorutils.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -87,7 +86,8 @@ namespace Oxygen
         if( dbus_message_is_signal( message, "org.kde.Oxygen.Style", "reparseConfiguration" ) )
         {
 
-            resetStyle( QtSettings::Oxygen );
+            Style::instance().initialize( QtSettings::Oxygen|QtSettings::Forced );
+            gtk_rc_reset_styles( gtk_settings_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
@@ -138,22 +138,16 @@ namespace Oxygen
                 flags |= QtSettings::Icons;
                 break;
 
+                default:
                 case SettingsChanged:
                 case ToolbarStyleChanged:
                 flags |= QtSettings::KdeGlobals;
                 break;
 
-                default: break;
             }
 
-            // reset caches if colors have changed
-            if( flags&QtSettings::Colors )
-            {
-                Style::instance().helper().clearCaches();
-                ColorUtils::clearCaches();
-            }
-
-            resetStyle( flags );
+            Style::instance().initialize( flags|QtSettings::Forced );
+            gtk_rc_reset_styles( gtk_settings_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -161,10 +155,4 @@ namespace Oxygen
     }
     #endif
 
-    //_________________________________________________________
-    void DBus::resetStyle( unsigned int flags )
-    {
-        Style::instance().settings().initialize( flags|QtSettings::Forced );
-        gtk_rc_reset_styles( gtk_settings_get_default() );
-    }
 }
