@@ -139,6 +139,11 @@ namespace Oxygen
         if( _KDESession )
         #endif
         {
+
+            // reload fonts
+            if( flags & Fonts )
+            { loadKdeFonts(); }
+
             // reload icons
             #if OXYGEN_ICON_HACK
             if( flags & Icons )
@@ -147,10 +152,6 @@ namespace Oxygen
                 loadKdeIcons();
             }
             #endif
-
-            // reload fonts
-            if( flags & Fonts )
-            { loadKdeFonts(); }
 
         }
 
@@ -179,8 +180,17 @@ namespace Oxygen
         // generate gtk colors
         generateGtkColors();
 
-        // for some reason one also needs to rewrite the icon part
-        loadKdeIcons();
+        #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
+        // TODO: Add support for gtk schemes when not _KDESession
+        if( _KDESession )
+        #endif
+        {
+            // reload icons
+            #if OXYGEN_ICON_HACK
+            loadKdeIcons();
+            #endif
+
+        }
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
