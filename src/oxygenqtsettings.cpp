@@ -189,6 +189,9 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
         #endif
 
+        // clear rc and generate gtk colors
+        _rc.clear();
+
         #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
         // TODO: Add support for gtk schemes when not _KDESession
         if( _KDESession )
@@ -205,8 +208,12 @@ namespace Oxygen
         generateGtkColors();
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
+        std::cerr << "Oxygen::QtSettings::initializeColors - Gtkrc: " << std::endl;
+        std::cerr << _rc << std::endl;
         #endif
+
+        // commit GtkRC
+        _rc.commit();
 
         return;
 
