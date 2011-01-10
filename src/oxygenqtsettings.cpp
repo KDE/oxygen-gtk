@@ -164,7 +164,7 @@ namespace Oxygen
         std::cerr << rc << std::endl;
         #endif
 
-        // commit GtkRC
+        // pass all resources to gtk and clear
         _rc.commit();
 
         #if OXYGEN_DEBUG
@@ -212,7 +212,7 @@ namespace Oxygen
         std::cerr << _rc << std::endl;
         #endif
 
-        // commit GtkRC
+        // pass all resources to gtk and clear
         _rc.commit();
 
         return;
