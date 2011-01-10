@@ -299,13 +299,11 @@ namespace Oxygen
 
     void ScrolledWindowData::vertScrollEvent(GtkAdjustment* adj,gpointer data)
     {
-        printf("vscroll\n");
         gtk_widget_queue_draw(GTK_WIDGET(data));
     }
 
     void ScrolledWindowData::horScrollEvent(GtkAdjustment* adj,gpointer data)
     {
-        printf("hscroll\n");
         gtk_widget_queue_draw(GTK_WIDGET(data));
     }
 
