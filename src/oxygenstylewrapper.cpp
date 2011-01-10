@@ -309,6 +309,7 @@ namespace Oxygen
                             options |= Hover;
                         if( Style::instance().animations().scrolledWindowEngine().focused(scrolledWindow))
                             options |= Focus;
+                        Style::instance().renderHoleBackground(window,&cellClip,x,y,w,h,TileSet::Ring);
                         Style::instance().renderHole(window,&cellClip,x,y,w,h,options,TileSet::Ring);
                     }
                 }
