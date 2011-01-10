@@ -62,6 +62,12 @@ namespace Oxygen
         {
 
             registerChild( child );
+            GtkAdjustment* vadj=gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(widget));
+            if(vadj)
+            { _vscroll.connect( G_OBJECT(vadj), "value-changed", G_CALLBACK( vertScrollEvent ), _target ); }
+            GtkAdjustment* hadj=gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(widget));
+            if(hadj)
+            { _hscroll.connect( G_OBJECT(hadj), "value-changed", G_CALLBACK( horScrollEvent ), _target ); }
 
         } else {
 
@@ -290,5 +296,18 @@ namespace Oxygen
         static_cast<ScrolledWindowData*>( data )->setFocused( widget, false );
         return FALSE;
     }
+
+    void ScrolledWindowData::vertScrollEvent(GtkAdjustment* adj,gpointer data)
+    {
+        printf("vscroll\n");
+        gtk_widget_queue_draw(GTK_WIDGET(data));
+    }
+
+    void ScrolledWindowData::horScrollEvent(GtkAdjustment* adj,gpointer data)
+    {
+        printf("hscroll\n");
+        gtk_widget_queue_draw(GTK_WIDGET(data));
+    }
+
 
 }
