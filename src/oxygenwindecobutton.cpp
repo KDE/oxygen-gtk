@@ -55,6 +55,8 @@ namespace Oxygen
                 ColorUtils::Rgba( settings().palette().color( Palette::Hover ) );
             shadow=darkColor(shadow);
             icon=shadow;
+        } else {
+            shadow=ColorUtils::Rgba(0,0,0);
         }
 
         GdkPixbuf *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
