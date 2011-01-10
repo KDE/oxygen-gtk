@@ -182,10 +182,6 @@ namespace Oxygen
         // pass all resources to gtk and clear
         _rc.commit();
 
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initializeColors - done. " << std::endl;
-        #endif
-
         return;
 
     }

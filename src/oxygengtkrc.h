@@ -113,8 +113,8 @@ namespace Oxygen
                 return out.str();
             }
 
-            //! commit to gtk
-            void commit( bool clear = true );
+            //! commit to gtk and clear
+            void commit( void );
 
             protected:
 
