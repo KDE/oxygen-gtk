@@ -16,7 +16,6 @@ set( CPACK_PACKAGE_VERSION_MINOR "0" )
 set( CPACK_PACKAGE_VERSION_PATCH "0" )
 set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-1.0.0" )
 include( CPack )
-
 ########################
 # Package specific flags
 ########################
@@ -87,18 +86,24 @@ set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 #########
 # summary
 #########
-message( STATUS "" )
-message( STATUS "Flags: " )
-message( STATUS "HAVE_DBUS ${HAVE_DBUS}" )
-message( STATUS "OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
-message( STATUS "OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
-message( STATUS "OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
-message( STATUS "ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
-message( STATUS "" )
-message( STATUS "Path: " )
-message( STATUS "Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
-message( STATUS "Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
-message( STATUS "" )
+message( "" )
+message( "Flags: " )
+message( "  HAVE_DBUS ${HAVE_DBUS}" )
+message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
+message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
+message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
+message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
+message( "" )
+message( "Path: " )
+message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
+message( "  Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
+message( "" )
+
+if( NOT DBUS_FOUND )
+    message( "Warning: " )
+    message( "dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system. dbus is a simple inter process communication system. It is used for Gtk applications to be updated 'on fly' when KDE configuration is changed." )
+    message( "" )
+endif( NOT DBUS_FOUND )
 
 ######################################################################
 # Setup definitions and directories to be used for linking and include
