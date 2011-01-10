@@ -203,11 +203,11 @@ style "oxygen-gimp-scale"
 
 class "*" style "oxygen-gimp-scale"
 
-# 2pixels thickness.
+# 1pixels thickness - other shadow parts will be drawn in the children
 style "oxygen-w2" = "oxygen-default"
 {
-    xthickness = 2
-    ythickness = 2
+    xthickness = 1
+    ythickness = 1
 }
 
 class "GtkScrolledWindow" style "oxygen-w2"
