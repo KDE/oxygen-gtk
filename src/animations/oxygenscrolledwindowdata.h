@@ -83,8 +83,6 @@ namespace Oxygen
         static gboolean focusInNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
         static gboolean focusOutNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
         static void childAddedEvent( GtkContainer* parent, GtkWidget*, gpointer );
-        static void vertScrollEvent(GtkAdjustment* adj,gpointer data);
-        static void horScrollEvent(GtkAdjustment* adj,gpointer data);
         //@}
 
         private:
@@ -146,9 +144,6 @@ namespace Oxygen
         //! map registered children and corresponding data
         typedef std::map<GtkWidget*, ChildData> ChildDataMap;
         ChildDataMap _childrenData;
-
-        Signal _vscroll;
-        Signal _hscroll;
 
     };
 

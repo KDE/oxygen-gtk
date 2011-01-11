@@ -203,24 +203,16 @@ style "oxygen-gimp-scale"
 
 class "*" style "oxygen-gimp-scale"
 
-# 1pixels thickness - other shadow parts will be drawn in the children
-style "oxygen-w1" = "oxygen-default"
-{
-    xthickness = 1
-    ythickness = 1
-}
-
-# 2pixels thickness - other shadow parts will be drawn in the children
+# 2pixels thickness.
 style "oxygen-w2" = "oxygen-default"
 {
     xthickness = 2
     ythickness = 2
 }
 
-class "GtkScrolledWindow" style "oxygen-w1"
+class "GtkScrolledWindow" style "oxygen-w2"
 class "GtkViewport" style "oxygen-w2"
 class "GtkFrame" style "oxygen-w2"
-widget "gtk-combobox-popup-window.GtkScrolledWindow" style "oxygen-w2"
 
 # tree headers
 style "oxygen-header" = "oxygen-default"

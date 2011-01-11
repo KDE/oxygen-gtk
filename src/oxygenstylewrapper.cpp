@@ -216,8 +216,6 @@ namespace Oxygen
                 // and detect hover
                 bool forceCellStart( false );
                 bool forceCellEnd( false );
-                // save original values of x & w to draw glow correctly
-                gint originalX=x, originalW=w;
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
 
@@ -279,39 +277,6 @@ namespace Oxygen
 
                     Style::instance().renderSelection( window, clipRect, x, y, w, h, tiles, options );
 
-                }
-
-                {
-                    // now draw shadow/glow
-                    GtkWidget* scrolledWindow = gtk_widget_get_parent(widget);
-                    x=originalX;
-                    w=originalW;
-                    if(scrolledWindow && GTK_IS_SCROLLED_WINDOW(scrolledWindow) && GTK_IS_TREE_VIEW(widget))
-                    {
-                        GdkRectangle cellClip={x,y,w,h};
-                        gtk_tree_view_convert_bin_window_to_widget_coords(GTK_TREE_VIEW(widget),0,0,&x,&y);
-                        x=-x-2;
-                        y=-y-2;
-                        w=widget->allocation.width+4;
-                        h=widget->allocation.height+4;
-                        TileSet::Tiles tiles(TileSet::Ring);
-                        if(gtk_tree_view_get_headers_visible(GTK_TREE_VIEW(widget)))
-                        {
-                            tiles &= ~TileSet::Top;
-                            h+=3;
-                            y-=3;
-                        }
-                        Style::instance().animations().scrolledWindowEngine().registerWidget(scrolledWindow);
-
-                        options &= ~(Hover|Focus);
-                        options |= NoFill;
-                        if( Style::instance().animations().scrolledWindowEngine().hovered(scrolledWindow))
-                            options |= Hover;
-                        if( Style::instance().animations().scrolledWindowEngine().focused(scrolledWindow))
-                            options |= Focus;
-                        Style::instance().renderHoleBackground(window,&cellClip,x,y,w,h,TileSet::Ring);
-                        Style::instance().renderHole(window,&cellClip,x,y,w,h,options,TileSet::Ring);
-                    }
                 }
 
             }
@@ -595,41 +560,14 @@ namespace Oxygen
             } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
 
                 // register to scrolled window engine if any
-                GtkWidget* scrolledWindow;
                 if(
-                    GTK_IS_SCROLLED_WINDOW( scrolledWindow = gtk_widget_get_parent( parent ) ) &&
-                    Style::instance().animations().scrolledWindowEngine().contains( scrolledWindow )
+                    GTK_IS_SCROLLED_WINDOW( parent = gtk_widget_get_parent( parent ) ) &&
+                    Style::instance().animations().scrolledWindowEngine().contains( parent )
                     )
-                { Style::instance().animations().scrolledWindowEngine().registerChild( scrolledWindow, widget ); }
-                else
-                {
-                    Style::instance().animations().scrolledWindowEngine().registerWidget(scrolledWindow);
-                    Style::instance().animations().scrolledWindowEngine().registerChild( scrolledWindow, widget );
-                }
-
+                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
 
                 // treevew header
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
-
-                {
-                    // header part of glow/shadow
-                    // FIXME: are headers always on top of the list?
-                    gint lx, ly;
-                    gtk_tree_view_convert_bin_window_to_widget_coords(GTK_TREE_VIEW(parent),0,0,&lx,&ly);
-                    x=-lx-2;
-                    y-=2;
-                    w=parent->allocation.width+4;
-                    h+=5;
-
-                    StyleOptions options(NoFill);
-                    options &= ~(Hover|Focus);
-                    options |= NoFill;
-                    if( Style::instance().animations().scrolledWindowEngine().hovered(scrolledWindow))
-                        options |= Hover;
-                    if( Style::instance().animations().scrolledWindowEngine().focused(scrolledWindow))
-                        options |= Focus;
-                    Style::instance().renderHole(window,clipRect,x,y,w,h,options,TileSet::Top|TileSet::Right|TileSet::Left);
-                }
 
             } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
