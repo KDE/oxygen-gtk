@@ -1206,8 +1206,19 @@ namespace Oxygen
 
         }
 
-        // do nothing if not enough room
-        if( w < 14 ) return;
+        // forces minimum size to 14x14
+        if( w < 14 || h < 14 )
+        {
+            GdkRectangle parent( Gtk::gdk_rectangle( x, y, w, h ) );
+            GdkRectangle child( Gtk::gdk_rectangle( x, y, std::max( w, 14), std::max( h, 14 ) ) );
+            centerRect( &parent, &child );
+            x = child.x;
+            y = child.y;
+            w = child.width;
+            h = child.height;
+            clipRect = 0L;
+        }
+
 
         // define colors
         ColorUtils::Rgba base;
