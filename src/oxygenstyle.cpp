@@ -759,8 +759,15 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
         const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Selected ) );
 
+        /* need to adjust clipRect */
+        if( clipRect )
+        {
+            clipRect->y -= 2;
+            clipRect->height += 4;
+        }
+
         // context
-        Cairo::Context context( window );
+        Cairo::Context context( window, clipRect );
 
         // validate rect
         if(w<0 || h<0) return;
