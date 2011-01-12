@@ -156,7 +156,7 @@ namespace Oxygen
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
-        std::cerr << rc << std::endl;
+        std::cerr << _rc << std::endl;
         #endif
 
         // pass all resources to gtk and clear
