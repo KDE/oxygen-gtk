@@ -193,6 +193,28 @@ style "oxygen-vseparator" = "oxygen-default"
 
 class "GtkVSeparator" style "oxygen-vseparator"
 
+# 2pixels thickness.
+style "oxygen-w2" = "oxygen-default"
+{
+    xthickness = 2
+    ythickness = 2
+}
+
+class "GtkScrolledWindow" style "oxygen-w2"
+class "GtkViewport" style "oxygen-w2"
+class "GtkFrame" style "oxygen-w2"
+class "GtkProgressBar" style "oxygen-w2"
+
+# tree headers
+style "oxygen-header" = "oxygen-default"
+{
+    xthickness = 2
+    ythickness = 0
+}
+widget_class "*<GtkTreeView>.<GtkButton>" style "oxygen-header"
+widget_class "*<GtkList>.<GtkButton>" style "oxygen-header"
+widget_class "*GimpThumbBox*.<GtkEventBox>.<GtkVBox>.<GtkButton>" style "oxygen-header"
+
 #############
 # Workarounds
 
@@ -205,25 +227,3 @@ style "oxygen-gimp-scale"
 }
 
 class "*" style "oxygen-gimp-scale"
-
-# 2pixels thickness.
-style "oxygen-w2" = "oxygen-default"
-{
-    xthickness = 2
-    ythickness = 2
-}
-
-class "GtkScrolledWindow" style "oxygen-w2"
-class "GtkViewport" style "oxygen-w2"
-class "GtkFrame" style "oxygen-w2"
-
-# tree headers
-style "oxygen-header" = "oxygen-default"
-{
-    xthickness = 2
-    ythickness = 0
-}
-widget_class "*<GtkTreeView>.<GtkButton>" style "oxygen-header"
-widget_class "*<GtkList>.<GtkButton>" style "oxygen-header"
-widget_class "*GimpThumbBox*.<GtkEventBox>.<GtkVBox>.<GtkButton>" style "oxygen-header"
-
