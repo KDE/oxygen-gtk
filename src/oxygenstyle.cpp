@@ -118,7 +118,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderWindowBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    bool Style::renderWindowBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, bool hole, TileSet::Tiles tiles ) const
     {
 
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
@@ -184,6 +184,27 @@ namespace Oxygen
             }
             // no sense in context saving since it will be destroyed
             cairo_translate( context, -wx, -wy );
+            if(hole)
+            {
+                // create a rounded-rect antimask for renderHoleBackground
+                GdkRectangle mask = {x+2, y+1, w-4, h-2 };
+                const double maskRadius = 3.5;
+                Corners corners( CornersNone );
+                if( tiles & TileSet::Top )
+                {
+                    if( tiles & TileSet::Left ) corners |= CornersTopLeft;
+                    if( tiles & TileSet::Right ) corners |= CornersTopRight;
+                }
+
+                if( tiles & TileSet::Bottom )
+                {
+                    if( tiles & TileSet::Left ) corners |= CornersBottomLeft;
+                    if( tiles & TileSet::Right ) corners |= CornersBottomRight;
+                }
+                gdk_cairo_rounded_rectangle_negative(context,&mask,maskRadius,CornersAll);
+                cairo_rectangle(context,x,y,w,h);
+                cairo_clip(context);
+            }
         }
         else
         {
@@ -555,123 +576,7 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return false;
 
-        /*
-        this code is the same as in renderWindowBackground
-        except that a mask is added to each portion of the background
-        TODO: make as much code in common as possible between
-        the two, to avoid code duplication.
-        */
-
-        // define colors
-        ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
-
-        // get window size and height
-        gint ww, wh;
-        gint wx, wy;
-        if( !Gtk::gdk_map_to_toplevel( window, &wx, &wy, &ww, &wh, true ) )
-        { return false; }
-
-        // do nothing if window dimensions could not be found
-        if( ww < 0 || wh < 0 ) return false;
-
-        // the hard-coded metrics are copied for
-        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
-        // vertical shift to account for window decoration
-        const int yShift = 23;
-        wy += yShift;
-
-        // translate to toplevel coordinates
-        x+=wx;
-        y+=wy;
-
-        // create context and translate to toplevel coordinates
-        Cairo::Context context( window, clipRect );
-        cairo_translate( context, -wx, -wy );
-
-        GdkRectangle rect = { x, y, w, h+1 };
-        GdkRectangle mask = {x+2, y+1, w-4, h-2 };
-        const double maskRadius = 3.5;
-        Corners corners( CornersNone );
-        if( tiles & TileSet::Top )
-        {
-            if( tiles & TileSet::Left ) corners |= CornersTopLeft;
-            if( tiles & TileSet::Right ) corners |= CornersTopRight;
-        }
-
-        if( tiles & TileSet::Bottom )
-        {
-            if( tiles & TileSet::Left ) corners |= CornersBottomLeft;
-            if( tiles & TileSet::Right ) corners |= CornersBottomRight;
-        }
-
-        // the hard-coded metrics are copied for
-        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
-        const int splitY( std::min(300, 3*wh/4 ) );
-
-        // upper rect
-        GdkRectangle upperRect = { 0, 0, ww, splitY };
-        if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
-        {
-
-            cairo_save( context );
-            gdk_cairo_rectangle( context, &upperRect );
-            cairo_clip( context );
-
-            Cairo::Pattern pattern( verticalGradient( base, -yShift, splitY-yShift ) );
-            cairo_set_source( context, pattern );
-
-            gdk_cairo_rectangle( context, &upperRect );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
-            cairo_fill( context );
-
-            cairo_restore( context );
-        }
-
-
-        // lower rect
-        GdkRectangle lowerRect = { 0, splitY, ww, wh - splitY + yShift };
-        if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
-        {
-
-            cairo_save( context );
-            gdk_cairo_rectangle( context, &lowerRect );
-            cairo_clip( context );
-
-            ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
-            cairo_set_source( context, bottom );
-            gdk_cairo_rectangle( context, &lowerRect );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
-            cairo_fill( context );
-
-            cairo_restore( context );
-        }
-
-        // radial pattern
-        const int patternHeight = 64;
-        const int radialW( std::min(600, ww ) );
-
-        GdkRectangle radialRect = {  (ww - radialW)/2, 0, radialW, patternHeight };
-        if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
-        {
-
-            // get pattern
-            Cairo::Pattern pattern( radialGradient( base, 64, patternHeight - 64, 64 ) );
-
-            // add matrix transformation
-            cairo_matrix_t transformation;
-            cairo_matrix_init_identity( &transformation );
-            cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
-            cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
-            cairo_pattern_set_matrix( pattern, &transformation );
-
-            gdk_cairo_rectangle( context, &radialRect );
-            gdk_cairo_rounded_rectangle_negative( context, &mask, maskRadius, corners );
-            cairo_set_source( context, pattern );
-            cairo_fill( context );
-        }
-
-        return true;
-
+        return renderWindowBackground(window,clipRect,x,y,w,h,true,tiles);
     }
 
     //__________________________________________________________________
