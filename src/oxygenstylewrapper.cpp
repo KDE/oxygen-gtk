@@ -615,7 +615,7 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
                 tiles &= ~TileSet::Left;
-                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h-1, tiles );
+                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
 
                 return;
@@ -943,7 +943,7 @@ namespace Oxygen
 
             TileSet::Tiles tiles( TileSet::Ring);
             tiles &= ~TileSet::Left;
-            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+1, tiles );
+            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
 
         } else if( d.isSpinButtonArrow() ) {
@@ -1179,7 +1179,7 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h-1, tiles );
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
@@ -1219,7 +1219,7 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1, tiles );
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, tiles );
 
             } else {
@@ -1257,7 +1257,7 @@ namespace Oxygen
                     {
 
                         options &= ~NoFill;
-                        Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                        Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
                         Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
 
                     } else {
@@ -1268,7 +1268,7 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                    Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
                     Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
 
                 }
@@ -1358,7 +1358,7 @@ namespace Oxygen
             // default shadow_in frame
             // hole background is needed for some special cases
             if( GTK_IS_CALENDAR( widget ) )
-            { Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 ); }
+            { Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 ); }
 
             // hole
             Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
@@ -1972,7 +1972,7 @@ namespace Oxygen
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+1 );
+                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {

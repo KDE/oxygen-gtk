@@ -186,8 +186,7 @@ namespace Oxygen
             if(hole)
             {
                 // create a rounded-rect antimask for renderHoleBackground
-                GdkRectangle mask = {x+2, y+1, w-4, h-2 };
-                h++;
+                GdkRectangle mask = {x+2, y+1, w-4, h-3 };
                 const double maskRadius = 3.5;
                 Corners corners( CornersNone );
                 if( tiles & TileSet::Top )
