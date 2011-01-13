@@ -21,14 +21,15 @@ include( CPack )
 # Package specific flags
 ########################
 
-# Debugging information
+# Set to 1 to enable debugging information
 set( OXYGEN_DEBUG 0 )
 
-# Replace gtk stock icons with oxygen-icons
-# if set to 1
+# Set to 1 to replace gtk stock icons
+# with oxygen-icons
 set( OXYGEN_ICON_HACK 1 )
 
-# Resize combobox list to compensate for combobox button glow width (may result in flicker on combo popup)
+# Set to 1 to resize combobox list to compensate for combobox button glow width
+# (may result in flicker on combo popup)
 set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 
 ##############
