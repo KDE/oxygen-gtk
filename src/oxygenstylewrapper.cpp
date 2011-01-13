@@ -1410,8 +1410,6 @@ namespace Oxygen
 
             if( d.isCellCheck() )
             {
-                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                Gtk::CellInfo cellInfo( treeView, x, y, w, h );
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
@@ -1497,8 +1495,6 @@ namespace Oxygen
 
             if( d.isCellRadio() )
             {
-                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                Gtk::CellInfo cellInfo( treeView, x, y, w, h );
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
