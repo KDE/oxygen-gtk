@@ -13,24 +13,25 @@ set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Oxygen Gtk theme" )
 set( CPACK_PACKAGE_VENDOR "hugo@oxygen-icons.org" )
 set( CPACK_PACKAGE_VERSION_MAJOR "1" )
 set( CPACK_PACKAGE_VERSION_MINOR "0" )
-set( CPACK_PACKAGE_VERSION_PATCH "0" )
-set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-1.0.0" )
+set( CPACK_PACKAGE_VERSION_PATCH "1" )
+set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )
 ########################
 # Package specific flags
 ########################
 
-# Debugging information
+# Set to 1 to enable debugging information
 set( OXYGEN_DEBUG 0 )
 
-# Replace gtk stock icons with oxygen-icons
-# if set to 1
+# Set to 1 to replace gtk stock icons
+# with oxygen-icons
 set( OXYGEN_ICON_HACK 1 )
 
-# Force KDE icons and fonts when running in non-KDE
+# Set to 1 to force KDE icons and fonts when running in non-KDE
 set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
 
-# Resize combobox list to compensate for combobox button glow width (may result in flicker on combo popup)
+# Set to 1 to resize combobox list to compensate for combobox button glow width
+# (may result in flicker on combo popup)
 set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 
 ##############
