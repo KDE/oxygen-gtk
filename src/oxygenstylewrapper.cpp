@@ -303,6 +303,10 @@ namespace Oxygen
             w += 2*xOffset;
             h += 2*yOffset;
 
+            // shrink entry by 3px at each side
+            x+=3;
+            w-=6;
+
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
 
@@ -331,6 +335,8 @@ namespace Oxygen
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // increase width since right part isn't drawn
+                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -356,6 +362,8 @@ namespace Oxygen
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // increase width since right part isn't drawn
+                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
 
             } else {
@@ -377,7 +385,7 @@ namespace Oxygen
                     gdk_window_get_size( window, &localWindowWidth, 0L );
 
                     // remove left border if needed
-                    if( localWindowX > 2 )
+                    if( localWindowX > 5 )
                     {
                         tiles &= ~TileSet::Left;
                         x -= 7;
@@ -385,7 +393,7 @@ namespace Oxygen
                     }
 
                     // remove right border if needed
-                    if( localWindowX + localWindowWidth < widgetWindowWidth - 2 )
+                    if( localWindowX + localWindowWidth < widgetWindowWidth - 5 )
                     {
                         tiles &= ~TileSet::Right;
                         w += 7;
@@ -615,8 +623,13 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
                 tiles &= ~TileSet::Left;
+                // shrink combo entry hole by 3px on right side
+                w-=3;
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
+
 
                 return;
 
@@ -943,8 +956,13 @@ namespace Oxygen
 
             TileSet::Tiles tiles( TileSet::Ring);
             tiles &= ~TileSet::Left;
+            // shrink spinbox entry hole by 3px on right side
+            w-=3;
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+            // fill padding
+            Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
+
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -1057,8 +1075,9 @@ namespace Oxygen
                 Style::instance().animations().widgetSizeEngine().registerWidget( parent );
                 if( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                 {
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
+                    // 6 and 3 here are to account for combo button's glow, shrinking list horizontally
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width - 6, allocation.height ) );
+                    gdk_window_shape_combine_mask( parent->window, mask, 3, 0 );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -1094,28 +1113,8 @@ namespace Oxygen
 
             // now draw float frame on background window
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
-            Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
-
-            #if ENABLE_COMBOBOX_LIST_RESIZE
-            // resize the list to match combobox width (taking into account its lesser width because of button glow)
-            if( GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox() )
-            {
-
-                int w, h;
-                GtkWindow* window( GTK_WINDOW( parent ) );
-                gtk_window_get_size( window, &w, &h );
-                if( combobox->allocation.width-6 != w )
-                {
-                    gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
-
-                    gint targetX, dummy, y;
-                    gtk_window_get_position( window, &dummy, &y );
-                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
-                    gtk_window_move( window, targetX+combobox->allocation.x+3, y );
-                }
-
-            }
-            #endif
+            // shrink float frame too
+            Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x+3, allocation.y, allocation.width-6, allocation.height, options );
 
             return;
 
@@ -1179,8 +1178,14 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // shrink entry by 3px at left
+                x+=3;
+                w-=3;
+
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x-3-1,y,3,h);
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -1219,8 +1224,20 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2, tiles );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, tiles );
+                // basic adjustments
+                x--;
+                y--;
+                w+=2;
+                h+=2;
+                // shrink entry by 3px on left side
+                x+=3;
+                w-=3;
+
+                Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
 
             } else {
 
@@ -1268,8 +1285,24 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
-                    Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+                    // basic adjustments
+                    x--;
+                    y--;
+                    w+=2;
+                    h+=2;
+                    if( d.isEntry() )
+                    {
+                        // shrink entry by 3px at each side
+                        x+=3;
+                        w-=6;
+                    }
+
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h );
+                    Style::instance().renderHole( window, clipRect, x, y, w, h, options );
+
+                    // fill padding
+                    Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
+                    Style::instance().renderWindowBackground( window, clipRect, x+w,y,3,h);
 
                 }
 
