@@ -72,11 +72,22 @@ exec_program(
 	OUTPUT_VARIABLE GTK_VERSION )
 
 set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
-message( STATUS "Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
-
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
-message( STATUS "Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
+
+#########
+# summary
+#########
+message( "" )
+message( "Flags: " )
+message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
+message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
+message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
+message( "" )
+message( "Path: " )
+message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
+message( "  Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
+message( "" )
 
 ######################################################################
 # Setup definitions and directories to be used for linking and include
