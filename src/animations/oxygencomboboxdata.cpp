@@ -41,6 +41,8 @@ namespace Oxygen
         _stateChangeId.connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
         initializeCellView( widget );
 
+        gtk_combo_box_set_wrap_width( GTK_COMBO_BOX( widget ), 0 );
+
     }
 
     //________________________________________________________________________________
