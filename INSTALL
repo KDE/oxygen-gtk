@@ -33,3 +33,5 @@ set this to 0 to disable oxygen-gtk from forcing KDE icons for GTK apps (regardl
 set this to 0 to disable forcing KDE icons and fonts (and use the ones set in GTK) - makes sense only when
 KDE is not running. Doesn't change anything when KDE is running.
 
+    * ENABLE_COMBOBOX_LIST_RESIZE:
+set this to 0 to disable combobox list resizing (see README for more detail)
