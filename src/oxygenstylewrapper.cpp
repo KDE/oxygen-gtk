@@ -1107,27 +1107,6 @@ namespace Oxygen
             // shrink float frame too
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x+3, allocation.y, allocation.width-6, allocation.height, options );
 
-            #if 0 && ENABLE_COMBOBOX_LIST_RESIZE
-            // resize the list to match combobox width (taking into account its lesser width because of button glow)
-            if( GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox() )
-            {
-
-                int w, h;
-                GtkWindow* window( GTK_WINDOW( parent ) );
-                gtk_window_get_size( window, &w, &h );
-                if( combobox->allocation.width-6 != w )
-                {
-                    gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
-
-                    gint targetX, dummy, y;
-                    gtk_window_get_position( window, &dummy, &y );
-                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
-                    gtk_window_move( window, targetX+combobox->allocation.x+3, y );
-                }
-
-            }
-            #endif
-
             return;
 
         } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {
