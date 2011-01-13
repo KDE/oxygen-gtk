@@ -136,6 +136,10 @@ namespace Oxygen
         // if we aren't going to draw window decorations...
         if(!context)
         {
+            // get window dimension and position
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            { return false; }
+
             // draw flat background for OpenOffice
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
@@ -145,11 +149,6 @@ namespace Oxygen
                 cairo_fill(context);
                 return true;
             }
-
-
-            // get window dimension and position
-            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
-            { return false; }
 
             wy += yShift;
 
