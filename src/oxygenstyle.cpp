@@ -78,6 +78,19 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    void Style::outline( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
+    {
+
+        // define colors
+        Cairo::Context context( window, clipRect );
+        cairo_rectangle( context, 0.5+x, 0.5+y, w-1, h-1 );
+        cairo_set_line_width( context, 1 );
+        cairo_set_source( context, color );
+        cairo_stroke( context );
+
+    }
+
+    //__________________________________________________________________
     void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options )
     {
 

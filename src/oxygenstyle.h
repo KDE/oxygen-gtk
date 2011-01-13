@@ -89,6 +89,9 @@ namespace Oxygen
         //! fill given rectangle with flat color
         void fill( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
+        //! outline given rectangle with flat color
+        void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
+
         //! separators
         void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
 
