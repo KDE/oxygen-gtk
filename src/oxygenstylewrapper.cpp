@@ -299,6 +299,10 @@ namespace Oxygen
             w += 2*xOffset;
             h += 2*yOffset;
 
+            // shrink entry by 3px at each side
+            x+=3;
+            w-=6;
+
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
 
@@ -327,6 +331,8 @@ namespace Oxygen
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // increase width since right part isn't drawn
+                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -352,6 +358,8 @@ namespace Oxygen
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // increase width since right part isn't drawn
+                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
 
             } else {
@@ -388,10 +396,6 @@ namespace Oxygen
                     }
 
                 }
-
-                // shrink entry by 3px at each side
-                x+=3;
-                w-=6;
 
                 // render hole
                 Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
@@ -1174,8 +1178,14 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+                // shrink entry by 3px at left
+                x+=3;
+                w-=3;
+
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x-3-1,y,3,h);
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -1214,8 +1224,20 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2, tiles );
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+5, h+2, options, tiles );
+                // basic adjustments
+                x--;
+                y--;
+                w+=2;
+                h+=2;
+                // shrink entry by 3px on left side
+                x+=3;
+                w-=3;
+
+                Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
 
             } else {
 
@@ -1268,9 +1290,12 @@ namespace Oxygen
                     y--;
                     w+=2;
                     h+=2;
-                    // shrink entry by 3px at each side
-                    x+=3;
-                    w-=6;
+                    if( d.isEntry() )
+                    {
+                        // shrink entry by 3px at each side
+                        x+=3;
+                        w-=6;
+                    }
 
                     Style::instance().renderHoleBackground( window, clipRect, x, y, w, h );
                     Style::instance().renderHole( window, clipRect, x, y, w, h, options );
