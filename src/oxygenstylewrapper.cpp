@@ -373,7 +373,7 @@ namespace Oxygen
                     gdk_window_get_size( window, &localWindowWidth, 0L );
 
                     // remove left border if needed
-                    if( localWindowX > 2 )
+                    if( localWindowX > 5 )
                     {
                         tiles &= ~TileSet::Left;
                         x -= 7;
@@ -381,13 +381,17 @@ namespace Oxygen
                     }
 
                     // remove right border if needed
-                    if( localWindowX + localWindowWidth < widgetWindowWidth - 2 )
+                    if( localWindowX + localWindowWidth < widgetWindowWidth - 5 )
                     {
                         tiles &= ~TileSet::Right;
                         w += 7;
                     }
 
                 }
+
+                // shrink entry by 3px at each side
+                x+=3;
+                w-=6;
 
                 // render hole
                 Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
@@ -1259,8 +1263,21 @@ namespace Oxygen
 
                 } else {
 
-                    Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
-                    Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
+                    // basic adjustments
+                    x--;
+                    y--;
+                    w+=2;
+                    h+=2;
+                    // shrink entry by 3px at each side
+                    x+=3;
+                    w-=6;
+
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h );
+                    Style::instance().renderHole( window, clipRect, x, y, w, h, options );
+
+                    // fill padding
+                    Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
+                    Style::instance().renderWindowBackground( window, clipRect, x+w,y,3,h);
 
                 }
 

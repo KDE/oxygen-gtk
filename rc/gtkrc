@@ -228,3 +228,11 @@ style "oxygen-gimp-scale"
 }
 
 class "*" style "oxygen-gimp-scale"
+
+# 5pixels thickness
+style "oxygen-w5" = "oxygen-w2"
+{
+    xthickness = 5
+}
+class "GtkEntry" style "oxygen-w5"
+
