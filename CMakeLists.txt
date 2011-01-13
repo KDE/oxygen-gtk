@@ -28,6 +28,10 @@ set( OXYGEN_DEBUG 0 )
 # with oxygen-icons
 set( OXYGEN_ICON_HACK 1 )
 
+# Set to 1 to resize combobox list to compensate for combobox button glow width
+# (may result in flicker on combo popup)
+set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
+
 ##############
 # Requirements
 ##############
