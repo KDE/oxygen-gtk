@@ -619,8 +619,13 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
                 tiles &= ~TileSet::Left;
+                // shrink combo entry hole by 3px on right side
+                w-=3;
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+                // fill padding
+                Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
+
 
                 return;
 
@@ -947,8 +952,13 @@ namespace Oxygen
 
             TileSet::Tiles tiles( TileSet::Ring);
             tiles &= ~TileSet::Left;
+            // shrink spinbox entry hole by 3px on right side
+            w-=3;
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+            // fill padding
+            Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
+
 
         } else if( d.isSpinButtonArrow() ) {
 
