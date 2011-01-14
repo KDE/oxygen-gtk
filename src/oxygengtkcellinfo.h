@@ -98,10 +98,6 @@ namespace Oxygen
             bool isValid( void ) const
             { return _path && _column; }
 
-            //! returns true if column is the first one
-            bool isFirstColumn( GtkTreeView* tree_view ) const
-            { return _column && _column == gtk_tree_view_get_column( tree_view, 0 ); }
-
             //! returns true if column is the last one
             bool isLastVisibleColumn( GtkTreeView* ) const;
 
