@@ -102,6 +102,9 @@ namespace Oxygen
             bool isFirstColumn( GtkTreeView* tree_view ) const
             { return _column && _column == gtk_tree_view_get_column( tree_view, 0 ); }
 
+            //! returns true if column is the last one
+            bool isLastVisibleColumn( GtkTreeView* ) const;
+
             //! returns true if column is the one that contains expander
             bool isExpanderColumn( GtkTreeView* treeView ) const
             { return _column == gtk_tree_view_get_expander_column( treeView ); }
