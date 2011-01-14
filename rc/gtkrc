@@ -142,6 +142,15 @@ style "oxygen-entry" = "oxygen-default"
 
 class "GtkEntry" style "oxygen-entry"
 
+# spinbutton margins
+style "oxygen-spinbutton" = "oxygen-default"
+{
+    xthickness = 7
+    ythickness = 2
+    GtkEntry::inner-border = { 2, 2, 2, 2 }
+}
+class "GtkSpinButton" style "oxygen-spinbutton"
+
 # comboboxes
 style "oxygen-combobox" = "oxygen-default"
 {
