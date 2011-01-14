@@ -1075,9 +1075,8 @@ namespace Oxygen
                 Style::instance().animations().widgetSizeEngine().registerWidget( parent );
                 if( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                 {
-                    // 6 and 3 here are to account for combo button's glow, shrinking list horizontally
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width - 6, allocation.height ) );
-                    gdk_window_shape_combine_mask( parent->window, mask, 3, 0 );
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -1113,8 +1112,28 @@ namespace Oxygen
 
             // now draw float frame on background window
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
-            // shrink float frame too
-            Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x+3, allocation.y, allocation.width-6, allocation.height, options );
+            Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+
+            #if ENABLE_COMBOBOX_LIST_RESIZE
+            // resize the list to match combobox width (taking into account its lesser width because of button glow)
+            if( GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox() )
+            {
+
+                int w, h;
+                GtkWindow* window( GTK_WINDOW( parent ) );
+                gtk_window_get_size( window, &w, &h );
+                if( combobox->allocation.width-6 != w )
+                {
+                    gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
+
+                    gint targetX, dummy, y;
+                    gtk_window_get_position( window, &dummy, &y );
+                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
+                    gtk_window_move( window, targetX+combobox->allocation.x+3, y );
+                }
+
+            }
+            #endif
 
             return;
 
