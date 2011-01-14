@@ -241,7 +241,7 @@ namespace Oxygen
 
                         // change selection rect so that it does not overlap with expander
                         forceCellStart = true;
-                        if( options & (Selected|Hover) )
+                        if( options&(Selected|Hover) )
                         {
 
                             // get expander size from widget
@@ -256,11 +256,15 @@ namespace Oxygen
 
                         }
 
-                    } else if( cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
+                    } else if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
 
                         forceCellEnd = true;
 
                     }
+
+                    // check if column is last
+                    if( (options&(Selected|Hover)) && cellInfo.isValid() && d.isCellMiddle() && cellInfo.isLastVisibleColumn( treeView ) )
+                    { forceCellEnd = true; }
 
                 }
 
