@@ -252,7 +252,7 @@ namespace Oxygen
                     }
 
                     // check if column is last
-                    if( (options&(Selected|Hover)) && cellInfo.isValid() && d.isCellMiddle() && cellInfo.isLastVisibleColumn( treeView ) )
+                    if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLastVisibleColumn( treeView ) )
                     { forceCellEnd = true; }
 
                 }
