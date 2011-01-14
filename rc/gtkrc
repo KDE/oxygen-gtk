@@ -232,5 +232,4 @@ style "oxygen-w5" = "oxygen-w2"
     xthickness = 5
 }
 class "GtkEntry" style "oxygen-w5"
-widget "gtk-combobox-popup-window.GtkScrolledWindow" style "oxygen-w5"
 
