@@ -69,8 +69,7 @@ style "oxygen-default"
     GtkToolbar::shadow-type = GTK_SHADOW_NONE
 
     engine "oxygen-gtk"
-    {
-    }
+    {}
 }
 
 class "*" style "oxygen-default"
@@ -94,9 +93,7 @@ class "GtkMenuBar" style "oxygen-menubar"
 
 # menuitems padding
 style "oxygen-menubaritem" = "oxygen-default"
-{
-    xthickness = 3
-}
+{ xthickness = 3 }
 
 style "oxygen-menuitem" = "oxygen-default"
 {
@@ -144,7 +141,15 @@ style "oxygen-entry" = "oxygen-default"
 }
 
 class "GtkEntry" style "oxygen-entry"
-class "GtkSpinButton" style "oxygen-entry"
+
+# spinbutton margins
+style "oxygen-spinbutton" = "oxygen-default"
+{
+    xthickness = 7
+    ythickness = 2
+    GtkEntry::inner-border = { 2, 2, 2, 2 }
+}
+class "GtkSpinButton" style "oxygen-spinbutton"
 
 # comboboxes
 style "oxygen-combobox" = "oxygen-default"
@@ -170,9 +175,18 @@ style "oxygen-combobox-entry" = "oxygen-default"
     xthickness = 1
     ythickness = 1
 }
+
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
-widget_class "*<GtkComboBoxEntry>.<GtkButton>" style "oxygen-combobox-entry"
-widget_class "*<GtkCombo>.<GtkButton>" style "oxygen-combobox-entry"
+
+style "oxygen-combobox-entry-button" = "oxygen-combobox-entry"
+{ xthickness = 2 }
+
+widget_class "*<GtkComboBoxEntry>.<GtkButton>" style "oxygen-combobox-entry-button"
+
+style "oxygen-combo-button" = "oxygen-combobox-entry"
+{ xthickness = 0 }
+
+widget_class "*<GtkCombo>.<GtkButton>" style "oxygen-combo-button"
 
 # option menu
 style "oxygen-option-menu" = "oxygen-default"
@@ -185,9 +199,7 @@ class "GtkOptionMenu" style "oxygen-option-menu"
 
 # vertical separators need enough room
 style "oxygen-vseparator" = "oxygen-default"
-{
-    xthickness = 3
-}
+{ xthickness = 3 }
 
 class "GtkVSeparator" style "oxygen-vseparator"
 
@@ -228,8 +240,7 @@ class "*" style "oxygen-gimp-scale"
 
 # 5pixels thickness
 style "oxygen-w5" = "oxygen-w2"
-{
-    xthickness = 5
-}
+{ xthickness = 5 }
+
 class "GtkEntry" style "oxygen-w5"
 
