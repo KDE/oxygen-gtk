@@ -51,6 +51,27 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________
+    bool Gtk::CellInfo::isLastVisibleColumn( GtkTreeView* treeView ) const
+    {
+        bool isLast( false );
+        GList* columns( gtk_tree_view_get_columns( treeView ) );
+        for( GList *child = g_list_last( columns ); child; child = g_list_previous( child ) )
+        {
+            if( !GTK_IS_TREE_VIEW_COLUMN( child->data ) ) continue;
+            GtkTreeViewColumn* column( GTK_TREE_VIEW_COLUMN( child->data ) );
+            if( gtk_tree_view_column_get_visible( column ) )
+            {
+                isLast = (_column == column );
+                break;
+            }
+
+        }
+
+        if( columns ) g_list_free( columns );
+        return isLast;
+    }
+
+    //____________________________________________________________________________
     bool Gtk::CellInfo::isLeftOfExpanderColumn( GtkTreeView* treeView ) const
     {
         // check expander column
