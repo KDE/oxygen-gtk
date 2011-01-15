@@ -777,6 +777,11 @@ namespace Oxygen
             if( GTK_IS_MENU( widget ) && GTK_MENU( widget )->torn_off )
             {
 
+                if(
+                    Gtk::gdk_window_is_base( window ) &&
+                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                { Style::instance().animations().backgroundHintEngine().registerWidget( widget, &Style::instance().helper() ); }
+
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 
             } else {
