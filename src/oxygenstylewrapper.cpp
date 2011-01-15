@@ -44,11 +44,11 @@
 #include <iostream>
 
 //_______________________________________________________________________________________________________________
-struct _OxygenStyle
+struct OxygenStyle
 { GtkStyle parent; };
 
 //_______________________________________________________________________________________________________________
-struct _OxygenStyleClass
+struct OxygenStyleClass
 {  GtkStyleClass parent; };
 
 //_______________________________________________________________________________________________________________
@@ -2703,16 +2703,16 @@ void oxygen_style_register_type( GTypeModule* module )
 
         static const GTypeInfo info =
         {
-            sizeof( OxygenStyleClass ),
-            0L,
-            0L,
+            (guint16)sizeof( OxygenStyleClass ),
+            (GBaseInitFunc) NULL,
+            (GBaseFinalizeFunc) NULL,
             (GClassInitFunc) oxygen_style_class_init,
-            0L,          /* class_finalize */
-            0L,          /* class_data */
-            sizeof( OxygenStyle ),
-            0,           /* n_preallocs */
+            (GClassFinalizeFunc) NULL,
+            NULL,
+            (guint16)sizeof( OxygenStyle ),
+            0,
             (GInstanceInitFunc) oxygen_style_instance_init,
-            0L
+            NULL
         };
 
         oxygen_style_type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &info, GTypeFlags(0 ) );

@@ -39,9 +39,6 @@ G_BEGIN_DECLS
 #define OXYGEN_IS_STYLE_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE(( klass ), OXYGEN_TYPE_STYLE ) )
 #define OXYGEN_STYLE_GET_CLASS(obj) ( G_TYPE_INSTANCE_GET_CLASS(( obj ), OXYGEN_TYPE_STYLE, OxygenStyleClass ) )
 
-typedef struct _OxygenStyle OxygenStyle;
-typedef struct _OxygenStyleClass OxygenStyleClass;
-
 void  oxygen_style_register_type( GTypeModule *module );
 GType oxygen_style_get_type( void ) G_GNUC_CONST;
 
