@@ -334,6 +334,7 @@ namespace Oxygen
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+
                 // increase width since right part isn't drawn
                 w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
@@ -1233,16 +1234,12 @@ namespace Oxygen
                     if( Style::instance().settings().applicationName().isOpenOffice() )
                     {
 
-                        // adjust rect
-                        y+=1;
-                        h-=2;
-
                         /*
                         for open-office on has to mask out the corners manually,
                         because renderholebackground fails
                         */
                         Cairo::Context context( window, clipRect );
-                        cairo_rounded_rectangle( context, x+1, y, w-1, h-1, 2, CornersLeft );
+                        cairo_rounded_rectangle( context, x+1, y+1, w-1, h-3, 2, CornersLeft );
                         cairo_set_source( context, background );
                         cairo_fill( context );
 
@@ -1257,13 +1254,14 @@ namespace Oxygen
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
                 // basic adjustments
-                x--;
-                y--;
-                w+=2;
-                h+=2;
+                x-=1; w+=2;
+
                 // shrink entry by 3px on left side
-                x+=3;
-                w-=3;
+                if( !Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    x+=3; w-=3;
+                    y-=1; h+=2;
+                }
 
                 Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
