@@ -46,9 +46,6 @@ namespace Oxygen
         //! registered type
         static GType type( void );
 
-        //! parent class
-        static GtkRcStyleClass* _parentClass;
-
         protected:
 
         //! class initialization method
@@ -64,6 +61,9 @@ namespace Oxygen
         static void merge( GtkRcStyle*, GtkRcStyle* );
 
         private:
+
+        //! parent class
+        static GtkRcStyleClass* _parentClass;
 
         //! registered type indo
         static GTypeInfo _typeInfo;
