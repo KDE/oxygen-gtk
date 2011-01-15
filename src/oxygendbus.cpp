@@ -30,10 +30,27 @@
 
 namespace Oxygen
 {
+    //__________________________________________________________________
+    DBus* DBus::_instance = 0;
+    DBus& DBus::instance( void )
+    {
+        if( !_instance )
+        {
+            _instance = new DBus();
+            _instance->setupConnection();
+        }
+
+        return *_instance;
+    }
 
     //_________________________________________________________
     void DBus::setupConnection( void )
     {
+
+        // make sure the method is called only once
+        static bool first( true );
+        if( !first ) return;
+        first = false;
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::DBus::setupConnection" << std::endl;

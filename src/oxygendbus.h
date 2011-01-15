@@ -38,10 +38,17 @@ namespace Oxygen
 
         public:
 
-        //! setup connections
-        static void setupConnection( void );
+        //! return singleton
+        static DBus& instance( void );
+
+        //! destructor
+        virtual ~DBus( void )
+        { _instance = 0L; }
 
         protected:
+
+        //! setup connections
+        void setupConnection( void );
 
         /*!
         copied from kdelibs/kdeui/kernel/kglobalsettings
@@ -65,6 +72,15 @@ namespace Oxygen
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );
         #endif
+
+        private:
+
+        //! constructor
+        DBus( void )
+        {}
+
+        //! singleton
+        static DBus* _instance;
 
     };
 

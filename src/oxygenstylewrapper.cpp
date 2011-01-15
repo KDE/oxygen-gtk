@@ -32,6 +32,7 @@
 #include "oxygen.h"
 #include "oxygenanimations.h"
 #include "oxygencairoutils.h"
+#include "oxygendbus.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtktypenames.h"
@@ -2646,6 +2647,7 @@ extern "C" void oxygen_style_instance_init( OxygenStyle* self )
     elsewhere, to fix some overwritting that occurs with some distros
     */
     Oxygen::Style::instance().settings().initializeColors();
+    Oxygen::DBus::instance();
 }
 
 //_______________________________________________________________________________________________________________
