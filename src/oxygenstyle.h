@@ -104,7 +104,7 @@ namespace Oxygen
         { return renderWindowBackground( window, 0L, r, x, y, w, h, hole, tiles ); }
 
         //! window background
-        void renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
 
         //! tooltip background
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;

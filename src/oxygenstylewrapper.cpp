@@ -415,6 +415,11 @@ namespace Oxygen
     //_____________________________________________________________________________________
     GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::processTabCloseButton" << std::endl;
+        #endif
+
         static GdkPixbuf* pbNormalColored(0L);
         static GdkPixbuf* pbNormalGray(0L);
         static GdkPixbuf* pbPrelight(0L);
@@ -435,7 +440,11 @@ namespace Oxygen
                 // check if our button is on active page and if not, make it gray
                 GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
                 GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+                if( !page ) break;
+
                 GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+                if( !tabLabel ) break;
+
                 if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) )
                 {
                     pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
@@ -661,6 +670,7 @@ namespace Oxygen
                 return;
 
             #endif
+
             } else {
 
                 // for google chrome, make GtkChromeButton appear as flat
@@ -777,6 +787,10 @@ namespace Oxygen
                     GdkScreen* screen( gdk_screen_get_default() );
                     if( screen && gdk_screen_is_composited( screen ) ) options |= Alpha;
 
+                    // flat option is used by drawFloatFrame
+                    // to paint square corners
+                    options |= Flat;
+
                 } else  if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
                 // add mask if needed
@@ -798,7 +812,9 @@ namespace Oxygen
 
                 }
 
-                Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
+                if( !Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options ) )
+                { options |= Flat; }
+
                 Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
             }
@@ -1122,6 +1138,12 @@ namespace Oxygen
             #endif
 
             return;
+
+        } else if( d.isBase() && GTK_IS_MENU( widget ) ) {
+
+                // this is to prevent crappy mozilla to
+                // draw yet another frame around menus
+                return;
 
         } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {
 
