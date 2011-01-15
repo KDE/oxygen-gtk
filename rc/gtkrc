@@ -82,6 +82,13 @@ style "oxygen-pathbutton" = "oxygen-default"
 }
 widget_class "*PathBar.<GtkButton>" style "oxygen-pathbutton"
 
+# entries
+style "oxygen-entry-margins" = "oxygen-default"
+{ xthickness = 5 }
+
+class "GtkEntry" style "oxygen-entry-margins"
+
+
 # menuitems padding
 style "oxygen-menubar" = "oxygen-default"
 {
@@ -131,25 +138,6 @@ style "oxygen-notebook" = "oxygen-default"
 }
 
 class "GtkNotebook" style "oxygen-notebook"
-
-# entry margins
-style "oxygen-entry" = "oxygen-default"
-{
-    xthickness = 2
-    ythickness = 2
-    GtkEntry::inner-border = { 2, 2, 2, 2 }
-}
-
-class "GtkEntry" style "oxygen-entry"
-
-# spinbutton margins
-style "oxygen-spinbutton" = "oxygen-default"
-{
-    xthickness = 7
-    ythickness = 2
-    GtkEntry::inner-border = { 2, 2, 2, 2 }
-}
-class "GtkSpinButton" style "oxygen-spinbutton"
 
 # comboboxes
 style "oxygen-combobox" = "oxygen-default"
@@ -237,10 +225,4 @@ style "oxygen-gimp-scale"
 }
 
 class "*" style "oxygen-gimp-scale"
-
-# 5pixels thickness
-style "oxygen-w5" = "oxygen-w2"
-{ xthickness = 5 }
-
-class "GtkEntry" style "oxygen-w5"
 
