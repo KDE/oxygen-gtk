@@ -766,7 +766,7 @@ namespace Oxygen
             { Style::instance().windowManager().registerWidget( widget ); }
 
             if( !Style::instance().settings().applicationName().isMozilla( widget ) )
-            { Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h ); }
+            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
 
             return;
 
