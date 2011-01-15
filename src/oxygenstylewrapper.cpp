@@ -2671,6 +2671,10 @@ namespace Oxygen
         if( !_type )
         {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::StyleWrapper::registerType" << std::endl;
+            #endif
+
             const GTypeInfo info =
             {
                 (guint16)sizeof( OxygenStyleClass ),
