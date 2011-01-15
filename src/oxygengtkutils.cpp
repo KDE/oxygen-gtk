@@ -475,10 +475,11 @@ namespace Oxygen
 
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if( !page ) continue;
 
-            if(!tabLabel)
-                return tab;
+            // get label
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if(!tabLabel) continue;
 
             // get allocted size and compare to position
             const GtkAllocation& allocation( tabLabel->allocation );
@@ -518,6 +519,8 @@ namespace Oxygen
         {
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            if( !page ) continue;
+
             GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
             if( widget == tabLabel ) return true;
         }
@@ -609,6 +612,8 @@ namespace Oxygen
 
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            if( !page ) continue;
+
             GtkWidget* label( gtk_notebook_get_tab_label( notebook, page ) );
 
             #if GTK_CHECK_VERSION(2, 20, 0)
@@ -636,18 +641,18 @@ namespace Oxygen
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( notebook ) )
         {
-            GtkWidget* tabLabel=0;
             int numPages=gtk_notebook_get_n_pages( notebook );
             for( int i = 0; i < numPages; ++i )
             {
 
-                // retrieve page and tab label
+                // retrieve page
                 GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                if(page)
-                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
+                if( !page ) continue;
 
-                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
-                    gtk_container_adjust_buttons_state(GTK_CONTAINER(tabLabel));
+                // retrieve tab label
+                GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+                if( tabLabel && GTK_IS_CONTAINER( tabLabel ) )
+                { gtk_container_adjust_buttons_state( GTK_CONTAINER( tabLabel ) ); }
 
             }
         }

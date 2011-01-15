@@ -414,6 +414,11 @@ namespace Oxygen
     //_____________________________________________________________________________________
     GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
     {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::processTabCloseButton" << std::endl;
+        #endif
+
         static GdkPixbuf* pbNormalColored(0L);
         static GdkPixbuf* pbNormalGray(0L);
         static GdkPixbuf* pbPrelight(0L);
@@ -434,7 +439,11 @@ namespace Oxygen
                 // check if our button is on active page and if not, make it gray
                 GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
                 GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+                if( !page ) break;
+
                 GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+                if( !tabLabel ) break;
+
                 if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) )
                 {
                     pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
