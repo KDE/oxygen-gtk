@@ -114,7 +114,7 @@ namespace Oxygen
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
 
             // render window background
-            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
             return;
 
@@ -623,10 +623,12 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
                 tiles &= ~TileSet::Left;
+
                 // shrink combo entry hole by 3px on right side
                 w-=3;
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+
                 // fill padding
                 Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
 
@@ -963,10 +965,12 @@ namespace Oxygen
 
             TileSet::Tiles tiles( TileSet::Ring);
             tiles &= ~TileSet::Left;
+
             // shrink spinbox entry hole by 3px on right side
             w-=3;
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+
             // fill padding
             Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
 
@@ -1345,7 +1349,7 @@ namespace Oxygen
 
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
-            Style::instance().renderWindowBackground(window,widget,clipRect,x-4,y-4,w+8,h+8);
+            Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 );
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
