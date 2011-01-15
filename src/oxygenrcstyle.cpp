@@ -32,14 +32,16 @@
 #include <gtk/gtk.h>
 
 //______________________________________________________________________
-struct _OxygenRcStyle
-{ GtkRcStyle parent; };
+struct OxygenRcStyle
+{
+    GtkRcStyle parent;
+};
 
 //______________________________________________________________________
-struct _OxygenRcStyleClass
-{ GtkRcStyleClass parent; };
-
-static GtkRcStyleClass *oxygen_rc_style_parent_class = 0L;
+struct OxygenRcStyleClass
+{
+    GtkRcStyleClass parent;
+};
 
 //______________________________________________________________________
 static GtkStyle* create_style( GtkRcStyle *rc_style )
@@ -74,8 +76,12 @@ static guint parse(
 }
 
 //______________________________________________________________________
+static GtkRcStyleClass *oxygen_rc_style_parent_class = 0L;
 static void merge( GtkRcStyle *dst, GtkRcStyle *src )
-{ oxygen_rc_style_parent_class->merge( dst, src ); }
+{
+    if( oxygen_rc_style_parent_class )
+    { oxygen_rc_style_parent_class->merge( dst, src ); }
+}
 
 //______________________________________________________________________
 extern "C" void oxygen_rc_style_instance_init( OxygenRcStyle *self )
@@ -102,16 +108,16 @@ void oxygen_rc_style_register_type( GTypeModule *module )
     {
         static const GTypeInfo info =
         {
-            sizeof(OxygenRcStyleClass ),
-            0L,
-            0L,
+            (guint16)sizeof(OxygenRcStyleClass ),
+            (GBaseInitFunc) NULL,
+            (GBaseFinalizeFunc) NULL,
             (GClassInitFunc) oxygen_rc_style_class_init,
-            0L,    /* class_finalize */
-            0L,    /* class_data */
-            sizeof( OxygenRcStyle ),
-            0,    /* n_preallocs */
+            (GClassFinalizeFunc) NULL,
+            NULL,
+            (guint16)sizeof( OxygenRcStyle ),
+            0,
             (GInstanceInitFunc) oxygen_rc_style_instance_init,
-            0L
+            NULL
         };
 
         oxygen_rc_style_type = g_type_module_register_type( module, GTK_TYPE_RC_STYLE, "OxygenRcStyle", &info, GTypeFlags(0 ) );
