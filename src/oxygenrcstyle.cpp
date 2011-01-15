@@ -38,7 +38,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     GtkStyle* RCStyle::createStyle( GtkRcStyle* rc_style )
-    { return GTK_STYLE( g_object_new( OXYGEN_TYPE_STYLE, 0L ) ); }
+    { return GTK_STYLE( g_object_new( StyleWrapper::type(), 0L ) ); }
 
     //______________________________________________________________________
     guint RCStyle::parse(
@@ -78,7 +78,8 @@ namespace Oxygen
     //______________________________________________________________________
     void RCStyle::classInit( OxygenRcStyleClass *klass )
     {
-        GtkRcStyleClass *rc_style_class = GTK_RC_STYLE_CLASS( klass );
+
+        GtkRcStyleClass *rc_style_class( GTK_RC_STYLE_CLASS( klass ) );
 
         _parentClass = static_cast<GtkRcStyleClass*>(g_type_class_peek_parent( klass ) );
 
@@ -98,7 +99,7 @@ namespace Oxygen
             std::cerr << "Oxygen::RCStyle::registerType" << std::endl;
             #endif
 
-            GTypeInfo info =
+            const GTypeInfo info =
             {
                 (guint16)sizeof(OxygenRcStyleClass ),
                 (GBaseInitFunc) NULL,

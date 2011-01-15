@@ -23,25 +23,53 @@
 * MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <gtk/gtk.h>
 
-#include <glib.h>
-#include <glib-object.h>
+// oxygen style struct
+struct OxygenStyle
+{ GtkStyle parent; };
 
-G_BEGIN_DECLS
+// oxygen style class struct
+struct OxygenStyleClass
+{  GtkStyleClass parent; };
 
-#define OXYGEN_TYPE_STYLE ( oxygen_style_get_type() )
-#define OXYGEN_STYLE(object) ( G_TYPE_CHECK_INSTANCE_CAST(( object ), OXYGEN_TYPE_STYLE, OxygenStyle ) )
-#define OXYGEN_STYLE_CLASS(klass) ( G_TYPE_CHECK_CLASS_CAST(( klass ), OXYGEN_TYPE_STYLE, OxygenStyleClass ) )
-#define OXYGEN_IS_STYLE(object) ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), OXYGEN_TYPE_STYLE ) )
-#define OXYGEN_IS_STYLE_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE(( klass ), OXYGEN_TYPE_STYLE ) )
-#define OXYGEN_STYLE_GET_CLASS(obj) ( G_TYPE_INSTANCE_GET_CLASS(( obj ), OXYGEN_TYPE_STYLE, OxygenStyleClass ) )
+namespace Oxygen
+{
+    class StyleWrapper
+    {
 
-void  oxygen_style_register_type( GTypeModule *module );
-GType oxygen_style_get_type( void ) G_GNUC_CONST;
+        public:
 
-G_END_DECLS
+        //! type registration
+        static void registerType( GTypeModule* );
+
+        //! registered type
+        static GType type( void );
+
+        //! parent class
+        inline static GtkStyleClass* parentClass( void )
+        { return _parentClass; }
+
+        protected:
+
+        //! instance initialization
+        static void instanceInit( OxygenStyle* );
+
+        //! class initialization
+        static void classInit( OxygenStyleClass* );
+
+        private:
+
+        //! parent class
+        static GtkStyleClass* _parentClass;
+
+        //! registered type indo
+        static GTypeInfo _typeInfo;
+
+        //! registered type
+        static GType _type;
+
+    };
+}
 
 #endif

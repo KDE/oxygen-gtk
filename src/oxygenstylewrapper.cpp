@@ -42,19 +42,13 @@
 
 #include <iostream>
 
-//_______________________________________________________________________________________________________________
-struct OxygenStyle
-{ GtkStyle parent; };
-
-//_______________________________________________________________________________________________________________
-struct OxygenStyleClass
-{  GtkStyleClass parent; };
-
-//_______________________________________________________________________________________________________________
-static GtkStyleClass* oxygen_style_parent_class = 0L;
-
 namespace Oxygen
 {
+
+    //___________________________________________________________________________________________________________
+    GtkStyleClass* StyleWrapper::_parentClass = 0L;
+    GTypeInfo StyleWrapper::_typeInfo;
+    GType StyleWrapper::_type = 0L;
 
     //___________________________________________________________________________________________________________
     static void draw_flat_box(
@@ -409,7 +403,7 @@ namespace Oxygen
         if( !accepted )
         {
 
-            oxygen_style_parent_class->draw_flat_box( style, window, state,
+            StyleWrapper::parentClass()->draw_flat_box( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
 
@@ -854,7 +848,7 @@ namespace Oxygen
                     otherwise some uninitialized pixels are present.
                     Not sure why
                     */
-                    oxygen_style_parent_class->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
+                    StyleWrapper::parentClass()->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
                     Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
                 }
 
@@ -997,7 +991,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_box( style, window, state,
+            StyleWrapper::parentClass()->draw_box( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
         }
@@ -1485,7 +1479,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_check( style, window, state,
+            StyleWrapper::parentClass()->draw_check( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
         }
@@ -1564,7 +1558,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_option( style, window, state,
+            StyleWrapper::parentClass()->draw_option( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
 
@@ -1924,7 +1918,7 @@ namespace Oxygen
             detail );
         #endif
 
-        oxygen_style_parent_class->draw_diamond( style, window, state,
+        StyleWrapper::parentClass()->draw_diamond( style, window, state,
             shadow, clipRect, widget, detail,
             x, y, w, h );
     }
@@ -1973,7 +1967,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_tab( style, window, state,
+            StyleWrapper::parentClass()->draw_tab( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h );
         }
@@ -2035,7 +2029,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_shadow_gap( style, window, state,
+            StyleWrapper::parentClass()->draw_shadow_gap( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
                 position, gap_x, gap_w );
@@ -2140,7 +2134,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_box_gap( style, window, state,
+            StyleWrapper::parentClass()->draw_box_gap( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
                 position, gap_x, gap_w );
@@ -2197,7 +2191,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_slider( style, window, state,
+            StyleWrapper::parentClass()->draw_slider( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
                 orientation );
@@ -2426,7 +2420,7 @@ namespace Oxygen
 
         } else {
 
-            oxygen_style_parent_class->draw_handle( style, window, state,
+            StyleWrapper::parentClass()->draw_handle( style, window, state,
                 shadow, clipRect, widget, detail,
                 x, y, w, h,
                 orientation );
@@ -2617,88 +2611,87 @@ namespace Oxygen
         } else {
 
             // in all other cases, fallback on default rendering, for now
-            oxygen_style_parent_class->draw_layout(
+            StyleWrapper::parentClass()->draw_layout(
                 style, window, state, use_text,
                 clipRect, widget, detail, x, y, layout );
 
         }
     }
-}
 
-//_______________________________________________________________________________________________________________
-extern "C" void oxygen_style_instance_init( OxygenStyle* self )
-{
-    /*
-    need to initialize the colors here even if done already
-    elsewhere, to fix some overwritting that occurs with some distros
-    */
-    Oxygen::Style::instance().settings().initializeColors();
-}
+    //_______________________________________________________________________________________________________________
+    void StyleWrapper::instanceInit( OxygenStyle* self )
+    {
+        /*
+        need to initialize the colors here even if done already
+        elsewhere, to fix some overwritting that occurs with some distros
+        */
+        Style::instance().settings().initializeColors();
+    }
 
-//_______________________________________________________________________________________________________________
-extern "C" void oxygen_style_class_init( OxygenStyleClass* klass )
-{
-    GtkStyleClass* style_class;
-
-    style_class = GTK_STYLE_CLASS( klass );
-
-    oxygen_style_parent_class = static_cast<GtkStyleClass*>( g_type_class_peek_parent( klass ) );
-
-    style_class->draw_hline = Oxygen::draw_hline;
-    style_class->draw_vline = Oxygen::draw_vline;
-    style_class->draw_shadow = Oxygen::draw_shadow;
-    style_class->draw_arrow = Oxygen::draw_arrow;
-
-    style_class->draw_diamond = Oxygen::draw_diamond;
-
-    style_class->draw_box = Oxygen::draw_box;
-    style_class->draw_flat_box = Oxygen::draw_flat_box;
-    style_class->draw_check = Oxygen::draw_check;
-    style_class->draw_option = Oxygen::draw_option;
-    style_class->draw_tab = Oxygen::draw_tab;
-    style_class->draw_shadow_gap = Oxygen::draw_shadow_gap;
-    style_class->draw_box_gap = Oxygen::draw_box_gap;
-    style_class->draw_extension = Oxygen::draw_extension;
-    style_class->draw_focus = Oxygen::draw_focus;
-    style_class->draw_slider = Oxygen::draw_slider;
-    style_class->draw_handle = Oxygen::draw_handle;
-    style_class->draw_resize_grip = Oxygen::draw_resize_grip;
-    style_class->draw_expander = Oxygen::draw_expander;
-
-    // icon rendering
-    style_class->render_icon = Oxygen::render_icon;
-
-    // text rendering
-    style_class->draw_layout = Oxygen::draw_layout;
-
-
-}
-
-//_______________________________________________________________________________________________________________
-static GType oxygen_style_type = 0;
-void oxygen_style_register_type( GTypeModule* module )
-{
-    if( !oxygen_style_type )
+    //_______________________________________________________________________________________________________________
+    void StyleWrapper::classInit( OxygenStyleClass* klass )
     {
 
-        static const GTypeInfo info =
-        {
-            (guint16)sizeof( OxygenStyleClass ),
-            (GBaseInitFunc) NULL,
-            (GBaseFinalizeFunc) NULL,
-            (GClassInitFunc) oxygen_style_class_init,
-            (GClassFinalizeFunc) NULL,
-            NULL,
-            (guint16)sizeof( OxygenStyle ),
-            0,
-            (GInstanceInitFunc) oxygen_style_instance_init,
-            NULL
-        };
+        GtkStyleClass* style_class( GTK_STYLE_CLASS( klass ) );
 
-        oxygen_style_type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &info, GTypeFlags(0 ) );
+        _parentClass = static_cast<GtkStyleClass*>( g_type_class_peek_parent( klass ) );
+
+        style_class->draw_hline = draw_hline;
+        style_class->draw_vline = draw_vline;
+        style_class->draw_shadow = draw_shadow;
+        style_class->draw_arrow = draw_arrow;
+
+        style_class->draw_diamond = draw_diamond;
+
+        style_class->draw_box = draw_box;
+        style_class->draw_flat_box = draw_flat_box;
+        style_class->draw_check = draw_check;
+        style_class->draw_option = draw_option;
+        style_class->draw_tab = draw_tab;
+        style_class->draw_shadow_gap = draw_shadow_gap;
+        style_class->draw_box_gap = draw_box_gap;
+        style_class->draw_extension = draw_extension;
+        style_class->draw_focus = draw_focus;
+        style_class->draw_slider = draw_slider;
+        style_class->draw_handle = draw_handle;
+        style_class->draw_resize_grip = draw_resize_grip;
+        style_class->draw_expander = draw_expander;
+
+        // icon rendering
+        style_class->render_icon = render_icon;
+
+        // text rendering
+        style_class->draw_layout = draw_layout;
+
     }
-}
 
-//_______________________________________________________________________________________________________________
-GType oxygen_style_get_type( void )
-{ return oxygen_style_type; }
+    //_______________________________________________________________________________________________________________
+    void StyleWrapper::registerType( GTypeModule* module )
+    {
+        if( !_type )
+        {
+
+            const GTypeInfo info =
+            {
+                (guint16)sizeof( OxygenStyleClass ),
+                (GBaseInitFunc) NULL,
+                (GBaseFinalizeFunc) NULL,
+                (GClassInitFunc) classInit,
+                (GClassFinalizeFunc) NULL,
+                NULL,
+                (guint16)sizeof( OxygenStyle ),
+                0,
+                (GInstanceInitFunc) instanceInit,
+                NULL
+            };
+
+            _typeInfo = info;
+            _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
+        }
+    }
+
+    //_______________________________________________________________________________________________________________
+    GType StyleWrapper::type( void )
+    { return _type; }
+
+}

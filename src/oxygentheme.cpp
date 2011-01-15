@@ -198,7 +198,7 @@ void enableARGB()
 void theme_init( GTypeModule* module )
 {
     Oxygen::RCStyle::registerType( module );
-    oxygen_style_register_type( module );
+    Oxygen::StyleWrapper::registerType( module );
 
     enableARGB();
 
