@@ -476,10 +476,11 @@ namespace Oxygen
 
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if( !page ) continue;
 
-            if(!tabLabel)
-                return tab;
+            // get label
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if(!tabLabel) continue;
 
             // get allocted size and compare to position
             const GtkAllocation& allocation( tabLabel->allocation );
@@ -519,6 +520,8 @@ namespace Oxygen
         {
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            if( !page ) continue;
+
             GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
             if( widget == tabLabel ) return true;
         }
@@ -610,6 +613,8 @@ namespace Oxygen
 
             // retrieve page and tab label
             GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            if( !page ) continue;
+
             GtkWidget* label( gtk_notebook_get_tab_label( notebook, page ) );
 
             #if GTK_CHECK_VERSION(2, 20, 0)
@@ -637,18 +642,18 @@ namespace Oxygen
         // cast to notebook and check against number of pages
         if( GTK_IS_NOTEBOOK( notebook ) )
         {
-            GtkWidget* tabLabel=0;
             int numPages=gtk_notebook_get_n_pages( notebook );
             for( int i = 0; i < numPages; ++i )
             {
 
-                // retrieve page and tab label
+                // retrieve page
                 GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                if(page)
-                    tabLabel=gtk_notebook_get_tab_label( notebook, page );
+                if( !page ) continue;
 
-                if(page && tabLabel && GTK_IS_CONTAINER(tabLabel))
-                    gtk_container_adjust_buttons_state(GTK_CONTAINER(tabLabel));
+                // retrieve tab label
+                GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+                if( tabLabel && GTK_IS_CONTAINER( tabLabel ) )
+                { gtk_container_adjust_buttons_state( GTK_CONTAINER( tabLabel ) ); }
 
             }
         }
@@ -723,36 +728,13 @@ namespace Oxygen
         if( h ) *h = -1;
 
         if( !( window && GDK_IS_WINDOW( window ) ) )
-        {
-            if( !widget ) return false;
+        { return false; }
 
-            // this is an alternative way to get widget position with respect to top level window
-            // and top level window size. This is used in case the GdkWindow passed as argument is
-            // actually a 'non window' drawable
-            window = gtk_widget_get_parent_window( widget );
-            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
-            else gdk_toplevel_get_size( window, w, h );
-            int xlocal, ylocal;
-            const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
-            if( success )
-            {
-
-                if( x ) *x=xlocal;
-                if( y ) *y=ylocal;
-
-            }
-
-            return success && ((!w) || *w > 0) && ((!h) || *h>0);
-
-        } else {
-
-            // get window size and height
-            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
-            else gdk_toplevel_get_size( window, w, h );
-            Gtk::gdk_window_get_toplevel_origin( window, x, y );
-            return ((!w) || *w > 0) && ((!h) || *h>0);
-
-        }
+        // get window size and height
+        if( frame ) gdk_toplevel_get_frame_size( window, w, h );
+        else gdk_toplevel_get_size( window, w, h );
+        Gtk::gdk_window_get_toplevel_origin( window, x, y );
+        return ((!w) || *w > 0) && ((!h) || *h>0);
 
     }
 
