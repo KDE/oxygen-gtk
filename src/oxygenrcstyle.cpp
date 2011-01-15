@@ -21,15 +21,11 @@
 * MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
 
-#include <gtk/gtk.h>
+#include "config.h"
 
 namespace Oxygen
 {
@@ -79,10 +75,6 @@ namespace Oxygen
     }
 
     //______________________________________________________________________
-    void RCStyle::instanceInit( OxygenRcStyle* )
-    {}
-
-    //______________________________________________________________________
     void RCStyle::classInit( OxygenRcStyleClass *klass )
     {
         GtkRcStyleClass *rc_style_class = GTK_RC_STYLE_CLASS( klass );
@@ -100,6 +92,11 @@ namespace Oxygen
 
         if( !_type )
         {
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::RCStyle::registerType" << std::endl;
+            #endif
+
             GTypeInfo info =
             {
                 (guint16)sizeof(OxygenRcStyleClass ),
@@ -110,7 +107,7 @@ namespace Oxygen
                 NULL,
                 (guint16)sizeof( OxygenRcStyle ),
                 0,
-                (GInstanceInitFunc) instanceInit,
+                (GInstanceInitFunc) NULL,
                 NULL
             };
 

@@ -40,16 +40,23 @@ namespace Oxygen
 
         public:
 
+        //! type registration
         static void registerType( GTypeModule* );
+
+        //! registered type
         static GType type( void );
 
         protected:
-        static void instanceInit( OxygenRcStyle* );
+
+        //! class initialization method
         static void classInit( OxygenRcStyleClass* );
 
         private:
 
+        //! registered type indo
         static GTypeInfo _typeInfo;
+
+        //! registered type
         static GType _type;
 
     };
