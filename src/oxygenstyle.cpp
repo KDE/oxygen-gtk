@@ -414,8 +414,8 @@ namespace Oxygen
 
         // paint translucent first
         const bool hasAlpha( (options&Alpha) );
-        const bool isMozilla( settings().applicationName().isMozilla() );
         const bool isOpenOffice( settings().applicationName().isOpenOffice() );
+        bool rounded( GDK_IS_WINDOW( window ) && !isOpenOffice );
 
         if( hasAlpha )
         {
@@ -438,7 +438,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
+            gdk_cairo_rounded_rectangle( context, &rect, 4, rounded ? CornersAll:CornersNone );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -450,7 +450,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, (isMozilla||isOpenOffice) ? CornersNone:CornersAll );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, rounded ? CornersAll:CornersNone );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
