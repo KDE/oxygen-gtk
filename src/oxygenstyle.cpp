@@ -149,37 +149,19 @@ namespace Oxygen
         // if we aren't going to draw window decorations...
         if(!context)
         {
-            // get window dimension and position
-            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
-            { return false; }
-
-            // draw flat background for OpenOffice
-            if( Style::instance().settings().applicationName().isOpenOffice() )
-            {
-                Cairo::Context context(window,clipRect);
-                cairo_set_source(context,base);
-                cairo_rectangle(context,x,y,w,h);
-                cairo_fill(context);
-                return true;
-            }
-
-            wy += yShift;
-
-            // translate to toplevel coordinates
-            x+=wx;
-            y+=wy;
 
             // create context and translate to toplevel coordinates
             // make it the old good way since context is cairo_t* instead Cairo::Context
-            context=gdk_cairo_create(window);
+            context = gdk_cairo_create(window);
             needToDestroyContext=true;
-            if(clipRect)
+
+            if( clipRect )
             {
                 cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
                 cairo_clip(context);
             }
-            // no sense in context saving since it will be destroyed
-            cairo_translate( context, -wx, -wy );
+
+            // add hole if required (this can be done before translating the context
             if(hole)
             {
                 // create a rounded-rect antimask for renderHoleBackground
@@ -201,9 +183,47 @@ namespace Oxygen
                 cairo_rectangle(context,x,y,w,h);
                 cairo_clip(context);
             }
-        }
-        else
-        {
+
+            // get window dimension and position
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            {
+                // do nothing for mozilla apps.
+                if( Style::instance().settings().applicationName().isMozilla() )
+                {
+                    cairo_destroy(context);
+                    return false;
+                }
+
+                // flat painting for all other apps
+                cairo_set_source(context,base);
+                cairo_rectangle(context,x,y,w,h);
+                cairo_fill(context);
+                cairo_destroy(context);
+                return true;
+
+            }
+
+            // for openoffice, even if the above succeeds, we have
+            // to paint a flat background, because other widget painting will simply fail.
+            if( Style::instance().settings().applicationName().isOpenOffice() )
+            {
+                cairo_set_source(context,base);
+                cairo_rectangle(context,x,y,w,h);
+                cairo_fill(context);
+                cairo_destroy(context);
+                return true;
+            }
+
+            // translate to toplevel coordinates
+            wy += yShift;
+            x+=wx;
+            y+=wy;
+
+            // no sense in context saving since it will be destroyed
+            cairo_translate( context, -wx, -wy );
+
+        } else {
+
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
@@ -304,7 +324,6 @@ namespace Oxygen
         // get window dimension and position
         gint ww, wh;
         gint wx, wy;
-        //if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
         if( !Gtk::gdk_map_to_toplevel( window, 0L, &wx, &wy, &ww, &wh, true ) )
         { return; }
 
@@ -433,13 +452,7 @@ namespace Oxygen
 
         // render normal window background
         if( !renderWindowBackground( window, clipRect, x, y, w, h ) )
-        {
-            // if failed, fallback to flat background
-            Cairo::Context context( window, clipRect );
-            cairo_rectangle( context, x, y, w, h );
-            cairo_set_source( context, base );
-            cairo_fill( context );
-        }
+        { fill( window, clipRect, x, y, w, h, base ); }
 
         // render lines
         renderHeaderLines( window, clipRect, x, y, w, h );
