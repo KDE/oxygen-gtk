@@ -314,7 +314,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
     {
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
@@ -325,7 +325,7 @@ namespace Oxygen
         gint ww, wh;
         gint wx, wy;
         if( !Gtk::gdk_map_to_toplevel( window, 0L, &wx, &wy, &ww, &wh, true ) )
-        { return; }
+        { return false; }
 
         // translate to toplevel coordinates
         x+=wx;
@@ -378,7 +378,7 @@ namespace Oxygen
 
         }
 
-        return;
+        return true;
 
     }
 
@@ -934,10 +934,8 @@ namespace Oxygen
 
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
-        const bool isMozilla( settings().applicationName().isMozilla() );
-        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
         const bool drawUglyShadow( !hasAlpha );
-        const bool rounded( !(isMozilla||isOpenOffice) );
+        const bool rounded( !(options&Flat) );
 
         // if we aren't drawing window decoration
         if( !context )

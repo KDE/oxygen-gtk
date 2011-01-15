@@ -669,6 +669,7 @@ namespace Oxygen
                 return;
 
             #endif
+
             } else {
 
                 // for google chrome, make GtkChromeButton appear as flat
@@ -785,6 +786,10 @@ namespace Oxygen
                     GdkScreen* screen( gdk_screen_get_default() );
                     if( screen && gdk_screen_is_composited( screen ) ) options |= Alpha;
 
+                    // flat option is used by drawFloatFrame
+                    // to paint square corners
+                    options |= Flat;
+
                 } else  if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
                 // add mask if needed
@@ -806,7 +811,9 @@ namespace Oxygen
 
                 }
 
-                Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
+                if( !Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options ) )
+                { options |= Flat; }
+
                 Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
 
             }
@@ -1130,6 +1137,12 @@ namespace Oxygen
             #endif
 
             return;
+
+        } else if( d.isBase() && GTK_IS_MENU( widget ) ) {
+
+                // this is to prevent crappy mozilla to
+                // draw yet another frame around menus
+                return;
 
         } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {
 
