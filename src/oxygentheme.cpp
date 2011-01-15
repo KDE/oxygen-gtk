@@ -23,7 +23,6 @@
 */
 
 #include "config.h"
-#include "oxygendbus.h"
 #include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
