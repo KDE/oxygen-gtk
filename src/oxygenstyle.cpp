@@ -162,7 +162,7 @@ namespace Oxygen
             }
 
             // add hole if required (this can be done before translating the context
-            if(hole)
+            if( hole )
             {
                 // create a rounded-rect antimask for renderHoleBackground
                 GdkRectangle mask = {x+2, y+1, w-4, h-3 };
@@ -188,7 +188,8 @@ namespace Oxygen
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
                 // do nothing for mozilla apps.
-                if( Style::instance().settings().applicationName().isMozilla() )
+                if( Style::instance().settings().applicationName().isMozilla() ||
+                    Style::instance().settings().applicationName().isOpenOffice() )
                 {
                     cairo_destroy(context);
                     return false;
