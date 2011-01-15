@@ -46,10 +46,22 @@ namespace Oxygen
         //! registered type
         static GType type( void );
 
+        //! parent class
+        static GtkRcStyleClass* _parentClass;
+
         protected:
 
         //! class initialization method
         static void classInit( OxygenRcStyleClass* );
+
+        //! style creation
+        static GtkStyle* createStyle( GtkRcStyle* );
+
+        //! parse RC options
+        static guint parse( GtkRcStyle*, GtkSettings*, GScanner* );
+
+        //! merge styles
+        static void merge( GtkRcStyle*, GtkRcStyle* );
 
         private:
 

@@ -33,16 +33,18 @@ namespace Oxygen
     //______________________________________________________________________
     GType RCStyle::_type = 0L;
     GTypeInfo RCStyle::_typeInfo;
+    GtkRcStyleClass* RCStyle::_parentClass = 0L;
+
 
     //______________________________________________________________________
-    static GtkStyle* create_style( GtkRcStyle *rc_style )
+    GtkStyle* RCStyle::createStyle( GtkRcStyle* rc_style )
     { return GTK_STYLE( g_object_new( OXYGEN_TYPE_STYLE, 0L ) ); }
 
     //______________________________________________________________________
-    static guint parse(
-        GtkRcStyle *rc_style,
-        GtkSettings *settings,
-        GScanner *scanner )
+    guint RCStyle::parse(
+        GtkRcStyle* rc_style,
+        GtkSettings* settings,
+        GScanner* scanner )
     {
         static GQuark scope_id = 0;
         guint old_scope;
@@ -67,11 +69,10 @@ namespace Oxygen
     }
 
     //______________________________________________________________________
-    static GtkRcStyleClass *oxygen_rc_style_parent_class = 0L;
-    static void merge( GtkRcStyle *dst, GtkRcStyle *src )
+    void RCStyle::merge( GtkRcStyle *dst, GtkRcStyle *src )
     {
-        if( oxygen_rc_style_parent_class )
-        { oxygen_rc_style_parent_class->merge( dst, src ); }
+        if( RCStyle::_parentClass )
+        { RCStyle::_parentClass->merge( dst, src ); }
     }
 
     //______________________________________________________________________
@@ -79,9 +80,9 @@ namespace Oxygen
     {
         GtkRcStyleClass *rc_style_class = GTK_RC_STYLE_CLASS( klass );
 
-        oxygen_rc_style_parent_class = static_cast<GtkRcStyleClass*>(g_type_class_peek_parent( klass ) );
+        _parentClass = static_cast<GtkRcStyleClass*>(g_type_class_peek_parent( klass ) );
 
-        rc_style_class->create_style = create_style;
+        rc_style_class->create_style = createStyle;
         rc_style_class->parse = parse;
         rc_style_class->merge = merge;
     }
