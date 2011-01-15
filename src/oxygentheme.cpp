@@ -200,7 +200,7 @@ void enableARGB()
 void theme_init( GTypeModule* module )
 {
 
-    oxygen_rc_style_register_type( module );
+    Oxygen::RCStyle::registerType( module );
     oxygen_style_register_type( module );
 
     enableARGB();
@@ -217,7 +217,7 @@ void theme_exit( void )
 
 //_________________________________________________
 GtkRcStyle* theme_create_rc_style( void )
-{ return GTK_RC_STYLE( g_object_new( OXYGEN_TYPE_RC_STYLE, NULL ) ); }
+{ return GTK_RC_STYLE( g_object_new( Oxygen::RCStyle::type(), NULL ) ); }
 
 //_________________________________________________
 const gchar* g_module_check_init( GModule *module )

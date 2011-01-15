@@ -23,25 +23,56 @@
 * MA 02110-1301, USA.
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <gtk/gtk.h>
 
-#include <glib.h>
-#include <glib-object.h>
+// Oxygen RcStyle struct
+struct OxygenRcStyle
+{ GtkRcStyle parent; };
 
-G_BEGIN_DECLS
+// oxygen RcStyleClass struct
+struct OxygenRcStyleClass
+{ GtkRcStyleClass parent; };
 
-#define OXYGEN_TYPE_RC_STYLE ( oxygen_rc_style_get_type() )
-#define OXYGEN_RC_STYLE(object) ( G_TYPE_CHECK_INSTANCE_CAST(( object ), OXYGEN_TYPE_RC_STYLE, OxygenRcStyle ) )
-#define OXYGEN_RC_STYLE_CLASS(klass) ( G_TYPE_CHECK_CLASS_CAST(( klass ), OXYGEN_TYPE_RC_STYLE, OxygenRcStyleClass ) )
-#define OXYGEN_IS_RC_STYLE(object) ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), OXYGEN_TYPE_RC_STYLE ) )
-#define OXYGEN_IS_RC_STYLE_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE(( klass ), OXYGEN_TYPE_RC_STYLE ) )
-#define OXYGEN_RC_STYLE_GET_CLASS(obj) ( G_TYPE_INSTANCE_GET_CLASS(( obj ), OXYGEN_TYPE_RC_STYLE, OxygenRcStyleClass ) )
+namespace Oxygen
+{
+    class RCStyle
+    {
 
-void  oxygen_rc_style_register_type( GTypeModule *module );
-GType oxygen_rc_style_get_type( void ) G_GNUC_CONST;
+        public:
 
-G_END_DECLS
+        //! type registration
+        static void registerType( GTypeModule* );
+
+        //! registered type
+        static GType type( void );
+
+        protected:
+
+        //! class initialization method
+        static void classInit( OxygenRcStyleClass* );
+
+        //! style creation
+        static GtkStyle* createStyle( GtkRcStyle* );
+
+        //! parse RC options
+        static guint parse( GtkRcStyle*, GtkSettings*, GScanner* );
+
+        //! merge styles
+        static void merge( GtkRcStyle*, GtkRcStyle* );
+
+        private:
+
+        //! parent class
+        static GtkRcStyleClass* _parentClass;
+
+        //! registered type indo
+        static GTypeInfo _typeInfo;
+
+        //! registered type
+        static GType _type;
+
+    };
+}
+
 
 #endif /* OXYGEN_RC_STYLE_H */
