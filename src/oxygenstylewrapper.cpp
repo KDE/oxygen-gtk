@@ -1114,8 +1114,18 @@ namespace Oxygen
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
 
             #if ENABLE_COMBOBOX_LIST_RESIZE
+
+            // find matching pressed down combobox (or comboboxEntry)
+            int sideMargin( 3 );
+            GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox();
+            if( Style::Entry_SideMargin && !combobox )
+            {
+                combobox = Style::instance().animations().comboBoxEntryEngine().pressedComboBoxEntry();
+                sideMargin = Style::Entry_SideMargin;
+            }
+
             // resize the list to match combobox width (taking into account its lesser width because of button glow)
-            if( GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox() )
+            if( combobox )
             {
 
                 int w, h;
