@@ -77,7 +77,6 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
-        bool accepted( false );
         if( d.isBase() || d.isEventBox())
         {
 
@@ -134,7 +133,7 @@ namespace Oxygen
                 { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
-                accepted = true;
+                return;
             }
 
         } else if( d.isTrough() ) {
@@ -327,7 +326,6 @@ namespace Oxygen
                 tiles &= ~TileSet::Right;
 
                 // increase width since right part isn't drawn
-                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -353,8 +351,8 @@ namespace Oxygen
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+
                 // increase width since right part isn't drawn
-                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
 
             } else {
@@ -397,18 +395,14 @@ namespace Oxygen
 
             }
 
-            accepted = true;
+            return;
 
         }
 
-        if( !accepted )
-        {
-
-            StyleWrapper::parentClass()->draw_flat_box( style, window, state,
-                shadow, clipRect, widget, detail,
-                x, y, w, h );
-
-        }
+        // call parent method if reaching here
+        StyleWrapper::parentClass()->draw_flat_box( style, window, state,
+            shadow, clipRect, widget, detail,
+            x, y, w, h );
 
     }
 
@@ -1225,15 +1219,14 @@ namespace Oxygen
 
                 if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
 
+                    // fill the inside of the spinbox manually
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
                     if( Style::instance().settings().applicationName().isOpenOffice() )
                     {
 
-                        /*
-                        for open-office on has to mask out the corners manually,
-                        because renderholebackground fails
-                        */
+                        // for openoffice on has to properly round the corners
+                        // and use an adjusted rect, because renderHoleBackground fails
                         Cairo::Context context( window, clipRect );
                         cairo_rounded_rectangle( context, x+1, y+1, w-1, h-3, 2, CornersLeft );
                         cairo_set_source( context, background );
@@ -1253,7 +1246,7 @@ namespace Oxygen
                 // basic adjustments
                 x-=1; w+=2;
 
-                // shrink entry by 3px on left side
+                // vertical alignment
                 if( !Style::instance().settings().applicationName().isOpenOffice() )
                 { y-=1; h+=2; }
 
