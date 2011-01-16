@@ -78,7 +78,6 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
-        bool accepted( false );
         if( d.isBase() || d.isEventBox())
         {
 
@@ -139,7 +138,7 @@ namespace Oxygen
                 { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
-                accepted = true;
+                return;
             }
 
         } else if( d.isTrough() ) {
@@ -303,8 +302,8 @@ namespace Oxygen
             h += 2*yOffset;
 
             // shrink entry by 3px at each side
-            x+=3;
-            w-=6;
+            x += Style::Entry_SideMargin;
+            w -= 2*Style::Entry_SideMargin;
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
@@ -336,7 +335,6 @@ namespace Oxygen
                 tiles &= ~TileSet::Right;
 
                 // increase width since right part isn't drawn
-                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
@@ -362,8 +360,8 @@ namespace Oxygen
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+
                 // increase width since right part isn't drawn
-                w+=3;
                 Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
 
             } else {
@@ -406,18 +404,14 @@ namespace Oxygen
 
             }
 
-            accepted = true;
+            return;
 
         }
 
-        if( !accepted )
-        {
-
-            StyleWrapper::parentClass()->draw_flat_box( style, window, state,
-                shadow, clipRect, widget, detail,
-                x, y, w, h );
-
-        }
+        // call parent method if reaching here
+        StyleWrapper::parentClass()->draw_flat_box( style, window, state,
+            shadow, clipRect, widget, detail,
+            x, y, w, h );
 
     }
 
@@ -634,13 +628,10 @@ namespace Oxygen
                 tiles &= ~TileSet::Left;
 
                 // shrink combo entry hole by 3px on right side
-                w-=3;
                 Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+
+                w -= Style::Entry_SideMargin;
                 Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
-
-                // fill padding
-                Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
-
 
                 return;
 
@@ -980,14 +971,11 @@ namespace Oxygen
             TileSet::Tiles tiles( TileSet::Ring);
             tiles &= ~TileSet::Left;
 
-            // shrink spinbox entry hole by 3px on right side
-            w-=3;
             Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+
+            // shrink spinbox entry hole by 3px on right side
+            w -= Style::Entry_SideMargin;
             Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
-
-            // fill padding
-            Style::instance().renderWindowBackground( window, clipRect, x+w+1,y,3,h);
-
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -1228,14 +1216,13 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
-                // shrink entry by 3px at left
-                x+=3;
-                w-=3;
 
+                // shrink entry by 3px at left
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+
+                x += Style::Entry_SideMargin;
+                w -= Style::Entry_SideMargin;
                 Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
-                // fill padding
-                Style::instance().renderWindowBackground( window, clipRect, x-3-1,y,3,h);
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -1246,15 +1233,14 @@ namespace Oxygen
 
                 if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
 
+                    // fill the inside of the spinbox manually
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
                     if( Style::instance().settings().applicationName().isOpenOffice() )
                     {
 
-                        /*
-                        for open-office on has to mask out the corners manually,
-                        because renderholebackground fails
-                        */
+                        // for openoffice on has to properly round the corners
+                        // and use an adjusted rect, because renderHoleBackground fails
                         Cairo::Context context( window, clipRect );
                         cairo_rounded_rectangle( context, x+1, y+1, w-1, h-3, 2, CornersLeft );
                         cairo_set_source( context, background );
@@ -1270,21 +1256,20 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
                 tiles &= ~TileSet::Right;
+
                 // basic adjustments
                 x-=1; w+=2;
 
-                // shrink entry by 3px on left side
+                // vertical alignment
                 if( !Style::instance().settings().applicationName().isOpenOffice() )
-                {
-                    x+=3; w-=3;
-                    y-=1; h+=2;
-                }
+                { y-=1; h+=2; }
 
                 Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
-                // fill padding
-                Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
+                if( !Style::instance().settings().applicationName().isOpenOffice() )
+                { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+
+                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
             } else {
 
@@ -1333,23 +1318,18 @@ namespace Oxygen
                 } else {
 
                     // basic adjustments
-                    x--;
-                    y--;
-                    w+=2;
-                    h+=2;
-                    if( d.isEntry() )
-                    {
-                        // shrink entry by 3px at each side
-                        x+=3;
-                        w-=6;
-                    }
+                    x-=1; y-=1;
+                    w+=2; h+=2;
 
                     Style::instance().renderHoleBackground( window, clipRect, x, y, w, h );
-                    Style::instance().renderHole( window, clipRect, x, y, w, h, options );
 
-                    // fill padding
-                    Style::instance().renderWindowBackground( window, clipRect, x-3,y,3,h);
-                    Style::instance().renderWindowBackground( window, clipRect, x+w,y,3,h);
+                    // shrink entry by 3px at each side
+                    if( d.isEntry() )
+                    {
+                        x += Style::Entry_SideMargin;
+                        w -= 2*Style::Entry_SideMargin;
+                    }
+                    Style::instance().renderHole( window, clipRect, x, y, w, h, options );
 
                 }
 
@@ -2047,12 +2027,16 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
-        if( d.isFrame() ) {
+        if( d.isFrame() )
+        {
 
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
                 Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
+
+                x += Style::Entry_SideMargin;
+                w -= 2*Style::Entry_SideMargin;
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {

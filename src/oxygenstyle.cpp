@@ -184,20 +184,26 @@ namespace Oxygen
                 GdkRectangle mask = {x+2, y+1, w-4, h-3 };
                 const double maskRadius = 3.5;
                 Corners corners( CornersNone );
-                if( tiles & TileSet::Top )
+                if( tiles & TileSet::Left )
                 {
-                    if( tiles & TileSet::Left ) corners |= CornersTopLeft;
-                    if( tiles & TileSet::Right ) corners |= CornersTopRight;
+                    mask.x += Entry_SideMargin;
+                    mask.width -= Entry_SideMargin;
+                    if( tiles & TileSet::Top ) corners |= CornersTopLeft;
+                    if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
                 }
 
-                if( tiles & TileSet::Bottom )
+                if( tiles & TileSet::Right )
                 {
-                    if( tiles & TileSet::Left ) corners |= CornersBottomLeft;
-                    if( tiles & TileSet::Right ) corners |= CornersBottomRight;
+                    mask.width -= Entry_SideMargin;
+                    if( tiles & TileSet::Top ) corners |= CornersTopRight;
+                    if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
                 }
+
+                // set clipping mask
                 gdk_cairo_rounded_rectangle_negative(context,&mask,maskRadius,CornersAll);
                 cairo_rectangle(context,x,y,w,h);
                 cairo_clip(context);
+
             }
 
             // get window dimension and position

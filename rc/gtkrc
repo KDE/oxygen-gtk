@@ -83,6 +83,7 @@ style "oxygen-pathbutton" = "oxygen-default"
 widget_class "*PathBar.<GtkButton>" style "oxygen-pathbutton"
 
 # entries
+# do not change unless also changing Entry_SideMargin in OxygenStyle.h
 style "oxygen-entry-margins" = "oxygen-default"
 { xthickness = 5 }
 

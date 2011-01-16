@@ -239,15 +239,24 @@ namespace Oxygen
         enum Metrics
         {
 
-            // checkbox. Do not change, unless
-            // changing the actual cached pixmap size
+            /*
+            checkbox. Do not change, unless
+            changing the actual cached pixmap size
+            */
             CheckBox_Size = 21,
 
             // slider groove height
             Slider_GrooveWidth = 5,
 
             // menu vertical offset
-            Menu_VerticalOffset = 1
+            Menu_VerticalOffset = 1,
+
+            /*
+            entries size margins. Do not change, unless
+            changing the corresponding oxygen-entry-margins style
+            in gtkrc
+            */
+            Entry_SideMargin = 3
 
         };
 
