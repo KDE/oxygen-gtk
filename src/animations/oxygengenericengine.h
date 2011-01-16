@@ -85,6 +85,10 @@ namespace Oxygen
         virtual DataMap<T>& data( void )
         { return _data; }
 
+        //! return refence to data
+        virtual const DataMap<T>& data( void ) const
+        { return _data; }
+
         private:
 
         //! map widgets to data

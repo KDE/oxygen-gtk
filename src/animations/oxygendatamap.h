@@ -139,6 +139,10 @@ namespace Oxygen
         Map& map( void )
         { return _map; }
 
+        //! retrieve internal map
+        const Map& map( void ) const
+        { return _map; }
+
         protected:
 
         //! copy constructor is private
