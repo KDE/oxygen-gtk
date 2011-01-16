@@ -72,6 +72,9 @@ namespace Oxygen
 
         //@}
 
+        //!@name accessors
+        //@{
+
         //! returns pressed combobox if any
         inline GtkWidget* pressedComboBox( void ) const;
 
@@ -86,6 +89,8 @@ namespace Oxygen
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
+
+        //@}
 
     };
 

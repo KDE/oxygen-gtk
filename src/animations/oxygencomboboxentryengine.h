@@ -79,6 +79,9 @@ namespace Oxygen
         //!@name accessors
         //@{
 
+        //! returns pressed combobox if any
+        inline GtkWidget* pressedComboBoxEntry( void ) const;
+
         //! true if either button or entry has focus
         bool hasFocus( GtkWidget* widget )
         { return data().value( widget ).hasFocus(); }
@@ -90,6 +93,15 @@ namespace Oxygen
         //@}
 
     };
+
+    //_________________________________________________
+    GtkWidget* ComboBoxEntryEngine::pressedComboBoxEntry( void ) const
+    {
+        const DataMap<ComboBoxEntryData>::Map& dataMap( data().map() );
+        for( DataMap<ComboBoxEntryData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        { if( iter->second.pressed() ) return iter->first; }
+        return 0L;
+    }
 
 }
 

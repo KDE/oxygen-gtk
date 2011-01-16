@@ -102,9 +102,16 @@ namespace Oxygen
         bool hovered( void ) const
         { return HoverData::hovered() || _button._hovered || _entry._hovered; }
 
+        //! pressed
+        bool pressed( void ) const
+        { return _button._pressed; }
+
         //@}
 
         protected:
+
+        //! set hover flag for given widget
+        void setPressed( GtkWidget*, bool );
 
         //! set hover flag for given widget
         virtual bool setHovered( GtkWidget*, bool );
@@ -117,6 +124,7 @@ namespace Oxygen
 
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static void childToggledEvent( GtkWidget*, gpointer );
 
         //@}
 
@@ -131,7 +139,8 @@ namespace Oxygen
             Data( void ):
                 _widget( 0L ),
                 _focus( false ),
-                _hovered( false )
+                _hovered( false ),
+                _pressed( false )
             {}
 
             //! disconnect
@@ -140,6 +149,7 @@ namespace Oxygen
             GtkWidget* _widget;
             bool _focus;
             bool _hovered;
+            bool _pressed;
 
             //!@name callback ids
             //@{
@@ -147,6 +157,7 @@ namespace Oxygen
             Signal _styleChangeId;
             Signal _enterId;
             Signal _leaveId;
+            Signal _toggledId;
             //@}
 
         };
