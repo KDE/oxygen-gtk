@@ -82,23 +82,6 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-
-        // hack GtkOptionMenu
-        if( GTK_IS_LABEL(widget) )
-        {
-            GtkWidget* parent=gtk_widget_get_parent(widget);
-            GtkStyle* style=gtk_widget_get_style(widget);
-
-            if(parent && GTK_IS_MENU_ITEM(parent))
-            {
-                style->depth=32;
-            }
-            else if (parent && GTK_IS_OPTION_MENU(parent))
-            {
-                style->depth=24;
-            }
-        }
-
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
         // make sure widget has not been realized already
