@@ -2657,7 +2657,8 @@ namespace Oxygen
         Style::instance().settings().initializeColors();
 
         // initialize argb hooks
-        ArgbHelper::instance().initializeHooks();
+        if( Style::instance().settings().argbEnabled() )
+        { ArgbHelper::instance().initializeHooks(); }
 
     }
 
