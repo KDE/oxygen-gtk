@@ -50,6 +50,10 @@ namespace Oxygen
         virtual ~QtSettings( void )
         {}
 
+        //! returns user config dir
+        std::string userConfigDir( void ) const
+        { return _userConfigDir; }
+
         //! initialize
         void initialize( void );
 
@@ -228,6 +232,9 @@ namespace Oxygen
         //! add icon theme to path list, accounting for theme inheritance (recursively)
         void addIconTheme( PathList&, const std::string& );
 
+        //! init user config dir
+        void initUserConfigDir( void );
+
         //! init application name
         void initApplicationName( void );
 
@@ -267,6 +274,9 @@ namespace Oxygen
 
         //! kde oxygen options
         OptionMap _oxygen;
+
+        //! user config directory
+        std::string _userConfigDir;
 
         //!@name icons
         //@{

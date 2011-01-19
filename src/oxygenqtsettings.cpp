@@ -79,6 +79,9 @@ namespace Oxygen
         if( _initialized ) return;
         _initialized = true;
 
+        // initialize user config dir
+        initUserConfigDir();
+
         // clear RC
         _rc.clear();
 
@@ -209,10 +212,13 @@ namespace Oxygen
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
         {
+
             out.split( path );
+
         } else {
-            const std::string userConfigDir( std::string( g_get_user_config_dir() ) + "/oxygen-gtk" );
-            out.push_back( userConfigDir );
+
+            out.push_back( userConfigDir() );
+
         }
 
         out.push_back( GTK_THEME_DIR );
@@ -235,6 +241,23 @@ namespace Oxygen
         { out.push_back( _defaultKdeIconPath ); }
 
         return out;
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::initUserConfigDir( void )
+    {
+
+        // create directory name
+        _userConfigDir = std::string( g_get_user_config_dir() ) + "/oxygen-gtk";
+
+        // make sure that corresponding directory does exist
+        struct stat st;
+        if( stat( _userConfigDir.c_str(), &st ) != 0 )
+        { mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO ); }
+
+        // note: in some cases, the target might exist and not be a directory
+        // nothing we can do about it. We won't overwrite the file to prevent dataloss
 
     }
 
