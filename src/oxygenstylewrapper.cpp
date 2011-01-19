@@ -31,6 +31,7 @@
 
 #include "oxygen.h"
 #include "oxygenanimations.h"
+#include "oxygenargbhelper.h"
 #include "oxygencairoutils.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
@@ -2654,6 +2655,10 @@ namespace Oxygen
         elsewhere, to fix some overwritting that occurs with some distros
         */
         Style::instance().settings().initializeColors();
+
+        // initialize argb hooks
+        ArgbHelper::instance().initializeHooks();
+
     }
 
     //_______________________________________________________________________________________________________________
