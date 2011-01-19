@@ -218,6 +218,10 @@ namespace Oxygen
 
         //@}
 
+        //! true if argb is enabled
+        bool argbEnabled( void ) const
+        { return _argbEnabled; }
+
         protected:
 
         // get home directory
@@ -237,6 +241,9 @@ namespace Oxygen
 
         //! init application name
         void initApplicationName( void );
+
+        //! init argb support
+        void initArgb( void );
 
         //! load kde icons
         void loadKdeIcons( void );
@@ -380,6 +387,9 @@ namespace Oxygen
         FrameBorder _frameBorder;
 
         //@}
+
+        //! true if argb is enabled
+        bool _argbEnabled;
 
         //! initialization flags
         bool _initialized;
