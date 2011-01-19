@@ -71,6 +71,7 @@ namespace Oxygen
         _frameBorder( BorderDefault ),
         _activeShadowConfiguration( Palette::Active ),
         _inactiveShadowConfiguration( Palette::Inactive ),
+        _argbEnabled( true ),
         _initialized( false ),
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
@@ -106,7 +107,11 @@ namespace Oxygen
 
         // init application name
         if( flags & AppName )
-        { initApplicationName(); }
+        {
+            initUserConfigDir();
+            initApplicationName();
+            initArgb();
+        }
 
         // configuration path
         _kdeConfigPathList = kdeConfigPathList();
@@ -224,10 +229,13 @@ namespace Oxygen
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
         {
+
             out.split( path );
+
         } else {
-            const std::string userConfigDir( std::string( g_get_user_config_dir() ) + "/oxygen-gtk" );
-            out.push_back( userConfigDir );
+
+            out.push_back( userConfigDir() );
+
         }
 
         out.push_back( GTK_THEME_DIR );
@@ -256,6 +264,135 @@ namespace Oxygen
         { out.push_back( _defaultKdeIconPath ); }
 
         return out;
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::initUserConfigDir( void )
+    {
+
+        // create directory name
+        _userConfigDir = std::string( g_get_user_config_dir() ) + "/oxygen-gtk";
+
+        // make sure that corresponding directory does exist
+        struct stat st;
+        if( stat( _userConfigDir.c_str(), &st ) != 0 )
+        { mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO ); }
+
+        // note: in some cases, the target might exist and not be a directory
+        // nothing we can do about it. We won't overwrite the file to prevent dataloss
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::initArgb( void )
+    {
+        // get program name
+        const char* appName = g_get_prgname();
+        if( !appName ) return;
+
+        // user-defined configuration file
+        const std::string userConfig( userConfigDir() + "/argb-apps.conf");
+
+        // make sure user configuration file exists
+        std::ofstream newConfig( userConfig.c_str(), std::ios::app );
+        if( newConfig )
+        {
+            // if the file is empty (newly created), put a hint there
+            if( !newConfig.tellp() )
+            { newConfig << "# argb-apps.conf\n# Put your user-specific ARGB app settings here\n\n"; }
+            newConfig.close();
+
+        }
+
+        // check for ARGB hack being disabled
+        if(g_getenv("OXYGEN_DISABLE_ARGB_HACK"))
+        {
+            std::cerr << "Oxygen::QtSettings::initArgb - ARGB hack is disabled; program name: " << appName << std::endl;
+            std::cerr << "Oxygen::QtSettings::initArgb - if disabling ARGB hack helps, please add this string:\n\ndisable:" << appName << "\n\nto ~/.config/oxygen-gtk/argb-apps.conf\nand report it here: https://bugs.kde.org/show_bug.cgi?id=260640" << std::endl;
+            return;
+        }
+
+        // get debug flag from environement
+        const bool OXYGEN_ARGB_DEBUG = g_getenv("OXYGEN_ARGB_DEBUG");
+
+        // read blacklist
+        // system-wide configuration file
+        const std::string configFile( std::string( GTK_THEME_DIR ) + "/argb-apps.conf" );
+        std::ifstream systemIn( configFile.c_str() );
+        if( !systemIn )
+        {
+
+            if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
+            { std::cerr << "Oxygen::QtSettings::initArgb - ARGB config file \"" << configFile << "\" not found" << std::endl; }
+
+        }
+
+        // load options into a string
+        std::string contents;
+        std::vector<std::string> lines;
+        while( std::getline( systemIn, contents, '\n' ) )
+        {
+            if( contents.empty() || contents[0] == '#' ) continue;
+            lines.push_back( contents );
+        }
+
+        // user specific blacklist
+        std::ifstream userIn( userConfig.c_str() );
+        if( !userIn )
+        {
+
+            if( G_UNLIKELY(OXYGEN_DEBUG||OXYGEN_ARGB_DEBUG) )
+            { std::cerr << "Oxygen::QtSettings::initArgb - user-defined ARGB config file \"" << userConfig << "\" not found - only system-wide one will be used" << std::endl; }
+
+        }
+
+        // load options into a string
+        while( std::getline( userIn, contents, '\n' ) )
+        {
+            if( contents.empty() || contents[0] == '#' ) continue;
+            lines.push_back( contents );
+        }
+
+        // true if application was found in one of the lines
+        bool found( false );
+        for( std::vector<std::string>::const_reverse_iterator iter = lines.rbegin(); iter != lines.rend() && !found; ++iter )
+        {
+
+            // store line locally
+            std::string contents( *iter );
+
+            // split string using ":" as a delimiter
+            std::vector<std::string> appNames;
+            size_t position( std::string::npos );
+            while( ( position = contents.find( ':' ) ) != std::string::npos )
+            {
+                std::string appName( contents.substr(0, position ) );
+                if( !appName.empty() ) { appNames.push_back( appName ); }
+                contents = contents.substr( position+1 );
+            }
+
+            if( !contents.empty() ) appNames.push_back( contents );
+            if( appNames.empty() ) continue;
+
+            // check line type
+            bool enabled( true );
+            if( appNames[0] == "enable" ) enabled = true;
+            else if( appNames[0] == "disable" ) enabled = false;
+            else continue;
+
+            // compare application names to this application
+            for( unsigned int i = 1; i < appNames.size(); i++ )
+            {
+                if( appNames[i] == "all" || appNames[i] == appName )
+                {
+                    found = true;
+                    _argbEnabled = enabled;
+                    break;
+                }
+            }
+
+        }
 
     }
 

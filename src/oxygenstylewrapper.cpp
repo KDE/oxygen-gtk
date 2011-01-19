@@ -31,6 +31,7 @@
 
 #include "oxygen.h"
 #include "oxygenanimations.h"
+#include "oxygenargbhelper.h"
 #include "oxygencairoutils.h"
 #include "oxygendbus.h"
 #include "oxygengtkcellinfo.h"
@@ -2671,6 +2672,11 @@ namespace Oxygen
 
         // also initialize dbus
         Oxygen::DBus::instance();
+
+        // initialize argb hooks
+        if( Style::instance().settings().argbEnabled() )
+        { ArgbHelper::instance().initializeHooks(); }
+
     }
 
     //_______________________________________________________________________________________________________________

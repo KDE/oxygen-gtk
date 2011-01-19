@@ -21,6 +21,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygentreeviewdata.cpp
     animations/oxygentreeviewengine.cpp
     oxygenapplicationname.cpp
+    oxygenargbhelper.cpp
     oxygencairocontext.cpp
     oxygencairopattern.cpp
     oxygencairoutils.cpp

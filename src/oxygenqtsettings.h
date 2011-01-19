@@ -67,6 +67,10 @@ namespace Oxygen
             Forced = 1<<6
         };
 
+        //! returns user config dir
+        std::string userConfigDir( void ) const
+        { return _userConfigDir; }
+
         //! initialize
         void initialize( unsigned int flags = All );
 
@@ -242,6 +246,10 @@ namespace Oxygen
 
         //@}
 
+        //! true if argb is enabled
+        bool argbEnabled( void ) const
+        { return _argbEnabled; }
+
         protected:
 
         // get home directory
@@ -256,8 +264,14 @@ namespace Oxygen
         //! add icon theme to path list, accounting for theme inheritance (recursively)
         void addIconTheme( PathList&, const std::string& );
 
+        //! init user config dir
+        void initUserConfigDir( void );
+
         //! init application name
         void initApplicationName( void );
+
+        //! init argb support
+        void initArgb( void );
 
         //! load kde icons
         void loadKdeIcons( void );
@@ -289,6 +303,9 @@ namespace Oxygen
 
         //! kde global options
         OptionMap _kdeGlobals;
+
+        //! user config directory
+        std::string _userConfigDir;
 
         //!@name icons
         //@{
@@ -398,6 +415,9 @@ namespace Oxygen
         ShadowConfiguration _inactiveShadowConfiguration;
 
         //@}
+
+        //! true if argb is enabled
+        bool _argbEnabled;
 
         //! initialization flags
         bool _initialized;
