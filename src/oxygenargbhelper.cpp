@@ -78,14 +78,14 @@ namespace Oxygen
     {
 
         // get widget from params
-        GObject* widget( G_OBJECT( g_value_get_object( params ) ) );
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
         // make sure widget has not been realized already
-        if( gtk_widget_get_realized( GTK_WIDGET( widget ) ) ) return TRUE;
+        if( gtk_widget_get_realized( widget ) ) return TRUE;
 
         // cast to window
         GtkWindow* window( GTK_WINDOW( widget ) );
@@ -114,13 +114,13 @@ namespace Oxygen
 
             GdkColormap* cmap=gdk_screen_get_rgba_colormap( screen );
             gtk_widget_push_colormap( cmap );
-            gtk_widget_set_colormap( GTK_WIDGET( widget ), cmap );
+            gtk_widget_set_colormap( widget, cmap );
 
         } else {
 
             GdkColormap* cmap=gdk_screen_get_rgb_colormap( screen );
             gtk_widget_push_colormap( cmap );
-            gtk_widget_set_colormap( GTK_WIDGET( widget ), cmap );
+            gtk_widget_set_colormap( widget, cmap );
 
         }
 
