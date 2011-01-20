@@ -515,10 +515,10 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
+            widget?G_OBJECT_TYPE_NAME( widget ):"0x0",
             Gtk::TypeNames::state( state ),
             Gtk::TypeNames::shadow( shadow ),
-            detail );
+            detail?detail:"0x0" );
         #endif
 
         if(GTK_IS_MENU_BAR( widget ) )
@@ -1051,10 +1051,10 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
             "widget=%s, primitive=shadow, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
+            widget?G_OBJECT_TYPE_NAME( widget ):"0x0",
             Gtk::TypeNames::state( state ),
             Gtk::TypeNames::shadow( shadow ),
-            detail );
+            detail?detail:"0x0" );
         #endif
 
         GtkWidget* parent( 0L );
