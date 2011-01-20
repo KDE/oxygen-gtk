@@ -9,6 +9,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygencomboboxdata.cpp
     animations/oxygencomboboxentrydata.cpp
     animations/oxygendialogengine.cpp
+    animations/oxygenhook.cpp
     animations/oxygenhoverdata.cpp
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenushelldata.cpp
