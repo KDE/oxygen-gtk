@@ -41,8 +41,13 @@ namespace Oxygen
         virtual ~Hook( void )
         {}
 
+
+
         //! connect
-        void connect( const std::string&, GSignalEmissionHook, gpointer );
+        void connect( const std::string&, GType, GSignalEmissionHook, gpointer );
+
+        void connect( const std::string& signal, GSignalEmissionHook hook, gpointer data )
+        { connect( signal, GTK_TYPE_WIDGET, hook, data ); }
 
         //! disconnect
         void disconnect( void );
