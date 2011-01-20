@@ -66,8 +66,8 @@ namespace Oxygen
 
         public:
 
-        //! return singleton
-        static ArgbHelper& instance( void );
+        //! constructor
+        explicit ArgbHelper( void );
 
         //! destructor
         virtual ~ArgbHelper( void );
@@ -82,17 +82,11 @@ namespace Oxygen
 
         private:
 
-        //! constructor
-        explicit ArgbHelper( void );
-
         //! true if hooks are initialized
         bool _hooksInitialized;
 
         //! colormap hook
         Hook _colormapHook;
-
-        //! singleton
-        static ArgbHelper* _instance;
 
     };
 

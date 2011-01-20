@@ -68,16 +68,6 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    ArgbHelper* ArgbHelper::_instance = 0;
-    ArgbHelper& ArgbHelper::instance( void )
-    {
-        if( !_instance )
-        { _instance = new ArgbHelper(); }
-
-        return *_instance;
-    }
-
-    //__________________________________________________________________
     ArgbHelper::ArgbHelper( void ):
         _hooksInitialized( false )
     {}
@@ -88,9 +78,6 @@ namespace Oxygen
     {
         // disconnect hooks
         _colormapHook.disconnect();
-
-        // clear singleton
-        _instance = 0L;
     }
 
     //_____________________________________________________

@@ -22,6 +22,7 @@
 */
 
 #include "oxygenanimations.h"
+#include "oxygenargbhelper.h"
 #include "oxygencairocontext.h"
 #include "oxygengeometry.h"
 #include "oxygengtkcellinfo.h"
@@ -78,6 +79,10 @@ namespace Oxygen
         //! animations
         Animations& animations( void )
         { return _animations; }
+
+        //! argb helper
+        ArgbHelper& argbHelper( void )
+        { return _argbHelper; }
 
         //! window manager
         WindowManager& windowManager( void )
@@ -379,6 +384,9 @@ namespace Oxygen
 
         // animations
         Animations _animations;
+
+        //! argb helper
+        ArgbHelper _argbHelper;
 
         //! window manager
         WindowManager _windowManager;
