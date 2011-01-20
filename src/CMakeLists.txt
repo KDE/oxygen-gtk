@@ -13,6 +13,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygenhoverdata.cpp
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenushelldata.cpp
+    animations/oxygenoptionmenudata.cpp
     animations/oxygensignal.cpp
     animations/oxygenscrollbardata.cpp
     animations/oxygenscrolledwindowdata.cpp
