@@ -47,7 +47,7 @@ namespace Oxygen
         protected:
 
         //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
+        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! depth adjustment hook
         static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
