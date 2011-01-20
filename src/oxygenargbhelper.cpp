@@ -38,13 +38,13 @@ namespace Oxygen
 {
 
     //__________________________________________________________________
-    void Hook::connect( const std::string& signal, GSignalEmissionHook hookFunction, gpointer data )
+    void Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
     {
         // make sure that signal is not already connected
         assert( _signalId == 0 && _hookId == 0 );
 
         // store signal id
-        _signalId = g_signal_lookup( signal.c_str(), GTK_TYPE_WIDGET );
+        _signalId = g_signal_lookup( signal.c_str(), typeId );
         if( !_signalId ) return;
 
         // store attributes and create connection
@@ -189,12 +189,15 @@ namespace Oxygen
         // adjust depth
         if( style->depth != gdk_drawable_get_depth( window ) )
         {
+
+            #if OXYGEN_DEBUG
             std::cerr
                 << "Oxygen::ArgbHelper::styleHook -"
                 << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " style depth: " << style->depth
                 << " window depth: " << gdk_drawable_get_depth( window )
                 << std::endl;
+            #endif
 
             widget->style = gtk_style_attach( style, window );
 
