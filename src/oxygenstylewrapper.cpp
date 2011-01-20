@@ -1741,7 +1741,7 @@ namespace Oxygen
             GtkWidget* parent=gtk_widget_get_parent(widget);
             if(parent)
                 parent=gtk_widget_get_parent(parent);
-            if( std::string(G_OBJECT_TYPE_NAME(parent)) == "GimpScaleComboBox")
+            if( parent && std::string(G_OBJECT_TYPE_NAME(parent)) == "GimpScaleComboBox")
                 x--;
         }
 
