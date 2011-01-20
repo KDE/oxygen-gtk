@@ -36,7 +36,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::connect - " << widget << std::endl;
+        std::cerr << "Oxygen::TabWidgetData::connect - " << widget << std::endl;
         #endif
 
         _target = widget;
@@ -53,7 +53,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::disconnect - " << widget << std::endl;
+        std::cerr << "Oxygen::TabWidgetData::disconnect - " << widget << std::endl;
         #endif
 
         _target = 0L;
@@ -146,7 +146,7 @@ namespace Oxygen
     void TabWidgetData::pageAddedEvent( GtkNotebook* parent, GtkWidget* child, guint, gpointer data)
     {
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::pageAddedEvent - " << child << std::endl;
+        std::cerr << "Oxygen::TabWidgetData::pageAddedEvent - " << child << std::endl;
         #endif
         static_cast<TabWidgetData*>(data)->updateRegisteredChildren( GTK_WIDGET( parent ) );
     }
@@ -181,7 +181,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cout << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
+            std::cerr << "Oxygen::TabWidgetData::registerChild - " << widget << std::endl;
             #endif
 
             // allocate new ChildData
@@ -223,7 +223,7 @@ namespace Oxygen
         if( iter == _childrenData.end() ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
+        std::cerr << "Oxygen::TabWidgetData::unregisterChild - " << widget << std::endl;
         #endif
 
         iter->second.disconnect();

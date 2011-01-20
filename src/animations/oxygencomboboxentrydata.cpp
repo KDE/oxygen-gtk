@@ -58,7 +58,7 @@ namespace Oxygen
         assert( !_entry._widget );
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxEntryData::setEntry - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::ComboBoxEntryData::setEntry - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         _entry._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
@@ -100,7 +100,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxEntryData::unregisterChild - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::ComboBoxEntryData::unregisterChild - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         if( widget == _button._widget ) _button.disconnect();
@@ -114,7 +114,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxEntryData::Data::disconnect - " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::ComboBoxEntryData::Data::disconnect - " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")" << std::endl;
         #endif
 
         if( !_widget ) return;

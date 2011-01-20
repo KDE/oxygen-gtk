@@ -52,7 +52,7 @@ namespace Oxygen
         if( !child ) return;
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ScrolledWindowData::connect -"
             << " child: " << child << " (" << G_OBJECT_TYPE_NAME( child ) << ")"
             << std::endl;
@@ -126,7 +126,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cout
+            std::cerr
                 << "Oxygen::ScrolledWindowData::registerChild -"
                 << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << std::endl;
@@ -177,7 +177,7 @@ namespace Oxygen
         if( iter == _childrenData.end() ) return;
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ScrolledWindowData::unregisterChild -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
@@ -197,7 +197,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ScrolledWindowData::ChildData::disconnect -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
@@ -218,7 +218,7 @@ namespace Oxygen
     gboolean ScrolledWindowData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ScrolledWindowData::childDestroyNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
@@ -236,7 +236,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ScrolledWindowData::enterNotifyEvent -"
+        std::cerr << "Oxygen::ScrolledWindowData::enterNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -252,7 +252,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ScrolledWindowData::leaveNotifyEvent -"
+        std::cerr << "Oxygen::ScrolledWindowData::leaveNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -268,7 +268,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ScrolledWindowData::focusInNotifyEvent -"
+        std::cerr << "Oxygen::ScrolledWindowData::focusInNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -282,7 +282,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ScrolledWindowData::focusOutNotifyEvent -"
+        std::cerr << "Oxygen::ScrolledWindowData::focusOutNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
