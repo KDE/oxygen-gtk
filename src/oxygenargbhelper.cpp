@@ -128,7 +128,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer* )
+    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
     {
 
         // get widget from params
