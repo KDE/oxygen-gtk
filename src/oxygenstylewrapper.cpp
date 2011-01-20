@@ -2833,7 +2833,7 @@ namespace Oxygen
 
         // initialize argb hooks
         if( Style::instance().settings().argbEnabled() )
-        { ArgbHelper::instance().initializeHooks(); }
+        { Style::instance().argbHelper().initializeHooks(); }
 
     }
 
