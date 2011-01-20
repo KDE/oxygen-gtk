@@ -38,36 +38,6 @@ namespace Oxygen
 {
 
     //__________________________________________________________________
-    void Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
-    {
-        // make sure that signal is not already connected
-        assert( _signalId == 0 && _hookId == 0 );
-
-        // store signal id
-        _signalId = g_signal_lookup( signal.c_str(), typeId );
-        if( !_signalId ) return;
-
-        // store attributes and create connection
-        _hookId = g_signal_add_emission_hook(
-            _signalId,
-            (GQuark)0L,
-            hookFunction,
-            data, 0L);
-
-    }
-
-    //____________________________________________________________________
-    void Hook::disconnect( void )
-    {
-
-        // disconnect signal
-        if( _signalId > 0 && _hookId > 0 ) g_signal_remove_emission_hook( _signalId, _hookId );
-        _signalId = 0;
-        _hookId = 0;
-
-    }
-
-    //__________________________________________________________________
     ArgbHelper::ArgbHelper( void ):
         _hooksInitialized( false )
     {}
