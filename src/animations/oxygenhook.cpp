@@ -1,5 +1,3 @@
-#ifndef oxygenargbhelper_h
-#define oxygenargbhelper_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -23,48 +21,39 @@
 
 #include "oxygenhook.h"
 
-#include <gtk/gtk.h>
-#include <string>
+#include <cassert>
 
 namespace Oxygen
 {
 
-    //! handles argb support on a per-application, per-widget basis
-    class ArgbHelper
+    //__________________________________________________________________
+    void Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
+    {
+        // make sure that signal is not already connected
+        assert( _signalId == 0 && _hookId == 0 );
+
+        // store signal id
+        _signalId = g_signal_lookup( signal.c_str(), typeId );
+        if( !_signalId ) return;
+
+        // store attributes and create connection
+        _hookId = g_signal_add_emission_hook(
+            _signalId,
+            (GQuark)0L,
+            hookFunction,
+            data, 0L);
+
+    }
+
+    //____________________________________________________________________
+    void Hook::disconnect( void )
     {
 
-        public:
+        // disconnect signal
+        if( _signalId > 0 && _hookId > 0 ) g_signal_remove_emission_hook( _signalId, _hookId );
+        _signalId = 0;
+        _hookId = 0;
 
-        //! constructor
-        explicit ArgbHelper( void );
-
-        //! destructor
-        virtual ~ArgbHelper( void );
-
-        //! initialize hooks
-        void initializeHooks( void );
-
-        protected:
-
-        //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
-
-        //! depth adjustment hook
-        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
-
-        private:
-
-        //! true if hooks are initialized
-        bool _hooksInitialized;
-
-        //! colormap hook
-        Hook _colormapHook;
-
-        //! style hook
-        Hook _styleHook;
-
-    };
+    }
 
 }
-
-#endif

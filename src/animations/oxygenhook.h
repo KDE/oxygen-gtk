@@ -1,5 +1,5 @@
-#ifndef oxygenargbhelper_h
-#define oxygenargbhelper_h
+#ifndef oxygenhook_h
+#define oxygenhook_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -21,47 +21,42 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenhook.h"
-
 #include <gtk/gtk.h>
 #include <string>
 
 namespace Oxygen
 {
-
-    //! handles argb support on a per-application, per-widget basis
-    class ArgbHelper
+    //! handles gtk signal hooks
+    class Hook
     {
-
         public:
 
         //! constructor
-        explicit ArgbHelper( void );
+        Hook( void ):
+            _signalId(0),
+            _hookId(0)
+        {}
 
         //! destructor
-        virtual ~ArgbHelper( void );
+        virtual ~Hook( void )
+        {}
 
-        //! initialize hooks
-        void initializeHooks( void );
 
-        protected:
 
-        //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
+        //! connect
+        void connect( const std::string&, GType, GSignalEmissionHook, gpointer );
 
-        //! depth adjustment hook
-        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
+        void connect( const std::string& signal, GSignalEmissionHook hook, gpointer data )
+        { connect( signal, GTK_TYPE_WIDGET, hook, data ); }
+
+        //! disconnect
+        void disconnect( void );
 
         private:
 
-        //! true if hooks are initialized
-        bool _hooksInitialized;
-
-        //! colormap hook
-        Hook _colormapHook;
-
-        //! style hook
-        Hook _styleHook;
+        //! signal id
+        guint _signalId;
+        gulong _hookId;
 
     };
 
