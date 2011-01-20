@@ -51,7 +51,7 @@ namespace Oxygen
 
         // register
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::BackgroundHintEngine::registerWidget - (" << topLevel << "," << id << ")" << std::endl;
+        std::cerr << "Oxygen::BackgroundHintEngine::registerWidget - (" << topLevel << "," << id << ")" << std::endl;
         #endif
 
         // insert in set
@@ -73,7 +73,7 @@ namespace Oxygen
             {
 
                 #if OXYGEN_DEBUG
-                std::cout << "Oxygen::BackgroundHintEngine::unregisterWidget - (" << iter->_widget << "," << iter->_id << ")" << std::endl;
+                std::cerr << "Oxygen::BackgroundHintEngine::unregisterWidget - (" << iter->_widget << "," << iter->_id << ")" << std::endl;
                 #endif
 
                 _data.erase( iter++ );
