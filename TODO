@@ -1,0 +1,18 @@
+This is the oxygen-gtk TODO list, maintained and updated by the devs. 
+You can add anything you can think of here. Possibly specifying the branch, a possible release target, and a priority.
+You can also add your name on which of the item you are either already working on, or interested in working on. 
+
+Reminder: fixing existing bugs on bugs.kde.org should always have the highest priority :)
+
+argb branch:
+- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class
+
+main branch:
+- add hooks to deal with combobox/comboboxentry list resize.
+- add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
+
+- implement smooth animations (notably hover and focus smooth glow)
+- try implement some "true" inner-shadow (and glow) for GtkListView
+- better support for using oxygen-gtk in a non-kde environment.
+
+- merge the argb branch when stable enough.
