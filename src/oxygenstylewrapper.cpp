@@ -1750,6 +1750,15 @@ namespace Oxygen
             fill );
         #endif
 
+        {
+            // Deal with GimpScaleComboBox misplaced arrow because of entry shrinking
+            GtkWidget* parent=gtk_widget_get_parent(widget);
+            if(parent)
+                parent=gtk_widget_get_parent(parent);
+            if( std::string(G_OBJECT_TYPE_NAME(parent)) == "GimpScaleComboBox")
+                x--;
+        }
+
         const Gtk::Detail d( detail );
 
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
