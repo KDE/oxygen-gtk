@@ -103,7 +103,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer* )
+    gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
     {
 
         // get widget from params
