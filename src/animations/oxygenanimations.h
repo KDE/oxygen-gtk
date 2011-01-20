@@ -29,6 +29,7 @@
 #include "oxygenhoverengine.h"
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
+#include "oxygenoptionmenuengine.h"
 #include "oxygenscrollbarengine.h"
 #include "oxygenscrolledwindowengine.h"
 #include "oxygensignal.h"
@@ -90,6 +91,10 @@ namespace Oxygen
         //! menushell engine
         MenuShellEngine& menuShellEngine( void ) const
         { return *_menuShellEngine; }
+
+        //! optionmenu engine
+        OptionMenuEngine& optionMenuEngine( void ) const
+        { return *_optionMenuEngine; }
 
         //! hover engine
         HoverEngine& hoverEngine( void ) const
@@ -155,6 +160,9 @@ namespace Oxygen
 
         //! menushell engine
         MenuShellEngine* _menuShellEngine;
+
+        //! option menu engine
+        OptionMenuEngine* _optionMenuEngine;
 
         //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;

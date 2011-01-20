@@ -40,6 +40,7 @@ namespace Oxygen
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
+        registerEngine( _optionMenuEngine = new OptionMenuEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
