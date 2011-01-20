@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <sys/stat.h>
 
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -35,6 +36,36 @@
 
 namespace Oxygen
 {
+
+    //__________________________________________________________________
+    void Hook::connect( const std::string& signal, GSignalEmissionHook hookFunction, gpointer data )
+    {
+        // make sure that signal is not already connected
+        assert( _signalId == 0 && _hookId == 0 );
+
+        // store signal id
+        _signalId = g_signal_lookup( signal.c_str(), GTK_TYPE_WIDGET );
+        if( !_signalId ) return;
+
+        // store attributes and create connection
+        _hookId = g_signal_add_emission_hook(
+            _signalId,
+            (GQuark)0L,
+            hookFunction,
+            data, 0L);
+
+    }
+
+    //____________________________________________________________________
+    void Hook::disconnect( void )
+    {
+
+        // disconnect signal
+        if( _signalId > 0 && _hookId > 0 ) g_signal_remove_emission_hook( _signalId, _hookId );
+        _signalId = 0;
+        _hookId = 0;
+
+    }
 
     //__________________________________________________________________
     ArgbHelper* ArgbHelper::_instance = 0;
@@ -51,6 +82,18 @@ namespace Oxygen
         _hooksInitialized( false )
     {}
 
+
+    //_____________________________________________________
+    ArgbHelper::~ArgbHelper( void )
+    {
+        // disconnect hooks
+        _colormapHook.disconnect();
+        _styleHook.disconnect();
+
+        // clear singleton
+        _instance = 0L;
+    }
+
     //_____________________________________________________
     void ArgbHelper::initializeHooks( void )
     {
@@ -62,18 +105,8 @@ namespace Oxygen
         if( signalId <= 0 ) return;
 
         // install hooks
-
-        g_signal_add_emission_hook(
-            g_signal_lookup("style-set", GTK_TYPE_WINDOW ),
-            (GQuark)0L,
-            (GSignalEmissionHook)colormapHook,
-            0L, 0L);
-
-        g_signal_add_emission_hook(
-            g_signal_lookup("parent-set", GTK_TYPE_WINDOW ),
-            (GQuark)0L,
-            (GSignalEmissionHook)depthAdjustmentHook,
-            0L, 0L);
+        _colormapHook.connect( "style-set", (GSignalEmissionHook)colormapHook, 0L );
+        _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, 0L );
 
         _hooksInitialized = true;
         return;
@@ -114,7 +147,7 @@ namespace Oxygen
 
             #if OXYGEN_DEBUG
             std::cerr << "Oxygen::ArgbHelper::colormapHook - "
-                << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
+                << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
                 << std::endl;
             #endif
@@ -136,7 +169,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::depthAdjustmentHook( GSignalInvocationHint*, guint, const GValue* params, gpointer* )
+    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer* )
     {
 
         // get widget from params
@@ -147,7 +180,7 @@ namespace Oxygen
 
         // retrieve widget style and check
         GtkStyle* style( widget->style );
-        if( !style ) return TRUE;
+        if( !( style && style->depth >= 0 ) ) return TRUE;
 
         // retrieve parent window and check
         GdkWindow* window( gtk_widget_get_parent_window( widget ) );
@@ -155,7 +188,17 @@ namespace Oxygen
 
         // adjust depth
         if( style->depth != gdk_drawable_get_depth( window ) )
-        { widget->style = gtk_style_attach( style, window ); }
+        {
+            std::cerr
+                << "Oxygen::ArgbHelper::styleHook -"
+                << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " style depth: " << style->depth
+                << " window depth: " << gdk_drawable_get_depth( window )
+                << std::endl;
+
+            widget->style = gtk_style_attach( style, window );
+
+        }
 
         return TRUE;
 

@@ -22,9 +22,38 @@
 */
 
 #include <gtk/gtk.h>
+#include <string>
 
 namespace Oxygen
 {
+    //! handles gtk signal connections
+    class Hook
+    {
+        public:
+
+        //! constructor
+        Hook( void ):
+            _signalId(0),
+            _hookId(0)
+        {}
+
+        //! destructor
+        virtual ~Hook( void )
+        {}
+
+        //! connect
+        void connect( const std::string&, GSignalEmissionHook, gpointer );
+
+        //! disconnect
+        void disconnect( void );
+
+        private:
+
+        //! signal id
+        guint _signalId;
+        gulong _hookId;
+
+    };
 
     //! handles argb support on a per-application, per-widget basis
     class ArgbHelper
@@ -36,8 +65,7 @@ namespace Oxygen
         static ArgbHelper& instance( void );
 
         //! destructor
-        virtual ~ArgbHelper( void )
-        { _instance = 0L; }
+        virtual ~ArgbHelper( void );
 
         //! initialize hooks
         void initializeHooks( void );
@@ -48,7 +76,7 @@ namespace Oxygen
         static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
 
         //! depth adjustment hook
-        static gboolean depthAdjustmentHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
+        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
 
         private:
 
@@ -57,6 +85,12 @@ namespace Oxygen
 
         //! true if hooks are initialized
         bool _hooksInitialized;
+
+        //! colormap hook
+        Hook _colormapHook;
+
+        //! style hook
+        Hook _styleHook;
 
         //! singleton
         static ArgbHelper* _instance;
