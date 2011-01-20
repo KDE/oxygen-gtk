@@ -28,7 +28,7 @@ namespace Oxygen
     void Signal::connect( GObject* object, const std::string& signal, GCallback callback, gpointer data )
     {
         // make sure that signal is not already connected
-        assert( _object == 0 && _id < 0 );
+        assert( _object == 0L && _id == 0 );
 
         // store attributes and create connection
         _object = object;
@@ -40,11 +40,11 @@ namespace Oxygen
     {
 
         // disconnect signal
-        if( _object && _id >= 0 ) g_signal_handler_disconnect( _object, _id );
+        if( _object && _id > 0 ) g_signal_handler_disconnect( _object, _id );
 
         // reset members
         _object = 0L;
-        _id = -1;
+        _id = 0;
 
     }
 

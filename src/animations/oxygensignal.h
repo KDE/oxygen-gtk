@@ -34,7 +34,7 @@ namespace Oxygen
 
         //! constructor
         Signal( void ):
-            _id(-1),
+            _id(0),
             _object(0L)
         {}
 
@@ -51,7 +51,7 @@ namespace Oxygen
         private:
 
         //! signal id
-        int _id;
+        guint _id;
 
         //! connected object
         GObject* _object;
