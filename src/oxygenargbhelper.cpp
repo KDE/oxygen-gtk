@@ -61,12 +61,19 @@ namespace Oxygen
         const guint signalId( g_signal_lookup("style-set", GTK_TYPE_WINDOW ) );
         if( signalId <= 0 ) return;
 
-        // install hook
+        // install hooks
+
         g_signal_add_emission_hook(
             g_signal_lookup("style-set", GTK_TYPE_WINDOW ),
             (GQuark)0L,
             (GSignalEmissionHook)colormapHook,
-            this, 0L);
+            0L, 0L);
+
+        g_signal_add_emission_hook(
+            g_signal_lookup("parent-set", GTK_TYPE_WINDOW ),
+            (GQuark)0L,
+            (GSignalEmissionHook)depthAdjustmentHook,
+            0L, 0L);
 
         _hooksInitialized = true;
         return;
@@ -123,6 +130,32 @@ namespace Oxygen
             gtk_widget_set_colormap( widget, cmap );
 
         }
+
+        return TRUE;
+
+    }
+
+    //_____________________________________________________
+    gboolean ArgbHelper::depthAdjustmentHook( GSignalInvocationHint*, guint, const GValue* params, gpointer* )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // retrieve widget style and check
+        GtkStyle* style( widget->style );
+        if( !style ) return TRUE;
+
+        // retrieve parent window and check
+        GdkWindow* window( gtk_widget_get_parent_window( widget ) );
+        if( !window ) return TRUE;
+
+        // adjust depth
+        if( style->depth != gdk_drawable_get_depth( window ) )
+        { widget->style = gtk_style_attach( style, window ); }
 
         return TRUE;
 

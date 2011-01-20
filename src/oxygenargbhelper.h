@@ -47,6 +47,9 @@ namespace Oxygen
         //! argb hook
         static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
 
+        //! depth adjustment hook
+        static gboolean depthAdjustmentHook( GSignalInvocationHint*, guint, const GValue*, gpointer* );
+
         private:
 
         //! constructor
