@@ -5,7 +5,7 @@ You can also add your name on which of the item you are either already working o
 Reminder: fixing existing bugs on bugs.kde.org should always have the highest priority :)
 
 argb branch:
-- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class
+- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
 
 main branch:
 - add hooks to deal with combobox/comboboxentry list resize.
