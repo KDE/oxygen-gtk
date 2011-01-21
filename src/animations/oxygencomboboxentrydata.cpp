@@ -20,6 +20,7 @@
 
 #include "oxygencomboboxentrydata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 #include <iostream>

@@ -70,7 +70,9 @@ namespace Oxygen
     {
         if( _hooksInitialized ) return;
 
+        # if ENABLE_COMBOBOX_LIST_RESIZE
         _comboBoxHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxHook, this );
+        #endif
 
         _hooksInitialized = true;
     }
