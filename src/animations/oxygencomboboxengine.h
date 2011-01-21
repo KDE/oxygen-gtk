@@ -75,8 +75,9 @@ namespace Oxygen
         //!@name accessors
         //@{
 
-        //! returns pressed combobox if any
-        inline GtkWidget* pressedComboBox( void ) const;
+        //! find combobox matching widget
+        /*! the widget can be any of those in a visible list */
+        inline GtkWidget* find( GtkWidget* );
 
         //! true if either button or is pressed
         bool pressed( GtkWidget* widget )
@@ -95,12 +96,24 @@ namespace Oxygen
     };
 
     //_________________________________________________
-    GtkWidget* ComboBoxEngine::pressedComboBox( void ) const
+    GtkWidget* ComboBoxEngine::find( GtkWidget* value )
     {
-        const DataMap<ComboBoxData>::Map& dataMap( data().map() );
-        for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
-        { if( iter->second.pressed() ) return iter->first; }
+        GtkWidget* topLevel( gtk_widget_get_toplevel( value ) );
+        DataMap<ComboBoxData>::Map& dataMap( data().map() );
+        for( DataMap<ComboBoxData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        {
+            if( iter->second.pressed() )
+            {
+                iter->second.setList( topLevel );
+                return iter->first;
+            }
+        }
+
+        for( DataMap<ComboBoxData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        { if( iter->second.list() == topLevel ) return iter->first; }
+
         return 0L;
+
     }
 
 }

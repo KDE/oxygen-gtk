@@ -1135,38 +1135,6 @@ namespace Oxygen
             // now draw float frame on background window
             Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
-
-            #if ENABLE_COMBOBOX_LIST_RESIZE
-
-            // find matching pressed down combobox (or comboboxEntry)
-            int sideMargin( 3 );
-            GtkWidget* combobox = Style::instance().animations().comboBoxEngine().pressedComboBox();
-            if( Style::Entry_SideMargin && !combobox )
-            {
-                combobox = Style::instance().animations().comboBoxEntryEngine().pressedComboBoxEntry();
-                sideMargin = Style::Entry_SideMargin;
-            }
-
-            // resize the list to match combobox width (taking into account its lesser width because of button glow)
-            if( combobox )
-            {
-
-                int w, h;
-                GtkWindow* window( GTK_WINDOW( parent ) );
-                gtk_window_get_size( window, &w, &h );
-                if( combobox->allocation.width-6 != w )
-                {
-                    gtk_widget_set_size_request( parent, combobox->allocation.width - 6,h);
-
-                    gint targetX, dummy, y;
-                    gtk_window_get_position( window, &dummy, &y );
-                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
-                    gtk_window_move( window, targetX+combobox->allocation.x+3, y );
-                }
-
-            }
-            #endif
-
             return;
 
         } else if( d.isBase() && GTK_IS_MENU( widget ) ) {
@@ -2681,6 +2649,9 @@ namespace Oxygen
         elsewhere, to fix some overwritting that occurs with some distros
         */
         Style::instance().settings().initializeColors();
+
+        // hooks
+        Style::instance().animations().initializeHooks();
 
         // also initialize dbus
         Oxygen::DBus::instance();

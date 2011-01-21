@@ -26,6 +26,7 @@
 #include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
 #include "oxygendialogengine.h"
+#include "oxygenhook.h"
 #include "oxygenhoverengine.h"
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenushellengine.h"
@@ -53,6 +54,9 @@ namespace Oxygen
 
         //! destructor
         virtual ~Animations( void );
+
+        //! initialize hooks
+        void initializeHooks( void );
 
         //! unregister widget
         bool registerWidget( GtkWidget* );
@@ -127,6 +131,9 @@ namespace Oxygen
         //! destruction callback
         static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
 
+        //! combobox list size adjustment hook
+        static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state
@@ -170,6 +177,18 @@ namespace Oxygen
 
         //! widget size engine
         WidgetSizeEngine* _widgetSizeEngine;
+
+        //!@name hooks
+        //@{
+
+        //! true when hooks are initialized
+        bool _hooksInitialized;
+
+        //! combobox hook
+        Hook _comboBoxHook;
+
+
+        //@}
 
         //! keep track of destruction and style change signals
         /*!
