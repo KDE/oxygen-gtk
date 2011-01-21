@@ -19,7 +19,8 @@
 */
 
 #include "oxygendialogengine.h"
-#include "../oxygengtkutils.h"
+
+#include <string>
 
 namespace Oxygen
 {
@@ -33,7 +34,7 @@ namespace Oxygen
         gtk_dialog_set_alternative_button_order will cause errors to be logged, but don't want these
         so register or own error handler, and then unregister afterwards...
         */
-        const unsigned int id( g_log_set_handler("Gtk", G_LOG_LEVEL_CRITICAL, Gtk::oxygen_log_handler, NULL) );
+        const guint id( g_log_set_handler( "Gtk", G_LOG_LEVEL_CRITICAL, logHandler, 0L ) );
 
         // change order
         gtk_dialog_set_alternative_button_order( GTK_DIALOG( widget ),
@@ -58,6 +59,20 @@ namespace Oxygen
         // call base class
         BaseEngine::registerWidget( widget );
         return true;
+
+    }
+
+    //_________________________________________________________
+    void DialogEngine::logHandler( const gchar* domain, GLogLevelFlags flags, const gchar* message, gpointer data )
+    {
+
+        /*
+        discard all messages containing "IA__gtk_box_reorder_child:"
+        and fallback to default handler otherwise
+        */
+        if( std::string( message ).find( "IA__gtk_box_reorder_child" ) == std::string::npos )
+        { g_log_default_handler( domain, flags, message, data ); }
+
     }
 
 }
