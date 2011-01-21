@@ -8,7 +8,10 @@ argb branch:
 - remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
 
 main branch:
-- add hooks to deal with combobox/comboboxentry list resize.
+- add hooks to deal with combobox/comboboxentry list resize. DONE
+- also add hooks for GtkCombo list resize.
+- try find a way to avoid flicker (not sure whether this actually is possible or not).
+
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
 
 - implement smooth animations (notably hover and focus smooth glow)
