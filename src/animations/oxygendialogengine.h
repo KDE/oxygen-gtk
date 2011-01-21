@@ -58,7 +58,7 @@ namespace Oxygen
 
         protected:
 
-        //! gtk error handler
+        //! error handler
         /*! it is used to disable printing out some messages triggered by re-ordering dialog's buttons */
         static void logHandler( const gchar*, GLogLevelFlags, const gchar*, gpointer );
 
