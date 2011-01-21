@@ -39,6 +39,7 @@ namespace Oxygen
         //! constructor
         ComboBoxData( void ):
             _target( 0L ),
+            _list( 0L ),
             _cellLayoutInitialized( false )
         {}
 
@@ -55,6 +56,14 @@ namespace Oxygen
 
         //!@name modifiers
         //@{
+
+        //! list
+        void setList( GtkWidget* widget )
+        { _list = widget; }
+
+        //! list
+        GtkWidget* list( void ) const
+        { return _list; }
 
         //! assign button
         void setButton( GtkWidget* value );
@@ -131,6 +140,10 @@ namespace Oxygen
         //! target widget
         GtkWidget* _target;
 
+        //! drop-down list, if set
+        GtkWidget* _list;
+
+        //! state change signal
         Signal _stateChangeId;
 
         // handle child registration

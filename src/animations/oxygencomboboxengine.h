@@ -54,6 +54,10 @@ namespace Oxygen
         //!@name modifiers
         //@{
 
+        //! assign drop-down list to data matching widget
+        void setList( GtkWidget* widget, GtkWidget* value )
+        { data().value( widget ).setList( value ); }
+
         //! assign button to data matching widget
         void setButton( GtkWidget* widget, GtkWidget* value )
         { data().value( widget ).setButton( value ); }
@@ -78,6 +82,9 @@ namespace Oxygen
         //! returns pressed combobox if any
         inline GtkWidget* pressedComboBox( void ) const;
 
+        //! find widget matching given list
+        inline GtkWidget* find( GtkWidget* ) const;
+
         //! true if either button or is pressed
         bool pressed( GtkWidget* widget )
         { return data().value( widget ).pressed(); }
@@ -100,6 +107,15 @@ namespace Oxygen
         const DataMap<ComboBoxData>::Map& dataMap( data().map() );
         for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
         { if( iter->second.pressed() ) return iter->first; }
+        return 0L;
+    }
+
+    //_________________________________________________
+    GtkWidget* ComboBoxEngine::find( GtkWidget* value ) const
+    {
+        const DataMap<ComboBoxData>::Map& dataMap( data().map() );
+        for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        { if( iter->second.list() == value ) return iter->first; }
         return 0L;
     }
 

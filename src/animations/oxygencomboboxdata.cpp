@@ -36,13 +36,20 @@ namespace Oxygen
         std::cerr << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
         #endif
 
+        // set pointers to widgets
         _target = widget;
+        _list = 0L;
+
+        // connect signals
         _stateChangeId.connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
+
+        // initialize cell view
         initializeCellView( widget );
 
         /*
         need to force the wrap-width property to 0,
         otherwise the "appears-as-list" flag is not respected, which additionaly breaks the widget rendering.
+        FIXME: this should move to the "polish" method when there is one.
         */
         gtk_combo_box_set_wrap_width( GTK_COMBO_BOX( widget ), 0 );
 
@@ -57,7 +64,10 @@ namespace Oxygen
 
         _stateChangeId.disconnect();
 
+        // clear pointers to widgets
         _target = 0L;
+        _list = 0L;
+
         _button.disconnect();
         _cell.disconnect();
 
