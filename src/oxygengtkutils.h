@@ -137,6 +137,9 @@ namespace Oxygen
         //! true for buttons in path bars
         bool gtk_button_is_in_path_bar( GtkWidget* widget );
 
+        //! true if widget is last in path bar
+        bool gtk_path_bar_button_is_last( GtkWidget* widget );
+
         //! returns an image on button-container
         GtkWidget* gtk_button_find_image( GtkWidget* );
 

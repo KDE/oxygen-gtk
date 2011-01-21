@@ -312,6 +312,28 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_path_bar_button_is_last( GtkWidget* widget )
+    {
+
+        GtkWidget* parent( gtk_widget_get_parent( widget ) );
+
+        // get parent and check type
+        if( !( parent && GTK_IS_CONTAINER( parent ) ) ) return false;
+
+        // get children
+        GList* children( gtk_container_get_children( GTK_CONTAINER( parent ) ) );
+
+        /*
+        for some reason, pathbar buttons are ordered in the container in reverse order.
+        meaning that the last button (in the pathbar) is stored first in the list.
+        */
+        bool result = (widget == g_list_first( children )->data );
+        if( children ) g_list_free( children );
+        return result;
+
+    }
+
+    //________________________________________________________
     GtkWidget* Gtk::gtk_button_find_image(GtkWidget* button)
     {
 
