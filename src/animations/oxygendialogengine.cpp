@@ -51,7 +51,7 @@ namespace Oxygen
 
         // reset error handler
         g_log_remove_handler( "Gtk", id );
-        g_log_set_handler( "Gtk", G_LOG_LEVEL_CRITICAL, g_log_default_handler, NULL );
+        g_log_set_handler( "Gtk", G_LOG_LEVEL_CRITICAL, g_log_default_handler, 0L );
 
         // insert in set
         _data.insert( widget );
