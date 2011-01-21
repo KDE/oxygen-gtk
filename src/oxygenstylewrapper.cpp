@@ -555,16 +555,19 @@ namespace Oxygen
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options;
+                const bool isLast( Gtk::gtk_path_bar_button_is_last( widget ) );
+
                 if(state!=GTK_STATE_NORMAL && state!=GTK_STATE_INSENSITIVE)
                 {
                     if( !(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) ) )
                     {
                         options |= Hover;
+                        if( isLast ) w -= 10;
                         Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
                     }
                 }
 
-                if( GTK_IS_TOGGLE_BUTTON(widget) && !Gtk::gtk_path_bar_button_is_last( widget ) )
+                if( GTK_IS_TOGGLE_BUTTON(widget) && !isLast )
                 {
 
                     options |= Contrast;
