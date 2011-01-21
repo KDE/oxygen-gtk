@@ -79,8 +79,9 @@ style "oxygen-pathbutton" = "oxygen-default"
 {
     #add some spacing to have centered text
     GtkButton::inner-border = { 2, 2, 1, 0 }
+    GtkToggleButton::inner-border={ 0, 10, 1, 0 }
 }
-widget_class "*PathBar.<GtkButton>" style "oxygen-pathbutton"
+widget_class "*PathBar.GtkToggleButton" style "oxygen-pathbutton"
 
 # entries
 # do not change unless also changing Entry_SideMargin in OxygenStyle.h

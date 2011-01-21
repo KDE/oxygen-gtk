@@ -562,11 +562,14 @@ namespace Oxygen
                 StyleOptions options(Hover);
                 if(state!=GTK_STATE_NORMAL && state!=GTK_STATE_INSENSITIVE)
                 {
-                    if(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) )
-                    { return; }
-
-                    Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
-
+                    if( !(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) ) )
+                    {
+                        Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
+                    }
+                }
+                if(GTK_IS_TOGGLE_BUTTON(widget))
+                {
+                    Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal,Contrast,Palette::WindowText);
                 }
             } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
 
