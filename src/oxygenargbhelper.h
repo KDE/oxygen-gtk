@@ -52,6 +52,10 @@ namespace Oxygen
         //! depth adjustment hook
         static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! error handler
+        /*! it is used to disable printing out some messages triggered by the style hook when deleting combobox-entry */
+        static void logHandler( const gchar*, GLogLevelFlags, const gchar*, gpointer );
+
         private:
 
         //! true if hooks are initialized
@@ -62,6 +66,9 @@ namespace Oxygen
 
         //! style hook
         Hook _styleHook;
+
+        //! log handler id
+        guint _logId;
 
     };
 
