@@ -61,10 +61,6 @@ namespace Oxygen
         void setList( GtkWidget* widget )
         { _list = widget; }
 
-        //! list
-        GtkWidget* list( void ) const
-        { return _list; }
-
         //! assign button
         void setButton( GtkWidget* value );
 
@@ -90,6 +86,10 @@ namespace Oxygen
 
         //!@name accessors
         //@{
+
+        //! list
+        GtkWidget* list( void ) const
+        { return _list; }
 
         //! pressed
         bool pressed( void ) const
