@@ -29,7 +29,8 @@ namespace Oxygen
 
     //_________________________________________
     Animations::Animations( void ):
-        _enabled( true )
+        _enabled( true ),
+        _hooksInitialized( false )
     {
 
         // create engines
@@ -51,8 +52,23 @@ namespace Oxygen
     //____________________________________________________________________________________________
     Animations::~Animations( void )
     {
+
+        // delete all engines
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { delete *iter; }
+
+        // clear hooks
+        _comboBoxHook.disconnect();
+
+        // FIXME: should we also clear the allWidgets list ?
+
+    }
+
+    //____________________________________________________________________________________________
+    void Animations::initializeHooks( void )
+    {
+        if( _hooksInitialized ) return;
+        _hooksInitialized = true;
     }
 
     //____________________________________________________________________________________________
