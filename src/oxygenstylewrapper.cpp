@@ -546,9 +546,6 @@ namespace Oxygen
 
         } else if( d.isButton() || d.isOptionMenu() || d.isToggleButton() ) {
 
-            // if( d.isOptionMenu() && GTK_IS_OPTION_MENU( widget ) )
-            // { Style::instance().animations().optionMenuEngine().registerWidget( widget ); }
-
             // check if it's PathBar toggle button
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
