@@ -560,18 +560,22 @@ namespace Oxygen
                 Style::instance().animations().hoverEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
-                StyleOptions options(Hover);
+                StyleOptions options;
                 if(state!=GTK_STATE_NORMAL && state!=GTK_STATE_INSENSITIVE)
                 {
                     if( !(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) ) )
                     {
+                        options |= Hover;
                         Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
                     }
                 }
+
                 if(GTK_IS_TOGGLE_BUTTON(widget))
                 {
-                    Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal,Contrast,Palette::WindowText);
+                    options |= Contrast;
+                    Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
                 }
+
             } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
 
                 // register to scrolled window engine if any
