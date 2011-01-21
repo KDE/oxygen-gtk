@@ -560,10 +560,12 @@ namespace Oxygen
                     }
                 }
 
-                if(GTK_IS_TOGGLE_BUTTON(widget))
+                if( GTK_IS_TOGGLE_BUTTON(widget) && !Gtk::gtk_path_bar_button_is_last( widget ) )
                 {
+
                     options |= Contrast;
                     Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
+
                 }
 
             } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {

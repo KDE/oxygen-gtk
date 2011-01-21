@@ -312,6 +312,22 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_path_bar_button_is_last( GtkWidget* widget )
+    {
+        GtkWidget* parent( gtk_widget_get_parent( widget ) );
+
+        // get parent and check type
+        if( !( parent && GTK_IS_CONTAINER( parent ) ) ) return false;
+
+        // get children
+        bool result( false );
+        GList* children( gtk_container_get_children( GTK_CONTAINER( parent ) ) );
+
+        if( children ) g_list_free( children );
+
+    }
+
+    //________________________________________________________
     GtkWidget* Gtk::gtk_button_find_image(GtkWidget* button)
     {
 
