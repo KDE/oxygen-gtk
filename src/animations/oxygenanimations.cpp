@@ -153,7 +153,8 @@ namespace Oxygen
         if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
 
         Animations& animations( *static_cast<Animations*>(data) );
-        GtkWidget *combobox( animations.comboBoxEngine().find( widget ) );
+        GtkWidget* combobox = animations.comboBoxEngine().find( widget );
+        if( !combobox ) combobox = animations.comboBoxEntryEngine().find( widget );
         if( !combobox ) return true;
 
         int w, h;

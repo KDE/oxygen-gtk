@@ -80,7 +80,7 @@ namespace Oxygen
         //@{
 
         //! returns pressed combobox if any
-        inline GtkWidget* pressedComboBoxEntry( void ) const;
+        inline GtkWidget* find( GtkWidget* );
 
         //! true if either button or entry has focus
         bool hasFocus( GtkWidget* widget )
@@ -95,12 +95,24 @@ namespace Oxygen
     };
 
     //_________________________________________________
-    GtkWidget* ComboBoxEntryEngine::pressedComboBoxEntry( void ) const
+    GtkWidget* ComboBoxEntryEngine::find( GtkWidget* value )
     {
-        const DataMap<ComboBoxEntryData>::Map& dataMap( data().map() );
-        for( DataMap<ComboBoxEntryData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
-        { if( iter->second.pressed() ) return iter->first; }
+        GtkWidget* topLevel( gtk_widget_get_toplevel( value ) );
+        DataMap<ComboBoxEntryData>::Map& dataMap( data().map() );
+        for( DataMap<ComboBoxEntryData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        {
+            if( iter->second.pressed() )
+            {
+                iter->second.setList( topLevel );
+                return iter->first;
+            }
+        }
+
+        for( DataMap<ComboBoxEntryData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        { if( iter->second.list() == topLevel ) return iter->first; }
+
         return 0L;
+
     }
 
 }

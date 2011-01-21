@@ -32,6 +32,12 @@ namespace Oxygen
     void ComboBoxEntryData::disconnect( GtkWidget* widget )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ComboBoxEntryData::connect - widget: " << widget << std::endl;
+        #endif
+
+        _list = 0L;
+
         HoverData::disconnect( widget );
         _entry.disconnect();
         _button.disconnect();

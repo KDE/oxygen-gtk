@@ -35,7 +35,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        ComboBoxEntryData( void )
+        ComboBoxEntryData( void ):
+            _list( 0L )
         {}
 
         //! destructor
@@ -47,6 +48,10 @@ namespace Oxygen
 
         //!@name modifiers
         //@{
+
+        //! list
+        void setList( GtkWidget* widget )
+        { _list = widget; }
 
         //! assign button
         void setButton( GtkWidget* value );
@@ -67,7 +72,7 @@ namespace Oxygen
             return;
         }
 
-       //! button focus
+        //! button focus
         void setButtonHovered( bool value )
         {
             if( _button._hovered == value ) return;
@@ -93,6 +98,10 @@ namespace Oxygen
 
         //!@name accessors
         //@{
+
+        //! list
+        GtkWidget* list( void ) const
+        { return _list; }
 
         //! true if either button or entry has focus
         bool hasFocus( void ) const
@@ -129,6 +138,9 @@ namespace Oxygen
         //@}
 
         private:
+
+        //! drop-down list, if set
+        GtkWidget* _list;
 
         class Data
         {
