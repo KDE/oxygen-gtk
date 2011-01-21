@@ -19,6 +19,7 @@
 */
 
 #include "oxygenanimations.h"
+#include "../oxygengtkutils.h"
 #include "../config.h"
 
 #include <cassert>
@@ -68,6 +69,9 @@ namespace Oxygen
     void Animations::initializeHooks( void )
     {
         if( _hooksInitialized ) return;
+
+        _comboBoxHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxHook, this );
+
         _hooksInitialized = true;
     }
 
@@ -133,5 +137,37 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void Animations::styleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
     { static_cast<Animations*>(data)->unregisterWidget( widget ); }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::comboBoxHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
+
+        GtkWindow* window( GTK_WINDOW( widget ) );
+        if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
+
+        Animations& animations( *static_cast<Animations*>(data) );
+        GtkWidget *combobox( animations.comboBoxEngine().find( widget ) );
+        if( !combobox ) return true;
+
+        int w, h;
+        gtk_window_get_size( window, &w, &h );
+
+        gint targetX, dummy, y;
+        gtk_window_get_position( window, &dummy, &y );
+        gdk_window_get_origin(combobox->window, &targetX, &dummy);
+        gtk_window_move( window, targetX+combobox->allocation.x+3, y );
+
+        gtk_widget_set_size_request( widget, combobox->allocation.width - 6, widget->allocation.height );
+
+        return TRUE;
+
+    }
 
 }

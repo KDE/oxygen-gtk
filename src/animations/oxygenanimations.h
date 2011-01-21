@@ -131,6 +131,9 @@ namespace Oxygen
         //! destruction callback
         static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
 
+        //! combobox list size adjustment hook
+        static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state

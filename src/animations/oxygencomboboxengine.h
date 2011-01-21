@@ -54,10 +54,6 @@ namespace Oxygen
         //!@name modifiers
         //@{
 
-        //! assign drop-down list to data matching widget
-        void setList( GtkWidget* widget, GtkWidget* value )
-        { data().value( widget ).setList( value ); }
-
         //! assign button to data matching widget
         void setButton( GtkWidget* widget, GtkWidget* value )
         { data().value( widget ).setButton( value ); }
@@ -79,11 +75,9 @@ namespace Oxygen
         //!@name accessors
         //@{
 
-        //! returns pressed combobox if any
-        inline GtkWidget* pressedComboBox( void ) const;
-
-        //! find widget matching given list
-        inline GtkWidget* find( GtkWidget* ) const;
+        //! find combobox matching widget
+        /*! the widget can be any of those in a visible list */
+        inline GtkWidget* find( GtkWidget* );
 
         //! true if either button or is pressed
         bool pressed( GtkWidget* widget )
@@ -102,21 +96,24 @@ namespace Oxygen
     };
 
     //_________________________________________________
-    GtkWidget* ComboBoxEngine::pressedComboBox( void ) const
+    GtkWidget* ComboBoxEngine::find( GtkWidget* value )
     {
-        const DataMap<ComboBoxData>::Map& dataMap( data().map() );
-        for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
-        { if( iter->second.pressed() ) return iter->first; }
-        return 0L;
-    }
+        GtkWidget* topLevel( gtk_widget_get_toplevel( value ) );
+        DataMap<ComboBoxData>::Map& dataMap( data().map() );
+        for( DataMap<ComboBoxData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        {
+            if( iter->second.pressed() )
+            {
+                iter->second.setList( topLevel );
+                return iter->first;
+            }
+        }
 
-    //_________________________________________________
-    GtkWidget* ComboBoxEngine::find( GtkWidget* value ) const
-    {
-        const DataMap<ComboBoxData>::Map& dataMap( data().map() );
-        for( DataMap<ComboBoxData>::Map::const_iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
-        { if( iter->second.list() == value ) return iter->first; }
+        for( DataMap<ComboBoxData>::Map::iterator iter = dataMap.begin(); iter != dataMap.end(); iter++ )
+        { if( iter->second.list() == topLevel ) return iter->first; }
+
         return 0L;
+
     }
 
 }
