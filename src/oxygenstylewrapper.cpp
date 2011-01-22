@@ -104,6 +104,7 @@ namespace Oxygen
             // register to window manager
             if( Gtk::gdk_window_is_base( window ) &&
                 !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() &&
                 !( GTK_IS_EVENT_BOX( widget ) && !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
             {
@@ -125,6 +126,7 @@ namespace Oxygen
         } else if( d.isViewportBin() ) {
 
             if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
@@ -774,10 +776,12 @@ namespace Oxygen
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
-            if( !Style::instance().settings().applicationName().isMozilla( widget ) )
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) )
             { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
 
             return;

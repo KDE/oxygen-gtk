@@ -40,7 +40,8 @@ namespace Oxygen
         std::cerr << "ApplicationName::parse - " << appName << std::endl;
         #endif
 
-        if( appName.find("firefox") == 0 ) _name = Firefox;
+        if( appName == "acroread" ) _name = Acrobat;
+        else if( appName.find("firefox") == 0 ) _name = Firefox;
         else if( appName.find("xulrunner") == 0 ) _name = Xul;
         else if( appName.find("thunderbird") == 0 ) _name = Thunderbird;
         else if( appName.find("seamonkey" ) == 0 ) _name = Seamonkey;
@@ -59,6 +60,23 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         if( parent ) std::cerr << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
+        #endif
+
+        // check parent
+        if( parent && GTK_IS_DIALOG( parent ) ) return false;
+        else return true;
+
+    }
+
+    //__________________________________________________________________________
+    bool ApplicationName::isAcrobat( GtkWidget* widget ) const
+    {
+        if( !isAcrobat() ) return false;
+
+        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
+
+        #if OXYGEN_DEBUG
+        if( parent ) std::cerr << "Oxygen::ApplicationName::isAcrobat - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
         #endif
 
         // check parent
