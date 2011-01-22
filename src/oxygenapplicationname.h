@@ -35,6 +35,7 @@ namespace Oxygen
     enum AppName
     {
         Unknown,
+        Acrobat,
         Firefox,
         Seamonkey,
         Thunderbird,
@@ -77,6 +78,7 @@ namespace Oxygen
         //!@name utilities
         //@{
 
+        bool isAcrobat( void ) const { return _name == Acrobat; }
         bool isFirefox( void ) const { return _name == Firefox; }
         bool isThunderbird( void ) const { return _name == Thunderbird; }
         bool isSeamonkey( void ) const { return _name == Seamonkey; }
@@ -87,8 +89,9 @@ namespace Oxygen
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }
         bool isUnknown( void ) const { return _name == Unknown; }
 
-        //! special case for mozilla that also check the type of the top level widget
+        //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
+        bool isAcrobat( GtkWidget* ) const;
         bool isMozilla( GtkWidget* ) const;
 
         //@}
