@@ -199,13 +199,18 @@ namespace Oxygen
 
         // draw the corner of the window - actually all 4 corners as one circle
         // this is all fixedSize. Does not scale with shadow size
-        Cairo::Pattern lg( cairo_pattern_create_linear(0,size-4.5,0,size-4.5) );
+        Cairo::Pattern lg( cairo_pattern_create_linear(0,size-4.5,0,size+4.5) );
         cairo_pattern_add_color_stop(lg, 0.0,  ColorUtils::lightColor( ColorUtils::backgroundTopColor( color ) ) );
         cairo_pattern_add_color_stop(lg, 0.51, ColorUtils::backgroundBottomColor(color));
         cairo_pattern_add_color_stop(lg, 1.0,  ColorUtils::backgroundBottomColor(color));
 
         cairo_set_source(p, lg);
         cairo_ellipse(p, size-4,size-4,8,8);
+        cairo_fill(p);
+
+        cairo_set_source_rgb(p,0,0,0);
+        cairo_set_operator(p,CAIRO_OPERATOR_CLEAR);
+        cairo_ellipse(p, size-3,size-3,6,6);
         cairo_fill(p);
 
         p.updateGdkPixbuf();
