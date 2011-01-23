@@ -36,6 +36,7 @@ namespace Oxygen
 
         // create engines
         registerEngine( _backgroundHintEngine = new BackgroundHintEngine( this ) );
+        registerEngine( _comboEngine = new ComboEngine( this ) );
         registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
         registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
         registerEngine( _dialogEngine = new DialogEngine( this ) );
@@ -157,6 +158,7 @@ namespace Oxygen
         Animations& animations( *static_cast<Animations*>(data) );
         GtkWidget* combobox = animations.comboBoxEngine().find( widget );
         if( !combobox ) combobox = animations.comboBoxEntryEngine().find( widget );
+        if( !combobox ) combobox = animations.comboEngine().find( widget );
         if( !combobox ) return true;
 
         int w, h;

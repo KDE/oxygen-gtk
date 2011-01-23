@@ -707,10 +707,17 @@ namespace Oxygen
                     if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
 
-                } else if( Gtk::gtk_parent_combo( widget ) ) {
+                } else if( ( parent = Gtk::gtk_parent_combo( widget ) ) ) {
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    if( Style::instance().settings().applicationName().isOpenOffice() )
                     {
+
+                        // Hover doesn't work correctly in OpenOffice, so disable it
+                        options &= ~(Hover|Focus);
+                        Style::instance().renderHole(window,clipRect,x-8,y-1,w+9,h+2,options,(TileSet::Tile)(TileSet::Full & (~TileSet::Left)));
+                        return;
+
+                    } else {
 
                         /*
                         make button flat; disable focus and hover
@@ -719,13 +726,7 @@ namespace Oxygen
                         */
                         options |= Flat;
                         options &= ~(Hover|Focus);
-
-                    } else {
-
-                        // Hover doesn't work correctly in OpenOffice, so disable it
-                        options &= ~(Hover|Focus);
-                        Style::instance().renderHole(window,clipRect,x-8,y-1,w+9,h+2,options,(TileSet::Tile)(TileSet::Full & (~TileSet::Left)));
-                        return;
+                        Style::instance().animations().comboEngine().registerWidget( parent );
 
                     }
 

@@ -23,6 +23,7 @@
 
 #include "oxygenbackgroundhintengine.h"
 #include "oxygenbaseengine.h"
+#include "oxygencomboengine.h"
 #include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
 #include "oxygendialogengine.h"
@@ -72,6 +73,10 @@ namespace Oxygen
         { return _enabled; }
 
         //! comboboxengine
+        ComboEngine& comboEngine( void ) const
+        { return *_comboEngine; }
+
+        //! comboboxengine
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
 
@@ -79,7 +84,7 @@ namespace Oxygen
         ComboBoxEntryEngine& comboBoxEntryEngine( void ) const
         { return *_comboBoxEntryEngine; }
 
-        //! comboboxengine
+        //! dialog engine
         DialogEngine& dialogEngine( void ) const
         { return *_dialogEngine; }
 
@@ -144,6 +149,9 @@ namespace Oxygen
 
         //! background hint engine
         BackgroundHintEngine* _backgroundHintEngine;
+
+        //! combobox engine
+        ComboEngine* _comboEngine;
 
         //! combobox engine
         ComboBoxEngine* _comboBoxEngine;
