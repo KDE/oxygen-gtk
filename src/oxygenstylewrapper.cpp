@@ -2045,8 +2045,11 @@ namespace Oxygen
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
 
-            const GtkArrowType arrow( ( expander_style == GTK_EXPANDER_COLLAPSED || expander_style == GTK_EXPANDER_SEMI_COLLAPSED ) ?
-                GTK_ARROW_RIGHT : GTK_ARROW_DOWN );
+            GtkArrowType arrow;
+            const bool isExpanded( expander_style !=GTK_EXPANDER_COLLAPSED && expander_style != GTK_EXPANDER_SEMI_COLLAPSED );
+            if( isExpanded ) arrow = GTK_ARROW_DOWN;
+            else if( Gtk::gtk_widget_layout_is_reversed( widget ) ) arrow = GTK_ARROW_LEFT;
+            else arrow = GTK_ARROW_RIGHT;
 
             const Gtk::Detail d( detail );
             QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
