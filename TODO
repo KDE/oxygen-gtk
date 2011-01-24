@@ -1,6 +1,6 @@
-This is the oxygen-gtk TODO list, maintained and updated by the devs. 
+This is the oxygen-gtk TODO list, maintained and updated by the devs.
 You can add anything you can think of here. Possibly specifying the branch, a possible release target, and a priority.
-You can also add your name on which of the item you are either already working on, or interested in working on. 
+You can also add your name on which of the item you are either already working on, or interested in working on.
 
 Reminder: fixing existing bugs on bugs.kde.org should always have the highest priority :)
 
@@ -18,7 +18,13 @@ main branch:
 - test the style with a Right-To-Left layout.
 
 After asking Craig D, there is no way to test without actually installing a right-to-left locale, and see whats wrong.
-I foresee _many_ issues. 
+I foresee _many_ issues:
+- menuItemRect (shade in presence of submenus is on the wrong size) DONE
+- GtkComboBoxEntry DONE
+- GtkComboBox DONE
+- GtkSpinButton DONE
+- tree-lines rendering
+- pathbar buttons
 
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
 
