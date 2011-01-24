@@ -1684,10 +1684,22 @@ namespace Oxygen
             gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
 
             // generate linear gradient for masking
-            Cairo::Pattern mask( cairo_pattern_create_linear( w-40, 0, w-4, 0 ) );
-            cairo_pattern_add_color_stop( mask, 0,  ColorUtils::Rgba::black() );
-            cairo_pattern_add_color_stop( mask, 1,  ColorUtils::Rgba::transparent() );
-            cairo_mask( context, mask );
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
+
+                Cairo::Pattern mask( cairo_pattern_create_linear( 4, 0, 40, 0 ) );
+                cairo_pattern_add_color_stop( mask, 0,  ColorUtils::Rgba::transparent() );
+                cairo_pattern_add_color_stop( mask, 1,  ColorUtils::Rgba::black() );
+                cairo_mask( context, mask );
+
+            } else {
+
+                Cairo::Pattern mask( cairo_pattern_create_linear( w-40, 0, w-4, 0 ) );
+                cairo_pattern_add_color_stop( mask, 0,  ColorUtils::Rgba::black() );
+                cairo_pattern_add_color_stop( mask, 1,  ColorUtils::Rgba::transparent() );
+                cairo_mask( context, mask );
+
+            }
 
             g_object_unref( pixbuf );
 
@@ -1695,6 +1707,7 @@ namespace Oxygen
 
             Cairo::Context context( window, clipRect );
             helper().holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
+
         }
     }
 
