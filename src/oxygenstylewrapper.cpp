@@ -201,6 +201,8 @@ namespace Oxygen
 
             } else {
 
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+
                 // draw rounded selection in normal list,
                 // and detect hover
                 bool forceCellStart( false );
@@ -229,6 +231,9 @@ namespace Oxygen
                         }
 
                         // change selection rect so that it does not overlap with expander
+                        if( reversed ) forceCellEnd = true;
+                        else forceCellStart = true;
+
                         forceCellStart = true;
                         if( options&(Selected|Hover) )
                         {
@@ -240,20 +245,29 @@ namespace Oxygen
 
                             int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
 
-                            x += offset;
-                            w -= offset;
+                            if( reversed ) w-= offset;
+                            else {
+
+                                x += offset;
+                                w -= offset;
+
+                            }
 
                         }
 
                     } else if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
 
-                        forceCellEnd = true;
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
 
                     }
 
                     // check if column is last
                     if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLastVisibleColumn( treeView ) )
-                    { forceCellEnd = true; }
+                    {
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
+                    }
 
                 }
 
