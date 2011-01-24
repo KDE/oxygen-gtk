@@ -226,8 +226,17 @@ namespace Oxygen
                         // tree lines
                         if( Style::instance().settings().viewDrawTreeBranchLines() )
                         {
+
+                            // generate flags from cell info
+                            Gtk::CellInfoFlags cellFlags( treeView, cellInfo );
+                            if( reversed ) cellFlags._flags |= Gtk::CellInfoFlags::Reversed;
+
+                            // set proper options
                             StyleOptions options( widget, state, shadow );
-                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, Gtk::CellInfoFlags( treeView, cellInfo ), options );
+
+                            // and render
+                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, cellFlags, options );
+
                         }
 
                         // change selection rect so that it does not overlap with expander
