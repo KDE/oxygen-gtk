@@ -209,6 +209,8 @@ namespace Oxygen
 
             } else {
 
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+
                 // draw rounded selection in normal list,
                 // and detect hover
                 bool forceCellStart( false );
@@ -232,11 +234,23 @@ namespace Oxygen
                         // tree lines
                         if( Style::instance().settings().viewDrawTreeBranchLines() )
                         {
+
+                            // generate flags from cell info
+                            Gtk::CellInfoFlags cellFlags( treeView, cellInfo );
+                            if( reversed ) cellFlags._flags |= Gtk::CellInfoFlags::Reversed;
+
+                            // set proper options
                             StyleOptions options( widget, state, shadow );
-                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, Gtk::CellInfoFlags( treeView, cellInfo ), options );
+
+                            // and render
+                            Style::instance().renderTreeLines( window, clipRect, x, y, w, h, cellFlags, options );
+
                         }
 
                         // change selection rect so that it does not overlap with expander
+                        if( reversed ) forceCellEnd = true;
+                        else forceCellStart = true;
+
                         forceCellStart = true;
                         if( options&(Selected|Hover) )
                         {
@@ -248,20 +262,29 @@ namespace Oxygen
 
                             int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
 
-                            x += offset;
-                            w -= offset;
+                            if( reversed ) w-= offset;
+                            else {
+
+                                x += offset;
+                                w -= offset;
+
+                            }
 
                         }
 
                     } else if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
 
-                        forceCellEnd = true;
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
 
                     }
 
                     // check if column is last
                     if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLastVisibleColumn( treeView ) )
-                    { forceCellEnd = true; }
+                    {
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
+                    }
 
                 }
 
@@ -2029,8 +2052,11 @@ namespace Oxygen
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
 
-            const GtkArrowType arrow( ( expander_style == GTK_EXPANDER_COLLAPSED || expander_style == GTK_EXPANDER_SEMI_COLLAPSED ) ?
-                GTK_ARROW_RIGHT : GTK_ARROW_DOWN );
+            GtkArrowType arrow;
+            const bool isExpanded( expander_style !=GTK_EXPANDER_COLLAPSED && expander_style != GTK_EXPANDER_SEMI_COLLAPSED );
+            if( isExpanded ) arrow = GTK_ARROW_DOWN;
+            else if( Gtk::gtk_widget_layout_is_reversed( widget ) ) arrow = GTK_ARROW_LEFT;
+            else arrow = GTK_ARROW_RIGHT;
 
             const Gtk::Detail d( detail );
             QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;

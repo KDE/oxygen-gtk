@@ -182,7 +182,8 @@ namespace Oxygen
             {
                 HasParent = 1<<0,
                 HasChildren = 1<<1,
-                IsLast = 1<<2
+                IsLast = 1<<2,
+                Reversed = 1<<3
             };
 
             //! constructor from CellInfo
