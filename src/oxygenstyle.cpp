@@ -516,13 +516,22 @@ namespace Oxygen
         cairo_set_source( context, base );
         cairo_set_line_width( context, 1.0 );
 
+        const bool reversed( cellFlags._flags & Gtk::CellInfoFlags::Reversed );
+
         int cellIndent( cellFlags._levelIndent + cellFlags._expanderSize + 4 );
         int xStart( x + cellIndent/2 );
+
+        if( reversed ) {
+
+            xStart += w - cellIndent;
+            cellIndent *= -1;
+
+        }
+
         for( unsigned int i=0; i< cellFlags._depth; ++i  )
         {
 
             const bool isLastCell( cellFlags._isLast[i] );
-
             const bool last( i == cellFlags._depth -1 );
             double xCenter = xStart;
 
@@ -547,18 +556,39 @@ namespace Oxygen
                     }
 
                     // horizontal line
-                    cairo_move_to( context, xCenter + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
-                    cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+                    if( reversed )
+                    {
+
+                        cairo_move_to( context, xCenter + 1 - int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_line_to( context, xCenter + 1  - cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                    } else {
+
+                        cairo_move_to( context, xCenter + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                    }
 
                 } else {
 
+                    // vertical line
                     cairo_move_to( context, xCenter + 0.5, y );
                     if( isLastCell ) cairo_line_to( context, xCenter + 0.5, yCenter );
                     else cairo_line_to( context, xCenter + 0.5, y+h );
 
                     // horizontal line
-                    cairo_move_to( context, xCenter, yCenter + 0.5 );
-                    cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+                    if( reversed )
+                    {
+
+                        cairo_move_to( context, xCenter + 1 , yCenter + 0.5 );
+                        cairo_line_to( context, xCenter + 1  - cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                    } else {
+
+                        cairo_move_to( context, xCenter, yCenter + 0.5 );
+                        cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
+
+                    }
 
                 }
 
