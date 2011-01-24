@@ -129,7 +129,6 @@ namespace Oxygen
             #endif
 
             GdkColormap* cmap=gdk_screen_get_rgba_colormap( screen );
-            gtk_widget_push_colormap( cmap );
             gtk_widget_set_colormap( widget, cmap );
 
         }
