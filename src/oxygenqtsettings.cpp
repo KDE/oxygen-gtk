@@ -130,6 +130,24 @@ namespace Oxygen
         loadKdeIcons();
         #endif
 
+        // deal with pathbar button margins
+        // this needs to be done programatically in order to properly account for RTL locales
+        _rc.addSection( "oxygen-pathbutton", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( "  GtkButton::inner-border = { 2, 2, 1, 0 }" );
+
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
+        {
+
+            _rc.addToCurrentSection( "  GtkToggleButton::inner-border={ 10, 0, 1, 0 }" );
+
+        } else {
+
+            _rc.addToCurrentSection( "  GtkToggleButton::inner-border={ 0, 10, 1, 0 }" );
+
+        }
+
+        _rc.addToRootSection( "widget_class \"*PathBar.GtkToggleButton\" style \"oxygen-pathbutton\"" );
+
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
         std::cerr << _rc << std::endl;
