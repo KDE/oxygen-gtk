@@ -6,16 +6,25 @@ Reminder: fixing existing bugs on bugs.kde.org should always have the highest pr
 
 argb branch:
 - remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
+- add hooks to deal with combobox/comboboxentry list resize. DONE
+- also add hooks for GtkCombo list resize. DONE.
+
+- try find a way to avoid flicker (not sure whether this actually is possible or not).
 
 main branch:
-- add hooks to deal with combobox/comboboxentry list resize. DONE
-- also add hooks for GtkCombo list resize.
-- try find a way to avoid flicker (not sure whether this actually is possible or not).
+
+- merge the argb branch when stable enough.
+
+- test the style with a Right-To-Left layout.
+
+After asking Craig D, there is no way to test without actually installing a right-to-left locale, and see whats wrong.
+I foresee _many_ issues. 
 
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
 
 - implement smooth animations (notably hover and focus smooth glow)
+
 - try implement some "true" inner-shadow (and glow) for GtkListView
+
 - better support for using oxygen-gtk in a non-kde environment.
 
-- merge the argb branch when stable enough.
