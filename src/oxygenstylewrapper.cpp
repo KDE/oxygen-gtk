@@ -327,10 +327,21 @@ namespace Oxygen
 
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // increase width since right part isn't drawn
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    // hide right part and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+
+                } else {
+
+                    // hide right part and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                }
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -1014,13 +1025,28 @@ namespace Oxygen
             { options |= Hover; }
 
             TileSet::Tiles tiles( TileSet::Ring);
-            tiles &= ~TileSet::Left;
 
-            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
 
-            // shrink spinbox entry hole by 3px on right side
-            w -= Style::Entry_SideMargin;
-            Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+                tiles &= ~TileSet::Right;
+                Style::instance().renderHoleBackground(window,clipRect, x-1, y-1, w+6, h+2, tiles );
+
+                // shrink spinbox entry hole by 3px on right side
+                x += Style::Entry_SideMargin;
+                w -= Style::Entry_SideMargin;
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, tiles );
+
+            } else {
+
+                tiles &= ~TileSet::Left;
+                Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+
+                // shrink spinbox entry hole by 3px on right side
+                w -= Style::Entry_SideMargin;
+                Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+
+            }
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -1321,23 +1347,37 @@ namespace Oxygen
 
                 }
 
-                TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
-
-                // basic adjustments
-                x-=1; w+=2;
-
                 // vertical alignment
                 if( !Style::instance().settings().applicationName().isOpenOffice() )
                 { y-=1; h+=2; }
 
-                Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                // basic adjustments
+                x-=1; w+=2;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
-                { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+                TileSet::Tiles tiles( TileSet::Ring );
 
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    { w-= Style::Entry_SideMargin; }
+
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                }
             } else {
 
                 if( Style::instance().settings().applicationName().isGoogleChrome() && GTK_IS_HBOX( widget ) )
@@ -1859,11 +1899,10 @@ namespace Oxygen
 
         } else if( d.isSpinButton() ) {
 
-            /*
-            TODO: this should be made more robust. What one really want is an arrow that is
-            one pixel away from the centerline, no matter what
-            */
-            x-=1;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
+            else x-=1;
+
             if( arrow == GTK_ARROW_UP && !Style::instance().settings().applicationName().isOpenOffice() )
             {
 
