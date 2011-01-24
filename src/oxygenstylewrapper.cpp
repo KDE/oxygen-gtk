@@ -674,6 +674,8 @@ namespace Oxygen
                 )
             {
 
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
 
@@ -687,14 +689,25 @@ namespace Oxygen
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
                     TileSet::Tiles tiles( TileSet::Ring );
-                    tiles &= ~TileSet::Left;
-                    Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
+                    if( reversed )
+                    {
+
+                        tiles &= ~TileSet::Right;
+                        Style::instance().renderButtonSlab( window, clipRect, x, y, w+7, h, options, tiles );
+
+                    } else {
+
+                        tiles &= ~TileSet::Left;
+                        Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
+
+                    }
 
                 } else {
 
                     options |= Flat;
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
-                    Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
+                    if( reversed ) Style::instance().renderButtonSlab( window, clipRect, x+1, y, w, h, options );
+                    else Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
 
                 }
 
@@ -1432,8 +1445,19 @@ namespace Oxygen
             else options &= ~Hover;
 
             TileSet::Tiles tiles( TileSet::Ring );
-            tiles &= ~TileSet::Right;
-            Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
+
+                tiles &= ~TileSet::Left;
+                Style::instance().renderButtonSlab( window, clipRect, x-10, y, w+10, h, options, tiles );
+
+            } else {
+
+                tiles &= ~TileSet::Right;
+                Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
+
+            }
 
         } else if( d.isNull() && (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN ) {
 
