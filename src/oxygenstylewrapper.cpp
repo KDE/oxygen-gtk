@@ -354,11 +354,21 @@ namespace Oxygen
 
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // increase width since right part isn't drawn
-                Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
+                    // hide left part and increase width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, tiles );
+
+                } else {
+
+                    // hide right part and increase width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+
+                }
             } else {
 
                 if(
@@ -632,13 +642,28 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
-                tiles &= ~TileSet::Left;
 
-                // shrink combo entry hole by 3px on right side
-                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
-                w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+                    // hide right and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground(window,clipRect, x-1, y, w+6, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, tiles  );
+
+                } else {
+
+                    // hide left and adjust width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+
+                }
 
                 return;
 
@@ -1232,14 +1257,26 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // shrink entry by 3px at left
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
-                x += Style::Entry_SideMargin;
-                w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, clipRect, x-6, y, w+7, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+
+                }
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -1755,10 +1792,10 @@ namespace Oxygen
         {
             // Deal with GimpScaleComboBox misplaced arrow because of entry shrinking
             GtkWidget* parent=gtk_widget_get_parent(widget);
-            if(parent)
-                parent=gtk_widget_get_parent(parent);
+            if(parent) parent=gtk_widget_get_parent(parent);
             if( parent && std::string(G_OBJECT_TYPE_NAME(parent)) == "GimpScaleComboBox")
-                x--;
+            { x--; }
+
         }
 
         const Gtk::Detail d( detail );
@@ -1838,15 +1875,24 @@ namespace Oxygen
             role = Palette::Text;
             y+=1;
 
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
         } else if( Gtk::gtk_parent_combo( widget ) ) {
 
             role = Palette::WindowText;
             y-=1;
 
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
             options &= ~( Focus|Hover );
             role = Palette::ButtonText;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
 
         } else if(
             Gtk::gtk_parent_button( widget ) &&
