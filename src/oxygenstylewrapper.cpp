@@ -334,10 +334,21 @@ namespace Oxygen
 
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // increase width since right part isn't drawn
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    // hide right part and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+
+                } else {
+
+                    // hide right part and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                }
 
             } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
 
@@ -361,11 +372,21 @@ namespace Oxygen
 
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // increase width since right part isn't drawn
-                Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
+                    // hide left part and increase width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, tiles );
+
+                } else {
+
+                    // hide right part and increase width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+
+                }
             } else {
 
                 if(
@@ -639,13 +660,28 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
-                tiles &= ~TileSet::Left;
 
-                // shrink combo entry hole by 3px on right side
-                Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
-                w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+                    // hide right and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground(window,clipRect, x-1, y, w+6, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, tiles  );
+
+                } else {
+
+                    // hide left and adjust width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+
+                }
 
                 return;
 
@@ -655,6 +691,8 @@ namespace Oxygen
                 Gtk::gtk_combobox_appears_as_list( parent )
                 )
             {
+
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
 
                 StyleOptions options( widget, state, shadow );
                 options |= Blend;
@@ -669,14 +707,25 @@ namespace Oxygen
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
                     TileSet::Tiles tiles( TileSet::Ring );
-                    tiles &= ~TileSet::Left;
-                    Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
+                    if( reversed )
+                    {
+
+                        tiles &= ~TileSet::Right;
+                        Style::instance().renderButtonSlab( window, clipRect, x, y, w+7, h, options, tiles );
+
+                    } else {
+
+                        tiles &= ~TileSet::Left;
+                        Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
+
+                    }
 
                 } else {
 
                     options |= Flat;
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
-                    Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
+                    if( reversed ) Style::instance().renderButtonSlab( window, clipRect, x+1, y, w, h, options );
+                    else Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
 
                 }
 
@@ -990,13 +1039,28 @@ namespace Oxygen
             { options |= Hover; }
 
             TileSet::Tiles tiles( TileSet::Ring);
-            tiles &= ~TileSet::Left;
 
-            Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
 
-            // shrink spinbox entry hole by 3px on right side
-            w -= Style::Entry_SideMargin;
-            Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+                tiles &= ~TileSet::Right;
+                Style::instance().renderHoleBackground(window,clipRect, x-1, y-1, w+6, h+2, tiles );
+
+                // shrink spinbox entry hole by 3px on right side
+                x += Style::Entry_SideMargin;
+                w -= Style::Entry_SideMargin;
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, tiles );
+
+            } else {
+
+                tiles &= ~TileSet::Left;
+                Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+
+                // shrink spinbox entry hole by 3px on right side
+                w -= Style::Entry_SideMargin;
+                Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+
+            }
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -1246,14 +1310,26 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
 
-                // shrink entry by 3px at left
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
-                x += Style::Entry_SideMargin;
-                w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, clipRect, x-6, y, w+7, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+
+                }
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
@@ -1285,23 +1361,37 @@ namespace Oxygen
 
                 }
 
-                TileSet::Tiles tiles( TileSet::Ring );
-                tiles &= ~TileSet::Right;
-
-                // basic adjustments
-                x-=1; w+=2;
-
                 // vertical alignment
                 if( !Style::instance().settings().applicationName().isOpenOffice() )
                 { y-=1; h+=2; }
 
-                Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                // basic adjustments
+                x-=1; w+=2;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
-                { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+                TileSet::Tiles tiles( TileSet::Ring );
 
-                Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
 
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    { w-= Style::Entry_SideMargin; }
+
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+
+                }
             } else {
 
                 if( Style::instance().settings().applicationName().isGoogleChrome() && GTK_IS_HBOX( widget ) )
@@ -1409,8 +1499,19 @@ namespace Oxygen
             else options &= ~Hover;
 
             TileSet::Tiles tiles( TileSet::Ring );
-            tiles &= ~TileSet::Right;
-            Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
+
+                tiles &= ~TileSet::Left;
+                Style::instance().renderButtonSlab( window, clipRect, x-10, y, w+10, h, options, tiles );
+
+            } else {
+
+                tiles &= ~TileSet::Right;
+                Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
+
+            }
 
         } else if( d.isNull() && (GTK_IS_TREE_VIEW(widget) || GTK_IS_CELL_VIEW(widget)) && shadow==GTK_SHADOW_IN ) {
 
@@ -1769,10 +1870,10 @@ namespace Oxygen
         {
             // Deal with GimpScaleComboBox misplaced arrow because of entry shrinking
             GtkWidget* parent=gtk_widget_get_parent(widget);
-            if(parent)
-                parent=gtk_widget_get_parent(parent);
+            if(parent) parent=gtk_widget_get_parent(parent);
             if( parent && std::string(G_OBJECT_TYPE_NAME(parent)) == "GimpScaleComboBox")
-                x--;
+            { x--; }
+
         }
 
         const Gtk::Detail d( detail );
@@ -1812,11 +1913,10 @@ namespace Oxygen
 
         } else if( d.isSpinButton() ) {
 
-            /*
-            TODO: this should be made more robust. What one really want is an arrow that is
-            one pixel away from the centerline, no matter what
-            */
-            x-=1;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
+            else x-=1;
+
             if( arrow == GTK_ARROW_UP && !Style::instance().settings().applicationName().isOpenOffice() )
             {
 
@@ -1852,15 +1952,24 @@ namespace Oxygen
             role = Palette::Text;
             y+=1;
 
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
         } else if( Gtk::gtk_parent_combo( widget ) ) {
 
             role = Palette::WindowText;
             y-=1;
 
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
             options &= ~( Focus|Hover );
             role = Palette::ButtonText;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
 
         } else if(
             Gtk::gtk_parent_button( widget ) &&
