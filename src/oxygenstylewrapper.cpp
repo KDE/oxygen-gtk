@@ -584,14 +584,24 @@ namespace Oxygen
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options;
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
                 const bool isLast( Gtk::gtk_path_bar_button_is_last( widget ) );
-
                 if(state!=GTK_STATE_NORMAL && state!=GTK_STATE_INSENSITIVE)
                 {
                     if( !(state==GTK_STATE_ACTIVE && !Style::instance().animations().hoverEngine().hovered( widget ) ) )
                     {
                         options |= Hover;
-                        if( isLast ) w -= 10;
+                        if( isLast )
+                        {
+                            if( reversed )
+                            {
+
+                                x += 10;
+                                w-=10;
+
+                            } else w -= 10;
+                        }
+
                         Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
                     }
                 }
@@ -600,7 +610,9 @@ namespace Oxygen
                 {
 
                     options |= Contrast;
-                    Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
+
+                    if( reversed ) Style::instance().renderArrow(window,NULL,GTK_ARROW_LEFT, x+3,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
+                    else Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
 
                 }
 
