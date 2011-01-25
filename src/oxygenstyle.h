@@ -98,21 +98,23 @@ namespace Oxygen
         void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
 
         //! separators
-        void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
+        void drawSeparator( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, bool hole=false, TileSet::Tiles = TileSet::Center ) const;
-        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, bool hole=false, TileSet::Tiles tiles= TileSet::Center ) const
-        { return renderWindowBackground( 0L,window,widget,r,x,y,w,h,hole,tiles ); }
-        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, bool hole=false, TileSet::Tiles tiles= TileSet::Center) const
-        { return renderWindowBackground( window, 0L, r, x, y, w, h, hole, tiles ); }
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center ) const;
+
+        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center ) const
+        { return renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+
+        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center) const
+        { return renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
-        bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
-        void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
         void renderHeaderBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
@@ -121,51 +123,50 @@ namespace Oxygen
         void renderHeaderLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
 
         //! tree view lines
-        void renderTreeLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, StyleOptions ) const;
+        void renderTreeLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, const StyleOptions& ) const;
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
         bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring ) const;
 
         //! splitters
-        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //!@name progressbar
         //@{
-        void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
-        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
+        void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
         //@}
 
         //!@name scrollbar
         //@{
-        void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
-        void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
         //@}
 
         //! toolbar handle
-        void renderToolBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions ) const;
+        void renderToolBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! frame
-        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, Palette::Role = Palette::Window ) const;
-        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions opt, Palette::Role role = Palette::Window) const
+        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, Palette::Role = Palette::Window ) const;
+        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& opt, Palette::Role role = Palette::Window) const
         { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
-        // void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring );
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions, TileSet::Tiles = TileSet::Ring, const ColorUtils::Rgba& = ColorUtils::Rgba() );
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions );
+        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions& );
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, StyleOptions );
+        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions& );
 
         //!@name generic slab
         //@{
 
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
-        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o )
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
+        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o )
         { renderSlab( window, r, x, y, w, h, Gtk::Gap(), o ); }
 
         //@}
@@ -176,48 +177,48 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions, TileSet::Tiles = TileSet::Ring );
-        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o, TileSet::Tiles tiles = TileSet::Ring )
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
         { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, tiles ); }
 
         //@}
 
         //!@name dock frame
         //@{
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
-        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, StyleOptions o )
+        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
+        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o )
         { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
 
         //! menu item
-        void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, StyleOptions );
+        void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& );
 
         //! selection
-        void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, StyleOptions );
+        void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
 
         //! arrow
-        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize = QtSettings::ArrowNormal, StyleOptions = Contrast, Palette::Role = Palette::ButtonText ) const;
+        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize = QtSettings::ArrowNormal, const StyleOptions& = Contrast, Palette::Role = Palette::ButtonText ) const;
 
         //! slider groove
-        void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
+        void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
 
         //! slider handle
-        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, StyleOptions );
+        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
 
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
         //! tab
-        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! tabbar base
-        void renderTabBarBase( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, Gtk::Gap, StyleOptions, TabOptions );
+        void renderTabBarBase( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, Gtk::Gap, const StyleOptions&, TabOptions );
 
         //! tabwidget frame
-        void renderTabBarFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, StyleOptions );
+        void renderTabBarFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
 
         //! tree 'standard' expanders (that is: +!-)
-        void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, StyleOptions, Palette::Role ) const;
+        void renderTreeExpander( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkExpanderStyle, const StyleOptions&, Palette::Role ) const;
 
         //@}
 
@@ -234,7 +235,7 @@ namespace Oxygen
         void drawWindecoButton(cairo_t*,WinDeco::ButtonType,WinDeco::ButtonStatus,WinDeco::Options, gint,gint,gint,gint);
 
         // adjust scrollbar hole, depending on orientation and buttons settings
-        void adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions ) const;
+        void adjustScrollBarHole( int& x, int& y, int& w, int& h, const StyleOptions& ) const;
 
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
@@ -287,23 +288,34 @@ namespace Oxygen
         //! constructor
         explicit Style( void );
 
+        //! get color matching role from either style option or default palette
+        const ColorUtils::Rgba& color( Palette::Role role, const StyleOptions& option ) const
+        { return color( Palette::Active, role, option ); }
+
+        //! get color matching group and role from either style option or default palette
+        const ColorUtils::Rgba& color( Palette::Group group, Palette::Role role, const StyleOptions& option ) const
+        {
+            Palette::ColorSet::const_iterator iter( option._customColors.find( role ) );
+            return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
+        }
+
         //@name internal rendering
         //@{
 
         //! tab
-        void renderActiveTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+        void renderActiveTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! tab
-        void renderInactiveTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+        void renderInactiveTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! tab
-        void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, StyleOptions, TabOptions );
+        void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! slab glowing color
         ColorUtils::Rgba slabShadowColor( StyleOptions ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, StyleOptions, TileSet::Tiles tiles = TileSet::Ring );
+        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */
@@ -354,7 +366,7 @@ namespace Oxygen
             {}
 
             //! constructor
-            explicit SlabRect( int x, int y, int w, int h, const TileSet::Tiles& tiles, StyleOptions options = StyleOptions() ):
+            explicit SlabRect( int x, int y, int w, int h, const TileSet::Tiles& tiles, const StyleOptions& options = StyleOptions() ):
                 _x(x),
                 _y(y),
                 _w(w),
