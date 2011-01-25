@@ -127,8 +127,8 @@ namespace Oxygen
                 << std::endl;
             #endif
 
-            GdkColormap* cmap=gdk_screen_get_rgba_colormap( screen );
-            gtk_widget_set_colormap( widget, cmap );
+            // assign argb colormap to widget
+            gtk_widget_set_colormap( widget, gdk_screen_get_rgba_colormap( screen ) );
 
         }
 
