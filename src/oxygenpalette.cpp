@@ -29,7 +29,7 @@ namespace Oxygen
 {
 
     //____________________________________________________________________________________
-    std::ostream& operator << ( std::ostream& out, const ColorUtils::Rgba::List& colors )
+    std::ostream& operator << ( std::ostream& out, const Palette::ColorList& colors )
     {
         for( unsigned int i=0; i<colors.size(); i++ )
         { out << Palette::roleName( Palette::Role(i) ) << "=" << colors[i] << std::endl; }
@@ -59,8 +59,8 @@ namespace Oxygen
         // start by copying palette
         colorList(to) = colorList(from);
 
-        const ColorUtils::Rgba::List& source = colorList(from);
-        ColorUtils::Rgba::List &destination = colorList(to);
+        const ColorList& source = colorList(from);
+        ColorList &destination = colorList(to);
 
         // apply effects to background
         destination[Window] = effect.color(source[Window]);

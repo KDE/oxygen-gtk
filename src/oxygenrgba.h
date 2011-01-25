@@ -49,7 +49,6 @@ namespace Oxygen
 
             public:
 
-            typedef std::vector<Rgba> List;
             //! constructor
             Rgba( void ):
                 _red(0),

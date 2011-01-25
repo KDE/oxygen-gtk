@@ -22,6 +22,9 @@
 
 #include "oxygenrgba.h"
 
+#include <vector>
+#include <map>
+
 namespace Oxygen
 {
 
@@ -68,6 +71,9 @@ namespace Oxygen
             Disabled
         };
 
+        //! color list
+        typedef std::vector<ColorUtils::Rgba> ColorList;
+
         //! constructor
         Palette( void ):
             _activeColors( NumColors, ColorUtils::Rgba() ),
@@ -79,9 +85,9 @@ namespace Oxygen
         //! clear
         void clear( void )
         {
-            _activeColors = ColorUtils::Rgba::List( NumColors, ColorUtils::Rgba() );
-            _inactiveColors = ColorUtils::Rgba::List( NumColors, ColorUtils::Rgba() );
-            _disabledColors = ColorUtils::Rgba::List( NumColors, ColorUtils::Rgba() );
+            _activeColors = ColorList( NumColors, ColorUtils::Rgba() );
+            _inactiveColors = ColorList( NumColors, ColorUtils::Rgba() );
+            _disabledColors = ColorList( NumColors, ColorUtils::Rgba() );
         }
 
         //! get color
@@ -147,7 +153,7 @@ namespace Oxygen
         protected:
 
         //! get color list from group
-        const ColorUtils::Rgba::List& colorList( Group group ) const
+        const ColorList& colorList( Group group ) const
         {
             switch( group )
             {
@@ -159,7 +165,7 @@ namespace Oxygen
         }
 
         //! get color list from group
-        ColorUtils::Rgba::List& colorList( Group group )
+        ColorList& colorList( Group group )
         {
             switch( group )
             {
@@ -172,15 +178,15 @@ namespace Oxygen
 
         private:
 
-        ColorUtils::Rgba::List _activeColors;
-        ColorUtils::Rgba::List _inactiveColors;
-        ColorUtils::Rgba::List _disabledColors;
+        ColorList _activeColors;
+        ColorList _inactiveColors;
+        ColorList _disabledColors;
 
         //! current group
         Group _group;
 
         //! streamer for color list
-        friend std::ostream& operator << ( std::ostream& out, const ColorUtils::Rgba::List& colors );
+        friend std::ostream& operator << ( std::ostream& out, const ColorList& colors );
         friend std::ostream& operator << ( std::ostream& out, const Palette& palette );
 
     };
