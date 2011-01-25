@@ -841,11 +841,10 @@ namespace Oxygen
 
                     }
 
-                } else if( style ) {
-
-                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, TileSet::Ring, Gtk::gdk_get_color( style->bg[state] ) );
-
                 } else {
+
+                    if( style )
+                    { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 

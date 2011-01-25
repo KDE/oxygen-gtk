@@ -1127,8 +1127,9 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles,
-        const ColorUtils::Rgba& color
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        TileSet::Tiles tiles
         )
     {
 
@@ -1140,7 +1141,7 @@ namespace Oxygen
             {
 
                 Cairo::Context context( window, clipRect );
-                ColorUtils::Rgba base( color.isValid() ? color : settings().palette().color( group, Palette::Window ) );
+                const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
 
                 if( options & Hover )
                 {
@@ -1177,17 +1178,13 @@ namespace Oxygen
 
 
         // define colors
-        ColorUtils::Rgba base;
+        ColorUtils::Rgba base( color( group, Palette::Button, options ) );
         if( options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( color.isValid() ? color : settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = color.isValid() ? color : settings().palette().color( group, Palette::Button );
+            base = ColorUtils::backgroundColor( base, wh, y+wy+h/2 );
 
         }
 

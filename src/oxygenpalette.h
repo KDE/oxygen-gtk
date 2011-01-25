@@ -80,6 +80,10 @@ namespace Oxygen
 
             public:
 
+            //! insert
+            void insert( Role role, const ColorUtils::Rgba& color )
+            { std::map<Role, ColorUtils::Rgba>::insert( std::make_pair( role, color ) ); }
+
             //! returns true if color set contains given Role
             bool contains( Role role ) const
             { return find( role ) != end(); }

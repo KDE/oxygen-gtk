@@ -153,7 +153,7 @@ namespace Oxygen
         { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring, const ColorUtils::Rgba& = ColorUtils::Rgba() );
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
@@ -284,6 +284,17 @@ namespace Oxygen
 
         //! constructor
         explicit Style( void );
+
+        //! get color matching role from either style option or default palette
+        const ColorUtils::Rgba& color( Palette::Role role, const StyleOptions& option ) const
+        { return color( Palette::Active, role, option ); }
+
+        //! get color matching group and role from either style option or default palette
+        const ColorUtils::Rgba& color( Palette::Group group, Palette::Role role, const StyleOptions& option ) const
+        {
+            Palette::ColorSet::const_iterator iter( option._customColors.find( role ) );
+            return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
+        }
 
         //@name internal rendering
         //@{
