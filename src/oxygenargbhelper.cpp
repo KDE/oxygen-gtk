@@ -100,7 +100,11 @@ namespace Oxygen
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
         // make sure widget has not been realized already
+        #if GTK_CHECK_VERSION(2, 20, 0)
         if( gtk_widget_get_realized( widget ) ) return TRUE;
+        #else
+        if( GTK_WIDGET_REALIZED( widget ) ) return TRUE;
+        #endif
 
         // cast to window
         GtkWindow* window( GTK_WINDOW( widget ) );
