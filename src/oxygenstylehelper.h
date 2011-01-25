@@ -26,7 +26,6 @@
 #include "oxygentilesetcache.h"
 
 #include <gdk/gdk.h>
-#include <X11/Xdefs.h>
 
 namespace Oxygen
 {
@@ -43,14 +42,12 @@ namespace Oxygen
         public:
 
         //! constructor
-        StyleHelper( void );
+        StyleHelper( void )
+        {}
 
         //! destructor
         virtual ~StyleHelper( void )
         {}
-
-        //! set background gradient hint to widget
-        virtual void setHasBackgroundGradient( XID, bool ) const;
 
         //! separators
         void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
@@ -229,9 +226,6 @@ namespace Oxygen
         GdkPixbufCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
 
         //@}
-
-        //! argb hint atom
-        Atom _backgroundGradientAtom;
 
     };
 

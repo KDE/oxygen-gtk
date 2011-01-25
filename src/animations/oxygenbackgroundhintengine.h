@@ -26,6 +26,8 @@
 #include <gtk/gtk.h>
 #include <set>
 
+#include <X11/Xdefs.h>
+
 namespace Oxygen
 {
 
@@ -40,21 +42,22 @@ namespace Oxygen
         public:
 
         //! constructor
-        BackgroundHintEngine( Animations* widget ):
-            BaseEngine( widget )
-            {}
+        BackgroundHintEngine( Animations* );
 
         //! destructor
         virtual ~BackgroundHintEngine( void )
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget*, StyleHelper* );
+        virtual bool registerWidget( GtkWidget* );
 
         //! unregister widget
-        virtual void unregisterWidget( GtkWidget* widget );
+        virtual void unregisterWidget( GtkWidget* );
 
         protected:
+
+        //! argb hint atom
+        Atom _backgroundGradientAtom;
 
         //! map widget and window id
         class Data

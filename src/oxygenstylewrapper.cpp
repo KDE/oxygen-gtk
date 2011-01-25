@@ -111,7 +111,7 @@ namespace Oxygen
             {
                 // register to window manager and set Background Gradient hint, when registered
                 Style::instance().windowManager().registerWidget( widget );
-                Style::instance().animations().backgroundHintEngine().registerWidget( widget, &Style::instance().helper() );
+                Style::instance().animations().backgroundHintEngine().registerWidget( widget );
             }
 
             // change gtk dialog button order
@@ -883,7 +883,7 @@ namespace Oxygen
                 if(
                     Gtk::gdk_window_is_base( window ) &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().animations().backgroundHintEngine().registerWidget( widget, &Style::instance().helper() ); }
+                { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
 
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 

@@ -25,11 +25,26 @@
 
 #include <iostream>
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 namespace Oxygen
 {
 
     //_________________________________________________________
-    bool BackgroundHintEngine::registerWidget( GtkWidget* widget, StyleHelper* helper )
+    BackgroundHintEngine::BackgroundHintEngine( Animations* animations ):
+        BaseEngine( animations )
+    {
+
+        // create background gradient atom
+        GdkDisplay *display( gdk_display_get_default () );
+        if( display ) _backgroundGradientAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
+        else _backgroundGradientAtom = None;
+
+    }
+
+    //_________________________________________________________
+    bool BackgroundHintEngine::registerWidget( GtkWidget* widget )
     {
 
         // get associated top level widget
@@ -47,7 +62,14 @@ namespace Oxygen
         if( contains( data ) ) return false;
 
         // set hint
-        helper->setHasBackgroundGradient( id, true );
+        GdkDisplay *display( gdk_display_get_default () );
+        if( display && _backgroundGradientAtom )
+        {
+            unsigned long uLongValue( true );
+            XChangeProperty(
+                GDK_DISPLAY_XDISPLAY( display ), id, _backgroundGradientAtom, XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<const unsigned char *>(&uLongValue), 1 );
+        }
 
         // register
         #if OXYGEN_DEBUG
