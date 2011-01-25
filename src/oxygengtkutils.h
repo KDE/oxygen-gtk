@@ -132,6 +132,9 @@ namespace Oxygen
         /*! adapted from QtCurve code */
         bool gtk_progress_bar_is_horizontal( GtkWidget* );
 
+        //! true if scrolled window must be forced to have a sunken frame
+        bool gtk_scrolled_window_force_sunken( GtkWidget* );
+
         //!@name button utilities
         //@{
 
