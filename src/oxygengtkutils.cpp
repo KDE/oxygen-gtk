@@ -739,6 +739,16 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_scrolled_window_force_sunken( GtkWidget* widget)
+    {
+
+        return
+            ( GTK_IS_BIN( widget ) && GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) ) ||
+            gtk_object_is_a( G_OBJECT( widget ), "FMIconView" );
+
+    }
+
+    //________________________________________________________
     bool Gtk::gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
     {
 
