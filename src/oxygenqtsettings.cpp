@@ -297,6 +297,7 @@ namespace Oxygen
         {
             std::cerr << "Oxygen::QtSettings::initArgb - ARGB hack is disabled; program name: " << appName << std::endl;
             std::cerr << "Oxygen::QtSettings::initArgb - if disabling ARGB hack helps, please add this string:\n\ndisable:" << appName << "\n\nto ~/.config/oxygen-gtk/argb-apps.conf\nand report it here: https://bugs.kde.org/show_bug.cgi?id=260640" << std::endl;
+            _argbEnabled = false;
             return;
         }
 
