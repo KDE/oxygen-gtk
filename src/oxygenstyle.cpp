@@ -121,7 +121,6 @@ namespace Oxygen
         const StyleOptions& options, TileSet::Tiles tiles ) const
     {
 
-        // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
         bool needToDestroyContext;
 
         // no background for gnome applets
