@@ -47,7 +47,6 @@ namespace Oxygen
     //_____________________________________________________
     ArgbHelper::~ArgbHelper( void )
     {
-        std::cerr << "ArgbHelper::~ArgbHelper" << std::endl;
 
         // disconnect hooks
         _colormapHook.disconnect();
