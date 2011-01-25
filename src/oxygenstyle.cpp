@@ -122,7 +122,6 @@ namespace Oxygen
     {
 
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
-
         bool needToDestroyContext;
 
         // no background for gnome applets
@@ -139,7 +138,7 @@ namespace Oxygen
         }
 
         // define colors
-        ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        ColorUtils::Rgba base( color( Palette::Window, options ) );
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp

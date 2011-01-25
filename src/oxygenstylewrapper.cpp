@@ -112,12 +112,13 @@ namespace Oxygen
             GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
             if( GTK_IS_DIALOG( toplevel ) )
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
+
             // if the app hasn't modified bg, draw background gradient
-            if( !( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG ) )
-            {
-                // render window background
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
-            }
+            StyleOptions options;
+            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            { options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) ); }
+
+            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options );
 
             return;
 
