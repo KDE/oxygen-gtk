@@ -2378,6 +2378,7 @@ namespace Oxygen
 
             StyleOptions options( Blend );
             options |= StyleOptions( widget, state, shadow );
+            options &= ~Sunken;
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
             Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
             return;

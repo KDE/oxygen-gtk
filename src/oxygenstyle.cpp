@@ -91,7 +91,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options )
+    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // define colors
@@ -321,7 +321,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
@@ -390,7 +390,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderTooltipBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::renderTooltipBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         // define colors
@@ -502,7 +502,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, StyleOptions options ) const
+    void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, const StyleOptions& options ) const
     {
 
         // define pen color
@@ -626,7 +626,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSplitter( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options ) const
+    void Style::renderSplitter( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         // orientation
@@ -703,7 +703,7 @@ namespace Oxygen
     void Style::renderProgressBarHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
@@ -718,7 +718,7 @@ namespace Oxygen
     void Style::renderProgressBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // colors
@@ -758,7 +758,7 @@ namespace Oxygen
     void Style::renderScrollBarHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // colors
@@ -775,7 +775,7 @@ namespace Oxygen
     void Style::renderScrollBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         // store colors
@@ -927,7 +927,7 @@ namespace Oxygen
     void Style::renderToolBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options ) const
+        gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         const bool vertical( options & Vertical );
@@ -961,7 +961,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, StyleOptions options, Palette::Role role ) const
+    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, Palette::Role role ) const
     {
 
         // define colors
@@ -1120,7 +1120,7 @@ namespace Oxygen
     void Style::renderButtonSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options, TileSet::Tiles tiles,
+        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles,
         const ColorUtils::Rgba& color
         )
     {
@@ -1242,7 +1242,7 @@ namespace Oxygen
     void Style::renderSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
     {
 
         // define colors
@@ -1304,7 +1304,7 @@ namespace Oxygen
     void Style::renderCheckBox(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options )
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options )
     {
 
         // define checkbox rect
@@ -1446,7 +1446,7 @@ namespace Oxygen
     void Style::renderRadioButton(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, StyleOptions options )
+        gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options )
     {
 
         // define checkbox rect
@@ -1546,7 +1546,7 @@ namespace Oxygen
     void Style::renderHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options,
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options,
         TileSet::Tiles tiles )
     {
 
@@ -1594,7 +1594,7 @@ namespace Oxygen
     void Style::renderDockFrame(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
     {
 
         // do nothing if not enough room
@@ -1626,7 +1626,7 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         GtkWidget* widget,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
         ColorUtils::Rgba base;
         gint wh, wy;
@@ -1747,7 +1747,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         TileSet::Tiles tiles,
-        StyleOptions options
+        const StyleOptions& options
         )
     {
 
@@ -1777,7 +1777,7 @@ namespace Oxygen
         GtkArrowType orientation,
         gint x, gint y, gint w, gint h,
         QtSettings::ArrowSize arrowSize,
-        StyleOptions options,
+        const StyleOptions& options,
         Palette::Role role ) const
     {
 
@@ -1863,7 +1863,7 @@ namespace Oxygen
     void Style::renderSliderGroove(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
@@ -1883,7 +1883,7 @@ namespace Oxygen
     void Style::renderSliderHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, StyleOptions options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // define colors
@@ -1903,7 +1903,6 @@ namespace Oxygen
         }
 
         // render slab
-        options &= ~Sunken;
         Cairo::Context context( window, clipRect );
         renderSlab( context, x, y, w, h, base, options );
 
@@ -1991,7 +1990,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
-        StyleOptions options,
+        const StyleOptions& options,
         TabOptions tabOptions
         )
     {
@@ -2021,7 +2020,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         Gtk::Gap gap,
-        StyleOptions options,
+        const StyleOptions& options,
         TabOptions tabOptions
         )
     {
@@ -2075,7 +2074,7 @@ namespace Oxygen
     void Style::renderTabBarFrame(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, StyleOptions options )
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
     {
 
         // define colors
@@ -2094,7 +2093,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkExpanderStyle style,
-        StyleOptions options,
+        const StyleOptions& options,
         Palette::Role role
         ) const
     {
@@ -2231,7 +2230,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, StyleOptions options ) const
+    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, const StyleOptions& options ) const
     {
 
         const int buttonSize( 12 );
@@ -2260,7 +2259,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
-        StyleOptions options,
+        const StyleOptions& options,
         TabOptions tabOptions
         )
     {
@@ -2437,7 +2436,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
-        StyleOptions options,
+        const StyleOptions& options,
         TabOptions tabOptions
         )
     {
@@ -2616,7 +2615,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
-        StyleOptions options,
+        const StyleOptions& options,
         TabOptions tabOptions
         )
     {
@@ -2996,7 +2995,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, StyleOptions options, TileSet::Tiles tiles )
+    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, const StyleOptions& options, TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
