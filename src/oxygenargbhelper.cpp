@@ -39,7 +39,8 @@ namespace Oxygen
 
     //__________________________________________________________________
     ArgbHelper::ArgbHelper( void ):
-        _hooksInitialized( false )
+        _hooksInitialized( false ),
+        _logId( 0 )
     {}
 
 
@@ -51,6 +52,15 @@ namespace Oxygen
         // disconnect hooks
         _colormapHook.disconnect();
         _styleHook.disconnect();
+
+        if( _logId > 0 )
+        {
+
+            g_log_remove_handler( "GLib-GObject", _logId );
+            g_log_set_handler( "GLib-GObject", G_LOG_LEVEL_CRITICAL, g_log_default_handler, 0L );
+
+        }
+
     }
 
     //_____________________________________________________
@@ -66,6 +76,13 @@ namespace Oxygen
         // install hooks
         _colormapHook.connect( "style-set", (GSignalEmissionHook)colormapHook, 0L );
         _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, 0L );
+
+        /*
+        the installation of "parent-set" hook triggers some glib critical error when destructing ComboBoxEntry.
+        a glib/gtk bug has been filed. In the meanwhile, and since the error is apparently harmless, we simply
+        disable the corresponding log
+        */
+        _logId = g_log_set_handler( "GLib-GObject", G_LOG_LEVEL_CRITICAL, logHandler, 0L );
 
         _hooksInitialized = true;
         return;
@@ -163,6 +180,19 @@ namespace Oxygen
         }
 
         return TRUE;
+
+    }
+
+    //_________________________________________________________
+    void ArgbHelper::logHandler( const gchar* domain, GLogLevelFlags flags, const gchar* message, gpointer data )
+    {
+
+        /*
+        discard all messages containing "IA__gtk_box_reorder_child:"
+        and fallback to default handler otherwise
+        */
+        if( std::string( message ).find( "g_object_ref" ) == std::string::npos )
+        { g_log_default_handler( domain, flags, message, data ); }
 
     }
 
