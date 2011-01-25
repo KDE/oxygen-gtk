@@ -35,7 +35,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TreeViewData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::TreeViewData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         // store target
@@ -74,7 +74,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TreeViewData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::TreeViewData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         // reset target
@@ -217,7 +217,7 @@ namespace Oxygen
         if( data._widget ) data.disconnect();
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TreeViewData::registerChild - " << widget << std::endl;
+        std::cerr << "Oxygen::TreeViewData::registerChild - " << widget << std::endl;
         #endif
 
         // make sure widget is not already in map
@@ -274,7 +274,7 @@ namespace Oxygen
         if( !_widget ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::TreeViewData::ScrollBarData::disconnect - " << _widget << std::endl;
+        std::cerr << "Oxygen::TreeViewData::ScrollBarData::disconnect - " << _widget << std::endl;
         #endif
 
         _destroyId.disconnect();

@@ -33,7 +33,7 @@ namespace Oxygen
     void ComboBoxData::connect( GtkWidget* widget )
     {
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
+        std::cerr << "Oxygen::ComboBoxData::connect - widget: " << widget << std::endl;
         #endif
 
         _target = widget;
@@ -52,7 +52,7 @@ namespace Oxygen
     void ComboBoxData::disconnect( GtkWidget* widget )
     {
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::disconnect - widget: " << widget << std::endl;
+        std::cerr << "Oxygen::ComboBoxData::disconnect - widget: " << widget << std::endl;
         #endif
 
         _stateChangeId.disconnect();
@@ -203,7 +203,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cout
+            std::cerr
                 << "Oxygen::ComboBoxData::registerChild -"
                 << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << std::endl;
@@ -243,7 +243,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ComboBoxData::unregisterChild -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
@@ -269,7 +269,7 @@ namespace Oxygen
         if( !_widget ) return;
 
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ComboBoxData::ChildData::disconnect -"
             << " " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")"
             << std::endl;
@@ -298,7 +298,7 @@ namespace Oxygen
         if( !_widget ) return;
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::HoverData::disconnect -"
+        std::cerr << "Oxygen::ComboBoxData::HoverData::disconnect -"
             << " " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")"
             << std::endl;
         #endif
@@ -315,7 +315,7 @@ namespace Oxygen
     gboolean ComboBoxData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
         #if OXYGEN_DEBUG
-        std::cout
+        std::cerr
             << "Oxygen::ComboBoxData::childDestroyNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
@@ -341,7 +341,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::enterNotifyEvent -"
+        std::cerr << "Oxygen::ComboBoxData::enterNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -355,7 +355,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::ComboBoxData::leaveNotifyEvent -"
+        std::cerr << "Oxygen::ComboBoxData::leaveNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif

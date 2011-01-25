@@ -35,7 +35,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         const bool enabled( gtk_widget_get_state( widget ) != GTK_STATE_INSENSITIVE );
@@ -65,7 +65,7 @@ namespace Oxygen
     void HoverData::disconnect( GtkWidget* widget )
     {
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         _enterId.disconnect();
@@ -76,7 +76,7 @@ namespace Oxygen
     gboolean HoverData::enterNotifyEvent(GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         #if OXYGEN_DEBUG
-        std::cout << "HoverData::enterNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "HoverData::enterNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         static_cast<HoverData*>( data )->setHovered( widget, true );
@@ -87,7 +87,7 @@ namespace Oxygen
     gboolean HoverData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::HoverData::leaveNotifyEvent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
         static_cast<HoverData*>( data )->setHovered( widget, false );
