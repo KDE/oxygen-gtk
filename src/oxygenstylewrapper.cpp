@@ -2808,6 +2808,7 @@ namespace Oxygen
     //_______________________________________________________________________________________________________________
     void StyleWrapper::instanceInit( OxygenStyle* self )
     {
+
         /*
         need to initialize the colors here even if done already
         elsewhere, to fix some overwritting that occurs with some distros
@@ -2821,7 +2822,9 @@ namespace Oxygen
         Oxygen::DBus::instance();
 
         // initialize argb hooks
-        if( Style::instance().settings().argbEnabled() )
+        if(
+            Style::instance().settings().argbEnabled() &&
+            !Style::instance().settings().applicationName().isMozilla() )
         { Style::instance().argbHelper().initializeHooks(); }
 
     }
