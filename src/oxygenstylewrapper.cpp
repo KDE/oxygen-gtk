@@ -1168,7 +1168,7 @@ namespace Oxygen
         if( d.isScrolledWindow() &&
             shadow != GTK_SHADOW_IN &&
             GTK_IS_SCROLLED_WINDOW( widget ) &&
-            GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
+            Gtk::gtk_scrolled_window_force_sunken( widget ) )
         {
 
             // make sure that scrolled windows containing a treeView have sunken frame
