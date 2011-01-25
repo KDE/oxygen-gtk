@@ -23,6 +23,7 @@
 
 #include "oxygenflags.h"
 #include "oxygengtkutils.h"
+#include "oxygenpalette.h"
 
 #include <gtk/gtk.h>
 
@@ -74,6 +75,11 @@ namespace Oxygen
         //! destructor
         virtual ~StyleOptions( void )
         {}
+
+
+        //! color set
+        /*! it is used to pass custom colors to painting routines */
+        Palette::ColorSet _customColors;
 
     };
 
