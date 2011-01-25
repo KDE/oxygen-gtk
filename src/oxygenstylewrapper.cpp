@@ -121,7 +121,7 @@ namespace Oxygen
 
             // if the app hasn't modified bg, draw background gradient
             StyleOptions options;
-            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            if( style && (gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG) )
             { options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) ); }
 
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options );
