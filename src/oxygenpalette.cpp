@@ -39,6 +39,16 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const Palette::ColorSet& colors )
+    {
+        for( Palette::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); iter++ )
+        { out << Palette::roleName( iter->first ) << "=" << iter->second << std::endl; }
+
+        return out;
+
+    }
+
+    //____________________________________________________________________________________
     std::ostream& operator << ( std::ostream& out, const Palette& palette )
     {
         out << "[Colors:" << Palette::groupName( Palette::Active ) << "]" << std::endl;

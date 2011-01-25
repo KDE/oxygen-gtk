@@ -74,6 +74,18 @@ namespace Oxygen
         //! color list
         typedef std::vector<ColorUtils::Rgba> ColorList;
 
+        //! color set
+        class ColorSet: public std::map<Role, ColorUtils::Rgba>
+        {
+
+            public:
+
+            //! returns true if color set contains given Role
+            bool contains( Role role ) const
+            { return find( role ) != end(); }
+
+        };
+
         //! constructor
         Palette( void ):
             _activeColors( NumColors, ColorUtils::Rgba() ),
@@ -187,6 +199,7 @@ namespace Oxygen
 
         //! streamer for color list
         friend std::ostream& operator << ( std::ostream& out, const ColorList& colors );
+        friend std::ostream& operator << ( std::ostream& out, const ColorSet& colors );
         friend std::ostream& operator << ( std::ostream& out, const Palette& palette );
 
     };
