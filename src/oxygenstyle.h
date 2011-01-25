@@ -102,11 +102,13 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, bool hole=false, TileSet::Tiles = TileSet::Center ) const;
-        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, bool hole=false, TileSet::Tiles tiles= TileSet::Center ) const
-        { return renderWindowBackground( 0L,window,widget,r,x,y,w,h,hole,tiles ); }
-        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, bool hole=false, TileSet::Tiles tiles= TileSet::Center) const
-        { return renderWindowBackground( window, 0L, r, x, y, w, h, hole, tiles ); }
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center ) const;
+
+        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center ) const
+        { return renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+
+        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center) const
+        { return renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;

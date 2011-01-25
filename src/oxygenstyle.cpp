@@ -115,7 +115,10 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderWindowBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, bool hole, TileSet::Tiles tiles ) const
+    bool Style::renderWindowBackground(
+        cairo_t* context, GdkWindow* window, GtkWidget* widget,
+        GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
+        const StyleOptions& options, TileSet::Tiles tiles ) const
     {
 
         // TODO: render custom color for widgets with modify_bg set (like white viewport bin in ccsm)
@@ -162,7 +165,7 @@ namespace Oxygen
             }
 
             // add hole if required (this can be done before translating the context
-            if( hole )
+            if( options&NoFill )
             {
                 // create a rounded-rect antimask for renderHoleBackground
                 GdkRectangle mask = {x+2, y+1, w-4, h-3 };
@@ -622,7 +625,11 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return false;
 
-        return renderWindowBackground(window,clipRect,x,y,w,h,true,tiles);
+        /*
+        pass "NoFill" option to renderWindowBackground,
+        to indicate one must make a "hole" in the center
+        */
+        return renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
     }
 
     //__________________________________________________________________
