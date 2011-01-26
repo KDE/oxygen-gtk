@@ -38,6 +38,7 @@ namespace Oxygen
     //_________________________________________________
     WindowManager::WindowManager( void ):
         _mode( Full ),
+        _hooksInitialized( false ),
         _drag( false ),
         _dragDistance( 4 ),
         _dragDelay( 500 ),
@@ -45,13 +46,29 @@ namespace Oxygen
         _lastRejectedEvent( 0L ),
         _x(-1),
         _y(-1)
-    { initializeBlackList(); }
+    {
+
+        // black list
+        initializeBlackList();
+
+    }
 
     //_________________________________________________
     WindowManager::~WindowManager( void )
     {
+        _buttonReleaseHook.disconnect();
         _map.disconnectAll();
         _map.clear();
+    }
+
+    //_________________________________________________
+    void WindowManager::initializeHooks( void )
+    {
+
+        if( _hooksInitialized ) return;
+        _buttonReleaseHook.connect( "button-release-event", (GSignalEmissionHook)buttonReleaseHook, this );
+        _hooksInitialized = true;
+
     }
 
     //_________________________________________________
@@ -171,34 +188,50 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    gboolean WindowManager::wmButtonRelease(GtkWidget *widget, GdkEventButton* event, gpointer data )
-    {
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::WindowManager::wmButtonRelease -"
-            << " event: " << event
-            << " widget: " << widget
-            << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " " << gtk_widget_get_name( widget )
-            << std::endl;
-        #endif
-
-        return static_cast<WindowManager*>( data )->finishDrag();
-    }
-
-    //_________________________________________________
     gboolean WindowManager::wmLeave(GtkWidget*, GdkEventCrossing*, gpointer data )
-    { return static_cast<WindowManager*>( data )->finishDrag(); }
+    { return (gboolean) static_cast<WindowManager*>( data )->finishDrag(); }
 
     //_________________________________________________
     gboolean WindowManager::wmMotion( GtkWidget *widget, GdkEventMotion* event, gpointer data )
-    { return static_cast<WindowManager*>(data)->startDrag( widget, event ); }
+    { return (gboolean) static_cast<WindowManager*>(data)->startDrag( widget, event ); }
 
     //_________________________________________________________________
     gboolean WindowManager::startDelayedDrag( gpointer data )
     {
         static_cast<WindowManager*>( data )->startDrag();
         return FALSE;
+    }
+
+    //_________________________________________________________________
+    gboolean WindowManager::buttonReleaseHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // cast data to window manager
+        WindowManager &manager( *static_cast<WindowManager*>(data ) );
+
+        // check mode
+        if( manager._mode == Disabled ) return TRUE;
+
+        // check if drag is in progress, and reset if yes
+        if( manager._drag )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::WindowManager::buttonReleaseHook -"
+                << " widget: " << widget
+                << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " " << gtk_widget_get_name( widget )
+                << std::endl;
+            #endif
+            manager.finishDrag();
+
+        }
+
+        return TRUE;
     }
 
     //_________________________________________________________________
@@ -249,7 +282,10 @@ namespace Oxygen
             &xev);
 
         // force a release as some widgets miss it...
-        wmButtonRelease( widget, 0L, this );
+        finishDrag();
+
+        // wmButtonRelease( widget, 0L, this );
+
         return true;
     }
 
@@ -471,7 +507,6 @@ namespace Oxygen
         data._styleId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( wmStyleSet ), this );
 
         data._pressId.connect( G_OBJECT( widget ), "button-press-event", G_CALLBACK( wmButtonPress ), this );
-        data._releaseId.connect( G_OBJECT( widget ), "button-release-event", G_CALLBACK( wmButtonRelease ), this );
         data._leaveId.connect( G_OBJECT( widget ), "leave-notify-event", G_CALLBACK( wmLeave ), this );
         data._motionId.connect( G_OBJECT( widget ), "motion-notify-event", G_CALLBACK( wmMotion ), this );
     }
@@ -483,7 +518,6 @@ namespace Oxygen
         _leaveId.disconnect();
         _destroyId.disconnect();
         _pressId.disconnect();
-        _releaseId.disconnect();
         _motionId.disconnect();
         _styleId.disconnect();
 

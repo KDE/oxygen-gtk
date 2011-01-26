@@ -28,10 +28,11 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygensignal.h"
-#include "oxygentimer.h"
 #include "oxygendatamap.h"
 #include "oxygengtkutils.h"
+#include "oxygenhook.h"
+#include "oxygensignal.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -53,6 +54,9 @@ namespace Oxygen
 
         //! destructor
         virtual ~WindowManager();
+
+        //! initialize hoooks
+        void initializeHooks( void );
 
         //! register widget
         /*! returns true if widget is effictively registered */
@@ -91,9 +95,6 @@ namespace Oxygen
         //! on button press
         static gboolean wmButtonPress( GtkWidget*, GdkEventButton*, gpointer );
 
-        //! on button release
-        static gboolean wmButtonRelease(GtkWidget*, GdkEventButton*, gpointer );
-
         //! on mouse leave
         static gboolean wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
 
@@ -105,6 +106,9 @@ namespace Oxygen
 
         //! delayed drag
         static gboolean startDelayedDrag( gpointer );
+
+        //! mouse button release event hook
+        static gboolean buttonReleaseHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //@}
 
@@ -189,7 +193,6 @@ namespace Oxygen
             Signal _leaveId;
             Signal _destroyId;
             Signal _pressId;
-            Signal _releaseId;
             Signal _motionId;
             Signal _styleId;
             //@}
@@ -203,6 +206,12 @@ namespace Oxygen
 
         //! drag mode
         Mode _mode;
+
+        //! true when hooks are initialized
+        bool _hooksInitialized;
+
+        //! mouse button release event hook
+        Hook _buttonReleaseHook;
 
         //! timer
         Timer _timer;
