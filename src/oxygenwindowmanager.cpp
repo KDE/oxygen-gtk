@@ -183,12 +183,12 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        return static_cast<WindowManager*>( data )->finishDrag( widget );
+        return static_cast<WindowManager*>( data )->finishDrag();
     }
 
     //_________________________________________________
-    gboolean WindowManager::wmLeave(GtkWidget *widget, GdkEventCrossing*, gpointer data )
-    { return static_cast<WindowManager*>( data )->finishDrag( widget ); }
+    gboolean WindowManager::wmLeave(GtkWidget*, GdkEventCrossing*, gpointer data )
+    { return static_cast<WindowManager*>( data )->finishDrag(); }
 
     //_________________________________________________
     gboolean WindowManager::wmMotion( GtkWidget *widget, GdkEventMotion* event, gpointer data )
@@ -254,7 +254,7 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    bool WindowManager::finishDrag( GtkWidget* widget )
+    bool WindowManager::finishDrag( void )
     {
 
         _widget = 0L;

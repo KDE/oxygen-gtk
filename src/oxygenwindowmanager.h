@@ -118,7 +118,7 @@ namespace Oxygen
         { if( _drag && _widget ) startDrag( _widget, _x, _y ); }
 
         //! finish dragging widget
-        bool finishDrag( GtkWidget* );
+        bool finishDrag( void );
 
         //! return true if window is dragable
         bool isWindowDragWidget( GtkWidget*, GdkEventButton* );
