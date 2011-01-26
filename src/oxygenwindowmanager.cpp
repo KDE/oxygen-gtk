@@ -289,6 +289,7 @@ namespace Oxygen
         if( _drag )
         {
 
+            gdk_pointer_ungrab( CurrentTime );
             _drag = false;
             return true;
 
