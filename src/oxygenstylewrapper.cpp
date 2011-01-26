@@ -2833,6 +2833,9 @@ namespace Oxygen
         */
         Style::instance().settings().initializeColors();
 
+        // initialize window manager hook
+        Style::instance().windowManager().initializeHooks();
+
         // initialize argb hooks
         if(
             Style::instance().settings().argbEnabled() &&
