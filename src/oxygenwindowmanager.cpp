@@ -38,6 +38,7 @@ namespace Oxygen
     //_________________________________________________
     WindowManager::WindowManager( void ):
         _mode( Full ),
+        _hooksInitialized( false ),
         _drag( false ),
         _dragDistance( 4 ),
         _dragDelay( 500 ),
@@ -45,13 +46,29 @@ namespace Oxygen
         _lastRejectedEvent( 0L ),
         _x(-1),
         _y(-1)
-    { initializeBlackList(); }
+    {
+
+        // black list
+        initializeBlackList();
+
+    }
 
     //_________________________________________________
     WindowManager::~WindowManager( void )
     {
+        _buttonReleaseHook.disconnect();
         _map.disconnectAll();
         _map.clear();
+    }
+
+    //_________________________________________________
+    void WindowManager::initializeHooks( void )
+    {
+
+        if( _hooksInitialized ) return;
+        _buttonReleaseHook.connect( "button-release-event", (GSignalEmissionHook)buttonReleaseHook, this );
+        _hooksInitialized = true;
+
     }
 
     //_________________________________________________
@@ -201,34 +218,9 @@ namespace Oxygen
         return FALSE;
     }
 
-    //_________________________________________________
-    bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
-    {
-        if( _mode == Disabled ) return false;
-        else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
-        {
-
-            // store widget and event position
-            _widget = widget;
-            _x = int(event->x_root);
-            _y = int(event->y_root);
-
-            // start timer
-            if( _timer.isRunning() ) _timer.stop();
-            _timer.start( _dragDelay, (GSourceFunc)startDelayedDrag, this );
-
-            // enable drag and accept
-            _drag = true;
-            return true;
-
-        } else {
-
-            // mark event as rejected
-            _lastRejectedEvent = event;
-            return false;
-        }
-
-    }
+    //_________________________________________________________________
+    gboolean WindowManager::buttonReleaseHook( GSignalInvocationHint*, guint, const GValue*, gpointer )
+    {}
 
     //_________________________________________________________________
     bool WindowManager::startDrag( GtkWidget* widget, GdkEventMotion* event )
@@ -294,12 +286,39 @@ namespace Oxygen
         if( _drag )
         {
 
-            gtk_grab_remove(widget);
-            gdk_pointer_ungrab( CurrentTime );
             _drag = false;
             return true;
 
         } else return false;
+
+    }
+
+    //_________________________________________________________________
+    bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
+    {
+        if( _mode == Disabled ) return false;
+        else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
+        {
+
+            // store widget and event position
+            _widget = widget;
+            _x = int(event->x_root);
+            _y = int(event->y_root);
+
+            // start timer
+            if( _timer.isRunning() ) _timer.stop();
+            _timer.start( _dragDelay, (GSourceFunc)startDelayedDrag, this );
+
+            // enable drag and accept
+            _drag = true;
+            return true;
+
+        } else {
+
+            // mark event as rejected
+            _lastRejectedEvent = event;
+            return false;
+        }
 
     }
 
