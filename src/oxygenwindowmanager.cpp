@@ -283,6 +283,9 @@ namespace Oxygen
         _x = -1;
         _y = -1;
 
+        // stop timer
+        if( _timer.isRunning() ) _timer.stop();
+
         if( _drag )
         {
 
