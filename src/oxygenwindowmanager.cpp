@@ -201,35 +201,6 @@ namespace Oxygen
         return FALSE;
     }
 
-    //_________________________________________________
-    bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
-    {
-        if( _mode == Disabled ) return false;
-        else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
-        {
-
-            // store widget and event position
-            _widget = widget;
-            _x = int(event->x_root);
-            _y = int(event->y_root);
-
-            // start timer
-            if( _timer.isRunning() ) _timer.stop();
-            _timer.start( _dragDelay, (GSourceFunc)startDelayedDrag, this );
-
-            // enable drag and accept
-            _drag = true;
-            return true;
-
-        } else {
-
-            // mark event as rejected
-            _lastRejectedEvent = event;
-            return false;
-        }
-
-    }
-
     //_________________________________________________________________
     bool WindowManager::startDrag( GtkWidget* widget, GdkEventMotion* event )
     {
@@ -294,12 +265,39 @@ namespace Oxygen
         if( _drag )
         {
 
-            gtk_grab_remove(widget);
-            gdk_pointer_ungrab( CurrentTime );
             _drag = false;
             return true;
 
         } else return false;
+
+    }
+
+    //_________________________________________________
+    bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
+    {
+        if( _mode == Disabled ) return false;
+        else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
+        {
+
+            // store widget and event position
+            _widget = widget;
+            _x = int(event->x_root);
+            _y = int(event->y_root);
+
+            // start timer
+            if( _timer.isRunning() ) _timer.stop();
+            _timer.start( _dragDelay, (GSourceFunc)startDelayedDrag, this );
+
+            // enable drag and accept
+            _drag = true;
+            return true;
+
+        } else {
+
+            // mark event as rejected
+            _lastRejectedEvent = event;
+            return false;
+        }
 
     }
 
