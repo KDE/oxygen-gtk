@@ -119,12 +119,11 @@ namespace Oxygen
             if( GTK_IS_DIALOG( toplevel ) )
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
 
-            // if the app hasn't modified bg, draw background gradient
-            StyleOptions options;
-            if( style && (gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG) )
-            { options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) ); }
+            // for apps that modify the background color, we don't paint any background.
+            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            { return; }
 
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options );
+            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
             return;
 
