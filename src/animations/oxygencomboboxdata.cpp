@@ -142,7 +142,12 @@ namespace Oxygen
         if( !( widget && GTK_IS_BUTTON( widget ) ) ) return;
 
         // get window
+        #if GTK_CHECK_VERSION(2, 22, 0)
         GdkWindow* window( gtk_button_get_event_window( GTK_BUTTON( widget ) ) );
+        #else
+        GdkWindow* window( GTK_BUTTON( widget )->event_window ) );
+        #endif
+
         if( !window ) return;
 
         // offset
