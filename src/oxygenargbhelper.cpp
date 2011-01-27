@@ -74,7 +74,7 @@ namespace Oxygen
 
         // install hooks
         _colormapHook.connect( "style-set", (GSignalEmissionHook)colormapHook, 0L );
-        _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, 0L );
+        _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, this );
 
         /*
         the installation of "parent-set" hook triggers some glib critical error when destructing ComboBoxEntry.
@@ -87,6 +87,46 @@ namespace Oxygen
         return;
 
     }
+
+    //_____________________________________________________
+    void ArgbHelper::attachStyle( GtkWidget* widget, GdkWindow* window ) const
+    {
+
+        // retrieve widget style and check
+        GtkStyle* style( widget->style );
+        if( !( style && style->depth >= 0 ) ) return;
+
+        // adjust depth
+        if( style->depth == gdk_drawable_get_depth( window ) )
+        { return; }
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::ArgbHelper::attachStyle -"
+            << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " style depth: " << style->depth
+            << " window depth: " << gdk_drawable_get_depth( window )
+            << std::endl;
+        #endif
+
+        widget->style = gtk_style_attach( style, window );
+
+        // if widget is a container, we need to do the same for its children
+        if( !GTK_IS_CONTAINER( widget ) ) return;
+
+        // get children
+        GList* children( gtk_container_get_children( GTK_CONTAINER( widget ) ) );
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
+        {
+            if( !GTK_IS_WIDGET( child->data ) ) continue;
+            attachStyle( GTK_WIDGET( child->data ), window );
+        }
+
+        if( children ) g_list_free( children );
+
+    }
+
+
 
     //_____________________________________________________
     gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
@@ -141,7 +181,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
+    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
     {
 
         // get widget from params
@@ -150,31 +190,11 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-        // retrieve widget style and check
-        GtkStyle* style( widget->style );
-        if( !( style && style->depth >= 0 ) ) return TRUE;
-
         // retrieve parent window and check
         GdkWindow* window( gtk_widget_get_parent_window( widget ) );
         if( !window ) return TRUE;
 
-        // adjust depth
-        if( style->depth != gdk_drawable_get_depth( window ) )
-        {
-
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::ArgbHelper::styleHook -"
-                << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
-                << " style depth: " << style->depth
-                << " window depth: " << gdk_drawable_get_depth( window )
-                << std::endl;
-            #endif
-
-            widget->style = gtk_style_attach( style, window );
-
-        }
-
+        static_cast<const ArgbHelper*>(data)->attachStyle( widget, window );
         return TRUE;
 
     }
