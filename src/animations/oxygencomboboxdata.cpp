@@ -78,9 +78,10 @@ namespace Oxygen
         _button._toggledId.connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
         _button._sizeAllocateId.connect( G_OBJECT(widget), "size-allocate", G_CALLBACK( childSizeAllocateEvent ), this );
         _button._widget = widget;
-        updateButtonEventWindow( widget );
-
         registerChild( widget, false );
+
+        updateButtonEventWindow();
+        gtk_widget_queue_draw( widget );
 
     }
 
@@ -121,14 +122,14 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::updateButtonEventWindow( GtkWidget* widget ) const
+    void ComboBoxData::updateButtonEventWindow( void ) const
     {
 
-        // make sure that this is the correct widget
-        if( widget != _button._widget ) return;
+        // store local pointer to relevant widget
+        GtkWidget* widget( _button._widget );
 
-        // check type
-        if( !GTK_IS_BUTTON( widget ) ) return;
+        // check validity and type
+        if( !( widget && GTK_IS_BUTTON( widget ) ) ) return;
 
         // get window
         GdkWindow* window( gtk_button_get_event_window( GTK_BUTTON( widget ) ) );
@@ -316,8 +317,7 @@ namespace Oxygen
     void ComboBoxData::childSizeAllocateEvent( GtkWidget* widget, GtkAllocation* allocation, gpointer data)
     {
 
-        if( GTK_IS_TOGGLE_BUTTON( widget ) )
-        { static_cast<ComboBoxData*>(data)->updateButtonEventWindow( widget ); }
+        static_cast<ComboBoxData*>(data)->updateButtonEventWindow();
         return;
     }
 

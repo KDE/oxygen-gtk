@@ -105,7 +105,7 @@ namespace Oxygen
         the trick is to extend the button event window by 6 pixels to the left,
         in order to fill a dead area created by the Combobox's GtkFrame's margin.
         */
-        void updateButtonEventWindow( GtkWidget* ) const;
+        void updateButtonEventWindow( void ) const;
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
