@@ -66,10 +66,6 @@ namespace Oxygen
         void registerChild( GtkWidget* widget, GtkWidget* child )
         { data().value( widget ).registerChild( child ); }
 
-        //! initialize cell layout
-        void initializeCellLayout( GtkWidget* widget )
-        { data().value( widget ).initializeCellLayout(); }
-
         //@}
 
         //!@name accessors
