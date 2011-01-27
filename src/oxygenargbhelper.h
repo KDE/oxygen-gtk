@@ -46,6 +46,9 @@ namespace Oxygen
 
         protected:
 
+        //! attach style of widget to passed window [recursive]
+        void attachStyle( GtkWidget*, GdkWindow* ) const;
+
         //! argb hook
         static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
