@@ -144,7 +144,8 @@ style "oxygen-combobox-frame" = "oxygen-default"
 {
     # must set combobox frame x thickness to 0, otherwise there
     # is a dead area between combobox text and button
-    xthickness = 0
+    xthickness = 4
+    ythickness = 4
 }
 
 class "GtkComboBox" style "oxygen-combobox"

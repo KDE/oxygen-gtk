@@ -76,7 +76,9 @@ namespace Oxygen
         assert( !_button._widget );
 
         _button._toggledId.connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
+        _button._sizeAllocateId.connect( G_OBJECT(widget), "size-allocate", G_CALLBACK( childSizeAllocateEvent ), this );
         _button._widget = widget;
+        updateButtonEventWindow( widget );
 
         registerChild( widget, false );
 
@@ -109,8 +111,9 @@ namespace Oxygen
         return;
 
     }
+
     //________________________________________________________________________________
-    void ComboBoxData::updateCellViewColor( void )
+    void ComboBoxData::updateCellViewColor( void ) const
     {
         // change background color
         if( _cell._widget )
@@ -118,54 +121,26 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ComboBoxData::initializeCellLayout( void )
+    void ComboBoxData::updateButtonEventWindow( GtkWidget* widget ) const
     {
 
-        if( _cellLayoutInitialized ) return;
-        if( !_cell._widget ) return;
+        // make sure that this is the correct widget
+        if( widget != _button._widget ) return;
 
-        GtkTreePath* path( gtk_cell_view_get_displayed_row( GTK_CELL_VIEW( _cell._widget ) ) );
-        if( !path ) return;
+        // check type
+        if( !GTK_IS_BUTTON( widget ) ) return;
 
-        gtk_cell_view_set_background_color( GTK_CELL_VIEW( _cell._widget ), 0L );
+        // get window
+        GdkWindow* window( gtk_button_get_event_window( GTK_BUTTON( widget ) ) );
+        if( !window ) return;
 
-        GtkCellLayout* layout( GTK_CELL_LAYOUT( _cell._widget ) );
-        GList* renderers( gtk_cell_layout_get_cells( layout ) );
+        // offset
+        /* TODO: we should get it from the x-thickness property of the GtkFrame for this combobox */
+        const int offset = 4;
 
-        // get maximum padding
-        unsigned short ypadmax(0);
-        for( GList* renderer = g_list_first(renderers); renderer; renderer = g_list_next(renderer) )
-        { ypadmax = std::max<unsigned short>( ypadmax, GTK_CELL_RENDERER( renderer->data )->ypad ); }
-
-        // assign to all renderers
-        for( GList* renderer = g_list_first(renderers); renderer; renderer = g_list_next(renderer) )
-        {
-            GtkCellRenderer* r( GTK_CELL_RENDERER( renderer->data ) );
-
-            int xpad, ypad;
-            gtk_cell_renderer_get_padding( r, &xpad, &ypad );
-
-            int xsize, ysize;
-            gtk_cell_renderer_get_size( r, _cell._widget, 0L, 0L, 0L, &xsize, &ysize );
-
-            gtk_cell_renderer_set_padding( r, std::max( 6, xpad ), ypadmax );
-
-            if( GTK_IS_CELL_RENDERER_PIXBUF( r ) )
-            { gtk_cell_renderer_set_fixed_size( r, xsize+6, ysize + ypadmax ); }
-
-        }
-
-        if( renderers ) g_list_free( renderers );
-
-        // need to trigger model changed
-        GtkTreeModel* model = gtk_combo_box_get_model( GTK_COMBO_BOX( _target ) );
-        GtkTreeIter iter;
-        gtk_combo_box_get_active_iter( GTK_COMBO_BOX( _target ), &iter );
-        gtk_tree_model_row_changed( model, path, &iter );
-        gtk_tree_path_free( path );
-
-        // mark as initialized
-        _cellLayoutInitialized = true;
+        // get allocation
+        const GtkAllocation& allocation( widget->allocation );
+        gdk_window_move_resize( window, allocation.x-offset, allocation.y, allocation.width+offset, allocation.height );
 
     }
 
@@ -285,6 +260,7 @@ namespace Oxygen
     {
         if( !_widget ) return;
         _toggledId.disconnect();
+        _sizeAllocateId.disconnect();
         _pressed = false;
         _focus = false;
 
@@ -333,6 +309,15 @@ namespace Oxygen
     {
         if( GTK_IS_TOGGLE_BUTTON( widget ) )
         { static_cast<ComboBoxData*>(data)->setPressed( widget, gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( widget ) ) ); }
+        return;
+    }
+
+    //____________________________________________________________________________________________
+    void ComboBoxData::childSizeAllocateEvent( GtkWidget* widget, GtkAllocation* allocation, gpointer data)
+    {
+
+        if( GTK_IS_TOGGLE_BUTTON( widget ) )
+        { static_cast<ComboBoxData*>(data)->updateButtonEventWindow( widget ); }
         return;
     }
 
