@@ -38,8 +38,7 @@ namespace Oxygen
 
         //! constructor
         ComboBoxData( void ):
-            _target( 0L ),
-            _cellLayoutInitialized( false )
+            _target( 0L )
         {}
 
         //! destructor
@@ -74,9 +73,6 @@ namespace Oxygen
         //! register child
         void registerChild( GtkWidget*, bool recursive = true );
 
-        //! initialize cell layout
-        void initializeCellLayout( void );
-
         //@}
 
         //!@name accessors
@@ -102,7 +98,14 @@ namespace Oxygen
         void initializeCellView( GtkWidget* value );
 
         //! update cell view color
-        void updateCellViewColor( void );
+        void updateCellViewColor( void ) const;
+
+        //! update button event window
+        /*!
+        the trick is to extend the button event window by 6 pixels to the left,
+        in order to fill a dead area created by the Combobox's GtkFrame's margin.
+        */
+        void updateButtonEventWindow( void ) const;
 
         //! set hover flag for given widget
         void setPressed( GtkWidget*, bool );
@@ -119,10 +122,12 @@ namespace Oxygen
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childToggledEvent( GtkWidget*, gpointer );
+        static void childSizeAllocateEvent( GtkWidget*, GtkAllocation*, gpointer );
 
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static void stateChangeEvent( GtkWidget*, GtkStateType, gpointer );
+
 
         //@}
 
@@ -189,6 +194,7 @@ namespace Oxygen
 
             //! toggled callback Id
             Signal _toggledId;
+            Signal _sizeAllocateId;
 
         };
 
