@@ -212,7 +212,7 @@ namespace Oxygen
             {
                 // do nothing for mozilla apps.
                 if( Style::instance().settings().applicationName().isMozilla() ||
-                    Style::instance().settings().applicationName().isOpenOffice() )
+                    ( Style::instance().settings().applicationName().isOpenOffice() && (options&NoFill) ) )
                 {
                     cairo_destroy(context);
                     return false;
