@@ -384,7 +384,7 @@ namespace Oxygen
                 {
 
                     // hide right part and adjust width
-                    tiles &= ~TileSet::Right;
+                    tiles &= ~TileSet::Left;
                     Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
 
                 } else {
@@ -1050,7 +1050,8 @@ namespace Oxygen
                 w+=1;
 
                 // also first draw solid window background
-                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+                ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Window ) );
+                Style::instance().fill( window, clipRect, x, y, w, h, background );
 
             } else {
 
