@@ -1486,7 +1486,8 @@ namespace Oxygen
                     x-=1; y-=1;
                     w+=2; h+=2;
 
-                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h );
+                    if( !Style::instance().settings().applicationName().isMozilla() )
+                    { Style::instance().renderHoleBackground( window, clipRect, x, y, w, h ); }
 
                     // shrink entry by 3px at each side
                     if( d.isEntry() )
