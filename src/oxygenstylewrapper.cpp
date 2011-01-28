@@ -1057,16 +1057,20 @@ namespace Oxygen
 
                 options |= NoFill;
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
-                if( Style::instance().settings().applicationName().isMozilla( widget ) ) {
+                if( Style::instance().settings().applicationName().isMozilla( widget ) )
+                {
 
                     /*
                     for firefox on has to mask out the corners manually,
                     because renderholebackground fails
                     */
                     Cairo::Context context( window, clipRect );
-                    cairo_rounded_rectangle( context, x-1, y+2, w, h-4, 2, CornersRight );
+                    cairo_rounded_rectangle( context, x-4, y+2, w+3, h-4, 2, CornersRight );
                     cairo_set_source( context, background );
                     cairo_fill( context );
+
+                    x += 1;
+                    w -= 1;
 
                 } else Style::instance().fill( window, clipRect, x, y, w, h, background );
 
@@ -1084,23 +1088,31 @@ namespace Oxygen
 
                 tiles &= ~TileSet::Right;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
-                Style::instance().renderHoleBackground(window,clipRect, x-1, y-1, w+6, h+2, tiles );
+                if( !Style::instance().settings().applicationName().isOpenOffice() &&
+                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                {
+                    Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
 
-                // shrink spinbox entry hole by 3px on right side
-                x += Style::Entry_SideMargin;
-                w -= Style::Entry_SideMargin;
+                    // shrink spinbox entry hole by 3px on right side
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                }
+
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, tiles );
 
             } else {
 
                 tiles &= ~TileSet::Left;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
-                { Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles ); }
+                if( !Style::instance().settings().applicationName().isOpenOffice() &&
+                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                {
 
-                // shrink spinbox entry hole by 3px on right side
-                w -= Style::Entry_SideMargin;
+                    Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles );
+
+                    // shrink spinbox entry hole by 3px on right side
+                    w -= Style::Entry_SideMargin;
+                }
                 Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
 
             }
@@ -1380,7 +1392,7 @@ namespace Oxygen
                 if( Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
-                if( style && !Style::instance().settings().applicationName().isMozilla( widget ) )
+                if( !Style::instance().settings().applicationName().isMozilla( widget ) )
                 {
 
                     // fill the inside of the spinbox manually
@@ -1416,8 +1428,7 @@ namespace Oxygen
 
                     tiles &= ~TileSet::Left;
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() &&
-                        !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
                         w-= Style::Entry_SideMargin;
@@ -1429,9 +1440,7 @@ namespace Oxygen
 
                     tiles &= ~TileSet::Right;
 
-                    if(
-                        !Style::instance().settings().applicationName().isOpenOffice() &&
-                        !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
                         x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
@@ -1440,6 +1449,7 @@ namespace Oxygen
                     Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
                 }
+
             } else {
 
                 if( Style::instance().settings().applicationName().isGoogleChrome() && GTK_IS_HBOX( widget ) )
