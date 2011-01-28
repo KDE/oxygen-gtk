@@ -157,6 +157,7 @@ namespace Oxygen
         if( !screen ) return TRUE;
 
         if(
+            hint == GDK_WINDOW_TYPE_HINT_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
