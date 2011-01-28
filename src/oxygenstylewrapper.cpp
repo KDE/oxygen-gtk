@@ -1008,7 +1008,6 @@ namespace Oxygen
                 {
 
                     // OpenOffice doesn't call draw_box to draw background
-                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
                     Cairo::Context context(window,clipRect);
                     cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
                     cairo_paint(context);
@@ -1024,7 +1023,6 @@ namespace Oxygen
                 if(Style::instance().settings().applicationName().isOpenOffice() )
                 {
                     // OpenOffice doesn't call draw_box to draw background
-                    // renderWindowBackground won't help here since i want to fill ALL the window, not only xwyh rect
                     Cairo::Context context(window,clipRect);
                     cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
                     cairo_paint(context);
@@ -1040,9 +1038,8 @@ namespace Oxygen
         } else if( d.isSpinButton()) {
 
             StyleOptions options( widget, state, shadow );
-            options |= (Blend|NoFill);
+            options |= Blend;
 
-            ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
 
@@ -1053,20 +1050,26 @@ namespace Oxygen
                 w+=1;
 
                 // also first draw solid window background
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
 
-            } else if( Style::instance().settings().applicationName().isMozilla( widget ) ) {
+            } else {
 
-                /*
-                for firefox on has to mask out the corners manually,
-                because renderholebackground fails
-                */
-                Cairo::Context context( window, clipRect );
-                cairo_rounded_rectangle( context, x-1, y+2, w, h-4, 2, CornersRight );
-                cairo_set_source( context, background );
-                cairo_fill( context );
+                options |= NoFill;
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
+                if( Style::instance().settings().applicationName().isMozilla( widget ) ) {
 
-            } else Style::instance().fill( window, clipRect, x, y, w, h, background );
+                    /*
+                    for firefox on has to mask out the corners manually,
+                    because renderholebackground fails
+                    */
+                    Cairo::Context context( window, clipRect );
+                    cairo_rounded_rectangle( context, x-1, y+2, w, h-4, 2, CornersRight );
+                    cairo_set_source( context, background );
+                    cairo_fill( context );
+
+                } else Style::instance().fill( window, clipRect, x, y, w, h, background );
+
+            }
 
             if(
                 Style::instance().animations().hoverEngine().contains( widget ) &&
@@ -1081,7 +1084,7 @@ namespace Oxygen
                 tiles &= ~TileSet::Right;
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() )
-                { Style::instance().renderHoleBackground(window,clipRect, x-1, y-1, w+6, h+2, tiles ); }
+                Style::instance().renderHoleBackground(window,clipRect, x-1, y-1, w+6, h+2, tiles );
 
                 // shrink spinbox entry hole by 3px on right side
                 x += Style::Entry_SideMargin;
@@ -1385,7 +1388,6 @@ namespace Oxygen
                     {
 
                         // for openoffice on has to properly round the corners
-                        // and use an adjusted rect, because renderHoleBackground fails
                         Cairo::Context context( window, clipRect );
                         cairo_rounded_rectangle( context, x+1, y+1, w-1, h-3, 2, CornersLeft );
                         cairo_set_source( context, background );
@@ -1412,20 +1414,27 @@ namespace Oxygen
                 {
 
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() )
-                    { w-= Style::Entry_SideMargin; }
+                    if( !Style::instance().settings().applicationName().isOpenOffice() &&
+                        !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    {
+                        Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                        w-= Style::Entry_SideMargin;
+                    }
 
                     Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
 
                 } else {
 
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() )
-                    { x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin; }
+                    if(
+                        !Style::instance().settings().applicationName().isOpenOffice() &&
+                        !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    {
+                        Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                        x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
+                    }
 
                     Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
 
@@ -1502,7 +1511,9 @@ namespace Oxygen
 
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
-            Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 );
+            if( !Style::instance().settings().applicationName().isOpenOffice() )
+            { Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 ); }
+
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
@@ -1932,12 +1943,11 @@ namespace Oxygen
         GtkWidget* parent( 0L );
         if( d.isTearOffMenuItem() )
         {
-            if( widget && gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
-            {
-
-                Style::instance().renderWindowBackground( window, widget, clipRect, x-8, y-8, w+16, h+16);
-
-            }
+            if( widget &&
+                gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT &&
+                GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
+                GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
+            { Style::instance().renderWindowBackground( window, widget, clipRect, x-8, y-8, w+16, h+16); }
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
@@ -2505,7 +2515,7 @@ namespace Oxygen
             {
                 // draw background since OOo won't draw it as it should
                 // in addition, it passes wrong rectangle to the theme
-                Style::instance().renderWindowBackground(window,widget,clipRect,x-1,y,w+2,h+1);
+                Style::instance().fill( window, clipRect, x-1, y, w+2, h+1, Gtk::gdk_get_color( style->bg[state] ) );
             }
 
             // render
@@ -2630,9 +2640,19 @@ namespace Oxygen
 
         } else if( d.isHandleBox() ) {
 
+            if( Style::instance().settings().applicationName().isOpenOffice() )
+            {
+
+                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+
+            } else {
+
+                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+
+            }
+
             StyleOptions options( widget, state, shadow );
             if( orientation == GTK_ORIENTATION_VERTICAL ) options |= Vertical;
-            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
             Style::instance().renderToolBarHandle( window, clipRect, x, y, w, h, options );
 
         } else {
