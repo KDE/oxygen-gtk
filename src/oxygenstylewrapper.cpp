@@ -2522,15 +2522,17 @@ namespace Oxygen
 
             }
 
-            if( Style::instance().settings().applicationName().isOpenOffice() )
+            if( isOpenOffice )
             {
                 // draw background since OOo won't draw it as it should
                 // in addition, it passes wrong rectangle to the theme
-                Style::instance().fill( window, clipRect, x-1, y, w+2, h+1, Gtk::gdk_get_color( style->bg[state] ) );
+                Style::instance().fill(
+                    window, clipRect, x-1, y, w+2, h+1,
+                    Style::instance().settings().palette().color( Palette::Window ) );
             }
 
             // render
-            if( Style::instance().settings().applicationName().isMozilla( widget ) ) tabOptions |= Mozilla;
+            if( isMozilla ) tabOptions |= Mozilla;
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
 
             // render tabbar base if current tab
