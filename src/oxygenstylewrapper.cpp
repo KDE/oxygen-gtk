@@ -86,7 +86,7 @@ namespace Oxygen
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
                 if( !GTK_IS_TOOLBAR( widget ) )
-                { Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) ); }
+                { Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window ); }
 
                 return;
             }
@@ -141,11 +141,17 @@ namespace Oxygen
 
         } else if( d.isViewportBin() ) {
 
-            // for mozilla and openoffice, or if the app has modified bg,
+            // for mozilla and openoffice
             // fill with flat color
             if( Style::instance().settings().applicationName().isMozilla( widget ) ||
-                Style::instance().settings().applicationName().isOpenOffice() ||
-                gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+                Style::instance().settings().applicationName().isOpenOffice() )
+            {
+                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
+                return;
+            }
+
+            // for modified bg, fill with flat custom color
+            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
@@ -362,8 +368,7 @@ namespace Oxygen
                 if( Style::instance().settings().applicationName().isOpenOffice() )
                 {
 
-                    ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Window ) );
-                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                    Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
                     return;
                 }
 
@@ -596,7 +601,7 @@ namespace Oxygen
         // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
         if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
         {
-            Style::instance().fill( window, clipRect, x, y, w-2, h-1, Gtk::gdk_get_color( style->bg[state] ) );
+            Style::instance().fill( window, clipRect, x, y, w-2, h-1, Palette::Window );
             return;
         }
 
@@ -696,11 +701,8 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
-                if( style )
-                {
-                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
-                    Style::instance().fill( window, clipRect, x, y, w, h, background );
-                }
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
+                Style::instance().fill( window, clipRect, x, y, w, h, background );
 
                 // update option accordingly
                 if( state == GTK_STATE_INSENSITIVE ) options &= ~(Hover|Focus);
@@ -1042,8 +1044,7 @@ namespace Oxygen
                 w+=1;
 
                 // also first draw solid window background
-                ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Window ) );
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
 
             } else {
 
