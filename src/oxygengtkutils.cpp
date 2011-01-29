@@ -60,10 +60,20 @@ namespace Oxygen
     }
 
     //____________________________________________________________
-    bool Gtk::gtk_widget_is_panel_applet( GtkWidget* widget )
+    bool Gtk::gtk_widget_is_applet( GtkWidget* widget )
     {
+        if( !widget ) return false;
+
+        // check widget name
         std::string name( G_OBJECT_TYPE_NAME( widget ) );
-        return name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0;
+        if( name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0 ) return true;
+
+        // also check parent
+        if( !widget->parent ) return false;
+        name = G_OBJECT_TYPE_NAME( widget->parent );
+        if( name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0 ) return true;
+        return false;
+
     }
 
     //____________________________________________________________
