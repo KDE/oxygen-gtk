@@ -91,14 +91,12 @@ namespace Oxygen
                 return;
             }
 
-            // for mozilla, do nothing
+            // do nothing for mozilla, acrobat, gnome applets, and other hint-specific windows
             if(
                 Style::instance().settings().applicationName().isMozilla( widget ) ||
-                Style::instance().settings().applicationName().isAcrobat( widget ) )
-            { return; }
-
-            // no background in comboboxes popup and tooltips windows
-            if( Gtk::gdk_window_nobackground( window ) )
+                Style::instance().settings().applicationName().isAcrobat( widget ) ||
+                Gtk::gtk_widget_is_applet( widget ) ||
+                Gtk::gdk_window_nobackground( window ) )
             { return; }
 
             // if background has been modified, simply fill with background color
@@ -142,6 +140,9 @@ namespace Oxygen
             return;
 
         } else if( d.isViewportBin() ) {
+
+            // do nothing for gnome applets
+            if( Gtk::gtk_widget_is_applet( widget ) ) return;
 
             // for mozilla and openoffice
             // fill with flat color
@@ -882,7 +883,8 @@ namespace Oxygen
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 !Style::instance().settings().applicationName().isAcrobat( widget ) &&
-                !Style::instance().settings().applicationName().isOpenOffice() )
+                !Style::instance().settings().applicationName().isOpenOffice() &&
+                !Gtk::gtk_widget_is_applet( widget ) )
             {
                 Style::instance().windowManager().registerWidget( widget );
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
@@ -996,7 +998,9 @@ namespace Oxygen
                     Not sure why
                     */
                     StyleWrapper::parentClass()->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
-                    Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+
+                    if( !Gtk::gtk_widget_is_applet( widget ) )
+                    { Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h ); }
                 }
 
                 StyleOptions options;
@@ -2038,7 +2042,7 @@ namespace Oxygen
                 role = Palette::WindowText;
             }
 
-        } else if( GTK_IS_CALENDAR( widget ) ) {
+        } else if( GTK_IS_CALENDAR( widget ) && !Gtk::gtk_widget_is_applet( widget ) ) {
 
             // need to render background behind arrows from calendar
             // offsets are empirical
@@ -2654,7 +2658,7 @@ namespace Oxygen
 
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
 
-            } else {
+            } else if( !Gtk::gtk_widget_is_applet( widget ) ) {
 
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 

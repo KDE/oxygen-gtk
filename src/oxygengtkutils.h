@@ -60,7 +60,7 @@ namespace Oxygen
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
         //! returns true if is an Gnome applet
-        bool gtk_widget_is_panel_applet( GtkWidget* );
+        bool gtk_widget_is_applet( GtkWidget* );
 
         //! print some widget information
         void gtk_widget_print_tree( GtkWidget* );
