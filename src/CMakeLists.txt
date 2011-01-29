@@ -49,6 +49,7 @@ set( OXYGEN-GTK-SOURCES
     oxygentheme.cpp
     oxygentileset.cpp
     oxygenwindecobutton.cpp
+    oxygenwindecooptions.cpp
     oxygenwindowmanager.cpp
     oxygenwindowshadow.cpp
 )

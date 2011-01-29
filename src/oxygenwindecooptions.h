@@ -21,6 +21,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenwindecobutton.h"
+
 namespace Oxygen
 {
 
@@ -40,6 +42,30 @@ namespace Oxygen
 
         //! window decoration options
         typedef unsigned long Options;
+
+        enum Metric
+        {
+            BorderLeft=0,
+            BorderRight,
+            BorderBottom,
+            // BorderTop includes title and resize handle heights
+            BorderTop,
+            ButtonSpacing,
+            ButtonMarginTop,
+            ButtonMarginBottom,
+            ShadowLeft,
+            ShadowTop,
+            ShadowRight,
+            ShadowBottom,
+            MetricsCount
+        };
+
+        //! get frame dimensions
+        int getMetric(Metric wm);
+
+        //! get button size
+        // all buttons are of the same size in oxygen, so no argument in internal function
+        int getButtonSize();
 
     }
 

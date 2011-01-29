@@ -49,6 +49,8 @@ extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, unsigned long,gin
 extern "C" G_MODULE_EXPORT void drawWindecoButton(cairo_t*, unsigned long,unsigned long, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options, gint x, gint y, gint w, gint h);
+extern "C" G_MODULE_EXPORT gint getWindecoMetric(unsigned long);
+extern "C" G_MODULE_EXPORT gint getWindecoButtonSize(unsigned long);
 
 //_________________________________________________
 void theme_init( GTypeModule* module )
@@ -103,4 +105,16 @@ void drawWindecoShapeMask(cairo_t* context, unsigned long options, gint x,gint y
 void drawWindowShadow(cairo_t* context, unsigned long options, gint x, gint y, gint w, gint h)
 {
     Oxygen::Style::instance().drawWindowShadow(context,(Oxygen::WinDeco::Options) options, x, y, w, h);
+}
+
+//_________________________________________________
+gint getWindecoMetric(unsigned long wm)
+{
+    return Oxygen::WinDeco::getMetric((Oxygen::WinDeco::Metric)wm);
+}
+
+//_________________________________________________
+gint getWindecoButtonSize(unsigned long buttonType)
+{
+    return Oxygen::WinDeco::getButtonSize();
 }
