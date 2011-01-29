@@ -2292,6 +2292,7 @@ namespace Oxygen
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
                 !Style::instance().settings().applicationName().isOpenOffice() )
             { Style::instance().windowManager().registerWidget( widget ); }
 
