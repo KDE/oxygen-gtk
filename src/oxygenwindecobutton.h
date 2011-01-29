@@ -55,6 +55,8 @@ namespace Oxygen
             ButtonUnmax,
             ButtonUnstick,
             ButtonUnshade,
+            ButtonUndoAbove,
+            ButtonUndoBelow,
             ButtonTypeCount
         };
 
