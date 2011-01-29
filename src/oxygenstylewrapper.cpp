@@ -150,6 +150,9 @@ namespace Oxygen
                 return;
             }
 
+            //register to window manager
+            Style::instance().windowManager().registerWidget( widget );
+
             // for modified bg, fill with flat custom color
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
