@@ -99,7 +99,7 @@ namespace Oxygen
                 case ShadowBottom:
                 {
                     WindowShadow shadow(Style::instance().settings(), Style::instance().helper());
-                    return int(shadow.shadowSize());
+                    return int(shadow.shadowSize()-4);
                 }
 
                 default:
