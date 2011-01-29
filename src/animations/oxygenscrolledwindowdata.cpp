@@ -69,7 +69,7 @@ namespace Oxygen
             static const char* widgetTypes[] = { "ExoIconView", "FMIconContainer", 0L };
             for( unsigned int i = 0; widgetTypes[i]; i++ )
             {
-                if( Gtk::gtk_object_is_a( G_OBJECT( child ), widgetTypes[i] ) )
+                if( Gtk::g_object_is_a( G_OBJECT( child ), widgetTypes[i] ) )
                 {
                     registerChild( child );
                     break;
