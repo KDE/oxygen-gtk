@@ -30,6 +30,7 @@
 #include <cstring>
 #include <gtk/gtk.h>
 #include <iostream>
+#include <set>
 
 namespace Oxygen
 {
@@ -64,14 +65,25 @@ namespace Oxygen
     {
         if( !widget ) return false;
 
+
+        static const char* names[] =
+        {
+            "PanelWidget",
+            "PanelApplet",
+            0
+        };
+
         // check widget name
         std::string name( G_OBJECT_TYPE_NAME( widget ) );
-        if( name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0 ) return true;
+        for( unsigned int i = 0; names[i]; ++i )
+        { if( g_object_is_a( G_OBJECT( widget ), names[i] ) || name.find( names[i] ) == 0  ) return true; }
 
         // also check parent
         if( !widget->parent ) return false;
         name = G_OBJECT_TYPE_NAME( widget->parent );
-        if( name.find( "PanelApplet" ) == 0 || name.find( "PanelWidget" ) == 0 ) return true;
+        for( unsigned int i = 0; names[i]; ++i )
+        { if( g_object_is_a( G_OBJECT( widget->parent ), names[i] ) || name.find( names[i] ) == 0 ) return true; }
+
         return false;
 
     }
