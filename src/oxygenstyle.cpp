@@ -2155,8 +2155,7 @@ namespace Oxygen
         cairo_save( context );
         cairo_set_source_rgba( context, 0, 0, 0, 0 );
         cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
-        cairo_rectangle(context,x,y,w,h);
-        cairo_fill( context );
+        cairo_paint( context );
         cairo_set_operator( context, CAIRO_OPERATOR_OVER );
 
         WindowShadow shadow(settings(), helper());
