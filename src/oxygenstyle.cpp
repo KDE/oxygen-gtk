@@ -2147,6 +2147,8 @@ namespace Oxygen
 
         StyleOptions options( hasAlpha ? Alpha : Blend );
 
+        options|=Round;
+
         // focus
         if(wopt & WinDeco::Active) options|=Focus;
 
