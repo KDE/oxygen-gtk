@@ -150,7 +150,7 @@ namespace Oxygen
 
             //! predicate
             bool operator() (const std::string& objectName ) const
-            { return Gtk::gtk_object_is_a( _object, objectName ); }
+            { return Gtk::g_object_is_a( _object, objectName ); }
 
             private:
 
