@@ -148,7 +148,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_object_is_a( const GObject* object, const std::string& type_name )
+    bool Gtk::g_object_is_a( const GObject* object, const std::string& type_name )
     {
 
         if( object )
@@ -745,7 +745,7 @@ namespace Oxygen
 
         return
             ( GTK_IS_BIN( widget ) && GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) ) ||
-            gtk_object_is_a( G_OBJECT( widget ), "FMIconView" );
+            g_object_is_a( G_OBJECT( widget ), "FMIconView" );
 
     }
 

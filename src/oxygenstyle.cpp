@@ -160,8 +160,9 @@ namespace Oxygen
         // vertical shift to account for window decoration
         const int yShift = 23;
 
-        gint ww, wh;
-        gint wx, wy;
+        // toplevel window information and relative positioning
+        gint ww(0), wh(0);
+        gint wx(0), wy(0);
 
         // if we aren't going to draw window decorations...
         if(!context)
@@ -210,13 +211,6 @@ namespace Oxygen
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
-                // do nothing for mozilla apps.
-                if( Style::instance().settings().applicationName().isMozilla() ||
-                    ( Style::instance().settings().applicationName().isOpenOffice() && (options&NoFill) ) )
-                {
-                    cairo_destroy(context);
-                    return false;
-                }
 
                 // flat painting for all other apps
                 cairo_set_source(context,base);
@@ -225,17 +219,6 @@ namespace Oxygen
                 cairo_destroy(context);
                 return true;
 
-            }
-
-            // for openoffice, even if the above succeeds, we have
-            // to paint a flat background, because other widget painting will simply fail.
-            if( Style::instance().settings().applicationName().isOpenOffice() )
-            {
-                cairo_set_source(context,base);
-                cairo_rectangle(context,x,y,w,h);
-                cairo_fill(context);
-                cairo_destroy(context);
-                return true;
             }
 
             // translate to toplevel coordinates
@@ -256,7 +239,7 @@ namespace Oxygen
             cairo_translate(context,x,y);
             x=0;
             y=0;
-            // wx and wy aren't set since clipRect will be 0L if we are here, and wx and wy are only used with clipRect
+
         }
 
         // split
@@ -329,10 +312,9 @@ namespace Oxygen
 
         }
 
-        if(needToDestroyContext)
-            cairo_destroy(context);
-        else
-            cairo_restore(context);
+        if(needToDestroyContext) cairo_destroy(context);
+        else cairo_restore(context);
+
         return true;
 
     }
@@ -360,13 +342,12 @@ namespace Oxygen
         cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
-        const bool isMozilla( settings().applicationName().isMozilla() );
-        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
+        const bool round( options&Round );
 
         GdkRectangle rect = { x, y, w, h };
 
         // paint translucent first
-        if( hasAlpha && !isOpenOffice )
+        if( hasAlpha )
         {
             cairo_rectangle( context, 0, 0, ww, wh );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
@@ -375,7 +356,7 @@ namespace Oxygen
         }
 
         const int splitY( std::min(200, 3*wh/4 ) );
-        const int verticalOffset( (isMozilla||isOpenOffice||!isMenu) ? 0:Menu_VerticalOffset );
+        const int verticalOffset( (isMenu && round) ? Menu_VerticalOffset:0 );
 
         GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
@@ -385,7 +366,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &upperRect, 3.5, isMozilla ? CornersNone:CornersTop );
+            gdk_cairo_rounded_rectangle( context, &upperRect, 3.5, round ? CornersTop:CornersNone );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -396,7 +377,7 @@ namespace Oxygen
         {
 
             // lower part
-            gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, isMozilla ? CornersNone:CornersBottom );
+            gdk_cairo_rounded_rectangle( context, &lowerRect, 3.5, round ? CornersBottom:CornersNone );
             cairo_set_source( context, bottom );
             cairo_fill( context );
 
@@ -421,8 +402,7 @@ namespace Oxygen
 
         // paint translucent first
         const bool hasAlpha( (options&Alpha) );
-        const bool isOpenOffice( settings().applicationName().isOpenOffice() );
-        bool rounded( GDK_IS_WINDOW( window ) && !isOpenOffice );
+        bool round( GDK_IS_WINDOW( window ) && (options&Round) );
 
         if( hasAlpha )
         {
@@ -445,7 +425,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, rounded ? CornersAll:CornersNone );
+            gdk_cairo_rounded_rectangle( context, &rect, 4, round ? CornersAll:CornersNone );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -457,7 +437,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, rounded ? CornersAll:CornersNone );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, round ? CornersAll:CornersNone );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
@@ -993,7 +973,7 @@ namespace Oxygen
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
         const bool drawUglyShadow( !hasAlpha );
-        const bool rounded( !(options&Flat) );
+        const bool rounded( options&Round );
 
         // if we aren't drawing window decoration
         if( !context )

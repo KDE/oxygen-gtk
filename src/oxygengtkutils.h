@@ -78,7 +78,7 @@ namespace Oxygen
         bool gdk_window_nobackground( GdkWindow* );
 
         //! true if object match a given type
-        bool gtk_object_is_a( const GObject*, const std::string& );
+        bool g_object_is_a( const GObject*, const std::string& );
 
         //! trigger area update using GdkRectangle
         inline void gtk_widget_queue_draw( GtkWidget* widget, const GdkRectangle* rect = 0L )
