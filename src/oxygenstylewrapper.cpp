@@ -267,7 +267,9 @@ namespace Oxygen
                     {
 
                         // tree lines
-                        if( Style::instance().settings().viewDrawTreeBranchLines() )
+                        if(
+                            Style::instance().settings().viewDrawTreeBranchLines() &&
+                            gtk_tree_view_get_show_expanders( treeView ) )
                         {
 
                             // generate flags from cell info
