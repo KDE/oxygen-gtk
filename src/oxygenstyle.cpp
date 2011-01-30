@@ -1685,16 +1685,12 @@ namespace Oxygen
         if( hasSubMenu )
         {
             Cairo::Context context( window, clipRect );
-
-            // draw item rect in a new surface
-            cairo_surface_t* surface=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
-            {
-                Cairo::Context context(surface);
-                helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full );
-            }
-
             cairo_translate( context, x, y );
-            cairo_set_source_surface( context, surface, 0, 0 );
+
+            // draw item rect in a group
+            cairo_push_group( context );
+            helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full );
+            cairo_pop_group_to_source( context );
 
             // generate linear gradient for masking
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -1713,8 +1709,6 @@ namespace Oxygen
                 cairo_mask( context, mask );
 
             }
-
-            cairo_surface_destroy( surface );
 
         } else {
 
