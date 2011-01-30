@@ -39,7 +39,8 @@ namespace Oxygen
         TabWidgetData( void ):
             _target(0L),
             _hoveredTab(-1),
-            _dragInProgress( false )
+            _dragInProgress( false ),
+            _dirty( false )
         {}
 
         //! destructor
@@ -52,6 +53,9 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
+        //!@name modifiers
+        //@{
+
         //! update tab rectangle
         /* this is used to decide when a tab is hovered or not */
         void updateTabRect( GtkWidget*, int, const GdkRectangle& );
@@ -63,6 +67,14 @@ namespace Oxygen
         void setDragInProgress( bool value )
         { _dragInProgress = value; }
 
+        //! mark as dirty
+        void setDirty( bool );
+
+        //@}
+
+        //@name accessors
+        //@{
+
         //! true if hovered
         int hoveredTab( void ) const
         { return _hoveredTab; }
@@ -70,6 +82,12 @@ namespace Oxygen
         //! true when drag is in progress
         bool dragInProgress( void ) const
         { return _dragInProgress; }
+
+        //! true if is dirty
+        bool isDirty( void ) const
+        { return _dirty; }
+
+        //@]
 
         protected:
 
@@ -120,6 +138,12 @@ namespace Oxygen
 
         //! true when there is a drag in progress
         bool _dragInProgress;
+
+        //! true when tabbar is dirty
+        /*! a repaint is triggered of the full tabbar when set to true.
+        This forces the tabbar base to be redrawn event if the selected tab
+        has not been primarily damaged */
+        bool _dirty;
 
         //! store rectangles matching tabs
         typedef std::vector<GdkRectangle> RectangleList;

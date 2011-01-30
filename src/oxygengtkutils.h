@@ -68,6 +68,9 @@ namespace Oxygen
         //! returns true if widget supports rgba
         bool gtk_widget_has_rgba( GtkWidget* );
 
+        //! returns true if default screen is composited
+        bool gdk_default_screen_is_composited( void );
+
         //! returns true if window supports rgba
         bool gdk_window_has_rgba( GdkWindow* );
 

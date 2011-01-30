@@ -109,6 +109,23 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void TabWidgetData::setDirty( bool value )
+    {
+        if( _dirty == value ) return;
+        _dirty = value;
+        if( _dirty && _target )
+        {
+
+            // we should only update the tabbar rect here
+            GdkRectangle updateRect;
+            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( _target ), &updateRect );
+            Gtk::gtk_widget_queue_draw( _target, &updateRect );
+
+        }
+
+    }
+
+    //________________________________________________________________________________
     void TabWidgetData::setHoveredTab( GtkWidget* widget, int index )
     {
 
