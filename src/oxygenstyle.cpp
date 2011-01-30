@@ -1668,19 +1668,17 @@ namespace Oxygen
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )
         {
+            Cairo::Context context( window, clipRect );
 
-            // draw item rect in a pixbuf
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( color ).toInt() );
+            // draw item rect in a new surface
+            cairo_surface_t* surface=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_COLOR_ALPHA,w,h);
             {
-                Cairo::Context context( pixbuf );
-                helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full  );
-                context.updateGdkPixbuf();
+                Cairo::Context context(surface);
+                helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full );
             }
 
-            Cairo::Context context( window, clipRect );
             cairo_translate( context, x, y );
-            gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+            cairo_set_source_surface( context, surface, 0, 0 );
 
             // generate linear gradient for masking
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -1700,7 +1698,7 @@ namespace Oxygen
 
             }
 
-            g_object_unref( pixbuf );
+            cairo_surface_destroy( surface );
 
         } else {
 
