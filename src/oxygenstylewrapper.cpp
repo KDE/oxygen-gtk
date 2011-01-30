@@ -1193,6 +1193,10 @@ namespace Oxygen
         GtkWidget* parent( 0L );
         const Gtk::Detail d( detail );
 
+        // ugly Gnumeric header
+        if( std::string( detail ) == "GnmItemBarCell" )
+        { return; }
+
         if( d.isScrolledWindow() &&
             shadow != GTK_SHADOW_IN &&
             GTK_IS_SCROLLED_WINDOW( widget ) &&
