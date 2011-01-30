@@ -2337,6 +2337,23 @@ namespace Oxygen
 
             } else {
 
+                if( GTK_IS_NOTEBOOK( widget ) )
+                {
+
+                    // this trick ensures that tabbar is always redrawn
+                    Style::instance().animations().tabWidgetEngine().registerWidget( widget );
+                    if( Style::instance().animations().tabWidgetEngine().isDirty( widget ) )
+                    {
+                        Style::instance().animations().tabWidgetEngine().setDirty( widget, false );
+
+                    } else {
+
+                        Style::instance().animations().tabWidgetEngine().setDirty( widget, true );
+
+                    }
+
+                }
+
                 Gtk::Gap gap;
 
                 // need adjustment depending on gap side

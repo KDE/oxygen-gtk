@@ -51,9 +51,8 @@ namespace Oxygen
         virtual ~TabWidgetEngine( void )
         {}
 
-        //! returns hovered tab, if any
-        int hoveredTab( GtkWidget* widget )
-        { return data().value( widget ).hoveredTab(); }
+        //!@name modifiers
+        //@{
 
         //! returns hovered tab, if any
         void updateTabRect( GtkWidget* widget, int index, int x, int y, int w, int h )
@@ -74,9 +73,28 @@ namespace Oxygen
         void setDragInProgress( GtkWidget* widget, bool value )
         { data().value( widget ).setDragInProgress( value ); }
 
+        //! true when tabbar is dirty
+        void setDirty( GtkWidget* widget, bool value )
+        { data().value( widget ).setDirty( value ); }
+
+        //@}
+
+        //!@name accessors
+        //@{
+
+        //! returns hovered tab, if any
+        int hoveredTab( GtkWidget* widget )
+        { return data().value( widget ).hoveredTab(); }
+
         //! true when drag is in progress
         bool dragInProgress( GtkWidget* widget )
         { return data().value( widget ).dragInProgress(); }
+
+        //! true when tabbar is dirty
+        bool isDirty( GtkWidget* widget )
+        { return data().value( widget ).isDirty(); }
+
+        //@}
 
     };
 
