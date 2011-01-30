@@ -94,9 +94,6 @@ namespace Oxygen
         //! on button press
         static gboolean wmButtonPress( GtkWidget*, GdkEventButton*, gpointer );
 
-        //! on button release
-        static gboolean wmButtonRelease(GtkWidget*, GdkEventButton*, gpointer );
-
         //! on mouse leave
         static gboolean wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
 
@@ -195,7 +192,6 @@ namespace Oxygen
             Signal _leaveId;
             Signal _destroyId;
             Signal _pressId;
-            Signal _releaseId;
             Signal _motionId;
             Signal _styleId;
             //@}
