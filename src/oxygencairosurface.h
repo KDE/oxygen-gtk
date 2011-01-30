@@ -1,5 +1,5 @@
-#ifndef oxygencairopattern_h
-#define oxygencairopattern_h
+#ifndef oxygencairosurface_h
+#define oxygencairosurface_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -28,70 +28,77 @@ namespace Oxygen
     namespace Cairo
     {
 
-        //! wrapper class around cairo_pattern_t structure
-        class Pattern
+        //! wrapper class around cairo_surface_t structure
+        class Surface
         {
             public:
 
             //! empty constructor is private
-            Pattern( void ):
-                _pattern( 0L )
+            Surface( void ):
+                _surface( 0L )
             {}
 
             //! constructor
-            Pattern( cairo_pattern_t* pattern ):
-                _pattern( pattern )
+            Surface( cairo_surface_t* surface ):
+                _surface( surface )
             {}
 
             //! destructor
-            virtual ~Pattern( void )
+            virtual ~Surface( void )
             { free(); }
 
 
             //! copy constructor is private
-            Pattern( const Pattern& other ):
-                _pattern( other._pattern )
-            { if( _pattern ) cairo_pattern_reference( _pattern ); }
+            Surface( const Surface& other ):
+                _surface( other._surface )
+            { if( _surface ) cairo_surface_reference( _surface ); }
 
             //! equal to operator is private
-            Pattern& operator = (const Pattern& other )
+            Surface& operator = (const Surface& other )
             {
-                cairo_pattern_t* old( _pattern );
-                _pattern = other._pattern;
-                if( _pattern ) cairo_pattern_reference( _pattern );
-                if( old ) cairo_pattern_destroy( old );
+                cairo_surface_t* old( _surface );
+                _surface = other._surface;
+                if( _surface ) cairo_surface_reference( _surface );
+                if( old ) cairo_surface_destroy( old );
                 return *this;
             }
 
-            //! set pattern
-            void set( cairo_pattern_t* pattern )
+            //! set surface
+            void set( cairo_surface_t* surface )
             {
-                assert( !_pattern );
-                _pattern = pattern;
+                assert( !_surface );
+                _surface = surface;
             }
 
-            //! free the pattern
+            //! free the surface
             /*!
             it should not be necessary to call this method
             since it is already handled in destructor
             */
             void free( void )
             {
-                if( _pattern )
+                if( _surface )
                 {
-                    cairo_pattern_destroy( _pattern );
-                    _pattern = 0L;
+                    cairo_surface_destroy( _surface );
+                    _surface = 0L;
                 }
             }
 
-            //! cast to cairo_pattern_t
-            operator cairo_pattern_t* (void) const
-            { return _pattern; }
+            //! cast to cairo_surface_t
+            operator cairo_surface_t* (void) const
+            { return _surface; }
 
             private:
 
-            //! pattern
-            cairo_pattern_t* _pattern;
+            //! equal to operator is private
+            Surface& operator = (cairo_surface_t* other )
+            {
+                assert( false );
+                return *this;
+            }
+
+            //! surface
+            cairo_surface_t* _surface;
 
 
         };

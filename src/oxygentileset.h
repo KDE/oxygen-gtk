@@ -21,6 +21,7 @@
 */
 
 #include "oxygenflags.h"
+#include "oxygencairosurface.h"
 
 #include <cairo.h>
 #include <gdk/gdk.h>
@@ -109,7 +110,7 @@ namespace Oxygen
 
         //! is valid
         bool isValid( void ) const
-        { return width() > 0  && height() > 0 && _pixmaps.size() == 9; }
+        { return width() > 0  && height() > 0 && _surfaces.size() == 9; }
 
         /*!
         Fills the specified rect with tiled chunks. Corners are never tiled,
@@ -130,18 +131,18 @@ namespace Oxygen
         private:
 
         //! shortcut to pixmap list
-        typedef std::vector< GdkPixbuf* > PixbufList;
+        typedef std::vector< Cairo::Surface > SurfaceList;
 
         //! initialize pixmap
-        void initPixmap( PixbufList&, GdkPixbuf*, int w, int h, int sx, int sy, int sw, int sh );
+        void initSurface( SurfaceList&, const Cairo::Surface&, int w, int h, int sx, int sy, int sw, int sh );
 
         //! copy pixmap
-        void copyPixmap( Cairo::Context&, int x, int y, GdkPixbuf*, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
+        void copySurface( Cairo::Context&, int x, int y, const Cairo::Surface&, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
 
         private:
 
         //! pixmap arry
-        PixbufList _pixmaps;
+        SurfaceList _surfaces;
 
         // dimensions
         int _w1;
