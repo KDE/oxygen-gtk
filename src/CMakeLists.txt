@@ -24,7 +24,6 @@ set( OXYGEN-GTK-SOURCES
     oxygenapplicationname.cpp
     oxygenargbhelper.cpp
     oxygencairocontext.cpp
-    oxygencairopattern.cpp
     oxygencairoutils.cpp
     oxygencoloreffect.cpp
     oxygencolorutils.cpp
