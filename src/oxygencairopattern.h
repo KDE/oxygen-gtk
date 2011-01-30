@@ -27,58 +27,61 @@ namespace Oxygen
 {
     namespace Cairo
     {
-        
+
         //! wrapper class around cairo_pattern_t structure
         class Pattern
         {
             public:
-            
+
             //! empty constructor is private
             Pattern( void ):
                 _pattern( 0L )
             {}
-                
+
             //! constructor
             Pattern( cairo_pattern_t* pattern ):
                 _pattern( pattern )
             {}
-            
+
             //! destructor
             virtual ~Pattern( void )
             { free(); }
-            
+
+
+            //! copy constructor is private
+            Pattern( const Pattern& other ):
+                _pattern( other._pattern )
+            { if( _pattern ) cairo_pattern_reference( _pattern ); }
+
+            //! equal to operator is private
+            Pattern& operator = (const Pattern& other )
+            {
+                cairo_pattern_t* old( _pattern );
+                _pattern = other._pattern;
+                if( _pattern ) cairo_pattern_reference( _pattern );
+                if( old ) cairo_pattern_destroy( old );
+                return *this;
+            }
+
             //! set pattern
             void set( cairo_pattern_t* pattern )
             {
                 assert( !_pattern );
                 _pattern = pattern;
             }
-            
+
             //! free the pattern
             /*!
             it should not be necessary to call this method
             since it is already handled in destructor
             */
             void free( void );
-            
+
             //! cast to cairo_pattern_t
             operator cairo_pattern_t* (void) const
             { return _pattern; }
-            
+
             private:
-            
-            //! copy constructor is private
-            Pattern( const Pattern& other ):
-                _pattern( 0L )
-            { assert( false ); }
-                
-            //! equal to operator is private
-            Pattern& operator = (const Pattern& other )
-            {
-                _pattern = other._pattern;
-                assert( false );
-                return *this;
-            }
 
             //! equal to operator is private
             Pattern& operator = (cairo_pattern_t* other )
