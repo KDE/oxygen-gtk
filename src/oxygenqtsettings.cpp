@@ -738,6 +738,21 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
         #endif
 
+        /*
+        due to a bug in gtk, menuitem spacing varies with font size even when there is an icon
+        we compensate for that by adjusting back the ythickness for provided fontsize
+        */
+        const int ythickness( std::max( 2, int( 4 + 9 - fonts[FontInfo::Menu].size() ) ) );
+        _rc.addSection( "oxygen-menuitem", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", ythickness ) );
+        _rc.addToRootSection( "widget_class \"*<GtkMenu>.<GtkMenuItem>\" style \"oxygen-menuitem\"" );
+
+        _rc.addSection( "oxygen-separator-menuitem", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 1 ) );
+        _rc.addToRootSection( "widget_class \"*<GtkMenu>.<GtkSeparatorMenuItem>\" style \"oxygen-separator-menuitem\"" );
+
     }
 
     //_________________________________________________________
