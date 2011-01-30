@@ -48,7 +48,7 @@ namespace Oxygen
         const int sh( gdk_pixbuf_get_width( pix ) );
 
         // create surface from pixbuf
-        cairo_surface_t *surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, sw, sh ) );
+        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, sw, sh ) );
         {
             Cairo::Context context( surface );
             gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
@@ -78,7 +78,6 @@ namespace Oxygen
         initSurface( _surfaces, surface, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
 
         // destroy
-        cairo_surface_destroy( surface );
 
     }
 
@@ -93,7 +92,7 @@ namespace Oxygen
         const int sh( gdk_pixbuf_get_width( pix ) );
 
         // create surface from pixbuf
-        cairo_surface_t *surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32 , sw, sh ) );
+        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32 , sw, sh ) );
         {
             Cairo::Context context( surface );
             gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
@@ -148,19 +147,8 @@ namespace Oxygen
         _w3 = other._w3;
         _h3 = other._h3;
 
-        // copy old surfaces for destruction
-        SurfaceList old( _surfaces );
-
         // copy pixmap list
         _surfaces = other._surfaces;
-
-        // increase ref counter
-        for( SurfaceList::iterator iter = _surfaces.begin(); iter != _surfaces.end(); ++iter )
-        { if( *iter ) cairo_surface_reference( *iter ); }
-
-        // unref existing pixmaps
-        for( SurfaceList::iterator iter = old.begin(); iter != old.end(); ++iter )
-        { if( *iter ) cairo_surface_destroy( *iter ); }
 
         return *this;
 
@@ -168,11 +156,7 @@ namespace Oxygen
 
     //______________________________________________________________
     TileSet::~TileSet( void )
-    {
-        // unref existing pixmaps
-        for( SurfaceList::iterator iter = _surfaces.begin(); iter != _surfaces.end(); ++iter )
-        { if( *iter ) cairo_surface_destroy( *iter ); }
-    }
+    {}
 
     //___________________________________________________________
     inline bool bits( unsigned int flags, unsigned int testFlags)
@@ -240,14 +224,14 @@ namespace Oxygen
 
 
     //______________________________________________________________
-    void TileSet::initSurface( SurfaceList& surfaces, cairo_surface_t *source, int w, int h, int sx, int sy, int sw, int sh )
+    void TileSet::initSurface( SurfaceList& surfaces, const Cairo::Surface &source, int w, int h, int sx, int sy, int sw, int sh )
     {
 
         if( sw <= 0 || sh<= 0 || w <=0 || h <= 0 ) surfaces.push_back( 0L );
         else {
 
             // create new surface
-            cairo_surface_t* dest = cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, w, h );
+            Cairo::Surface dest( cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, w, h ) );
             Cairo::Context context( dest );
 
             if( sw == w && sh == h ) {
@@ -258,7 +242,7 @@ namespace Oxygen
 
             } else {
 
-                cairo_surface_t* tile = cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, sw, sh );
+                Cairo::Surface tile( cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, sw, sh ) );
                 {
                     Cairo::Context local( tile );
                     cairo_set_source_surface( local, source, -sx, -sy );
@@ -271,8 +255,6 @@ namespace Oxygen
                 cairo_rectangle( context, 0, 0, w, h );
                 cairo_fill( context );
 
-                cairo_surface_destroy( tile );
-
             }
 
             surfaces.push_back( dest );
@@ -281,7 +263,7 @@ namespace Oxygen
     }
 
     //______________________________________________________________
-    void TileSet::copySurface( Cairo::Context& context, int x, int y, cairo_surface_t* source, int sx, int sy, int sw, int sh, cairo_extend_t extend ) const
+    void TileSet::copySurface( Cairo::Context& context, int x, int y, const Cairo::Surface& source, int sx, int sy, int sw, int sh, cairo_extend_t extend ) const
     {
 
         if( !source ) return;

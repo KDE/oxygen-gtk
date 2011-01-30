@@ -21,6 +21,7 @@
 */
 
 #include "oxygenflags.h"
+#include "oxygencairosurface.h"
 
 #include <cairo.h>
 #include <gdk/gdk.h>
@@ -130,13 +131,13 @@ namespace Oxygen
         private:
 
         //! shortcut to pixmap list
-        typedef std::vector< cairo_surface_t* > SurfaceList;
+        typedef std::vector< Cairo::Surface > SurfaceList;
 
         //! initialize pixmap
-        void initSurface( SurfaceList&, cairo_surface_t*, int w, int h, int sx, int sy, int sw, int sh );
+        void initSurface( SurfaceList&, const Cairo::Surface&, int w, int h, int sx, int sy, int sw, int sh );
 
         //! copy pixmap
-        void copySurface( Cairo::Context&, int x, int y, cairo_surface_t*, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
+        void copySurface( Cairo::Context&, int x, int y, const Cairo::Surface&, int sx, int sy, int sw, int sh, cairo_extend_t ) const;
 
         private:
 

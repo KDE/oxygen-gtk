@@ -2101,7 +2101,7 @@ namespace Oxygen
         bool isMaximized( wopt & WinDeco::Maximized );
 
         // first draw to an offscreen surface, then render it on the target, having clipped the corners if hasAlpha==TRUE
-        cairo_surface_t* surface = cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h );
+        Cairo::Surface surface( cairo_surface_create_similar( cairo_get_target(context), CAIRO_CONTENT_COLOR_ALPHA, w, h ) );
         {
 
             // create context to paint on surface
@@ -2140,8 +2140,6 @@ namespace Oxygen
         cairo_paint( context );
         cairo_restore( context );
 
-        // destroy surface
-        cairo_surface_destroy(surface);
     }
 
     //__________________________________________________________________
