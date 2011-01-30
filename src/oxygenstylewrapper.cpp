@@ -914,8 +914,7 @@ namespace Oxygen
 
                     // since menus are rendered square anyway, we can set the alpha channel
                     // based on the screen properties only, in order to prevent ugly shadow to be drawn
-                    GdkScreen* screen( gdk_screen_get_default() );
-                    if( screen && gdk_screen_is_composited( screen ) ) options |= Alpha;
+                    if( Gtk::gdk_default_screen_is_composited() ) options |= Alpha;
                     Style::instance().drawFloatFrame( window, clipRect, x, y, w, h, options );
                     return;
                 }
@@ -2337,7 +2336,7 @@ namespace Oxygen
 
             } else {
 
-                if( GTK_IS_NOTEBOOK( widget ) )
+                if( GTK_IS_NOTEBOOK( widget ) && !Gtk::gdk_default_screen_is_composited() )
                 {
 
                     // this trick ensures that tabbar is always redrawn
