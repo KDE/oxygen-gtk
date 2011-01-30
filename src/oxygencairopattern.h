@@ -75,7 +75,14 @@ namespace Oxygen
             it should not be necessary to call this method
             since it is already handled in destructor
             */
-            void free( void );
+            void free( void )
+            {
+                if( _pattern )
+                {
+                    cairo_pattern_destroy( _pattern );
+                    _pattern = 0L;
+                }
+            }
 
             //! cast to cairo_pattern_t
             operator cairo_pattern_t* (void) const

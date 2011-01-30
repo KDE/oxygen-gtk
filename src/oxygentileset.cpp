@@ -185,8 +185,6 @@ namespace Oxygen
         // check initialization
         if( _surfaces.size() < 9 ) return;
 
-        std::cerr << "Oxygen::TileSet::render" << std::endl;
-
         // calculate pixmaps widths
         int wLeft(0);
         int wRight(0);
@@ -237,7 +235,6 @@ namespace Oxygen
 
         // center
         if ( (t & Center) && h > 0 && w > 0 ) copySurface( context, x1, y1, _surfaces.at(4), 0, 0, w, h, CAIRO_EXTEND_REPEAT );
-        std::cerr << "Oxygen::TileSet::render - done" << std::endl;
 
    }
 
