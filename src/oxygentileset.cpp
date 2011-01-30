@@ -77,8 +77,6 @@ namespace Oxygen
         initSurface( _surfaces, surface, w, _h3, _w1, _h1+h2, w2, _h3 );
         initSurface( _surfaces, surface, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
 
-        // destroy
-
     }
 
     //______________________________________________________________
