@@ -242,13 +242,7 @@ namespace Oxygen
 
             } else {
 
-                Cairo::Surface tile( cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, sw, sh ) );
-                {
-                    Cairo::Context local( tile );
-                    cairo_set_source_surface( local, source, -sx, -sy );
-                    cairo_rectangle( local, 0, 0, sw, sh );
-                    cairo_fill( local );
-                }
+                Cairo::Surface tile( cairo_surface_create_for_rectangle( source, sx, sy, sw, sh ) );
 
                 cairo_set_source_surface( context, tile, 0, 0 );
                 cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
