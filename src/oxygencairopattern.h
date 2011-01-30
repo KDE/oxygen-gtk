@@ -90,13 +90,6 @@ namespace Oxygen
 
             private:
 
-            //! equal to operator is private
-            Pattern& operator = (cairo_pattern_t* other )
-            {
-                assert( false );
-                return *this;
-            }
-
             //! pattern
             cairo_pattern_t* _pattern;
 
