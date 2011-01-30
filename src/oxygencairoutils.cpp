@@ -20,6 +20,7 @@
 
 #include "oxygencairoutils.h"
 #include "oxygenrgba.h"
+#include <cairo/cairo-xlib.h>
 
 #include <cmath>
 namespace Oxygen
@@ -156,4 +157,37 @@ namespace Oxygen
         }
     }
 
+    //_____________________________________________________
+    int cairo_surface_get_width( cairo_surface_t* surface )
+    {
+        cairo_surface_type_t type=cairo_surface_get_type(surface);
+        if(type==CAIRO_SURFACE_TYPE_IMAGE)
+            return cairo_image_surface_get_width(surface);
+        else if(type==CAIRO_SURFACE_TYPE_XLIB)
+            return cairo_xlib_surface_get_width(surface);
+        else 
+        {
+            printf("returning -1 width, type: %d\n",type);
+            return -1;
+        }
+        // FIXME: we don't expect any surfaces other than Image and Xlib
+        // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+    }
+
+    //_____________________________________________________
+    int cairo_surface_get_height( cairo_surface_t* surface )
+    {
+        cairo_surface_type_t type=cairo_surface_get_type(surface);
+        if(type==CAIRO_SURFACE_TYPE_IMAGE)
+            return cairo_image_surface_get_height(surface);
+        else if(type==CAIRO_SURFACE_TYPE_XLIB)
+            return cairo_xlib_surface_get_height(surface);
+        else
+        {
+            printf("returning -1 width, type: %d\n",type);
+            return -1;
+        }
+        // FIXME: we don't expect any surfaces other than Image and Xlib
+        // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+    }
 }
