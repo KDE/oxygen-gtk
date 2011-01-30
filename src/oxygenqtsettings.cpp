@@ -734,10 +734,6 @@ namespace Oxygen
             _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
         }
 
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::loadKdeFonts - done." << std::endl;
-        #endif
-
     }
 
     //_________________________________________________________
