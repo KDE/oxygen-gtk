@@ -36,6 +36,8 @@ namespace Oxygen
 
             //! true when no valid value was passed
             bool isNull( void ) const { return _value.empty(); }
+            bool is( const std::string value ) const
+            { return _value == value; }
 
             bool isArrow( void ) const { return _value == "arrow"; }
             bool isBar( void ) const { return _value == "bar"; }
