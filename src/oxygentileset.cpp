@@ -78,27 +78,7 @@ namespace Oxygen
             cairo_paint( context );
         }
 
-        // set metrics
-        int x2 = gdk_pixbuf_get_width( pix ) - _w3;
-        int y2 = gdk_pixbuf_get_height( pix ) - _h3;
-        int w = w2; while (w < 32 && w2 > 0) w += w2;
-        int h = h2; while (h < 32 && h2 > 0) h += h2;
-
-        // initialise surface array
-        // top
-        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
-        initSurface( _surfaces, surface, w, _h1, x1, 0, w2, _h1 );
-        initSurface( _surfaces, surface, _w3, h1, x2, 0, _w3, _h1 );
-
-        // center
-        initSurface( _surfaces, surface, _w1, h, 0, y1, _w1, h2 );
-        initSurface( _surfaces, surface, w, h, x1, y1, w2, h2 );
-        initSurface( _surfaces, surface, _w3, h, x2, y1, _w3, h2 );
-
-        // bottom
-        initSurface( _surfaces, surface, _w1, _h3, 0, y2, _w1, _h3 );
-        initSurface( _surfaces, surface, w, _h3, x1, y2, w2, _h3 );
-        initSurface( _surfaces, surface, _w3, _h3, x2, y2, _w3, _h3 );
+        init( surface, w1, h1, w3, h3, x1, y1, w2, h2 );
 
     }
 
@@ -226,6 +206,33 @@ namespace Oxygen
         initSurface( _surfaces, surface, _w1, _h3, 0, _h1+h2, _w1, _h3 );
         initSurface( _surfaces, surface, w, _h3, _w1, _h1+h2, w2, _h3 );
         initSurface( _surfaces, surface, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
+
+    }
+
+    //______________________________________________________________
+    void TileSet::init( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2)
+    {
+        // set metrics
+        int x2 = cairo_surface_get_width( surface ) - _w3;
+        int y2 = cairo_surface_get_height( surface ) - _h3;
+        int w = w2; while (w < 32 && w2 > 0) w += w2;
+        int h = h2; while (h < 32 && h2 > 0) h += h2;
+
+        // initialise surface array
+        // top
+        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
+        initSurface( _surfaces, surface, w, _h1, x1, 0, w2, _h1 );
+        initSurface( _surfaces, surface, _w3, h1, x2, 0, _w3, _h1 );
+
+        // center
+        initSurface( _surfaces, surface, _w1, h, 0, y1, _w1, h2 );
+        initSurface( _surfaces, surface, w, h, x1, y1, w2, h2 );
+        initSurface( _surfaces, surface, _w3, h, x2, y1, _w3, h2 );
+
+        // bottom
+        initSurface( _surfaces, surface, _w1, _h3, 0, y2, _w1, _h3 );
+        initSurface( _surfaces, surface, w, _h3, x1, y2, w2, _h3 );
+        initSurface( _surfaces, surface, _w3, _h3, x2, y2, _w3, _h3 );
 
     }
 

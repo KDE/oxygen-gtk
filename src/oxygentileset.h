@@ -74,6 +74,9 @@ namespace Oxygen
         @param h2 height of the not-top-or-bottom chunks
         */
         TileSet( GdkPixbuf*, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
+        TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 ):
+            _w1(w1), _h1(h1), _w3(w3), _h3(h3)
+            { init( surface, w1, h1, w3, h3, x2, y2, w2, h2 ); }
 
         //! destructor
         virtual ~TileSet();
@@ -134,10 +137,8 @@ namespace Oxygen
         //!@name internal constuctors
         //@{
         void init( const Cairo::Surface&, int w1, int h1, int w2, int h2 );
-
+        void init( const Cairo::Surface&, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
         //@}
-
-        private:
 
         //! shortcut to pixmap list
         typedef std::vector< Cairo::Surface > SurfaceList;
