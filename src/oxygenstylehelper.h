@@ -93,8 +93,8 @@ namespace Oxygen
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        GdkPixbuf* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
-        GdkPixbuf* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+        cairo_surface_t* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        cairo_surface_t* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -223,10 +223,10 @@ namespace Oxygen
         TileSetCache<SelectionKey> m_selectionCache;
 
         //! round slabs
-        GdkPixbufCache<SlabKey> m_roundSlabCache;
+        CairoSurfaceCache<SlabKey> m_roundSlabCache;
 
         //! round slabs
-        GdkPixbufCache<SlabFocusedKey> m_roundSlabFocusedCache;
+        CairoSurfaceCache<SlabFocusedKey> m_roundSlabFocusedCache;
 
         //! progressbar indicators
         GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;

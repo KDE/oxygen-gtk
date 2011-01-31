@@ -1458,14 +1458,14 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options ) );
 
         // get the pixmap
-        GdkPixbuf* pixbuf( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
+        cairo_surface_t* surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
 
         // create context
         Cairo::Context context( window, clipRect );
         cairo_save( context );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, child.width, child.height );
-        gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+        cairo_set_source_surface( context, surface, 0, 0 );
         cairo_fill( context );
         cairo_restore( context );
 

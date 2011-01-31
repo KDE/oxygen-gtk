@@ -386,20 +386,19 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
+    cairo_surface_t* StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
     {
 
         const SlabKey key( base, shade, size );
-        GdkPixbuf* pixbuf( m_roundSlabCache.value( key ) );
-        if( !pixbuf )
+        cairo_surface_t* surface( m_roundSlabCache.value( key ) );
+        if( !surface )
         {
             const int w( 3*size );
             const int h( 3*size );
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( w, h );
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
@@ -409,29 +408,27 @@ namespace Oxygen
                 drawRoundSlab( context, base, shade );
             }
 
-            context.updateGdkPixbuf();
-            m_roundSlabCache.insert( key, pixbuf );
+            m_roundSlabCache.insert( key, surface );
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //__________________________________________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    cairo_surface_t* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
         SlabFocusedKey key( base, glow, shade, size );
-        GdkPixbuf* pixbuf( m_roundSlabFocusedCache.value( key ) );
-        if( !pixbuf )
+        cairo_surface_t* surface( m_roundSlabFocusedCache.value( key ) );
+        if( !surface )
         {
 
             const int w( 3*size );
             const int h( 3*size );
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( w, h );
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
@@ -439,12 +436,11 @@ namespace Oxygen
             if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
             if( base.isValid() ) drawRoundSlab( context, base, shade );
 
-            context.updateGdkPixbuf();
-            m_roundSlabFocusedCache.insert( key, pixbuf );
+            m_roundSlabFocusedCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //__________________________________________________________________
