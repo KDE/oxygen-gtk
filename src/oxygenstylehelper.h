@@ -21,6 +21,7 @@
 */
 
 #include "oxygencachekey.h"
+#include "oxygencairosurface.h"
 #include "oxygengdkpixbufcache.h"
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
@@ -42,7 +43,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        StyleHelper( void )
+        StyleHelper( void ):
+            // for now we use a Cairo_image_surface for reference.
+            // will try using a cairo_x11_surface later
+            _refSurface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, 1, 1 ) )
         {}
 
         //! destructor
@@ -138,6 +142,10 @@ namespace Oxygen
 
         protected:
 
+        //! create surface of given width and h
+        cairo_surface_t* createSurface( int w, int h ) const
+        { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
+
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
 
@@ -170,6 +178,9 @@ namespace Oxygen
         static const double _shadowGain;
         static const double _glowBias;
         //@}
+
+        //! reference surface for all later surface creations
+        Cairo::Surface _refSurface;
 
         //!@name caches
         //@{
@@ -224,7 +235,6 @@ namespace Oxygen
 
         //! decoration glow
         GdkPixbufCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
-
 
         //@}
 
