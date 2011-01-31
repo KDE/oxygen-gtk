@@ -160,34 +160,46 @@ namespace Oxygen
     //_____________________________________________________
     int cairo_surface_get_width( cairo_surface_t* surface )
     {
-        cairo_surface_type_t type=cairo_surface_get_type(surface);
-        if(type==CAIRO_SURFACE_TYPE_IMAGE)
-            return cairo_image_surface_get_width(surface);
-        else if(type==CAIRO_SURFACE_TYPE_XLIB)
-            return cairo_xlib_surface_get_width(surface);
-        else 
+        const cairo_surface_type_t type( cairo_surface_get_type(surface) );
+        switch( type )
         {
-            printf("returning -1 width, type: %d\n",type);
+
+            case CAIRO_SURFACE_TYPE_IMAGE:
+            return cairo_image_surface_get_width(surface);
+
+            case CAIRO_SURFACE_TYPE_XLIB:
+            return cairo_xlib_surface_get_width(surface);
+
+            default:
+            // FIXME: we don't expect any surfaces other than Image and Xlib
+            // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+            std::cerr << "Oxygen::cairo_surface_get_width - unsupported type " << type << std::endl;
             return -1;
+
         }
-        // FIXME: we don't expect any surfaces other than Image and Xlib
-        // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+
     }
 
     //_____________________________________________________
     int cairo_surface_get_height( cairo_surface_t* surface )
     {
-        cairo_surface_type_t type=cairo_surface_get_type(surface);
-        if(type==CAIRO_SURFACE_TYPE_IMAGE)
-            return cairo_image_surface_get_height(surface);
-        else if(type==CAIRO_SURFACE_TYPE_XLIB)
-            return cairo_xlib_surface_get_height(surface);
-        else
+        const cairo_surface_type_t type( cairo_surface_get_type(surface) );
+        switch( type )
         {
-            printf("returning -1 width, type: %d\n",type);
+            case CAIRO_SURFACE_TYPE_IMAGE:
+            return cairo_image_surface_get_height(surface);
+
+            case CAIRO_SURFACE_TYPE_XLIB:
+            return cairo_xlib_surface_get_height(surface);
+
+            default:
+            // FIXME: we don't expect any surfaces other than Image and Xlib
+            // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+            std::cerr << "Oxygen::cairo_surface_get_height - unsupported type " << type << std::endl;
             return -1;
+
         }
-        // FIXME: we don't expect any surfaces other than Image and Xlib
-        // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
+
     }
+
 }

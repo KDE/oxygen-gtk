@@ -116,8 +116,11 @@ namespace Oxygen
 
     //@}
 
-    int cairo_surface_get_width(cairo_surface_t* surface);
-    int cairo_surface_get_height(cairo_surface_t* surface);
+    //! get width for surface
+    int cairo_surface_get_width( cairo_surface_t* );
+
+    //! get height for surface
+    int cairo_surface_get_height( cairo_surface_t* );
 
 }
 
