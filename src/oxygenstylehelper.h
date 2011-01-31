@@ -127,7 +127,7 @@ namespace Oxygen
         const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
 
         //! progressbar indicator
-        GdkPixbuf* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
+        cairo_surface_t* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
         const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -229,7 +229,7 @@ namespace Oxygen
         CairoSurfaceCache<SlabFocusedKey> m_roundSlabFocusedCache;
 
         //! progressbar indicators
-        GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
+        CairoSurfaceCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
 
         //! decoration button
         CairoSurfaceCache<WindecoButtonKey> m_windecoButtonCache;

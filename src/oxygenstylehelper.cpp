@@ -838,12 +838,12 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    GdkPixbuf* StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
+    cairo_surface_t* StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
     {
 
         ProgressBarIndicatorKey key( base, highlight, w, h );
-        GdkPixbuf* pixbuf = m_progressBarIndicatorCache.value( key );
-        if( !pixbuf )
+        cairo_surface_t* surface( m_progressBarIndicatorCache.value( key ) );
+        if( !surface )
         {
 
             // local rect
@@ -852,110 +852,101 @@ namespace Oxygen
             int wl = w+2;
             int hl = h+3;
 
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( ColorUtils::Rgba::white() ).toInt() );
+            surface = createSurface( wl, hl );
+            Cairo::Context context( surface );
+
+            // adjust rect
+            xl += 1;
+            yl += 1;
+            wl -= 2;
+            hl -= 2;
+
+            // colors
+            const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
+            const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
 
             {
-
-                // context
-                Cairo::Context context( pixbuf );
-
-                // adjust rect
-                xl += 1;
-                yl += 1;
-                wl -= 2;
-                hl -= 2;
-
-                // colors
-                const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
-                const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-                const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-                const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
-
-                {
-                    // shadow
-                    cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
-                    cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
-                    cairo_set_line_width( context, 0.6 );
-                    cairo_stroke( context );
-                }
-
-                {
-                    // filling
-                    cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
-                    cairo_rectangle( context, xl+1, yl, wl-2, hl );
-                    cairo_fill( context );
-                }
-
-                // create pattern pixbuf
-                wl--;
-                if( wl > 0 )
-                {
-
-                    Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                    cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
-                    cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
-                    cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
-                    cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
-
-                    const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                    cairo_pattern_add_color_stop( pattern, 0,  mix );
-                    cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 1.0, mix );
-
-                    Cairo::Surface localSurface( createSurface( wl, hl ) );
-                    Cairo::Context localContext( localSurface );
-                    cairo_rectangle( localContext, 0, 0, wl, hl );
-                    cairo_set_source( localContext, pattern );
-                    cairo_mask( localContext, mask );
-                    localContext.free();
-
-                    cairo_save( context );
-                    cairo_translate( context, 1, 1 );
-                    cairo_rectangle( context, 0, 0, wl, hl );
-                    cairo_set_source_surface( context, localSurface, 0, 0 );
-                    cairo_fill( context );
-                    cairo_restore( context );
-
-                }
-
-                cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
-                {
-                    // bevel
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                    cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
-                    cairo_pattern_add_color_stop( pattern, 0.5, highlight );
-                    cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
-                    cairo_set_line_width( context, 1.0 );
-                    cairo_set_source( context, pattern );
-                    cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
-                    cairo_stroke( context );
-                }
-
-                {
-                    // bright top edge
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                    const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
-                    cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 0.5, mix );
-                    cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_set_line_width( context, 1.0 );
-                    cairo_set_source( context, pattern );
-                    cairo_move_to( context, xl+0.5, yl+0.5 );
-                    cairo_line_to( context, xl+wl-0.5, yl+0.5 );
-                    cairo_stroke( context );
-                }
-
-                context.updateGdkPixbuf();
-                m_progressBarIndicatorCache.insert( key, pixbuf );
+                // shadow
+                cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
+                cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
+                cairo_set_line_width( context, 0.6 );
+                cairo_stroke( context );
             }
 
+            {
+                // filling
+                cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
+                cairo_rectangle( context, xl+1, yl, wl-2, hl );
+                cairo_fill( context );
+            }
 
+            // create pattern pixbuf
+            wl--;
+            if( wl > 0 )
+            {
+
+                Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+                cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
+                cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
+                cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
+                cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+
+                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+                cairo_pattern_add_color_stop( pattern, 0,  mix );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, mix );
+
+                Cairo::Surface localSurface( createSurface( wl, hl ) );
+                Cairo::Context localContext( localSurface );
+                cairo_rectangle( localContext, 0, 0, wl, hl );
+                cairo_set_source( localContext, pattern );
+                cairo_mask( localContext, mask );
+                localContext.free();
+
+                cairo_save( context );
+                cairo_translate( context, 1, 1 );
+                cairo_rectangle( context, 0, 0, wl, hl );
+                cairo_set_source_surface( context, localSurface, 0, 0 );
+                cairo_fill( context );
+                cairo_restore( context );
+
+            }
+
+            cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
+            {
+                // bevel
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+                cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
+                cairo_pattern_add_color_stop( pattern, 0.5, highlight );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
+                cairo_set_line_width( context, 1.0 );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
+                cairo_stroke( context );
+            }
+
+            {
+                // bright top edge
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
+                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, mix );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
+                cairo_set_line_width( context, 1.0 );
+                cairo_set_source( context, pattern );
+                cairo_move_to( context, xl+0.5, yl+0.5 );
+                cairo_line_to( context, xl+wl-0.5, yl+0.5 );
+                cairo_stroke( context );
+            }
+
+            m_progressBarIndicatorCache.insert( key, surface );
         }
 
-        return pixbuf;
+        return surface;
 
     }
 

@@ -715,12 +715,12 @@ namespace Oxygen
         const int indicatorSize( (options&Vertical ? h:w ) );
         if( indicatorSize >= 4 )
         {
-            // get pixbuf
-            GdkPixbuf* pixbuf( helper().progressBarIndicator( base, glow, w, h ) );
+            // get surface
+            cairo_surface_t* surface( helper().progressBarIndicator( base, glow, w, h ) );
             cairo_translate( context, -1, -2 );
             cairo_translate( context, x, y );
-            cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
-            gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+            cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+            cairo_set_source_surface( context, surface, 0, 0 );
             cairo_fill( context );
         }
 
