@@ -53,6 +53,9 @@ namespace Oxygen
         @param h2 height of the not-top-or-bottom chunks
         */
         TileSet( GdkPixbuf*, int w1, int h1, int w2, int h2 );
+        TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 ):
+            _w1(w1), _h1(h1), _w3(0), _h3(0)
+            { init( surface, w1, h1, w2, h2 ); }
 
         /*!
         Create a TileSet from a pixmap. The size of the top/left and bottom/right
@@ -74,6 +77,12 @@ namespace Oxygen
 
         //! destructor
         virtual ~TileSet();
+
+        //! copy constructor
+        TileSet( const TileSet& );
+
+        //! assignment operator
+        TileSet& operator = ( const TileSet& );
 
         /*!
         Flags specifying what sides to draw in ::render. Corners are drawn when
@@ -122,11 +131,11 @@ namespace Oxygen
 
         protected:
 
-        //! copy constructor
-        TileSet( const TileSet& );
+        //!@name internal constuctors
+        //@{
+        void init( const Cairo::Surface&, int w1, int h1, int w2, int h2 );
 
-        //! assignment operator
-        TileSet& operator = ( const TileSet& );
+        //@}
 
         private:
 
