@@ -2894,12 +2894,6 @@ namespace Oxygen
     void StyleWrapper::instanceInit( OxygenStyle* self )
     {
 
-        /*
-        need to initialize the colors here even if done already
-        elsewhere, to fix some overwritting that occurs with some distros
-        */
-        Style::instance().settings().initializeColors();
-
         // initialize window manager hook
         Style::instance().windowManager().initializeHooks();
 
