@@ -51,7 +51,6 @@ namespace Oxygen
         @param w2 width of the not-left-or-right chunks
         @param h2 height of the not-top-or-bottom chunks
         */
-        //TileSet( GdkPixbuf*, int w1, int h1, int w2, int h2 );
         TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 );
 
         /*!
@@ -70,7 +69,6 @@ namespace Oxygen
         @param w2 width of the not-left-or-right chunks
         @param h2 height of the not-top-or-bottom chunks
         */
-        //TileSet( GdkPixbuf*, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
         TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
 
         //! destructor
