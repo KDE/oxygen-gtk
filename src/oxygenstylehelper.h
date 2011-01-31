@@ -23,7 +23,6 @@
 #include "oxygencachekey.h"
 #include "oxygencairosurface.h"
 #include "oxygencairosurfacecache.h"
-#include "oxygengdkpixbufcache.h"
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
 
