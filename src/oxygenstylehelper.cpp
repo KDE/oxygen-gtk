@@ -437,12 +437,15 @@ namespace Oxygen
     GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
-        const int w( 3*size );
-        const int h( 3*size );
-        GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-        gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
-
+        SlabFocusedKey key( base, glow, shade, size );
+        GdkPixbuf* pixbuf( m_roundSlabFocusedCache.value( key ) );
+        if( !pixbuf )
         {
+
+            const int w( 3*size );
+            const int h( 3*size );
+            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h );
+            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
 
             // create cairo context
             Cairo::Context context( pixbuf );
@@ -454,6 +457,7 @@ namespace Oxygen
             if( base.isValid() ) drawRoundSlab( context, base, shade );
 
             context.updateGdkPixbuf();
+            m_roundSlabFocusedCache.insert( key, pixbuf );
 
         }
 
