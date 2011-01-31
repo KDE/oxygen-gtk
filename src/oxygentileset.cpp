@@ -39,46 +39,59 @@ namespace Oxygen
     {}
 
     //______________________________________________________________
-    TileSet::TileSet( GdkPixbuf *pix, int w1, int h1, int w2, int h2):
+    TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 ):
         _w1(w1), _h1(h1), _w3(0), _h3(0)
     {
+        // set metrics
+        _w3 = cairo_surface_get_width( surface ) - (w1 + w2);
+        _h3 = cairo_surface_get_height( surface ) - (h1 + h2);
 
-        if( !pix ) return;
+        int w = w2; while (w < 32 && w2 > 0) w += w2;
+        int h = h2; while (h < 32 && h2 > 0) h += h2;
 
-        const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_height( pix ) );
+        // initialise pixmap array
+        // top
+        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
+        initSurface( _surfaces, surface, w, _h1, _w1, 0, w2, _h1 );
+        initSurface( _surfaces, surface, _w3, _h1, _w1+w2, 0, _w3, _h1 );
 
-        // create surface from pixbuf
-        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, sw, sh ) );
-        {
-            Cairo::Context context( surface );
-            gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
-            cairo_paint( context );
-        }
+        // center
+        initSurface( _surfaces, surface, _w1, h, 0, _h1, _w1, h2 );
+        initSurface( _surfaces, surface, w, h, w1, _h1, w2, h2 );
+        initSurface( _surfaces, surface, _w3, h, _w1+w2, _h1, _w3, h2 );
 
-        init( surface, w1, h1, w2, h2 );
+        // bottom
+        initSurface( _surfaces, surface, _w1, _h3, 0, _h1+h2, _w1, _h3 );
+        initSurface( _surfaces, surface, w, _h3, _w1, _h1+h2, w2, _h3 );
+        initSurface( _surfaces, surface, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
 
     }
 
     //______________________________________________________________
-    TileSet::TileSet( GdkPixbuf* pix, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2):
+    TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2):
         _w1(w1), _h1(h1), _w3(w3), _h3(h3)
     {
+        // set metrics
+        int x2 = cairo_surface_get_width( surface ) - _w3;
+        int y2 = cairo_surface_get_height( surface ) - _h3;
+        int w = w2; while (w < 32 && w2 > 0) w += w2;
+        int h = h2; while (h < 32 && h2 > 0) h += h2;
 
-        if( !pix ) return;
+        // initialise surface array
+        // top
+        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
+        initSurface( _surfaces, surface, w, _h1, x1, 0, w2, _h1 );
+        initSurface( _surfaces, surface, _w3, h1, x2, 0, _w3, _h1 );
 
-        const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_height( pix ) );
+        // center
+        initSurface( _surfaces, surface, _w1, h, 0, y1, _w1, h2 );
+        initSurface( _surfaces, surface, w, h, x1, y1, w2, h2 );
+        initSurface( _surfaces, surface, _w3, h, x2, y1, _w3, h2 );
 
-        // create surface from pixbuf
-        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32 , sw, sh ) );
-        {
-            Cairo::Context context( surface );
-            gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
-            cairo_paint( context );
-        }
-
-        init( surface, w1, h1, w3, h3, x1, y1, w2, h2 );
+        // bottom
+        initSurface( _surfaces, surface, _w1, _h3, 0, y2, _w1, _h3 );
+        initSurface( _surfaces, surface, w, _h3, x1, y2, w2, _h3 );
+        initSurface( _surfaces, surface, _w3, _h3, x2, y2, _w3, _h3 );
 
     }
 
@@ -178,61 +191,6 @@ namespace Oxygen
 
         // center
         if ( (t & Center) && h > 0 && w > 0 ) copySurface( context, x1, y1, _surfaces.at(4), 0, 0, w, h, CAIRO_EXTEND_REPEAT );
-
-    }
-
-    //______________________________________________________________
-    void TileSet::init( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 )
-    {
-        // set metrics
-        _w3 = cairo_surface_get_width( surface ) - (w1 + w2);
-        _h3 = cairo_surface_get_height( surface ) - (h1 + h2);
-
-        int w = w2; while (w < 32 && w2 > 0) w += w2;
-        int h = h2; while (h < 32 && h2 > 0) h += h2;
-
-        // initialise pixmap array
-        // top
-        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
-        initSurface( _surfaces, surface, w, _h1, _w1, 0, w2, _h1 );
-        initSurface( _surfaces, surface, _w3, _h1, _w1+w2, 0, _w3, _h1 );
-
-        // center
-        initSurface( _surfaces, surface, _w1, h, 0, _h1, _w1, h2 );
-        initSurface( _surfaces, surface, w, h, w1, _h1, w2, h2 );
-        initSurface( _surfaces, surface, _w3, h, _w1+w2, _h1, _w3, h2 );
-
-        // bottom
-        initSurface( _surfaces, surface, _w1, _h3, 0, _h1+h2, _w1, _h3 );
-        initSurface( _surfaces, surface, w, _h3, _w1, _h1+h2, w2, _h3 );
-        initSurface( _surfaces, surface, _w3, _h3, _w1+w2, _h1+h2, _w3, _h3 );
-
-    }
-
-    //______________________________________________________________
-    void TileSet::init( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2)
-    {
-        // set metrics
-        int x2 = cairo_surface_get_width( surface ) - _w3;
-        int y2 = cairo_surface_get_height( surface ) - _h3;
-        int w = w2; while (w < 32 && w2 > 0) w += w2;
-        int h = h2; while (h < 32 && h2 > 0) h += h2;
-
-        // initialise surface array
-        // top
-        initSurface( _surfaces, surface, _w1, _h1, 0, 0, _w1, _h1 );
-        initSurface( _surfaces, surface, w, _h1, x1, 0, w2, _h1 );
-        initSurface( _surfaces, surface, _w3, h1, x2, 0, _w3, _h1 );
-
-        // center
-        initSurface( _surfaces, surface, _w1, h, 0, y1, _w1, h2 );
-        initSurface( _surfaces, surface, w, h, x1, y1, w2, h2 );
-        initSurface( _surfaces, surface, _w3, h, x2, y1, _w3, h2 );
-
-        // bottom
-        initSurface( _surfaces, surface, _w1, _h3, 0, y2, _w1, _h3 );
-        initSurface( _surfaces, surface, w, _h3, x1, y2, w2, _h3 );
-        initSurface( _surfaces, surface, _w3, _h3, x2, y2, _w3, _h3 );
 
     }
 
