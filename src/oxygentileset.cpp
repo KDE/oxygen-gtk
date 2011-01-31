@@ -25,7 +25,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <gdk/gdk.h>
 
 namespace Oxygen
 {

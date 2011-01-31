@@ -24,7 +24,6 @@
 #include "oxygencairosurface.h"
 
 #include <cairo.h>
-#include <gdk/gdk.h>
 #include <vector>
 
 namespace Oxygen
