@@ -39,17 +39,17 @@ namespace Oxygen
     void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
     {
 
-        // get pixbuf
-        GdkPixbuf* pixbuf( separator( base, vertical, vertical ? h:w ) );
-        if(!pixbuf) return;
+        // get surface
+        cairo_surface_t* surface( separator( base, vertical, vertical ? h:w ) );
+        if(!surface) return;
 
         // translate
         cairo_save( context );
         if( vertical ) cairo_translate( context, x+w/2-1, y );
         else cairo_translate( context, x, y+h/2 );
 
-        cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
-        gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+        cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+        cairo_set_source_surface( context, surface, 0, 0 );
         cairo_fill( context );
         cairo_restore( context );
 
@@ -57,20 +57,18 @@ namespace Oxygen
 
 
     //__________________________________________________________________
-    GdkPixbuf* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
+    cairo_surface_t* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
     {
 
         if(size<=0) return 0L;
 
         const SeparatorKey key( base, vertical, size );
-        GdkPixbuf *pixbuf( m_separatorCache.value(key) );
+        cairo_surface_t* surface( m_separatorCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
-            pixbuf = vertical ?
-                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, 3, size ):
-                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, 2 );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            surface = vertical ? createSurface( 3, size ):createSurface( size, 2 );
 
             int xStart( 0 );
             int yStart( 0 );
@@ -79,7 +77,7 @@ namespace Oxygen
             int xOffset( vertical ? 1:0 );
             int yOffset( vertical ? 0:1 );
 
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_set_line_width( context, 1.0 );
 
             if( vertical ) cairo_translate( context, 0.5, 0 );
@@ -141,34 +139,32 @@ namespace Oxygen
             }
 
 
-            context.updateGdkPixbuf();
-            m_separatorCache.insert( key, pixbuf );
+            m_separatorCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //______________________________________________________________________________
-    GdkPixbuf* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
+    cairo_surface_t* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
     {
 
         const WindecoButtonKey key( base, size, pressed );
-        GdkPixbuf *pixbuf( m_windecoButtonCache.value(key) );
+        cairo_surface_t *surface( m_windecoButtonCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
 
-            // create pixbuf
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            // create surface
+            surface = createSurface( size, size );
 
             // calculate colors
             ColorUtils::Rgba light = ColorUtils::lightColor(base);
             ColorUtils::Rgba dark = ColorUtils::darkColor(base);
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             const double u = double(size)/18.0;
             cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
@@ -204,31 +200,29 @@ namespace Oxygen
                 cairo_stroke( context );
             }
 
-            context.updateGdkPixbuf();
-            m_windecoButtonCache.insert( key, pixbuf );
+            m_windecoButtonCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //_______________________________________________________________________
-    GdkPixbuf* StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
+    cairo_surface_t* StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
     {
 
         const WindecoButtonGlowKey key( base, size );
-        GdkPixbuf *pixbuf( m_windecoButtonGlowCache.value(key) );
+        cairo_surface_t *surface( m_windecoButtonGlowCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( size, size );
 
             // right now the same color is used for the two shadows
             const ColorUtils::Rgba& light( base );
             const ColorUtils::Rgba& dark( base );
 
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             const double u = double(size)/18.0;
             cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
@@ -265,12 +259,11 @@ namespace Oxygen
                 cairo_fill( context );
             }
 
-            context.updateGdkPixbuf();
-            m_windecoButtonGlowCache.insert( key, pixbuf );
+            m_windecoButtonGlowCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //_________________________________________________
@@ -898,8 +891,6 @@ namespace Oxygen
                 wl--;
                 if( wl > 0 )
                 {
-                    GdkPixbuf* localbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
-                    gdk_pixbuf_fill( localbuf, ColorUtils::Rgba::transparent().toInt() );
 
                     Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
                     cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
@@ -914,20 +905,19 @@ namespace Oxygen
                     cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
                     cairo_pattern_add_color_stop( pattern, 1.0, mix );
 
-                    Cairo::Context localContext( localbuf );
+                    Cairo::Surface localSurface( createSurface( wl, hl ) );
+                    Cairo::Context localContext( localSurface );
                     cairo_rectangle( localContext, 0, 0, wl, hl );
                     cairo_set_source( localContext, pattern );
                     cairo_mask( localContext, mask );
-                    localContext.updateGdkPixbuf();
                     localContext.free();
 
                     cairo_save( context );
                     cairo_translate( context, 1, 1 );
                     cairo_rectangle( context, 0, 0, wl, hl );
-                    gdk_cairo_set_source_pixbuf( context, localbuf, 0, 0 );
+                    cairo_set_source_surface( context, localSurface, 0, 0 );
                     cairo_fill( context );
                     cairo_restore( context );
-                    g_object_unref( localbuf );
 
                 }
 

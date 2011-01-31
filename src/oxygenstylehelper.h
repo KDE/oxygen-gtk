@@ -22,6 +22,7 @@
 
 #include "oxygencachekey.h"
 #include "oxygencairosurface.h"
+#include "oxygencairosurfacecache.h"
 #include "oxygengdkpixbufcache.h"
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
@@ -78,14 +79,11 @@ namespace Oxygen
             m_windecoButtonGlowCache.clear();
         }
 
-        // separator
-        virtual GdkPixbuf* separator(const ColorUtils::Rgba &color, bool vertical, int size );
-
         //!@name decoration specific helper functions
         //!
         //@{
-        virtual GdkPixbuf* windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
-        virtual GdkPixbuf* windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        virtual cairo_surface_t* windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
+        virtual cairo_surface_t* windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
         //@}
 
         //!@name slabs
@@ -146,6 +144,9 @@ namespace Oxygen
         cairo_surface_t* createSurface( int w, int h ) const
         { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
 
+        // separator
+        virtual cairo_surface_t* separator(const ColorUtils::Rgba &color, bool vertical, int size );
+
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
 
@@ -186,7 +187,7 @@ namespace Oxygen
         //@{
 
         //! round slabs
-        GdkPixbufCache<SeparatorKey> m_separatorCache;
+        CairoSurfaceCache<SeparatorKey> m_separatorCache;
 
         //! slabs
         TileSetCache<SlabKey> m_slabCache;
@@ -231,10 +232,10 @@ namespace Oxygen
         GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
 
         //! decoration button
-        GdkPixbufCache<WindecoButtonKey> m_windecoButtonCache;
+        CairoSurfaceCache<WindecoButtonKey> m_windecoButtonCache;
 
         //! decoration glow
-        GdkPixbufCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+        CairoSurfaceCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
 
         //@}
 
