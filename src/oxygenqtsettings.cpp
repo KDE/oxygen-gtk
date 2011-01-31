@@ -194,50 +194,6 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::initializeColors( bool forced )
-    {
-
-        // reload palette, if needed
-        loadKdePalette( forced );
-
-        if( _gtkColorsInitialized && !forced ) return;
-        _gtkColorsInitialized = true;
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initializeColors." << std::endl;
-        #endif
-
-        // clear rc and generate gtk colors
-        _rc.clear();
-
-        #if !OXYGEN_FORCE_KDE_ICONS_AND_FONTS
-        // TODO: Add support for gtk schemes when not _KDESession
-        if( _KDESession )
-        #endif
-        {
-            // reload icons
-            #if OXYGEN_ICON_HACK
-            loadKdeIcons();
-            #endif
-
-        }
-
-        // generate gtk colors
-        generateGtkColors();
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initializeColors - Gtkrc: " << std::endl;
-        std::cerr << _rc << std::endl;
-        #endif
-
-        // pass all resources to gtk and clear
-        _rc.commit();
-
-        return;
-
-    }
-
-    //_________________________________________________________
     PathList QtSettings::kdeConfigPathList( void ) const
     {
 
