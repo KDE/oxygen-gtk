@@ -45,7 +45,7 @@ namespace Oxygen
         if( !pix ) return;
 
         const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_width( pix ) );
+        const int sh( gdk_pixbuf_get_height( pix ) );
 
         // create surface from pixbuf
         Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, sw, sh ) );
@@ -87,7 +87,7 @@ namespace Oxygen
         if( !pix ) return;
 
         const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_width( pix ) );
+        const int sh( gdk_pixbuf_get_height( pix ) );
 
         // create surface from pixbuf
         Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32 , sw, sh ) );
