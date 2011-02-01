@@ -24,7 +24,6 @@
 #include "oxygencairosurface.h"
 
 #include <cairo.h>
-#include <gdk/gdk.h>
 #include <vector>
 
 namespace Oxygen
@@ -52,7 +51,7 @@ namespace Oxygen
         @param w2 width of the not-left-or-right chunks
         @param h2 height of the not-top-or-bottom chunks
         */
-        TileSet( GdkPixbuf*, int w1, int h1, int w2, int h2 );
+        TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 );
 
         /*!
         Create a TileSet from a pixmap. The size of the top/left and bottom/right
@@ -70,10 +69,16 @@ namespace Oxygen
         @param w2 width of the not-left-or-right chunks
         @param h2 height of the not-top-or-bottom chunks
         */
-        TileSet( GdkPixbuf*, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
+        TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
 
         //! destructor
         virtual ~TileSet();
+
+        //! copy constructor
+        TileSet( const TileSet& );
+
+        //! assignment operator
+        TileSet& operator = ( const TileSet& );
 
         /*!
         Flags specifying what sides to draw in ::render. Corners are drawn when
@@ -122,13 +127,11 @@ namespace Oxygen
 
         protected:
 
-        //! copy constructor
-        TileSet( const TileSet& );
-
-        //! assignment operator
-        TileSet& operator = ( const TileSet& );
-
-        private:
+        //!@name internal constuctors
+        //@{
+        void init( const Cairo::Surface&, int w1, int h1, int w2, int h2 );
+        void init( const Cairo::Surface&, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );
+        //@}
 
         //! shortcut to pixmap list
         typedef std::vector< Cairo::Surface > SurfaceList;

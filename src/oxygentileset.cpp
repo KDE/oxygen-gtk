@@ -20,11 +20,11 @@
 
 #include "oxygentileset.h"
 #include "oxygencairocontext.h"
+#include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
 
 #include <algorithm>
 #include <iostream>
-#include <gdk/gdk.h>
 
 namespace Oxygen
 {
@@ -38,26 +38,13 @@ namespace Oxygen
     {}
 
     //______________________________________________________________
-    TileSet::TileSet( GdkPixbuf *pix, int w1, int h1, int w2, int h2):
+    TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 ):
         _w1(w1), _h1(h1), _w3(0), _h3(0)
     {
-
-        if( !pix ) return;
-
-        const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_height( pix ) );
-
-        // create surface from pixbuf
-        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, sw, sh ) );
-        {
-            Cairo::Context context( surface );
-            gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
-            cairo_paint( context );
-        }
-
         // set metrics
-        _w3 = gdk_pixbuf_get_width( pix ) - (w1 + w2);
-        _h3 = gdk_pixbuf_get_height( pix ) - (h1 + h2);
+        _w3 = cairo_surface_get_width( surface ) - (w1 + w2);
+        _h3 = cairo_surface_get_height( surface ) - (h1 + h2);
+
         int w = w2; while (w < 32 && w2 > 0) w += w2;
         int h = h2; while (h < 32 && h2 > 0) h += h2;
 
@@ -80,26 +67,12 @@ namespace Oxygen
     }
 
     //______________________________________________________________
-    TileSet::TileSet( GdkPixbuf* pix, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2):
+    TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2):
         _w1(w1), _h1(h1), _w3(w3), _h3(h3)
     {
-
-        if( !pix ) return;
-
-        const int sw( gdk_pixbuf_get_width( pix ) );
-        const int sh( gdk_pixbuf_get_height( pix ) );
-
-        // create surface from pixbuf
-        Cairo::Surface surface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32 , sw, sh ) );
-        {
-            Cairo::Context context( surface );
-            gdk_cairo_set_source_pixbuf( context, pix, 0, 0 );
-            cairo_paint( context );
-        }
-
         // set metrics
-        int x2 = gdk_pixbuf_get_width( pix ) - _w3;
-        int y2 = gdk_pixbuf_get_height( pix ) - _h3;
+        int x2 = cairo_surface_get_width( surface ) - _w3;
+        int y2 = cairo_surface_get_height( surface ) - _h3;
         int w = w2; while (w < 32 && w2 > 0) w += w2;
         int h = h2; while (h < 32 && h2 > 0) h += h2;
 
@@ -218,8 +191,7 @@ namespace Oxygen
         // center
         if ( (t & Center) && h > 0 && w > 0 ) copySurface( context, x1, y1, _surfaces.at(4), 0, 0, w, h, CAIRO_EXTEND_REPEAT );
 
-   }
-
+    }
 
     //______________________________________________________________
     void TileSet::initSurface( SurfaceList& surfaces, const Cairo::Surface &source, int w, int h, int sx, int sy, int sw, int sh )

@@ -50,7 +50,7 @@ namespace Oxygen
         void render(cairo_t*, gint x, gint y, gint w, gint h);
 
         //! simple pixmap
-        GdkPixbuf* shadowPixmap(const ColorUtils::Rgba& color, bool active);
+        Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
 
         TileSet* tileSet(const ColorUtils::Rgba& color, double);
 

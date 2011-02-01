@@ -21,7 +21,8 @@
 */
 
 #include "oxygencachekey.h"
-#include "oxygengdkpixbufcache.h"
+#include "oxygencairosurface.h"
+#include "oxygencairosurfacecache.h"
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
 
@@ -42,7 +43,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        StyleHelper( void )
+        StyleHelper( void ):
+            // for now we use a Cairo_image_surface for reference.
+            // will try using a cairo_x11_surface later
+            _refSurface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, 1, 1 ) )
         {}
 
         //! destructor
@@ -74,14 +78,19 @@ namespace Oxygen
             m_windecoButtonGlowCache.clear();
         }
 
-        // separator
-        virtual GdkPixbuf* separator(const ColorUtils::Rgba &color, bool vertical, int size );
+        //! create surface from reference for given width and height
+        Cairo::Surface createSurface( int w, int h ) const
+        { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
+
+        //! access reference surface
+        const Cairo::Surface& refSurface( void ) const
+        { return _refSurface; }
 
         //!@name decoration specific helper functions
         //!
         //@{
-        virtual GdkPixbuf* windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
-        virtual GdkPixbuf* windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        virtual Cairo::Surface windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
+        virtual Cairo::Surface windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
         //@}
 
         //!@name slabs
@@ -91,8 +100,8 @@ namespace Oxygen
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        GdkPixbuf* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
-        GdkPixbuf* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+        Cairo::Surface roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        Cairo::Surface roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -125,7 +134,7 @@ namespace Oxygen
         const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
 
         //! progressbar indicator
-        GdkPixbuf* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
+        Cairo::Surface progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
         const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -137,6 +146,9 @@ namespace Oxygen
         void renderDot( cairo_t*, const ColorUtils::Rgba&, int x, int y ) const;
 
         protected:
+
+        // separator
+        virtual Cairo::Surface separator(const ColorUtils::Rgba &color, bool vertical, int size );
 
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
@@ -171,11 +183,14 @@ namespace Oxygen
         static const double _glowBias;
         //@}
 
+        //! reference surface for all later surface creations
+        Cairo::Surface _refSurface;
+
         //!@name caches
         //@{
 
         //! round slabs
-        GdkPixbufCache<SeparatorKey> m_separatorCache;
+        CairoSurfaceCache<SeparatorKey> m_separatorCache;
 
         //! slabs
         TileSetCache<SlabKey> m_slabCache;
@@ -211,19 +226,19 @@ namespace Oxygen
         TileSetCache<SelectionKey> m_selectionCache;
 
         //! round slabs
-        GdkPixbufCache<SlabKey> m_roundSlabCache;
+        CairoSurfaceCache<SlabKey> m_roundSlabCache;
 
         //! round slabs
-        GdkPixbufCache<SlabFocusedKey> m_roundSlabFocusedCache;
+        CairoSurfaceCache<SlabFocusedKey> m_roundSlabFocusedCache;
 
         //! progressbar indicators
-        GdkPixbufCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
+        CairoSurfaceCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
 
         //! decoration button
-        GdkPixbufCache<WindecoButtonKey> m_windecoButtonCache;
+        CairoSurfaceCache<WindecoButtonKey> m_windecoButtonCache;
 
         //! decoration glow
-        GdkPixbufCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+        CairoSurfaceCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
 
         //@}
 

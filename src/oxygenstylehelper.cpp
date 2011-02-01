@@ -40,17 +40,17 @@ namespace Oxygen
     void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
     {
 
-        // get pixbuf
-        GdkPixbuf* pixbuf( separator( base, vertical, vertical ? h:w ) );
-        if(!pixbuf) return;
+        // get surface
+        Cairo::Surface surface( separator( base, vertical, vertical ? h:w ) );
+        if(!surface) return;
 
         // translate
         cairo_save( context );
         if( vertical ) cairo_translate( context, x+w/2-1, y );
         else cairo_translate( context, x, y+h/2 );
 
-        cairo_rectangle( context, 0, 0, gdk_pixbuf_get_width( pixbuf ), gdk_pixbuf_get_height( pixbuf ) );
-        gdk_cairo_set_source_pixbuf( context, pixbuf, 0, 0 );
+        cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+        cairo_set_source_surface( context, surface, 0, 0 );
         cairo_fill( context );
         cairo_restore( context );
 
@@ -58,20 +58,18 @@ namespace Oxygen
 
 
     //__________________________________________________________________
-    GdkPixbuf* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
+    Cairo::Surface StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
     {
 
         if(size<=0) return 0L;
 
         const SeparatorKey key( base, vertical, size );
-        GdkPixbuf *pixbuf( m_separatorCache.value(key) );
+        Cairo::Surface surface( m_separatorCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
-            pixbuf = vertical ?
-                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, 3, size ):
-                gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, 2 );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+
+            surface = vertical ? createSurface( 3, size ):createSurface( size, 2 );
 
             int xStart( 0 );
             int yStart( 0 );
@@ -80,7 +78,7 @@ namespace Oxygen
             int xOffset( vertical ? 1:0 );
             int yOffset( vertical ? 0:1 );
 
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_set_line_width( context, 1.0 );
 
             if( vertical ) cairo_translate( context, 0.5, 0 );
@@ -142,34 +140,32 @@ namespace Oxygen
             }
 
 
-            context.updateGdkPixbuf();
-            m_separatorCache.insert( key, pixbuf );
+            m_separatorCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //______________________________________________________________________________
-    GdkPixbuf* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
+    Cairo::Surface StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
     {
 
         const WindecoButtonKey key( base, size, pressed );
-        GdkPixbuf *pixbuf( m_windecoButtonCache.value(key) );
+        Cairo::Surface surface( m_windecoButtonCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
 
-            // create pixbuf
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            // create surface
+            surface = createSurface( size, size );
 
             // calculate colors
             ColorUtils::Rgba light = ColorUtils::lightColor(base);
             ColorUtils::Rgba dark = ColorUtils::darkColor(base);
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             const double u = double(size)/18.0;
             cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
@@ -205,31 +201,29 @@ namespace Oxygen
                 cairo_stroke( context );
             }
 
-            context.updateGdkPixbuf();
-            m_windecoButtonCache.insert( key, pixbuf );
+            m_windecoButtonCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //_______________________________________________________________________
-    GdkPixbuf* StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
+    Cairo::Surface StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
     {
 
         const WindecoButtonGlowKey key( base, size );
-        GdkPixbuf *pixbuf( m_windecoButtonGlowCache.value(key) );
+        Cairo::Surface surface( m_windecoButtonGlowCache.value(key) );
 
-        if( !pixbuf )
+        if( !surface )
         {
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, size, size );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( size, size );
 
             // right now the same color is used for the two shadows
             const ColorUtils::Rgba& light( base );
             const ColorUtils::Rgba& dark( base );
 
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             const double u = double(size)/18.0;
             cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
@@ -266,12 +260,11 @@ namespace Oxygen
                 cairo_fill( context );
             }
 
-            context.updateGdkPixbuf();
-            m_windecoButtonGlowCache.insert( key, pixbuf );
+            m_windecoButtonGlowCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //_________________________________________________
@@ -283,16 +276,15 @@ namespace Oxygen
         if( !tileSet )
         {
 
-            // create pixbuf and initialize
+            // create surface and initialize
             const int w( 2*size );
             const int h( 2*size );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
                 // create cairo context
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_scale( context, double(size)/7, double(size)/7 );
                 cairo_rectangle( context, 0, 0, 14, 14 );
                 cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
@@ -304,13 +296,11 @@ namespace Oxygen
                     drawSlab( context, base, shade );
                 }
 
-                context.updateGdkPixbuf();
             }
 
             // create tileSet
-            tileSet = new TileSet( pixbuf,  size, size, size, size, size-1, size, 2, 1);
+            tileSet = new TileSet( surface,  size, size, size, size, size-1, size, 2, 1);
             m_slabCache.insert( key, tileSet );
-            g_object_unref( pixbuf );
         }
 
         return *tileSet;
@@ -326,15 +316,14 @@ namespace Oxygen
         if( !tileSet )
         {
 
-            // create pixbuf and initialize
+            // create surface and initialize
             const int w( 2*size );
             const int h( 2*size );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
                 // create cairo context
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_scale( context, double(size)/7, double(size)/7 );
                 cairo_rectangle( context, 0, 0, 14, 14 );
                 cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
@@ -343,13 +332,11 @@ namespace Oxygen
                 if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor( base ), 14 );
                 if( glow.isValid() ) drawOuterGlow( context, glow, 14 );
                 if( base.isValid() ) drawSlab( context, base, shade );
-                context.updateGdkPixbuf();
 
             }
 
             // create tileSet
-            tileSet = new TileSet( pixbuf,  size, size, size, size, size-1, size, 2, 1);
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface,  size, size, size, size, size-1, size, 2, 1);
 
             m_slabFocusedCache.insert( key, tileSet );
         }
@@ -367,16 +354,15 @@ namespace Oxygen
         if( !tileSet )
         {
 
-            // create pixbuf and initialize
+            // create surface and initialize
             const int w( 2*size );
             const int h( 2*size );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
                 // create cairo context
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_scale( context, double(size)/7, double(size)/7 );
                 cairo_rectangle( context, 0, 0, 14, 14 );
                 cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
@@ -387,14 +373,11 @@ namespace Oxygen
                     drawSlab( context, base, shade );
                     drawInverseShadow( context, ColorUtils::shadowColor(base), 3, 8, 0.0);
                 }
-                context.updateGdkPixbuf();
 
             }
 
             // create tileSet
-            tileSet = new TileSet( pixbuf,  size, size, size, size, size-1, size, 2, 1);
-            g_object_unref( pixbuf );
-
+            tileSet = new TileSet( surface,  size, size, size, size, size-1, size, 2, 1);
             m_slabSunkenCache.insert( key, tileSet );
 
         }
@@ -404,20 +387,19 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
+    Cairo::Surface StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
     {
 
         const SlabKey key( base, shade, size );
-        GdkPixbuf* pixbuf( m_roundSlabCache.value( key ) );
-        if( !pixbuf )
+        Cairo::Surface surface( m_roundSlabCache.value( key ) );
+        if( !surface )
         {
             const int w( 3*size );
             const int h( 3*size );
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( w, h );
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
@@ -427,29 +409,27 @@ namespace Oxygen
                 drawRoundSlab( context, base, shade );
             }
 
-            context.updateGdkPixbuf();
-            m_roundSlabCache.insert( key, pixbuf );
+            m_roundSlabCache.insert( key, surface );
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //__________________________________________________________________________________________________________
-    GdkPixbuf* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    Cairo::Surface StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
         SlabFocusedKey key( base, glow, shade, size );
-        GdkPixbuf* pixbuf( m_roundSlabFocusedCache.value( key ) );
-        if( !pixbuf )
+        Cairo::Surface surface( m_roundSlabFocusedCache.value( key ) );
+        if( !surface )
         {
 
             const int w( 3*size );
             const int h( 3*size );
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            surface = createSurface( w, h );
 
             // create cairo context
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
             cairo_scale( context, double(size)/7, double(size)/7 );
 
             // shadow
@@ -457,12 +437,11 @@ namespace Oxygen
             if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
             if( base.isValid() ) drawRoundSlab( context, base, shade );
 
-            context.updateGdkPixbuf();
-            m_roundSlabFocusedCache.insert( key, pixbuf );
+            m_roundSlabFocusedCache.insert( key, surface );
 
         }
 
-        return pixbuf;
+        return surface;
     }
 
     //__________________________________________________________________
@@ -530,13 +509,11 @@ namespace Oxygen
             const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
             const int w( 2*rsize );
             const int h( 2*rsize );
-
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_translate( context, -2, -2 );
                 cairo_scale( context, 10.0/w, 10.0/h );
 
@@ -550,13 +527,10 @@ namespace Oxygen
 
                 // shadow
                 drawInverseShadow( context, ColorUtils::shadowColor( base ), 3, 8, 0.0);
-                context.updateGdkPixbuf();
 
             }
 
-            tileSet = new TileSet(pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1);
-            g_object_unref( pixbuf );
-
+            tileSet = new TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
             m_holeCache.insert( key, tileSet );
         }
 
@@ -572,17 +546,15 @@ namespace Oxygen
         TileSet* tileSet( m_holeFocusedCache.value( key ) );
         if( !tileSet )
         {
-            // create pixbuf and initialize
+            // create surface and initialize
             const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
             const int w( 2*rsize );
             const int h( 2*rsize );
 
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
-
+            Cairo::Surface surface( createSurface( w, h ) );
             {
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 const TileSet& holeTileSet = hole( base, fill, shade, size );
 
                 // hole
@@ -593,12 +565,10 @@ namespace Oxygen
                 cairo_scale( context, 10.0/w, 10.0/h );
 
                 drawInverseGlow( context, glow, 3, 8, size );
-                context.updateGdkPixbuf();
 
             }
 
-            tileSet = new TileSet(pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1);
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
 
             m_holeFocusedCache.insert( key, tileSet );
 
@@ -620,12 +590,11 @@ namespace Oxygen
             const int w( 2*rsize );
             const int h( 2*rsize );
 
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_translate( context, -2, -2 );
                 cairo_scale( context, 10.0/w, 10.0/h );
 
@@ -636,13 +605,10 @@ namespace Oxygen
                 cairo_set_source( context, base );
                 cairo_ellipse( context, 3.4, 3.4, 7.2, 7.2 );
                 cairo_fill( context );
-                context.updateGdkPixbuf();
 
             }
 
-
-            tileSet = new TileSet( pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
             m_holeFlatCache.insert( key, tileSet );
 
         }
@@ -668,10 +634,9 @@ namespace Oxygen
             // create pixmap
             const int w( 15 );
             const int h( 15 );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
-            Cairo::Context context( pixbuf );
+            Cairo::Context context( surface );
 
             GdkRectangle r = { 0, 0, w, h };
             GdkRectangle rect = { 1, 0, w-2, h-1 };
@@ -746,10 +711,7 @@ namespace Oxygen
                 cairo_stroke( context );
             }
 
-            context.updateGdkPixbuf();
-            tileSet = new TileSet( pixbuf, 7, 7, 1, 1 );
-            g_object_unref( pixbuf );
-
+            tileSet = new TileSet( surface, 7, 7, 1, 1 );
             m_scrollHoleCache.insert( key, tileSet );
 
         }
@@ -769,10 +731,9 @@ namespace Oxygen
             // create pixmap
             const int w( 9 );
             const int h( 9 );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
             {
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
 
                 cairo_pattern_t* pattern( cairo_pattern_create_radial( 4.5, 4.5, 4.5 ) );
                 ColorUtils::Rgba tmp( ColorUtils::alphaColor( glow, 180.0/255 ) );
@@ -786,11 +747,9 @@ namespace Oxygen
                 cairo_ellipse( context, 0, 0, 9, 9 ) ;
                 cairo_fill( context );
 
-                context.updateGdkPixbuf();
             }
 
-            tileSet = new TileSet( pixbuf, 4, 4, 1, 1 );
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface, 4, 4, 1, 1 );
 
             m_slitFocusedCache.insert( key, tileSet );
 
@@ -816,11 +775,10 @@ namespace Oxygen
             // fixed height
             const int h( 9 );
 
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
             {
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_save( context );
                 cairo_translate( context, 0.5, 0.5 );
                 cairo_scale( context, 1.0, 4.0/5.0 );
@@ -869,11 +827,9 @@ namespace Oxygen
                 cairo_restore( context );
                 drawSeparator( context, base, 0, -1, w, 2, false );
                 drawSeparator( context, base, 0, h-3, w, 2, false );
-                context.updateGdkPixbuf();
             }
 
-            tileSet = new TileSet( pixbuf, 4, 4, w-8, h-8 );
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface, 4, 4, w-8, h-8 );
 
             m_dockFrameCache.insert( key, tileSet );
         }
@@ -883,12 +839,12 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    GdkPixbuf* StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
+    Cairo::Surface StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
     {
 
         ProgressBarIndicatorKey key( base, highlight, w, h );
-        GdkPixbuf* pixbuf = m_progressBarIndicatorCache.value( key );
-        if( !pixbuf )
+        Cairo::Surface surface( m_progressBarIndicatorCache.value( key ) );
+        if( !surface )
         {
 
             // local rect
@@ -897,113 +853,101 @@ namespace Oxygen
             int wl = w+2;
             int hl = h+3;
 
-            pixbuf = gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( ColorUtils::Rgba::white() ).toInt() );
+            surface = createSurface( wl, hl );
+            Cairo::Context context( surface );
+
+            // adjust rect
+            xl += 1;
+            yl += 1;
+            wl -= 2;
+            hl -= 2;
+
+            // colors
+            const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
+            const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
 
             {
-
-                // context
-                Cairo::Context context( pixbuf );
-
-                // adjust rect
-                xl += 1;
-                yl += 1;
-                wl -= 2;
-                hl -= 2;
-
-                // colors
-                const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
-                const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-                const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-                const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
-
-                {
-                    // shadow
-                    cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
-                    cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
-                    cairo_set_line_width( context, 0.6 );
-                    cairo_stroke( context );
-                }
-
-                {
-                    // filling
-                    cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
-                    cairo_rectangle( context, xl+1, yl, wl-2, hl );
-                    cairo_fill( context );
-                }
-
-                // create pattern pixbuf
-                wl--;
-                if( wl > 0 )
-                {
-                    GdkPixbuf* localbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, wl, hl ) );
-                    gdk_pixbuf_fill( localbuf, ColorUtils::Rgba::transparent().toInt() );
-
-                    Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                    cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
-                    cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
-                    cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
-                    cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
-
-                    const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                    cairo_pattern_add_color_stop( pattern, 0,  mix );
-                    cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 1.0, mix );
-
-                    Cairo::Context localContext( localbuf );
-                    cairo_rectangle( localContext, 0, 0, wl, hl );
-                    cairo_set_source( localContext, pattern );
-                    cairo_mask( localContext, mask );
-                    localContext.updateGdkPixbuf();
-                    localContext.free();
-
-                    cairo_save( context );
-                    cairo_translate( context, 1, 1 );
-                    cairo_rectangle( context, 0, 0, wl, hl );
-                    gdk_cairo_set_source_pixbuf( context, localbuf, 0, 0 );
-                    cairo_fill( context );
-                    cairo_restore( context );
-                    g_object_unref( localbuf );
-
-                }
-
-                cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
-                {
-                    // bevel
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                    cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
-                    cairo_pattern_add_color_stop( pattern, 0.5, highlight );
-                    cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
-                    cairo_set_line_width( context, 1.0 );
-                    cairo_set_source( context, pattern );
-                    cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
-                    cairo_stroke( context );
-                }
-
-                {
-                    // bright top edge
-                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                    const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
-                    cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_pattern_add_color_stop( pattern, 0.5, mix );
-                    cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
-                    cairo_set_line_width( context, 1.0 );
-                    cairo_set_source( context, pattern );
-                    cairo_move_to( context, xl+0.5, yl+0.5 );
-                    cairo_line_to( context, xl+wl-0.5, yl+0.5 );
-                    cairo_stroke( context );
-                }
-
-                context.updateGdkPixbuf();
-                m_progressBarIndicatorCache.insert( key, pixbuf );
+                // shadow
+                cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
+                cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
+                cairo_set_line_width( context, 0.6 );
+                cairo_stroke( context );
             }
 
+            {
+                // filling
+                cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
+                cairo_rectangle( context, xl+1, yl, wl-2, hl );
+                cairo_fill( context );
+            }
 
+            // create pattern pixbuf
+            wl--;
+            if( wl > 0 )
+            {
+
+                Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+                cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
+                cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
+                cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
+                cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+
+                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+                cairo_pattern_add_color_stop( pattern, 0,  mix );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, mix );
+
+                Cairo::Surface localSurface( createSurface( wl, hl ) );
+                Cairo::Context localContext( localSurface );
+                cairo_rectangle( localContext, 0, 0, wl, hl );
+                cairo_set_source( localContext, pattern );
+                cairo_mask( localContext, mask );
+                localContext.free();
+
+                cairo_save( context );
+                cairo_translate( context, 1, 1 );
+                cairo_rectangle( context, 0, 0, wl, hl );
+                cairo_set_source_surface( context, localSurface, 0, 0 );
+                cairo_fill( context );
+                cairo_restore( context );
+
+            }
+
+            cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
+            {
+                // bevel
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+                cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
+                cairo_pattern_add_color_stop( pattern, 0.5, highlight );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
+                cairo_set_line_width( context, 1.0 );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
+                cairo_stroke( context );
+            }
+
+            {
+                // bright top edge
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
+                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, mix );
+                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
+                cairo_set_line_width( context, 1.0 );
+                cairo_set_source( context, pattern );
+                cairo_move_to( context, xl+0.5, yl+0.5 );
+                cairo_line_to( context, xl+wl-0.5, yl+0.5 );
+                cairo_stroke( context );
+            }
+
+            m_progressBarIndicatorCache.insert( key, surface );
         }
 
-        return pixbuf;
+        return surface;
 
     }
 
@@ -1018,12 +962,11 @@ namespace Oxygen
             const int rsize( ( int )ceil( double( size ) * 3.0/7.0 ) );
             const int w( rsize*2 );
             const int h( rsize*2 );
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent().toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_translate( context, -2, -2 );
                 cairo_scale( context, 6/w, 6/h );
 
@@ -1033,12 +976,9 @@ namespace Oxygen
                 cairo_ellipse_negative( context, 4, 4, 2, 2 );
                 cairo_fill( context );
 
-                context.updateGdkPixbuf();
-
             }
 
-            tileSet = new TileSet( pixbuf, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
-            g_object_unref( pixbuf );
+            tileSet = new TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 );
             m_grooveCache.insert( key, tileSet );
         }
 
@@ -1055,8 +995,7 @@ namespace Oxygen
         if( !tileSet )
         {
             const int w = 32+16;
-            GdkPixbuf* pixbuf( gdk_pixbuf_new( GDK_COLORSPACE_RGB, true, 8, w, h ) );
-            gdk_pixbuf_fill( pixbuf, ColorUtils::Rgba::transparent( base ).toInt() );
+            Cairo::Surface surface( createSurface( w, h ) );
 
             {
 
@@ -1065,7 +1004,7 @@ namespace Oxygen
                 const int y = 0;
                 const double rounding( 2.5 );
 
-                Cairo::Context context( pixbuf );
+                Cairo::Context context( surface );
                 cairo_set_line_width( context, 1.0 );
 
                 {
@@ -1092,14 +1031,10 @@ namespace Oxygen
                     cairo_stroke( context );
                 }
 
-                context.updateGdkPixbuf();
-
             }
 
             // create tileSet
-            tileSet = new TileSet( pixbuf, 8, 0, 32, h );
-            g_object_unref( pixbuf );
-
+            tileSet = new TileSet( surface, 8, 0, 32, h );
             m_selectionCache.insert( key, tileSet );
         }
 

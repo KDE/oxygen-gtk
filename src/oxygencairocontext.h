@@ -29,66 +29,59 @@ namespace Oxygen
 {
     namespace Cairo
     {
-        
+
         //! wrapper class around cairo_t structure
         class Context
         {
             public:
-            
+
             //! constructor
             explicit Context( GdkWindow*, GdkRectangle* = 0L );
-            
+
             //! constructor
             explicit Context( cairo_surface_t*, GdkRectangle* = 0L );
-            
-            //! constructor from pixbuf
-            explicit Context( GdkPixbuf*, GdkRectangle* = 0L );
-            
+
             //! destructor
             virtual ~Context( void )
             { free(); }
-            
+
             //! free the context
             /*!
             it should not be necessary to call this method
             since it is already handled in destructor
             */
             void free( void );
-            
+
             //! cast to cairo_t
             operator cairo_t* (void) const
             { return _cr; }
-            
+
             //! context accessor
             cairo_t* cr( void ) const
             { return _cr; }
-            
+
             //! set clipping
             void setClipping( GdkRectangle* ) const;
-            
+
             //! set clipping
             void setClipping( GdkRegion* ) const;
-            
-            //! update gdk pixbuf
-            void updateGdkPixbuf( void ) const;
-            
+
             private:
-            
+
             //! empty constructor is private
             explicit Context( void ):
                 _cr( 0L )
             { assert( false ); }
-                
+
             //! copy constructor is private
             Context( const Context& other ):
                 _cr( 0L )
             { assert( false ); }
-                    
+
             //! equal to operator is private
             Context& operator = (const Context& other )
             {
                 _cr = other._cr;
-                _pixbuf_key = other._pixbuf_key;
                 assert( false );
                 return *this;
             }
@@ -102,10 +95,6 @@ namespace Oxygen
 
             //! cairo contect
             cairo_t* _cr;
-
-            //! user key
-            cairo_user_data_key_t _pixbuf_key;
-
 
         };
 

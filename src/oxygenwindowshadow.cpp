@@ -41,15 +41,19 @@ namespace Oxygen
         // TODO: implement real opacity to get animated transition from active to inactive
         // For now, opacity==0 means inactive, otherwise active
 
-        double size( shadowSize() );
+        // TODO: right now this code leaks. The tilesets created here are never deleted
+        // either store the created tileset into a cache (with proper deletion at exit)
+        // or do not use pointers
 
-        GdkPixbuf* shadow = shadowPixmap(color,opacity);
-        TileSet* tileSet = new TileSet(shadow,int(size),int(size),1,1);
-        return tileSet;
+        const double size( shadowSize() );
+        return new TileSet(
+            shadowPixmap( color, opacity ),
+            int(size), int(size), 1, 1 );
+
     }
 
     //________________________________________________________________________________
-    GdkPixbuf* WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, bool active)
+    Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, bool active)
     {
         ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
@@ -57,9 +61,7 @@ namespace Oxygen
         double size( shadowSize() );
         double shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize() : 0 );
 
-        GdkPixbuf* shadow( gdk_pixbuf_new( GDK_COLORSPACE_RGB, TRUE, 8, int(size*2), int(size*2) ) );
-        gdk_pixbuf_fill( shadow, ColorUtils::Rgba::transparent().toInt() );
-
+        Cairo::Surface shadow( helper().createSurface( int(size*2), int(size*2) ) );
         Cairo::Context p(shadow);
 
         // some gradients rendering are different at bottom corners if client has no border
@@ -202,10 +204,10 @@ namespace Oxygen
         cairo_ellipse(p, size-3,size-3,6,6);
         cairo_fill(p);
 */
-        p.updateGdkPixbuf();
 
         return shadow;
     }
+
     //________________________________________________________________________________
     void WindowShadow::renderGradient(cairo_t* p,const GdkRectangle& rect, cairo_pattern_t* rg, bool hasBorder) const
     {

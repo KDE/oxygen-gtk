@@ -1,5 +1,5 @@
-#ifndef oxygengdkpixbufcache_h
-#define oxygengdkpixbufcache_h
+#ifndef oxygencairosurfacecache_h
+#define oxygencairosurfacecache_h
 
 /*
 * this file is part of the oxygen gtk engine
@@ -22,35 +22,36 @@
 */
 
 #include "oxygencache.h"
+#include "oxygencairosurface.h"
 
-#include <gdk/gdk.h>
+#include <cairo.h>
 
 namespace Oxygen
 {
 
     template< typename T>
-    class GdkPixbufCache: public Cache<T, GdkPixbuf*>
+    class CairoSurfaceCache: public Cache<T, Cairo::Surface>
     {
 
         public:
 
         //! constructor
-        GdkPixbufCache( void )
+        CairoSurfaceCache( void )
         {}
 
         //! destructor
-        virtual ~GdkPixbufCache( void )
+        virtual ~CairoSurfaceCache( void )
         {}
 
         protected:
 
         //! erase value from map
-        virtual void erase( GdkPixbuf*& pixbuf )
-        { g_object_unref( pixbuf ); }
+        virtual void erase( Cairo::Surface& pixbuf )
+        {}
 
         //! default value
-        virtual GdkPixbuf* defaultValue( void ) const
-        { return 0L; }
+        virtual Cairo::Surface defaultValue( void ) const
+        { return Cairo::Surface(); }
 
     };
 
