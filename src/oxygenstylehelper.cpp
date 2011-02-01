@@ -41,7 +41,7 @@ namespace Oxygen
     {
 
         // get surface
-        Cairo::Surface surface( separator( base, vertical, vertical ? h:w ) );
+        const Cairo::Surface& surface( separator( base, vertical, vertical ? h:w ) );
         if(!surface) return;
 
         // translate
@@ -56,215 +56,215 @@ namespace Oxygen
 
     }
 
-
     //__________________________________________________________________
-    Cairo::Surface StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
+    const Cairo::Surface& StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
     {
 
-        if(size<=0) return 0L;
-
         const SeparatorKey key( base, vertical, size );
-        Cairo::Surface surface( m_separatorCache.value(key) );
 
-        if( !surface )
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_separatorCache.value(key) )
+        { return surface; }
+
+        // for invalid sizes return a null surface
+        if( size <= 0 )
+        { return m_separatorCache.insert( key, 0L ); }
+
+        // cached not found, create new
+        Cairo::Surface surface( vertical ? createSurface( 3, size ):createSurface( size, 2 ) );
+
+        int xStart( 0 );
+        int yStart( 0 );
+        int xStop( vertical ? 0 : size );
+        int yStop( vertical ? size : 0 );
+        int xOffset( vertical ? 1:0 );
+        int yOffset( vertical ? 0:1 );
+
+        Cairo::Context context( surface );
+        cairo_set_line_width( context, 1.0 );
+
+        if( vertical ) cairo_translate( context, 0.5, 0 );
+        else cairo_translate( context, 0, 0.5 );
+
         {
+            ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
+            if( vertical ) light.setAlpha( 0.7 );
 
-            surface = vertical ? createSurface( 3, size ):createSurface( size, 2 );
+            cairo_pattern_add_color_stop( pattern, 0.3, light );
+            cairo_pattern_add_color_stop( pattern, 0.7, light );
+            light.setAlpha( 0 );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, light );
+            cairo_set_source( context, pattern );
 
-            int xStart( 0 );
-            int yStart( 0 );
-            int xStop( vertical ? 0 : size );
-            int yStop( vertical ? size : 0 );
-            int xOffset( vertical ? 1:0 );
-            int yOffset( vertical ? 0:1 );
-
-            Cairo::Context context( surface );
-            cairo_set_line_width( context, 1.0 );
-
-            if( vertical ) cairo_translate( context, 0.5, 0 );
-            else cairo_translate( context, 0, 0.5 );
-
+            if( vertical )
             {
-                ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-                Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
-                if( vertical ) light.setAlpha( 0.7 );
+                cairo_move_to( context, xStart, yStart );
+                cairo_line_to( context, xStop, yStop );
+                cairo_move_to( context, xStart+2*xOffset, yStart+2*yOffset );
+                cairo_line_to( context, xStop+2*xOffset, yStop+2*yOffset );
 
-                cairo_pattern_add_color_stop( pattern, 0.3, light );
-                cairo_pattern_add_color_stop( pattern, 0.7, light );
-                light.setAlpha( 0 );
-                cairo_pattern_add_color_stop( pattern, 0, light );
-                cairo_pattern_add_color_stop( pattern, 1, light );
-                cairo_set_source( context, pattern );
+            } else {
 
-                if( vertical )
-                {
-                    cairo_move_to( context, xStart, yStart );
-                    cairo_line_to( context, xStop, yStop );
-                    cairo_move_to( context, xStart+2*xOffset, yStart+2*yOffset );
-                    cairo_line_to( context, xStop+2*xOffset, yStop+2*yOffset );
+                cairo_move_to( context, xStart+xOffset, yStart+yOffset );
+                cairo_line_to( context, xStop+xOffset, yStop+yOffset );
 
-                } else {
-
-                    cairo_move_to( context, xStart+xOffset, yStart+yOffset );
-                    cairo_line_to( context, xStop+xOffset, yStop+yOffset );
-
-                }
-
-                cairo_stroke( context );
             }
 
-            {
-                ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-
-                Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
-                cairo_pattern_add_color_stop( pattern, 0.3, dark );
-                cairo_pattern_add_color_stop( pattern, 0.7, dark );
-                dark.setAlpha(0);
-                cairo_pattern_add_color_stop( pattern, 0, dark );
-                cairo_pattern_add_color_stop( pattern, 1, dark );
-                cairo_set_source( context, pattern );
-
-                if( vertical )
-                {
-
-                    cairo_move_to( context, xStart+xOffset, yStart+yOffset );
-                    cairo_line_to( context, xStop+xOffset, yStop+yOffset );
-
-                } else {
-
-                    cairo_move_to( context, xStart, yStart );
-                    cairo_line_to( context, xStop, yStop );
-                }
-
-                cairo_stroke( context );
-            }
-
-
-            m_separatorCache.insert( key, surface );
-
+            cairo_stroke( context );
         }
 
-        return surface;
+        {
+            ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+            Cairo::Pattern pattern( cairo_pattern_create_linear( xStart, yStart, xStop, yStop ) );
+            cairo_pattern_add_color_stop( pattern, 0.3, dark );
+            cairo_pattern_add_color_stop( pattern, 0.7, dark );
+            dark.setAlpha(0);
+            cairo_pattern_add_color_stop( pattern, 0, dark );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_set_source( context, pattern );
+
+            if( vertical )
+            {
+
+                cairo_move_to( context, xStart+xOffset, yStart+yOffset );
+                cairo_line_to( context, xStop+xOffset, yStop+yOffset );
+
+            } else {
+
+                cairo_move_to( context, xStart, yStart );
+                cairo_line_to( context, xStop, yStop );
+            }
+
+            cairo_stroke( context );
+        }
+
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_separatorCache.insert( key, surface );
+
     }
 
     //______________________________________________________________________________
-    Cairo::Surface StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
+    const Cairo::Surface& StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
     {
 
         const WindecoButtonKey key( base, size, pressed );
-        Cairo::Surface surface( m_windecoButtonCache.value(key) );
 
-        if( !surface )
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_windecoButtonCache.value(key) )
+        { return surface; }
+
+        // cached not found, create new
+        Cairo::Surface surface( createSurface( size, size ) );
+
+        // calculate colors
+        ColorUtils::Rgba light = ColorUtils::lightColor(base);
+        ColorUtils::Rgba dark = ColorUtils::darkColor(base);
+
+        // create cairo context
+        Cairo::Context context( surface );
+        const double u = double(size)/18.0;
+        cairo_translate( context, 0.5*u, (0.5-0.668)*u );
+
         {
 
-            // create surface
-            surface = createSurface( size, size );
-
-            // calculate colors
-            ColorUtils::Rgba light = ColorUtils::lightColor(base);
-            ColorUtils::Rgba dark = ColorUtils::darkColor(base);
-
-            // create cairo context
-            Cairo::Context context( surface );
-            const double u = double(size)/18.0;
-            cairo_translate( context, 0.5*u, (0.5-0.668)*u );
-
+            // plain background
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(12.33+1.665) ) );
+            if( pressed )
             {
-
-                // plain background
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(12.33+1.665) ) );
-                if( pressed )
-                {
-                    cairo_pattern_add_color_stop( pattern, 1, light );
-                    cairo_pattern_add_color_stop( pattern, 0, dark );
-                } else {
-                    cairo_pattern_add_color_stop( pattern, 0, light );
-                    cairo_pattern_add_color_stop( pattern, 1, dark );
-                }
-
-                cairo_ellipse( context, u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
-                cairo_set_source( context, pattern );
-                cairo_fill( context );
-
-            }
-
-            {
-                // outline circle
-                const double penWidth( 0.7 );
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(2.0*12.33+1.665) ) );
+                cairo_pattern_add_color_stop( pattern, 1, light );
+                cairo_pattern_add_color_stop( pattern, 0, dark );
+            } else {
                 cairo_pattern_add_color_stop( pattern, 0, light );
                 cairo_pattern_add_color_stop( pattern, 1, dark );
-
-                cairo_ellipse( context, u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
-                cairo_set_source( context, pattern );
-                cairo_set_line_width( context, penWidth );
-                cairo_stroke( context );
             }
 
-            m_windecoButtonCache.insert( key, surface );
+            cairo_ellipse( context, u*0.5*(17-12.33), u*1.665, u*12.33, u*12.33 );
+            cairo_set_source( context, pattern );
+            cairo_fill( context );
 
         }
 
-        return surface;
+        {
+            // outline circle
+            const double penWidth( 0.7 );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, u*1.665, 0, u*(2.0*12.33+1.665) ) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+
+            cairo_ellipse( context, u*0.5*(17-12.33+penWidth), u*(1.665+penWidth), u*(12.33-penWidth), u*(12.33-penWidth) );
+            cairo_set_source( context, pattern );
+            cairo_set_line_width( context, penWidth );
+            cairo_stroke( context );
+        }
+
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_windecoButtonCache.insert( key, surface );
+
     }
 
     //_______________________________________________________________________
-    Cairo::Surface StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
+    const Cairo::Surface& StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
     {
 
         const WindecoButtonGlowKey key( base, size );
-        Cairo::Surface surface( m_windecoButtonGlowCache.value(key) );
 
-        if( !surface )
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_windecoButtonGlowCache.value(key) )
+        { return surface; }
+
+        // cached not found, create new
+        Cairo::Surface surface( createSurface( size, size ) );
+
+        // right now the same color is used for the two shadows
+        const ColorUtils::Rgba& light( base );
+        const ColorUtils::Rgba& dark( base );
+
+        Cairo::Context context( surface );
+        const double u = double(size)/18.0;
+        cairo_translate( context, 0.5*u, (0.5-0.668)*u );
+
         {
-            surface = createSurface( size, size );
 
-            // right now the same color is used for the two shadows
-            const ColorUtils::Rgba& light( base );
-            const ColorUtils::Rgba& dark( base );
+            // outer shadow
+            Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
 
-            Cairo::Context context( surface );
-            const double u = double(size)/18.0;
-            cairo_translate( context, 0.5*u, (0.5-0.668)*u );
+            static const int nPoints( 5 );
+            double x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
+            double values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
+            ColorUtils::Rgba c = dark;
+            for( int i = 0; i<nPoints; i++ )
+            { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
 
-            {
-
-                // outer shadow
-                Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
-
-                static const int nPoints( 5 );
-                double x[5] = { 0.61, 0.72, 0.81, 0.9, 1};
-                double values[5] = { 255-172, 255-178, 255-210, 255-250, 0 };
-                ColorUtils::Rgba c = dark;
-                for( int i = 0; i<nPoints; i++ )
-                { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
-
-                cairo_set_source( context, pattern );
-                cairo_rectangle( context, 0, 0, size, size );
-                cairo_fill( context );
-            }
-
-            {
-                // inner shadow
-                Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
-
-                static const int nPoints(6);
-                const double x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
-                const double values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
-                ColorUtils::Rgba c( light );
-                for( int i = 0; i<nPoints; i++ )
-                { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
-
-                cairo_set_source( context, pattern );
-                cairo_rectangle( context, 0, 0, size, size );
-                cairo_fill( context );
-            }
-
-            m_windecoButtonGlowCache.insert( key, surface );
-
+            cairo_set_source( context, pattern );
+            cairo_rectangle( context, 0, 0, size, size );
+            cairo_fill( context );
         }
 
-        return surface;
+        {
+            // inner shadow
+            Cairo::Pattern pattern( cairo_pattern_create_radial( u*8.5, u*8.5, u*8.5 ) );
+
+            static const int nPoints(6);
+            const double x[6] = { 0.61, 0.67, 0.7, 0.74, 0.78, 1 };
+            const double values[6] = { 255-92, 255-100, 255-135, 255-205, 255-250, 0 };
+            ColorUtils::Rgba c( light );
+            for( int i = 0; i<nPoints; i++ )
+            { c.setAlpha( values[i]/255 ); cairo_pattern_add_color_stop( pattern, x[i], c ); }
+
+            cairo_set_source( context, pattern );
+            cairo_rectangle( context, 0, 0, size, size );
+            cairo_fill( context );
+        }
+
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_windecoButtonGlowCache.insert( key, surface );
+
     }
 
     //_________________________________________________
@@ -387,61 +387,65 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    Cairo::Surface StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
+    const Cairo::Surface& StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
     {
 
         const SlabKey key( base, shade, size );
-        Cairo::Surface surface( m_roundSlabCache.value( key ) );
-        if( !surface )
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_roundSlabCache.value( key ) )
+        { return surface; }
+
+        // cached not found, create new
+        const int w( 3*size );
+        const int h( 3*size );
+        Cairo::Surface surface( createSurface( w, h ) );
+
+        // create cairo context
+        Cairo::Context context( surface );
+        cairo_scale( context, double(size)/7, double(size)/7 );
+
+        // shadow
+        if( base.isValid() )
         {
-            const int w( 3*size );
-            const int h( 3*size );
-            surface = createSurface( w, h );
-
-            // create cairo context
-            Cairo::Context context( surface );
-            cairo_scale( context, double(size)/7, double(size)/7 );
-
-            // shadow
-            if( base.isValid() )
-            {
-                drawShadow( context, ColorUtils::shadowColor(base), 21 );
-                drawRoundSlab( context, base, shade );
-            }
-
-            m_roundSlabCache.insert( key, surface );
+            drawShadow( context, ColorUtils::shadowColor(base), 21 );
+            drawRoundSlab( context, base, shade );
         }
 
-        return surface;
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_roundSlabCache.insert( key, surface );
+
     }
 
     //__________________________________________________________________________________________________________
-    Cairo::Surface StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    const Cairo::Surface& StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
         SlabFocusedKey key( base, glow, shade, size );
-        Cairo::Surface surface( m_roundSlabFocusedCache.value( key ) );
-        if( !surface )
-        {
 
-            const int w( 3*size );
-            const int h( 3*size );
-            surface = createSurface( w, h );
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_roundSlabFocusedCache.value( key ) )
+        { return surface; }
 
-            // create cairo context
-            Cairo::Context context( surface );
-            cairo_scale( context, double(size)/7, double(size)/7 );
+        // cached not found, create new
+        const int w( 3*size );
+        const int h( 3*size );
+        Cairo::Surface surface( createSurface( w, h ) );
 
-            // shadow
-            if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor(base), 21 );
-            if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
-            if( base.isValid() ) drawRoundSlab( context, base, shade );
+        // create cairo context
+        Cairo::Context context( surface );
+        cairo_scale( context, double(size)/7, double(size)/7 );
 
-            m_roundSlabFocusedCache.insert( key, surface );
+        // shadow
+        if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor(base), 21 );
+        if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
+        if( base.isValid() ) drawRoundSlab( context, base, shade );
 
-        }
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_roundSlabFocusedCache.insert( key, surface );
 
-        return surface;
     }
 
     //__________________________________________________________________
@@ -839,115 +843,117 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    Cairo::Surface StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
+    const Cairo::Surface& StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
     {
 
         ProgressBarIndicatorKey key( base, highlight, w, h );
-        Cairo::Surface surface( m_progressBarIndicatorCache.value( key ) );
-        if( !surface )
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_progressBarIndicatorCache.value( key ) )
+        { return surface; }
+
+        // cached not found, create new
+
+        // local rect
+        int xl = 0;
+        int yl = 0;
+        int wl = w+2;
+        int hl = h+3;
+
+        Cairo::Surface surface( createSurface( wl, hl ) );
+        Cairo::Context context( surface );
+
+        // adjust rect
+        xl += 1;
+        yl += 1;
+        wl -= 2;
+        hl -= 2;
+
+        // colors
+        const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+        const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
+
         {
-
-            // local rect
-            int xl = 0;
-            int yl = 0;
-            int wl = w+2;
-            int hl = h+3;
-
-            surface = createSurface( wl, hl );
-            Cairo::Context context( surface );
-
-            // adjust rect
-            xl += 1;
-            yl += 1;
-            wl -= 2;
-            hl -= 2;
-
-            // colors
-            const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
-            const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
-
-            {
-                // shadow
-                cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
-                cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
-                cairo_set_line_width( context, 0.6 );
-                cairo_stroke( context );
-            }
-
-            {
-                // filling
-                cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
-                cairo_rectangle( context, xl+1, yl, wl-2, hl );
-                cairo_fill( context );
-            }
-
-            // create pattern pixbuf
-            wl--;
-            if( wl > 0 )
-            {
-
-                Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
-                cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
-                cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
-                cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
-
-                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                cairo_pattern_add_color_stop( pattern, 0,  mix );
-                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
-                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, mix );
-
-                Cairo::Surface localSurface( createSurface( wl, hl ) );
-                Cairo::Context localContext( localSurface );
-                cairo_rectangle( localContext, 0, 0, wl, hl );
-                cairo_set_source( localContext, pattern );
-                cairo_mask( localContext, mask );
-                localContext.free();
-
-                cairo_save( context );
-                cairo_translate( context, 1, 1 );
-                cairo_rectangle( context, 0, 0, wl, hl );
-                cairo_set_source_surface( context, localSurface, 0, 0 );
-                cairo_fill( context );
-                cairo_restore( context );
-
-            }
-
-            cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
-            {
-                // bevel
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
-                cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
-                cairo_pattern_add_color_stop( pattern, 0.5, highlight );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
-                cairo_set_line_width( context, 1.0 );
-                cairo_set_source( context, pattern );
-                cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
-                cairo_stroke( context );
-            }
-
-            {
-                // bright top edge
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
-                const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
-                cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
-                cairo_pattern_add_color_stop( pattern, 0.5, mix );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
-                cairo_set_line_width( context, 1.0 );
-                cairo_set_source( context, pattern );
-                cairo_move_to( context, xl+0.5, yl+0.5 );
-                cairo_line_to( context, xl+wl-0.5, yl+0.5 );
-                cairo_stroke( context );
-            }
-
-            m_progressBarIndicatorCache.insert( key, surface );
+            // shadow
+            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
+            cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
+            cairo_set_line_width( context, 0.6 );
+            cairo_stroke( context );
         }
 
-        return surface;
+        {
+            // filling
+            cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
+            cairo_rectangle( context, xl+1, yl, wl-2, hl );
+            cairo_fill( context );
+        }
+
+        // create pattern pixbuf
+        wl--;
+        if( wl > 0 )
+        {
+
+            Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+            cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::transparent() );
+            cairo_pattern_add_color_stop( mask, 0.4, ColorUtils::Rgba::black() );
+            cairo_pattern_add_color_stop( mask, 0.6, ColorUtils::Rgba::black() );
+            cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+
+            const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.3 ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+            cairo_pattern_add_color_stop( pattern, 0,  mix );
+            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( mix ) );
+            cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( mix ) );
+            cairo_pattern_add_color_stop( pattern, 1.0, mix );
+
+            Cairo::Surface localSurface( createSurface( wl, hl ) );
+            Cairo::Context localContext( localSurface );
+            cairo_rectangle( localContext, 0, 0, wl, hl );
+            cairo_set_source( localContext, pattern );
+            cairo_mask( localContext, mask );
+            localContext.free();
+
+            cairo_save( context );
+            cairo_translate( context, 1, 1 );
+            cairo_rectangle( context, 0, 0, wl, hl );
+            cairo_set_source_surface( context, localSurface, 0, 0 );
+            cairo_fill( context );
+            cairo_restore( context );
+
+        }
+
+        cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
+        {
+            // bevel
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
+            cairo_pattern_add_color_stop( pattern, 0.0, lhighlight );
+            cairo_pattern_add_color_stop( pattern, 0.5, highlight );
+            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
+            cairo_set_line_width( context, 1.0 );
+            cairo_set_source( context, pattern );
+            cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
+            cairo_stroke( context );
+        }
+
+        {
+            // bright top edge
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+            const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
+            cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
+            cairo_pattern_add_color_stop( pattern, 0.5, mix );
+            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
+            cairo_set_line_width( context, 1.0 );
+            cairo_set_source( context, pattern );
+            cairo_move_to( context, xl+0.5, yl+0.5 );
+            cairo_line_to( context, xl+wl-0.5, yl+0.5 );
+            cairo_stroke( context );
+        }
+
+        // note: we can't return the surface directly, because it is a temporary
+        // we have to return the inserted object instead
+        return m_progressBarIndicatorCache.insert( key, surface );
 
     }
 

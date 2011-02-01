@@ -789,7 +789,7 @@ namespace Oxygen
         if( indicatorSize >= 4 )
         {
             // get surface
-            Cairo::Surface surface( helper().progressBarIndicator( base, glow, w, h ) );
+            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
             cairo_translate( context, -1, -2 );
             cairo_translate( context, x, y );
             cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
@@ -1531,7 +1531,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options ) );
 
         // get the pixmap
-        Cairo::Surface surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
+        const Cairo::Surface& surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
 
         // create context
         Cairo::Context context( window, clipRect );

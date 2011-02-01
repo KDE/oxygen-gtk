@@ -80,7 +80,10 @@ namespace Oxygen
 
         //! create surface from reference for given width and height
         Cairo::Surface createSurface( int w, int h ) const
-        { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
+        {
+            if( w <= 0 || h <= 0 ) return 0L;
+            else return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h );
+        }
 
         //! access reference surface
         const Cairo::Surface& refSurface( void ) const
@@ -89,8 +92,8 @@ namespace Oxygen
         //!@name decoration specific helper functions
         //!
         //@{
-        virtual Cairo::Surface windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
-        virtual Cairo::Surface windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        const Cairo::Surface& windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
+        const Cairo::Surface& windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
         //@}
 
         //!@name slabs
@@ -100,8 +103,8 @@ namespace Oxygen
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        Cairo::Surface roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
-        Cairo::Surface roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+        const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        const Cairo::Surface& roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -134,7 +137,7 @@ namespace Oxygen
         const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
 
         //! progressbar indicator
-        Cairo::Surface progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
+        const Cairo::Surface& progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
         const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -148,7 +151,7 @@ namespace Oxygen
         protected:
 
         // separator
-        virtual Cairo::Surface separator(const ColorUtils::Rgba &color, bool vertical, int size );
+        const Cairo::Surface& separator(const ColorUtils::Rgba &color, bool vertical, int size );
 
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
