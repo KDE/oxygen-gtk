@@ -31,22 +31,16 @@ namespace Oxygen
     {
         // FIXME: is this correct color
         ColorUtils::Rgba background = settings().palette().color(Palette::Window);
-        TileSet* tileset=tileSet(background, _wopt&WinDeco::Active);
-        tileset->render(cr,x,y,w,h,TileSet::Full);
+        tileSet( background, _wopt&WinDeco::Active).render( cr, x, y, w, h, TileSet::Full );
     }
 
     //________________________________________________________________________________
-    TileSet* WindowShadow::tileSet(const ColorUtils::Rgba& color, double opacity)
+    TileSet WindowShadow::tileSet(const ColorUtils::Rgba& color, double opacity)
     {
         // TODO: implement real opacity to get animated transition from active to inactive
         // For now, opacity==0 means inactive, otherwise active
-
-        // TODO: right now this code leaks. The tilesets created here are never deleted
-        // either store the created tileset into a cache (with proper deletion at exit)
-        // or do not use pointers
-
         const double size( shadowSize() );
-        return new TileSet(
+        return TileSet(
             shadowPixmap( color, opacity ),
             int(size), int(size), 1, 1 );
 

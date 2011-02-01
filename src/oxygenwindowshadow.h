@@ -52,7 +52,7 @@ namespace Oxygen
         //! simple pixmap
         Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
 
-        TileSet* tileSet(const ColorUtils::Rgba& color, double);
+        TileSet tileSet(const ColorUtils::Rgba& color, double);
 
         void setWindowState(WinDeco::Options wopt)
         { _wopt=wopt; }
