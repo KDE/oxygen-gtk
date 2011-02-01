@@ -54,8 +54,9 @@ namespace Oxygen
         typedef typename Map::const_iterator const_iterator;
 
         //! creator
-        SimpleCache( size_t size = 100 ):
-            _maxSize( size )
+        SimpleCache( size_t size = 100, M defaultValue = M() ):
+            _maxSize( size ),
+            _defaultValue( defaultValue )
             {}
 
         //! copy constructor
@@ -81,7 +82,7 @@ namespace Oxygen
         }
 
         //! insert pair in cache
-        inline void insert( const T&, const M& );
+        inline const M& insert( const T&, const M& );
 
         //! returns true if cache contains key
         /*! cannot be const, because key gets promoted when contained */
@@ -92,7 +93,7 @@ namespace Oxygen
         inline iterator find( const T& );
 
         //! return value for given key, or defaultValue if not found
-        inline M value( const T& );
+        inline const M& value( const T& );
 
         //! end
         inline iterator end( void )
@@ -111,14 +112,6 @@ namespace Oxygen
         */
         virtual void erase( M& )
         {}
-
-        //! default value
-        /*!
-        by default, returns empty constructor. Must be re-implemented with proper
-        construction if for instance cache is used to store pointer
-        */
-        virtual M defaultValue( void ) const
-        { return M(); }
 
         //! promote key to front of the list
         virtual inline void promote( const T& );
@@ -141,6 +134,8 @@ namespace Oxygen
 
         //! keys
         List _keys;
+
+        M _defaultValue;
 
     };
 
@@ -188,7 +183,7 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    void SimpleCache<T,M>::insert( const T& key, const M& value )
+    const M& SimpleCache<T,M>::insert( const T& key, const M& value )
     {
 
         typename Map::iterator iter = _map.find( key );
@@ -196,7 +191,8 @@ namespace Oxygen
         {
 
             // insert in map, and push key in list
-            const Key& internal_key( _map.insert( std::make_pair( key, value ) ).first->first );
+            iter = _map.insert( std::make_pair( key, value ) ).first;
+            const Key& internal_key( iter->first );
             _keys.push_front( &internal_key );
 
         } else {
@@ -214,6 +210,9 @@ namespace Oxygen
 
         // adjust size
         adjustSize();
+
+        // return newly inserted value
+        return iter->second;
 
     }
 
@@ -242,10 +241,10 @@ namespace Oxygen
 
     //______________________________________________________________________
     template <typename T, typename M>
-    M SimpleCache<T,M>::value( const T& key )
+    const M& SimpleCache<T,M>::value( const T& key )
     {
         typename Map::iterator iter = _map.find( key );
-        if( iter == _map.end() ) return defaultValue();
+        if( iter == _map.end() ) return _defaultValue;
         else {
             promote( iter->first );
             return iter->second;
@@ -303,8 +302,8 @@ namespace Oxygen
 
 
         //! creator
-        Cache( size_t size = 100 ):
-            SimpleCache<T,M>( size )
+        Cache( size_t size = 100, M defaultValue = M() ):
+            SimpleCache<T,M>( size, defaultValue )
             {}
 
         protected:

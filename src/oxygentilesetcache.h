@@ -36,7 +36,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        TileSetCache( void )
+        TileSetCache( size_t size = 100 ):
+            Cache<T, TileSet*>( size, 0L )
         {}
 
         //! destructor
@@ -48,10 +49,6 @@ namespace Oxygen
         //! erase value from map
         virtual void erase( TileSet*& tileset )
         { delete tileset; }
-
-        //! default value
-        virtual TileSet* defaultValue( void ) const
-        { return 0L; }
 
     };
 

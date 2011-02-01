@@ -29,6 +29,7 @@
 namespace Oxygen
 {
 
+
     template< typename T>
     class CairoSurfaceCache: public Cache<T, Cairo::Surface>
     {
@@ -42,16 +43,6 @@ namespace Oxygen
         //! destructor
         virtual ~CairoSurfaceCache( void )
         {}
-
-        protected:
-
-        //! erase value from map
-        virtual void erase( Cairo::Surface& pixbuf )
-        {}
-
-        //! default value
-        virtual Cairo::Surface defaultValue( void ) const
-        { return Cairo::Surface(); }
 
     };
 
