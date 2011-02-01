@@ -46,10 +46,6 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    Style::Style( void )
-    {}
-
-    //__________________________________________________________________
     void Style::initialize( void )
     {
         _settings.initialize();
@@ -62,6 +58,64 @@ namespace Oxygen
         // pass drag distance and delay to window manager
         windowManager().setDragDistance( settings().startDragDist() );
         windowManager().setDragDelay( settings().startDragTime() );
+
+    }
+
+    //__________________________________________________________________
+    GdkPixbuf* Style::tabCloseButton( const StyleOptions& options )
+    {
+
+        // active tab
+        GError* err( 0L );
+        if( options&Focus )
+        {
+            // create button
+            if( !_tabCloseButtons.active )
+            {
+                const std::string filename( std::string(GTK_THEME_DIR)+ "/special-icons/standardbutton-closetab-down-16.png" );
+                _tabCloseButtons.active = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+            }
+
+            return _tabCloseButtons.active;
+        }
+
+        // prelight
+        if( options&Hover )
+        {
+            // create button
+            if( !_tabCloseButtons.prelight )
+            {
+                const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-hover-16.png" );
+                _tabCloseButtons.prelight = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+            }
+
+            return _tabCloseButtons.prelight;
+
+        }
+
+        // normal or inactive
+        if( !_tabCloseButtons.normal )
+        {
+            const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-16.png" );
+            _tabCloseButtons.normal = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+        }
+
+        // inactive
+        if( (options&Disabled) && _tabCloseButtons.normal )
+        {
+
+            if( !_tabCloseButtons.inactive )
+            {
+                _tabCloseButtons.inactive = Gtk::gdk_pixbuf_set_alpha( _tabCloseButtons.normal, 0.5 );
+                gdk_pixbuf_saturate_and_pixelate( _tabCloseButtons.inactive, _tabCloseButtons.inactive , 0.1, false );
+            }
+
+            return _tabCloseButtons.inactive;
+
+        }
+
+        // fallback to normal
+        return _tabCloseButtons.normal;
 
     }
 

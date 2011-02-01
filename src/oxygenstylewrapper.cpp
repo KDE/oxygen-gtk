@@ -503,22 +503,10 @@ namespace Oxygen
         std::cout << "Oxygen::processTabCloseButton" << std::endl;
         #endif
 
-        static GdkPixbuf* pbNormalColored(0L);
-        static GdkPixbuf* pbNormalGray(0L);
-        static GdkPixbuf* pbPrelight(0L);
-        static GdkPixbuf* pbActive(0L);
-        GdkPixbuf* toDraw( 0L );
-        GError* err( 0L );
         switch (state)
         {
             case GTK_STATE_NORMAL:
             {
-
-                if(!pbNormalColored)
-                {
-                    std::string buttonIconName = std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-16.png";
-                    pbNormalColored=gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
-                }
 
                 // check if our button is on active page and if not, make it gray
                 GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
@@ -528,55 +516,23 @@ namespace Oxygen
                 GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
                 if( !tabLabel ) break;
 
-                if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) )
-                {
-                    pbNormalGray = Gtk::gdk_pixbuf_set_alpha(pbNormalColored, 0.5);
-                    gdk_pixbuf_saturate_and_pixelate( pbNormalGray, pbNormalGray , 0.1, false );
-                    toDraw=pbNormalGray;
-                }
-                else toDraw = pbNormalColored;
+                if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) ) return Style::instance().tabCloseButton( Disabled );
+                else return Style::instance().tabCloseButton( StyleOptions() );
+
             }
 
             break;
 
-            case GTK_STATE_ACTIVE:
-            {
-                if(!pbActive) {
-
-                    std::string buttonIconName = std::string(GTK_THEME_DIR)+ "/special-icons/standardbutton-closetab-down-16.png";
-                    pbActive = gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
-
-                }
-
-                if(pbActive) toDraw = pbActive;
-            }
-
-            break;
-
-            case GTK_STATE_PRELIGHT:
-            {
-                if(!pbPrelight)
-                {
-                    std::string buttonIconName = std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-hover-16.png";
-                    pbPrelight = gdk_pixbuf_new_from_file(buttonIconName.c_str(),&err);
-                }
-                if(pbPrelight) toDraw = pbPrelight;
-            }
-
-            break;
-
-            default:
-            toDraw = 0L;
-            break;
+            case GTK_STATE_ACTIVE: return Style::instance().tabCloseButton( Focus );
+            case GTK_STATE_PRELIGHT: return Style::instance().tabCloseButton( Hover );
+            default: break;
 
         }
 
-        // TODO: should the error be deallocated ?
-        if( err )
-        { std::cerr << "Oxygen::processTabCloseButton - " << err->message << std::endl; }
+        return 0L;
 
-        return toDraw;
     }
+
     //___________________________________________________________________________________________________________
     static void draw_box( GtkStyle* style,
         GdkWindow* window,
