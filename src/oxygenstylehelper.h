@@ -81,8 +81,8 @@ namespace Oxygen
         //!@name decoration specific helper functions
         //!
         //@{
-        virtual cairo_surface_t* windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
-        virtual cairo_surface_t* windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        virtual Cairo::Surface windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
+        virtual Cairo::Surface windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
         //@}
 
         //!@name slabs
@@ -92,8 +92,8 @@ namespace Oxygen
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        cairo_surface_t* roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
-        cairo_surface_t* roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+        Cairo::Surface roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
+        Cairo::Surface roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -126,7 +126,7 @@ namespace Oxygen
         const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
 
         //! progressbar indicator
-        cairo_surface_t* progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
+        Cairo::Surface progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
         const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -140,11 +140,11 @@ namespace Oxygen
         protected:
 
         //! create surface of given width and h
-        cairo_surface_t* createSurface( int w, int h ) const
+        Cairo::Surface createSurface( int w, int h ) const
         { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
 
         // separator
-        virtual cairo_surface_t* separator(const ColorUtils::Rgba &color, bool vertical, int size );
+        virtual Cairo::Surface separator(const ColorUtils::Rgba &color, bool vertical, int size );
 
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;

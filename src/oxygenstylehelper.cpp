@@ -40,7 +40,7 @@ namespace Oxygen
     {
 
         // get surface
-        cairo_surface_t* surface( separator( base, vertical, vertical ? h:w ) );
+        Cairo::Surface surface( separator( base, vertical, vertical ? h:w ) );
         if(!surface) return;
 
         // translate
@@ -57,13 +57,13 @@ namespace Oxygen
 
 
     //__________________________________________________________________
-    cairo_surface_t* StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
+    Cairo::Surface StyleHelper::separator( const ColorUtils::Rgba& base, bool vertical, int size )
     {
 
         if(size<=0) return 0L;
 
         const SeparatorKey key( base, vertical, size );
-        cairo_surface_t* surface( m_separatorCache.value(key) );
+        Cairo::Surface surface( m_separatorCache.value(key) );
 
         if( !surface )
         {
@@ -147,11 +147,11 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    cairo_surface_t* StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
+    Cairo::Surface StyleHelper::windecoButton(const ColorUtils::Rgba &base, bool pressed, int size)
     {
 
         const WindecoButtonKey key( base, size, pressed );
-        cairo_surface_t *surface( m_windecoButtonCache.value(key) );
+        Cairo::Surface surface( m_windecoButtonCache.value(key) );
 
         if( !surface )
         {
@@ -208,11 +208,11 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________
-    cairo_surface_t* StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
+    Cairo::Surface StyleHelper::windecoButtonGlow(const ColorUtils::Rgba &base, int size)
     {
 
         const WindecoButtonGlowKey key( base, size );
-        cairo_surface_t *surface( m_windecoButtonGlowCache.value(key) );
+        Cairo::Surface surface( m_windecoButtonGlowCache.value(key) );
 
         if( !surface )
         {
@@ -386,11 +386,11 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    cairo_surface_t* StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
+    Cairo::Surface StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
     {
 
         const SlabKey key( base, shade, size );
-        cairo_surface_t* surface( m_roundSlabCache.value( key ) );
+        Cairo::Surface surface( m_roundSlabCache.value( key ) );
         if( !surface )
         {
             const int w( 3*size );
@@ -415,11 +415,11 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________________________________________
-    cairo_surface_t* StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    Cairo::Surface StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
         SlabFocusedKey key( base, glow, shade, size );
-        cairo_surface_t* surface( m_roundSlabFocusedCache.value( key ) );
+        Cairo::Surface surface( m_roundSlabFocusedCache.value( key ) );
         if( !surface )
         {
 
@@ -838,11 +838,11 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    cairo_surface_t* StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
+    Cairo::Surface StyleHelper::progressBarIndicator(const ColorUtils::Rgba& base, const ColorUtils::Rgba& highlight, int w, int h )
     {
 
         ProgressBarIndicatorKey key( base, highlight, w, h );
-        cairo_surface_t* surface( m_progressBarIndicatorCache.value( key ) );
+        Cairo::Surface surface( m_progressBarIndicatorCache.value( key ) );
         if( !surface )
         {
 

@@ -22,6 +22,7 @@
 */
 
 #include "oxygencache.h"
+#include "oxygencairosurface.h"
 
 #include <cairo.h>
 
@@ -29,7 +30,7 @@ namespace Oxygen
 {
 
     template< typename T>
-    class CairoSurfaceCache: public Cache<T, cairo_surface_t*>
+    class CairoSurfaceCache: public Cache<T, Cairo::Surface>
     {
 
         public:
@@ -45,12 +46,12 @@ namespace Oxygen
         protected:
 
         //! erase value from map
-        virtual void erase( cairo_surface_t*& pixbuf )
-        { g_object_unref( pixbuf ); }
+        virtual void erase( Cairo::Surface& pixbuf )
+        {}
 
         //! default value
-        virtual cairo_surface_t* defaultValue( void ) const
-        { return 0L; }
+        virtual Cairo::Surface defaultValue( void ) const
+        { return Cairo::Surface(); }
 
     };
 

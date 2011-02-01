@@ -59,14 +59,14 @@ namespace Oxygen
             shadow=ColorUtils::Rgba(0,0,0);
         }
 
-        cairo_surface_t *windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
+        Cairo::Surface windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
         cairo_set_source_surface( context, windecoButtonGlow, 0, 0 );
         cairo_rectangle( context, 0, 0, w, h );
         cairo_fill( context );
 
         // draw button slab
         const bool pressed( _state == Pressed || _type==ButtonUnstick );
-        cairo_surface_t* windecoButton( helper().windecoButton( base, pressed, int(scale) ) );
+        Cairo::Surface windecoButton( helper().windecoButton( base, pressed, int(scale) ) );
         cairo_set_source_surface( context, windecoButton, 0, 0 );
         cairo_rectangle( context, 0, 0, w, h );
         cairo_fill( context );
