@@ -51,7 +51,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~Style( void )
-        { _instance = 0L; }
+        {}
 
         //! initialize
         void initialize( unsigned int flags = QtSettings::All );
@@ -87,6 +87,9 @@ namespace Oxygen
         //! window manager
         WindowManager& windowManager( void )
         { return _windowManager; }
+
+        //! return tabCloseButton for given set of options
+        GdkPixbuf* tabCloseButton( const StyleOptions& );
 
         //!@name primitives
         //@{
@@ -294,7 +297,8 @@ namespace Oxygen
         protected:
 
         //! constructor
-        explicit Style( void );
+        explicit Style( void )
+        {}
 
         //! get color matching role from either style option or default palette
         const ColorUtils::Rgba& color( Palette::Role role, const StyleOptions& option ) const
@@ -410,6 +414,39 @@ namespace Oxygen
 
         //! window manager
         WindowManager _windowManager;
+
+        //! Tab close buttons
+        class TabCloseButtons
+        {
+            public:
+
+            //! constructor
+            TabCloseButtons( void ):
+                normal(0L),
+                active(0L),
+                inactive(0L),
+                prelight(0L)
+            {}
+
+            //! destructor
+            virtual ~TabCloseButtons( void )
+            {
+
+                if( normal ) g_object_unref( normal );
+                if( active ) g_object_unref( active );
+                if( inactive ) g_object_unref( inactive );
+                if( prelight ) g_object_unref( prelight );
+
+            }
+
+            GdkPixbuf* normal;
+            GdkPixbuf* active;
+            GdkPixbuf* inactive;
+            GdkPixbuf* prelight;
+        };
+
+        //! Tab close buttons
+        TabCloseButtons _tabCloseButtons;
 
         //! singleton
         static Style* _instance;
