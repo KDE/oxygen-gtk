@@ -78,6 +78,10 @@ namespace Oxygen
             m_windecoButtonGlowCache.clear();
         }
 
+        //! access reference surface
+        const Cairo::Surface& refSurface( void ) const
+        { return _refSurface; }
+
         //!@name decoration specific helper functions
         //!
         //@{
