@@ -40,7 +40,7 @@ namespace Oxygen
     {
 
         // get surface
-        Cairo::Surface surface( separator( base, vertical, vertical ? h:w ) );
+        const Cairo::Surface& surface( separator( base, vertical, vertical ? h:w ) );
         if(!surface) return;
 
         // translate
