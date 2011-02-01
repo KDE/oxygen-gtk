@@ -78,6 +78,10 @@ namespace Oxygen
             m_windecoButtonGlowCache.clear();
         }
 
+        //! create surface from reference for given width and height
+        Cairo::Surface createSurface( int w, int h ) const
+        { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
+
         //! access reference surface
         const Cairo::Surface& refSurface( void ) const
         { return _refSurface; }
@@ -142,10 +146,6 @@ namespace Oxygen
         void renderDot( Cairo::Context&, const ColorUtils::Rgba&, int x, int y ) const;
 
         protected:
-
-        //! create surface of given width and h
-        Cairo::Surface createSurface( int w, int h ) const
-        { return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h ); }
 
         // separator
         virtual Cairo::Surface separator(const ColorUtils::Rgba &color, bool vertical, int size );
