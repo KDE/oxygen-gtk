@@ -116,11 +116,25 @@ namespace Oxygen
 
     //@}
 
+    //!@name surfaces
+    //@{
+
     //! get width for surface
     int cairo_surface_get_width( cairo_surface_t* );
 
     //! get height for surface
     int cairo_surface_get_height( cairo_surface_t* );
+
+    //! deep copy
+    cairo_surface_t* cairo_surface_copy( cairo_surface_t* );
+
+    //! alpha channel
+    void cairo_surface_add_alpha( cairo_surface_t*, double );
+
+    //! saturation
+    void cairo_image_surface_saturate( cairo_surface_t*, double );
+
+    //@}
 
 }
 

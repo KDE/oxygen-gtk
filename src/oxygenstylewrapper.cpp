@@ -496,7 +496,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________________________________________
-    GdkPixbuf* processTabCloseButton(GtkWidget* widget, GtkStateType state)
+    Cairo::Surface processTabCloseButton(GtkWidget* widget, GtkStateType state)
     {
 
         #if OXYGEN_DEBUG
@@ -804,7 +804,7 @@ namespace Oxygen
                     if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
                     { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
 
-                    if( GdkPixbuf* pixbuf = processTabCloseButton(widget,state) )
+                    if( Cairo::Surface surface = processTabCloseButton(widget,state) )
                     {
 
                         // hide previous image
@@ -813,14 +813,14 @@ namespace Oxygen
                         { gtk_widget_hide(image); }
 
                         // center the button image
-                        const int height( gdk_pixbuf_get_height( pixbuf ) );
-                        const int width( gdk_pixbuf_get_width( pixbuf ) );
+                        const int height( cairo_surface_get_height( surface ) );
+                        const int width( cairo_surface_get_width( surface ) );
                         x=x+(w-width)/2;
                         y=y+(h-height)/2;
 
                         // render the image
                         Cairo::Context context( window, clipRect );
-                        gdk_cairo_set_source_pixbuf( context, pixbuf, x, y);
+                        cairo_set_source_surface( context, surface, x, y);
                         cairo_paint(context);
 
                     }

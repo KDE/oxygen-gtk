@@ -89,7 +89,7 @@ namespace Oxygen
         { return _windowManager; }
 
         //! return tabCloseButton for given set of options
-        GdkPixbuf* tabCloseButton( const StyleOptions& );
+        Cairo::Surface tabCloseButton( const StyleOptions& );
 
         //!@name primitives
         //@{
@@ -427,19 +427,12 @@ namespace Oxygen
 
             //! destructor
             virtual ~TabCloseButtons( void )
-            {
+            {}
 
-                if( normal ) g_object_unref( normal );
-                if( active ) g_object_unref( active );
-                if( inactive ) g_object_unref( inactive );
-                if( prelight ) g_object_unref( prelight );
-
-            }
-
-            GdkPixbuf* normal;
-            GdkPixbuf* active;
-            GdkPixbuf* inactive;
-            GdkPixbuf* prelight;
+            Cairo::Surface normal;
+            Cairo::Surface active;
+            Cairo::Surface inactive;
+            Cairo::Surface prelight;
         };
 
         //! Tab close buttons
