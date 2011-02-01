@@ -78,18 +78,17 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    GdkPixbuf* Style::tabCloseButton( const StyleOptions& options )
+    Cairo::Surface Style::tabCloseButton( const StyleOptions& options )
     {
 
         // active tab
-        GError* err( 0L );
         if( options&Focus )
         {
             // create button
             if( !_tabCloseButtons.active )
             {
                 const std::string filename( std::string(GTK_THEME_DIR)+ "/special-icons/standardbutton-closetab-down-16.png" );
-                _tabCloseButtons.active = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+                _tabCloseButtons.active = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
             }
 
             return _tabCloseButtons.active;
@@ -102,7 +101,7 @@ namespace Oxygen
             if( !_tabCloseButtons.prelight )
             {
                 const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-hover-16.png" );
-                _tabCloseButtons.prelight = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+                _tabCloseButtons.prelight = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
             }
 
             return _tabCloseButtons.prelight;
@@ -113,7 +112,7 @@ namespace Oxygen
         if( !_tabCloseButtons.normal )
         {
             const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-16.png" );
-            _tabCloseButtons.normal = gdk_pixbuf_new_from_file( filename.c_str(), &err );
+            _tabCloseButtons.normal = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
         }
 
         // inactive
@@ -122,8 +121,12 @@ namespace Oxygen
 
             if( !_tabCloseButtons.inactive )
             {
-                _tabCloseButtons.inactive = Gtk::gdk_pixbuf_set_alpha( _tabCloseButtons.normal, 0.5 );
-                gdk_pixbuf_saturate_and_pixelate( _tabCloseButtons.inactive, _tabCloseButtons.inactive , 0.1, false );
+
+                // make deep copy of the normal image
+                _tabCloseButtons.inactive = Cairo::Surface( cairo_surface_copy( _tabCloseButtons.normal ) );
+                cairo_surface_add_alpha(  _tabCloseButtons.inactive, 0.5 );
+                cairo_image_surface_saturate( _tabCloseButtons.inactive, 0.1 );
+
             }
 
             return _tabCloseButtons.inactive;

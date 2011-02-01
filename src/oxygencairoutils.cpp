@@ -160,15 +160,15 @@ namespace Oxygen
     //_____________________________________________________
     int cairo_surface_get_width( cairo_surface_t* surface )
     {
-        const cairo_surface_type_t type( cairo_surface_get_type(surface) );
+        const cairo_surface_type_t type( cairo_surface_get_type( surface ) );
         switch( type )
         {
 
             case CAIRO_SURFACE_TYPE_IMAGE:
-            return cairo_image_surface_get_width(surface);
+            return cairo_image_surface_get_width( surface );
 
             case CAIRO_SURFACE_TYPE_XLIB:
-            return cairo_xlib_surface_get_width(surface);
+            return cairo_xlib_surface_get_width( surface );
 
             default:
             // FIXME: we don't expect any surfaces other than Image and Xlib
@@ -183,20 +183,101 @@ namespace Oxygen
     //_____________________________________________________
     int cairo_surface_get_height( cairo_surface_t* surface )
     {
-        const cairo_surface_type_t type( cairo_surface_get_type(surface) );
+        const cairo_surface_type_t type( cairo_surface_get_type( surface ) );
         switch( type )
         {
             case CAIRO_SURFACE_TYPE_IMAGE:
-            return cairo_image_surface_get_height(surface);
+            return cairo_image_surface_get_height( surface );
 
             case CAIRO_SURFACE_TYPE_XLIB:
-            return cairo_xlib_surface_get_height(surface);
+            return cairo_xlib_surface_get_height( surface );
 
             default:
             // FIXME: we don't expect any surfaces other than Image and Xlib
             // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
             std::cerr << "Oxygen::cairo_surface_get_height - unsupported type " << type << std::endl;
             return -1;
+
+        }
+
+    }
+
+    //__________________________________________________________________
+    cairo_surface_t* cairo_surface_copy( cairo_surface_t* source )
+    {
+
+        const int width( cairo_surface_get_width( source ) );
+        const int height( cairo_surface_get_height( source ) );
+        cairo_surface_t* dest = cairo_surface_create_similar( source, CAIRO_CONTENT_COLOR_ALPHA, width, height );
+
+        // create context on surface
+        cairo_t* context( cairo_create( dest ) );
+        cairo_set_source_surface( context, source, 0, 0 );
+        cairo_rectangle( context, 0, 0, width, height );
+        cairo_fill( context );
+
+        cairo_destroy( context );
+        return dest;
+
+    }
+
+    //__________________________________________________________________
+    void cairo_surface_add_alpha( cairo_surface_t* surface, double alpha )
+    {
+
+        // create context on surface
+        cairo_t* context( cairo_create( surface ) );
+        cairo_set_operator( context, CAIRO_OPERATOR_DEST_IN );
+        cairo_set_source_rgba( context, 1, 1, 1, alpha );
+        cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+        cairo_fill( context );
+        cairo_destroy( context );
+        return;
+
+    }
+
+    //__________________________________________________________________
+    void cairo_image_surface_saturate( cairo_surface_t* surface, double saturation )
+    {
+
+        // make sure right type is used
+        assert( cairo_surface_get_type( surface ) == CAIRO_SURFACE_TYPE_IMAGE );
+        assert( cairo_image_surface_get_format( surface ) == CAIRO_FORMAT_ARGB32 );
+
+
+        // dimensions and stride
+        const int width( cairo_image_surface_get_width( surface ) );
+        const int height( cairo_image_surface_get_width( surface ) );
+        const int stride( cairo_image_surface_get_stride( surface ) );
+        const int bytesPerPixel(4);
+
+        // data
+        unsigned char* data( cairo_image_surface_get_data( surface ) );
+        assert( data );
+
+        int t;
+        #define INTENSITY(r, g, b) ((r) * 0.30 + (g) * 0.59 + (b) * 0.11)
+        #define CLAMP_UCHAR(v) (t = (v), CLAMP (t, 0, 255))
+        #define SATURATE(v) ((1.0 - saturation) * intensity + saturation * (v))
+
+        unsigned char* line(data);
+        unsigned char* pixel(data);
+
+        for( int i = 0 ; i < height ; i++ )
+        {
+
+            pixel = line;
+            line += stride;
+
+            for( int j = 0 ; j < width ; j++ )
+            {
+                unsigned char intensity = INTENSITY( pixel[0], pixel[1], pixel[2] );
+                pixel[0] = CLAMP_UCHAR( SATURATE( pixel[0] ) );
+                pixel[1] = CLAMP_UCHAR( SATURATE( pixel[1] ) );
+                pixel[2] = CLAMP_UCHAR( SATURATE( pixel[2] ) );
+                pixel += bytesPerPixel;
+
+            }
 
         }
 
