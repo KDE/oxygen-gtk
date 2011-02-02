@@ -762,9 +762,16 @@ namespace Oxygen
     bool Gtk::gtk_scrolled_window_force_sunken( GtkWidget* widget)
     {
 
-        return
-            ( GTK_IS_BIN( widget ) && GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( widget ) ) ) ) ||
-            g_object_is_a( G_OBJECT( widget ), "FMIconView" );
+        // FMIconView (from nautilus) always get sunken
+        if( g_object_is_a( G_OBJECT( widget ), "FMIconView" ) ) return true;
+
+        // other checks require widget to be of type GtkBin
+        if( !GTK_IS_BIN( widget ) ) return false;
+
+        // retrieve child
+        GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_ICON_VIEW( child ) ) return true;
+        else return false;
 
     }
 
