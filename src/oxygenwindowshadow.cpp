@@ -44,7 +44,6 @@ namespace Oxygen
 
         if( !tileSet )
         {
-            std::cerr << "drawing shadow tileset\n";
             const double size( shadowSize() );
             tileSet = new TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 );
 
