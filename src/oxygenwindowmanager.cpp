@@ -93,6 +93,18 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        /*
+        check event mask (for now we only need to do that for GtkWindow.
+        The idea is that if the window has been set to recieve button_press and button_release events
+        (which is not done by default), it likely means that it does something with such events,
+        in which case we should not use them for grabbing
+        */
+        if(
+            GTK_IS_WINDOW( widget ) &&
+            (gtk_widget_get_events ( widget ) &
+            (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) )
+        { return; }
+
         // Force widget to listen to relevant events
         gtk_widget_add_events( widget,
             GDK_BUTTON_RELEASE_MASK |
