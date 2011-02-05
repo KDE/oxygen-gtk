@@ -19,6 +19,7 @@
 */
 
 #include "oxygencairoutils.h"
+#include "oxygencairocontext.h"
 #include "oxygenrgba.h"
 #include <cairo/cairo-xlib.h>
 
@@ -171,11 +172,14 @@ namespace Oxygen
             return cairo_xlib_surface_get_width( surface );
 
             default:
-            // FIXME: we don't expect any surfaces other than Image and Xlib
-            // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
-            std::cerr << "Oxygen::cairo_surface_get_width - unsupported type " << type << std::endl;
-            return -1;
-
+            {
+                // This is less efficient, still makes rendering correct
+                std::cerr << "Oxygen::cairo_surface_get_width: warning: using cairo_clip_extents to determine surface width. Surface type: " << type << std::endl;
+                Cairo::Context context(surface);
+                double x1,x2,dummy;
+                cairo_clip_extents(context,&x1,&dummy,&x2,&dummy);
+                return int(x2-x1);
+            }
         }
 
     }
@@ -193,11 +197,14 @@ namespace Oxygen
             return cairo_xlib_surface_get_height( surface );
 
             default:
-            // FIXME: we don't expect any surfaces other than Image and Xlib
-            // Do we need to implement a cairo_create + cairo_clip_extents fallback for unexpected surfaces?
-            std::cerr << "Oxygen::cairo_surface_get_height - unsupported type " << type << std::endl;
-            return -1;
-
+            {
+                // This is less efficient, still makes rendering correct
+                std::cerr << "Oxygen::cairo_surface_get_height: warning: using cairo_clip_extents to determine surface height. Surface type: " << type << std::endl;
+                Cairo::Context context(surface);
+                double y1,y2,dummy;
+                cairo_clip_extents(context,&dummy,&y1,&dummy,&y2);
+                return int(y2-y1);
+            }
         }
 
     }
