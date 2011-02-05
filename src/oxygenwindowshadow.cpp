@@ -20,6 +20,7 @@
 */
 
 #include "oxygenwindowshadow.h"
+#include "oxygencachekey.h"
 #include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
 
@@ -29,20 +30,28 @@ namespace Oxygen
     //________________________________________________________________________________
     void WindowShadow::render(cairo_t* cr, gint x, gint y, gint w, gint h)
     {
-        // FIXME: is this correct color
         ColorUtils::Rgba background = settings().palette().color(Palette::Window);
-        tileSet( background, _wopt&WinDeco::Active).render( cr, x, y, w, h, TileSet::Full );
+        WindowShadowKey key;
+        key.active=_wopt&WinDeco::Active;
+        tileSet( background, key)->render( cr, x, y, w, h, TileSet::Full );
     }
 
     //________________________________________________________________________________
-    TileSet WindowShadow::tileSet(const ColorUtils::Rgba& color, double opacity)
+    TileSet* WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey& key)
     {
-        // TODO: implement real opacity to get animated transition from active to inactive
-        // For now, opacity==0 means inactive, otherwise active
-        const double size( shadowSize() );
-        return TileSet(
-            shadowPixmap( color, opacity ),
-            int(size), int(size), 1, 1 );
+        // check if tileset already in cache
+        TileSet* tileSet = helper().m_windowShadowCache.value(key);
+
+        if( !tileSet )
+        {
+            std::cerr << "drawing shadow tileset\n";
+            const double size( shadowSize() );
+            tileSet = new TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 );
+
+            helper().m_windowShadowCache.insert(key,tileSet);
+        }
+
+        return tileSet;
 
     }
 

@@ -32,7 +32,7 @@ namespace Oxygen
 {
     class WindowShadow
     {
-        // TODO: implement caching of tilesets and opacity
+        // TODO: implement opacity
         public:
 
         //! constructor
@@ -52,7 +52,7 @@ namespace Oxygen
         //! simple pixmap
         Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
 
-        TileSet tileSet(const ColorUtils::Rgba& color, double);
+        TileSet* tileSet(const ColorUtils::Rgba& color, WindowShadowKey&);
 
         void setWindowState(WinDeco::Options wopt)
         { _wopt=wopt; }

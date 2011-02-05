@@ -37,8 +37,11 @@ namespace Oxygen
     namespace ColorUtils
     { class Rgba; }
 
+    class WindowShadow;
+
     class StyleHelper
     {
+        friend class WindowShadow;
 
         public:
 
@@ -76,6 +79,7 @@ namespace Oxygen
             m_progressBarIndicatorCache.clear();
             m_windecoButtonCache.clear();
             m_windecoButtonGlowCache.clear();
+            m_windowShadowCache.clear();
         }
 
         //! create surface from reference for given width and height
@@ -242,6 +246,9 @@ namespace Oxygen
 
         //! decoration glow
         CairoSurfaceCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+
+        //! decoration shadow
+        TileSetCache<WindowShadowKey> m_windowShadowCache;
 
         //@}
 

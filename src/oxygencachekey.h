@@ -574,6 +574,69 @@ namespace Oxygen
 
     };
 
+    //! key for window shadows
+    /*! keys are used to store tilesets into cache */
+    class WindowShadowKey
+    {
+
+        public:
+
+        //! explicit constructor
+        explicit WindowShadowKey( void ):
+            active(false),
+            useOxygenShadows(true),
+            isShade(false),
+            hasTitleOutline(false),
+            hasBorder( true )
+        {}
+
+        //! constructor from int
+        WindowShadowKey( int hash ):
+            active( (hash>>4)&1 ),
+            useOxygenShadows( (hash>>3)&1 ),
+            isShade( (hash>>2)&1 ),
+            hasTitleOutline( (hash>>1)&1 ),
+            hasBorder( hash&1 )
+        {}
+
+        //! hash function
+        int hash( void ) const
+        {
+
+            // note this can be optimized because not all of the flag configurations are actually relevant
+            // allocate 3 empty bits for flags
+            return
+                ( active << 4 ) |
+                (useOxygenShadows << 3 ) |
+                (isShade<<2) |
+                (hasTitleOutline<<1) |
+                (hasBorder<<0);
+
+        }
+
+        //! equal to operator
+        bool operator == (const WindowShadowKey& other) const
+        {
+            return hash() == other.hash();
+        }
+
+        //! less than operator
+        bool operator < (const WindowShadowKey& other) const
+        {
+            if( active != other.active ) return active < other.active;
+            else if( useOxygenShadows != other.useOxygenShadows ) return useOxygenShadows < other.useOxygenShadows;
+            else if( isShade != other.isShade ) return isShade < other.isShade;
+            else if( hasTitleOutline != other.hasTitleOutline ) return hasTitleOutline < other.hasTitleOutline;
+            else return hasBorder < other.hasBorder;
+        }
+
+        bool active;
+        bool useOxygenShadows;
+        bool isShade;
+        bool hasTitleOutline;
+        bool hasBorder;
+
+    };
 
 }
 
