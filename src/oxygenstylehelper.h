@@ -79,6 +79,10 @@ namespace Oxygen
             m_windowShadowCache.clear();
             m_verticalGradientCache.clear();
             m_radialGradientCache.clear();
+            m_windecoLeftBorderCache.clear();
+            m_windecoRightBorderCache.clear();
+            m_windecoTopBorderCache.clear();
+            m_windecoBottomBorderCache.clear();
         }
 
         //! create surface from reference for given width and height
@@ -156,10 +160,18 @@ namespace Oxygen
         //! dots
         void renderDot( cairo_t*, const ColorUtils::Rgba&, int x, int y ) const;
 
-        //! give access to window shadow cache
-        /*! needed to oxygenwindowshadow */
+        //! give access to windeco caches
+        /*! needed to oxygenwindowshadow and drawWindowDecoration() */
         TileSetCache<WindowShadowKey>& windowShadowCache( void )
         { return m_windowShadowCache; }
+        CairoSurfaceCache<WindecoLeftBorderKey>& windecoLeftBorderCache( void )
+        { return m_windecoLeftBorderCache; }
+        CairoSurfaceCache<WindecoRightBorderKey>& windecoRightBorderCache( void )
+        { return m_windecoRightBorderCache; }
+        CairoSurfaceCache<WindecoTopBorderKey>& windecoTopBorderCache( void )
+        { return m_windecoTopBorderCache; }
+        CairoSurfaceCache<WindecoBottomBorderKey>& windecoBottomBorderCache( void )
+        { return m_windecoBottomBorderCache; }
 
         protected:
 
@@ -264,6 +276,12 @@ namespace Oxygen
 
         //! window backgound radial gradient
         CairoSurfaceCache<RadialGradientKey> m_radialGradientCache;
+
+        //! windeco borders
+        CairoSurfaceCache<WindecoLeftBorderKey> m_windecoLeftBorderCache;
+        CairoSurfaceCache<WindecoRightBorderKey> m_windecoRightBorderCache;
+        CairoSurfaceCache<WindecoTopBorderKey> m_windecoTopBorderCache;
+        CairoSurfaceCache<WindecoBottomBorderKey> m_windecoBottomBorderCache;
 
         //@}
 

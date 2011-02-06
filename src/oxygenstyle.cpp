@@ -2193,7 +2193,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2221,6 +2221,132 @@ namespace Oxygen
         {
             ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
             renderWindowDots( context, x, y, w, h, base, wopt);
+        }
+    }
+
+    //__________________________________________________________________
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    {
+        /*
+           caches layout:
+               left&right border height: h
+               top&bottom border width: w-BorderLeft-BorderRight
+        */
+        WindecoBorderKey key(wopt,w,h);
+
+        {
+            // draw left border with cache
+            Cairo::Surface left( helper().windecoLeftBorderCache().value(key) );
+            int sw=WinDeco::getMetric(WinDeco::BorderLeft);
+
+            if( !left )
+            {
+#if OXYGEN_DEBUG
+                std::cerr<<"drawWindowDecoration: drawing left border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+#endif
+                left=helper().createSurface(sw,h);
+
+                Cairo::Context context(left);
+                renderWindowDecoration( context, wopt, 0, 0, w, h );
+
+                helper().windecoLeftBorderCache().insert(key,left);
+            }
+#if OXYGEN_DEBUG
+            else
+                std::cerr << "drawWindowDecoration: using saved left border" << std::endl;
+#endif
+
+            cairo_set_source_surface(context, left, x, y);
+            cairo_rectangle(context,x,y,sw,h);
+            cairo_fill(context);
+        }
+
+        {
+            // draw right border with cache
+            Cairo::Surface right( helper().windecoRightBorderCache().value(key) );
+            int sw=WinDeco::getMetric(WinDeco::BorderRight);
+
+            if( !right )
+            {
+#if OXYGEN_DEBUG
+                std::cerr<<"drawWindowDecoration: drawing right border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+#endif
+                right=helper().createSurface(sw,h);
+
+                Cairo::Context context(right);
+                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h );
+
+                helper().windecoRightBorderCache().insert(key,right);
+            }
+#if OXYGEN_DEBUG
+            else
+                std::cerr << "drawWindowDecoration: using saved right border" << std::endl;
+#endif
+
+            cairo_set_source_surface(context, right, x+w-sw, y);
+            cairo_rectangle(context,x+w-sw,y,sw,h);
+            cairo_fill(context);
+        }
+
+        {
+            // draw top border with cache
+            Cairo::Surface top( helper().windecoTopBorderCache().value(key) );
+            int left=WinDeco::getMetric(WinDeco::BorderLeft);
+            int right=WinDeco::getMetric(WinDeco::BorderRight);
+            int sh=WinDeco::getMetric(WinDeco::BorderTop);
+            int sw=w-left-right;
+
+            if( !top )
+            {
+#if OXYGEN_DEBUG
+                std::cerr<<"drawWindowDecoration: drawing top border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+#endif
+                top=helper().createSurface(sw,sh);
+
+                Cairo::Context context(top);
+                renderWindowDecoration( context, wopt, -left, 0, w, h );
+
+                helper().windecoTopBorderCache().insert(key,top);
+            }
+#if OXYGEN_DEBUG
+            else
+                std::cerr << "drawWindowDecoration: using saved top border" << std::endl;
+#endif
+
+            cairo_set_source_surface(context, top, x+left, y);
+            cairo_rectangle(context,x+left,y,sw,sh);
+            cairo_fill(context);
+        }
+
+        {
+            // draw bottom border with cache
+            Cairo::Surface bottom( helper().windecoBottomBorderCache().value(key) );
+            int left=WinDeco::getMetric(WinDeco::BorderLeft);
+            int right=WinDeco::getMetric(WinDeco::BorderRight);
+            int sh=WinDeco::getMetric(WinDeco::BorderBottom);
+            int sw=w-left-right;
+            int Y=y+h-sh;
+
+            if( !bottom)
+            {
+#if OXYGEN_DEBUG
+                std::cerr<<"drawWindowDecoration: drawing bottom border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+#endif
+                bottom=helper().createSurface(sw,sh);
+
+                Cairo::Context context(bottom);
+                renderWindowDecoration( context, wopt, -left, y-Y, w, h );
+
+                helper().windecoBottomBorderCache().insert(key,bottom);
+            }
+#if OXYGEN_DEBUG
+            else
+                std::cerr << "drawWindowDecoration: using saved bottom border" << std::endl;
+#endif
+
+            cairo_set_source_surface(context, bottom, x+left, Y);
+            cairo_rectangle(context,x+left,Y,sw,sh);
+            cairo_fill(context);
         }
     }
 

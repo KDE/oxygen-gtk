@@ -22,6 +22,7 @@
 */
 
 #include "oxygenrgba.h"
+#include "oxygenwindecooptions.h"
 
 namespace Oxygen
 {
@@ -680,6 +681,47 @@ namespace Oxygen
 
     //! key for window background radial gradient
     typedef VerticalGradientKey RadialGradientKey;
+
+    //! key for left windeco border
+    class WindecoBorderKey
+    {
+        public:
+
+        //! constructor
+        WindecoBorderKey( WinDeco::Options wopt, const int width, const int height ):
+            _wopt(wopt),
+            _width(width),
+            _height(height)
+        {}
+
+        //! equal to operator
+        bool operator == (const WindecoBorderKey& other) const
+        {
+            return _width == other._width &&
+                _height == other._height &&
+                _wopt == other._wopt;
+        }
+
+        //! less than operator
+        bool operator < (const WindecoBorderKey& other) const
+        {
+            if( _width != other._width ) return _width < other._width;
+            else if( _height != other._height ) return _height < other._height;
+            else return _wopt < other._wopt;
+        }
+
+        private:
+
+        WinDeco::Options _wopt;
+        int _width;
+        int _height;
+    };
+
+    //! key for other windeco borders
+    typedef WindecoBorderKey WindecoLeftBorderKey;
+    typedef WindecoBorderKey WindecoRightBorderKey;
+    typedef WindecoBorderKey WindecoTopBorderKey;
+    typedef WindecoBorderKey WindecoBottomBorderKey;
 
 }
 
