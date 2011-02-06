@@ -1127,14 +1127,12 @@ namespace Oxygen
         {
 
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
-            cairo_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1 );
 
         } else {
 
             if( h > 20.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 1.0 - 12.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             else if( h > 8.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 3.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
-            cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, 3.5 );
 
         }
 
