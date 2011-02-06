@@ -267,6 +267,36 @@ namespace Oxygen
     }
 
     //_________________________________________________
+    const Cairo::Surface& StyleHelper::verticalGradient( const ColorUtils::Rgba& base, int height )
+    {
+
+        const VerticalGradientKey key( base, height );
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_verticalGradientCache.value(key) )
+        { return surface; }
+
+        // cached not found, create new
+        Cairo::Surface surface( createSurface( height, 32 ) );
+
+        {
+            ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
+            ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, height ) );
+            cairo_pattern_add_color_stop( pattern, 0, top );
+            cairo_pattern_add_color_stop( pattern, 0.5, base );
+            cairo_pattern_add_color_stop( pattern, 1, bottom );
+
+            Cairo::Context context( surface );
+            cairo_set_source( context, pattern );
+            cairo_rectangle( context, 0, 0, height, 32 );
+            cairo_fill( context );
+        }
+
+        return m_verticalGradientCache.insert( key, surface );
+    }
+
+    //_________________________________________________
     const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, double shade, int size)
     {
 
