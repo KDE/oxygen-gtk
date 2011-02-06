@@ -26,7 +26,7 @@
 #include "oxygentileset.h"
 #include "oxygentilesetcache.h"
 
-#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
@@ -43,15 +43,20 @@ namespace Oxygen
         public:
 
         //! constructor
-        StyleHelper( void ):
-            // for now we use a Cairo_image_surface for reference.
-            // will try using a cairo_x11_surface later
-            _refSurface( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, 1, 1 ) )
-        {}
+        StyleHelper( void )
+        {
+            GtkWidget* window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+            gtk_widget_realize(window);
+            Cairo::Context context(window->window);
+            _refSurface=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_ALPHA,1,1);
+            gtk_widget_destroy(window);
+        }
 
         //! destructor
         virtual ~StyleHelper( void )
-        {}
+        {
+            cairo_surface_destroy(_refSurface);
+        }
 
         //! separators
         void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
@@ -88,7 +93,7 @@ namespace Oxygen
         }
 
         //! access reference surface
-        const Cairo::Surface& refSurface( void ) const
+        const cairo_surface_t* refSurface( void ) const
         { return _refSurface; }
 
         //!@name decoration specific helper functions
@@ -194,7 +199,7 @@ namespace Oxygen
         //@}
 
         //! reference surface for all later surface creations
-        Cairo::Surface _refSurface;
+        cairo_surface_t* _refSurface;
 
         //!@name caches
         //@{
