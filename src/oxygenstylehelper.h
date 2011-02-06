@@ -100,7 +100,7 @@ namespace Oxygen
         //!@name window background cache
         //@{
         const Cairo::Surface& verticalGradient( const ColorUtils::Rgba&, int );
-        const Cairo::Surface& radialGradient( const ColorUtils::Rgba&, int, int, int );
+        const Cairo::Surface& radialGradient( const ColorUtils::Rgba&, int );
         //@}
 
         //!@name slabs
