@@ -48,15 +48,13 @@ namespace Oxygen
             GtkWidget* window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
             gtk_widget_realize(window);
             Cairo::Context context(window->window);
-            _refSurface=cairo_surface_create_similar(cairo_get_target(context),CAIRO_CONTENT_ALPHA,1,1);
+            _refSurface = Cairo::Surface( cairo_surface_create_similar( cairo_get_target(context),CAIRO_CONTENT_ALPHA, 1, 1 ) );
             gtk_widget_destroy(window);
         }
 
         //! destructor
         virtual ~StyleHelper( void )
-        {
-            cairo_surface_destroy(_refSurface);
-        }
+        {}
 
         //! separators
         void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
@@ -96,10 +94,6 @@ namespace Oxygen
             if( w <= 0 || h <= 0 ) return 0L;
             else return cairo_surface_create_similar( _refSurface, CAIRO_CONTENT_COLOR_ALPHA, w, h );
         }
-
-        //! access reference surface
-        const cairo_surface_t* refSurface( void ) const
-        { return _refSurface; }
 
         //!@name decoration specific helper functions
         //@{
@@ -165,20 +159,32 @@ namespace Oxygen
         //! dots
         void renderDot( cairo_t*, const ColorUtils::Rgba&, int x, int y ) const;
 
-        //! give access to windeco caches
+        //!@name windeco caches
+        //@{
+
         /*! needed to oxygenwindowshadow and drawWindowDecoration() */
         TileSetCache<WindowShadowKey>& windowShadowCache( void )
         { return m_windowShadowCache; }
+
         CairoSurfaceCache<WindecoLeftBorderKey>& windecoLeftBorderCache( void )
         { return m_windecoLeftBorderCache; }
+
         CairoSurfaceCache<WindecoRightBorderKey>& windecoRightBorderCache( void )
         { return m_windecoRightBorderCache; }
+
         CairoSurfaceCache<WindecoTopBorderKey>& windecoTopBorderCache( void )
         { return m_windecoTopBorderCache; }
+
         CairoSurfaceCache<WindecoBottomBorderKey>& windecoBottomBorderCache( void )
         { return m_windecoBottomBorderCache; }
 
+        //@}
+
         protected:
+
+        //! access reference surface
+        const Cairo::Surface& refSurface( void ) const
+        { return _refSurface; }
 
         // separator
         const Cairo::Surface& separator(const ColorUtils::Rgba &color, bool vertical, int size );
@@ -217,7 +223,7 @@ namespace Oxygen
         //@}
 
         //! reference surface for all later surface creations
-        cairo_surface_t* _refSurface;
+        Cairo::Surface _refSurface;
 
         //!@name caches
         //@{
@@ -282,7 +288,11 @@ namespace Oxygen
         //! window backgound radial gradient
         CairoSurfaceCache<RadialGradientKey> m_radialGradientCache;
 
-        //! windeco borders
+        //@}
+
+        //!@name windeco borders
+        //@{
+
         CairoSurfaceCache<WindecoLeftBorderKey> m_windecoLeftBorderCache;
         CairoSurfaceCache<WindecoRightBorderKey> m_windecoRightBorderCache;
         CairoSurfaceCache<WindecoTopBorderKey> m_windecoTopBorderCache;
