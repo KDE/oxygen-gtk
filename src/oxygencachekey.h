@@ -574,6 +574,48 @@ namespace Oxygen
 
     };
 
+    //! key for window background vertical gradient
+    class VerticalGradientKey
+    {
+        public:
+
+        //! constructor
+        VerticalGradientKey( const ColorUtils::Rgba& color, int size ):
+            _color( color.toInt() ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const VerticalGradientKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const VerticalGradientKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const VerticalGradientKey& key )
+        {
+            out << "VerticalGradientKey - color: " << key._color << " size: " << key._size;
+            return out;
+        }
+
+    };
+
+    //! key for window background radial gradient
+    typedef VerticalGradientKey RadialGradientKey;
 
 }
 
