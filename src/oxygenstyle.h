@@ -113,12 +113,12 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center ) const;
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
 
-        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center ) const
+        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
         { return renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
 
-        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center) const
+        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
         { return renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
@@ -128,7 +128,7 @@ namespace Oxygen
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
-        void renderHeaderBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+        void renderHeaderBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint );
 
         //! tree view header
         void renderHeaderLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
@@ -138,7 +138,7 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring ) const;
+        bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -332,12 +332,6 @@ namespace Oxygen
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
-
-        //! vertical window background gradient
-        cairo_pattern_t* verticalGradient( const ColorUtils::Rgba&, int, int ) const;
-
-        //! radial window background gradient
-        cairo_pattern_t* radialGradient( const ColorUtils::Rgba&, int, int, int ) const;
 
         //@}
 

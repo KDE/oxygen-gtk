@@ -175,7 +175,7 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles ) const
+        const StyleOptions& options, TileSet::Tiles tiles )
     {
 
         bool needToDestroyContext;
@@ -295,10 +295,10 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
-            Cairo::Pattern pattern( verticalGradient( base, 0, splitY ) );
-
+            const Cairo::Surface& surface( helper().verticalGradient( base, splitY ) );
+            cairo_set_source_surface( context, surface, 0, 0 );
+            cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
             gdk_cairo_rectangle( context, &upperRect );
-            cairo_set_source( context, pattern );
             cairo_fill( context );
 
         }
@@ -323,19 +323,17 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
         {
 
-            // get pattern
-            Cairo::Pattern pattern( radialGradient( base, 64, patternHeight - 64, 64 ) );
+            const Cairo::Surface& surface( helper().radialGradient( base, 64 ) );
+            cairo_set_source_surface( context, surface, 0, 0 );
 
             // add matrix transformation
             cairo_matrix_t transformation;
             cairo_matrix_init_identity( &transformation );
             cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
             cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
-            cairo_pattern_set_matrix( pattern, &transformation );
+            cairo_pattern_set_matrix( cairo_get_source( context ), &transformation );
 
-            // fill
             gdk_cairo_rectangle( context, &radialRect );
-            cairo_set_source( context, pattern );
             cairo_fill( context );
 
         }
@@ -476,7 +474,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderHeaderBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    void Style::renderHeaderBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h )
     {
 
         // load color
@@ -641,7 +639,7 @@ namespace Oxygen
     bool Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, TileSet::Tiles tiles ) const
+        gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
@@ -3128,32 +3126,6 @@ namespace Oxygen
 
 
 
-    }
-
-    //__________________________________________________________________
-    cairo_pattern_t* Style::verticalGradient( const ColorUtils::Rgba& base, int y1, int y2 ) const
-    {
-
-        ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
-        ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
-        cairo_pattern_t* pattern = cairo_pattern_create_linear( 0, y1, 0, y2 );
-        cairo_pattern_add_color_stop( pattern, 0, top );
-        cairo_pattern_add_color_stop( pattern, 0.5, base );
-        cairo_pattern_add_color_stop( pattern, 1, bottom );
-        return pattern;
-    }
-
-    //__________________________________________________________________
-    cairo_pattern_t* Style::radialGradient( const ColorUtils::Rgba& base, int x, int y, int r ) const
-    {
-        // create radial pattern
-        ColorUtils::Rgba radial( ColorUtils::backgroundRadialColor( base ) );
-        cairo_pattern_t* pattern( cairo_pattern_create_radial( x, y, r ) );
-        cairo_pattern_add_color_stop( pattern, 0, radial );
-        cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( radial, 101.0/255 ) );
-        cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( radial, 37.0/255 ) );
-        cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( radial, 0 ) );
-        return pattern;
     }
 
     //__________________________________________________________________

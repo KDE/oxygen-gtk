@@ -76,6 +76,8 @@ namespace Oxygen
             m_progressBarIndicatorCache.clear();
             m_windecoButtonCache.clear();
             m_windecoButtonGlowCache.clear();
+            m_verticalGradientCache.clear();
+            m_radialGradientCache.clear();
         }
 
         //! create surface from reference for given width and height
@@ -90,10 +92,15 @@ namespace Oxygen
         { return _refSurface; }
 
         //!@name decoration specific helper functions
-        //!
         //@{
         const Cairo::Surface& windecoButton(const ColorUtils::Rgba &color, bool pressed, int size = 21);
         const Cairo::Surface& windecoButtonGlow(const ColorUtils::Rgba &color, int size = 21);
+        //@}
+
+        //!@name window background cache
+        //@{
+        const Cairo::Surface& verticalGradient( const ColorUtils::Rgba&, int );
+        const Cairo::Surface& radialGradient( const ColorUtils::Rgba&, int );
         //@}
 
         //!@name slabs
@@ -242,6 +249,12 @@ namespace Oxygen
 
         //! decoration glow
         CairoSurfaceCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+
+        //! window backgound vertical gradient
+        CairoSurfaceCache<VerticalGradientKey> m_verticalGradientCache;
+
+        //! window backgound radial gradient
+        CairoSurfaceCache<RadialGradientKey> m_radialGradientCache;
 
         //@}
 
