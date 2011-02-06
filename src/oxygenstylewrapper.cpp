@@ -879,19 +879,27 @@ namespace Oxygen
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
                 // add mask if needed
-                if( !(options&Alpha) && GTK_IS_MENU(widget) )
+                if( GTK_IS_MENU(widget) )
                 {
-
-                    // make menus appear rounded using XShape extension if screen isn't composited
-                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                    const GtkAllocation& allocation( widget->allocation );
-                    if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                    if( !(options&Alpha) )
                     {
-                        GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
-                        gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
-                        gdk_pixmap_unref(mask);
-                    }
 
+                        // make menus appear rounded using XShape extension if screen isn't composited
+                        Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                        const GtkAllocation& allocation( widget->allocation );
+                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                        {
+                            GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
+                            gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
+                            gdk_pixmap_unref(mask);
+                        }
+
+                    }
+                    else
+                    {
+                        // reset mask if compositing has appeared after we had set a mask
+                        gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), NULL, 0, 0);
+                    }
                 }
 
                 // if render
