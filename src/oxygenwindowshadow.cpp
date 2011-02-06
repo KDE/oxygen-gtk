@@ -33,24 +33,19 @@ namespace Oxygen
         ColorUtils::Rgba background = settings().palette().color(Palette::Window);
         WindowShadowKey key;
         key.active=_wopt&WinDeco::Active;
-        tileSet( background, key)->render( cr, x, y, w, h, TileSet::Full );
+        tileSet( background, key).render( cr, x, y, w, h, TileSet::Full );
     }
 
     //________________________________________________________________________________
-    TileSet* WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey& key)
+    const TileSet& WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey& key)
     {
+
         // check if tileset already in cache
-        TileSet* tileSet = helper().windowShadowCache().value(key);
+        const TileSet& tileSet( helper().windowShadowCache().value(key) );
+        if( tileSet.isValid() ) return tileSet;
 
-        if( !tileSet )
-        {
-            const double size( shadowSize() );
-            tileSet = new TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 );
-
-            helper().windowShadowCache().insert(key,tileSet);
-        }
-
-        return tileSet;
+        const double size( shadowSize() );
+        return helper().windowShadowCache().insert(key, TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 ) );
 
     }
 
