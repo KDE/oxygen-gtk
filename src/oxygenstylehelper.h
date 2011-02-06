@@ -37,11 +37,8 @@ namespace Oxygen
     namespace ColorUtils
     { class Rgba; }
 
-    class WindowShadow;
-
     class StyleHelper
     {
-        friend class WindowShadow;
 
         public:
 
@@ -151,6 +148,11 @@ namespace Oxygen
 
         //! dots
         void renderDot( cairo_t*, const ColorUtils::Rgba&, int x, int y ) const;
+
+        //! give access to window shadow cache
+        /*! needed to oxygenwindowshadow */
+        TileSetCache<WindowShadowKey>& windowShadowCache( void )
+        { return m_windowShadowCache; }
 
         protected:
 

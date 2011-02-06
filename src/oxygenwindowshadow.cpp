@@ -40,14 +40,14 @@ namespace Oxygen
     TileSet* WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey& key)
     {
         // check if tileset already in cache
-        TileSet* tileSet = helper().m_windowShadowCache.value(key);
+        TileSet* tileSet = helper().windowShadowCache().value(key);
 
         if( !tileSet )
         {
             const double size( shadowSize() );
             tileSet = new TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 );
 
-            helper().m_windowShadowCache.insert(key,tileSet);
+            helper().windowShadowCache().insert(key,tileSet);
         }
 
         return tileSet;
