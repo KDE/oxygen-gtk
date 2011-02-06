@@ -2201,7 +2201,6 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::drawWindowShadow( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
     {
-        cairo_save( context );
         cairo_set_source_rgba( context, 0, 0, 0, 0 );
         cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
         cairo_paint( context );
