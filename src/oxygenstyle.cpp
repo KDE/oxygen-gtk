@@ -30,8 +30,6 @@
 #include <algorithm>
 #include <cmath>
 
-#define OXYGEN_USE_CACHE 1
-
 namespace Oxygen
 {
 
@@ -313,18 +311,11 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
-            #if OXYGEN_USE_CACHE
             const Cairo::Surface& surface( helper().verticalGradient( base, splitY ) );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
             gdk_cairo_rectangle( context, &upperRect );
             cairo_fill( context );
-            #else
-            Cairo::Pattern pattern( verticalGradient( base, splitY ) );
-            gdk_cairo_rectangle( context, &upperRect );
-            cairo_set_source( context, pattern );
-            cairo_fill( context );
-            #endif
 
         }
 
@@ -348,7 +339,6 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
         {
 
-            #if OXYGEN_USE_CACHE
             const Cairo::Surface& surface( helper().radialGradient( base, 64 ) );
             cairo_set_source_surface( context, surface, 0, 0 );
 
@@ -361,24 +351,6 @@ namespace Oxygen
 
             gdk_cairo_rectangle( context, &radialRect );
             cairo_fill( context );
-
-            #else
-
-            // get pattern
-            Cairo::Pattern pattern( radialGradient( base, 64 ) );
-
-            // add matrix transformation
-            cairo_matrix_t transformation;
-            cairo_matrix_init_identity( &transformation );
-            cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
-            cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
-            cairo_pattern_set_matrix( pattern, &transformation );
-
-            // fill
-            gdk_cairo_rectangle( context, &radialRect );
-            cairo_set_source( context, pattern );
-            cairo_fill( context );
-            #endif
 
         }
 
@@ -1169,14 +1141,12 @@ namespace Oxygen
         {
 
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( dark, 0 ) );
-            cairo_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1 );
 
         } else {
 
             if( h > 20.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 1.0 - 12.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             else if( h > 8.5 ) cairo_pattern_add_color_stop( pattern, std::max( 0.0, 3.0/( double(h)-5.5 ) ), ColorUtils::alphaColor( light, 0.5 ) );
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
-            cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, 3.5 );
 
         }
 
@@ -3294,32 +3264,6 @@ namespace Oxygen
 
 
 
-    }
-
-    //__________________________________________________________________
-    cairo_pattern_t* Style::verticalGradient( const ColorUtils::Rgba& base, int height ) const
-    {
-
-        ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
-        ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
-        cairo_pattern_t* pattern = cairo_pattern_create_linear( 0, 0, 0, height );
-        cairo_pattern_add_color_stop( pattern, 0, top );
-        cairo_pattern_add_color_stop( pattern, 0.5, base );
-        cairo_pattern_add_color_stop( pattern, 1, bottom );
-        return pattern;
-    }
-
-    //__________________________________________________________________
-    cairo_pattern_t* Style::radialGradient( const ColorUtils::Rgba& base, int r ) const
-    {
-        // create radial pattern
-        ColorUtils::Rgba radial( ColorUtils::backgroundRadialColor( base ) );
-        cairo_pattern_t* pattern( cairo_pattern_create_radial( r, 0, r ) );
-        cairo_pattern_add_color_stop( pattern, 0, radial );
-        cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( radial, 101.0/255 ) );
-        cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( radial, 37.0/255 ) );
-        cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( radial, 0 ) );
-        return pattern;
     }
 
     //__________________________________________________________________

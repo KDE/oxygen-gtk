@@ -339,12 +339,6 @@ namespace Oxygen
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
 
-        //! vertical window background gradient
-        cairo_pattern_t* verticalGradient( const ColorUtils::Rgba&, int ) const;
-
-        //! radial window background gradient
-        cairo_pattern_t* radialGradient( const ColorUtils::Rgba&, int ) const;
-
         //@}
 
         //!@name window decoration rendering
