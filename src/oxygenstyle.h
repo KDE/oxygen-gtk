@@ -334,10 +334,10 @@ namespace Oxygen
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
 
         //! vertical window background gradient
-        cairo_pattern_t* verticalGradient( const ColorUtils::Rgba&, int, int ) const;
+        cairo_pattern_t* verticalGradient( const ColorUtils::Rgba&, int ) const;
 
         //! radial window background gradient
-        cairo_pattern_t* radialGradient( const ColorUtils::Rgba&, int, int, int ) const;
+        cairo_pattern_t* radialGradient( const ColorUtils::Rgba&, int ) const;
 
         //@}
 
