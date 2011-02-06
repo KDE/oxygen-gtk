@@ -30,6 +30,8 @@
 #include <algorithm>
 #include <cmath>
 
+#define OXYGEN_USE_CACHE 1
+
 namespace Oxygen
 {
 
@@ -191,7 +193,7 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles ) const
+        const StyleOptions& options, TileSet::Tiles tiles )
     {
 
         bool needToDestroyContext;
@@ -311,11 +313,18 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
+            #if OXYGEN_USE_CACHE
+            const Cairo::Surface& surface( helper().verticalGradient( base, splitY ) );
+            cairo_set_source_surface( context, surface, 0, 0 );
+            cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
+            gdk_cairo_rectangle( context, &upperRect );
+            cairo_fill( context );
+            #else
             Cairo::Pattern pattern( verticalGradient( base, splitY ) );
-
             gdk_cairo_rectangle( context, &upperRect );
             cairo_set_source( context, pattern );
             cairo_fill( context );
+            #endif
 
         }
 
@@ -339,6 +348,22 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
         {
 
+            #if OXYGEN_USE_CACHE
+            const Cairo::Surface& surface( helper().radialGradient( base, 64 ) );
+            cairo_set_source_surface( context, surface, 0, 0 );
+
+            // add matrix transformation
+            cairo_matrix_t transformation;
+            cairo_matrix_init_identity( &transformation );
+            cairo_matrix_scale( &transformation, 128.0/radialW, 1.0 );
+            cairo_matrix_translate( &transformation, -(ww - radialW)/2, 0 );
+            cairo_pattern_set_matrix( cairo_get_source( context ), &transformation );
+
+            gdk_cairo_rectangle( context, &radialRect );
+            cairo_fill( context );
+
+            #else
+
             // get pattern
             Cairo::Pattern pattern( radialGradient( base, 64 ) );
 
@@ -353,6 +378,7 @@ namespace Oxygen
             gdk_cairo_rectangle( context, &radialRect );
             cairo_set_source( context, pattern );
             cairo_fill( context );
+            #endif
 
         }
 
@@ -492,7 +518,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderHeaderBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    void Style::renderHeaderBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h )
     {
 
         // load color
@@ -657,7 +683,7 @@ namespace Oxygen
     bool Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, TileSet::Tiles tiles ) const
+        gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room

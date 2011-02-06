@@ -278,7 +278,7 @@ namespace Oxygen
         { return surface; }
 
         // cached not found, create new
-        Cairo::Surface surface( createSurface( height, 32 ) );
+        Cairo::Surface surface( createSurface( 32, height ) );
 
         {
             ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
@@ -290,11 +290,43 @@ namespace Oxygen
 
             Cairo::Context context( surface );
             cairo_set_source( context, pattern );
-            cairo_rectangle( context, 0, 0, height, 32 );
+            cairo_rectangle( context, 0, 0, 32, height );
             cairo_fill( context );
         }
 
         return m_verticalGradientCache.insert( key, surface );
+    }
+
+    //_________________________________________________
+    const Cairo::Surface& StyleHelper::radialGradient( const ColorUtils::Rgba& base, int radius )
+    {
+
+        const RadialGradientKey key( base, radius );
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = m_radialGradientCache.value(key) )
+        { return surface; }
+
+        // cached not found, create new
+        Cairo::Surface surface( createSurface( 2*radius, radius ) );
+
+        {
+            // create radial pattern
+            ColorUtils::Rgba radial( ColorUtils::backgroundRadialColor( base ) );
+            Cairo::Pattern pattern( cairo_pattern_create_radial( radius, 0, radius ) );
+            cairo_pattern_add_color_stop( pattern, 0, radial );
+            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( radial, 101.0/255 ) );
+            cairo_pattern_add_color_stop( pattern, 0.75, ColorUtils::alphaColor( radial, 37.0/255 ) );
+            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( radial, 0 ) );
+
+            Cairo::Context context( surface );
+            cairo_set_source( context, pattern );
+            cairo_rectangle( context, 0, 0, 2*radius, radius );
+            cairo_fill( context );
+        }
+
+        return m_radialGradientCache.insert( key, surface );
+
     }
 
     //_________________________________________________
