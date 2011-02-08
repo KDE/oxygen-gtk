@@ -51,6 +51,7 @@ extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gin
 extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options, gint x, gint y, gint w, gint h);
 extern "C" G_MODULE_EXPORT gint getWindecoMetric(unsigned long);
 extern "C" G_MODULE_EXPORT gint getWindecoButtonSize(unsigned long);
+extern "C" G_MODULE_EXPORT unsigned long getWindecoABIVersion(void);
 
 //_________________________________________________
 void theme_init( GTypeModule* module )
@@ -118,3 +119,10 @@ gint getWindecoButtonSize(unsigned long buttonType)
 {
     return Oxygen::WinDeco::getButtonSize();
 }
+
+//_________________________________________________
+unsigned long getWindecoABIVersion(void)
+{
+    return 0x1;
+}
+
