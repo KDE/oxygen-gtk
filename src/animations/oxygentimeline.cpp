@@ -62,20 +62,21 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    void TimeLine::update( void )
+    bool TimeLine::update( void )
     {
 
-        if( !_running ) return;
+        if( !_running ) return false;
 
         // get time (msec)
         const int elapsed( 1000*g_timer_elapsed(_timer, 0L) );
         const double end( _direction == Forward ? 1:0 );
-        if( elapsed > _duration )
+        if( elapsed >= _duration )
         {
 
             _time = _duration;
             _value = end;
             stop();
+            return false;
 
         } else {
 
@@ -86,10 +87,10 @@ namespace Oxygen
 
             _value = ( _value*double(_duration - elapsed) + end*double(elapsed - _time) )/double(_duration - _time);
             _time = elapsed;
+            return true;
 
         }
 
-        return;
     }
 
 }

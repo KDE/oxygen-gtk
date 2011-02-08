@@ -68,8 +68,11 @@ namespace Oxygen
         { return _direction; }
 
         //! update value and running state
-        /*! also emits signal when value has changed since last time */
-        void update( void );
+        /*!
+        also emits signal when value has changed since last time.
+        returns true if timeline is still running
+        */
+        bool update( void );
 
         //! value (between 0 and 1)
         double value( void ) const

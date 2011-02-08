@@ -19,6 +19,7 @@ set( OXYGEN-GTK-SOURCES
     animations/oxygenscrolledwindowdata.cpp
     animations/oxygentabwidgetdata.cpp
     animations/oxygentimeline.cpp
+    animations/oxygentimelineserver.cpp
     animations/oxygentimer.cpp
     animations/oxygentreeviewdata.cpp
     animations/oxygentreeviewengine.cpp
