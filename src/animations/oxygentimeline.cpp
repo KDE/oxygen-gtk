@@ -57,6 +57,7 @@ namespace Oxygen
         _running = true;
 
         TimeLineServer::instance().start();
+        trigger();
 
     }
 
@@ -84,6 +85,7 @@ namespace Oxygen
 
             _time = _duration;
             _value = end;
+            trigger();
             stop();
             return false;
 
@@ -96,6 +98,7 @@ namespace Oxygen
 
             _value = ( _value*double(_duration - elapsed) + end*double(elapsed - _time) )/double(_duration - _time);
             _time = elapsed;
+            trigger();
             return true;
 
         }
