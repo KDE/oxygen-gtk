@@ -46,7 +46,7 @@ namespace Oxygen
 
         public:
 
-        //! return singleton
+        //! singleton
         static Style& instance( void );
 
         //! destructor
