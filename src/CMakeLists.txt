@@ -3,7 +3,7 @@ include_directories( animations )
 
 # Sources
 # please keep this list alphabetically sorted for clarity
-set( OXYGEN-GTK-SOURCES
+set( oxygen_gtk_SOURCES
     animations/oxygenanimations.cpp
     animations/oxygenbackgroundhintengine.cpp
     animations/oxygenbaseengine.cpp
@@ -55,7 +55,7 @@ set( OXYGEN-GTK-SOURCES
     oxygenwindowshadow.cpp
 )
 
-add_library( oxygen-gtk SHARED ${OXYGEN-GTK-SOURCES} )
+add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
 
 # Add GTK's cflags
 set( CMAKE_CXX_FLAGS " -Wall ${CMAKE_CXX_FLAGS}" )
