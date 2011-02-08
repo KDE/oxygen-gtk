@@ -49,6 +49,14 @@ namespace Oxygen
         //! update state
         bool updateState( bool );
 
+        //! return timeline
+        const TimeLine& timeLine( void ) const
+        { return _timeLine; }
+
+        //! opacity
+        double opacity( void ) const
+        { return timeLine().value(); }
+
         protected:
 
         //! delayed update
