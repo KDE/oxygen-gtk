@@ -42,6 +42,20 @@ namespace Oxygen
         void setDuration( int duration )
         { _duration = duration; }
 
+        //! connect callback
+        void connect( GSourceFunc func, gpointer data )
+        {
+            _func = func;
+            _data = data;
+        }
+
+        //! disconnect
+        void disconnect( void )
+        {
+            _func = 0L;
+            _data = 0L;
+        }
+
         //! start
         void start( void );
 
@@ -82,6 +96,12 @@ namespace Oxygen
         bool isRunning( void ) const
         { return _running; }
 
+        protected:
+
+        //! run callback
+        void trigger( void ) const
+        { if( _func )  (_func)(_data); }
+
         private:
 
         //! duration
@@ -101,6 +121,12 @@ namespace Oxygen
 
         //! timer
         GTimer* _timer;
+
+        //! source function
+        GSourceFunc _func;
+
+        //! data
+        gpointer _data;
 
     };
 

@@ -33,7 +33,9 @@ namespace Oxygen
         _running( false ),
         _value( 0 ),
         _time( 0 ),
-        _timer( g_timer_new() )
+        _timer( g_timer_new() ),
+        _func( 0L ),
+        _data( 0L )
     { TimeLineServer::instance().registerTimeLine( this ); }
 
     //_________________________________________________
