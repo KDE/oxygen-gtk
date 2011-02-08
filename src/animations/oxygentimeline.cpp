@@ -19,6 +19,7 @@
 */
 
 #include "oxygentimeline.h"
+#include "oxygentimelineserver.h"
 
 #include <cassert>
 
@@ -33,21 +34,27 @@ namespace Oxygen
         _value( 0 ),
         _time( 0 ),
         _timer( g_timer_new() )
-    {}
+    { TimeLineServer::instance().registerTimeLine( this ); }
 
     //_________________________________________________
     TimeLine::~TimeLine( void )
-    { g_timer_destroy( _timer ); }
+    {
+        g_timer_destroy( _timer );
+        TimeLineServer::instance().registerTimeLine( this );
+    }
 
     //_________________________________________________
     void TimeLine::start( void )
     {
 
         assert( !_running );
+
         _value = (_direction == Forward ) ? 0:1;
         _time = 0;
         g_timer_start( _timer );
         _running = true;
+
+        TimeLineServer::instance().start();
 
     }
 
