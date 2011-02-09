@@ -66,6 +66,11 @@ namespace Oxygen
             if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
             else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
             else windowManager().setMode( WindowManager::Full );
+
+            // pass animations configuration to engines
+            animations().widgetStateEngine().setEnabled( settings().genericAnimationsEnabled() );
+            animations().widgetStateEngine().setDuration( settings().genericAnimationsDuration() );
+
         }
 
         if( flags&QtSettings::KdeGlobals )
