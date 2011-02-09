@@ -129,13 +129,12 @@ namespace Oxygen
     {
 
         if( dataMap.contains( widget ) ) return false;
-        if( enabled() )
-        {
 
-            WidgetStateData& data( dataMap.registerWidget( widget ) );
-            data.connect( widget );
+        WidgetStateData& data( dataMap.registerWidget( widget ) );
+        data.timeLine().setDuration( _duration );
 
-        } else dataMap.registerWidget( widget );
+        // connect
+        if( enabled() ) data.connect( widget );
 
         return true;
 
@@ -150,22 +149,43 @@ namespace Oxygen
     }
 
     //________________________________________________________________________
+    void WidgetStateEngine::setDuration( int value )
+    {
+
+        if( _duration == value ) return;
+        _duration = value;
+
+        // hover data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
+        { iter->second.timeLine().setDuration( value ); }
+
+        // focus data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+        { iter->second.timeLine().setDuration( value ); }
+
+    }
+
+    //________________________________________________________________________
     void WidgetStateEngine::setEnabled( bool value )
     {
 
         if( enabled() == value ) return;
         BaseEngine::setEnabled( value );
-        if( enabled() )
+
+        // hover data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
         {
+            iter->second.timeLine().setEnabled( value );
+            if( enabled() ) iter->second.connect( iter->first );
+            else iter->second.disconnect( iter->first );
+        }
 
-            _hoverData.connectAll();
-            _focusData.connectAll();
-
-        } else {
-
-            _hoverData.disconnectAll();
-            _focusData.disconnectAll();
-
+        // focus data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+        {
+            iter->second.timeLine().setEnabled( value );
+            if( enabled() ) iter->second.connect( iter->first );
+            else iter->second.disconnect( iter->first );
         }
 
     }

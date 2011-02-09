@@ -44,7 +44,8 @@ namespace Oxygen
 
         //! constructor
         WidgetStateEngine( Animations* widget ):
-            BaseEngine( widget )
+            BaseEngine( widget ),
+            _duration( 150 )
             {}
 
         //! destructor
@@ -59,6 +60,9 @@ namespace Oxygen
 
         //! enabled state
         virtual void setEnabled( bool );
+
+        //! transition duration
+        virtual void setDuration( int );
 
         //!@name accessors
         //@{
@@ -91,6 +95,9 @@ namespace Oxygen
         void unregisterWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;
 
         private:
+
+        //! transition duration
+        int _duration;
 
         //!@name maps
         //@{
