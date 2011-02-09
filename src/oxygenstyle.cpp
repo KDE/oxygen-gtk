@@ -3121,6 +3121,14 @@ namespace Oxygen
 
         // no glow when widget is disabled
         if( options&Disabled ) return ColorUtils::Rgba();
+
+        /*
+        for flat, un-sunken, hovered buttons, return Focus color, consistently with oxygen-qt
+        though this is not quite correct
+        */
+        else if( (options&Flat) && !(options&Sunken) && (options&(Hover|Focus)) ) return  settings().palette().color( Palette::Focus );
+
+        // normal behavior in all other cases
         else if( options & Hover ) return settings().palette().color( Palette::Hover );
         else if( options & Focus ) return  settings().palette().color( Palette::Focus );
         else return ColorUtils::Rgba();
