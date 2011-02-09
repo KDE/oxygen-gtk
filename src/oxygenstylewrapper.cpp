@@ -748,12 +748,12 @@ namespace Oxygen
                     {
 
                         tiles &= ~TileSet::Right;
-                        Style::instance().renderButtonSlab( window, clipRect, x, y, w+7, h, options, tiles );
+                        Style::instance().renderButtonSlab( window, clipRect, x, y, w+7, h, options, data, tiles );
 
                     } else {
 
                         tiles &= ~TileSet::Left;
-                        Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, tiles );
+                        Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, data, tiles );
 
                     }
 
