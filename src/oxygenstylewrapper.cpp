@@ -734,7 +734,14 @@ namespace Oxygen
                 {
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
 
+                    // tiles
                     TileSet::Tiles tiles( TileSet::Ring );
+
+                    // animation state
+                    const AnimationData data( (options&Sunken) ?
+                        AnimationData():
+                        Style::instance().animations().widgetStateEngine().get( parent, options ) );
+
                     if( reversed )
                     {
 
@@ -850,14 +857,10 @@ namespace Oxygen
                     if( style )
                     { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
-                    if( options&Sunken ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
-                    else {
-
-                        // get animation state and render accordingly
-                        const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-                        Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
-
-                    }
+                    // retrieve animation state and render accordingly
+                    // animations are disabled if widget is sunken
+                    const AnimationData data( (options&Sunken) ? AnimationData():Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
 
                 }
 
@@ -1525,18 +1528,22 @@ namespace Oxygen
             if(  Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
             else options &= ~Hover;
 
+            // animation state
+            const AnimationData data( (options&Sunken) ? AnimationData():Style::instance().animations().widgetStateEngine().get( parent, options ) );
+
+            // tiles
             TileSet::Tiles tiles( TileSet::Ring );
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             {
 
                 tiles &= ~TileSet::Left;
-                Style::instance().renderButtonSlab( window, clipRect, x-10, y, w+10, h, options, tiles );
+                Style::instance().renderButtonSlab( window, clipRect, x-10, y, w+10, h, options, data, tiles );
 
             } else {
 
                 tiles &= ~TileSet::Right;
-                Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, tiles );
+                Style::instance().renderButtonSlab( window, clipRect, x, y, w+10, h, options, data, tiles );
 
             }
 
