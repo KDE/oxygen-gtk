@@ -1272,7 +1272,9 @@ namespace Oxygen
     void Style::renderSlab(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
+        const StyleOptions& options,
+        double opacity, AnimationMode mode )
     {
 
         // define colors
@@ -1293,7 +1295,7 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-        renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
+        renderSlab( context, x, y, w, h, base, options, opacity, mode, TileSet::Ring );
 
     }
 
@@ -1334,7 +1336,10 @@ namespace Oxygen
     void Style::renderCheckBox(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options )
+        gint x, gint y, gint w, gint h, GtkShadowType shadow,
+        const StyleOptions& options,
+        double opacity,
+        AnimationMode mode )
     {
 
         // define checkbox rect
@@ -1374,7 +1379,7 @@ namespace Oxygen
 
             StyleOptions localOptions( options );
             localOptions &= ~Sunken;
-            renderSlab( context, child.x, child.y, child.width, child.height, base, localOptions );
+            renderSlab( context, child.x, child.y, child.width, child.height, base, localOptions, opacity, mode );
 
         }
 
@@ -1476,7 +1481,9 @@ namespace Oxygen
     void Style::renderRadioButton(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options )
+        gint x, gint y, gint w, gint h, GtkShadowType shadow,
+        const StyleOptions& options,
+        double opacity, AnimationMode mode )
     {
 
         // define checkbox rect
@@ -1516,7 +1523,8 @@ namespace Oxygen
 
         }
 
-        const ColorUtils::Rgba glow( slabShadowColor( options ) );
+        // glow
+        const ColorUtils::Rgba glow( slabShadowColor( options, opacity, mode ) );
 
         // get the pixmap
         const Cairo::Surface& surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
@@ -3170,7 +3178,13 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSlab( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, const StyleOptions& options, TileSet::Tiles tiles )
+    void Style::renderSlab(
+        Cairo::Context& context,
+        gint x, gint y, gint w, gint h,
+        const ColorUtils::Rgba& base,
+        const StyleOptions& options,
+        double opacity, AnimationMode mode,
+        TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
@@ -3217,7 +3231,7 @@ namespace Oxygen
 
             // calculate glow color
             const TileSet* tile;
-            ColorUtils::Rgba glow( slabShadowColor( options ) );
+            ColorUtils::Rgba glow( slabShadowColor( options, opacity, mode ) );
             if( glow.isValid() ) tile = &helper().slabFocused( base, glow , 0);
             else if( base.isValid() ) tile = &helper().slab( base, 0 );
             else return;

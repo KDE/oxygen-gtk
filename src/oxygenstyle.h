@@ -172,17 +172,18 @@ namespace Oxygen
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions& );
+        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions& );
+        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
 
         //!@name generic slab
         //@{
 
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
-        void renderSlab( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o )
-        { renderSlab( window, r, x, y, w, h, Gtk::Gap(), o ); }
+        void renderSlab( GdkWindow* window, GdkRectangle* clipRect, int x, gint y, gint w, gint h, const StyleOptions& options, double opacity = WidgetStateData::OpacityInvalid, AnimationMode mode = AnimationNone )
+        { renderSlab( window, clipRect, x, y, w, h, Gtk::Gap(), options, opacity, mode ); }
+
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
 
         //@}
 
@@ -334,7 +335,7 @@ namespace Oxygen
         ColorUtils::Rgba slabShadowColor( const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles tiles = TileSet::Ring );
+        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone, TileSet::Tiles tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */
