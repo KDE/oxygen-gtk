@@ -54,9 +54,6 @@ namespace Oxygen
         virtual ~WidgetStateEngine( void )
         {}
 
-        //! register widget
-        virtual bool registerWidget( GtkWidget*, AnimationModes, const StyleOptions& = StyleOptions() );
-
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
 
@@ -76,45 +73,31 @@ namespace Oxygen
         //! true if widget is included
         virtual bool contains( GtkWidget*, AnimationMode );
 
-        //! true if widget is animated
-        virtual bool isAnimated( GtkWidget*, AnimationMode );
-
-        //! animation opacity
-        virtual double opacity( GtkWidget*, AnimationMode );
-
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
-        virtual AnimationData get( GtkWidget* widget, const StyleOptions& options )
+        virtual AnimationData get( GtkWidget* widget, const StyleOptions& options, AnimationModes modes = AnimationHover|AnimationFocus )
         {
 
             // check widget
             if( !( enabled() && widget ) ) return AnimationData();
 
             // register
-            registerWidget( widget, AnimationHover|AnimationFocus, options );
+            registerWidget( widget, modes, options );
 
             // stores WidgetStateData locally for speedup
-            WidgetStateData& hoverData( _hoverData.value( widget ) );
-            WidgetStateData& focusData( _focusData.value( widget ) );
+            WidgetStateData* hoverData( (modes&AnimationHover) ? &_hoverData.value( widget ):0L );
+            WidgetStateData* focusData( (modes&AnimationFocus) ? &_focusData.value( widget ):0L );
 
             // update state
-            hoverData.updateState( (options&Hover) && !(options&Disabled) );
-            focusData.updateState( (options&Focus) && !(options&Disabled) );
+            if( hoverData ) hoverData->updateState( (options&Hover) && !(options&Disabled) );
+            if( focusData ) focusData->updateState( (options&Focus) && !(options&Disabled) );
 
             // assume hover takes precedence over focus
-            if( hoverData.timeLine().isRunning() ) return AnimationData( hoverData.opacity(), AnimationHover );
-            else if( focusData.timeLine().isRunning() ) return AnimationData( focusData.opacity(), AnimationFocus );
+            if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
+            else if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
             else return AnimationData();
 
         }
-
-        //@}
-
-        //!@name modifiers
-        //@{
-
-        //! update state
-        virtual bool updateState( GtkWidget*, AnimationMode, bool );
 
         //@}
 
@@ -134,6 +117,23 @@ namespace Oxygen
             return _applicationName.isMozilla( widget );
 
         }
+
+        //!@name protected modifiers
+        //@{
+
+        //! register widget
+        virtual bool registerWidget( GtkWidget*, AnimationModes, const StyleOptions& = StyleOptions() );
+
+        //! true if widget is animated
+        virtual bool isAnimated( GtkWidget*, AnimationMode );
+
+        //! animation opacity
+        virtual double opacity( GtkWidget*, AnimationMode );
+
+        //! update state
+        virtual bool updateState( GtkWidget*, AnimationMode, bool );
+
+        //@}
 
         private:
 
