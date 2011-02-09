@@ -327,7 +327,7 @@ namespace Oxygen
         void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! slab glowing color
-        ColorUtils::Rgba slabShadowColor( StyleOptions ) const;
+        ColorUtils::Rgba slabShadowColor( const StyleOptions& ) const;
 
         //! slab
         void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles tiles = TileSet::Ring );

@@ -1169,6 +1169,10 @@ namespace Oxygen
 
         // flat buttons are only rendered with a simple Rect, and only when either focused or sunken
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+
+        // glow color (depending on hover/glow
+        const ColorUtils::Rgba glow( slabShadowColor( options ) );
+
         if( options & Flat )
         {
             if( options & Sunken )
@@ -1176,18 +1180,11 @@ namespace Oxygen
 
                 Cairo::Context context( window, clipRect );
                 const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
+                if( glow.isValid() ) helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
+                else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
 
-                if( options & Hover )
-                {
+            } else if( glow.isValid() ) {
 
-                    const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Hover ) );
-                    helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
-
-                } else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
-
-            } else if( options&Hover ) {
-
-                const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Focus ) );
                 Cairo::Context context( window, clipRect );
                 helper().slitFocused( glow ).render( context, x, y, w, h, tiles );
 
@@ -1252,25 +1249,13 @@ namespace Oxygen
 
             helper().slabSunken( base, 0 ).render( context, x, y, w, h, tiles );
 
+        } else if( glow.isValid() ) {
+
+            helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
+
         } else {
 
-            const bool enabled( !(options&Disabled ) );
-            if( enabled && (options & Hover) )
-            {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
-
-            } else if( enabled && (options & Focus) ) {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
-
-            } else {
-
-                helper().slab( base, 0 ).render( context, x, y, w, h, tiles );
-
-            }
+            helper().slab( base, 0 ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -3131,7 +3116,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    ColorUtils::Rgba Style::slabShadowColor( StyleOptions options ) const
+    ColorUtils::Rgba Style::slabShadowColor( const StyleOptions& options ) const
     {
 
         ColorUtils::Rgba glow;
