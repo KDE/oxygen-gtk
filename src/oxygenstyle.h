@@ -219,7 +219,7 @@ namespace Oxygen
         void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
 
         //! slider handle
-        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
 
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;

@@ -1913,7 +1913,9 @@ namespace Oxygen
     void Style::renderSliderHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const StyleOptions& options )
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        double opacity, AnimationMode mode )
     {
 
         // define colors
@@ -1934,7 +1936,7 @@ namespace Oxygen
 
         // render slab
         Cairo::Context context( window, clipRect );
-        renderSlab( context, x, y, w, h, base, options );
+        renderSlab( context, x, y, w, h, base, options, opacity, mode );
 
     }
 

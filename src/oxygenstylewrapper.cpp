@@ -2439,7 +2439,23 @@ namespace Oxygen
             options |= StyleOptions( widget, state, shadow );
             options &= ~Sunken;
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
-            Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
+
+            // handle animations
+            /* TODO: this is very redundant between various type of buttons. Should be moved upstream */
+            Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
+            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
+            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
+
+            const bool enabled( !(options&Disabled) );
+            const bool hoverAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
+            const bool focusAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
+            const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
+            const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
+
+            if( hoverAnimated ) Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, hoverOpacity, AnimationHover );
+            else if( focusAnimated ) Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, focusOpacity, AnimationFocus );
+            else Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
+
             return;
 
         } else if( GTK_IS_VSCROLLBAR( widget ) ) {
