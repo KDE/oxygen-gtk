@@ -863,7 +863,8 @@ namespace Oxygen
 
                     // retrieve animation state and render accordingly
                     // animations are disabled if widget is sunken
-                    const AnimationData data( (options&Sunken) ? AnimationData():Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                    const bool animated( (options&Flat) || !(options&Sunken) );
+                    const AnimationData data( animated ? Style::instance().animations().widgetStateEngine().get( widget, options ):AnimationData() );
                     Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
 
                 }
