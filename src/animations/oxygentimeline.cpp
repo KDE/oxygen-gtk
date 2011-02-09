@@ -29,6 +29,7 @@ namespace Oxygen
     //_________________________________________________
     TimeLine::TimeLine( int duration ):
         _duration( duration ),
+        _enabled( true ),
         _direction( Forward ),
         _running( false ),
         _value( 0 ),
@@ -41,6 +42,7 @@ namespace Oxygen
     //_________________________________________________
     TimeLine::TimeLine( const TimeLine& other ):
         _duration( other._duration ),
+        _enabled( other._enabled ),
         _direction( other._direction ),
         _running( false ),
         _value( 0 ),
@@ -64,6 +66,7 @@ namespace Oxygen
         stop();
 
         _duration = other._duration;
+        _enabled = other._enabled;
         _direction = other._direction;
         _value = 0;
         _time = 0;
@@ -77,6 +80,9 @@ namespace Oxygen
     //_________________________________________________
     void TimeLine::start( void )
     {
+
+        // do nothing if disabled
+        if( (!_enabled) || _duration <= 0 ) return;
 
         assert( !_running );
 

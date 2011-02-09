@@ -34,7 +34,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        TimeLine( int duration );
+        TimeLine( int = 0 );
 
         //! copy constructor
         /*! warning other timeline state is not copied */
@@ -45,10 +45,6 @@ namespace Oxygen
 
         //! assignment operator
         TimeLine& operator = (const TimeLine& );
-
-        //! duration
-        void setDuration( int duration )
-        { _duration = duration; }
 
         //! connect callback
         void connect( GSourceFunc func, gpointer data )
@@ -64,15 +60,29 @@ namespace Oxygen
             _data = 0L;
         }
 
-        //! start
-        void start( void );
+        //!@name accessors
+        //@{
 
-        //! stop
-        void stop( void );
+        //! value (between 0 and 1)
+        double value( void ) const
+        { return _value; }
+
+        //! true if running
+        bool isRunning( void ) const
+        { return _running; }
+
+        //@}
+
+        //!@name modifiers
+        //@{
 
         //! duration
-        int duration( void ) const
-        { return _duration; }
+        void setDuration( int value )
+        { _duration = value; }
+
+        //! enable state
+        void setEnabled( bool value )
+        { _enabled = value; }
 
         //! direction
         enum Direction
@@ -85,9 +95,11 @@ namespace Oxygen
         void setDirection( Direction direction )
         { _direction = direction; }
 
-        //! direction
-        Direction direction( void ) const
-        { return _direction; }
+        //! start
+        void start( void );
+
+        //! stop
+        void stop( void );
 
         //! update value and running state
         /*!
@@ -96,13 +108,7 @@ namespace Oxygen
         */
         bool update( void );
 
-        //! value (between 0 and 1)
-        double value( void ) const
-        { return _value; }
-
-        //! true if running
-        bool isRunning( void ) const
-        { return _running; }
+        //@}
 
         protected:
 
@@ -114,6 +120,9 @@ namespace Oxygen
 
         //! duration
         int _duration;
+
+        //! enable state
+        bool _enabled;
 
         //! direction
         Direction _direction;
