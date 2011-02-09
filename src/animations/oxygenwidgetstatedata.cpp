@@ -33,7 +33,6 @@ namespace Oxygen
     //_____________________________________________
     WidgetStateData::WidgetStateData( void ):
         _target( 0L ),
-        _timeLine( 150 ),
         _state( false )
     {}
 

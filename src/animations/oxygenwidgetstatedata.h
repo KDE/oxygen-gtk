@@ -56,6 +56,10 @@ namespace Oxygen
         const TimeLine& timeLine( void ) const
         { return _timeLine; }
 
+        //! return timeline
+        TimeLine& timeLine( void )
+        { return _timeLine; }
+
         //! opacity
         double opacity( void ) const
         { return timeLine().value(); }
