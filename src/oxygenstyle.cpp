@@ -60,6 +60,9 @@ namespace Oxygen
         // reinitialize settings
         _settings.initialize( flags );
 
+        // pass applicationName to widgetStateEngine
+        animations().widgetStateEngine().setApplicationName( settings().applicationName() );
+
         if( flags&QtSettings::Oxygen )
         {
             // pass window drag mode to window manager

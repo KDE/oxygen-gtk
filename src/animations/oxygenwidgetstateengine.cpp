@@ -134,6 +134,11 @@ namespace Oxygen
         data.updateState( state );
         data.timeLine().setDuration( _duration );
 
+        /*
+        blacklist some applications based on name and widget
+        the widget is effectively registered, but not connected
+        */
+        if( widgetIsBlackListed( widget ) ) return true;
 
         // connect
         if( enabled() ) data.connect( widget );
@@ -178,7 +183,7 @@ namespace Oxygen
         for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
         {
             iter->second.timeLine().setEnabled( value );
-            if( enabled() ) iter->second.connect( iter->first );
+            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
             else iter->second.disconnect( iter->first );
         }
 
@@ -186,7 +191,7 @@ namespace Oxygen
         for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
         {
             iter->second.timeLine().setEnabled( value );
-            if( enabled() ) iter->second.connect( iter->first );
+            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
             else iter->second.disconnect( iter->first );
         }
 
