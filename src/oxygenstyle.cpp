@@ -3132,9 +3132,24 @@ namespace Oxygen
         if( data._mode == AnimationNone || data._opacity < 0 )
         {
 
+            if( (options&Flat) && !(options&Sunken) && (options&(Hover|Focus)) ) return  settings().palette().color( Palette::Focus );
             if( options & Hover ) return settings().palette().color( Palette::Hover );
             if( options & Focus ) return  settings().palette().color( Palette::Focus );
             return ColorUtils::Rgba();
+
+        } else if( (options&Flat) && !(options&Sunken) ) {
+
+            /*
+            flat buttons have special handling of colors
+            that is consistent with oxygen-qt, but quite inconsistent with other widgets
+            */
+            if(
+                ( data._mode == AnimationHover && (options&Focus) ) ||
+                ( data._mode == AnimationFocus && (options&Hover) ) )
+            {
+                return settings().palette().color( Palette::Focus );
+
+            } else return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
 
         } else if( data._mode == AnimationHover ) {
 
