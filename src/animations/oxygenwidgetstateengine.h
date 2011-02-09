@@ -21,7 +21,8 @@
 */
 
 
-#include "../oxygenanimationmodes.h"
+#include "../oxygenanimationdata.h"
+#include "../oxygenstyleoptions.h"
 #include "oxygenbaseengine.h"
 #include "oxygendatamap.h"
 #include "oxygenwidgetstatedata.h"
@@ -75,6 +76,32 @@ namespace Oxygen
 
         //! animation opacity
         virtual double opacity( GtkWidget*, AnimationMode );
+
+        //! retrieve animation data matching a given widget for provided options
+        /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
+        virtual AnimationData get( GtkWidget* widget, const StyleOptions& options )
+        {
+
+            // check widget
+            if( !( enabled() && widget ) ) return AnimationData();
+
+            // register
+            registerWidget( widget, AnimationHover|AnimationFocus );
+
+            // stores WidgetStateData locally for speedup
+            WidgetStateData& hoverData( _hoverData.value( widget ) );
+            WidgetStateData& focusData( _focusData.value( widget ) );
+
+            // update state
+            hoverData.updateState( (options&Hover) && !(options&Disabled) );
+            focusData.updateState( (options&Focus) && !(options&Disabled) );
+
+            // assume hover takes precedence over focus
+            if( hoverData.timeLine().isRunning() ) return AnimationData( hoverData.opacity(), AnimationHover );
+            else if( focusData.timeLine().isRunning() ) return AnimationData( focusData.opacity(), AnimationFocus );
+            else return AnimationData();
+
+        }
 
         //@}
 

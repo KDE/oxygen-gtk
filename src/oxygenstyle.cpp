@@ -1059,8 +1059,8 @@ namespace Oxygen
             {
 
                 // window is active - it's a glow, not a shadow
-                ColorUtils::Rgba frameColor( settings().palette().color( Palette::ActiveWindowBackground ) );
-                ColorUtils::Rgba glow=ColorUtils::mix(ColorUtils::Rgba(0.5,0.5,0.5),frameColor,0.7);
+                const ColorUtils::Rgba frameColor( settings().palette().color( Palette::ActiveWindowBackground ) );
+                const ColorUtils::Rgba glow = ColorUtils::mix(ColorUtils::Rgba(0.5,0.5,0.5),frameColor,0.7);
                 cairo_set_source(context,glow);
 
                 const double radius( 11*0.5 );
@@ -1168,8 +1168,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
-        double opacity,
-        AnimationMode mode,
+        const AnimationData& animationData,
         TileSet::Tiles tiles
         )
     {
@@ -1178,7 +1177,7 @@ namespace Oxygen
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
 
         // glow color (depending on hover/glow
-        const ColorUtils::Rgba glow( slabShadowColor( options, opacity, mode ) );
+        const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
 
         if( options & Flat )
         {
@@ -1274,7 +1273,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
         const StyleOptions& options,
-        double opacity, AnimationMode mode )
+        const AnimationData& animationData )
     {
 
         // define colors
@@ -1295,7 +1294,7 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-        renderSlab( context, x, y, w, h, base, options, opacity, mode, TileSet::Ring );
+        renderSlab( context, x, y, w, h, base, options, animationData, TileSet::Ring );
 
     }
 
@@ -1338,8 +1337,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
-        double opacity,
-        AnimationMode mode )
+        const AnimationData& animationData )
     {
 
         // define checkbox rect
@@ -1379,7 +1377,7 @@ namespace Oxygen
 
             StyleOptions localOptions( options );
             localOptions &= ~Sunken;
-            renderSlab( context, child.x, child.y, child.width, child.height, base, localOptions, opacity, mode );
+            renderSlab( context, child.x, child.y, child.width, child.height, base, localOptions, animationData );
 
         }
 
@@ -1483,7 +1481,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
-        double opacity, AnimationMode mode )
+        const AnimationData& animationData )
     {
 
         // define checkbox rect
@@ -1524,7 +1522,7 @@ namespace Oxygen
         }
 
         // glow
-        const ColorUtils::Rgba glow( slabShadowColor( options, opacity, mode ) );
+        const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
 
         // get the pixmap
         const Cairo::Surface& surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
@@ -1915,7 +1913,7 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
-        double opacity, AnimationMode mode )
+        const AnimationData& animationData )
     {
 
         // define colors
@@ -1936,7 +1934,7 @@ namespace Oxygen
 
         // render slab
         Cairo::Context context( window, clipRect );
-        renderSlab( context, x, y, w, h, base, options, opacity, mode );
+        renderSlab( context, x, y, w, h, base, options, animationData );
 
     }
 
@@ -3133,44 +3131,45 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    ColorUtils::Rgba Style::slabShadowColor( const StyleOptions& options, double opacity, AnimationMode mode ) const
+    ColorUtils::Rgba Style::slabShadowColor( const StyleOptions& options, const AnimationData& data ) const
     {
 
         // no glow when widget is disabled
         if( options&Disabled ) return ColorUtils::Rgba();
 
-        if( mode == AnimationNone || opacity < 0 )
+        if( data._mode == AnimationNone || data._opacity < 0 )
         {
 
             if( options & Hover ) return settings().palette().color( Palette::Hover );
             if( options & Focus ) return  settings().palette().color( Palette::Focus );
             return ColorUtils::Rgba();
 
-        } else if( mode == AnimationHover ) {
+        } else if( data._mode == AnimationHover ) {
 
             if( options & Focus )
             {
                 return ColorUtils::mix(
                     settings().palette().color( Palette::Focus ),
-                    settings().palette().color( Palette::Hover ), opacity );
+                    settings().palette().color( Palette::Hover ), data._opacity );
+
             } else {
 
-                return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), opacity );
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
 
             }
 
-        } else if( mode == AnimationFocus ) {
+        } else if( data._mode == AnimationFocus ) {
 
             if( options & Hover )
             {
 
                 return ColorUtils::mix(
                     settings().palette().color( Palette::Hover ),
-                    settings().palette().color( Palette::Focus ), opacity );
+                    settings().palette().color( Palette::Focus ), data._opacity );
 
             } else {
 
-                return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), opacity );
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), data._opacity );
 
             }
 
@@ -3185,7 +3184,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         const ColorUtils::Rgba& base,
         const StyleOptions& options,
-        double opacity, AnimationMode mode,
+        const AnimationData& animationData,
         TileSet::Tiles tiles )
     {
 
@@ -3233,7 +3232,7 @@ namespace Oxygen
 
             // calculate glow color
             const TileSet* tile;
-            ColorUtils::Rgba glow( slabShadowColor( options, opacity, mode ) );
+            const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
             if( glow.isValid() ) tile = &helper().slabFocused( base, glow , 0);
             else if( base.isValid() ) tile = &helper().slab( base, 0 );
             else return;

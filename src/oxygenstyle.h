@@ -22,6 +22,7 @@
 */
 
 #include "oxygenanimations.h"
+#include "oxygenanimationdata.h"
 #include "oxygenanimationmodes.h"
 #include "oxygenargbhelper.h"
 #include "oxygencairocontext.h"
@@ -166,24 +167,24 @@ namespace Oxygen
 
         //! button slab
         void renderButtonSlab( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
-        { renderButtonSlab( window, clipRect, x, y, w, h, options, WidgetStateData::OpacityInvalid, AnimationNone, tiles ); }
+        { renderButtonSlab( window, clipRect, x, y, w, h, options, AnimationData(), tiles ); }
 
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, double, AnimationMode, TileSet::Tiles = TileSet::Ring );
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
+        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
+        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //!@name generic slab
         //@{
 
-        void renderSlab( GdkWindow* window, GdkRectangle* clipRect, int x, gint y, gint w, gint h, const StyleOptions& options, double opacity = WidgetStateData::OpacityInvalid, AnimationMode mode = AnimationNone )
-        { renderSlab( window, clipRect, x, y, w, h, Gtk::Gap(), options, opacity, mode ); }
+        void renderSlab( GdkWindow* window, GdkRectangle* clipRect, int x, gint y, gint w, gint h, const StyleOptions& options, const AnimationData& animationData = AnimationData() )
+        { renderSlab( window, clipRect, x, y, w, h, Gtk::Gap(), options, animationData ); }
 
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
+        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //@}
 
@@ -219,7 +220,7 @@ namespace Oxygen
         void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
 
         //! slider handle
-        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone );
+        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
@@ -332,10 +333,10 @@ namespace Oxygen
         void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! slab glowing color
-        ColorUtils::Rgba slabShadowColor( const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone ) const;
+        ColorUtils::Rgba slabShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone, TileSet::Tiles tiles = TileSet::Ring );
+        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */

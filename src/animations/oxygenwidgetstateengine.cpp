@@ -82,7 +82,7 @@ namespace Oxygen
     //________________________________________________________
     double WidgetStateEngine::opacity( GtkWidget* widget, AnimationMode mode )
     {
-        if( !isAnimated( widget, mode ) ) return WidgetStateData::OpacityInvalid;
+        if( !isAnimated( widget, mode ) ) return OpacityInvalid;
         switch( mode )
         {
             case AnimationHover:
@@ -91,7 +91,7 @@ namespace Oxygen
             case AnimationFocus:
             return _focusData.value( widget ).opacity();
 
-            default: return WidgetStateData::OpacityInvalid;
+            default: return OpacityInvalid;
 
         }
 

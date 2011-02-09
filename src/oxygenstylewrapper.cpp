@@ -847,26 +847,17 @@ namespace Oxygen
 
                 } else {
 
-                    // register to widget state engine, update focus and hover state
-                    Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
-
-                    Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
-                    Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
-
                     if( style )
                     { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
-                    // store animation state
-                    const bool enabled( !(options&Disabled) );
-                    const bool sunken( options&Sunken );
-                    const bool hoverAnimated( enabled && !sunken && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
-                    const bool focusAnimated( enabled && !sunken && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
-                    const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
-                    const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
+                    if( options&Sunken ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                    else {
 
-                    if( hoverAnimated ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, hoverOpacity, AnimationHover );
-                    else if( focusAnimated ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, focusOpacity, AnimationFocus );
-                    else Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                        // get animation state and render accordingly
+                        const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                        Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
+
+                    }
 
                 }
 
@@ -1666,19 +1657,9 @@ namespace Oxygen
 
             } else {
 
-                Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
-                Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
-                Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
-
-                const bool enabled( !(options&Disabled) );
-                const bool hoverAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
-                const bool focusAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
-                const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
-                const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
-
-                if( hoverAnimated ) Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, hoverOpacity, AnimationHover );
-                else if( focusAnimated ) Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, focusOpacity, AnimationFocus );
-                else Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
+                // retrieve animation state and render accordingly
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
 
             }
 
@@ -1731,20 +1712,9 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             if( !Gtk::gtk_parent_tree_view( widget ) ) options |= Blend;
 
-            // register to widget state engine for animations
-            Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
-            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
-            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
-
-            const bool enabled( !(options&Disabled) );
-            const bool hoverAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
-            const bool focusAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
-            const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
-            const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
-
-            if( hoverAnimated ) Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, hoverOpacity, AnimationHover );
-            else if( focusAnimated ) Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, focusOpacity, AnimationFocus );
-            else Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
+            // retrieve animation state and render accordingly
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, data );
 
         } else if( d.isOption() || d.isCellRadio() ) {
 
@@ -2444,21 +2414,9 @@ namespace Oxygen
             options &= ~Sunken;
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
 
-            // handle animations
-            /* TODO: this is very redundant between various type of buttons. Should be moved upstream */
-            Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
-            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
-            Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
-
-            const bool enabled( !(options&Disabled) );
-            const bool hoverAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
-            const bool focusAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
-            const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
-            const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
-
-            if( hoverAnimated ) Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, hoverOpacity, AnimationHover );
-            else if( focusAnimated ) Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, focusOpacity, AnimationFocus );
-            else Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options );
+            // retrieve animation state and render accordingly
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+            Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, data );
 
             return;
 
