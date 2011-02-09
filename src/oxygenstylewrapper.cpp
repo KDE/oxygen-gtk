@@ -1586,7 +1586,11 @@ namespace Oxygen
             // default shadow_in frame
             // hole background is needed for some special cases
             if( GTK_IS_CALENDAR( widget ) )
-            { Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 ); }
+            {
+                Style::instance().renderHoleBackground(
+                    window, clipRect,
+                    x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+            }
 
             // hole
             Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
