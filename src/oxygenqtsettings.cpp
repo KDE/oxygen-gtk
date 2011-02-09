@@ -67,6 +67,8 @@ namespace Oxygen
         _windowDragMode( WD_FULL ),
         _startDragDist( 4 ),
         _startDragTime( 500 ),
+        _genericAnimationsEnabled( true ),
+        _genericAnimationsDuration( 150 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _activeShadowConfiguration( Palette::Active ),
@@ -824,6 +826,10 @@ namespace Oxygen
         std::string windowDragMode( oxygen.getOption( "[Style]", "WindowDragMode" ).toVariant<std::string>("WD_FULL") );
         if( windowDragMode == "WD_MINIMAL" ) _windowDragMode = WD_MINIMAL;
         else _windowDragMode = WD_FULL;
+
+        // animations
+        _genericAnimationsEnabled = oxygen.getOption( "[Style]", "GenericAnimationsEnabled" ).toVariant<bool>(true);
+        _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
 
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );

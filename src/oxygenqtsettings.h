@@ -197,6 +197,17 @@ namespace Oxygen
 
         //@}
 
+        //!@name animation options
+        //@{
+
+        bool genericAnimationsEnabled( void ) const
+        { return _genericAnimationsEnabled; }
+
+        int genericAnimationsDuration( void ) const
+        { return _genericAnimationsDuration; }
+
+        //@}
+
         //!@name window decoration options
         //@{
 
@@ -393,6 +404,14 @@ namespace Oxygen
 
         //! drag delay
         int _startDragTime;
+
+        //@}
+
+        //!@name animation options
+        //@{
+
+        bool _genericAnimationsEnabled;
+        int _genericAnimationsDuration;
 
         //@}
 
