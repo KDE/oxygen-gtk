@@ -828,7 +828,7 @@ namespace Oxygen
         else _windowDragMode = WD_FULL;
 
         // animations
-        _genericAnimationsEnabled = oxygen.getOption( "[Style]", "GenericAnimationsEnabled" ).toVariant<bool>(true);
+        _genericAnimationsEnabled = ( oxygen.getOption( "[Style]", "GenericAnimationsEnabled" ).toVariant<std::string>("true") == "true" );
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
 
         // window decoration button size
