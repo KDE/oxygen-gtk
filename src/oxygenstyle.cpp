@@ -2981,13 +2981,11 @@ namespace Oxygen
     ColorUtils::Rgba Style::slabShadowColor( const StyleOptions& options ) const
     {
 
-        ColorUtils::Rgba glow;
-        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-
-        const bool enabled( !(options&Disabled ) );
-        if( enabled && (options & Hover) ) glow = settings().palette().color( group, Palette::Hover );
-        else if( enabled && (options & Focus) ) glow =  settings().palette().color( group, Palette::Focus );
-        return glow;
+        // no glow when widget is disabled
+        if( options&Disabled ) return ColorUtils::Rgba();
+        else if( options & Hover ) return settings().palette().color( Palette::Hover );
+        else if( options & Focus ) return  settings().palette().color( Palette::Focus );
+        else return ColorUtils::Rgba();
 
     }
 
