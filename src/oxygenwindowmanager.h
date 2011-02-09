@@ -98,9 +98,6 @@ namespace Oxygen
         //! on mouse leave
         static gboolean wmLeave(GtkWidget*, GdkEventCrossing*, gpointer );
 
-        //! on style change
-        static gboolean wmStyleSet( GtkWidget*, GtkStyle*, gpointer );
-
         //! on window destroy
         static gboolean wmDestroy( GtkWidget*, gpointer );
 
@@ -194,7 +191,6 @@ namespace Oxygen
             Signal _destroyId;
             Signal _pressId;
             Signal _motionId;
-            Signal _styleId;
             //@}
 
         };

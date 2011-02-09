@@ -162,13 +162,6 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    gboolean WindowManager::wmStyleSet( GtkWidget* widget, GtkStyle* , gpointer data )
-    {
-        static_cast<WindowManager*>(data)->unregisterWidget( widget );
-        return false;
-    }
-
-    //_________________________________________________
     gboolean WindowManager::wmDestroy( GtkWidget* widget, gpointer data )
     {
         static_cast<WindowManager*>(data)->unregisterWidget( widget );
@@ -516,8 +509,6 @@ namespace Oxygen
     void WindowManager::connect( GtkWidget* widget, WindowManager::Data& data )
     {
         data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( wmDestroy ), this );
-        data._styleId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( wmStyleSet ), this );
-
         data._pressId.connect( G_OBJECT( widget ), "button-press-event", G_CALLBACK( wmButtonPress ), this );
         data._leaveId.connect( G_OBJECT( widget ), "leave-notify-event", G_CALLBACK( wmLeave ), this );
         data._motionId.connect( G_OBJECT( widget ), "motion-notify-event", G_CALLBACK( wmMotion ), this );
@@ -531,7 +522,6 @@ namespace Oxygen
         _destroyId.disconnect();
         _pressId.disconnect();
         _motionId.disconnect();
-        _styleId.disconnect();
 
     }
 
