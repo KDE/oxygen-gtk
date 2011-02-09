@@ -1658,9 +1658,26 @@ namespace Oxygen
                     { options |= Hover; }
                 }
 
+                Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
+
+            } else {
+
+                Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
+                Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
+                Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
+
+                const bool enabled( !(options&Disabled) );
+                const bool hoverAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
+                const bool focusAnimated( enabled && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
+                const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
+                const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
+
+                if( hoverAnimated ) Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, hoverOpacity, AnimationHover );
+                else if( focusAnimated ) Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, focusOpacity, AnimationFocus );
+                else Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
+
             }
 
-            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
 
         } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
@@ -1712,7 +1729,6 @@ namespace Oxygen
 
             // register to widget state engine for animations
             Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
-
             Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
             Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
 
