@@ -22,6 +22,7 @@
 */
 
 #include <glib.h>
+#include <cassert>
 
 namespace Oxygen
 {
@@ -35,8 +36,15 @@ namespace Oxygen
         //! constructor
         TimeLine( int duration );
 
+        //! copy constructor
+        /*! warning other timeline state is not copied */
+        TimeLine( const TimeLine& );
+
         //! destructor
         virtual ~TimeLine( void );
+
+        //! assignment operator
+        TimeLine& operator = (const TimeLine& );
 
         //! duration
         void setDuration( int duration )

@@ -39,10 +39,39 @@ namespace Oxygen
     { TimeLineServer::instance().registerTimeLine( this ); }
 
     //_________________________________________________
+    TimeLine::TimeLine( const TimeLine& other ):
+        _duration( other._duration ),
+        _direction( other._direction ),
+        _running( false ),
+        _value( 0 ),
+        _time( 0 ),
+        _timer( g_timer_new() ),
+        _func( other._func ),
+        _data( other._data )
+    { TimeLineServer::instance().registerTimeLine( this ); }
+
+    //_________________________________________________
     TimeLine::~TimeLine( void )
     {
-        g_timer_destroy( _timer );
-        TimeLineServer::instance().registerTimeLine( this );
+        if( _timer ) g_timer_destroy( _timer );
+        TimeLineServer::instance().unregisterTimeLine( this );
+    }
+
+    //_________________________________________________
+    TimeLine& TimeLine::operator = ( const TimeLine& other )
+    {
+
+        stop();
+
+        _duration = other._duration;
+        _direction = other._direction;
+        _value = 0;
+        _time = 0;
+        _func = other._func;
+        _data = other._data;
+
+        return *this;
+
     }
 
     //_________________________________________________
