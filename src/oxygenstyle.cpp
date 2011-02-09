@@ -3123,9 +3123,44 @@ namespace Oxygen
 
         // no glow when widget is disabled
         if( options&Disabled ) return ColorUtils::Rgba();
-        else if( options & Hover ) return settings().palette().color( Palette::Hover );
-        else if( options & Focus ) return  settings().palette().color( Palette::Focus );
-        else return ColorUtils::Rgba();
+
+        if( mode == AnimationNone || opacity < 0 )
+        {
+
+            if( options & Hover ) return settings().palette().color( Palette::Hover );
+            if( options & Focus ) return  settings().palette().color( Palette::Focus );
+            return ColorUtils::Rgba();
+
+        } else if( mode == AnimationHover ) {
+
+            if( options & Focus )
+            {
+                return ColorUtils::mix(
+                    settings().palette().color( Palette::Focus ),
+                    settings().palette().color( Palette::Hover ), opacity );
+            } else {
+
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), opacity );
+
+            }
+
+        } else if( mode == AnimationFocus ) {
+
+            if( options & Hover )
+            {
+
+                return ColorUtils::mix(
+                    settings().palette().color( Palette::Hover ),
+                    settings().palette().color( Palette::Focus ), opacity );
+
+            } else {
+
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), opacity );
+
+            }
+
+
+        } else return ColorUtils::Rgba();
 
     }
 

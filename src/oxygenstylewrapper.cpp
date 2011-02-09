@@ -856,7 +856,17 @@ namespace Oxygen
                     if( style )
                     { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
-                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
+                    // store animation state
+                    const bool enabled( !(options&Disabled) );
+                    const bool sunken( options&Sunken );
+                    const bool hoverAnimated( enabled && !sunken && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationHover ) );
+                    const bool focusAnimated( enabled && !sunken && Style::instance().animations().widgetStateEngine().isAnimated( widget, AnimationFocus ) );
+                    const double hoverOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationHover ) );
+                    const double focusOpacity( Style::instance().animations().widgetStateEngine().opacity( widget, AnimationFocus ) );
+
+                    if( hoverAnimated ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, hoverOpacity, AnimationHover );
+                    else if( focusAnimated ) Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, focusOpacity, AnimationFocus );
+                    else Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options );
 
                 }
 
