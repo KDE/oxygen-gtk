@@ -83,12 +83,45 @@ namespace Oxygen
             }
         }
 
+        //! true if widget is animated
+        virtual bool isAnimated( GtkWidget* widget, AnimationMode mode )
+        {
+            switch( mode )
+            {
+                case AnimationHover:
+                return _hoverData.value( widget ).timeLine().isRunning();
+
+                case AnimationFocus:
+                return _focusData.value( widget ).timeLine().isRunning();
+
+                default: return false;
+            }
+        }
+
+        //! animation opacity
+        virtual double opacity( GtkWidget* widget, AnimationMode mode )
+        {
+            if( !isAnimated( widget, mode ) ) return WidgetStateData::OpacityInvalid;
+            switch( mode )
+            {
+                case AnimationHover:
+                return _hoverData.value( widget ).opacity();
+
+                case AnimationFocus:
+                return _focusData.value( widget ).opacity();
+
+                default: return WidgetStateData::OpacityInvalid;
+
+            }
+
+        }
+
         protected:
 
         //! register widget in given map
         bool registerWidget( GtkWidget* widget, DataMap<WidgetStateData>& dataMap ) const
         {
-            
+
             if( dataMap.contains( widget ) ) return false;
             if( enabled() )
             {
