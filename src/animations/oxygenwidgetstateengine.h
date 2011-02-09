@@ -72,6 +72,9 @@ namespace Oxygen
         //! enabled state
         inline virtual void setEnabled( bool value );
 
+        //!@name accessors
+        //@{
+
         //! true if widget is included
         virtual bool contains( GtkWidget* widget, AnimationMode mode )
         {
@@ -115,6 +118,29 @@ namespace Oxygen
             }
 
         }
+
+        //@}
+
+        //!@name modifiers
+        //@{
+
+        //! update state
+        virtual bool updateState( GtkWidget* widget, AnimationMode mode, bool value )
+        {
+            switch( mode )
+            {
+                case AnimationHover:
+                return _hoverData.value( widget ).updateState( value );
+
+                case AnimationFocus:
+                return _focusData.value( widget ).updateState( value );
+
+                default: return false;
+            }
+
+        }
+
+        //@}
 
         protected:
 
