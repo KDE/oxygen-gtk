@@ -54,7 +54,7 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget*, AnimationModes );
+        virtual bool registerWidget( GtkWidget*, AnimationModes, const StyleOptions& = StyleOptions() );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
@@ -86,7 +86,7 @@ namespace Oxygen
             if( !( enabled() && widget ) ) return AnimationData();
 
             // register
-            registerWidget( widget, AnimationHover|AnimationFocus );
+            registerWidget( widget, AnimationHover|AnimationFocus, options );
 
             // stores WidgetStateData locally for speedup
             WidgetStateData& hoverData( _hoverData.value( widget ) );
@@ -116,7 +116,7 @@ namespace Oxygen
         protected:
 
         //! register widget in given map
-        bool registerWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;
+        bool registerWidget( GtkWidget*, DataMap<WidgetStateData>&, const bool& = false ) const;
 
         //! register widget in given map
         void unregisterWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;

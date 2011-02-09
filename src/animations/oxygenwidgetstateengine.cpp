@@ -24,7 +24,7 @@ namespace Oxygen
 {
 
     //________________________________________________________
-    bool WidgetStateEngine::registerWidget( GtkWidget* widget, AnimationModes modes )
+    bool WidgetStateEngine::registerWidget( GtkWidget* widget, AnimationModes modes, const StyleOptions& options )
     {
 
         #if OXYGEN_DEBUG
@@ -36,8 +36,8 @@ namespace Oxygen
         #endif
 
         bool registered( false );
-        if( (modes&AnimationHover) && registerWidget( widget, _hoverData ) ) registered = true;
-        if( (modes&AnimationFocus) && registerWidget( widget, _focusData ) ) registered = true;
+        if( (modes&AnimationHover) && registerWidget( widget, _hoverData, (options&Hover)&&!(options&Disabled) ) ) registered = true;
+        if( (modes&AnimationFocus) && registerWidget( widget, _focusData, (options&Focus)&&!(options&Disabled) ) ) registered = true;
 
         if( registered )
         { BaseEngine::registerWidget( widget ); }
@@ -125,13 +125,15 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool WidgetStateEngine::registerWidget( GtkWidget* widget, DataMap<WidgetStateData>& dataMap ) const
+    bool WidgetStateEngine::registerWidget( GtkWidget* widget, DataMap<WidgetStateData>& dataMap, const bool& state ) const
     {
 
         if( dataMap.contains( widget ) ) return false;
 
         WidgetStateData& data( dataMap.registerWidget( widget ) );
+        data.updateState( state );
         data.timeLine().setDuration( _duration );
+
 
         // connect
         if( enabled() ) data.connect( widget );
