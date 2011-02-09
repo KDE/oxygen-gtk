@@ -23,6 +23,10 @@
 
 namespace Oxygen
 {
+
+    //_____________________________________________
+    const double WidgetStateData::OpacityInvalid = -1;
+
     //_____________________________________________
     WidgetStateData::WidgetStateData( void ):
         _target( 0L ),

@@ -33,6 +33,9 @@ namespace Oxygen
 
         public:
 
+        //! invalid opacity
+        static const double OpacityInvalid;
+
         //! constructor
         WidgetStateData( void );
 
