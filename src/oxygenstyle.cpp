@@ -1163,6 +1163,8 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
+        double opacity,
+        AnimationMode mode,
         TileSet::Tiles tiles
         )
     {
@@ -1254,16 +1256,10 @@ namespace Oxygen
 
         } else {
 
-            const bool enabled( !(options&Disabled ) );
-            if( enabled && (options & Hover) )
+            const ColorUtils::Rgba glow( slabShadowColor( options ) );
+            if( glow.isValid() )
             {
 
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-                helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
-
-            } else if( enabled && (options & Focus) ) {
-
-                ColorUtils::Rgba glow( settings().palette().color( Palette::Focus) );
                 helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
 
             } else {
@@ -3131,7 +3127,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    ColorUtils::Rgba Style::slabShadowColor( StyleOptions options ) const
+    ColorUtils::Rgba Style::slabShadowColor( const StyleOptions& options, double opacity, AnimationMode mode ) const
     {
 
         ColorUtils::Rgba glow;

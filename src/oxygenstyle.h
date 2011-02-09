@@ -22,6 +22,7 @@
 */
 
 #include "oxygenanimations.h"
+#include "oxygenanimationmodes.h"
 #include "oxygenargbhelper.h"
 #include "oxygencairocontext.h"
 #include "oxygengeometry.h"
@@ -164,7 +165,10 @@ namespace Oxygen
         { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderButtonSlab( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
+        { renderButtonSlab( window, clipRect, x, y, w, h, options, WidgetStateData::OpacityInvalid, AnimationNone, tiles ); }
+
+        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, double, AnimationMode, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
@@ -327,7 +331,7 @@ namespace Oxygen
         void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
 
         //! slab glowing color
-        ColorUtils::Rgba slabShadowColor( StyleOptions ) const;
+        ColorUtils::Rgba slabShadowColor( const StyleOptions&, double = WidgetStateData::OpacityInvalid, AnimationMode = AnimationNone ) const;
 
         //! slab
         void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles tiles = TileSet::Ring );
