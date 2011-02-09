@@ -48,6 +48,7 @@ namespace Oxygen
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
+        registerEngine( _widgetStateEngine = new WidgetStateEngine( this ) );
 
     }
 
