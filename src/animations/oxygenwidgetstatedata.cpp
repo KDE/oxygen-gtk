@@ -20,6 +20,9 @@
 */
 
 #include "oxygenwidgetstatedata.h"
+#include "../config.h"
+
+#include <iostream>
 
 namespace Oxygen
 {
@@ -37,13 +40,22 @@ namespace Oxygen
     //_____________________________________________
     void WidgetStateData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WidgetStateData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         _target = widget;
         _timeLine.connect( (GSourceFunc)delayedUpdate, this );
     }
 
     //_____________________________________________
-    void WidgetStateData::disconnect( GtkWidget* )
+    void WidgetStateData::disconnect( GtkWidget* widget )
     {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WidgetStateData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
         _timeLine.disconnect();
         _target = 0L;
         _state = false;
@@ -53,6 +65,15 @@ namespace Oxygen
     bool WidgetStateData::updateState( bool state )
     {
         if( state == _state ) return false;
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::WidgetStateData::updateState - "
+            << _target << " (" << G_OBJECT_TYPE_NAME( _target ) << ")"
+            << " state: " << state
+            << std::endl;
+        #endif
+
         _state = state;
 
         // change direction
@@ -67,7 +88,18 @@ namespace Oxygen
     //_____________________________________________
     gboolean WidgetStateData::delayedUpdate( gpointer pointer )
     {
+
         WidgetStateData& data( *static_cast<WidgetStateData*>( pointer ) );
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::WidgetStateData::updateState - "
+            << data._target << " (" << G_OBJECT_TYPE_NAME( data._target ) << ")"
+            << " state: " << data._state
+            << " opacity: " << data._timeLine.value()
+            << std::endl;
+        #endif
+
         if( data._target )
         { gtk_widget_queue_draw( data._target ); }
 
