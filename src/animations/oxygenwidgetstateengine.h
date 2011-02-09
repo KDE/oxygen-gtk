@@ -26,7 +26,10 @@
 #include "oxygendatamap.h"
 #include "oxygenwidgetstatedata.h"
 
+#include "../config.h"
+
 #include <gtk/gtk.h>
+#include <iostream>
 
 namespace Oxygen
 {
@@ -49,75 +52,25 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* widget, AnimationModes modes )
-        {
-            bool registered( false );
-            if( (modes&AnimationHover) && registerWidget( widget, _hoverData ) ) registered = true;
-            if( (modes&AnimationFocus) && registerWidget( widget, _focusData ) ) registered = true;
-
-            if( registered )
-            { BaseEngine::registerWidget( widget ); }
-
-            return registered;
-
-        }
+        virtual bool registerWidget( GtkWidget*, AnimationModes );
 
         //! unregister widget
-        virtual void unregisterWidget( GtkWidget* widget )
-        {
-            unregisterWidget( widget, _hoverData );
-            unregisterWidget( widget, _focusData );
-        }
+        virtual void unregisterWidget( GtkWidget* );
 
         //! enabled state
-        inline virtual void setEnabled( bool value );
+        virtual void setEnabled( bool );
 
         //!@name accessors
         //@{
 
         //! true if widget is included
-        virtual bool contains( GtkWidget* widget, AnimationMode mode )
-        {
-            switch( mode )
-            {
-                case AnimationHover: return _hoverData.contains( widget );
-                case AnimationFocus: return _focusData.contains( widget );
-                default: return false;
-            }
-        }
+        virtual bool contains( GtkWidget*, AnimationMode );
 
         //! true if widget is animated
-        virtual bool isAnimated( GtkWidget* widget, AnimationMode mode )
-        {
-            switch( mode )
-            {
-                case AnimationHover:
-                return _hoverData.value( widget ).timeLine().isRunning();
-
-                case AnimationFocus:
-                return _focusData.value( widget ).timeLine().isRunning();
-
-                default: return false;
-            }
-        }
+        virtual bool isAnimated( GtkWidget*, AnimationMode );
 
         //! animation opacity
-        virtual double opacity( GtkWidget* widget, AnimationMode mode )
-        {
-            if( !isAnimated( widget, mode ) ) return WidgetStateData::OpacityInvalid;
-            switch( mode )
-            {
-                case AnimationHover:
-                return _hoverData.value( widget ).opacity();
-
-                case AnimationFocus:
-                return _focusData.value( widget ).opacity();
-
-                default: return WidgetStateData::OpacityInvalid;
-
-            }
-
-        }
+        virtual double opacity( GtkWidget*, AnimationMode );
 
         //@}
 
@@ -125,49 +78,17 @@ namespace Oxygen
         //@{
 
         //! update state
-        virtual bool updateState( GtkWidget* widget, AnimationMode mode, bool value )
-        {
-            switch( mode )
-            {
-                case AnimationHover:
-                return _hoverData.value( widget ).updateState( value );
-
-                case AnimationFocus:
-                return _focusData.value( widget ).updateState( value );
-
-                default: return false;
-            }
-
-        }
+        virtual bool updateState( GtkWidget*, AnimationMode, bool );
 
         //@}
 
         protected:
 
         //! register widget in given map
-        bool registerWidget( GtkWidget* widget, DataMap<WidgetStateData>& dataMap ) const
-        {
-
-            if( dataMap.contains( widget ) ) return false;
-            if( enabled() )
-            {
-
-                WidgetStateData& data( dataMap.registerWidget( widget ) );
-                data.connect( widget );
-
-            } else dataMap.registerWidget( widget );
-
-            return true;
-
-        }
+        bool registerWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;
 
         //! register widget in given map
-        void unregisterWidget( GtkWidget* widget, DataMap<WidgetStateData>& data ) const
-        {
-            if( !data.contains( widget ) ) return;
-            data.value( widget ).disconnect( widget );
-            data.erase( widget );
-        }
+        void unregisterWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;
 
         private:
 
@@ -178,27 +99,6 @@ namespace Oxygen
         //@}
 
     };
-
-    //________________________________________________________________________
-    void WidgetStateEngine::setEnabled( bool value )
-    {
-
-        if( enabled() == value ) return;
-        BaseEngine::setEnabled( value );
-        if( enabled() )
-        {
-
-            _hoverData.connectAll();
-            _focusData.connectAll();
-
-        } else {
-
-            _hoverData.disconnectAll();
-            _focusData.disconnectAll();
-
-        }
-
-    }
 
 }
 

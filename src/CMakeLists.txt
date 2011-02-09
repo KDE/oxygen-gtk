@@ -24,6 +24,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygentreeviewdata.cpp
     animations/oxygentreeviewengine.cpp
     animations/oxygenwidgetstatedata.cpp
+    animations/oxygenwidgetstateengine.cpp
     oxygenapplicationname.cpp
     oxygenargbhelper.cpp
     oxygencairocontext.cpp
@@ -59,8 +60,8 @@ set( oxygen_gtk_SOURCES
 add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
 
 # Add GTK's cflags
-set( CMAKE_CXX_FLAGS " -Wall ${CMAKE_CXX_FLAGS}" )
-set( CMAKE_C_FLAGS " -Wall ${CMAKE_C_FLAGS}" )
+set( CMAKE_CXX_FLAGS " -Wall -g ${CMAKE_CXX_FLAGS}" )
+set( CMAKE_C_FLAGS " -Wall -g ${CMAKE_C_FLAGS}" )
 
 target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${DBUS_LIBRARIES} ${X11_X11_LIB} )
 
