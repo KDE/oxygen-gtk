@@ -37,6 +37,7 @@
 #include "oxygentabwidgetengine.h"
 #include "oxygentreeviewengine.h"
 #include "oxygenwidgetsizeengine.h"
+#include "oxygenwidgetstateengine.h"
 
 #include <gtk/gtk.h>
 #include <vector>
@@ -124,6 +125,10 @@ namespace Oxygen
         WidgetSizeEngine& widgetSizeEngine( void ) const
         { return *_widgetSizeEngine; }
 
+        //! widget state engine
+        WidgetStateEngine& widgetStateEngine( void ) const
+        { return *_widgetStateEngine; }
+
         protected:
 
         //! register new engine
@@ -185,6 +190,9 @@ namespace Oxygen
 
         //! widget size engine
         WidgetSizeEngine* _widgetSizeEngine;
+
+        //! widget state engine
+        WidgetStateEngine* _widgetStateEngine;
 
         //!@name hooks
         //@{
