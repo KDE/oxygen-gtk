@@ -109,64 +109,7 @@ namespace Oxygen
 
         } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
 
-            unsigned int flags(0);
-            if( Style::instance().settings().applicationName().isMozilla() )
-            {
-
-                // for mozilla on has to
-                flags |= QtSettings::All;
-
-            } else {
-
-                /*
-                for all other applications, one always have to update the icons.
-                This does not cost much extra overload when icon options are actually unchanged.
-                Besides it is necessary to get the proper icons re-mapping after any other
-                configuration change
-                */
-                flags |= QtSettings::All;
-
-                // get argument to check which flags have to be reset
-                // load argument
-                DBusError error;
-                dbus_error_init( &error );
-                int type(0);
-                if( !dbus_message_get_args( message, &error, DBUS_TYPE_INT32, &type, DBUS_TYPE_INVALID ) )
-                {
-
-                    #if OXYGEN_DEBUG
-                    std::cerr << "Oxygen::DBus::signalFilter - " << error.message << std::endl;
-                    #endif
-                    dbus_error_free (&error);
-                    return DBUS_HANDLER_RESULT_HANDLED;
-
-                }
-
-                switch( type )
-                {
-                    case PaletteChanged:
-                    flags |= QtSettings::Colors;
-                    break;
-
-                    case FontChanged:
-                    flags |= QtSettings::Fonts;
-                    break;
-
-                    case IconChanged:
-                    flags |= QtSettings::Icons;
-                    break;
-
-                    default:
-                    case SettingsChanged:
-                    case ToolbarStyleChanged:
-                    flags |= QtSettings::KdeGlobals;
-                    break;
-
-                }
-
-            }
-
-            Style::instance().initialize( flags|QtSettings::Forced );
+            Style::instance().initialize( QtSettings::All|QtSettings::Forced );
             gtk_rc_reset_styles( gtk_settings_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
