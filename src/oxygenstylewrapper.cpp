@@ -778,7 +778,12 @@ namespace Oxygen
 
                 if( widget && Gtk::gtk_button_is_flat( widget ) )
                 {
+
+                    // set button as flat and disable focus
                     options |= Flat;
+                    options &= ~Focus;
+
+                    // register to Hover engine and check state
                     Style::instance().animations().hoverEngine().registerWidget( widget );
                     if( Style::instance().animations().hoverEngine().hovered( widget ) )
                     { options |= Hover; }
