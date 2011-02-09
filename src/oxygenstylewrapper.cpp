@@ -842,6 +842,12 @@ namespace Oxygen
 
                 } else {
 
+                    // register to widget state engine, update focus and hover state
+                    Style::instance().animations().widgetStateEngine().registerWidget( widget, AnimationHover|AnimationFocus );
+
+                    Style::instance().animations().widgetStateEngine().updateState( widget, AnimationHover, options&Hover );
+                    Style::instance().animations().widgetStateEngine().updateState( widget, AnimationFocus, options&Focus );
+
                     if( style )
                     { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
