@@ -194,9 +194,13 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles = TileSet::Ring );
+
         void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, tiles ); }
+        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, AnimationData(), tiles ); }
+
+        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, const AnimationData& animationData, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, animationData, tiles ); }
 
         //@}
 
@@ -334,6 +338,9 @@ namespace Oxygen
 
         //! slab glowing color
         ColorUtils::Rgba slabShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
+
+        //! hole glowing color
+        ColorUtils::Rgba holeShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //! slab
         void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );

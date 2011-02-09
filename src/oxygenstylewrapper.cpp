@@ -483,8 +483,10 @@ namespace Oxygen
 
                 }
 
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+
                 // render hole
-                Style::instance().renderHole( window, clipRect, x, y, w, h, options, tiles );
+                Style::instance().renderHole( window, clipRect, x, y, w, h, options, data, tiles );
 
             }
 
@@ -802,7 +804,9 @@ namespace Oxygen
 
                         // Hover doesn't work correctly in OpenOffice, so disable it
                         options &= ~(Hover|Focus);
-                        Style::instance().renderHole(window,clipRect,x-8,y-1,w+9,h+2,options,(TileSet::Tile)(TileSet::Full & (~TileSet::Left)));
+                        TileSet::Tiles tiles( TileSet::Full );
+                        tiles &= ( ~TileSet::Left );
+                        Style::instance().renderHole( window, clipRect, x-8, y-1, w+9, h+2, options, tiles );
                         return;
 
                     } else {
@@ -1476,10 +1480,18 @@ namespace Oxygen
                     // shrink entry by 3px at each side
                     if( d.isEntry() )
                     {
+
                         x += Style::Entry_SideMargin;
                         w -= 2*Style::Entry_SideMargin;
+                        const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                        Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
+
+                    } else {
+
+                        Style::instance().renderHole( window, clipRect, x, y, w, h, options );
+
                     }
-                    Style::instance().renderHole( window, clipRect, x, y, w, h, options );
+
 
                 }
 

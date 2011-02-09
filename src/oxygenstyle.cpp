@@ -1582,7 +1582,9 @@ namespace Oxygen
     void Style::renderHole(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options,
+        gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
+        const StyleOptions& options,
+        const AnimationData& animationData,
         TileSet::Tiles tiles )
     {
 
@@ -1607,22 +1609,9 @@ namespace Oxygen
 
         if( fill.isValid() ) tiles |= TileSet::Center;
 
-        if( enabled && (options & Focus) )
-        {
-
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Focus ) );
-            helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
-
-        } else if( enabled && (options & Hover) ) {
-
-            const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-            helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
-
-        } else {
-
-            helper().hole( base, fill, 0, 7 ).render( context, x, y, w, h, tiles );
-
-        }
+        const ColorUtils::Rgba glow( holeShadowColor( options, animationData ) );
+        if( glow.isValid() ) helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
+        else helper().hole( base, fill, 0, 7 ).render( context, x, y, w, h, tiles );
 
     }
 
@@ -3173,6 +3162,47 @@ namespace Oxygen
 
             }
 
+
+        } else return ColorUtils::Rgba();
+
+    }
+
+    //____________________________________________________________________________________
+    ColorUtils::Rgba Style::holeShadowColor( const StyleOptions& options, const AnimationData& data ) const
+    {
+
+        // no glow when widget is disabled
+        if( options&Disabled ) return ColorUtils::Rgba();
+
+        if( data._mode == AnimationFocus && data._opacity >= 0 )
+        {
+
+            if( options & Hover )
+            {
+
+                return ColorUtils::mix(
+                    settings().palette().color( Palette::Hover ),
+                    settings().palette().color( Palette::Focus ), data._opacity );
+
+            } else return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), data._opacity );
+
+        } else if( options & Focus ) {
+
+            return settings().palette().color( Palette::Focus );
+
+        } else if( data._mode == AnimationHover && data._opacity >= 0 ) {
+
+            if( options & Focus )
+            {
+                return ColorUtils::mix(
+                    settings().palette().color( Palette::Focus ),
+                    settings().palette().color( Palette::Hover ), data._opacity );
+
+            } else return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+
+        } else if( options & Hover ) {
+
+            return settings().palette().color( Palette::Hover );
 
         } else return ColorUtils::Rgba();
 
