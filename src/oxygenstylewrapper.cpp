@@ -2082,9 +2082,9 @@ namespace Oxygen
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
 
-            // FIXME: for now (until fixed), we disable scrollbar arrow animation
-            // this will require a dedicated engine
+            // use dedicated engine to get animation state
             useWidgetStateEngine = false;
+            data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
 
             GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
             GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );

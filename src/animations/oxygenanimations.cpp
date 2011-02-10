@@ -50,6 +50,7 @@ namespace Oxygen
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
         registerEngine( _widgetStateEngine = new WidgetStateEngine( this ) );
         registerEngine( _arrowStateEngine = new ArrowStateEngine( this ) );
+        registerEngine( _scrollBarStateEngine = new ScrollBarStateEngine( this ) );
 
     }
 
