@@ -77,11 +77,14 @@ namespace Oxygen
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
 
             // stop previous animation if running
-            if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
+            if( _current._index != IndexInvalid )
+            {
+                if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
-            // move current tab index to previous
-            _previous._index = _current._index;
-            if( _previous._index != IndexInvalid ) _previous._timeLine.start();
+                // move current tab index to previous
+                _previous._index = _current._index;
+                _previous._timeLine.start();
+            }
 
             // assign new index to current and start animation
             _current._index = index;
