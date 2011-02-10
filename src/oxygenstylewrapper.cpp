@@ -2753,7 +2753,16 @@ namespace Oxygen
 
         /* If the state was wildcarded, then generate a state. */
         GdkPixbuf *stated( scaled );
-        if( gtk_icon_source_get_state_wildcarded( source ) )
+
+        // non-flat pushbuttons don't have any icon effect
+        bool noEffect=false;
+        if(GtkWidget* button=Gtk::gtk_parent_button(widget))
+        {
+            if(gtk_button_get_relief(GTK_BUTTON(button))==GTK_RELIEF_NORMAL)
+                noEffect=true;
+        }
+
+        if( !noEffect && gtk_icon_source_get_state_wildcarded( source ) )
         {
 
             if( state == GTK_STATE_INSENSITIVE )
