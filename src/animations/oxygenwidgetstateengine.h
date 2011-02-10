@@ -22,8 +22,8 @@
 
 
 #include "../oxygenanimationdata.h"
-#include "../oxygenapplicationname.h"
 #include "../oxygenstyleoptions.h"
+#include "oxygenanimationengine.h"
 #include "oxygenbaseengine.h"
 #include "oxygendatamap.h"
 #include "oxygenwidgetstatedata.h"
@@ -39,7 +39,7 @@ namespace Oxygen
     class Animations;
 
     //! associates widgets with some type of data
-    class WidgetStateEngine: public BaseEngine
+    class WidgetStateEngine: public BaseEngine, public AnimationEngine
     {
 
         public:
@@ -66,10 +66,6 @@ namespace Oxygen
 
         //! transition duration
         virtual void setDuration( int );
-
-        //! application name
-        virtual void setApplicationName( const ApplicationName& applicationName )
-        { _applicationName = applicationName; }
 
         //!@name accessors
         //@{
@@ -143,22 +139,7 @@ namespace Oxygen
             data.erase( widget );
         }
 
-        //! returs true if widget is black listed (based notably on application name)
-        bool widgetIsBlackListed( GtkWidget* widget ) const
-        {
-
-            // for now, only Mozilla applications need blacklisting
-            return _applicationName.isMozilla( widget );
-
-        }
-
         private:
-
-        //! application name
-        /*!
-        it is a copy from what's stored in Qt-Settings for easier discarding of
-        animations when application is invalid */
-        ApplicationName _applicationName;
 
         //! transition duration
         int _duration;
