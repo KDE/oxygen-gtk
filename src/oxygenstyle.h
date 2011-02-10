@@ -143,7 +143,7 @@ namespace Oxygen
         bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
-        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //!@name progressbar
         //@{

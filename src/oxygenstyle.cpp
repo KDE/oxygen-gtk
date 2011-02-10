@@ -677,7 +677,11 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderSplitter( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    void Style::renderSplitter(
+        GdkWindow* window, GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        const AnimationData& data ) const
     {
 
         // orientation
@@ -689,10 +693,22 @@ namespace Oxygen
         // context
         Cairo::Context context( window, clipRect );
 
-        // hover rect
-        if( options&Hover )
+        // hover color
+        ColorUtils::Rgba highlight;
+        if( data._mode == AnimationHover )
         {
-            const ColorUtils::Rgba& highlight( ColorUtils::alphaColor( ColorUtils::lightColor( base ), 0.5 ) );
+
+            highlight = ColorUtils::alphaColor( ColorUtils::lightColor( base ), 0.5*data._opacity );
+
+        } else if( options&Hover ) {
+
+            highlight = ColorUtils::alphaColor( ColorUtils::lightColor( base ), 0.5 );
+
+        }
+
+        // render hover rect
+        if( highlight.isValid() )
+        {
 
             Cairo::Context context( window, clipRect );
             Cairo::Pattern pattern;

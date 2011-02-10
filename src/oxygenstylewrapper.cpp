@@ -2670,7 +2670,8 @@ namespace Oxygen
 
             }
 
-            Style::instance().renderSplitter( window, 0L, x, y, w, h, options );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderSplitter( window, 0L, x, y, w, h, options, data );
 
         } else if( d.isHandleBox() ) {
 
