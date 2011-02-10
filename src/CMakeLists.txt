@@ -23,6 +23,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygenscrolledwindowdata.cpp
     animations/oxygentabwidgetdata.cpp
     animations/oxygentabwidgetstatedata.cpp
+    animations/oxygentabwidgetstateengine.cpp
     animations/oxygentimeline.cpp
     animations/oxygentimelineserver.cpp
     animations/oxygentimer.cpp

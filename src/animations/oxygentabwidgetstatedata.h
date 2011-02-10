@@ -52,6 +52,20 @@ namespace Oxygen
         //! update state
         bool updateState( int index, bool value );
 
+        //! enable state
+        void setEnabled( bool value )
+        {
+            _current._timeLine.setEnabled( value );
+            _previous._timeLine.setEnabled( value );
+        }
+
+        //! duration
+        void setDuration( int value )
+        {
+            _current._timeLine.setDuration( value );
+            _previous._timeLine.setDuration( value );
+        }
+
         //! true if tab index is animated
         bool isAnimated( int index ) const
         {
