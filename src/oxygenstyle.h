@@ -232,10 +232,21 @@ namespace Oxygen
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
         //! tab
-        void renderTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
+        void renderTab(
+            GdkWindow*, GdkRectangle*,
+            gint, gint, gint, gint,
+            GtkPositionType,
+            const StyleOptions&,
+            const TabOptions&,
+            const AnimationData& = AnimationData() );
 
         //! tabbar base
-        void renderTabBarBase( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, Gtk::Gap, const StyleOptions&, TabOptions );
+        void renderTabBarBase(
+            GdkWindow*, GdkRectangle*,
+            gint, gint, gint, gint,
+            GtkPositionType, Gtk::Gap,
+            const StyleOptions&,
+            const TabOptions& );
 
         //! tabwidget frame
         void renderTabBarFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
@@ -332,13 +343,30 @@ namespace Oxygen
         //@{
 
         //! tab
-        void renderActiveTab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
+        void renderActiveTab(
+            GdkWindow*, GdkRectangle*,
+            gint, gint, gint, gint,
+            GtkPositionType,
+            const StyleOptions&,
+            const TabOptions& );
 
         //! tab
-        void renderInactiveTab_Plain( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
+        void renderInactiveTab_Plain(
+            GdkWindow*, GdkRectangle*,
+            gint, gint, gint, gint,
+            GtkPositionType,
+            const StyleOptions&,
+            const TabOptions&,
+            const AnimationData& );
 
         //! tab
-        void renderInactiveTab_Single( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkPositionType, const StyleOptions&, TabOptions );
+        void renderInactiveTab_Single(
+            GdkWindow*, GdkRectangle*,
+            gint, gint, gint, gint,
+            GtkPositionType,
+            const StyleOptions&,
+            const TabOptions&,
+            const AnimationData& );
 
         //! slab glowing color
         ColorUtils::Rgba slabShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;

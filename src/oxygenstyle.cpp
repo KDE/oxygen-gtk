@@ -64,6 +64,7 @@ namespace Oxygen
         animations().widgetStateEngine().setApplicationName( settings().applicationName() );
         animations().arrowStateEngine().setApplicationName( settings().applicationName() );
         animations().scrollBarStateEngine().setApplicationName( settings().applicationName() );
+        animations().tabWidgetStateEngine().setApplicationName( settings().applicationName() );
 
         if( flags&QtSettings::Oxygen )
         {
@@ -81,6 +82,9 @@ namespace Oxygen
 
             animations().scrollBarStateEngine().setEnabled( settings().genericAnimationsEnabled() );
             animations().scrollBarStateEngine().setDuration( settings().genericAnimationsDuration() );
+
+            animations().tabWidgetStateEngine().setEnabled( settings().genericAnimationsEnabled() );
+            animations().tabWidgetStateEngine().setDuration( settings().genericAnimationsDuration() );
 
         }
 
@@ -2057,7 +2061,8 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
-        TabOptions tabOptions
+        const TabOptions& tabOptions,
+        const AnimationData& data
         )
     {
 
@@ -2070,8 +2075,8 @@ namespace Oxygen
 
             switch( settings().tabStyle() )
             {
-                case QtSettings::TS_SINGLE: return renderInactiveTab_Single( window, clipRect, x, y, w, h, side, options, tabOptions );
-                case QtSettings::TS_PLAIN: return renderInactiveTab_Plain( window, clipRect, x, y, w, h, side, options, tabOptions );
+                case QtSettings::TS_SINGLE: return renderInactiveTab_Single( window, clipRect, x, y, w, h, side, options, tabOptions, data );
+                case QtSettings::TS_PLAIN: return renderInactiveTab_Plain( window, clipRect, x, y, w, h, side, options, tabOptions, data );
                 default: return;
             }
 
@@ -2087,7 +2092,7 @@ namespace Oxygen
         GtkPositionType side,
         Gtk::Gap gap,
         const StyleOptions& options,
-        TabOptions tabOptions
+        const TabOptions& tabOptions
         )
     {
 
@@ -2140,7 +2145,9 @@ namespace Oxygen
     void Style::renderTabBarFrame(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
+        gint x, gint y, gint w, gint h,
+        const Gtk::Gap& gap,
+        const StyleOptions& options )
     {
 
         // define colors
@@ -2451,7 +2458,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
-        TabOptions tabOptions
+        const TabOptions& tabOptions
         )
     {
 
@@ -2628,7 +2635,8 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
-        TabOptions tabOptions
+        const TabOptions& tabOptions,
+        const AnimationData& data
         )
     {
 
@@ -2720,17 +2728,12 @@ namespace Oxygen
         }
 
         // render tab
-        const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
-        if( (options&Hover) )
-        {
+        ColorUtils::Rgba glow;
+        if( data._mode == AnimationHover ) glow = ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+        else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
 
-            helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        } else {
-
-            helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-
-        }
+        if( glow.isValid() ) helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        else helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         // adjust rect for filling
         SlabRect fillSlab( tabSlab );
@@ -2787,7 +2790,7 @@ namespace Oxygen
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         {
 
-            if( (iter->_options&Hover) && (options&Hover) )
+            if( (iter->_options&Hover) && glow.isValid() )
             {
 
                 helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
@@ -2807,7 +2810,8 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
-        TabOptions tabOptions
+        const TabOptions& tabOptions,
+        const AnimationData& data
         )
     {
         // convenience flags
@@ -3152,13 +3156,16 @@ namespace Oxygen
         cairo_set_source( context, darkColor );
         cairo_stroke( context );
 
+        ColorUtils::Rgba glow;
+        if( data._mode == AnimationHover ) glow = ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+        else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
+
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         {
             // render tab
-            if( options&Hover )
+            if( glow.isValid() )
             {
 
-                const ColorUtils::Rgba glow( settings().palette().color( Palette::Hover ) );
                 helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
 
             } else {
