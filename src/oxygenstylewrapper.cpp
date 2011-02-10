@@ -267,13 +267,12 @@ namespace Oxygen
                     if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
                     { options |= Hover; }
 
-                    if( cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ) )
+                    const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
+                    if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
                     {
 
                         // tree lines
-                        if(
-                            Style::instance().settings().viewDrawTreeBranchLines() &&
-                            gtk_tree_view_get_show_expanders( treeView ) )
+                        if( Style::instance().settings().viewDrawTreeBranchLines() && showExpanders )
                         {
 
                             // generate flags from cell info
@@ -313,7 +312,7 @@ namespace Oxygen
 
                         }
 
-                    } else if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
+                    } else if( showExpanders && (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
 
                         if( reversed ) forceCellStart = true;
                         else forceCellEnd = true;
