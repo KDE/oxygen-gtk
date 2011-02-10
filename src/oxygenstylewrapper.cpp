@@ -436,19 +436,19 @@ namespace Oxygen
 
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
-
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
                     // hide left part and increase width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and increase width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
 
                 }
             } else {
@@ -486,9 +486,8 @@ namespace Oxygen
 
                 }
 
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-
                 // render hole
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
                 Style::instance().renderHole( window, clipRect, x, y, w, h, options, data, tiles );
 
             }
@@ -695,6 +694,7 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -704,7 +704,7 @@ namespace Oxygen
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, tiles  );
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, data, tiles  );
 
                 } else {
 
@@ -713,7 +713,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
 
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, tiles  );
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, data, tiles  );
 
                 }
 
@@ -1345,7 +1345,7 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
-
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -1353,7 +1353,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground( window, clipRect, x-6, y, w+7, h, tiles );
 
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, data, tiles );
 
                 } else {
 
@@ -1362,7 +1362,7 @@ namespace Oxygen
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, data, tiles );
 
                 }
 
