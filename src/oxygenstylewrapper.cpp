@@ -394,7 +394,7 @@ namespace Oxygen
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
 
                 // animation data
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
@@ -435,7 +435,7 @@ namespace Oxygen
 
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -486,7 +486,7 @@ namespace Oxygen
                 }
 
                 // render hole
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 Style::instance().renderHole( window, clipRect, x, y, w, h, options, data, tiles );
 
             }
@@ -693,7 +693,7 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring);
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -1095,7 +1095,7 @@ namespace Oxygen
             { options |= Hover; }
 
             TileSet::Tiles tiles( TileSet::Ring);
-            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             {
@@ -1344,7 +1344,7 @@ namespace Oxygen
 
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -1402,7 +1402,7 @@ namespace Oxygen
                 x-=1; w+=2;
 
                 // animation data
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
                 TileSet::Tiles tiles( TileSet::Ring );
 
@@ -1496,7 +1496,7 @@ namespace Oxygen
                     }
 
                     // animation
-                    const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                    const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                     Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
 
                 }
