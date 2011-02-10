@@ -3,7 +3,6 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
-* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -27,14 +26,17 @@
 
 namespace Oxygen
 {
-    // track widget state changes events
+    //! track widget state changes events
     class WidgetStateData
     {
 
         public:
 
         //! constructor
-        WidgetStateData( void );
+        explicit WidgetStateData( void ):
+            _target( 0L ),
+            _state( false )
+        {}
 
         //! destructor
         virtual ~WidgetStateData( void )
