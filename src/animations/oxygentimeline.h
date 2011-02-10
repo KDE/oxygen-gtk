@@ -67,6 +67,10 @@ namespace Oxygen
         double value( void ) const
         { return _value; }
 
+        //! true if connected
+        bool isConnected( void ) const
+        { return _func && _data; }
+
         //! true if running
         bool isRunning( void ) const
         { return _running; }
