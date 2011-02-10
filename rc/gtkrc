@@ -29,6 +29,7 @@ gtk-alternative-button-order = 1
 # oxygen's generic style options
 style "oxygen-default"
 {
+    GtkPaned::handle-size = 3
 
     GtkButton::child_displacement_x = 0
     GtkButton::child_displacement_y = 0
