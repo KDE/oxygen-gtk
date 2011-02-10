@@ -1675,7 +1675,9 @@ namespace Oxygen
         GdkWindow* window,
         GdkRectangle* clipRect,
         GtkWidget* widget,
-        gint x, gint y, gint w, gint h, const StyleOptions& options )
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        const AnimationData& data )
     {
         ColorUtils::Rgba base;
         gint wh, wy;
@@ -1708,6 +1710,14 @@ namespace Oxygen
             else color = ColorUtils::mix( color, ColorUtils::tint( color, settings().palette().color( Palette::Hover ), 0.6 ) );
 
         }
+
+        // apply animation data
+        if( data._mode == AnimationHover )
+        {
+            if( data._opacity > 0 ) color = ColorUtils::alphaColor( color, data._opacity );
+            else return;
+        }
+
 
         if( isInMenuBar )
         {
