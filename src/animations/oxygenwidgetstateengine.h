@@ -83,7 +83,7 @@ namespace Oxygen
 
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
-        virtual AnimationData get( GtkWidget* widget, const StyleOptions& options, AnimationModes modes = AnimationHover|AnimationFocus )
+        virtual AnimationData get( GtkWidget* widget, const StyleOptions& options, AnimationModes modes = AnimationHover|AnimationFocus, AnimationMode precedence = AnimationHover )
         {
 
             // check widget
@@ -101,9 +101,20 @@ namespace Oxygen
             if( focusData ) focusData->updateState( (options&Focus) && !(options&Disabled) );
 
             // assume hover takes precedence over focus
-            if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
-            else if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
-            else return AnimationData();
+            switch( precedence )
+            {
+                default:
+                case AnimationHover:
+                if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
+                else if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
+                else return AnimationData();
+
+                case AnimationFocus:
+                if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
+                else if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
+                else return AnimationData();
+
+            }
 
         }
 
