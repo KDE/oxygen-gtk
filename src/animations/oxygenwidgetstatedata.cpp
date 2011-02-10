@@ -69,7 +69,7 @@ namespace Oxygen
         _timeLine.setDirection( state ? TimeLine::Forward:TimeLine::Backward );
 
         // restart timeLine if needed
-        if( _target && !_timeLine.isRunning() ) _timeLine.start();
+        if( _timeLine.isConnected() && !_timeLine.isRunning() ) _timeLine.start();
 
         return true;
     }
