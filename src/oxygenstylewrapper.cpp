@@ -1990,8 +1990,8 @@ namespace Oxygen
 
         } else if( d.isSpinButton() ) {
 
-            // FIXME: for now (until fixed), we disable spinbox arrow animation
-            // this will require a dedicated engine
+            // use dedicated engine to get animation state
+            data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
             useWidgetStateEngine = false;
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
@@ -2011,8 +2011,8 @@ namespace Oxygen
 
         } else if( d.isNotebook() ) {
 
-            // FIXME: for now (until fixed), we disable spinbox arrow animation
-            // this will require a dedicated engine
+            // use dedicated engine to get animation state
+            data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
             useWidgetStateEngine = false;
 
             if( GTK_IS_NOTEBOOK( widget ) )

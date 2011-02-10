@@ -49,6 +49,7 @@ namespace Oxygen
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
         registerEngine( _widgetStateEngine = new WidgetStateEngine( this ) );
+        registerEngine( _arrowStateEngine = new ArrowStateEngine( this ) );
 
     }
 

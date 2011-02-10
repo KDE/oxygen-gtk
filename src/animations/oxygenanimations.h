@@ -21,6 +21,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenarrowstateengine.h"
 #include "oxygenbackgroundhintengine.h"
 #include "oxygenbaseengine.h"
 #include "oxygencomboengine.h"
@@ -73,11 +74,11 @@ namespace Oxygen
         bool enabled( void ) const
         { return _enabled; }
 
-        //! comboboxengine
+        //! combo engine
         ComboEngine& comboEngine( void ) const
         { return *_comboEngine; }
 
-        //! comboboxengine
+        //! combobox engine
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
 
@@ -125,9 +126,18 @@ namespace Oxygen
         WidgetSizeEngine& widgetSizeEngine( void ) const
         { return *_widgetSizeEngine; }
 
+        //!@name animations specific engines
+        //@{
+
         //! widget state engine
         WidgetStateEngine& widgetStateEngine( void ) const
         { return *_widgetStateEngine; }
+
+        //! arrow state engine
+        ArrowStateEngine& arrowStateEngine( void ) const
+        { return *_arrowStateEngine; }
+
+        //@}
 
         protected:
 
@@ -191,8 +201,16 @@ namespace Oxygen
         //! widget size engine
         WidgetSizeEngine* _widgetSizeEngine;
 
+        //!@name Animation specific engines
+        //@{
+
         //! widget state engine
         WidgetStateEngine* _widgetStateEngine;
+
+        //! arrow state engine
+        ArrowStateEngine* _arrowStateEngine;
+
+        //@}
 
         //!@name hooks
         //@{
