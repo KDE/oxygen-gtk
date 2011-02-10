@@ -111,22 +111,8 @@ namespace Oxygen
 
         protected:
 
-        //!@name protected modifiers
-        //@{
-
         //! register widget
         virtual bool registerWidget( GtkWidget*, AnimationModes, const StyleOptions& = StyleOptions() );
-
-        //! true if widget is animated
-        virtual bool isAnimated( GtkWidget*, AnimationMode );
-
-        //! animation opacity
-        virtual double opacity( GtkWidget*, AnimationMode );
-
-        //! update state
-        virtual bool updateState( GtkWidget*, AnimationMode, bool );
-
-        //@}
 
         //! register widget in given map
         bool registerWidget( GtkWidget*, DataMap<WidgetStateData>&, const bool& = false ) const;

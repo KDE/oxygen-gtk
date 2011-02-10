@@ -89,66 +89,6 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool WidgetStateEngine::isAnimated( GtkWidget* widget, AnimationMode mode )
-    {
-        switch( mode )
-        {
-            case AnimationHover:
-            return _hoverData.value( widget ).timeLine().isRunning();
-
-            case AnimationFocus:
-            return _focusData.value( widget ).timeLine().isRunning();
-
-            default: return false;
-        }
-    }
-
-    //________________________________________________________
-    double WidgetStateEngine::opacity( GtkWidget* widget, AnimationMode mode )
-    {
-        if( !isAnimated( widget, mode ) ) return OpacityInvalid;
-        switch( mode )
-        {
-            case AnimationHover:
-            return _hoverData.value( widget ).opacity();
-
-            case AnimationFocus:
-            return _focusData.value( widget ).opacity();
-
-            default: return OpacityInvalid;
-
-        }
-
-    }
-
-    //________________________________________________________
-    bool WidgetStateEngine::updateState( GtkWidget* widget, AnimationMode mode, bool value )
-    {
-
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::WidgetStateEngine::updateState - "
-            << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " mode: " << mode
-            << " value: " << value
-            << std::endl;
-        #endif
-
-        switch( mode )
-        {
-            case AnimationHover:
-            return _hoverData.value( widget ).updateState( value );
-
-            case AnimationFocus:
-            return _focusData.value( widget ).updateState( value );
-
-            default: return false;
-        }
-
-    }
-
-    //________________________________________________________
     bool WidgetStateEngine::registerWidget( GtkWidget* widget, DataMap<WidgetStateData>& dataMap, const bool& state ) const
     {
 

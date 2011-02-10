@@ -98,18 +98,6 @@ namespace Oxygen
             return registered;
         }
 
-        //! true if widget is animated
-        virtual bool isAnimated( GtkWidget* widget, GtkArrowType type )
-        { return data().value( widget ).timeLine( type ).isRunning(); }
-
-        //! animation opacity
-        virtual double opacity( GtkWidget* widget, GtkArrowType type )
-        { return data().value( widget ).opacity( type ); }
-
-        //! update state
-        virtual bool updateState( GtkWidget* widget, GtkArrowType type, bool value )
-        { return data().value( widget ).updateState( type, value ); }
-
         //@}
 
         private:
