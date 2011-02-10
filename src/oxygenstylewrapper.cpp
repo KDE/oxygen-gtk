@@ -1938,6 +1938,7 @@ namespace Oxygen
 
         const Gtk::Detail d( detail );
 
+        // by default all arrows are animated
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
         if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla( widget ) )
         { arrowSize = QtSettings::ArrowTiny; }
@@ -1952,6 +1953,13 @@ namespace Oxygen
         // Arrows which are active are painted as hovered
         if( state == GTK_STATE_ACTIVE ) options |= Hover;
 
+        // animation data
+        AnimationData data;
+
+        // if true, widgetStateEngine is used to decide on animation state
+        // use either custom engine, or disable animation, otherwise
+        bool useWidgetStateEngine( true );
+
         GtkWidget* parent( 0L );
         if( d.isTearOffMenuItem() )
         {
@@ -1964,14 +1972,20 @@ namespace Oxygen
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
 
+            useWidgetStateEngine = false;
+
         } else if( d.isMenuItem() && !Gtk::gtk_parent_tree_view( widget ) ) {
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
             role = Palette::WindowText;
+            useWidgetStateEngine = false;
 
         } else if( d.isSpinButton() ) {
 
+            // FIXME: for now (until fixed), we disable spinbox arrow animation
+            // this will require a dedicated engine
+            useWidgetStateEngine = false;
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
             else x-=1;
@@ -2024,6 +2038,8 @@ namespace Oxygen
 
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
+            useWidgetStateEngine = false;
+
             options &= ~( Focus|Hover );
             role = Palette::ButtonText;
 
@@ -2036,6 +2052,7 @@ namespace Oxygen
             !Gtk::gtk_parent_combo( widget ) )
         {
 
+            useWidgetStateEngine = false;
             options &= ~( Focus|Hover );
             if( d.isArrow() && GTK_IS_ARROW( widget ) )
             {
@@ -2052,6 +2069,11 @@ namespace Oxygen
             role = Palette::WindowText;
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
+
+
+            // FIXME: for now (until fixed), we disable scrollbar arrow animation
+            // this will require a dedicated engine
+            useWidgetStateEngine = false;
 
             GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
             GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
@@ -2073,7 +2095,8 @@ namespace Oxygen
         }
 
         // render arrow
-        Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options, role );
+        if( useWidgetStateEngine ) data = Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover );
+        Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options, data, role );
 
     }
 
@@ -2103,6 +2126,7 @@ namespace Oxygen
         StyleOptions options( widget, state );
         const Gtk::Detail d( detail );
         const Palette::Role role( d.isTreeView() ? Palette::Text : Palette::WindowText );
+
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
 
@@ -2113,15 +2137,31 @@ namespace Oxygen
             else arrow = GTK_ARROW_RIGHT;
 
             const Gtk::Detail d( detail );
-            QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
-            if( d.isTreeView() ) arrowSize = Style::instance().settings().viewTriangularExpanderSize();
-            else options |= Contrast;
+            if( d.isTreeView() )
+            {
 
-            Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, role );
+                // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
+                const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
+                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, role );
+
+            } else {
+
+                options |= Contrast;
+                const QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-5, 10, 10, arrowSize, options, data, role );
+
+            }
+
+        } else if( d.isTreeView() ) {
+
+            // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, role );
 
         } else {
 
-            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, role );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-5, 10, 10, expander_style, options, data, role );
 
         }
 
