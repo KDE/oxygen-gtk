@@ -6,6 +6,7 @@ include_directories( animations )
 set( oxygen_gtk_SOURCES
     animations/oxygenanimations.cpp
     animations/oxygenarrowstatedata.cpp
+    animations/oxygenarrowstateengine.cpp
     animations/oxygenbackgroundhintengine.cpp
     animations/oxygenbaseengine.cpp
     animations/oxygencomboboxdata.cpp
