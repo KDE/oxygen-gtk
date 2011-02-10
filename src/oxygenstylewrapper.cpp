@@ -2558,6 +2558,7 @@ namespace Oxygen
             */
             const bool isMozilla( Style::instance().settings().applicationName().isMozilla( widget ) );
             const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
+            AnimationData data;
             if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice ) )
             {
 
@@ -2595,6 +2596,9 @@ namespace Oxygen
                         ((tabOptions & LastTab) && Gtk::gtk_notebook_get_current_tab( notebook ) == 0 );
                 }
 
+                if( !isCurrentTab )
+                { data = Style::instance().animations().tabWidgetStateEngine().get( widget, tabIndex, options ); }
+
             }
 
             if( isOpenOffice )
@@ -2608,7 +2612,8 @@ namespace Oxygen
 
             // render
             if( isMozilla ) tabOptions |= Mozilla;
-            Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions );
+
+            Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions, data );
 
             // render tabbar base if current tab
             if( drawTabBarBase )

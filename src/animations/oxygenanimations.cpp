@@ -48,9 +48,12 @@ namespace Oxygen
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
+
+        // animations specific engines
         registerEngine( _widgetStateEngine = new WidgetStateEngine( this ) );
         registerEngine( _arrowStateEngine = new ArrowStateEngine( this ) );
         registerEngine( _scrollBarStateEngine = new ScrollBarStateEngine( this ) );
+        registerEngine( _tabWidgetStateEngine = new TabWidgetStateEngine( this ) );
 
     }
 

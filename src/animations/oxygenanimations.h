@@ -37,6 +37,7 @@
 #include "oxygenscrolledwindowengine.h"
 #include "oxygensignal.h"
 #include "oxygentabwidgetengine.h"
+#include "oxygentabwidgetstateengine.h"
 #include "oxygentreeviewengine.h"
 #include "oxygenwidgetsizeengine.h"
 #include "oxygenwidgetstateengine.h"
@@ -111,10 +112,6 @@ namespace Oxygen
         ScrollBarEngine& scrollBarEngine( void ) const
         { return *_scrollBarEngine; }
 
-        //! scrollbar arrow animation engine
-        ScrollBarStateEngine& scrollBarStateEngine( void ) const
-        { return *_scrollBarStateEngine; }
-
         //! scrolled window engine
         ScrolledWindowEngine& scrolledWindowEngine( void ) const
         { return *_scrolledWindowEngine; }
@@ -134,13 +131,21 @@ namespace Oxygen
         //!@name animations specific engines
         //@{
 
-        //! widget state engine
+        //! widget mouse-over and focus animations engine
         WidgetStateEngine& widgetStateEngine( void ) const
         { return *_widgetStateEngine; }
 
-        //! arrow state engine
+        //! arrow mouse-over animations engine
         ArrowStateEngine& arrowStateEngine( void ) const
         { return *_arrowStateEngine; }
+
+        //! scrollbar arrow mouse-over animations engine
+        ScrollBarStateEngine& scrollBarStateEngine( void ) const
+        { return *_scrollBarStateEngine; }
+
+        //! notebook tabs mouse-over animations engine
+        TabWidgetStateEngine& tabWidgetStateEngine( void ) const
+        { return *_tabWidgetStateEngine; }
 
         //@}
 
@@ -194,9 +199,6 @@ namespace Oxygen
         //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;
 
-        //! scrollbar arrow animation engine
-        ScrollBarStateEngine* _scrollBarStateEngine;
-
         //! scrolled window engine
         ScrolledWindowEngine* _scrolledWindowEngine;
 
@@ -212,11 +214,17 @@ namespace Oxygen
         //!@name Animation specific engines
         //@{
 
-        //! widget state engine
+        //! widget mouse-over and focus animations engine
         WidgetStateEngine* _widgetStateEngine;
 
-        //! arrow state engine
+        //! arrow mouse-over animations engine
         ArrowStateEngine* _arrowStateEngine;
+
+        //! scrollbar arrow mouse-over animations engine
+        ScrollBarStateEngine* _scrollBarStateEngine;
+
+        //! notebook tabs mouse-over animations engine
+        TabWidgetStateEngine* _tabWidgetStateEngine;
 
         //@}
 
