@@ -1484,15 +1484,12 @@ namespace Oxygen
 
                         x += Style::Entry_SideMargin;
                         w -= 2*Style::Entry_SideMargin;
-                        const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-                        Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
-
-                    } else {
-
-                        Style::instance().renderHole( window, clipRect, x, y, w, h, options );
 
                     }
 
+                    // animation
+                    AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                    Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
 
                 }
 
