@@ -2011,6 +2011,10 @@ namespace Oxygen
 
         } else if( d.isNotebook() ) {
 
+            // FIXME: for now (until fixed), we disable spinbox arrow animation
+            // this will require a dedicated engine
+            useWidgetStateEngine = false;
+
             if( GTK_IS_NOTEBOOK( widget ) )
             {
                 const int offset = 6;
