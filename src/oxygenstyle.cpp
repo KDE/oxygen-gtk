@@ -892,13 +892,15 @@ namespace Oxygen
         // colored background
         if( settings().scrollBarColored() )
         {
-            if( options&Hover ) cairo_set_source( context, settings().palette().color( Palette::Hover ) );
-            else cairo_set_source( context, color );
+            ColorUtils::Rgba fillColor;
+            if( data._mode == AnimationHover ) fillColor = ColorUtils::mix( color, settings().palette().color( Palette::Hover ), data._opacity );
+            else if( options&Hover ) fillColor = settings().palette().color( Palette::Hover );
+            else fillColor = color;
 
+            cairo_set_source( context, fillColor );
             cairo_rounded_rectangle( context, xf, yf, wf, hf, 2 );
             cairo_fill( context );
         }
-
 
         // slider pattern
         {
