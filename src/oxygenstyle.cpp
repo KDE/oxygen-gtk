@@ -1817,6 +1817,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         QtSettings::ArrowSize arrowSize,
         const StyleOptions& options,
+        const AnimationData& data,
         Palette::Role role ) const
     {
 
@@ -1826,6 +1827,10 @@ namespace Oxygen
         // retrieve colors
         ColorUtils::Rgba base;
         if( options&Disabled ) base = settings().palette().color( Palette::Disabled, role );
+        else if( data._mode == AnimationHover ) base = ColorUtils::mix(
+            settings().palette().color( Palette::Active, role ),
+            settings().palette().color( Palette::Hover ),
+            data._opacity );
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
         else base = settings().palette().color( Palette::Active, role );
 

@@ -218,7 +218,9 @@ namespace Oxygen
         void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
 
         //! arrow
-        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize = QtSettings::ArrowNormal, const StyleOptions& = Contrast, Palette::Role = Palette::ButtonText ) const;
+        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize, const StyleOptions&, const AnimationData&, Palette::Role ) const;
+        void renderArrow( GdkWindow* window, GdkRectangle* clipRect, GtkArrowType type, gint x, gint y, gint w, gint h, QtSettings::ArrowSize size = QtSettings::ArrowNormal, const StyleOptions& options = Contrast, Palette::Role role = Palette::ButtonText ) const
+        { renderArrow( window, clipRect, type, x, y, w, h, size, options, AnimationData(), role ); }
 
         //! slider groove
         void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
