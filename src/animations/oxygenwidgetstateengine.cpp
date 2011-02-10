@@ -23,6 +23,48 @@
 namespace Oxygen
 {
 
+    //________________________________________________________________________
+    void WidgetStateEngine::setEnabled( bool value )
+    {
+
+        if( enabled() == value ) return;
+        BaseEngine::setEnabled( value );
+
+        // hover data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
+        {
+            iter->second.timeLine().setEnabled( value );
+            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+            else iter->second.disconnect( iter->first );
+        }
+
+        // focus data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+        {
+            iter->second.timeLine().setEnabled( value );
+            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+            else iter->second.disconnect( iter->first );
+        }
+
+    }
+
+    //________________________________________________________________________
+    void WidgetStateEngine::setDuration( int value )
+    {
+
+        if( _duration == value ) return;
+        _duration = value;
+
+        // hover data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
+        { iter->second.timeLine().setDuration( value ); }
+
+        // focus data map
+        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+        { iter->second.timeLine().setDuration( value ); }
+
+    }
+
     //________________________________________________________
     bool WidgetStateEngine::registerWidget( GtkWidget* widget, AnimationModes modes, const StyleOptions& options )
     {
@@ -44,24 +86,6 @@ namespace Oxygen
 
         return registered;
 
-    }
-
-    //________________________________________________________
-    void WidgetStateEngine::unregisterWidget( GtkWidget* widget )
-    {
-        unregisterWidget( widget, _hoverData );
-        unregisterWidget( widget, _focusData );
-    }
-
-    //________________________________________________________
-    bool WidgetStateEngine::contains( GtkWidget* widget, AnimationMode mode )
-    {
-        switch( mode )
-        {
-            case AnimationHover: return _hoverData.contains( widget );
-            case AnimationFocus: return _focusData.contains( widget );
-            default: return false;
-        }
     }
 
     //________________________________________________________
@@ -144,56 +168,6 @@ namespace Oxygen
         if( enabled() ) data.connect( widget );
 
         return true;
-
-    }
-
-    //________________________________________________________
-    void WidgetStateEngine::unregisterWidget( GtkWidget* widget, DataMap<WidgetStateData>& data ) const
-    {
-        if( !data.contains( widget ) ) return;
-        data.value( widget ).disconnect( widget );
-        data.erase( widget );
-    }
-
-    //________________________________________________________________________
-    void WidgetStateEngine::setDuration( int value )
-    {
-
-        if( _duration == value ) return;
-        _duration = value;
-
-        // hover data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
-        { iter->second.timeLine().setDuration( value ); }
-
-        // focus data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
-        { iter->second.timeLine().setDuration( value ); }
-
-    }
-
-    //________________________________________________________________________
-    void WidgetStateEngine::setEnabled( bool value )
-    {
-
-        if( enabled() == value ) return;
-        BaseEngine::setEnabled( value );
-
-        // hover data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
-        {
-            iter->second.timeLine().setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
-
-        // focus data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
-        {
-            iter->second.timeLine().setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
 
     }
 

@@ -55,7 +55,11 @@ namespace Oxygen
         {}
 
         //! unregister widget
-        virtual void unregisterWidget( GtkWidget* );
+        virtual void unregisterWidget( GtkWidget* widget )
+        {
+            unregisterWidget( widget, _hoverData );
+            unregisterWidget( widget, _focusData );
+        }
 
         //! enabled state
         virtual void setEnabled( bool );
@@ -71,7 +75,15 @@ namespace Oxygen
         //@{
 
         //! true if widget is included
-        virtual bool contains( GtkWidget*, AnimationMode );
+        virtual bool contains( GtkWidget* widget, AnimationMode mode )
+        {
+            switch( mode )
+            {
+                case AnimationHover: return _hoverData.contains( widget );
+                case AnimationFocus: return _focusData.contains( widget );
+                default: return false;
+            }
+        }
 
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
@@ -103,21 +115,6 @@ namespace Oxygen
 
         protected:
 
-        //! register widget in given map
-        bool registerWidget( GtkWidget*, DataMap<WidgetStateData>&, const bool& = false ) const;
-
-        //! register widget in given map
-        void unregisterWidget( GtkWidget*, DataMap<WidgetStateData>& ) const;
-
-        //! returs true if widget is black listed (based notably on application name)
-        bool widgetIsBlackListed( GtkWidget* widget ) const
-        {
-
-            // for now, only Mozilla applications need blacklisting
-            return _applicationName.isMozilla( widget );
-
-        }
-
         //!@name protected modifiers
         //@{
 
@@ -134,6 +131,26 @@ namespace Oxygen
         virtual bool updateState( GtkWidget*, AnimationMode, bool );
 
         //@}
+
+        //! register widget in given map
+        bool registerWidget( GtkWidget*, DataMap<WidgetStateData>&, const bool& = false ) const;
+
+        //! register widget in given map
+        void unregisterWidget( GtkWidget* widget, DataMap<WidgetStateData>& data ) const
+        {
+            if( !data.contains( widget ) ) return;
+            data.value( widget ).disconnect( widget );
+            data.erase( widget );
+        }
+
+        //! returs true if widget is black listed (based notably on application name)
+        bool widgetIsBlackListed( GtkWidget* widget ) const
+        {
+
+            // for now, only Mozilla applications need blacklisting
+            return _applicationName.isMozilla( widget );
+
+        }
 
         private:
 
