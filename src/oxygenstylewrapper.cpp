@@ -394,6 +394,9 @@ namespace Oxygen
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
 
+                // animation data
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+
                 // hole
                 TileSet::Tiles tiles( TileSet::Ring );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -401,13 +404,13 @@ namespace Oxygen
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, data, tiles );
 
                 }
 
@@ -1093,6 +1096,7 @@ namespace Oxygen
             { options |= Hover; }
 
             TileSet::Tiles tiles( TileSet::Ring);
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             {
@@ -1106,7 +1110,7 @@ namespace Oxygen
                 // shrink spinbox entry hole by 3px on right side
                 x += Style::Entry_SideMargin;
                 w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, tiles );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, data, tiles );
 
             } else {
 
@@ -1118,7 +1122,7 @@ namespace Oxygen
 
                 // shrink spinbox entry hole by 3px on right side
                 w -= Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, tiles );
+                Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, data, tiles );
 
             }
 
@@ -1398,6 +1402,9 @@ namespace Oxygen
                 // basic adjustments
                 x-=1; w+=2;
 
+                // animation data
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+
                 TileSet::Tiles tiles( TileSet::Ring );
 
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -1411,7 +1418,7 @@ namespace Oxygen
                         w-= Style::Entry_SideMargin;
                     }
 
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, data, tiles );
 
                 } else {
 
@@ -1423,7 +1430,7 @@ namespace Oxygen
                         x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
                     }
 
-                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, data, tiles );
 
                 }
 
