@@ -5,6 +5,7 @@ include_directories( animations )
 # please keep this list alphabetically sorted for clarity
 set( oxygen_gtk_SOURCES
     animations/oxygenanimations.cpp
+    animations/oxygenarrowstatedata.cpp
     animations/oxygenbackgroundhintengine.cpp
     animations/oxygenbaseengine.cpp
     animations/oxygencomboboxdata.cpp
