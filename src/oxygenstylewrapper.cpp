@@ -2852,6 +2852,15 @@ namespace Oxygen
 
         /* If the state was wildcarded, then generate a state. */
         GdkPixbuf *stated( scaled );
+
+        // non-flat pushbuttons don't have any icon effect
+        bool noEffect=false;
+        if(GtkWidget* button=Gtk::gtk_parent_button(widget))
+        {
+            if(gtk_button_get_relief(GTK_BUTTON(button))==GTK_RELIEF_NORMAL)
+                noEffect=true;
+        }
+
         if( gtk_icon_source_get_state_wildcarded( source ) )
         {
 
@@ -2862,7 +2871,7 @@ namespace Oxygen
                 gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
                 g_object_unref (scaled);
 
-            } else if (state == GTK_STATE_PRELIGHT) {
+            } else if (!noEffect && state == GTK_STATE_PRELIGHT) {
 
                 stated = gdk_pixbuf_copy( scaled );
                 if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.5 ) )
