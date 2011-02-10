@@ -154,7 +154,7 @@ namespace Oxygen
         //!@name scrollbar
         //@{
         void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
-        void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
         //@}
 
         //! toolbar handle

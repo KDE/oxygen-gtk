@@ -1025,6 +1025,8 @@ namespace Oxygen
                     // adjust scrollbar hole since it has wrong geometry in OOo
                     y-=1; h+=1;
                 }
+
+
                 Style::instance().adjustScrollBarHole( x, y, w, h, Vertical );
                 Style::instance().renderScrollBarHole( window, clipRect, x, y+1, w-1, h-1, Vertical );
 
@@ -1488,7 +1490,7 @@ namespace Oxygen
                     }
 
                     // animation
-                    AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                    const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
                     Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
 
                 }
@@ -2441,12 +2443,14 @@ namespace Oxygen
 
             StyleOptions options( Vertical );
             options |= StyleOptions( widget, state, shadow );
-            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w-1, h, options );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w-1, h, options, data );
 
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
-            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options, data );
 
         } else {
 

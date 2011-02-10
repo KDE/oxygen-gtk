@@ -842,7 +842,9 @@ namespace Oxygen
     void Style::renderScrollBarHandle(
         GdkWindow* window,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        const AnimationData& data ) const
     {
 
         // store colors
@@ -857,6 +859,7 @@ namespace Oxygen
         // glow color
         ColorUtils::Rgba glow;
         if( settings().scrollBarColored() ) glow = ColorUtils::mix( dark, shadow, 0.5 );
+        else if( data._mode == AnimationHover ) glow = ColorUtils::mix( base, settings().palette().color( Palette::Hover ), data._opacity );
         else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
         else glow = base;
 
