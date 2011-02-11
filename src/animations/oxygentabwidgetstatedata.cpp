@@ -114,6 +114,25 @@ namespace Oxygen
     }
 
     //_____________________________________________
+    GdkRectangle TabWidgetStateData::dirtyRect( void ) const
+    {
+
+        // FIXME: it might be enough to union the rects of the current and previous tab
+        if( GTK_IS_NOTEBOOK( _target ) )
+        {
+
+            GdkRectangle rect( Gtk::gdk_rectangle() );
+            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( _target ), &rect );
+            return rect;
+
+        } else {
+
+            return _target->allocation;
+        }
+
+    }
+
+    //_____________________________________________
     gboolean TabWidgetStateData::delayedUpdate( gpointer pointer )
     {
 
@@ -121,20 +140,8 @@ namespace Oxygen
 
         if( !data._target ) return FALSE;
 
-        // FIXME: it might be enough to union the rects of the current and previous tab
-        if( GTK_IS_NOTEBOOK( data._target ) )
-        {
-
-            GdkRectangle rect( Gtk::gdk_rectangle() );
-            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( data._target ), &rect );
-            Gtk::gtk_widget_queue_draw( data._target, &rect );
-
-        } else {
-
-            gtk_widget_queue_draw( data._target );
-
-        }
-
+        const GdkRectangle rect( data.dirtyRect() );
+        Gtk::gtk_widget_queue_draw( data._target, &rect );
         return FALSE;
 
     }

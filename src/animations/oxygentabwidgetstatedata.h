@@ -84,6 +84,9 @@ namespace Oxygen
 
         protected:
 
+        //! return dirty rect (for update)
+        GdkRectangle dirtyRect( void ) const;
+
         //! delayed update
         static gboolean delayedUpdate( gpointer );
 
