@@ -1765,6 +1765,7 @@ namespace Oxygen
 
             }
 
+            AnimationData data;
             if( d.isCellRadio() )
             {
                 /*
@@ -1775,17 +1776,21 @@ namespace Oxygen
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
+
                     GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
                     if( cellInfo.isValid() &&
                         Style::instance().animations().treeViewEngine().contains( widget ) &&
                         Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
                     { options |= Hover; }
+
+                    data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+
                 }
 
             }
 
-            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options );
+            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, data );
 
         } else {
 
