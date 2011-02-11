@@ -1663,6 +1663,12 @@ namespace Oxygen
 
             if( d.isCellCheck() )
             {
+
+                /*
+                TODO: use dedicated engine to handle animations.
+                It should use Widget and CellInfo for tagging, and work like
+                TabWidgetState engine
+                */
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
@@ -1758,6 +1764,11 @@ namespace Oxygen
 
             if( d.isCellRadio() )
             {
+                /*
+                TODO: use dedicated engine to handle animations.
+                It should use Widget and CellInfo for tagging, and work like
+                TabWidgetState engine
+                */
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
@@ -2067,12 +2078,21 @@ namespace Oxygen
                 role = Palette::WindowText;
             }
 
-        } else if( GTK_IS_CALENDAR( widget ) && !Gtk::gtk_widget_is_applet( widget ) ) {
+        } else if( GTK_IS_CALENDAR( widget ) ) {
 
-            // need to render background behind arrows from calendar
-            // offsets are empirical
-            Style::instance().renderWindowBackground( window, widget, clipRect, x-2, y-3, w+4, h+6 );
-            role = Palette::WindowText;
+            // FIXME: needs dedicated engine to
+            // handle smooth animations
+            useWidgetStateEngine = false;
+
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            {
+
+                // need to render background behind arrows from calendar
+                // offsets are empirical
+                Style::instance().renderWindowBackground( window, widget, clipRect, x-2, y-3, w+4, h+6 );
+                role = Palette::WindowText;
+
+            }
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
@@ -2132,6 +2152,12 @@ namespace Oxygen
         StyleOptions options( widget, state );
         const Gtk::Detail d( detail );
         const Palette::Role role( d.isTreeView() ? Palette::Text : Palette::WindowText );
+
+        /*
+        TODO: For TreeViews, use dedicated engine to handle animations.
+        It should use Widget and CellInfo for tagging, and work like
+        TabWidgetState engine.
+        */
 
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
