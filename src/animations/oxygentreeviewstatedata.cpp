@@ -114,8 +114,12 @@ namespace Oxygen
     GdkRectangle TreeViewStateData::dirtyRect( void ) const
     {
 
-        // FIXME: it might be enough to union the rects of the current and previous tab
-        return _target->allocation;
+        /*
+        FIXME: For now we return an invalid rect, which triggers full
+        update of the widget. This can certainly be optimized, notably
+        by using the CellInfo rects instead
+        */
+        return Gtk::gdk_rectangle();
 
     }
 
@@ -126,9 +130,9 @@ namespace Oxygen
         TreeViewStateData& data( *static_cast<TreeViewStateData*>( pointer ) );
 
         if( !data._target ) return FALSE;
-
         const GdkRectangle rect( data.dirtyRect() );
         Gtk::gtk_widget_queue_draw( data._target, &rect );
+
         return FALSE;
 
     }

@@ -2158,6 +2158,13 @@ namespace Oxygen
         It should use Widget and CellInfo for tagging, and work like
         TabWidgetState engine.
         */
+        AnimationData data;
+        if( d.isTreeView() && GTK_IS_TREE_VIEW( widget ) )
+        {
+            GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+            const Gtk::CellInfo cellInfo( treeView, x-3, y-4, 10, 10 );
+            data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+        }
 
         if( Style::instance().settings().viewDrawTriangularExpander() )
         {
@@ -2174,7 +2181,7 @@ namespace Oxygen
 
                 // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
                 const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
-                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, role );
+                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, data, role );
 
             } else {
 

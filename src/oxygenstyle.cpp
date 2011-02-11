@@ -65,6 +65,7 @@ namespace Oxygen
         animations().arrowStateEngine().setApplicationName( settings().applicationName() );
         animations().scrollBarStateEngine().setApplicationName( settings().applicationName() );
         animations().tabWidgetStateEngine().setApplicationName( settings().applicationName() );
+        animations().treeViewStateEngine().setApplicationName( settings().applicationName() );
 
         if( flags&QtSettings::Oxygen )
         {
@@ -85,6 +86,9 @@ namespace Oxygen
 
             animations().tabWidgetStateEngine().setEnabled( settings().genericAnimationsEnabled() );
             animations().tabWidgetStateEngine().setDuration( settings().genericAnimationsDuration() );
+
+            animations().treeViewStateEngine().setEnabled( settings().genericAnimationsEnabled() );
+            animations().treeViewStateEngine().setDuration( settings().genericAnimationsDuration() );
 
         }
 

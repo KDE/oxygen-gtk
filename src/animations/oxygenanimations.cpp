@@ -54,6 +54,7 @@ namespace Oxygen
         registerEngine( _arrowStateEngine = new ArrowStateEngine( this ) );
         registerEngine( _scrollBarStateEngine = new ScrollBarStateEngine( this ) );
         registerEngine( _tabWidgetStateEngine = new TabWidgetStateEngine( this ) );
+        registerEngine( _treeViewStateEngine = new TreeViewStateEngine( this ) );
 
     }
 
