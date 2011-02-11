@@ -43,14 +43,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        StyleHelper( void )
-        {
-            GtkWidget* window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-            gtk_widget_realize(window);
-            Cairo::Context context(window->window);
-            _refSurface = Cairo::Surface( cairo_surface_create_similar( cairo_get_target(context),CAIRO_CONTENT_ALPHA, 1, 1 ) );
-            gtk_widget_destroy(window);
-        }
+        StyleHelper( void );
 
         //! destructor
         virtual ~StyleHelper( void )
