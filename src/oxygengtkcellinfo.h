@@ -83,6 +83,10 @@ namespace Oxygen
             bool operator == (const CellInfo& other ) const
             { return sameColumn( other ) && samePath( other ); }
 
+            //! equal to operator
+            bool operator != (const CellInfo& other ) const
+            { return !sameColumn( other ) || !samePath( other ); }
+
             //! clear
             void clear( void )
             {
