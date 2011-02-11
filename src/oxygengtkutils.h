@@ -33,10 +33,17 @@
 namespace Oxygen
 {
 
-    //! gdkRectangle streamer
+    //! GdkRectangle streamer
     inline std::ostream& operator << (std::ostream& out, const GdkRectangle& rect )
     {
         out << "( " << rect.x << "," << rect.y << "," << rect.width << "," << rect.height << ")";
+        return out;
+    }
+
+    //! GtkBorder streamer
+    inline std::ostream& operator << (std::ostream& out, const GtkBorder& border )
+    {
+        out << "( " << border.left << "," << border.right << "," << border.top << "," << border.bottom << ")";
         return out;
     }
 
