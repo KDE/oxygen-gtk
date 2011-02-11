@@ -140,7 +140,7 @@ namespace Oxygen
         { newRect.x = 0; newRect.width = widget->allocation.width; }
 
         // take the union of both rectangles
-        GdkRectangle updateRect;
+        GdkRectangle updateRect( Gtk::gdk_rectangle() );
         if( Gtk::gdk_rectangle_is_valid( &oldRect ) )
         {
 
