@@ -1661,6 +1661,7 @@ namespace Oxygen
                 options |= Blend;
             }
 
+            AnimationData data;
             if( d.isCellCheck() )
             {
 
@@ -1673,23 +1674,25 @@ namespace Oxygen
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
                     GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                    Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                    const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
                     if( cellInfo.isValid() &&
                         Style::instance().animations().treeViewEngine().contains( widget ) &&
                         Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
                     { options |= Hover; }
-                }
 
-                Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
+                    // retrieve animation state
+                    data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+
+                }
 
             } else {
 
-                // retrieve animation state and render accordingly
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-                Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
+                // retrieve animation state
+                data = Style::instance().animations().widgetStateEngine().get( widget, options );
 
             }
 
+            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
 
         } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
