@@ -448,7 +448,8 @@ namespace Oxygen
 
                 // compare painting rect to widget rect, to decide if some sides are to be masked
                 TileSet::Tiles tiles = TileSet::Ring;
-                if( widget && window != widget->window && GDK_IS_WINDOW( window ) && widget->window == gdk_window_get_parent( window )  )
+                GdkWindow* widgetWindow( gtk_widget_get_window( widget ) );
+                if( widget && window != widgetWindow && GDK_IS_WINDOW( window ) && widgetWindow == gdk_window_get_parent( window )  )
                 {
 
                     const int widgetWindowWidth( widget->allocation.width );
@@ -1198,7 +1199,7 @@ namespace Oxygen
                 if( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
                 {
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_mask( parent->window, mask, 0, 0 );
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -1219,7 +1220,7 @@ namespace Oxygen
                         widget->allocation.height - 2*offset,
                         3 ) );
 
-                    gdk_window_shape_combine_mask( widget->window, mask, offset, offset );
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( widget ), mask, offset, offset );
                     gdk_pixmap_unref( mask );
                 }
 
@@ -1228,8 +1229,9 @@ namespace Oxygen
             }
 
             // menu background and float frame
-            Style::instance().renderMenuBackground( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
-            Style::instance().drawFloatFrame( parent->window, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+            GdkWindow* parentWindow( gtk_widget_get_window( parent ) );
+            Style::instance().renderMenuBackground( parentWindow, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+            Style::instance().drawFloatFrame( parentWindow, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
 
             #if ENABLE_COMBOBOX_LIST_RESIZE
 
@@ -1255,7 +1257,7 @@ namespace Oxygen
 
                     gint targetX, dummy, y;
                     gtk_window_get_position( window, &dummy, &y );
-                    gdk_window_get_origin(combobox->window, &targetX, &dummy);
+                    gdk_window_get_origin( gtk_widget_get_window( combobox ), &targetX, &dummy);
                     gtk_window_move( window, targetX+combobox->allocation.x+3, y );
                 }
 
@@ -1294,8 +1296,8 @@ namespace Oxygen
                 Style::instance().animations().widgetSizeEngine().registerWidget(parent);
                 if( Style::instance().animations().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
                 {
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width,allocation.height ) );
-                    gdk_window_shape_combine_mask(parent->window,mask,0,0);
+                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
                     gdk_pixmap_unref(mask);
                 }
             }
@@ -2497,7 +2499,7 @@ namespace Oxygen
                 // update drag in progress flag
                 if( isCurrentTab )
                 {
-                    bool drag( widget && (window != widget->window ) );
+                    bool drag( widget && (window != gtk_widget_get_window( widget ) ) );
                     Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
                 }
 

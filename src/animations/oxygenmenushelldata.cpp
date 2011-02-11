@@ -57,7 +57,7 @@ namespace Oxygen
 
         // get pointer position
         gint xPointer, yPointer;
-        gdk_window_get_pointer(widget->window, &xPointer, &yPointer, 0L );
+        gdk_window_get_pointer( gtk_widget_get_window( widget ), &xPointer, &yPointer, 0L );
 
         GList *children( gtk_container_get_children( GTK_CONTAINER(widget) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
