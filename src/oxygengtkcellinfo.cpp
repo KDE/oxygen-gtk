@@ -20,6 +20,7 @@
 
 #include "oxygengtkcellinfo.h"
 #include "oxygengeometry.h"
+#include "oxygengtkutils.h"
 
 #include <iostream>
 #include <cassert>
@@ -179,7 +180,7 @@ namespace Oxygen
     //____________________________________________________________________________
     GdkRectangle Gtk::CellInfo::backgroundRect( GtkTreeView* treeView ) const
     {
-        GdkRectangle out = {0, 0, -1, -1 };
+        GdkRectangle out( Gtk::gdk_rectangle() );
         if( treeView && isValid() )
         { gtk_tree_view_get_background_area( treeView, _path, _column, &out ); }
 
