@@ -52,6 +52,73 @@ namespace Oxygen
             MidButton = 3
         };
 
+        //@!name gdk utilities
+        //@{
+
+        //! returns OxygenRgba color from GdkColor
+        inline ColorUtils::Rgba gdk_get_color( const GdkColor& color )
+        {
+            return ColorUtils::Rgba(
+                double(color.red)/0xffff,
+                double(color.green)/0xffff,
+                double(color.blue)/0xffff );
+        }
+
+        //! map widget origin to top level
+        /*!
+        x and y correspond to (0,0) maped to toplevel window;
+        w and h correspond to toplevel window frame size
+        */
+        bool gdk_map_to_toplevel( GdkWindow*, GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
+
+        //! map widget origin to top level
+        /*!
+        x and y correspond to (0,0) maped to toplevel window;
+        w and h correspond to toplevel window frame size
+        */
+        inline bool gdk_map_to_toplevel( GdkWindow* window, gint* x, gint* y, gint* w, gint* h, bool frame = false )
+        { return gdk_map_to_toplevel( window, 0L, x, y, w, h, frame ); }
+
+        //! get top level windows dimension
+        void gdk_toplevel_get_size( GdkWindow*, gint*, gint* );
+
+        //! get top level windows dimension
+        void gdk_toplevel_get_frame_size( GdkWindow*, gint*, gint* );
+
+        //! get position relatve to toplevel
+        void gdk_window_get_toplevel_origin( GdkWindow*, gint*, gint* );
+
+        //! add alpha channel to pixbuf
+        GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf*, double );
+
+        //! changes the gamma value of an image
+        bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
+
+        //! resize pixbuf
+        GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
+
+        //! returns initialized GdkRectangle
+        inline GdkRectangle gdk_rectangle( int x = 0, int y = 0, int w = -1, int h = -1 )
+        {
+            GdkRectangle out = {x, y, w, h};
+            return out;
+        }
+
+        //! returns true if rectangle is valid
+        inline bool gdk_rectangle_is_valid( const GdkRectangle* rect )
+        { return rect && rect->width > 0 && rect->height > 0; }
+
+        //! returns true if given rectangle contains point
+        inline bool gdk_rectangle_contains( const GdkRectangle* rect, int x, int y )
+        {
+            return
+                rect &&
+                ( rect->x <= x && (rect->x + rect->width) > x ) &&
+                ( rect->y <= y && (rect->y + rect->height) > y );
+        }
+
+        //@}
+
         //! returns true if widget's layout is reversed
         inline bool gtk_widget_layout_is_reversed( GtkWidget* widget )
         { return widget ? gtk_widget_get_direction( widget ) == GTK_TEXT_DIR_RTL : false; }
@@ -86,7 +153,7 @@ namespace Oxygen
         //! trigger area update using GdkRectangle
         inline void gtk_widget_queue_draw( GtkWidget* widget, const GdkRectangle* rect = 0L )
         {
-            if( !rect ) ::gtk_widget_queue_draw( widget );
+            if( !gdk_rectangle_is_valid( rect ) ) ::gtk_widget_queue_draw( widget );
             else ::gtk_widget_queue_draw_area( widget, rect->x, rect->y, rect->width, rect->height );
         }
 
@@ -212,73 +279,6 @@ namespace Oxygen
 
         //! returns true if widget is a notebook close button
         bool gtk_notebook_is_close_button( GtkWidget* );
-
-        //@}
-
-        //@!name gdk utilities
-        //@{
-
-        //! returns OxygenRgba color from GdkColor
-        inline ColorUtils::Rgba gdk_get_color( const GdkColor& color )
-        {
-            return ColorUtils::Rgba(
-                double(color.red)/0xffff,
-                double(color.green)/0xffff,
-                double(color.blue)/0xffff );
-        }
-
-        //! map widget origin to top level
-        /*!
-        x and y correspond to (0,0) maped to toplevel window;
-        w and h correspond to toplevel window frame size
-        */
-        bool gdk_map_to_toplevel( GdkWindow*, GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
-
-        //! map widget origin to top level
-        /*!
-        x and y correspond to (0,0) maped to toplevel window;
-        w and h correspond to toplevel window frame size
-        */
-        inline bool gdk_map_to_toplevel( GdkWindow* window, gint* x, gint* y, gint* w, gint* h, bool frame = false )
-        { return gdk_map_to_toplevel( window, 0L, x, y, w, h, frame ); }
-
-        //! get top level windows dimension
-        void gdk_toplevel_get_size( GdkWindow*, gint*, gint* );
-
-        //! get top level windows dimension
-        void gdk_toplevel_get_frame_size( GdkWindow*, gint*, gint* );
-
-        //! get position relatve to toplevel
-        void gdk_window_get_toplevel_origin( GdkWindow*, gint*, gint* );
-
-        //! add alpha channel to pixbuf
-        GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf*, double );
-
-        //! changes the gamma value of an image
-        bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
-
-        //! resize pixbuf
-        GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
-
-        //! returns initialized GdkRectangle
-        inline GdkRectangle gdk_rectangle( int x = 0, int y = 0, int w = -1, int h = -1 )
-        {
-            GdkRectangle out = {x, y, w, h};
-            return out;
-        }
-
-        //! returns true if rectangle is valid
-        inline bool gdk_rectangle_is_valid( const GdkRectangle* rect )
-        { return rect && rect->width > 0 && rect->height > 0; }
-
-        //! returns true if given rectangle contains point
-        inline bool gdk_rectangle_contains( const GdkRectangle* rect, int x, int y )
-        {
-            return
-                rect &&
-                ( rect->x <= x && (rect->x + rect->width) > x ) &&
-                ( rect->y <= y && (rect->y + rect->height) > y );
-        }
 
         //@}
 
