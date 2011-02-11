@@ -55,7 +55,7 @@ namespace Oxygen
                 // to have the proper initial value of the hover flag
                 GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
                 gint xPointer,yPointer;
-                gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+                gdk_window_get_pointer( gtk_widget_get_window( widget ), &xPointer, &yPointer, 0L );
                 gtk_tree_view_convert_widget_to_bin_window_coords( treeView, xPointer, yPointer, &xPointer, &yPointer );
                 updatePosition( widget, xPointer, yPointer );
             }

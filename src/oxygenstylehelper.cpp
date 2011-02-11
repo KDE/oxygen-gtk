@@ -37,6 +37,20 @@ namespace Oxygen
     const double StyleHelper::_glowBias = 0.6;
 
     //__________________________________________________________________
+    StyleHelper::StyleHelper( void )
+    {
+        /*
+        create dummy widget, get its window,
+        creates surface for it, and assign to ref surface
+        */
+        GtkWidget* widget( gtk_window_new(GTK_WINDOW_TOPLEVEL) );
+        gtk_widget_realize( widget );
+        Cairo::Context context( gtk_widget_get_window( widget ) );
+        _refSurface = Cairo::Surface( cairo_surface_create_similar( cairo_get_target( context ), CAIRO_CONTENT_ALPHA, 1, 1 ) );
+        gtk_widget_destroy( widget );
+    }
+
+    //__________________________________________________________________
     void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
     {
 

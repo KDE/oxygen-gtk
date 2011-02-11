@@ -157,9 +157,8 @@ namespace Oxygen
             // to have the proper initial value of the hover flag
             if( enabled )
             {
-
                 gint xPointer,yPointer;
-                gdk_window_get_pointer(widget->window,&xPointer,&yPointer, 0L);
+                gdk_window_get_pointer( gtk_widget_get_window( widget ), &xPointer, &yPointer, 0L );
                 GdkRectangle rect = { 0, 0, widget->allocation.width, widget->allocation.height };
                 setHovered( widget, Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) );
             }
