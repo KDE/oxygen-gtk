@@ -50,7 +50,7 @@ namespace Oxygen
         void disconnect( GtkWidget* );
 
         //! update state
-        bool updateState( int index, bool value );
+        bool updateState( int, bool );
 
         //! enable state
         void setEnabled( bool value )
