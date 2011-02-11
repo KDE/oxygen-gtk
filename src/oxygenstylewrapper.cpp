@@ -352,21 +352,17 @@ namespace Oxygen
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
-            const int xOffset( style ? style->xthickness + 1 : 3);
+            const int xOffset( style ? style->xthickness + 1 - Style::Entry_SideMargin : 3 );
             const int yOffset( style ? style->ythickness + 1 : 3);
 
             // there is no need to render anything if both offsets are larger than 4
-            if( xOffset >= 5 && yOffset >= 5 ) return;
+            if( xOffset > 4 && yOffset > 4 ) return;
 
             // adjust rect using offsets above
             x -= xOffset;
             y -= yOffset;
             w += 2*xOffset;
             h += 2*yOffset;
-
-            // shrink entry by 3px at each side
-            x += Style::Entry_SideMargin;
-            w -= 2*Style::Entry_SideMargin;
 
             if( GTK_IS_SPIN_BUTTON( widget ) )
             {
