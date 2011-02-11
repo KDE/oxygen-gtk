@@ -19,7 +19,6 @@
 */
 
 #include "oxygentreeviewstatedata.h"
-#include "../oxygengtkutils.h"
 #include "../config.h"
 
 #include <iostream>
@@ -78,6 +77,10 @@ namespace Oxygen
             {
                 if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
+                // update dirty rect, to make sure de-allocated cellInfo gets repainted
+                if( _previous._info.isValid() && GTK_IS_TREE_VIEW( _target ) )
+                { _dirtyRect = _previous._info.backgroundRect( GTK_TREE_VIEW( _target ) ); }
+
                 // move current tab info to previous
                 _previous._info = _current._info;
                 _previous._timeLine.start();
@@ -97,6 +100,10 @@ namespace Oxygen
             // stop previous animation if running
             if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
+            // update dirty rect, to make sure de-allocated cellInfo gets repainted
+            if( _previous._info.isValid() && GTK_IS_TREE_VIEW( _target ) )
+            { _dirtyRect = _previous._info.backgroundRect( GTK_TREE_VIEW( _target ) ); }
+
             // move current tab info to previous
             _previous._info = _current._info;
             if( _previous._info.isValid() ) _previous._timeLine.start();
@@ -111,7 +118,7 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    GdkRectangle TreeViewStateData::dirtyRect( void ) const
+    GdkRectangle TreeViewStateData::dirtyRect( void )
     {
 
         /*
@@ -119,7 +126,47 @@ namespace Oxygen
         update of the widget. This can certainly be optimized, notably
         by using the CellInfo rects instead
         */
-        return Gtk::gdk_rectangle();
+        GdkRectangle rect( Gtk::gdk_rectangle() );
+        if( GTK_IS_TREE_VIEW( _target ) )
+        {
+            GtkTreeView* treeView( GTK_TREE_VIEW( _target ) );
+
+            const GdkRectangle previousRect( _previous._info.backgroundRect( treeView ) );
+            const GdkRectangle currentRect( _current._info.backgroundRect( treeView ) );
+            if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
+            {
+
+                gdk_rectangle_union( &previousRect, &currentRect, &rect );
+
+            } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
+
+                rect = previousRect;
+
+            } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
+
+                rect = currentRect;
+
+            }
+
+            // also union with dirty rect
+            if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
+            {
+                if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
+                else rect = _dirtyRect;
+
+                _dirtyRect = Gtk::gdk_rectangle();
+
+            }
+
+            // finally convert to widget coordinated
+            gtk_tree_view_convert_bin_window_to_widget_coords(
+                treeView, rect.x, rect.y,
+                &rect.x, &rect.y );
+
+
+        }
+
+        return rect;
 
     }
 

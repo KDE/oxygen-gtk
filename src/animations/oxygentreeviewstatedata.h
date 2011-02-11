@@ -23,6 +23,7 @@
 #include "oxygentimeline.h"
 #include "../oxygenanimationdata.h"
 #include "../oxygengtkcellinfo.h"
+#include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
 
@@ -37,7 +38,8 @@ namespace Oxygen
 
         //! constructor
         explicit TreeViewStateData( void ):
-            _target( 0L )
+            _target( 0L ),
+            _dirtyRect( Gtk::gdk_rectangle() )
         {}
 
         //! destructor
@@ -86,7 +88,7 @@ namespace Oxygen
         protected:
 
         //! return dirty rect (for update)
-        GdkRectangle dirtyRect( void ) const;
+        GdkRectangle dirtyRect( void );
 
         //! delayed update
         static gboolean delayedUpdate( gpointer );
@@ -119,6 +121,9 @@ namespace Oxygen
 
         //! previous tab data
         Data _previous;
+
+        //! additional dirty rect
+        GdkRectangle _dirtyRect;
 
     };
 
