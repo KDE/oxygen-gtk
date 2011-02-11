@@ -3185,19 +3185,13 @@ namespace Oxygen
         // no glow when widget is disabled
         if( options&Disabled ) return ColorUtils::Rgba();
 
-        if( data._mode == AnimationNone || data._opacity < 0 )
+        if( (options&Flat) && !(options&Sunken) )
         {
 
-            if( (options&Flat) && !(options&Sunken) && (options&(Hover|Focus)) ) return  settings().palette().color( Palette::Focus );
-            if( options & Hover ) return settings().palette().color( Palette::Hover );
-            if( options & Focus ) return  settings().palette().color( Palette::Focus );
-            return ColorUtils::Rgba();
-
-        } else if( (options&Flat) && !(options&Sunken) ) {
-
             /*
-            flat buttons have special handling of colors
-            that is consistent with oxygen-qt, but quite inconsistent with other widgets
+            flat buttons have special handling of colors: hover and focus are both assigned
+            the hover color. This is consistent with oxygen-qt, though quite inconsistent with
+            other widgets.
             */
             if(
                 ( data._mode == AnimationHover && (options&Focus) ) ||
@@ -3205,7 +3199,15 @@ namespace Oxygen
             {
                 return settings().palette().color( Palette::Focus );
 
-            } else return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+            } else if( data._mode & (AnimationHover|AnimationFocus) ) {
+
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+
+            } else if( options&(Focus|Hover) ) {
+
+                return settings().palette().color( Palette::Focus );
+
+            } else return ColorUtils::Rgba();
 
         } else if( data._mode == AnimationHover ) {
 
@@ -3221,21 +3223,17 @@ namespace Oxygen
 
             }
 
+        } else if( options&Hover ) {
+
+            return settings().palette().color( Palette::Hover );
+
         } else if( data._mode == AnimationFocus ) {
 
-            if( options & Hover )
-            {
+            return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), data._opacity );
 
-                return ColorUtils::mix(
-                    settings().palette().color( Palette::Hover ),
-                    settings().palette().color( Palette::Focus ), data._opacity );
+        } else if( options&Focus ) {
 
-            } else {
-
-                return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), data._opacity );
-
-            }
-
+            return settings().palette().color( Palette::Focus );
 
         } else return ColorUtils::Rgba();
 
@@ -3266,13 +3264,7 @@ namespace Oxygen
 
         } else if( data._mode == AnimationHover && data._opacity >= 0 ) {
 
-            if( options & Focus )
-            {
-                return ColorUtils::mix(
-                    settings().palette().color( Palette::Focus ),
-                    settings().palette().color( Palette::Hover ), data._opacity );
-
-            } else return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+            return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
 
         } else if( options & Hover ) {
 
