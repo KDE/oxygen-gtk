@@ -705,9 +705,9 @@ namespace Oxygen
             int center = ( w-( ngroups-1 )*250 )/2 + x;
             for( int k = 0; k < ngroups; k++, center += 250 )
             {
-                helper().renderDot( context, base, center-3, y-1 );
-                helper().renderDot( context, base, center, y-1 );
-                helper().renderDot( context, base, center+3, y-1 );
+                helper().renderDot( context, base, center-3, y );
+                helper().renderDot( context, base, center, y );
+                helper().renderDot( context, base, center+3, y );
             }
 
         } else {
