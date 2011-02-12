@@ -26,6 +26,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowshadow.h"
+#include "oxygenfontinfo.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2178,33 +2179,41 @@ namespace Oxygen
             renderWindowDots( context, x, y, w, h, base, wopt);
         }
 
-        if(windowStrings && windowStrings[0])
+        if(windowStrings)
         {
-            // draw caption
+            if( windowStrings[0] )
+            {
+                // draw caption
+                cairo_text_extents_t cte;
+                double textWidth, textHeight;
 
-            gchar* &caption(windowStrings[0]);
-            cairo_text_extents_t cte;
-            double textWidth, textHeight;
+                gchar* &caption(windowStrings[0]);
+                const FontInfo& font(settings().WMFont());
+                const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
+                const cairo_font_slant_t slant( font.italic() ? CAIRO_FONT_SLANT_ITALIC : CAIRO_FONT_SLANT_NORMAL );
+                const cairo_font_weight_t weight( font.weight() < FontInfo::DemiBold ? CAIRO_FONT_WEIGHT_NORMAL : CAIRO_FONT_WEIGHT_BOLD );
 
-            // TODO: set font settings from config
-            cairo_select_font_face(context,"sans",CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);
-            cairo_set_font_size(context,10);
-            cairo_set_source_rgb(context,0,0,0);
+                cairo_select_font_face( context, font.family().c_str(), slant, weight );
+                cairo_set_font_size( context, font.size() );
+                cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
 
-            cairo_text_extents(context,caption,&cte);
-            textWidth=cte.width;
-            textHeight=cte.height;
+                cairo_text_extents(context,caption,&cte);
+                textWidth=cte.width;
+                textHeight=cte.height;
 
-            // TODO: handle text placement according to config
-            // for now, make text centered
-            double xOffset=(w-textWidth)/2.-cte.x_bearing;
-            double yOffset=(WinDeco::getMetric(WinDeco::BorderTop)-textHeight)/2.-cte.y_bearing;
+                // TODO: handle text placement according to config
+                // for now, make text centered
+                double xOffset=(w-textWidth)/2.-cte.x_bearing;
+                double yOffset=(WinDeco::getMetric(WinDeco::BorderTop)-textHeight)/2.-cte.y_bearing;
 
-            cairo_move_to(context,x+xOffset,y+yOffset);
-            cairo_show_text(context,caption);
-            cairo_set_source_rgba(context,1,0,0,0.5);
+                cairo_move_to(context,x+xOffset,y+yOffset);
+                cairo_show_text(context,caption);
+            }
 
-            // TODO: check windowStrings[1] and use WMCLASS and caption to enable kwin per-window style exceptions
+            if( windowStrings[1] )
+            {
+                // TODO: use WMCLASS and caption to enable per-window style exceptions
+            }
         }
     }
 

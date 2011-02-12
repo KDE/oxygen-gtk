@@ -28,6 +28,7 @@
 #include "oxygenpalette.h"
 #include "oxygenshadowconfiguration.h"
 #include "oxygenpathlist.h"
+#include "oxygenfontinfo.h"
 
 #include <iostream>
 #include <sstream>
@@ -241,6 +242,10 @@ namespace Oxygen
             }
         }
 
+        //! windeco font
+        const FontInfo& WMFont( void ) const
+        { return _WMFont; }
+
         //@}
 
         //! true if argb is enabled
@@ -410,6 +415,9 @@ namespace Oxygen
 
         //! inactive shadows
         ShadowConfiguration _inactiveShadowConfiguration;
+
+        //! windeco font
+        FontInfo _WMFont;
 
         //@}
 
