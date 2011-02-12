@@ -2148,7 +2148,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2177,11 +2177,48 @@ namespace Oxygen
             ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
             renderWindowDots( context, x, y, w, h, base, wopt);
         }
+
+        if(windowStrings && windowStrings[0])
+        {
+            // draw caption
+
+            gchar* &caption(windowStrings[0]);
+            cairo_text_extents_t cte;
+            double textWidth, textHeight;
+
+            // TODO: set font settings from config
+            cairo_select_font_face(context,"sans",CAIRO_FONT_SLANT_NORMAL,CAIRO_FONT_WEIGHT_NORMAL);
+            cairo_set_font_size(context,10);
+            cairo_set_source_rgb(context,0,0,0);
+
+            cairo_text_extents(context,caption,&cte);
+            textWidth=cte.width;
+            textHeight=cte.height;
+
+            // TODO: handle text placement according to config
+            // for now, make text centered
+            double xOffset=(w-textWidth)/2.-cte.x_bearing;
+            double yOffset=(WinDeco::getMetric(WinDeco::BorderTop)-textHeight)/2.-cte.y_bearing;
+
+            cairo_move_to(context,x+xOffset,y+yOffset);
+            cairo_show_text(context,caption);
+            cairo_set_source_rgba(context,1,0,0,0.5);
+
+            // TODO: check windowStrings[1] and use WMCLASS and caption to enable kwin per-window style exceptions
+        }
     }
 
     //__________________________________________________________________
-    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings )
     {
+        /*
+           (any element of windowStrings[] may be NULL - will be understood as "")
+           windowStrings may also be NULL
+
+           elements:
+            windowStrings[0]: caption
+            windowStrings[1]: WMCLASS
+        */
         /*
            caches layout:
                left&right border height: h
@@ -2202,7 +2239,7 @@ namespace Oxygen
                 left=helper().createSurface(sw,h);
 
                 Cairo::Context context(left);
-                renderWindowDecoration( context, wopt, 0, 0, w, h );
+                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings );
 
                 helper().windecoLeftBorderCache().insert(key,left);
             }
@@ -2229,7 +2266,7 @@ namespace Oxygen
                 right=helper().createSurface(sw,h);
 
                 Cairo::Context context(right);
-                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h );
+                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings );
 
                 helper().windecoRightBorderCache().insert(key,right);
             }
@@ -2259,7 +2296,7 @@ namespace Oxygen
                 top=helper().createSurface(sw,sh);
 
                 Cairo::Context context(top);
-                renderWindowDecoration( context, wopt, -left, 0, w, h );
+                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings );
 
                 helper().windecoTopBorderCache().insert(key,top);
             }
@@ -2290,7 +2327,7 @@ namespace Oxygen
                 bottom=helper().createSurface(sw,sh);
 
                 Cairo::Context context(bottom);
-                renderWindowDecoration( context, wopt, -left, y-Y, w, h );
+                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings );
 
                 helper().windecoBottomBorderCache().insert(key,bottom);
             }
