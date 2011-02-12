@@ -2202,6 +2202,7 @@ namespace Oxygen
                 textHeight=cte.height;
 
                 // TODO: handle text placement according to config
+                // TODO: correctly clip text by buttons and replace its ending by "..." if it doesn't fit
                 // for now, make text centered
                 double xOffset=(w-textWidth)/2.-cte.x_bearing;
                 double yOffset=(WinDeco::getMetric(WinDeco::BorderTop)-textHeight)/2.-cte.y_bearing;
