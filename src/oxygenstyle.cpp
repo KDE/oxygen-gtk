@@ -26,6 +26,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowshadow.h"
+#include "oxygenfontinfo.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2215,7 +2216,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2244,11 +2245,57 @@ namespace Oxygen
             ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
             renderWindowDots( context, x, y, w, h, base, wopt);
         }
+
+        if(windowStrings)
+        {
+            if( windowStrings[0] )
+            {
+                // draw caption
+                cairo_text_extents_t cte;
+                double textWidth, textHeight;
+
+                gchar* &caption(windowStrings[0]);
+                const FontInfo& font(settings().WMFont());
+                const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
+                const cairo_font_slant_t slant( font.italic() ? CAIRO_FONT_SLANT_ITALIC : CAIRO_FONT_SLANT_NORMAL );
+                const cairo_font_weight_t weight( font.weight() < FontInfo::DemiBold ? CAIRO_FONT_WEIGHT_NORMAL : CAIRO_FONT_WEIGHT_BOLD );
+
+                cairo_select_font_face( context, font.family().c_str(), slant, weight );
+                cairo_set_font_size( context, font.size() );
+                cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
+
+                cairo_text_extents(context,caption,&cte);
+                textWidth=cte.width;
+                textHeight=cte.height;
+
+                // TODO: handle text placement according to config
+                // TODO: correctly clip text by buttons and replace its ending by "..." if it doesn't fit
+                // for now, make text centered
+                double xOffset=(w-textWidth)/2.-cte.x_bearing;
+                double yOffset=(WinDeco::getMetric(WinDeco::BorderTop)-textHeight)/2.-cte.y_bearing;
+
+                cairo_move_to(context,x+xOffset,y+yOffset);
+                cairo_show_text(context,caption);
+            }
+
+            if( windowStrings[1] )
+            {
+                // TODO: use WMCLASS and caption to enable per-window style exceptions
+            }
+        }
     }
 
     //__________________________________________________________________
-    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings )
     {
+        /*
+           (any element of windowStrings[] may be NULL - will be understood as "")
+           windowStrings may also be NULL
+
+           elements:
+            windowStrings[0]: caption
+            windowStrings[1]: WMCLASS
+        */
         /*
            caches layout:
                left&right border height: h
@@ -2269,7 +2316,7 @@ namespace Oxygen
                 left=helper().createSurface(sw,h);
 
                 Cairo::Context context(left);
-                renderWindowDecoration( context, wopt, 0, 0, w, h );
+                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings );
 
                 helper().windecoLeftBorderCache().insert(key,left);
             }
@@ -2296,7 +2343,7 @@ namespace Oxygen
                 right=helper().createSurface(sw,h);
 
                 Cairo::Context context(right);
-                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h );
+                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings );
 
                 helper().windecoRightBorderCache().insert(key,right);
             }
@@ -2326,7 +2373,7 @@ namespace Oxygen
                 top=helper().createSurface(sw,sh);
 
                 Cairo::Context context(top);
-                renderWindowDecoration( context, wopt, -left, 0, w, h );
+                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings );
 
                 helper().windecoTopBorderCache().insert(key,top);
             }
@@ -2357,7 +2404,7 @@ namespace Oxygen
                 bottom=helper().createSurface(sw,sh);
 
                 Cairo::Context context(bottom);
-                renderWindowDecoration( context, wopt, -left, y-Y, w, h );
+                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings );
 
                 helper().windecoBottomBorderCache().insert(key,bottom);
             }
