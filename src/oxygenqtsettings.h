@@ -29,6 +29,7 @@
 #include "oxygenshadowconfiguration.h"
 #include "oxygenpathlist.h"
 #include "oxygenfontinfo.h"
+#include "pango/pango.h"
 
 #include <iostream>
 #include <sstream>
@@ -246,6 +247,10 @@ namespace Oxygen
         const FontInfo& WMFont( void ) const
         { return _WMFont; }
 
+        //! title alignment
+        const PangoAlignment TitleAlignment( void ) const
+        { return _titleAlignment; }
+
         //@}
 
         //! true if argb is enabled
@@ -418,6 +423,9 @@ namespace Oxygen
 
         //! windeco font
         FontInfo _WMFont;
+
+        //! title alignment
+        PangoAlignment _titleAlignment;
 
         //@}
 
