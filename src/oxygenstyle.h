@@ -259,10 +259,10 @@ namespace Oxygen
         //@}
 
         //! draw window decorations
-        void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**);
+        void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint);
 
         //! internal windeco renderer
-        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**);
+        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint);
 
         //! draw window shadow
         void drawWindowShadow( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
