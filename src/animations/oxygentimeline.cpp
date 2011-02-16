@@ -113,7 +113,7 @@ namespace Oxygen
         if( !_running ) return false;
 
         // get time (msec)
-        const int elapsed( 1000*g_timer_elapsed(_timer, 0L) );
+        const int elapsed( int(1000*g_timer_elapsed(_timer, 0L)) );
         const double end( _direction == Forward ? 1:0 );
         if( elapsed >= _duration )
         {
