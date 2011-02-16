@@ -52,13 +52,23 @@ namespace Oxygen
         bool updateState( GtkArrowType type, bool value )
         { return data( type ).updateState( value ); }
 
-        //! return timeline
-        const TimeLine& timeLine( GtkArrowType type ) const
-        { return data( type )._timeLine; }
+        //! enable state
+        void setEnabled( bool value )
+        {
+            data( GTK_ARROW_UP )._timeLine.setEnabled( value );
+            data( GTK_ARROW_DOWN )._timeLine.setEnabled( value );
+        }
 
-        //! return timeline
-        TimeLine& timeLine( GtkArrowType type )
-        { return data( type )._timeLine; }
+        //! duration
+        void setDuration( int value )
+        {
+            data( GTK_ARROW_UP )._timeLine.setDuration( value );
+            data( GTK_ARROW_DOWN )._timeLine.setDuration( value );
+        }
+
+        //! true if timeline for give arrow type is running
+        bool isAnimated( GtkArrowType type ) const
+        { return data( type )._timeLine.isRunning(); }
 
         //! opacity
         double opacity( GtkArrowType type ) const

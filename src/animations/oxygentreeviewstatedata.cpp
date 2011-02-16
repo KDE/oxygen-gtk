@@ -121,11 +121,6 @@ namespace Oxygen
     GdkRectangle TreeViewStateData::dirtyRect( void )
     {
 
-        /*
-        FIXME: For now we return an invalid rect, which triggers full
-        update of the widget. This can certainly be optimized, notably
-        by using the CellInfo rects instead
-        */
         GdkRectangle rect( Gtk::gdk_rectangle() );
         if( GTK_IS_TREE_VIEW( _target ) )
         {

@@ -51,17 +51,21 @@ namespace Oxygen
         //! update state
         bool updateState( bool );
 
-        //! return timeline
-        const TimeLine& timeLine( void ) const
-        { return _timeLine; }
-
-        //! return timeline
-        TimeLine& timeLine( void )
-        { return _timeLine; }
+        //! true if animated
+        bool isAnimated( void ) const
+        { return _timeLine.isRunning(); }
 
         //! opacity
         double opacity( void ) const
-        { return timeLine().value(); }
+        { return _timeLine.value(); }
+
+        //! enable state
+        void setEnabled( bool value )
+        { _timeLine.setEnabled( value ); }
+
+        //! duration
+        void setDuration( int value )
+        { _timeLine.setDuration( value ); }
 
         protected:
 

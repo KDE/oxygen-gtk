@@ -81,7 +81,7 @@ namespace Oxygen
             {
 
                 data.updateState( type, (options&Hover) && !(options&Disabled) );
-                return data.timeLine( type ).isRunning() ? AnimationData( data.opacity( type ), AnimationHover ):AnimationData();
+                return data.isAnimated( type ) ? AnimationData( data.opacity( type ), AnimationHover ):AnimationData();
 
             } else return AnimationData();
 
@@ -95,12 +95,7 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             const bool registered( GenericEngine<ScrollBarStateData>::registerWidget( widget ) );
-            if( registered )
-            {
-                data().value( widget ).timeLine( GTK_ARROW_UP ).setDuration( _duration );
-                data().value( widget ).timeLine( GTK_ARROW_DOWN ).setDuration( _duration );
-            }
-
+            if( registered ) data().value( widget ).setDuration( _duration );
             return registered;
         }
 

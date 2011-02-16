@@ -105,13 +105,13 @@ namespace Oxygen
             {
                 default:
                 case AnimationHover:
-                if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
-                else if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
+                if( hoverData && hoverData->isAnimated() ) return AnimationData( hoverData->opacity(), AnimationHover );
+                else if( focusData && focusData->isAnimated() ) return AnimationData( focusData->opacity(), AnimationFocus );
                 else return AnimationData();
 
                 case AnimationFocus:
-                if( focusData && focusData->timeLine().isRunning() ) return AnimationData( focusData->opacity(), AnimationFocus );
-                else if( hoverData && hoverData->timeLine().isRunning() ) return AnimationData( hoverData->opacity(), AnimationHover );
+                if( focusData && focusData->isAnimated() ) return AnimationData( focusData->opacity(), AnimationFocus );
+                else if( hoverData && hoverData->isAnimated() ) return AnimationData( hoverData->opacity(), AnimationHover );
                 else return AnimationData();
 
             }

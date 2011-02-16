@@ -33,7 +33,7 @@ namespace Oxygen
         // hover data map
         for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
         {
-            iter->second.timeLine().setEnabled( value );
+            iter->second.setEnabled( value );
             if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
             else iter->second.disconnect( iter->first );
         }
@@ -41,7 +41,7 @@ namespace Oxygen
         // focus data map
         for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
         {
-            iter->second.timeLine().setEnabled( value );
+            iter->second.setEnabled( value );
             if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
             else iter->second.disconnect( iter->first );
         }
@@ -57,11 +57,11 @@ namespace Oxygen
 
         // hover data map
         for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
-        { iter->second.timeLine().setDuration( value ); }
+        { iter->second.setDuration( value ); }
 
         // focus data map
         for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
-        { iter->second.timeLine().setDuration( value ); }
+        { iter->second.setDuration( value ); }
 
     }
 
@@ -96,7 +96,7 @@ namespace Oxygen
 
         WidgetStateData& data( dataMap.registerWidget( widget ) );
         data.updateState( state );
-        data.timeLine().setDuration( _duration );
+        data.setDuration( _duration );
 
         /*
         blacklist some applications based on name and widget

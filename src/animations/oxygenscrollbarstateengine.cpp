@@ -33,8 +33,7 @@ namespace Oxygen
         // focus data map
         for( DataMap<ScrollBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
         {
-            iter->second.timeLine( GTK_ARROW_UP ).setEnabled( value );
-            iter->second.timeLine( GTK_ARROW_DOWN ).setEnabled( value );
+            iter->second.setEnabled( value );
             if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
             else iter->second.disconnect( iter->first );
         }
@@ -50,10 +49,7 @@ namespace Oxygen
 
         // focus data map
         for( DataMap<ScrollBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-        {
-            iter->second.timeLine( GTK_ARROW_UP ).setDuration( value );
-            iter->second.timeLine( GTK_ARROW_DOWN ).setDuration( value );
-        }
+        { iter->second.setDuration( value ); }
 
     }
 
