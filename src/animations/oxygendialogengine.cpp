@@ -67,10 +67,10 @@ namespace Oxygen
     {
 
         /*
-        discard all messages containing "IA__gtk_box_reorder_child:"
+        discard all messages containing "gtk_box_reorder_child:"
         and fallback to default handler otherwise
         */
-        if( std::string( message ).find( "IA__gtk_box_reorder_child" ) == std::string::npos )
+        if( std::string( message ).find( "gtk_box_reorder_child" ) == std::string::npos )
         { g_log_default_handler( domain, flags, message, data ); }
 
     }
