@@ -23,20 +23,14 @@
 
 namespace Oxygen
 {
-
     //_________________________________________________________
     bool DialogEngine::registerWidget( GtkWidget* widget )
     {
         if( contains( widget ) ) return false;
 
-        /*
-        gtk_dialog_set_alternative_button_order will cause errors to be logged, but don't want these
-        so register or own error handler, and then unregister afterwards...
-        */
-        const unsigned int id( g_log_set_handler("Gtk", G_LOG_LEVEL_CRITICAL, Gtk::oxygen_log_handler, NULL) );
+        GtkDialog* dialog(GTK_DIALOG(widget));
 
-        // change order
-        gtk_dialog_set_alternative_button_order( GTK_DIALOG( widget ),
+        gint responses[]={
             GTK_RESPONSE_HELP,
             GTK_RESPONSE_OK,
             GTK_RESPONSE_YES,
@@ -45,12 +39,29 @@ namespace Oxygen
             GTK_RESPONSE_REJECT,
             GTK_RESPONSE_CLOSE,
             GTK_RESPONSE_NO,
-            GTK_RESPONSE_CANCEL,
-            -1 );
+            GTK_RESPONSE_CANCEL
+        };
+        const int numOfResponseIDs=sizeof(responses)/sizeof(responses[0]);
 
-        // reset error handler
-        g_log_remove_handler( "Gtk", id );
-        g_log_set_handler( "Gtk", G_LOG_LEVEL_CRITICAL, g_log_default_handler, NULL );
+        int numOfResponsesFound=0;
+        for(int i=0; i<numOfResponseIDs; i++)
+        {
+            if(Gtk::dialog_find_button(dialog,responses[i]))
+            {
+                #if OXYGEN_DEBUG
+                std::cerr << "responseID found: " << responses[i] << std::endl;
+                #endif
+                // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
+                responses[numOfResponsesFound]=responses[i];
+                numOfResponsesFound++;
+            }
+        }
+        #if OXYGEN_DEBUG
+        std::cerr << "numOfResponsesFound: " << numOfResponsesFound << std::endl;
+        #endif
+
+        // change order
+        gtk_dialog_set_alternative_button_order_from_array( dialog, numOfResponsesFound,responses );
 
         // insert in set
         _data.insert( widget );
