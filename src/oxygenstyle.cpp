@@ -2387,7 +2387,7 @@ namespace Oxygen
                     cairo_save( context );
 
                     cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
-                    cairo_translate( context, titleIndentLeft, (H-textHeight)/2. );
+                    cairo_translate( context, x+titleIndentLeft, y+(H-textHeight)/2. );
                     pango_cairo_update_layout( context, layout );
                     pango_cairo_show_layout( context, layout );
 
