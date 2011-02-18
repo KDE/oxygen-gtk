@@ -73,18 +73,4 @@ namespace Oxygen
         return true;
 
     }
-
-    //_________________________________________________________
-    void DialogEngine::logHandler( const gchar* domain, GLogLevelFlags flags, const gchar* message, gpointer data )
-    {
-
-        /*
-        discard all messages containing "gtk_box_reorder_child:"
-        and fallback to default handler otherwise
-        */
-        if( std::string( message ).find( "gtk_box_reorder_child" ) == std::string::npos )
-        { g_log_default_handler( domain, flags, message, data ); }
-
-    }
-
 }
