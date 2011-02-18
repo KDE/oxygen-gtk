@@ -56,12 +56,6 @@ namespace Oxygen
         virtual bool contains( GtkWidget* widget )
         { return _data.find( widget ) != _data.end(); }
 
-        protected:
-
-        //! error handler
-        /*! it is used to disable printing out some messages triggered by re-ordering dialog's buttons */
-        static void logHandler( const gchar*, GLogLevelFlags, const gchar*, gpointer );
-
         private:
 
         //! store registered widgets
