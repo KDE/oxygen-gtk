@@ -965,4 +965,29 @@ namespace Oxygen
 
     }
 
+    GtkWidget* Gtk::dialog_find_button(GtkDialog* dialog,gint response_id)
+    {
+        GList *children, *tmp_list;
+        GtkWidget *child = NULL;
+
+        children = gtk_container_get_children (GTK_CONTAINER (dialog->action_area));
+
+        for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
+        {
+            gint rid = gtk_dialog_get_response_for_widget(dialog, GTK_WIDGET(tmp_list->data));
+
+            if (rid == response_id)
+            {
+                child = GTK_WIDGET(tmp_list->data);
+                break;
+            }
+        }
+
+        g_list_free (children);
+
+        return child;
+
+    }
+
+
 }
