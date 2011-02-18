@@ -287,9 +287,6 @@ namespace Oxygen
                 ( rect->y <= y && (rect->y + rect->height) > y );
         }
 
-        //! gtk error handler, do nothing
-        inline void oxygen_log_handler( const gchar*, GLogLevelFlags, const gchar*, gpointer )
-        {}
         //@}
 
         //! returns a widget which has response_id as response id for dialog
