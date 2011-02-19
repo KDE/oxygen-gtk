@@ -740,6 +740,11 @@ namespace Oxygen
             _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
         }
 
+        if( _kdeGlobals.hasOption( "[WM]", "activeFont" ) )
+        {
+            _WMFont=FontInfo::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeFont", "Sans Serif,8,-1,5,50,0,0,0,0,0" ) );
+        }
+
     }
 
     //_________________________________________________________
@@ -850,6 +855,13 @@ namespace Oxygen
         else if( frameBorder == "Very Huge" ) _frameBorder = BorderVeryHuge;
         else if( frameBorder == "Oversized" ) _frameBorder = BorderOversized;
         else _frameBorder = BorderDefault;
+
+        // window decoration title alignment
+        std::string titleAlign( oxygen.getValue( "[Windeco]", "TitleAlignment", "Center" ) );
+        if( titleAlign == "Left" ) _titleAlignment = PANGO_ALIGN_LEFT;
+        else if( titleAlign == "Center" ) _titleAlignment = PANGO_ALIGN_CENTER;
+        else if( titleAlign == "Right" ) _titleAlignment = PANGO_ALIGN_RIGHT;
+        else _titleAlignment = PANGO_ALIGN_CENTER;
 
         // shadow configurations
         _activeShadowConfiguration.initialize( oxygen );
