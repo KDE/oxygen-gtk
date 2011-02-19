@@ -53,6 +53,7 @@ namespace Oxygen
         if( dataMap.contains( widget ) ) return false;
 
         WidgetStateData& data( dataMap.registerWidget( widget ) );
+        data.setEnabled( enabled() );
         data.updateState( state );
         data.setDuration( duration() );
 

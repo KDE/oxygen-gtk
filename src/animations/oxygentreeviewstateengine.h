@@ -106,7 +106,10 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             const bool registered( GenericEngine<TreeViewStateData>::registerWidget( widget ) );
-            if( registered ) data().value( widget ).setDuration( _duration );
+            if( registered ) {
+                data().value( widget ).setEnabled( enabled() );
+                data().value( widget ).setDuration( duration() );
+            }
             return registered;
         }
 
