@@ -6,7 +6,6 @@ include_directories( animations )
 set( oxygen_gtk_SOURCES
     animations/oxygenanimations.cpp
     animations/oxygenarrowstatedata.cpp
-    animations/oxygenarrowstateengine.cpp
     animations/oxygenbackgroundhintengine.cpp
     animations/oxygenbaseengine.cpp
     animations/oxygencomboboxdata.cpp
@@ -19,18 +18,15 @@ set( oxygen_gtk_SOURCES
     animations/oxygensignal.cpp
     animations/oxygenscrollbardata.cpp
     animations/oxygenscrollbarstatedata.cpp
-    animations/oxygenscrollbarstateengine.cpp
     animations/oxygenscrolledwindowdata.cpp
     animations/oxygentabwidgetdata.cpp
     animations/oxygentabwidgetstatedata.cpp
-    animations/oxygentabwidgetstateengine.cpp
     animations/oxygentimeline.cpp
     animations/oxygentimelineserver.cpp
     animations/oxygentimer.cpp
     animations/oxygentreeviewdata.cpp
     animations/oxygentreeviewengine.cpp
     animations/oxygentreeviewstatedata.cpp
-    animations/oxygentreeviewstateengine.cpp
     animations/oxygenwidgetstatedata.cpp
     animations/oxygenwidgetstateengine.cpp
     oxygenapplicationname.cpp
