@@ -23,19 +23,6 @@
 namespace Oxygen
 {
 
-    //________________________________________________________________________
-    void TabWidgetStateEngine::setDuration( int value )
-    {
-
-        if( _duration == value ) return;
-        _duration = value;
-
-        // focus data map
-        for( DataMap<TabWidgetStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-        { iter->second.setDuration( value ); }
-
-    }
-
 }
 
 

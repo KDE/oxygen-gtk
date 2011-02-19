@@ -31,7 +31,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit AnimationEngine( void )
+        explicit AnimationEngine( void ):
+            _duration( 150 )
         {}
 
         //! destructor
@@ -41,6 +42,19 @@ namespace Oxygen
         //! application name
         virtual void setApplicationName( const ApplicationName& applicationName )
         { _applicationName = applicationName; }
+
+        //! duration
+        const int& duration( void ) const
+        { return _duration; }
+
+        //! duration
+        /*! returns true if changed */
+        bool setDuration( int value )
+        {
+            if( _duration == value ) return false;
+            _duration = value;
+            return true;
+        }
 
         protected:
 
@@ -57,6 +71,9 @@ namespace Oxygen
 
         //! application name
         ApplicationName _applicationName;
+
+        //! animation duration
+        int _duration;
 
     };
 }

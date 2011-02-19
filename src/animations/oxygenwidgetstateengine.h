@@ -46,8 +46,7 @@ namespace Oxygen
 
         //! constructor
         WidgetStateEngine( Animations* widget ):
-            BaseEngine( widget ),
-            _duration( 150 )
+            BaseEngine( widget )
             {}
 
         //! destructor
@@ -87,7 +86,22 @@ namespace Oxygen
         }
 
         //! transition duration
-        virtual void setDuration( int );
+        virtual bool setDuration( int value )
+        {
+
+            if( !AnimationEngine::setDuration( value ) ) return false;
+
+            // hover data map
+            for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
+            { iter->second.setDuration( value ); }
+
+            // focus data map
+            for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+            { iter->second.setDuration( value ); }
+
+            return true;
+
+        }
 
         //!@name accessors
         //@{
@@ -159,9 +173,6 @@ namespace Oxygen
         }
 
         private:
-
-        //! transition duration
-        int _duration;
 
         //!@name maps
         //@{

@@ -23,23 +23,6 @@
 namespace Oxygen
 {
 
-    //________________________________________________________________________
-    void WidgetStateEngine::setDuration( int value )
-    {
-
-        if( _duration == value ) return;
-        _duration = value;
-
-        // hover data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
-        { iter->second.setDuration( value ); }
-
-        // focus data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
-        { iter->second.setDuration( value ); }
-
-    }
-
     //________________________________________________________
     bool WidgetStateEngine::registerWidget( GtkWidget* widget, AnimationModes modes, const StyleOptions& options )
     {
@@ -71,7 +54,7 @@ namespace Oxygen
 
         WidgetStateData& data( dataMap.registerWidget( widget ) );
         data.updateState( state );
-        data.setDuration( _duration );
+        data.setDuration( duration() );
 
         /*
         blacklist some applications based on name and widget

@@ -20,22 +20,4 @@
 
 #include "oxygenarrowstateengine.h"
 
-namespace Oxygen
-{
-
-    //________________________________________________________________________
-    void ArrowStateEngine::setDuration( int value )
-    {
-
-        if( _duration == value ) return;
-        _duration = value;
-
-        // focus data map
-        for( DataMap<ArrowStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-        { iter->second.setDuration( value ); }
-
-    }
-
-}
-
 

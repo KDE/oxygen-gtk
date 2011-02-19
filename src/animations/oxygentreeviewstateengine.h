@@ -69,7 +69,13 @@ namespace Oxygen
         }
 
         //! transition duration
-        virtual void setDuration( int );
+        virtual bool setDuration( int value )
+        {
+            if( !AnimationEngine::setDuration( value ) ) return false;
+            for( DataMap<TreeViewStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setDuration( value ); }
+            return true;
+        }
 
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */

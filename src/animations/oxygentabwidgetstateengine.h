@@ -46,8 +46,7 @@ namespace Oxygen
 
         //! constructor
         TabWidgetStateEngine( Animations* widget ):
-            GenericEngine<TabWidgetStateData>( widget ),
-            _duration( 150 )
+            GenericEngine<TabWidgetStateData>( widget )
             {}
 
         //! destructor
@@ -68,7 +67,13 @@ namespace Oxygen
         }
 
         //! transition duration
-        virtual void setDuration( int );
+        virtual bool setDuration( int value )
+        {
+            if( !AnimationEngine::setDuration( value ) ) return false;
+            for( DataMap<TabWidgetStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setDuration( value ); }
+            return false;
+        }
 
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
@@ -99,16 +104,11 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             const bool registered( GenericEngine<TabWidgetStateData>::registerWidget( widget ) );
-            if( registered ) data().value( widget ).setDuration( _duration );
+            if( registered ) data().value( widget ).setDuration( duration() );
             return registered;
         }
 
         //@}
-
-        private:
-
-        //! transition duration
-        int _duration;
 
     };
 
