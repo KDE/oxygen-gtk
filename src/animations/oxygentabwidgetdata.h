@@ -155,7 +155,6 @@ namespace Oxygen
         to properly update tab hover because some tabs have embedded children.
         This is notably the case for gimp, nautilus (in tabbed mode), etc.
         */
-
         class ChildData
         {
             public:
@@ -181,7 +180,6 @@ namespace Oxygen
         //! map registered children and corresponding data
         typedef std::map<GtkWidget*, ChildData> ChildDataMap;
         ChildDataMap _childrenData;
-
 
     };
 
