@@ -56,7 +56,17 @@ namespace Oxygen
         {}
 
         //! enabled state
-        virtual void setEnabled( bool );
+        virtual bool setEnabled( bool value )
+        {
+            if( !BaseEngine::setEnabled( value ) ) return false;
+            for( DataMap<TreeViewStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            {
+                iter->second.setEnabled( value );
+                if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+                else iter->second.disconnect( iter->first );
+            }
+            return true;
+        }
 
         //! transition duration
         virtual void setDuration( int );

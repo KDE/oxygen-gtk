@@ -62,7 +62,29 @@ namespace Oxygen
         }
 
         //! enabled state
-        virtual void setEnabled( bool );
+        virtual bool setEnabled( bool value )
+        {
+
+            if( !BaseEngine::setEnabled( value ) ) return false;
+
+            // hover data map
+            for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
+            {
+                iter->second.setEnabled( value );
+                if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+                else iter->second.disconnect( iter->first );
+            }
+
+            // focus data map
+            for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
+            {
+                iter->second.setEnabled( value );
+                if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+                else iter->second.disconnect( iter->first );
+            }
+
+            return true;
+        }
 
         //! transition duration
         virtual void setDuration( int );

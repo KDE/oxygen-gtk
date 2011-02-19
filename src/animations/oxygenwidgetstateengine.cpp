@@ -24,31 +24,6 @@ namespace Oxygen
 {
 
     //________________________________________________________________________
-    void WidgetStateEngine::setEnabled( bool value )
-    {
-
-        if( enabled() == value ) return;
-        BaseEngine::setEnabled( value );
-
-        // hover data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _hoverData.map().begin(); iter != _hoverData.map().end(); iter++ )
-        {
-            iter->second.setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
-
-        // focus data map
-        for( DataMap<WidgetStateData>::Map::iterator iter = _focusData.map().begin(); iter != _focusData.map().end(); iter++ )
-        {
-            iter->second.setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
-
-    }
-
-    //________________________________________________________________________
     void WidgetStateEngine::setDuration( int value )
     {
 

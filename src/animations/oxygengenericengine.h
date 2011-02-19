@@ -73,7 +73,8 @@ namespace Oxygen
         }
 
         //! enabled state
-        inline virtual void setEnabled( bool value );
+        /*! returns true if changed */
+        inline virtual bool setEnabled( bool value );
 
         //! true if widget is included
         virtual bool contains( GtkWidget* widget )
@@ -97,12 +98,16 @@ namespace Oxygen
     };
 
     //________________________________________________________________________
-    template< typename T> void GenericEngine<T>::setEnabled( bool value )
+    template< typename T> bool GenericEngine<T>::setEnabled( bool value )
     {
-        if( enabled() == value ) return;
+        if( enabled() == value ) return false;
+
         BaseEngine::setEnabled( value );
         if( enabled() ) _data.connectAll();
         else _data.disconnectAll();
+
+        return true;
+
     }
 
 }

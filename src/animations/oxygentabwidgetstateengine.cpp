@@ -24,23 +24,6 @@ namespace Oxygen
 {
 
     //________________________________________________________________________
-    void TabWidgetStateEngine::setEnabled( bool value )
-    {
-
-        if( enabled() == value ) return;
-        BaseEngine::setEnabled( value );
-
-        // focus data map
-        for( DataMap<TabWidgetStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-        {
-            iter->second.setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
-
-    }
-
-    //________________________________________________________________________
     void TabWidgetStateEngine::setDuration( int value )
     {
 

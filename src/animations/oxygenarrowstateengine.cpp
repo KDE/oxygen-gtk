@@ -24,23 +24,6 @@ namespace Oxygen
 {
 
     //________________________________________________________________________
-    void ArrowStateEngine::setEnabled( bool value )
-    {
-
-        if( enabled() == value ) return;
-        BaseEngine::setEnabled( value );
-
-        // focus data map
-        for( DataMap<ArrowStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-        {
-            iter->second.setEnabled( value );
-            if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
-            else iter->second.disconnect( iter->first );
-        }
-
-    }
-
-    //________________________________________________________________________
     void ArrowStateEngine::setDuration( int value )
     {
 
