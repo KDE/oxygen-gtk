@@ -142,14 +142,6 @@ namespace Oxygen
 
             //const GtkAllocation& allocation( childWidget->allocation );
             GtkAllocation allocation( childWidget->allocation );
-            const int borderWidth( gtk_container_get_border_width( GTK_CONTAINER( widget ) ) );
-
-            allocation.x += borderWidth;
-            allocation.y += borderWidth + 1;
-
-            allocation.width -= 2*borderWidth;
-            allocation.height -= (2*borderWidth + 2);
-
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
