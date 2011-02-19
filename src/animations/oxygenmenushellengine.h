@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenanimationengine.h"
 #include "oxygengenericengine.h"
 #include "oxygendatamap.h"
 #include "oxygenmenushelldata.h"
@@ -36,19 +37,72 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class MenuShellEngine: public GenericEngine<MenuShellData>
+    class MenuShellEngine: public GenericEngine<MenuShellData>, public AnimationEngine
     {
 
         public:
 
         //! constructor
         MenuShellEngine( Animations* parent ):
-            GenericEngine<MenuShellData>( parent )
+            GenericEngine<MenuShellData>( parent ),
+            _animationEnabled( true )
             {}
 
         //! destructor
         virtual ~MenuShellEngine( void )
         {}
+
+        //! register widget [overloaded]
+        virtual bool registerWidget( GtkWidget* widget )
+        {
+            const bool registered( GenericEngine<MenuShellData>::registerWidget( widget ) );
+            if( registered ) data().value( widget ).setDuration( duration() );
+            return registered;
+        }
+
+        //! enable animations
+        bool setAnimationEnabled( bool value )
+        {
+            if( _animationEnabled == value ) return false;
+            _animationEnabled = value;
+
+            for( DataMap<MenuShellData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setAnimationEnabled( value && !widgetIsBlackListed( iter->first ) ); }
+            return true;
+        }
+
+        //! transition duration
+        virtual bool setDuration( int value )
+        {
+            if( !AnimationEngine::setDuration( value ) ) return false;
+            for( DataMap<MenuShellData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setDuration( value ); }
+            return false;
+        }
+
+        //!@name accessors
+        //@{
+
+        //! true if animated
+        bool isAnimated( GtkWidget* widget )
+        { return data().value( widget ).isAnimated(); }
+
+        //! true if given animation type is animated
+        bool isAnimated( GtkWidget* widget, const AnimationType& type )
+        { return data().value( widget ).isAnimated( type ); }
+
+        //! animated rect for given widget and type
+        const GdkRectangle& rectangle( GtkWidget* widget, const AnimationType& type )
+        { return data().value( widget ).rectangle( type ); }
+
+        //! animation data for given widget and type
+        AnimationData animationData( GtkWidget* widget, const AnimationType& type )
+        { return data().value( widget ).animationData( type ); }
+
+        private:
+
+        //! enable animations
+        bool _animationEnabled;
 
     };
 

@@ -31,6 +31,17 @@
 namespace Oxygen
 {
 
+    //! animation index
+    /*!
+    used for engines that keep track of previously(fade-out) and
+    currently (fade-in) animated objects
+    */
+    enum AnimationType
+    {
+        AnimationCurrent,
+        AnimationPrevious
+    };
+
     //! animation mode
     enum AnimationMode
     {

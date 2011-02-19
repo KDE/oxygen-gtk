@@ -561,9 +561,6 @@ namespace Oxygen
             detail?detail:"0x0" );
         #endif
 
-        if(GTK_IS_MENU_BAR( widget ) )
-        { Style::instance().animations().menuShellEngine().registerWidget(widget); }
-
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
@@ -870,7 +867,52 @@ namespace Oxygen
 
             }
 
-        } else if( d.isMenuBar() || d.isToolBar() ) {
+        } else if( d.isMenuBar() ) {
+
+            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
+                !Style::instance().settings().applicationName().isOpenOffice() &&
+                !Gtk::gtk_widget_is_applet( widget ) )
+            {
+                Style::instance().windowManager().registerWidget( widget );
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            }
+
+            // check animation state
+            if( GTK_IS_MENU_BAR( widget ) )
+            {
+
+                MenuShellEngine& engine( Style::instance().animations().menuShellEngine() );
+                engine.registerWidget(widget);
+
+                // deal with current rect
+                if( engine.isAnimated( widget, AnimationCurrent ) )
+                {
+
+                    const AnimationData data( engine.animationData( widget, AnimationCurrent ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, Hover, data );
+
+                }
+
+                // deal with previous rect
+                if( engine.isAnimated( widget, AnimationPrevious ) )
+                {
+
+                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, Hover, data );
+
+                }
+
+            }
+
+            return;
+
+        } else if( d.isToolBar() ) {
 
             // https://bugzilla.gnome.org/show_bug.cgi?id=635511
             if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
@@ -963,6 +1005,19 @@ namespace Oxygen
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
         } else if( d.isMenuItem() ) {
+
+            GtkWidget* parent( gtk_widget_get_parent( widget ) );
+            if( GTK_IS_MENU_BAR( parent ) )
+            {
+                /*
+                for menubars, do nothing when animated, because it is dealt with
+                when painting menubar background
+                */
+                Style::instance().animations().menuShellEngine().registerWidget(parent );
+                if( Style::instance().animations().menuShellEngine().isAnimated( parent, AnimationCurrent ) )
+                { return; }
+
+            }
 
             StyleOptions options = StyleOptions( widget, state, shadow );
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );

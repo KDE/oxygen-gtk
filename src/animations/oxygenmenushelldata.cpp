@@ -38,22 +38,94 @@ namespace Oxygen
     //________________________________________________________________________________
     void MenuShellData::connect( GtkWidget* widget )
     {
-        _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), 0L);
-        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), 0L );
+
+        _target = widget;
+        _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
+        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+
+        // connect timeLines
+        _current._timeLine.connect( (GSourceFunc)delayedUpdate, this );
+        _previous._timeLine.connect( (GSourceFunc)delayedUpdate, this );
+
+        // set directions
+        _current._timeLine.setDirection( TimeLine::Forward );
+        _previous._timeLine.setDirection( TimeLine::Backward );
+
     }
 
     //________________________________________________________________________________
     void MenuShellData::disconnect( GtkWidget* widget )
     {
+
+        _target = 0L;
+
         // disconnect signal
         _motionId.disconnect();
         _leaveId.disconnect();
+
+        // disconnect timelines
+        _current._timeLine.disconnect();
+        _previous._timeLine.disconnect();
+
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer )
+    bool MenuShellData::updateState( GtkWidget* widget, const GdkRectangle& rect, bool state )
+    {
+
+        if( state && widget != _current._widget )
+        {
+
+            // stop current animation if running
+            if( _current._timeLine.isRunning() ) _current._timeLine.stop();
+
+            // stop previous animation if running
+            if( _current._widget )
+            {
+                if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
+
+                // move current to previous
+                _previous._widget = _current._widget;
+                _previous._rect = _current._rect;
+                _previous._timeLine.start();
+            }
+
+            // assign new widget to current and start animation
+            _current._widget = widget;
+            _current._rect = rect;
+            if( _current._widget ) _current._timeLine.start();
+
+            return true;
+
+        } else if( (!state) && widget == _current._widget ) {
+
+            // stop current animation if running
+            if( _current._timeLine.isRunning() ) _current._timeLine.stop();
+
+            // stop previous animation if running
+            if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
+
+            // move current to previous
+            _previous._widget = _current._widget;
+            _previous._rect = _current._rect;
+            if( _previous._widget ) _previous._timeLine.start();
+
+            // assign invalid widget to current
+            _current._widget = 0L;
+            _current._rect = Gtk::gdk_rectangle();
+            return true;
+
+        } else return false;
+
+    }
+
+    //________________________________________________________________________________
+    gboolean MenuShellData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer pointer )
     {
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
+
+        // cast pointer
+        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
 
         // get pointer position
         gint xPointer, yPointer;
@@ -64,19 +136,32 @@ namespace Oxygen
         {
 
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
-            if( gtk_widget_get_state( GTK_WIDGET( child->data ) ) == GTK_STATE_INSENSITIVE ) continue;
 
-            const GtkAllocation& allocation( GTK_WIDGET( child->data )->allocation );
+            GtkWidget* childWidget( GTK_WIDGET( child->data ) );
+            if( gtk_widget_get_state( childWidget ) == GTK_STATE_INSENSITIVE ) continue;
+
+            //const GtkAllocation& allocation( childWidget->allocation );
+            GtkAllocation allocation( childWidget->allocation );
+            const int borderWidth( gtk_container_get_border_width( GTK_CONTAINER( widget ) ) );
+
+            allocation.x += borderWidth;
+            allocation.y += borderWidth + 1;
+
+            allocation.width -= 2*borderWidth;
+            allocation.height -= (2*borderWidth + 2);
+
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
                 // this triggers widget update
-                gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_PRELIGHT );
+                data.updateState( childWidget, allocation, true );
+                gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
 
             } else {
 
                 // this triggers widget update
-                gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_NORMAL );
+                data.updateState( childWidget, allocation, false );
+                gtk_widget_set_state( childWidget, GTK_STATE_NORMAL );
 
             }
         }
@@ -88,8 +173,9 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer )
+    gboolean MenuShellData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer pointer )
     {
+
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
         GList* children( gtk_container_get_children( GTK_CONTAINER( widget ) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
@@ -109,7 +195,25 @@ namespace Oxygen
 
         if( children ) g_list_free( children );
 
+        // also triggers animation of current widget
+        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        data.updateState( data._current._widget, Gtk::gdk_rectangle(), false );
+
         return FALSE;
+
+    }
+
+    //_____________________________________________
+    gboolean MenuShellData::delayedUpdate( gpointer pointer )
+    {
+
+        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+
+        if( data._target )
+        { Gtk::gtk_widget_queue_draw( data._target ); }
+
+        return FALSE;
+
     }
 
 }
