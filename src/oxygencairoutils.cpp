@@ -263,9 +263,9 @@ namespace Oxygen
         assert( data );
 
         int t;
-        #define INTENSITY(r, g, b) ((r) * 0.30 + (g) * 0.59 + (b) * 0.11)
+        #define INTENSITY(r, g, b) ((unsigned char)((r) * 0.30 + (g) * 0.59 + (b) * 0.11))
         #define CLAMP_UCHAR(v) (t = (v), CLAMP (t, 0, 255))
-        #define SATURATE(v) ((1.0 - saturation) * intensity + saturation * (v))
+        #define SATURATE(v) int(((1.0 - saturation) * intensity + saturation * (v)))
 
         unsigned char* line(data);
         unsigned char* pixel(data);

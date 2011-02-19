@@ -26,6 +26,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowshadow.h"
+#include "oxygenfontinfo.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2215,7 +2216,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2244,11 +2245,28 @@ namespace Oxygen
             ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
             renderWindowDots( context, x, y, w, h, base, wopt);
         }
+
+        if(windowStrings)
+        {
+            // caption is drawn in drawWindowDecoration
+            if( windowStrings[1] )
+            {
+                // TODO: use WMCLASS and caption to enable per-window style exceptions
+            }
+        }
     }
 
     //__________________________________________________________________
-    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h )
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
     {
+        /*
+           (any element of windowStrings[] may be NULL - will be understood as "")
+           windowStrings may also be NULL
+
+           elements:
+            windowStrings[0]: caption
+            windowStrings[1]: WMCLASS
+        */
         /*
            caches layout:
                left&right border height: h
@@ -2269,7 +2287,7 @@ namespace Oxygen
                 left=helper().createSurface(sw,h);
 
                 Cairo::Context context(left);
-                renderWindowDecoration( context, wopt, 0, 0, w, h );
+                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight);
 
                 helper().windecoLeftBorderCache().insert(key,left);
             }
@@ -2296,7 +2314,7 @@ namespace Oxygen
                 right=helper().createSurface(sw,h);
 
                 Cairo::Context context(right);
-                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h );
+                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight );
 
                 helper().windecoRightBorderCache().insert(key,right);
             }
@@ -2326,7 +2344,7 @@ namespace Oxygen
                 top=helper().createSurface(sw,sh);
 
                 Cairo::Context context(top);
-                renderWindowDecoration( context, wopt, -left, 0, w, h );
+                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight );
 
                 helper().windecoTopBorderCache().insert(key,top);
             }
@@ -2338,6 +2356,47 @@ namespace Oxygen
             cairo_set_source_surface(context, top, x+left, y);
             cairo_rectangle(context,x+left,y,sw,sh);
             cairo_fill(context);
+
+            // caption shouldn't be saved in the cache
+            if( windowStrings && windowStrings[0] )
+            {
+                // draw caption
+                gchar* &caption(windowStrings[0]);
+                const FontInfo& font( settings().WMFont() );
+                PangoFontDescription* fdesc( pango_font_description_new() );
+                const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
+                const int H=WinDeco::getMetric(WinDeco::BorderTop);
+                int textHeight;
+                gint layoutWidth=w-(titleIndentLeft+titleIndentRight);
+
+                if(layoutWidth>0)
+                {
+                    pango_font_description_set_family( fdesc, font.family().c_str() );
+                    pango_font_description_set_weight( fdesc, PangoWeight( (font.weight()+2)*10 ) );
+                    pango_font_description_set_style( fdesc, font.italic() ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL );
+                    pango_font_description_set_size( fdesc, int(font.size()*PANGO_SCALE) );
+
+                    PangoLayout* layout( pango_cairo_create_layout(context) );
+                    pango_layout_set_text( layout,caption, -1 );
+                    pango_layout_set_font_description( layout, fdesc );
+                    pango_layout_set_width( layout, layoutWidth*PANGO_SCALE );
+                    pango_layout_set_ellipsize( layout, PANGO_ELLIPSIZE_END );
+                    pango_layout_set_alignment( layout, settings().TitleAlignment() );
+                    pango_layout_get_pixel_size( layout, NULL, &textHeight );
+
+                    cairo_save( context );
+
+                    cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
+                    cairo_translate( context, x+titleIndentLeft, y+(H-textHeight)/2. );
+                    pango_cairo_update_layout( context, layout );
+                    pango_cairo_show_layout( context, layout );
+
+                    cairo_restore( context );
+
+                    g_object_unref(layout);
+                    pango_font_description_free(fdesc);
+                }
+            }
         }
 
         {
@@ -2357,7 +2416,7 @@ namespace Oxygen
                 bottom=helper().createSurface(sw,sh);
 
                 Cairo::Context context(bottom);
-                renderWindowDecoration( context, wopt, -left, y-Y, w, h );
+                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight );
 
                 helper().windecoBottomBorderCache().insert(key,bottom);
             }

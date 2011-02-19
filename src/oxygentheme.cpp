@@ -45,7 +45,7 @@ extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
 
 // exports for WM theming
-extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, unsigned long,gint,gint,gint,gint);
+extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, unsigned long,gint,gint,gint,gint,gchar**,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindecoButton(cairo_t*, unsigned long,unsigned long, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gint,gint,gint,gint);
 extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options, gint x, gint y, gint w, gint h);
@@ -83,9 +83,9 @@ const gchar* g_module_check_init( GModule *module )
 }
 
 //_________________________________________________
-void drawWindowDecoration(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h)
+void drawWindowDecoration(cairo_t* context, unsigned long options, gint x,gint y,gint w,gint h, gchar** ws, gint til, gint tir)
 {
-    Oxygen::Style::instance().drawWindowDecoration( context, (Oxygen::WinDeco::Options) options, x, y, w, h);
+    Oxygen::Style::instance().drawWindowDecoration( context, (Oxygen::WinDeco::Options) options, x, y, w, h, ws, til, tir);
 }
 
 //_________________________________________________
@@ -123,6 +123,6 @@ gint getWindecoButtonSize(unsigned long buttonType)
 //_________________________________________________
 unsigned long getWindecoABIVersion(void)
 {
-    return 0x1;
+    return 0x3;
 }
 
