@@ -171,9 +171,11 @@ namespace Oxygen
 
         TreeViewStateData& data( *static_cast<TreeViewStateData*>( pointer ) );
 
-        if( !data._target ) return FALSE;
-        const GdkRectangle rect( data.dirtyRect() );
-        Gtk::gtk_widget_queue_draw( data._target, &rect );
+        if( data._target )
+        {
+            const GdkRectangle rect( data.dirtyRect() );
+            Gtk::gtk_widget_queue_draw( data._target, &rect );
+        }
 
         return FALSE;
 

@@ -46,7 +46,8 @@ namespace Oxygen
         //! constructor
         MenuBarStateData( void ):
             _target( 0L ),
-            _animationsEnabled( true )
+            _animationsEnabled( true ),
+            _dirtyRect( Gtk::gdk_rectangle() )
             {}
 
         //! destructor
@@ -116,6 +117,9 @@ namespace Oxygen
 
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, bool );
+
+        //! return dirty rect (for update)
+        GdkRectangle dirtyRect( void );
 
         //! animations data
         class Data
@@ -196,6 +200,9 @@ namespace Oxygen
 
         //! true if menubar item mouse-over is animated
         bool _animationsEnabled;
+
+        //! additional dirty rect
+        GdkRectangle _dirtyRect;
 
         Data _previous;
         Data _current;

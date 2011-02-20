@@ -94,6 +94,9 @@ namespace Oxygen
             {
                 if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
+                if( _previous._widget && Gtk::gdk_rectangle_is_valid( &_previous._rect ) )
+                { _dirtyRect = _previous._rect; }
+
                 // move current to previous
                 _previous._widget = _current._widget;
                 _previous._rect = _current._rect;
@@ -119,6 +122,9 @@ namespace Oxygen
             // stop previous animation if running
             if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
+            if( _previous._widget && Gtk::gdk_rectangle_is_valid( &_previous._rect ) )
+            { _dirtyRect = _previous._rect; }
+
             // move current to previous
             _previous._widget = _current._widget;
             _previous._rect = _current._rect;
@@ -135,6 +141,44 @@ namespace Oxygen
             return true;
 
         } else return false;
+
+    }
+
+    //_____________________________________________
+    GdkRectangle MenuBarStateData::dirtyRect( void )
+    {
+
+        GdkRectangle rect( Gtk::gdk_rectangle() );
+
+        const GdkRectangle previousRect( _previous._rect );
+        const GdkRectangle currentRect( _current._rect );
+
+        if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
+        {
+
+            gdk_rectangle_union( &previousRect, &currentRect, &rect );
+
+        } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
+
+            rect = previousRect;
+
+        } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
+
+            rect = currentRect;
+
+        }
+
+        // also union with dirty rect
+        if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
+        {
+            if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
+            else rect = _dirtyRect;
+
+            _dirtyRect = Gtk::gdk_rectangle();
+
+        }
+
+        return rect;
 
     }
 
@@ -221,7 +265,10 @@ namespace Oxygen
         MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
 
         if( data._target )
-        { Gtk::gtk_widget_queue_draw( data._target ); }
+        {
+            const GdkRectangle rect( data.dirtyRect() );
+            Gtk::gtk_widget_queue_draw( data._target, &rect );
+        }
 
         return FALSE;
 
@@ -232,11 +279,8 @@ namespace Oxygen
     {
 
         MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
-        if( data._previous._widget )
-        {
-            assert( !data._previous._timeLine.isRunning() );
-            data._previous._timeLine.start();
-        }
+        if( data._previous._widget && !data._previous._timeLine.isRunning() )
+        { data._previous._timeLine.start(); }
 
         return FALSE;
     }
