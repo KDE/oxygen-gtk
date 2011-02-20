@@ -68,7 +68,10 @@ namespace Oxygen
         _startDragDist( 4 ),
         _startDragTime( 500 ),
         _genericAnimationsEnabled( true ),
+        _menuBarAnimationsEnabled( true ),
+        _menuBarAnimationType( MB_FADE ),
         _genericAnimationsDuration( 150 ),
+        _menuBarAnimationsDuration( 150 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _activeShadowConfiguration( Palette::Active ),
@@ -834,7 +837,16 @@ namespace Oxygen
 
         // animations
         _genericAnimationsEnabled = ( oxygen.getOption( "[Style]", "GenericAnimationsEnabled" ).toVariant<std::string>("true") == "true" );
+        _menuBarAnimationsEnabled = ( oxygen.getOption( "[Style]", "MenuBarAnimationsEnabled" ).toVariant<std::string>("true") == "true" );
+        std::string menuBarAnimationType( oxygen.getValue( "[Style]", "MenuBarAnimationType", "MB_FADE") );
+        if( menuBarAnimationType == "MB_NONE" ) _menuBarAnimationType = MB_NONE;
+        else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = MB_FADE;
+        else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = MB_FOLLOW_MOUSE;
+
+        std::cout << "Oxygen::QtSettings::loadOxygenOptions - menubar animation type: " << _menuBarAnimationType << std::endl;
+
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
+        _menuBarAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarAnimationsDuration" ).toVariant<int>(150);
 
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );

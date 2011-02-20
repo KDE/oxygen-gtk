@@ -199,14 +199,40 @@ namespace Oxygen
 
         //@}
 
-        //!@name animation options
+        //!@name animation enable state
         //@{
 
         bool genericAnimationsEnabled( void ) const
         { return _genericAnimationsEnabled; }
 
+        bool menuBarAnimationsEnabled( void ) const
+        { return _menuBarAnimationsEnabled; }
+
+        //@}
+
+        //!@name animations type
+        //@{
+
+        enum MenuBarAnimationType
+        {
+            MB_NONE,
+            MB_FADE,
+            MB_FOLLOW_MOUSE
+        };
+
+        MenuBarAnimationType menuBarAnimationType( void ) const
+        { return _menuBarAnimationType; }
+
+        //@}
+
+        //!@name animations duration
+        //@{
+
         int genericAnimationsDuration( void ) const
         { return _genericAnimationsDuration; }
+
+        int menuBarAnimationsDuration( void ) const
+        { return _menuBarAnimationsDuration; }
 
         //@}
 
@@ -420,8 +446,20 @@ namespace Oxygen
         //!@name animation options
         //@{
 
+        //! generic animations
         bool _genericAnimationsEnabled;
+
+        //! menubar animations
+        bool _menuBarAnimationsEnabled;
+
+        //! menubar animations
+        MenuBarAnimationType _menuBarAnimationType;
+
+        //! generic animations
         int _genericAnimationsDuration;
+
+        //! menubar animations
+        int _menuBarAnimationsDuration;
 
         //@}
 
