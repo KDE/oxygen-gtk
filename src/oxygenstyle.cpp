@@ -92,7 +92,7 @@ namespace Oxygen
             animations().treeViewStateEngine().setEnabled( settings().genericAnimationsEnabled() );
             animations().treeViewStateEngine().setDuration( settings().genericAnimationsDuration() );
 
-            animations().menuShellEngine().setAnimationEnabled( settings().genericAnimationsEnabled() );
+            animations().menuShellEngine().setAnimationsEnabled( settings().genericAnimationsEnabled() );
             animations().menuShellEngine().setDuration( settings().genericAnimationsDuration() );
 
         }

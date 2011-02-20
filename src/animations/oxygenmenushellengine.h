@@ -45,7 +45,7 @@ namespace Oxygen
         //! constructor
         MenuShellEngine( Animations* parent ):
             GenericEngine<MenuShellData>( parent ),
-            _animationEnabled( true )
+            _animationsEnabled( true )
             {}
 
         //! destructor
@@ -61,13 +61,13 @@ namespace Oxygen
         }
 
         //! enable animations
-        bool setAnimationEnabled( bool value )
+        bool setAnimationsEnabled( bool value )
         {
-            if( _animationEnabled == value ) return false;
-            _animationEnabled = value;
+            if( _animationsEnabled == value ) return false;
+            _animationsEnabled = value;
 
             for( DataMap<MenuShellData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-            { iter->second.setAnimationEnabled( value && !widgetIsBlackListed( iter->first ) ); }
+            { iter->second.setAnimationsEnabled( value && !widgetIsBlackListed( iter->first ) ); }
             return true;
         }
 
@@ -106,7 +106,7 @@ namespace Oxygen
         private:
 
         //! enable animations
-        bool _animationEnabled;
+        bool _animationsEnabled;
 
     };
 

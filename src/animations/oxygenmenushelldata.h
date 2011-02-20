@@ -59,7 +59,7 @@ namespace Oxygen
         void disconnect( GtkWidget* );
 
         //! enable state
-        void setAnimationEnabled( bool value )
+        void setAnimationsEnabled( bool value )
         {
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
