@@ -185,7 +185,6 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MenuBarStateData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer pointer )
     {
-        if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
 
         // cast pointer
         MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
@@ -230,7 +229,6 @@ namespace Oxygen
     gboolean MenuBarStateData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer pointer )
     {
 
-        if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
         GList* children( gtk_container_get_children( GTK_CONTAINER( widget ) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
         {
