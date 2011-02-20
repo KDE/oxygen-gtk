@@ -59,6 +59,9 @@ namespace Oxygen
 
         _target = 0L;
 
+        // stop timer
+        _timer.stop();
+
         // disconnect signal
         _motionId.disconnect();
         _leaveId.disconnect();
@@ -108,7 +111,12 @@ namespace Oxygen
             // move current to previous
             _previous._widget = _current._widget;
             _previous._rect = _current._rect;
-            if( _previous._widget ) _previous._timeLine.start();
+            if( _previous._widget )
+            {
+                //_previous._timeLine.start();
+                if( _timer.isRunning() ) _timer.stop();
+                _timer.start( 100, (GSourceFunc)delayedAnimate, this );
+            }
 
             // assign invalid widget to current
             _current._widget = 0L;
@@ -206,6 +214,20 @@ namespace Oxygen
 
         return FALSE;
 
+    }
+
+    //________________________________________________________________________________
+    gboolean MenuShellData::delayedAnimate( gpointer pointer )
+    {
+
+        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        if( data._previous._widget )
+        {
+            assert( !data._previous._timeLine.isRunning() );
+            data._previous._timeLine.start();
+        }
+
+        return FALSE;
     }
 
 }

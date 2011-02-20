@@ -83,6 +83,10 @@ namespace Oxygen
         //!@name accessors
         //@{
 
+        //! true if locked
+        bool isLocked( GtkWidget* widget )
+        { return data().value( widget ).isLocked(); }
+
         //! true if animated
         bool isAnimated( GtkWidget* widget )
         { return data().value( widget ).isAnimated(); }

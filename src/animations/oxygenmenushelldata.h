@@ -32,6 +32,7 @@
 #include "../oxygengtkutils.h"
 #include "oxygensignal.h"
 #include "oxygentimeline.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 
@@ -77,6 +78,10 @@ namespace Oxygen
         //! true if animated
         bool isAnimated( void ) const
         { return isAnimated( AnimationCurrent ) || isAnimated( AnimationPrevious ); }
+
+        //! true if locked (meaning: delayed timer is Running)
+        bool isLocked( void ) const
+        { return _timer.isRunning(); }
 
         //! true if given animation type is animated
         bool isAnimated( const AnimationType& type ) const
@@ -152,6 +157,9 @@ namespace Oxygen
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean delayedUpdate( gpointer );
+
+        //! performs delayed fade-out animation when leaving taskbar
+        static gboolean delayedAnimate( gpointer );
         //@}
 
         private:
@@ -170,6 +178,9 @@ namespace Oxygen
         Data _previous;
         Data _current;
         //@}
+
+        //! timer for delayed animation
+        Timer _timer;
 
     };
 

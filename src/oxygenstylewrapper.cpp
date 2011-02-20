@@ -898,8 +898,14 @@ namespace Oxygen
                 }
 
                 // deal with previous rect
-                if( engine.isAnimated( widget, AnimationPrevious ) )
+                if( engine.isLocked( widget ) )
                 {
+
+                    // when locked the "previous" item must be painted with active rect.
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, Hover );
+
+                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
