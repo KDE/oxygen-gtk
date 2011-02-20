@@ -56,7 +56,11 @@ namespace Oxygen
         virtual bool registerWidget( GtkWidget* widget )
         {
             const bool registered( GenericEngine<MenuShellData>::registerWidget( widget ) );
-            if( registered ) data().value( widget ).setDuration( duration() );
+            if( registered )
+            {
+                data().value( widget ).setDuration( duration() );
+                data().value( widget ).setAnimationsEnabled( _animationsEnabled );
+            }
             return registered;
         }
 
