@@ -36,6 +36,9 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
+    const int MenuBarStateData::_fadeOutDelay = 10;
+
+    //________________________________________________________________________________
     void MenuBarStateData::connect( GtkWidget* widget )
     {
 
@@ -129,7 +132,7 @@ namespace Oxygen
             {
                 //_previous._timeLine.start();
                 if( _timer.isRunning() ) _timer.stop();
-                _timer.start( 10, (GSourceFunc)delayedAnimate, this );
+                _timer.start( _fadeOutDelay, (GSourceFunc)delayedAnimate, this );
             }
 
             // assign invalid widget to current

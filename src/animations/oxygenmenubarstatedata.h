@@ -225,6 +225,9 @@ namespace Oxygen
         Data _previous;
         Data _current;
 
+        //! fade-out animation delay
+        static const int _fadeOutDelay;
+
         //! timer for delayed animation
         Timer _timer;
 
