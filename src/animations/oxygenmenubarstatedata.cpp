@@ -90,7 +90,7 @@ namespace Oxygen
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
 
             // stop previous animation if running
-            if( _current._widget )
+            if( _current.isValid() )
             {
                 if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
