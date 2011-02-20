@@ -79,6 +79,10 @@ namespace Oxygen
         if( state && widget != _current._widget )
         {
 
+            // stop timer. This blocks fade-out animation
+            const bool locked( _timer.isRunning() );
+            if( _timer.isRunning() ) _timer.stop();
+
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
 
@@ -90,13 +94,17 @@ namespace Oxygen
                 // move current to previous
                 _previous._widget = _current._widget;
                 _previous._rect = _current._rect;
-                _previous._timeLine.start();
+                if( !locked ) _previous._timeLine.start();
             }
 
             // assign new widget to current and start animation
             _current._widget = widget;
             _current._rect = rect;
-            if( _current._widget ) _current._timeLine.start();
+            if( _current._widget )
+            {
+                if( !locked ) _current._timeLine.start();
+                else delayedUpdate( this );
+            }
 
             return true;
 
@@ -197,7 +205,8 @@ namespace Oxygen
 
         // also triggers animation of current widget
         MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
-        data.updateState( data._current._widget, Gtk::gdk_rectangle(), false );
+        if( data._current._widget )
+        { data.updateState( data._current._widget, data._current._widget->allocation, false ); }
 
         return FALSE;
 
