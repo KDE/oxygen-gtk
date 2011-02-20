@@ -883,7 +883,7 @@ namespace Oxygen
             if( GTK_IS_MENU_BAR( widget ) )
             {
 
-                MenuShellEngine& engine( Style::instance().animations().menuShellEngine() );
+                MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
                 engine.registerWidget(widget);
 
                 // deal with current rect
@@ -1019,8 +1019,8 @@ namespace Oxygen
                 for menubars, do nothing when animated, because it is dealt with
                 when painting menubar background
                 */
-                Style::instance().animations().menuShellEngine().registerWidget(parent );
-                if( Style::instance().animations().menuShellEngine().isAnimated( parent, AnimationCurrent ) )
+                Style::instance().animations().menuBarStateEngine().registerWidget(parent );
+                if( Style::instance().animations().menuBarStateEngine().isAnimated( parent, AnimationCurrent ) )
                 { return; }
 
             }

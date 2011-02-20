@@ -3,7 +3,7 @@
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 * Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
-* MenuShell prelight effect is based on
+* MenuBarState prelight effect is based on
 * Redmond95 - a cairo based GTK+ engine
 * Copyright (C) 2001 Red Hat, Inc. <@redhat.com>
 * Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
@@ -27,7 +27,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenmenushelldata.h"
+#include "oxygenmenubarstatedata.h"
 #include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
@@ -36,7 +36,7 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    void MenuShellData::connect( GtkWidget* widget )
+    void MenuBarStateData::connect( GtkWidget* widget )
     {
 
         _target = widget;
@@ -54,7 +54,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MenuShellData::disconnect( GtkWidget* widget )
+    void MenuBarStateData::disconnect( GtkWidget* widget )
     {
 
         _target = 0L;
@@ -73,7 +73,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    bool MenuShellData::updateState( GtkWidget* widget, const GdkRectangle& rect, bool state )
+    bool MenuBarStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, bool state )
     {
 
         // do nothing if animations are disabled
@@ -139,12 +139,12 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer pointer )
+    gboolean MenuBarStateData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion*, gpointer pointer )
     {
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
 
         // cast pointer
-        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
 
         // get pointer position
         gint xPointer, yPointer;
@@ -184,7 +184,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer pointer )
+    gboolean MenuBarStateData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer pointer )
     {
 
         if( !GTK_IS_MENU_SHELL( widget ) ) return FALSE;
@@ -207,7 +207,7 @@ namespace Oxygen
         if( children ) g_list_free( children );
 
         // also triggers animation of current widget
-        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
         if( data._current._widget )
         { data.updateState( data._current._widget, data._current._widget->allocation, false ); }
 
@@ -216,10 +216,10 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    gboolean MenuShellData::delayedUpdate( gpointer pointer )
+    gboolean MenuBarStateData::delayedUpdate( gpointer pointer )
     {
 
-        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
 
         if( data._target )
         { Gtk::gtk_widget_queue_draw( data._target ); }
@@ -229,10 +229,10 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean MenuShellData::delayedAnimate( gpointer pointer )
+    gboolean MenuBarStateData::delayedAnimate( gpointer pointer )
     {
 
-        MenuShellData& data( *static_cast<MenuShellData*>( pointer ) );
+        MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
         if( data._previous._widget )
         {
             assert( !data._previous._timeLine.isRunning() );

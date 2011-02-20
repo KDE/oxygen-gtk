@@ -1,11 +1,11 @@
-#ifndef oxygenmenushelldata_h
-#define oxygenmenushelldata_h
+#ifndef oxygenmenubarstatedata_h
+#define oxygenmenubarstatedata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 * Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
-* MenuShell prelight effect is based on
+* MenuBarState prelight effect is based on
 * Redmond95 - a cairo based GTK+ engine
 * Copyright (C) 2001 Red Hat, Inc. <@redhat.com>
 * Copyright (C) 2006 Andrew Johnson <acjgenius@earthlink.net>
@@ -38,19 +38,19 @@
 
 namespace Oxygen
 {
-    class MenuShellData
+    class MenuBarStateData
     {
 
         public:
 
         //! constructor
-        MenuShellData( void ):
+        MenuBarStateData( void ):
             _target( 0L ),
             _animationsEnabled( true )
             {}
 
         //! destructor
-        virtual ~MenuShellData( void )
+        virtual ~MenuBarStateData( void )
         {}
 
         //! setup connections

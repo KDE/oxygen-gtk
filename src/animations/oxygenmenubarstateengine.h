@@ -1,5 +1,5 @@
-#ifndef oxygenmenushellengine_h
-#define oxygenmenushellengine_h
+#ifndef oxygenmenubarstateengine_h
+#define oxygenmenubarstateengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -23,7 +23,7 @@
 #include "oxygenanimationengine.h"
 #include "oxygengenericengine.h"
 #include "oxygendatamap.h"
-#include "oxygenmenushelldata.h"
+#include "oxygenmenubarstatedata.h"
 
 #include <gtk/gtk.h>
 
@@ -37,25 +37,25 @@ namespace Oxygen
     ensures that the text entry and the button of editable comboboxes
     gets hovered and focus flags at the same time
     */
-    class MenuShellEngine: public GenericEngine<MenuShellData>, public AnimationEngine
+    class MenuBarStateEngine: public GenericEngine<MenuBarStateData>, public AnimationEngine
     {
 
         public:
 
         //! constructor
-        MenuShellEngine( Animations* parent ):
-            GenericEngine<MenuShellData>( parent ),
+        MenuBarStateEngine( Animations* parent ):
+            GenericEngine<MenuBarStateData>( parent ),
             _animationsEnabled( true )
             {}
 
         //! destructor
-        virtual ~MenuShellEngine( void )
+        virtual ~MenuBarStateEngine( void )
         {}
 
         //! register widget [overloaded]
         virtual bool registerWidget( GtkWidget* widget )
         {
-            const bool registered( GenericEngine<MenuShellData>::registerWidget( widget ) );
+            const bool registered( GenericEngine<MenuBarStateData>::registerWidget( widget ) );
             if( registered )
             {
                 data().value( widget ).setDuration( duration() );
@@ -70,7 +70,7 @@ namespace Oxygen
             if( _animationsEnabled == value ) return false;
             _animationsEnabled = value;
 
-            for( DataMap<MenuShellData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            for( DataMap<MenuBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
             { iter->second.setAnimationsEnabled( value && !widgetIsBlackListed( iter->first ) ); }
             return true;
         }
@@ -79,7 +79,7 @@ namespace Oxygen
         virtual bool setDuration( int value )
         {
             if( !AnimationEngine::setDuration( value ) ) return false;
-            for( DataMap<MenuShellData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            for( DataMap<MenuBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
             { iter->second.setDuration( value ); }
             return false;
         }

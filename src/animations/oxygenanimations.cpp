@@ -43,7 +43,7 @@ namespace Oxygen
         registerEngine( _dialogEngine = new DialogEngine( this ) );
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
-        registerEngine( _menuShellEngine = new MenuShellEngine( this ) );
+        registerEngine( _menuBarStateEngine = new MenuBarStateEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
@@ -84,7 +84,7 @@ namespace Oxygen
         scrollBarStateEngine().setApplicationName( settings.applicationName() );
         tabWidgetStateEngine().setApplicationName( settings.applicationName() );
         treeViewStateEngine().setApplicationName( settings.applicationName() );
-        menuShellEngine().setApplicationName( settings.applicationName() );
+        menuBarStateEngine().setApplicationName( settings.applicationName() );
 
         // pass animations configuration to engines
         widgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
@@ -102,11 +102,11 @@ namespace Oxygen
         treeViewStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        menuShellEngine().setAnimationsEnabled(
+        menuBarStateEngine().setAnimationsEnabled(
             settings.menuBarAnimationsEnabled() &&
             settings.menuBarAnimationType() == QtSettings::MB_FADE );
 
-        menuShellEngine().setDuration( settings.menuBarAnimationsDuration() );
+        menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
     }
 
