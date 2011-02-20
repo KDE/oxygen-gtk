@@ -20,6 +20,7 @@
 
 #include "oxygenanimations.h"
 #include "../oxygengtkutils.h"
+#include "../oxygenqtsettings.h"
 #include "../config.h"
 
 #include <cassert>
@@ -70,6 +71,42 @@ namespace Oxygen
         _comboBoxHook.disconnect();
 
         // FIXME: should we also clear the allWidgets list ?
+
+    }
+
+    //_________________________________________
+    void Animations::initialize( const QtSettings& settings )
+    {
+
+        // pass applicationName to engines
+        widgetStateEngine().setApplicationName( settings.applicationName() );
+        arrowStateEngine().setApplicationName( settings.applicationName() );
+        scrollBarStateEngine().setApplicationName( settings.applicationName() );
+        tabWidgetStateEngine().setApplicationName( settings.applicationName() );
+        treeViewStateEngine().setApplicationName( settings.applicationName() );
+        menuShellEngine().setApplicationName( settings.applicationName() );
+
+        // pass animations configuration to engines
+        widgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        widgetStateEngine().setDuration( settings.genericAnimationsDuration() );
+
+        arrowStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        arrowStateEngine().setDuration( settings.genericAnimationsDuration() );
+
+        scrollBarStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        scrollBarStateEngine().setDuration( settings.genericAnimationsDuration() );
+
+        tabWidgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        tabWidgetStateEngine().setDuration( settings.genericAnimationsDuration() );
+
+        treeViewStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
+
+        menuShellEngine().setAnimationsEnabled(
+            settings.menuBarAnimationsEnabled() &&
+            settings.menuBarAnimationType() == QtSettings::MB_FADE );
+
+        menuShellEngine().setDuration( settings.menuBarAnimationsDuration() );
 
     }
 

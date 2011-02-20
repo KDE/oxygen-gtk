@@ -61,13 +61,8 @@ namespace Oxygen
         // reinitialize settings
         _settings.initialize( flags );
 
-        // pass applicationName to widgetStateEngine
-        animations().widgetStateEngine().setApplicationName( settings().applicationName() );
-        animations().arrowStateEngine().setApplicationName( settings().applicationName() );
-        animations().scrollBarStateEngine().setApplicationName( settings().applicationName() );
-        animations().tabWidgetStateEngine().setApplicationName( settings().applicationName() );
-        animations().treeViewStateEngine().setApplicationName( settings().applicationName() );
-        animations().menuShellEngine().setApplicationName( settings().applicationName() );
+        // reinitialize animations
+        _animations.initialize( _settings );
 
         if( flags&QtSettings::Oxygen )
         {
@@ -75,28 +70,6 @@ namespace Oxygen
             if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
             else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
             else windowManager().setMode( WindowManager::Full );
-
-            // pass animations configuration to engines
-            animations().widgetStateEngine().setEnabled( settings().genericAnimationsEnabled() );
-            animations().widgetStateEngine().setDuration( settings().genericAnimationsDuration() );
-
-            animations().arrowStateEngine().setEnabled( settings().genericAnimationsEnabled() );
-            animations().arrowStateEngine().setDuration( settings().genericAnimationsDuration() );
-
-            animations().scrollBarStateEngine().setEnabled( settings().genericAnimationsEnabled() );
-            animations().scrollBarStateEngine().setDuration( settings().genericAnimationsDuration() );
-
-            animations().tabWidgetStateEngine().setEnabled( settings().genericAnimationsEnabled() );
-            animations().tabWidgetStateEngine().setDuration( settings().genericAnimationsDuration() );
-
-            animations().treeViewStateEngine().setEnabled( settings().genericAnimationsEnabled() );
-            animations().treeViewStateEngine().setDuration( settings().genericAnimationsDuration() );
-
-            animations().menuShellEngine().setAnimationsEnabled(
-                settings().menuBarAnimationsEnabled() &&
-                settings().menuBarAnimationType() == QtSettings::MB_FADE );
-
-            animations().menuShellEngine().setDuration( settings().menuBarAnimationsDuration() );
 
         }
 

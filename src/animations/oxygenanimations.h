@@ -50,6 +50,10 @@
 namespace Oxygen
 {
 
+    //! forward declaration
+    class QtSettings;
+
+    //! keeps track of all animation engines
     class Animations
     {
 
@@ -60,6 +64,9 @@ namespace Oxygen
 
         //! destructor
         virtual ~Animations( void );
+
+        //! initialize settings
+        void initialize( const QtSettings& );
 
         //! initialize hooks
         void initializeHooks( void );
