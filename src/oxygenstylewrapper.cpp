@@ -1204,6 +1204,7 @@ namespace Oxygen
         if( d.is("GnmItemBarCell") )
         { return; }
 
+        // adjust shadow type for some known widgets
         if( d.isScrolledWindow() &&
             shadow != GTK_SHADOW_IN &&
             GTK_IS_SCROLLED_WINDOW( widget ) &&
@@ -1213,6 +1214,18 @@ namespace Oxygen
             // make sure that scrolled windows containing a treeView have sunken frame
             shadow = GTK_SHADOW_IN;
             gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+
+        } else if(
+            d.isFrame() &&
+            ( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) &&
+            GTK_IS_FRAME( widget ) &&
+            Gtk::gtk_scrolled_window_force_sunken( widget )
+            )
+        {
+
+            // make sure that entry shadows are drawn
+            shadow = GTK_SHADOW_IN;
+            gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN );
 
         } else if( d.isEntry() && shadow != GTK_SHADOW_IN ) {
 
