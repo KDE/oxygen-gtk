@@ -133,6 +133,24 @@ namespace Oxygen
                 _rect( Gtk::gdk_rectangle() )
             {}
 
+            //! update data
+            void copy( const Data& other )
+            {
+                _widget = other._widget;
+                _rect = other._rect;
+            }
+
+            //! update data
+            void update( GtkWidget* widget, const GdkRectangle& rect )
+            {
+                _widget = widget;
+                _rect = rect;
+            }
+
+            //! true if valid
+            bool isValid( void ) const
+            { return _widget && Gtk::gdk_rectangle_is_valid( &_rect ); }
+
             //! clear
             void clear( void )
             {

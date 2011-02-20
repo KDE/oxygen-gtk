@@ -94,19 +94,17 @@ namespace Oxygen
             {
                 if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
-                if( _previous._widget && Gtk::gdk_rectangle_is_valid( &_previous._rect ) )
+                if( _previous.isValid() )
                 { _dirtyRect = _previous._rect; }
 
                 // move current to previous
-                _previous._widget = _current._widget;
-                _previous._rect = _current._rect;
+                _previous.copy( _current );
                 if( !locked ) _previous._timeLine.start();
             }
 
             // assign new widget to current and start animation
-            _current._widget = widget;
-            _current._rect = rect;
-            if( _current._widget )
+            _current.update( widget, rect );
+            if( _current.isValid() )
             {
                 if( !locked ) _current._timeLine.start();
                 else delayedUpdate( this );
@@ -122,13 +120,12 @@ namespace Oxygen
             // stop previous animation if running
             if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
-            if( _previous._widget && Gtk::gdk_rectangle_is_valid( &_previous._rect ) )
+            if( _previous.isValid() )
             { _dirtyRect = _previous._rect; }
 
             // move current to previous
-            _previous._widget = _current._widget;
-            _previous._rect = _current._rect;
-            if( _previous._widget )
+            _previous.copy( _current );
+            if( _previous.isValid() )
             {
                 //_previous._timeLine.start();
                 if( _timer.isRunning() ) _timer.stop();
@@ -136,8 +133,8 @@ namespace Oxygen
             }
 
             // assign invalid widget to current
-            _current._widget = 0L;
-            _current._rect = Gtk::gdk_rectangle();
+            _current.clear();
+
             return true;
 
         } else return false;
