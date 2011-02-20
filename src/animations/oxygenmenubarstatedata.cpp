@@ -129,7 +129,7 @@ namespace Oxygen
             {
                 //_previous._timeLine.start();
                 if( _timer.isRunning() ) _timer.stop();
-                _timer.start( 100, (GSourceFunc)delayedAnimate, this );
+                _timer.start( 10, (GSourceFunc)delayedAnimate, this );
             }
 
             // assign invalid widget to current
