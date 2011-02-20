@@ -92,8 +92,11 @@ namespace Oxygen
             animations().treeViewStateEngine().setEnabled( settings().genericAnimationsEnabled() );
             animations().treeViewStateEngine().setDuration( settings().genericAnimationsDuration() );
 
-            animations().menuShellEngine().setAnimationsEnabled( settings().genericAnimationsEnabled() );
-            animations().menuShellEngine().setDuration( settings().genericAnimationsDuration() );
+            animations().menuShellEngine().setAnimationsEnabled(
+                settings().menuBarAnimationsEnabled() &&
+                settings().menuBarAnimationType() == QtSettings::MB_FADE );
+
+            animations().menuShellEngine().setDuration( settings().menuBarAnimationsDuration() );
 
         }
 
