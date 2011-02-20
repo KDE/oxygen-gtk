@@ -76,6 +76,9 @@ namespace Oxygen
     bool MenuShellData::updateState( GtkWidget* widget, const GdkRectangle& rect, bool state )
     {
 
+        // do nothing if animations are disabled
+        if( !_animationsEnabled ) return true;
+
         if( state && widget != _current._widget )
         {
 

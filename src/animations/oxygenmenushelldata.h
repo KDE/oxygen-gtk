@@ -45,7 +45,8 @@ namespace Oxygen
 
         //! constructor
         MenuShellData( void ):
-            _target( 0L )
+            _target( 0L ),
+            _animationsEnabled( true )
             {}
 
         //! destructor
@@ -61,8 +62,17 @@ namespace Oxygen
         //! enable state
         void setAnimationsEnabled( bool value )
         {
+            _animationsEnabled = value;
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
+
+            if( !value )
+            {
+                _timer.stop();
+                _current.clear();
+                _previous.clear();
+            }
+
         }
 
         //! duration
@@ -118,6 +128,14 @@ namespace Oxygen
                 _widget( 0L ),
                 _rect( Gtk::gdk_rectangle() )
             {}
+
+            //! clear
+            void clear( void )
+            {
+                if( _timeLine.isRunning() ) _timeLine.stop();
+                _widget = 0L;
+                _rect = Gtk::gdk_rectangle();
+            }
 
             //! timeline
             TimeLine _timeLine;
@@ -175,12 +193,17 @@ namespace Oxygen
 
         //!@name animation data
         //@{
+
+        //! true if menubar item mouse-over is animated
+        bool _animationsEnabled;
+
         Data _previous;
         Data _current;
-        //@}
 
         //! timer for delayed animation
         Timer _timer;
+
+        //@}
 
     };
 
