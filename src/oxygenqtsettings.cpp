@@ -843,8 +843,6 @@ namespace Oxygen
         else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = MB_FADE;
         else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = MB_FOLLOW_MOUSE;
 
-        std::cout << "Oxygen::QtSettings::loadOxygenOptions - menubar animation type: " << _menuBarAnimationType << std::endl;
-
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
         _menuBarAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarAnimationsDuration" ).toVariant<int>(150);
 
