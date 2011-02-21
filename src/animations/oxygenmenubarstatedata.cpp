@@ -36,7 +36,7 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
-    const int MenuBarStateData::_fadeOutDelay = 10;
+    const int MenuBarStateData::_fadeOutDelay = 50;
 
     //________________________________________________________________________________
     void MenuBarStateData::connect( GtkWidget* widget )
