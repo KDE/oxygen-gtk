@@ -110,10 +110,13 @@ namespace Oxygen
         protected:
 
         //! update items
-        void updateItems( void );
+        void updateItems( GdkEventType );
 
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, bool );
+
+        //! true if menu item is active (pressed down)
+        bool menuItemIsActive( GtkWidget* ) const;
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );

@@ -70,15 +70,18 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MenuBarStateData::updateItems( void )
+    void MenuBarStateData::updateItems( GdkEventType type )
     {
 
         if( !_target ) return;
+
+        const bool isLeaveEvent( type == GDK_LEAVE_NOTIFY );
 
         gint xPointer, yPointer;
         gdk_window_get_pointer( gtk_widget_get_window( _target ), &xPointer, &yPointer, 0L );
 
         bool activeFound( false );
+        GtkWidget *activeWidget( 0L );
         GList *children( gtk_container_get_children( GTK_CONTAINER( _target ) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
         {
@@ -96,7 +99,7 @@ namespace Oxygen
             {
 
                 activeFound = true;
-                if( state != GTK_STATE_PRELIGHT )
+                if( state != GTK_STATE_PRELIGHT && !isLeaveEvent )
                 {
                     // this triggers widget update
                     updateState( childWidget, allocation, true );
@@ -105,20 +108,43 @@ namespace Oxygen
 
             } else if( state != GTK_STATE_NORMAL ) {
 
-                // this triggers widget update
-                gtk_widget_set_state( childWidget, GTK_STATE_NORMAL );
+                activeWidget = childWidget;
 
             }
         }
 
         if( children ) g_list_free( children );
 
+        // disable previous active widget, if either another active widget was found, or this one is not active
+        if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
+        { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
+
         // fade-out current
-        if( _current.isValid() && !activeFound )
+        if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
         { updateState( _current._widget, _current._rect, false ); }
 
         return;
 
+    }
+
+    //________________________________________________________________________________
+    bool MenuBarStateData::menuItemIsActive( GtkWidget* widget ) const
+    {
+
+        // check argument
+        if( !GTK_IS_MENU_ITEM( widget ) ) return false;
+
+        // check menu
+        GtkWidget* menu( GTK_MENU_ITEM( widget )->submenu );
+        if( !GTK_IS_MENU( menu ) ) return false;
+
+        GtkWidget* topLevel( gtk_widget_get_toplevel( menu ) );
+        if( !topLevel ) return false;
+
+        return
+            GTK_WIDGET_VISIBLE( menu ) &&
+            GTK_WIDGET_REALIZED( topLevel ) &&
+            GTK_WIDGET_VISIBLE( topLevel );
     }
 
     //________________________________________________________________________________
@@ -220,14 +246,14 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MenuBarStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
-        static_cast<MenuBarStateData*>( pointer )->updateItems();
+        static_cast<MenuBarStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
         return FALSE;
     }
 
     //________________________________________________________________________________
     gboolean MenuBarStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
     {
-        static_cast<MenuBarStateData*>( pointer )->updateItems();
+        static_cast<MenuBarStateData*>( pointer )->updateItems( GDK_LEAVE_NOTIFY );
         return FALSE;
     }
 
