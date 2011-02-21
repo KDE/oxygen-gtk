@@ -64,6 +64,9 @@ namespace Oxygen
             return registered;
         }
 
+        //!@name modifiers
+        //@{
+
         //! enable animations
         bool setAnimationsEnabled( bool value )
         {
@@ -84,12 +87,10 @@ namespace Oxygen
             return false;
         }
 
+        //@}
+
         //!@name accessors
         //@{
-
-        //! true if locked
-        bool isLocked( GtkWidget* widget )
-        { return data().value( widget ).isLocked(); }
 
         //! true if animated
         bool isAnimated( GtkWidget* widget )
@@ -106,6 +107,8 @@ namespace Oxygen
         //! animation data for given widget and type
         AnimationData animationData( GtkWidget* widget, const AnimationType& type )
         { return data().value( widget ).animationData( type ); }
+
+        //@}
 
         private:
 
