@@ -99,11 +99,10 @@ namespace Oxygen
             {
 
                 activeFound = true;
-                if( state != GTK_STATE_PRELIGHT && !isLeaveEvent )
+                if( state != GTK_STATE_PRELIGHT )
                 {
-                    // this triggers widget update
                     updateState( childWidget, allocation, true );
-                    gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
+                    if( !isLeaveEvent ) gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
                 }
 
             } else if( state != GTK_STATE_NORMAL ) {
