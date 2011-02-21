@@ -114,13 +114,13 @@ namespace Oxygen
 
         if( children ) g_list_free( children );
 
-        // disable previous active widget, if either another active widget was found, or this one is not active
-        if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
-        { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
-
         // fade-out current
         if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
         { updateState( _current._widget, _current._rect, false ); }
+
+        // disable previous active widget, if either another active widget was found, or this one is not active
+        if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
+        { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
 
         return;
 
@@ -196,7 +196,7 @@ namespace Oxygen
             // move current to previous; clear current, and animate
             _previous.copy( _current );
             _current.clear();
-            if( _previous.isValid() ) _previous._timeLine.start();
+            if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
 
             return true;
 
