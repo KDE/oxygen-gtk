@@ -866,15 +866,12 @@ namespace Oxygen
 
         } else if( d.isMenuBar() ) {
 
-            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
-                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
-                !Style::instance().settings().applicationName().isOpenOffice() &&
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { Style::instance().windowManager().registerWidget( widget ); }
+
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
                 !Gtk::gtk_widget_is_applet( widget ) )
-            {
-                Style::instance().windowManager().registerWidget( widget );
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
-            }
+            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
 
             // check animation state
             if( GTK_IS_MENU_BAR( widget ) )
