@@ -47,7 +47,7 @@ namespace Oxygen
     //_________________________________________________________
     QtSettings::QtSettings( void ):
         _kdeIconTheme( "oxygen" ),
-        _kdeFallbackIconTheme( "oxy-gnome" ),
+        _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
         _checkBoxStyle( CS_CHECK ),
         _tabStyle( TS_SINGLE ),
