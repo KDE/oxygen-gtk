@@ -173,6 +173,8 @@ namespace Oxygen
 
         //@}
 
+        //@}
+
         protected:
 
         //! access reference surface
