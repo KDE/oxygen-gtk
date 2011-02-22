@@ -418,19 +418,6 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::initApplicationName( void )
-    {
-        const char* applicationName = g_get_prgname();
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initApplicationName - " << applicationName << std::endl;
-        #endif
-
-        if( applicationName ) { _applicationName.parse( applicationName ); }
-
-    }
-
-    //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
 
