@@ -43,6 +43,7 @@ namespace Oxygen
         Gimp,
         OpenOffice,
         GoogleChrome,
+        Opera,
         Java,
         JavaSwt
     };
@@ -89,6 +90,7 @@ namespace Oxygen
 
         bool isJava( void ) const { return _name == Java; }
         bool isJavaSwt( void ) const { return _name == JavaSwt; }
+        bool isOpera( void ) const { return _name == Opera; }
 
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
@@ -99,8 +101,11 @@ namespace Oxygen
 
         protected:
 
-        //! get type from string
-        void parse( const std::string& );
+        //! get application name from Gtk
+        std::string fromGtk( void ) const;
+
+        //! get application name from pid
+        std::string fromPid( int ) const;
 
         private:
 
