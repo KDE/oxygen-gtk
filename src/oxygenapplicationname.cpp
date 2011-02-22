@@ -27,28 +27,49 @@
 #include "oxygengtkutils.h"
 #include "config.h"
 
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace Oxygen
 {
 
     //__________________________________________________________________________
-    void ApplicationName::parse( const std::string& appName )
+    void ApplicationName::initialize( void )
     {
 
+        // get application name from gtk
+        const std::string gtkAppName( fromGtk() );
+
+        // get application name from pid
+        const std::string pidAppName( fromPid( getpid() ) );
+
         #if OXYGEN_DEBUG
-        std::cerr << "ApplicationName::parse - " << appName << std::endl;
+        std::cerr << "ApplicationName::initialize -"
+            << " from pid: " << pidAppName
+            << " from gtk: " << gtkAppName
+            << std::endl;
         #endif
 
-        if( appName == "acroread" ) _name = Acrobat;
-        else if( appName.find("firefox") == 0 ) _name = Firefox;
-        else if( appName.find("xulrunner") == 0 ) _name = Xul;
-        else if( appName.find("thunderbird") == 0 ) _name = Thunderbird;
-        else if( appName.find("seamonkey" ) == 0 ) _name = Seamonkey;
-        else if( appName == "soffice" ) _name = OpenOffice;
-        else if( appName == "gimp" ) _name = Gimp;
-        else if( appName == "chromium" || appName == "chromium-browser" || appName == "google-chrome" ) _name = GoogleChrome;
+        if( pidAppName == "opera" ) _name = Opera;
+        else if( pidAppName == "java" ) {
+
+            if( !gtkAppName.empty() ) _name = JavaSwt;
+            else _name = Java;
+
+        } else if( gtkAppName == "acroread" ) _name = Acrobat;
+        else if( gtkAppName.find("firefox") == 0 ) _name = Firefox;
+        else if( gtkAppName.find("xulrunner") == 0 ) _name = Xul;
+        else if( gtkAppName.find("thunderbird") == 0 ) _name = Thunderbird;
+        else if( gtkAppName.find("seamonkey" ) == 0 ) _name = Seamonkey;
+        else if( gtkAppName == "soffice" ) _name = OpenOffice;
+        else if( gtkAppName == "gimp" ) _name = Gimp;
+        else if(
+            gtkAppName == "chromium" ||
+            gtkAppName == "chromium-browser" ||
+            gtkAppName == "google-chrome" ) _name = GoogleChrome;
         else _name = Unknown;
+
     }
 
     //__________________________________________________________________________
@@ -82,6 +103,52 @@ namespace Oxygen
         // check parent
         if( parent && GTK_IS_DIALOG( parent ) ) return false;
         else return true;
+
+    }
+
+    //__________________________________________________________________________
+    bool ApplicationName::useFlatBackground( GtkWidget* widget ) const
+    {
+
+        return
+            isMozilla( widget ) ||
+            isAcrobat( widget ) ||
+            isJavaSwt() ||
+            isOpenOffice();
+
+    }
+
+    //__________________________________________________________________________
+    std::string ApplicationName::fromGtk( void ) const
+    {
+        if( const char* gtkAppName = g_get_prgname() ) return gtkAppName;
+        else return "";
+    }
+
+    //__________________________________________________________________________
+    std::string ApplicationName::fromPid( int pid ) const
+    {
+
+        // generate /proc filename
+        std::ostringstream filename;
+        filename << "/proc/" << pid << "/cmdline";
+
+        // try read file
+        std::ifstream in( filename.str().c_str() );
+        if( !in ) return std::string();
+
+        /*
+        somehow std::getline gets some extra crap (non char) from the procfile
+        one has to use ifstream::getline, and pass it a fixed size line
+        */
+        char lineC[1024];
+        in.getline( lineC, 1024, '\n' );
+        std::string line( lineC );
+
+        // get position of last "/" character, and truncate accordingly
+        const size_t pos = line.rfind( '/' );
+        if( pos == std::string::npos ) return line;
+        else return line.substr( pos+1 );
 
     }
 

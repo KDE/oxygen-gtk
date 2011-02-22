@@ -42,7 +42,10 @@ namespace Oxygen
         Xul,
         Gimp,
         OpenOffice,
-        GoogleChrome
+        GoogleChrome,
+        Opera,
+        Java,
+        JavaSwt
     };
 
     //! stores application name and provides some utility functions
@@ -56,11 +59,6 @@ namespace Oxygen
             _name( name )
         {}
 
-        //! constructor
-        ApplicationName( const std::string& appName ):
-            _name( Unknown )
-        { parse( appName ); }
-
         //! assignment
         ApplicationName& operator = ( const AppName& name )
         {
@@ -72,8 +70,9 @@ namespace Oxygen
         operator const AppName& ( void ) const
         { return _name; }
 
-        //! get type from string
-        void parse( const std::string& );
+        //! initialize
+        /*! try derive AppName from gtk program name */
+        void initialize( void );
 
         //!@name utilities
         //@{
@@ -89,12 +88,28 @@ namespace Oxygen
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }
         bool isUnknown( void ) const { return _name == Unknown; }
 
+        bool isJava( void ) const { return _name == Java; }
+        bool isJavaSwt( void ) const { return _name == JavaSwt; }
+        bool isOpera( void ) const { return _name == Opera; }
+
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
         bool isAcrobat( GtkWidget* ) const;
         bool isMozilla( GtkWidget* ) const;
 
+
+        // true for all applications that requires a flat background to be used
+        bool useFlatBackground( GtkWidget* ) const;
+
         //@}
+
+        protected:
+
+        //! get application name from Gtk
+        std::string fromGtk( void ) const;
+
+        //! get application name from pid
+        std::string fromPid( int ) const;
 
         private:
 

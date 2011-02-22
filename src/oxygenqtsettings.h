@@ -312,7 +312,8 @@ namespace Oxygen
         void initUserConfigDir( void );
 
         //! init application name
-        void initApplicationName( void );
+        void initApplicationName( void )
+        { _applicationName.initialize(); }
 
         //! init argb support
         void initArgb( void );
