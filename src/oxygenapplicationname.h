@@ -42,7 +42,9 @@ namespace Oxygen
         Xul,
         Gimp,
         OpenOffice,
-        GoogleChrome
+        GoogleChrome,
+        Java,
+        JavaSwt
     };
 
     //! stores application name and provides some utility functions
@@ -84,6 +86,9 @@ namespace Oxygen
         bool isOpenOffice( void ) const { return _name == OpenOffice; }
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }
         bool isUnknown( void ) const { return _name == Unknown; }
+
+        bool isJava( void ) const { return _name == Java; }
+        bool isJavaSwt( void ) const { return _name == JavaSwt; }
 
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
