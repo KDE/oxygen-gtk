@@ -113,13 +113,13 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
+        void renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
 
-        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
-        { return renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+        void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
+        { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
 
-        bool renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-        { return renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
+        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -138,7 +138,7 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        bool renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;

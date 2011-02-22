@@ -189,7 +189,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderWindowBackground(
+    void Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
         const StyleOptions& options, TileSet::Tiles tiles )
@@ -262,7 +262,7 @@ namespace Oxygen
                 cairo_rectangle(context,x,y,w,h);
                 cairo_fill(context);
                 cairo_destroy(context);
-                return true;
+                return;
 
             }
 
@@ -358,7 +358,7 @@ namespace Oxygen
         if(needToDestroyContext) cairo_destroy(context);
         else cairo_restore(context);
 
-        return true;
+        return;
 
     }
 
@@ -498,8 +498,7 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // render normal window background
-        if( !renderWindowBackground( window, clipRect, x, y, w, h ) )
-        { fill( window, clipRect, x, y, w, h, base ); }
+        renderWindowBackground( window, clipRect, x, y, w, h );
 
         // render lines
         renderHeaderLines( window, clipRect, x, y, w, h );
@@ -653,20 +652,20 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    bool Style::renderHoleBackground(
+    void Style::renderHoleBackground(
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
         // do nothing if not enough room
-        if( w < 14 || h < 14 )  return false;
+        if( w < 14 || h < 14 )  return;
 
         /*
         pass "NoFill" option to renderWindowBackground,
         to indicate one must make a "hole" in the center
         */
-        return renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
+        renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
     }
 
     //__________________________________________________________________
