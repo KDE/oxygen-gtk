@@ -229,14 +229,6 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::initApplicationName( void )
-    {
-        const char* applicationName = g_get_prgname();
-        if( applicationName ) { _applicationName.parse( applicationName ); }
-
-    }
-
-    //_________________________________________________________
     void QtSettings::initArgb( void )
     {
         // get program name

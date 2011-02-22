@@ -33,6 +33,13 @@ namespace Oxygen
 {
 
     //__________________________________________________________________________
+    void ApplicationName::initialize( void )
+    {
+        if( const char* applicationName = g_get_prgname() )
+        { parse( applicationName ); }
+    }
+
+    //__________________________________________________________________________
     void ApplicationName::parse( const std::string& appName )
     {
 

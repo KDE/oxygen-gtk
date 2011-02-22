@@ -56,11 +56,6 @@ namespace Oxygen
             _name( name )
         {}
 
-        //! constructor
-        ApplicationName( const std::string& appName ):
-            _name( Unknown )
-        { parse( appName ); }
-
         //! assignment
         ApplicationName& operator = ( const AppName& name )
         {
@@ -72,8 +67,9 @@ namespace Oxygen
         operator const AppName& ( void ) const
         { return _name; }
 
-        //! get type from string
-        void parse( const std::string& );
+        //! initialize
+        /*! try derive AppName from gtk program name */
+        void initialize( void );
 
         //!@name utilities
         //@{
@@ -95,6 +91,11 @@ namespace Oxygen
         bool isMozilla( GtkWidget* ) const;
 
         //@}
+
+        protected:
+
+        //! get type from string
+        void parse( const std::string& );
 
         private:
 
