@@ -96,6 +96,7 @@ namespace Oxygen
         /*! this allows to prevent false positive for open and print dialogs */
         bool isAcrobat( GtkWidget* ) const;
         bool isMozilla( GtkWidget* ) const;
+        bool isJavaSwt( GtkWidget* ) const;
 
 
         // true for all applications that requires a flat background to be used
