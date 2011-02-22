@@ -97,6 +97,10 @@ namespace Oxygen
         bool isAcrobat( GtkWidget* ) const;
         bool isMozilla( GtkWidget* ) const;
 
+
+        // true for all applications that requires a flat background to be used
+        bool useFlatBackground( GtkWidget* ) const;
+
         //@}
 
         protected:

@@ -93,8 +93,7 @@ namespace Oxygen
 
             // do nothing for mozilla, acrobat, gnome applets, and other hint-specific windows
             if(
-                Style::instance().settings().applicationName().isMozilla( widget ) ||
-                Style::instance().settings().applicationName().isAcrobat( widget ) ||
+                Style::instance().settings().applicationName().useFlatBackground( widget ) ||
                 Gtk::gtk_widget_is_applet( widget ) ||
                 Gtk::gdk_window_nobackground( window ) )
             { return; }
@@ -146,9 +145,7 @@ namespace Oxygen
 
             // for mozilla and openoffice
             // fill with flat color
-            if( Style::instance().settings().applicationName().isMozilla( widget ) ||
-                Style::instance().settings().applicationName().isAcrobat( widget ) ||
-                Style::instance().settings().applicationName().isOpenOffice() )
+            if( Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
                 Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
                 return;
@@ -839,16 +836,12 @@ namespace Oxygen
 
         } else if( d.isMenuBar() || d.isToolBar() ) {
 
-            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
-                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
-                !Style::instance().settings().applicationName().isOpenOffice() &&
-                !Gtk::gtk_widget_is_applet( widget ) )
-            {
-                Style::instance().windowManager().registerWidget( widget );
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
-            }
+            if( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
+                Gtk::gtk_widget_is_applet( widget ) )
+                { return; }
 
+            Style::instance().windowManager().registerWidget( widget );
+            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
             return;
 
         } else if( d.isMenu() ) {

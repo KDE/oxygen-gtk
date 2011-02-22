@@ -107,6 +107,18 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________
+    bool ApplicationName::useFlatBackground( GtkWidget* widget ) const
+    {
+
+        return
+            isMozilla( widget ) ||
+            isAcrobat( widget ) ||
+            isJavaSwt() ||
+            isOpenOffice();
+
+    }
+
+    //__________________________________________________________________________
     std::string ApplicationName::fromGtk( void ) const
     {
         if( const char* gtkAppName = g_get_prgname() ) return gtkAppName;
