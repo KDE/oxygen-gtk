@@ -79,10 +79,6 @@ namespace Oxygen
 
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
-        #if OXYGEN_DEBUG
-        if( parent ) std::cerr << "Oxygen::ApplicationName::isMozilla - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
-        #endif
-
         // check parent
         if( parent && GTK_IS_DIALOG( parent ) ) return false;
         else return true;
@@ -96,9 +92,17 @@ namespace Oxygen
 
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
-        #if OXYGEN_DEBUG
-        if( parent ) std::cerr << "Oxygen::ApplicationName::isAcrobat - parent: " << G_OBJECT_TYPE_NAME( widget ) << std::endl;
-        #endif
+        // check parent
+        if( parent && GTK_IS_DIALOG( parent ) ) return false;
+        else return true;
+
+    }
+    //__________________________________________________________________________
+    bool ApplicationName::isJavaSwt( GtkWidget* widget ) const
+    {
+        if( !isJavaSwt() ) return false;
+
+        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         // check parent
         if( parent && GTK_IS_DIALOG( parent ) ) return false;
@@ -110,9 +114,14 @@ namespace Oxygen
     bool ApplicationName::useFlatBackground( GtkWidget* widget ) const
     {
 
-        return
-            isMozilla( widget ) ||
-            isAcrobat( widget ) ||
+        // first check parent
+        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
+
+        // check parent
+        if( parent && GTK_IS_DIALOG( parent ) ) return false;
+        else return
+            isMozilla() ||
+            isAcrobat() ||
             isJavaSwt() ||
             isOpenOffice();
 
