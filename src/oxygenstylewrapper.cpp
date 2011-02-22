@@ -1463,7 +1463,7 @@ namespace Oxygen
                     x-=1; y-=1;
                     w+=2; h+=2;
 
-                    if( !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { Style::instance().renderHoleBackground( window, clipRect, x, y, w, h ); }
 
                     // shrink entry by 3px at each side
@@ -1486,7 +1486,7 @@ namespace Oxygen
 
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
-            if( !Style::instance().settings().applicationName().isOpenOffice() )
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
             { Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 ); }
 
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
