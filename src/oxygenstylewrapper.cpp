@@ -2117,7 +2117,6 @@ namespace Oxygen
 
             if( state != GTK_STATE_INSENSITIVE ) options &= ~Contrast;
             role = Palette::Text;
-            y+=1;
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             { x+=2; }
@@ -2125,7 +2124,6 @@ namespace Oxygen
         } else if( Gtk::gtk_parent_combo( widget ) ) {
 
             role = Palette::WindowText;
-            y-=1;
 
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             { x+=2; }
@@ -2151,7 +2149,9 @@ namespace Oxygen
             if( d.isArrow() && GTK_IS_ARROW( widget ) )
             {
 
-                x += 1;
+                //if( arrow == GTK_ARROW_DOWN || arrow == GTK_ARROW_UP )
+                { x += 1; }
+
                 role = Palette::WindowText;
             }
 
