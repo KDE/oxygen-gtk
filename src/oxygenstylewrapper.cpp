@@ -2759,12 +2759,7 @@ namespace Oxygen
         GdkPixbuf *stated( scaled );
 
         // non-flat pushbuttons don't have any icon effect
-        bool noEffect=false;
-        if(GtkWidget* button=Gtk::gtk_parent_button(widget))
-        {
-            if(gtk_button_get_relief(GTK_BUTTON(button))==GTK_RELIEF_NORMAL)
-                noEffect=true;
-        }
+        const bool useEffect( Style::instance().settings().useIconEffect() && Gtk::gtk_button_is_flat( Gtk::gtk_parent_button( widget ) ) );
 
         if( gtk_icon_source_get_state_wildcarded( source ) )
         {
@@ -2776,12 +2771,16 @@ namespace Oxygen
                 gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
                 g_object_unref (scaled);
 
-            } else if (!noEffect && state == GTK_STATE_PRELIGHT) {
+            } else if( useEffect && state == GTK_STATE_PRELIGHT ) {
 
                 stated = gdk_pixbuf_copy( scaled );
                 if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.5 ) )
                 {
                     // FIXME: correct the value to match KDE
+                    /*
+                    in fact KDE allows one to set many different effects on icon
+                    not sure we want to copy this code all over the place, especially since nobody changes the default settings,
+                    as far as I know */
                     gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
                 }
                 g_object_unref( scaled );

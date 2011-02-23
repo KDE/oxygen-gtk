@@ -87,6 +87,10 @@ namespace Oxygen
         //!@name oxygen style options
         //@{
 
+        //! use effect to render active (mouse-over) icons
+        bool useIconEffect( void ) const
+        { return _useIconEffect; }
+
         //! checkbox style
         enum CheckBoxStyle
         {
@@ -348,6 +352,9 @@ namespace Oxygen
 
         //! if true, inactive selection has different color from active
         bool _inactiveChangeSelectionColor;
+
+        //! active icon effect
+        bool _useIconEffect;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;

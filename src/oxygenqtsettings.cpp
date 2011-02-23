@@ -49,6 +49,7 @@ namespace Oxygen
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
+        _useIconEffect( true ),
         _checkBoxStyle( CS_CHECK ),
         _tabStyle( TS_SINGLE ),
         _scrollBarColored( false ),
@@ -746,6 +747,9 @@ namespace Oxygen
         else if( toolbarTextPosition == "TextBesideIcon" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH_HORIZ" ) );
         else if( toolbarTextPosition == "NoText" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_ICONS" ) );
         else _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH" ) );
+
+        // active icon effects
+        _useIconEffect = _kdeGlobals.getOption( "[MainToolbarIcons]", "ActiveEffect" ).toVariant<std::string>( "gamma" ) != "none";
 
         // start drag time and distance
         _startDragDist = _kdeGlobals.getOption( "[KDE]", "StartDragDist" ).toVariant<int>( 4 );
