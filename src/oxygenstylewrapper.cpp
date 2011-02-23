@@ -915,9 +915,8 @@ namespace Oxygen
 
                 MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
                 engine.registerWidget(widget);
-
-                // deal with previous rect
-                if( engine.isAnimated( widget, AnimationPrevious ) ) {
+                if( engine.isAnimated( widget, AnimationPrevious ) )
+                {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
@@ -938,6 +937,22 @@ namespace Oxygen
 
             Style::instance().windowManager().registerWidget( widget );
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
+            if( GTK_IS_TOOLBAR( widget ) )
+            {
+                ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+                engine.registerWidget(widget);
+                if( engine.isAnimated( widget, AnimationPrevious ) )
+                {
+                    GtkWidget* child( engine.widget( widget, AnimationPrevious ) );
+                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    StyleOptions options( Flat );
+                    options |= Hover;
+                    Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
+                }
+
+            }
 
             return;
 
