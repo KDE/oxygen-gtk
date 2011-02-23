@@ -246,10 +246,11 @@ namespace Oxygen
 
         // loopup in hover map
         HoverDataMap::iterator iter( _hoverData.find( widget ) );
-        if( iter == _hoverData.end() ) return;
-
-        iter->second.disconnect();
-        _hoverData.erase( iter );
+        if( iter != _hoverData.end() )
+        {
+            iter->second.disconnect();
+            _hoverData.erase( iter );
+        }
 
     }
 
