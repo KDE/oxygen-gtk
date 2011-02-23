@@ -863,6 +863,8 @@ namespace Oxygen
             { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
 
             // flat buttons
+            bool useWidgetState( true );
+            AnimationData data;
             if( widget && Gtk::gtk_button_is_flat( widget ) )
             {
 
@@ -880,14 +882,19 @@ namespace Oxygen
                 {
                     Style::instance().animations().toolBarStateEngine().registerWidget( parent );
                     Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
+
+                    useWidgetState = false;
+                    data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationCurrent );
+
                 }
 
             }
 
-            // retrieve animation state and render accordingly
-            // animations are disabled if widget is sunken
-            const bool animated( (options&Flat) || !(options&Sunken) );
-            const AnimationData data( animated ? Style::instance().animations().widgetStateEngine().get( widget, options ):AnimationData() );
+            // retrieve animation
+            if( useWidgetState )
+            { data = Style::instance().animations().widgetStateEngine().get( widget, options ); }
+
+            // render
             Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
 
         } else if( d.isMenuBar() ) {

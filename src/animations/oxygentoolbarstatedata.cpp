@@ -33,8 +33,6 @@
 
 #include <gtk/gtk.h>
 
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
@@ -147,7 +145,6 @@ namespace Oxygen
         if( !_animationsEnabled ) return true;
 
         const GdkRectangle rect( widget ? widget->allocation : Gtk::gdk_rectangle() );
-        std::cout << "ToolBarStateData::updateState - " << widget << " state: " << state << " rect: " << rect << std::endl;
 
         if( state && widget != _current._widget )
         {
