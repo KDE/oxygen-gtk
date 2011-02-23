@@ -92,6 +92,10 @@ namespace Oxygen
         bool isAnimated( const AnimationType& type ) const
         { return data( type )._timeLine.isRunning(); }
 
+        //! widget for current animation type
+        GtkWidget* widget( const AnimationType& type ) const
+        { return data( type )._widget; }
+
         //! rect for given animation type
         const GdkRectangle& rectangle( const AnimationType& type ) const
         { return data( type )._rect; }

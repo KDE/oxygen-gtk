@@ -916,17 +916,6 @@ namespace Oxygen
                 MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
                 engine.registerWidget(widget);
 
-                // deal with current rect
-                if( engine.isAnimated( widget, AnimationCurrent ) )
-                {
-
-                    const AnimationData data( engine.animationData( widget, AnimationCurrent ) );
-                    const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
-
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, Hover, data );
-
-                }
-
                 // deal with previous rect
                 if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
@@ -1033,20 +1022,18 @@ namespace Oxygen
         } else if( d.isMenuItem() ) {
 
             GtkWidget* parent( gtk_widget_get_parent( widget ) );
+            AnimationData data;
             if( GTK_IS_MENU_BAR( parent ) )
             {
-                /*
-                for menubars, do nothing when animated, because it is dealt with
-                when painting menubar background
-                */
+
                 Style::instance().animations().menuBarStateEngine().registerWidget(parent );
-                if( Style::instance().animations().menuBarStateEngine().isAnimated( parent, AnimationCurrent ) )
-                { return; }
+                if( Style::instance().animations().menuBarStateEngine().widget( parent, AnimationCurrent ) == widget )
+                { data = Style::instance().animations().menuBarStateEngine().animationData( parent, AnimationCurrent ); }
 
             }
 
             StyleOptions options = StyleOptions( widget, state, shadow );
-            Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
+            Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options, data );
 
         } else if( d.isTroughAny() && GTK_IS_SCALE( widget ) ) {
 
