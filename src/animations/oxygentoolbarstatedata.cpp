@@ -162,13 +162,8 @@ namespace Oxygen
             }
 
             // assign new widget to current and start animation
-            const bool animate( !_current.isValid() );
             _current.update( widget, rect );
-            if( _current.isValid() )
-            {
-                if( animate ) _current._timeLine.start();
-                else delayedUpdate( this );
-            }
+            if( _current.isValid() ) _current._timeLine.start();
 
             return true;
 
