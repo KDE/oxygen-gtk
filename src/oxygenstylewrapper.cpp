@@ -880,13 +880,20 @@ namespace Oxygen
                 // register to ToolBarState engine
                 if( GtkWidget* parent = Gtk::gtk_parent_toolbar( widget ) )
                 {
+
                     Style::instance().animations().toolBarStateEngine().registerWidget( parent );
                     Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
 
+                    useWidgetState = false;
                     if( Style::instance().animations().toolBarStateEngine().widget( parent, AnimationCurrent ) == widget )
                     {
-                        useWidgetState = false;
+
                         data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationCurrent );
+
+                    } else if( (options & Sunken ) && Style::instance().animations().toolBarStateEngine().widget( parent, AnimationPrevious ) == widget ) {
+
+                        data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationPrevious );
+
                     }
 
                 }
@@ -942,9 +949,8 @@ namespace Oxygen
             {
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
                 engine.registerWidget(widget);
-                if( engine.isAnimated( widget, AnimationPrevious ) )
+                if( engine.isAnimated( widget, AnimationPrevious ) && !gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
                 {
-                    GtkWidget* child( engine.widget( widget, AnimationPrevious ) );
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
                     StyleOptions options( Flat );
