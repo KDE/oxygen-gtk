@@ -205,9 +205,6 @@ namespace Oxygen
         bool genericAnimationsEnabled( void ) const
         { return _genericAnimationsEnabled; }
 
-        bool menuBarAnimationsEnabled( void ) const
-        { return _menuBarAnimationsEnabled; }
-
         //@}
 
         //!@name animations type
@@ -222,6 +219,16 @@ namespace Oxygen
 
         MenuBarAnimationType menuBarAnimationType( void ) const
         { return _menuBarAnimationType; }
+
+        enum ToolBarAnimationType
+        {
+            TB_NONE,
+            TB_FADE,
+            TB_FOLLOW_MOUSE
+        };
+
+        ToolBarAnimationType toolBarAnimationType( void ) const
+        { return _toolBarAnimationType; }
 
         //@}
 
@@ -451,10 +458,10 @@ namespace Oxygen
         bool _genericAnimationsEnabled;
 
         //! menubar animations
-        bool _menuBarAnimationsEnabled;
-
-        //! menubar animations
         MenuBarAnimationType _menuBarAnimationType;
+
+        //! toolbar animation type
+        ToolBarAnimationType _toolBarAnimationType;
 
         //! generic animations
         int _genericAnimationsDuration;

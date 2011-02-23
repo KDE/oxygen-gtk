@@ -103,17 +103,13 @@ namespace Oxygen
         treeViewStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        menuBarStateEngine().setAnimationsEnabled(
-            settings.menuBarAnimationsEnabled() &&
-            settings.menuBarAnimationType() == QtSettings::MB_FADE );
-
+        // for now, only MB_FADE animation mode is supported for menubar animations
+        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
-        toolBarStateEngine().setEnabled(
-            settings.menuBarAnimationsEnabled() &&
-            settings.menuBarAnimationType() == QtSettings::MB_FADE );
-
-        toolBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
+        // for now, only TB_FADE animation mode is supported for toolbar animations
+        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == QtSettings::TB_FADE );
+        toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
     }
 
