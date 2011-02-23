@@ -43,7 +43,6 @@ namespace Oxygen
         registerEngine( _dialogEngine = new DialogEngine( this ) );
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
-        registerEngine( _menuBarStateEngine = new MenuBarStateEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
@@ -56,6 +55,7 @@ namespace Oxygen
         registerEngine( _scrollBarStateEngine = new ScrollBarStateEngine( this ) );
         registerEngine( _tabWidgetStateEngine = new TabWidgetStateEngine( this ) );
         registerEngine( _treeViewStateEngine = new TreeViewStateEngine( this ) );
+        registerEngine( _menuBarStateEngine = new MenuBarStateEngine( this ) );
 
     }
 

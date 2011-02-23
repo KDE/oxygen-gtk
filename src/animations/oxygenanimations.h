@@ -108,10 +108,6 @@ namespace Oxygen
         MainWindowEngine& mainWindowEngine( void ) const
         { return *_mainWindowEngine; }
 
-        //! menushell engine
-        MenuBarStateEngine& menuBarStateEngine( void ) const
-        { return *_menuBarStateEngine; }
-
         //! hover engine
         HoverEngine& hoverEngine( void ) const
         { return *_hoverEngine; }
@@ -159,6 +155,10 @@ namespace Oxygen
         TreeViewStateEngine& treeViewStateEngine( void ) const
         { return *_treeViewStateEngine; }
 
+        //! menushell engine
+        MenuBarStateEngine& menuBarStateEngine( void ) const
+        { return *_menuBarStateEngine; }
+
         //@}
 
         protected:
@@ -205,9 +205,6 @@ namespace Oxygen
         //! main window engine
         MainWindowEngine* _mainWindowEngine;
 
-        //! menushell engine
-        MenuBarStateEngine* _menuBarStateEngine;
-
         //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;
 
@@ -240,6 +237,9 @@ namespace Oxygen
 
         //! tree view animation engine
         TreeViewStateEngine* _treeViewStateEngine;
+
+        //! menushell engine
+        MenuBarStateEngine* _menuBarStateEngine;
 
         //@}
 
