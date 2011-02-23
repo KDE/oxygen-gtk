@@ -213,6 +213,16 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    GtkWidget* Gtk::gtk_parent_toolbar( GtkWidget* widget )
+    {
+        GtkWidget *parent( widget );
+        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        { if( GTK_IS_TOOLBAR( parent ) ) return parent; }
+
+        return 0L;
+    }
+
+    //________________________________________________________
     GtkWidget* Gtk::gtk_parent_tree_view( GtkWidget* widget )
     {
 

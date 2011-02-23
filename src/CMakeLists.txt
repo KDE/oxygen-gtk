@@ -24,6 +24,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygentimeline.cpp
     animations/oxygentimelineserver.cpp
     animations/oxygentimer.cpp
+    animations/oxygentoolbarstatedata.cpp
     animations/oxygentreeviewdata.cpp
     animations/oxygentreeviewengine.cpp
     animations/oxygentreeviewstatedata.cpp

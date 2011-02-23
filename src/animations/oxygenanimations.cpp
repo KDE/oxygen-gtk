@@ -56,6 +56,7 @@ namespace Oxygen
         registerEngine( _tabWidgetStateEngine = new TabWidgetStateEngine( this ) );
         registerEngine( _treeViewStateEngine = new TreeViewStateEngine( this ) );
         registerEngine( _menuBarStateEngine = new MenuBarStateEngine( this ) );
+        registerEngine( _toolBarStateEngine = new ToolBarStateEngine( this ) );
 
     }
 
@@ -107,6 +108,12 @@ namespace Oxygen
             settings.menuBarAnimationType() == QtSettings::MB_FADE );
 
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
+
+        toolBarStateEngine().setAnimationsEnabled(
+            settings.menuBarAnimationsEnabled() &&
+            settings.menuBarAnimationType() == QtSettings::MB_FADE );
+
+        toolBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
     }
 

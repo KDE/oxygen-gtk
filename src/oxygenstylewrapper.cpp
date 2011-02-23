@@ -875,6 +875,13 @@ namespace Oxygen
                 if( Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
+                // register to ToolBarState engine
+                if( GtkWidget* parent = Gtk::gtk_parent_toolbar( widget ) )
+                {
+                    Style::instance().animations().toolBarStateEngine().registerWidget( parent );
+                    Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
+                }
+
             }
 
             // retrieve animation state and render accordingly

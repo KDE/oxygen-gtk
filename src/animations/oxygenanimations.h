@@ -38,6 +38,7 @@
 #include "oxygensignal.h"
 #include "oxygentabwidgetengine.h"
 #include "oxygentabwidgetstateengine.h"
+#include "oxygentoolbarstateengine.h"
 #include "oxygentreeviewengine.h"
 #include "oxygentreeviewstateengine.h"
 #include "oxygenwidgetsizeengine.h"
@@ -151,13 +152,17 @@ namespace Oxygen
         TabWidgetStateEngine& tabWidgetStateEngine( void ) const
         { return *_tabWidgetStateEngine; }
 
-        //! tree view animation engine
+        //! tree view mouse-over animation engine
         TreeViewStateEngine& treeViewStateEngine( void ) const
         { return *_treeViewStateEngine; }
 
-        //! menushell engine
+        //! menubar mouse-over animation engine
         MenuBarStateEngine& menuBarStateEngine( void ) const
         { return *_menuBarStateEngine; }
+
+        //! toolbar mouse-over animation engine
+        ToolBarStateEngine& toolBarStateEngine( void ) const
+        { return *_toolBarStateEngine; }
 
         //@}
 
@@ -235,11 +240,14 @@ namespace Oxygen
         //! notebook tabs mouse-over animations engine
         TabWidgetStateEngine* _tabWidgetStateEngine;
 
-        //! tree view animation engine
+        //! tree view mouse-over animation engine
         TreeViewStateEngine* _treeViewStateEngine;
 
-        //! menushell engine
+        //! menubar mouse-over animation engine
         MenuBarStateEngine* _menuBarStateEngine;
+
+        //! toolbar mouse-over animation engine
+        ToolBarStateEngine* _toolBarStateEngine;
 
         //@}
 

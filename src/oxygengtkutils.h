@@ -179,6 +179,9 @@ namespace Oxygen
         //! return parent treeview if any.
         GtkWidget* gtk_parent_tree_view( GtkWidget* );
 
+        //! return parent toolbar if any.
+        GtkWidget* gtk_parent_toolbar( GtkWidget* );
+
         //! return parent combobox if any.
         GtkWidget* gtk_parent_combo( GtkWidget* );
 
