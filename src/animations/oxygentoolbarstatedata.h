@@ -46,7 +46,6 @@ namespace Oxygen
         //! constructor
         ToolBarStateData( void ):
             _target( 0L ),
-            _animationsEnabled( true ),
             _dirtyRect( Gtk::gdk_rectangle() )
             {}
 
@@ -64,9 +63,8 @@ namespace Oxygen
         void registerChild( GtkWidget*, bool = true );
 
         //! enable state
-        void setAnimationsEnabled( bool value )
+        void setEnabled( bool value )
         {
-            _animationsEnabled = value;
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
 
@@ -213,9 +211,6 @@ namespace Oxygen
 
         //!@name animation data
         //@{
-
-        //! true if toolbar item mouse-over is animated
-        bool _animationsEnabled;
 
         //! additional dirty rect
         GdkRectangle _dirtyRect;

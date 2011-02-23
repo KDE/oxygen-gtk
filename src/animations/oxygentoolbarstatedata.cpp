@@ -141,9 +141,6 @@ namespace Oxygen
     bool ToolBarStateData::updateState( GtkWidget* widget, bool state )
     {
 
-        // do nothing if animations are disabled
-        if( !_animationsEnabled ) return true;
-
         const GdkRectangle rect( widget ? widget->allocation : Gtk::gdk_rectangle() );
 
         if( state && widget != _current._widget )

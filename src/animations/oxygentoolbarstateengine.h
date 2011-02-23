@@ -44,8 +44,7 @@ namespace Oxygen
 
         //! constructor
         ToolBarStateEngine( Animations* parent ):
-            GenericEngine<ToolBarStateData>( parent ),
-            _animationsEnabled( true )
+            GenericEngine<ToolBarStateData>( parent )
             {}
 
         //! destructor
@@ -59,7 +58,7 @@ namespace Oxygen
             if( registered )
             {
                 data().value( widget ).setDuration( duration() );
-                data().value( widget ).setAnimationsEnabled( _animationsEnabled );
+                data().value( widget ).setEnabled( enabled() );
             }
             return registered;
         }
@@ -72,13 +71,16 @@ namespace Oxygen
         { data().value( widget ).registerChild( child, value ); }
 
         //! enable animations
-        bool setAnimationsEnabled( bool value )
+        bool setEnabled( bool value )
         {
-            if( _animationsEnabled == value ) return false;
-            _animationsEnabled = value;
+            if( !BaseEngine::setEnabled( value ) ) return false;
 
             for( DataMap<ToolBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-            { iter->second.setAnimationsEnabled( value && !widgetIsBlackListed( iter->first ) ); }
+            {
+                iter->second.setEnabled( value );
+                if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+                else iter->second.disconnect( iter->first );
+            }
             return true;
         }
 
@@ -117,11 +119,6 @@ namespace Oxygen
         { return data().value( widget ).animationData( type ); }
 
         //@}
-
-        private:
-
-        //! enable animations
-        bool _animationsEnabled;
 
     };
 

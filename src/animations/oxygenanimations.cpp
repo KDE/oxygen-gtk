@@ -109,7 +109,7 @@ namespace Oxygen
 
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
-        toolBarStateEngine().setAnimationsEnabled(
+        toolBarStateEngine().setEnabled(
             settings.menuBarAnimationsEnabled() &&
             settings.menuBarAnimationType() == QtSettings::MB_FADE );
 
