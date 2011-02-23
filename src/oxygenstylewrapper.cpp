@@ -883,8 +883,11 @@ namespace Oxygen
                     Style::instance().animations().toolBarStateEngine().registerWidget( parent );
                     Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
 
-                    useWidgetState = false;
-                    data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationCurrent );
+                    if( Style::instance().animations().toolBarStateEngine().widget( parent, AnimationCurrent ) == widget )
+                    {
+                        useWidgetState = false;
+                        data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationCurrent );
+                    }
 
                 }
 
@@ -946,6 +949,7 @@ namespace Oxygen
 
             Style::instance().windowManager().registerWidget( widget );
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
             return;
 
         } else if( d.isMenu() ) {

@@ -104,6 +104,10 @@ namespace Oxygen
         bool isAnimated( GtkWidget* widget, const AnimationType& type )
         { return data().value( widget ).isAnimated( type ); }
 
+        //! widget matching type
+        GtkWidget* widget( GtkWidget* widget, const AnimationType& type )
+        { return data().value( widget ).widget( type ); }
+
         //! animated rect for given widget and type
         const GdkRectangle& rectangle( GtkWidget* widget, const AnimationType& type )
         { return data().value( widget ).rectangle( type ); }
