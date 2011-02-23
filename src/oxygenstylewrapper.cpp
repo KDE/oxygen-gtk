@@ -577,7 +577,7 @@ namespace Oxygen
 
         } else if( d.isButton() || d.isOptionMenu() || d.isToggleButton() ) {
 
-            // check if it's PathBar toggle button
+            // pathbar buttons
             if( Gtk::gtk_button_is_in_path_bar(widget) )
             {
 
@@ -626,7 +626,12 @@ namespace Oxygen
 
                 }
 
-            } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
+                return;
+
+            }
+
+            // treeview headers
+            if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
 
                 // register to scrolled window engine if any
                 if(
@@ -637,9 +642,14 @@ namespace Oxygen
 
                 // treevew header
                 Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
+                return;
 
-            } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
+            }
 
+            // combobox entry buttons
+            if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
+
+                // combobox entry buttons
                 // keep track of whether button is active (pressed-down) or pre-lighted
                 const bool buttonActive( state == GTK_STATE_ACTIVE || state == GTK_STATE_PRELIGHT );
 
@@ -709,13 +719,17 @@ namespace Oxygen
 
                 return;
 
-            } else if(
+            }
+
+            // combobox buttons
+            if(
                 ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
                 !Style::instance().settings().applicationName().isMozilla( widget ) &&
                 Gtk::gtk_combobox_appears_as_list( parent )
                 )
             {
 
+                // combobox buttons
                 const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
 
                 StyleOptions options( widget, state, shadow );
@@ -750,119 +764,124 @@ namespace Oxygen
 
                     }
 
+                    return;
+
                 } else {
 
                     options |= Flat;
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
                     if( reversed ) Style::instance().renderButtonSlab( window, clipRect, x+1, y, w, h, options );
                     else Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
-
-                }
-
-            #if GTK_CHECK_VERSION(2, 20, 0)
-            } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
-
-                return;
-
-            #endif
-
-            } else {
-
-                // for google chrome, make GtkChromeButton appear as flat
-                if(
-                    Style::instance().settings().applicationName().isGoogleChrome() &&
-                    !Gtk::gtk_button_is_flat( widget ) &&
-                    Gtk::g_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
-                { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
-
-                StyleOptions options( Blend );
-                options |= StyleOptions( widget, state, shadow );
-
-                if( widget && Gtk::gtk_button_is_flat( widget ) )
-                {
-
-                    // set button as flat and disable focus
-                    options |= Flat;
-                    options &= ~Focus;
-
-                    // register to Hover engine and check state
-                    Style::instance().animations().hoverEngine().registerWidget( widget );
-                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
-                    { options |= Hover; }
-
-                } else if( ( parent = Gtk::gtk_parent_combo( widget ) ) ) {
-
-                    if( Style::instance().settings().applicationName().isOpenOffice() )
-                    {
-
-                        // Hover doesn't work correctly in OpenOffice, so disable it
-                        options &= ~(Hover|Focus);
-                        TileSet::Tiles tiles( TileSet::Full );
-                        tiles &= ( ~TileSet::Left );
-                        Style::instance().renderHole( window, clipRect, x-8, y-1, w+9, h+2, options, tiles );
-                        return;
-
-                    } else {
-
-                        /*
-                        make button flat; disable focus and hover
-                        (this is handled when rendering the arrow
-                        This doesn't work for OpenOffice.
-                        */
-                        options |= Flat;
-                        options &= ~(Hover|Focus);
-                        Style::instance().animations().comboEngine().registerWidget( parent );
-
-                    }
-
-                    /*
-                    make button flat; disable focus and hover
-                    (this is handled when rendering the arrow)
-                    */
-                    options |= Flat;
-                    options &= ~(Hover|Focus);
-                }
-
-                if( Gtk::gtk_notebook_is_close_button(widget)) {
-
-                    if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
-                    { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
-
-                    if( Cairo::Surface surface = processTabCloseButton(widget,state) )
-                    {
-
-                        // hide previous image
-                        // show ours instead
-                        if( GtkWidget* image = Gtk::gtk_button_find_image(widget) )
-                        { gtk_widget_hide(image); }
-
-                        // center the button image
-                        const int height( cairo_surface_get_height( surface ) );
-                        const int width( cairo_surface_get_width( surface ) );
-                        x=x+(w-width)/2;
-                        y=y+(h-height)/2;
-
-                        // render the image
-                        Cairo::Context context( window, clipRect );
-                        cairo_set_source_surface( context, surface, x, y);
-                        cairo_paint(context);
-
-                    }
-
-                } else {
-
-                    if( style )
-                    { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
-
-                    // retrieve animation state and render accordingly
-                    // animations are disabled if widget is sunken
-                    const bool animated( (options&Flat) || !(options&Sunken) );
-                    const AnimationData data( animated ? Style::instance().animations().widgetStateEngine().get( widget, options ):AnimationData() );
-                    Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
+                    return;
 
                 }
 
             }
+
+            // combo button
+            if( ( parent = Gtk::gtk_parent_combo( widget ) ) )
+            {
+
+                StyleOptions options( Blend );
+                options |= StyleOptions( widget, state, shadow );
+
+                if( Style::instance().settings().applicationName().isOpenOffice() )
+                {
+
+                    // Hover doesn't work correctly in OpenOffice, so disable it
+                    options &= ~(Hover|Focus);
+                    TileSet::Tiles tiles( TileSet::Full );
+                    tiles &= ( ~TileSet::Left );
+                    Style::instance().renderHole( window, clipRect, x-8, y-1, w+9, h+2, options, tiles );
+                    return;
+
+                } else {
+
+                    /*
+                    make button flat; disable focus and hover
+                    (this is handled when rendering the arrow
+                    This doesn't work for OpenOffice.
+                    */
+                    options |= Flat;
+                    options &= ~(Hover|Focus);
+                    Style::instance().animations().comboEngine().registerWidget( parent );
+                    return;
+
+                }
+
+            }
+
+            // notebook close buttons
+            if( Gtk::gtk_notebook_is_close_button(widget))
+            {
+
+                if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
+                { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
+
+                if( Cairo::Surface surface = processTabCloseButton(widget,state) )
+                {
+
+                    // hide previous image
+                    // show ours instead
+                    if( GtkWidget* image = Gtk::gtk_button_find_image(widget) )
+                    { gtk_widget_hide(image); }
+
+                    // center the button image
+                    const int height( cairo_surface_get_height( surface ) );
+                    const int width( cairo_surface_get_width( surface ) );
+                    x=x+(w-width)/2;
+                    y=y+(h-height)/2;
+
+                    // render the image
+                    Cairo::Context context( window, clipRect );
+                    cairo_set_source_surface( context, surface, x, y);
+                    cairo_paint(context);
+
+                }
+
+                return;
+
+            }
+
+            #if GTK_CHECK_VERSION(2, 20, 0)
+            // tool itemgroup buttons
+            if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
+            #endif
+
+            // for google chrome, make GtkChromeButton appear as flat
+            if(
+                Style::instance().settings().applicationName().isGoogleChrome() &&
+                !Gtk::gtk_button_is_flat( widget ) &&
+                Gtk::g_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
+            { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
+
+            StyleOptions options( Blend );
+            options |= StyleOptions( widget, state, shadow );
+
+            // default case
+            if( style )
+            { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
+
+            // flat buttons
+            if( widget && Gtk::gtk_button_is_flat( widget ) )
+            {
+
+                // set button as flat and disable focus
+                options |= Flat;
+                options &= ~Focus;
+
+                // register to Hover engine and check state
+                Style::instance().animations().hoverEngine().registerWidget( widget );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                { options |= Hover; }
+
+            }
+
+            // retrieve animation state and render accordingly
+            // animations are disabled if widget is sunken
+            const bool animated( (options&Flat) || !(options&Sunken) );
+            const AnimationData data( animated ? Style::instance().animations().widgetStateEngine().get( widget, options ):AnimationData() );
+            Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
 
         } else if( d.isMenuBar() ) {
 
