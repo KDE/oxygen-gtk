@@ -2,7 +2,7 @@
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
 *
-* inspired notably from kdelibs/kdeui/color/kcolorscheme.h
+* inspired notably from kdelibs/kdeui/colors/kcolorscheme.h
 * Copyright (c) 2007 Matthew Woehlke <mw_triad@users.sourceforge.net>
 *
 * This  library is free  software; you can  redistribute it and/or
@@ -178,7 +178,6 @@ namespace Oxygen
         //__________________________________________________________________________________________
         std::ostream& operator << (std::ostream& out, const Effect& effect )
         {
-            out << std::endl;
             out << "Color=" << effect._color << std::endl;
             out << "ColorAmount=" << effect._colorEffectAmount << std::endl;
             out << "ColorEffect=" << effect._colorEffect << std::endl;
