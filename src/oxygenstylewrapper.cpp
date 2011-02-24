@@ -939,7 +939,10 @@ namespace Oxygen
 
         } else if( d.isMenuItem() ) {
 
-            StyleOptions options = StyleOptions( widget, state, shadow );
+            StyleOptions options( widget, state, shadow );
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
+            { options |= Blend; }
+
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options );
 
         } else if( d.isTroughAny() && GTK_IS_SCALE( widget ) ) {
