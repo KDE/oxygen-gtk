@@ -185,8 +185,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_button( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_BUTTON( parent ) ) return parent; }
 
         return 0L;
@@ -216,8 +215,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_tree_view( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_TREE_VIEW( parent ) ) return parent; }
 
         return 0L;
@@ -227,8 +225,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_combo( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_COMBO( parent ) ) return parent; }
 
         return 0L;
@@ -238,8 +235,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_combobox( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_COMBO_BOX( parent ) ) return parent; }
 
         return 0L;
@@ -249,8 +245,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_combobox_entry( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_COMBO_BOX_ENTRY( parent ) ) return parent; }
 
         return 0L;
@@ -260,8 +255,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_scrolled_window( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_SCROLLED_WINDOW( parent ) ) return parent; }
 
         return 0L;
@@ -271,8 +265,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_statusbar( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_STATUSBAR( parent ) ) return parent; }
 
         return 0L;
@@ -282,8 +275,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_notebook( GtkWidget* widget )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_NOTEBOOK( parent ) ) return parent; }
 
         return 0L;
@@ -293,8 +285,7 @@ namespace Oxygen
     bool Gtk::gtk_widget_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
     {
 
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( potentialParent==parent ) return true; }
 
         return false;
@@ -303,8 +294,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_parent_is_shadow_in( GtkWidget* widget )
     {
-        GtkWidget *parent( widget );
-        while( parent && (parent = gtk_widget_get_parent( parent ) ) )
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         {
             if( GTK_IS_FRAME( parent ) && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_IN ) return true;
             if( GTK_IS_SCROLLED_WINDOW( parent ) && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( parent ) ) == GTK_SHADOW_IN ) return true;
