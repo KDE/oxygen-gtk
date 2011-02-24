@@ -25,6 +25,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenpalette.h"
 
+#include <iostream>
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -81,6 +82,9 @@ namespace Oxygen
         //! color set
         /*! it is used to pass custom colors to painting routines */
         Palette::ColorSet _customColors;
+
+        //! streamer
+        friend std::ostream& operator << (std::ostream& out, const StyleOptions& options );
 
     };
 
