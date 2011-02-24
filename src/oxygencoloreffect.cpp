@@ -173,4 +173,21 @@ namespace Oxygen
 
     }
 
+    namespace ColorUtils
+    {
+        //__________________________________________________________________________________________
+        std::ostream& operator << (std::ostream& out, const Effect& effect )
+        {
+            out << std::endl;
+            out << "Color=" << effect._color << std::endl;
+            out << "ColorAmount=" << effect._colorEffectAmount << std::endl;
+            out << "ColorEffect=" << effect._colorEffect << std::endl;
+            out << "ContrastAmount=" << effect._contrastEffectAmount << std::endl;
+            out << "ContrastEffect=" << effect._contrastEffect << std::endl;
+            out << "IntensityAmount=" << effect._intensityEffectAmount << std::endl;
+            out << "IntensityEffect=" << effect._intensityEffect << std::endl;
+            return out;
+        }
+    }
+
 }

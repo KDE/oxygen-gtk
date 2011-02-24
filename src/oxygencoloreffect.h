@@ -26,6 +26,8 @@
 #include "oxygenpalette.h"
 #include "oxygenrgba.h"
 
+#include <iostream>
+
 namespace Oxygen
 {
 
@@ -118,6 +120,9 @@ namespace Oxygen
 
             //! enable state
             bool _enabled;
+
+            // streamer
+            friend std::ostream& operator << (std::ostream&, const Effect& );
 
         };
 
