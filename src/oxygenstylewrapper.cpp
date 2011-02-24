@@ -140,6 +140,9 @@ namespace Oxygen
             // render background gradient
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
+            // register to toolbar state engine and deal with toolbutton animations
+            Style::instance().animations().toolBarStateEngine().registerWidget( widget );
+
             return;
 
         } else if( d.isViewportBin() ) {
@@ -162,16 +165,22 @@ namespace Oxygen
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
-                return;
+
+            } else {
+
+                // make sure that widget is registered to scrolledBarEngine,
+                // so that background gets updated properly
+                if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
+                { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
+
+                // render background gradient
+                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+
             }
 
-            // make sure that widget is registered to scrolledBarEngine,
-            // so that background gets updated properly
-            if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
-            { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
+            // register to toolbar state engine and deal with toolbutton animations
+            Style::instance().animations().toolBarStateEngine().registerWidget( widget );
 
-            // render background gradient
-            Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
             return;
 
         } else if( d.isTrough() ) {
@@ -878,10 +887,10 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // register to ToolBarState engine
-                if( GtkWidget* parent = Gtk::gtk_parent_toolbar( widget ) )
+                if( GtkWidget* parent = Style::instance().animations().toolBarStateEngine().findParent( widget ) )
                 {
 
-                    Style::instance().animations().toolBarStateEngine().registerWidget( parent );
+                    // register child
                     Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
 
                     useWidgetState = false;

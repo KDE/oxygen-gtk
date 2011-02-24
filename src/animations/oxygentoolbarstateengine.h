@@ -98,6 +98,15 @@ namespace Oxygen
         //!@name accessors
         //@{
 
+        //! returns parent that matches a given child, and is in list
+        GtkWidget* findParent( GtkWidget* widget )
+        {
+            for( GtkWidget *parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
+            { if( data().contains( parent ) ) return parent; }
+
+            return 0L;
+        }
+
         //! true if animated
         bool isAnimated( GtkWidget* widget )
         { return data().value( widget ).isAnimated(); }
