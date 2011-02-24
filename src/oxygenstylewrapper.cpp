@@ -53,6 +53,32 @@ namespace Oxygen
     GType StyleWrapper::_type = 0L;
 
     //___________________________________________________________________________________________________________
+    static void draw_animated_button(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
+            "widget=%s, primitive=animated_button",
+            G_OBJECT_TYPE_NAME( widget ) );
+        #endif
+
+        ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+        engine.registerWidget(widget);
+        if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
+        {
+            const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+            const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
+        }
+
+    }
+
+    //___________________________________________________________________________________________________________
     static void draw_flat_box(
         GtkStyle* style,
         GdkWindow* window,
@@ -140,8 +166,8 @@ namespace Oxygen
             // render background gradient
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
-            // register to toolbar state engine and deal with toolbutton animations
-            Style::instance().animations().toolBarStateEngine().registerWidget( widget );
+            // also draw possible animated tool button
+            draw_animated_button( window, clipRect, widget );
 
             return;
 
@@ -178,8 +204,8 @@ namespace Oxygen
 
             }
 
-            // register to toolbar state engine and deal with toolbutton animations
-            Style::instance().animations().toolBarStateEngine().registerWidget( widget );
+            // also draw possible animated tool button
+            draw_animated_button( window, clipRect, widget );
 
             return;
 
@@ -954,21 +980,8 @@ namespace Oxygen
             Style::instance().windowManager().registerWidget( widget );
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
-            if( GTK_IS_TOOLBAR( widget ) )
-            {
-                ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
-                engine.registerWidget(widget);
-                if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
-                {
-                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
-                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
-                    StyleOptions options( Flat );
-                    options |= Hover;
-                    Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
-                }
-
-            }
-
+            // also draw possible animated tool button
+            draw_animated_button( window, clipRect, widget );
             return;
 
         } else if( d.isMenu() ) {
