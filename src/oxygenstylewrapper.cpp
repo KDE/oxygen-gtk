@@ -958,7 +958,7 @@ namespace Oxygen
             {
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
                 engine.registerWidget(widget);
-                if( engine.isAnimated( widget, AnimationPrevious ) && !gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
+                if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
                 {
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
