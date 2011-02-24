@@ -504,12 +504,22 @@ namespace Oxygen
         _palette.setColor( Palette::Active, Palette::ActiveWindowBackground, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeBackground" ) ) );
         _palette.setColor( Palette::Active, Palette::InactiveWindowBackground, ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( "[WM]", "inactiveBackground" ) ) );
 
+        // load effects
+        const ColorUtils::Effect disabledEffect( Palette::Disabled, _kdeGlobals );
+        const ColorUtils::Effect inactiveEffect( Palette::Inactive, _kdeGlobals );
+
         // generate inactive and disabled palette from active, applying effects from kdeglobals
         _inactiveChangeSelectionColor = ( _kdeGlobals.getOption( "[ColorEffects:Inactive]", "ChangeSelectionColor" ).toVariant<std::string>( "false" ) == "true" );
-        _palette.generate( Palette::Active, Palette::Inactive, ColorUtils::Effect( Palette::Inactive, _kdeGlobals ), _inactiveChangeSelectionColor );
-        _palette.generate( Palette::Active, Palette::Disabled, ColorUtils::Effect( Palette::Disabled, _kdeGlobals ) );
+        _palette.generate( Palette::Active, Palette::Inactive, inactiveEffect, _inactiveChangeSelectionColor );
+        _palette.generate( Palette::Active, Palette::Disabled, disabledEffect );
 
         #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::loadKdePalette - disabled effect: " << std::endl;
+        std::cerr << disabledEffect << std::endl;
+
+        std::cerr << "Oxygen::QtSettings::loadKdePalette - inactive effect: " << std::endl;
+        std::cerr << inactiveEffect << std::endl;
+
         std::cerr << "Oxygen::QtSettings::loadKdePalette - palette: " << std::endl;
         std::cerr << _palette << std::endl;
         #endif

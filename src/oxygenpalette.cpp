@@ -81,10 +81,12 @@ namespace Oxygen
         if( changeSelectionColor ) destination[Selected] = effect.color( ColorUtils::tint( source[Window], source[Selected], 0.4 ) );
         else destination[Selected] = effect.color( source[Selected] );
 
-        // apply effects to hover and focus and text
-        destination[WindowText] = effect.color(source[WindowText], source[Window] );
-        destination[ButtonText] = effect.color(source[ButtonText], source[Button] );
-        destination[Text] = effect.color(source[Text], source[Base] );
+        // apply effects to text
+        destination[WindowText] = effect.color( effect.color( source[WindowText], source[Window] ) );
+        destination[ButtonText] = effect.color( effect.color( source[ButtonText], source[Button] ) );
+        destination[Text] = effect.color( effect.color(source[Text], source[Base] ) );
+
+        // apply effects to focus
         destination[Focus] = effect.color(source[Focus], source[Base] );
         destination[Hover] = effect.color(source[Hover], source[Base] );
 
