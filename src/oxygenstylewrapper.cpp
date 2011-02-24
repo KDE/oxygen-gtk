@@ -962,8 +962,11 @@ namespace Oxygen
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    StyleOptions options( Hover );
+                    if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
+                    { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, Hover, data );
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options, data );
 
                 }
 
@@ -1075,7 +1078,10 @@ namespace Oxygen
 
             }
 
-            StyleOptions options = StyleOptions( widget, state, shadow );
+            StyleOptions options( widget, state, shadow );
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
+            { options |= Blend; }
+
             Style::instance().renderMenuItemRect( window, clipRect, widget, x, y, w, h, options, data );
 
         } else if( d.isTroughAny() && GTK_IS_SCALE( widget ) ) {

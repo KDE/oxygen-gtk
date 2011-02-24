@@ -1676,6 +1676,7 @@ namespace Oxygen
         const AnimationData& data )
     {
         ColorUtils::Rgba base;
+
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
         const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
@@ -1684,7 +1685,8 @@ namespace Oxygen
         if( wh > 0 )
         {
             if( isInMenu ) base = ColorUtils::menuBackgroundColor( ColorUtils::midColor( settings().palette().color( Palette::Window ) ), wh, y+wy+h/2 );
-            else base = ColorUtils::backgroundColor( ColorUtils::midColor( settings().palette().color( Palette::Window ) ), wh, y+wy+h/2 );
+            else if( options&Blend ) base = ColorUtils::backgroundColor( ColorUtils::midColor( settings().palette().color( Palette::Window ) ), wh, y+wy+h/2 );
+            else base = ColorUtils::midColor( settings().palette().color( Palette::Window ) );
 
         } else {
 
