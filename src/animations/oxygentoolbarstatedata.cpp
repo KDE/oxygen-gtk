@@ -223,6 +223,10 @@ namespace Oxygen
 
         }
 
+        /* Add extra margin to rect. FIXME: this should be triggered from widget's metrics */
+        if( Gtk::gdk_rectangle_is_valid( &rect ) )
+        { rect.x -= 2; rect.y -= 2; rect.width += 4; rect.height += 4; }
+
         return rect;
 
     }
