@@ -78,6 +78,10 @@ namespace Oxygen
         */
         bool gdk_map_to_toplevel( GdkWindow*, GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
 
+        //! translate origin of child window into parent
+        /*! returns true on success */
+        bool gdk_window_translate_origin( GdkWindow*, GdkWindow*, gint*, gint* );
+
         //! map widget origin to top level
         /*!
         x and y correspond to (0,0) maped to toplevel window;

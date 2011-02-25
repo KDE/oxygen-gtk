@@ -819,6 +819,30 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gdk_window_translate_origin( GdkWindow* parent, GdkWindow* child, gint* x, gint* y )
+    {
+        if( x ) *x = 0;
+        if( y ) *y = 0;
+        if( !( parent && child ) ) return false;
+        while( child && GDK_IS_WINDOW( child ) &&
+            child != parent &&
+            gdk_window_get_window_type( child ) != GDK_WINDOW_TOPLEVEL &&
+            gdk_window_get_window_type( child ) != GDK_WINDOW_TEMP
+            )
+        {
+            gint xloc;
+            gint yloc;
+            gdk_window_get_position( child, &xloc, &yloc );
+            if( x ) *x += xloc;
+            if( y ) *y += yloc;
+            child = gdk_window_get_parent( child );
+        }
+
+        return( child == parent );
+
+    }
+
+    //________________________________________________________
     void Gtk::gdk_toplevel_get_size( GdkWindow* window, gint* w, gint* h )
     {
 
@@ -963,6 +987,7 @@ namespace Oxygen
 
     }
 
+    //___________________________________________________________
     GtkWidget* Gtk::dialog_find_button(GtkDialog* dialog,gint response_id)
     {
         GList *children, *tmp_list;
