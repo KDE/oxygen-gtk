@@ -80,41 +80,39 @@ namespace Oxygen
     void Animations::initialize( const QtSettings& settings )
     {
 
-        // pass applicationName to engines
-        widgetStateEngine().setApplicationName( settings.applicationName() );
-        arrowStateEngine().setApplicationName( settings.applicationName() );
-        scrollBarStateEngine().setApplicationName( settings.applicationName() );
-        tabWidgetStateEngine().setApplicationName( settings.applicationName() );
-        treeViewStateEngine().setApplicationName( settings.applicationName() );
-        menuBarStateEngine().setApplicationName( settings.applicationName() );
-        menuStateEngine().setApplicationName( settings.applicationName() );
-        toolBarStateEngine().setApplicationName( settings.applicationName() );
-
         // pass animations configuration to engines
+        widgetStateEngine().setApplicationName( settings.applicationName() );
         widgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         widgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
+        arrowStateEngine().setApplicationName( settings.applicationName() );
         arrowStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         arrowStateEngine().setDuration( settings.genericAnimationsDuration() );
 
+        scrollBarStateEngine().setApplicationName( settings.applicationName() );
         scrollBarStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         scrollBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
+        tabWidgetStateEngine().setApplicationName( settings.applicationName() );
         tabWidgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         tabWidgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
+        treeViewStateEngine().setApplicationName( settings.applicationName() );
         treeViewStateEngine().setEnabled( settings.genericAnimationsEnabled() );
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         // for now, only MB_FADE animation mode is supported for menubar animations
+        menuBarStateEngine().setApplicationName( settings.applicationName() );
         menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
         // for now, only MB_FADE animation mode is supported for menubar animations
+        menuStateEngine().setApplicationName( settings.applicationName() );
         menuStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
         menuStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
         // for now, only TB_FADE animation mode is supported for toolbar animations
+        toolBarStateEngine().setApplicationName( settings.applicationName() );
         toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == QtSettings::TB_FADE );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
