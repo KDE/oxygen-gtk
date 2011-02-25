@@ -116,7 +116,7 @@ namespace Oxygen
         protected:
 
         //! update items
-        void updateItems( GdkEventType );
+        void updateItems( void );
 
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, bool );

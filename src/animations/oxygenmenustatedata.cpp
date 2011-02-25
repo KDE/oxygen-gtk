@@ -71,12 +71,10 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MenuStateData::updateItems( GdkEventType type )
+    void MenuStateData::updateItems( void )
     {
 
         if( !_target ) return;
-
-        const bool isLeaveEvent( type == GDK_LEAVE_NOTIFY );
 
         gint xPointer, yPointer;
         gdk_window_get_pointer( gtk_widget_get_window( _target ), &xPointer, &yPointer, 0L );
@@ -121,10 +119,7 @@ namespace Oxygen
 
                 activeFound = true;
                 if( state != GTK_STATE_PRELIGHT )
-                {
-                    updateState( childWidget, childWidget->allocation, true );
-                    if( !isLeaveEvent ) gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
-                }
+                { updateState( childWidget, childWidget->allocation, true ); }
 
             } else if( state != GTK_STATE_NORMAL ) {
 
@@ -138,10 +133,6 @@ namespace Oxygen
         // fade-out current
         if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
         { updateState( _current._widget, _current._rect, false ); }
-
-        // disable previous active widget, if either another active widget was found, or this one is not active
-        if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
-        { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
 
         return;
 
@@ -273,14 +264,14 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MenuStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
+        static_cast<MenuStateData*>( pointer )->updateItems();
         return FALSE;
     }
 
     //________________________________________________________________________________
     gboolean MenuStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems( GDK_LEAVE_NOTIFY );
+        static_cast<MenuStateData*>( pointer )->updateItems();
         return FALSE;
     }
 
