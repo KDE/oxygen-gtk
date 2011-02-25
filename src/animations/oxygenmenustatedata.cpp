@@ -83,8 +83,8 @@ namespace Oxygen
         GdkWindow* childWindow( 0L );
 
         // reset offset
-        _xOffset = 0;
-        _yOffset = 0;
+        int xOffset(0);
+        int yOffset(0);
 
         bool activeFound( false );
         GtkWidget *activeWidget( 0L );
@@ -105,21 +105,21 @@ namespace Oxygen
             {
 
                 childWindow = gtk_widget_get_window( childWidget );
-                Gtk::gdk_window_translate_origin( window, childWindow, &_xOffset, &_yOffset );
+                Gtk::gdk_window_translate_origin( window, childWindow, &xOffset, &yOffset );
 
             }
 
             // get allocation and add offsets
             GtkAllocation allocation( childWidget->allocation );
-            allocation.x += _xOffset;
-            allocation.y += _yOffset;
+            allocation.x += xOffset;
+            allocation.y += yOffset;
 
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
                 activeFound = true;
                 if( state != GTK_STATE_PRELIGHT )
-                { updateState( childWidget, childWidget->allocation, true ); }
+                { updateState( childWidget, childWidget->allocation, xOffset, yOffset, true ); }
 
             } else if( state != GTK_STATE_NORMAL ) {
 
@@ -132,7 +132,7 @@ namespace Oxygen
 
         // fade-out current
         if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
-        { updateState( _current._widget, _current._rect, false ); }
+        { updateState( _current._widget, _current._rect, _current._xOffset, _current._yOffset, false ); }
 
         return;
 
@@ -159,7 +159,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, bool state )
+    bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset, bool state )
     {
 
         // do nothing if animations are disabled
@@ -177,7 +177,11 @@ namespace Oxygen
                 if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
                 if( _previous.isValid() )
-                { _dirtyRect = _previous._rect; }
+                {
+                    _dirtyRect = _previous._rect;
+                    _dirtyRect.x += _previous._xOffset;
+                    _dirtyRect.y += _previous._yOffset;
+                }
 
                 // move current to previous
                 _previous.copy( _current );
@@ -185,7 +189,7 @@ namespace Oxygen
 
             // assign new widget to current and start animation
             const bool animate( !_current.isValid() );
-            _current.update( widget, rect );
+            _current.update( widget, rect, xOffset, yOffset );
             if( _current.isValid() )
             {
                 if( animate ) _current._timeLine.start();
@@ -203,7 +207,11 @@ namespace Oxygen
             if( _previous._timeLine.isRunning() ) _previous._timeLine.stop();
 
             if( _previous.isValid() )
-            { _dirtyRect = _previous._rect; }
+            {
+                _dirtyRect = _previous._rect;
+                _dirtyRect.x += _previous._xOffset;
+                _dirtyRect.y += _previous._yOffset;
+            }
 
             // move current to previous; clear current, and animate
             _previous.copy( _current );
@@ -221,20 +229,31 @@ namespace Oxygen
     {
 
         GdkRectangle rect( Gtk::gdk_rectangle() );
-
-        const GdkRectangle previousRect( _previous._rect );
-        const GdkRectangle currentRect( _current._rect );
+        GdkRectangle previousRect( _previous._rect );
+        GdkRectangle currentRect( _current._rect );
 
         if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
         {
+
+            previousRect.x += _previous._xOffset;
+            previousRect.y += _previous._yOffset;
+
+            currentRect.x += _current._xOffset;
+            currentRect.y += _current._yOffset;
 
             gdk_rectangle_union( &previousRect, &currentRect, &rect );
 
         } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
 
+            previousRect.x += _previous._xOffset;
+            previousRect.y += _previous._yOffset;
+
             rect = previousRect;
 
         } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
+
+            currentRect.x += _current._xOffset;
+            currentRect.y += _current._yOffset;
 
             rect = currentRect;
 
@@ -243,18 +262,12 @@ namespace Oxygen
         // also union with dirty rect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
+
             if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
             else rect = _dirtyRect;
 
             _dirtyRect = Gtk::gdk_rectangle();
 
-        }
-
-        // add offsets
-        if( Gtk::gdk_rectangle_is_valid( &rect ) )
-        {
-            rect.x += _xOffset;
-            rect.y += _yOffset;
         }
 
         return rect;

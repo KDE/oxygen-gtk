@@ -46,9 +46,7 @@ namespace Oxygen
         MenuStateData( void ):
             _target( 0L ),
             _animationsEnabled( true ),
-            _dirtyRect( Gtk::gdk_rectangle() ),
-            _xOffset(0),
-            _yOffset(0)
+            _dirtyRect( Gtk::gdk_rectangle() )
             {}
 
         //! destructor
@@ -119,7 +117,7 @@ namespace Oxygen
         void updateItems( void );
 
         //! update state for given widget
-        bool updateState( GtkWidget*, const GdkRectangle&, bool );
+        bool updateState( GtkWidget*, const GdkRectangle&, int, int, bool );
 
         //! true if menu item is active (pressed down)
         bool menuItemIsActive( GtkWidget* ) const;
@@ -136,7 +134,9 @@ namespace Oxygen
             //! constructor
             explicit Data( void ):
                 _widget( 0L ),
-                _rect( Gtk::gdk_rectangle() )
+                _rect( Gtk::gdk_rectangle() ),
+                _xOffset( 0 ),
+                _yOffset( 0 )
             {}
 
             //! update data
@@ -144,13 +144,17 @@ namespace Oxygen
             {
                 _widget = other._widget;
                 _rect = other._rect;
+                _xOffset = other._xOffset;
+                _yOffset = other._yOffset;
             }
 
             //! update data
-            void update( GtkWidget* widget, const GdkRectangle& rect )
+            void update( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset )
             {
                 _widget = widget;
                 _rect = rect;
+                _xOffset = xOffset;
+                _yOffset = yOffset;
             }
 
             //! true if valid
@@ -173,6 +177,10 @@ namespace Oxygen
 
             //! rectangle
             GdkRectangle _rect;
+
+            //! offset between paint window and menu window
+            int _xOffset;
+            int _yOffset;
 
         };
 
@@ -228,12 +236,6 @@ namespace Oxygen
         Data _previous;
         Data _current;
 
-        //@}
-
-        //!@name offsets between painting window and menu window
-        //@{
-        int _xOffset;
-        int _yOffset;
         //@}
 
     };
