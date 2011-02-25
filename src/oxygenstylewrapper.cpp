@@ -1076,7 +1076,14 @@ namespace Oxygen
                 if( Style::instance().animations().menuBarStateEngine().widget( parent, AnimationCurrent ) == widget )
                 { data = Style::instance().animations().menuBarStateEngine().animationData( parent, AnimationCurrent ); }
 
+            } else if( GTK_IS_MENU( parent ) ) {
+
+                Style::instance().animations().menuStateEngine().registerWidget(parent );
+                if( Style::instance().animations().menuStateEngine().widget( parent, AnimationCurrent ) == widget )
+                { data = Style::instance().animations().menuStateEngine().animationData( parent, AnimationCurrent ); }
+
             }
+
 
             StyleOptions options( widget, state, shadow );
             if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
