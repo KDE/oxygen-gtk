@@ -3245,7 +3245,7 @@ namespace Oxygen
 
             } else if( data._mode & (AnimationHover|AnimationFocus) ) {
 
-                return ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
+                return ColorUtils::alphaColor( settings().palette().color( Palette::Focus ), data._opacity );
 
             } else if( options&(Focus|Hover) ) {
 
