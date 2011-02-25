@@ -736,10 +736,8 @@ namespace Oxygen
             _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
         }
 
-        if( _kdeGlobals.hasOption( "[WM]", "activeFont" ) )
-        {
-            _WMFont=FontInfo::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeFont", "Sans Serif,8,-1,5,50,0,0,0,0,0" ) );
-        }
+        // don't check for section and tag presence - use default font if not present
+        _WMFont=FontInfo::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeFont", "Sans Serif,8,-1,5,50,0,0,0,0,0" ) );
 
     }
 
