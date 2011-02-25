@@ -1052,6 +1052,26 @@ namespace Oxygen
 
             }
 
+            // check animation state
+            if( GTK_IS_MENU( widget ) )
+            {
+
+                MenuStateEngine& engine( Style::instance().animations().menuStateEngine() );
+                engine.registerWidget(widget);
+                if( engine.isAnimated( widget, AnimationPrevious ) )
+                {
+
+                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    StyleOptions options( Hover );
+
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options, data );
+
+                }
+
+            }
+
+
         } else if( d.isMenuScrollArrow() ) {
 
             return;
@@ -1076,7 +1096,14 @@ namespace Oxygen
                 if( Style::instance().animations().menuBarStateEngine().widget( parent, AnimationCurrent ) == widget )
                 { data = Style::instance().animations().menuBarStateEngine().animationData( parent, AnimationCurrent ); }
 
+            } else if( GTK_IS_MENU( parent ) ) {
+
+                Style::instance().animations().menuStateEngine().registerWidget(parent );
+                if( Style::instance().animations().menuStateEngine().widget( parent, AnimationCurrent ) == widget )
+                { data = Style::instance().animations().menuStateEngine().animationData( parent, AnimationCurrent ); }
+
             }
+
 
             StyleOptions options( widget, state, shadow );
             if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
