@@ -56,6 +56,7 @@ namespace Oxygen
         registerEngine( _tabWidgetStateEngine = new TabWidgetStateEngine( this ) );
         registerEngine( _treeViewStateEngine = new TreeViewStateEngine( this ) );
         registerEngine( _menuBarStateEngine = new MenuBarStateEngine( this ) );
+        registerEngine( _menuStateEngine = new MenuStateEngine( this ) );
         registerEngine( _toolBarStateEngine = new ToolBarStateEngine( this ) );
 
     }
@@ -86,6 +87,8 @@ namespace Oxygen
         tabWidgetStateEngine().setApplicationName( settings.applicationName() );
         treeViewStateEngine().setApplicationName( settings.applicationName() );
         menuBarStateEngine().setApplicationName( settings.applicationName() );
+        menuStateEngine().setApplicationName( settings.applicationName() );
+        toolBarStateEngine().setApplicationName( settings.applicationName() );
 
         // pass animations configuration to engines
         widgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
@@ -106,6 +109,10 @@ namespace Oxygen
         // for now, only MB_FADE animation mode is supported for menubar animations
         menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
+
+        // for now, only MB_FADE animation mode is supported for menubar animations
+        menuStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
+        menuStateEngine().setDuration( settings.menuBarAnimationsDuration() );
 
         // for now, only TB_FADE animation mode is supported for toolbar animations
         toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == QtSettings::TB_FADE );

@@ -32,6 +32,7 @@
 #include "oxygenhoverengine.h"
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenubarstateengine.h"
+#include "oxygenmenustateengine.h"
 #include "oxygenscrollbarengine.h"
 #include "oxygenscrollbarstateengine.h"
 #include "oxygenscrolledwindowengine.h"
@@ -160,6 +161,10 @@ namespace Oxygen
         MenuBarStateEngine& menuBarStateEngine( void ) const
         { return *_menuBarStateEngine; }
 
+        //! menu mouse-over animation engine
+        MenuStateEngine& menuStateEngine( void ) const
+        { return *_menuStateEngine; }
+
         //! toolbar mouse-over animation engine
         ToolBarStateEngine& toolBarStateEngine( void ) const
         { return *_toolBarStateEngine; }
@@ -245,6 +250,9 @@ namespace Oxygen
 
         //! menubar mouse-over animation engine
         MenuBarStateEngine* _menuBarStateEngine;
+
+        //! menu mouse-over animation engine
+        MenuStateEngine* _menuStateEngine;
 
         //! toolbar mouse-over animation engine
         ToolBarStateEngine* _toolBarStateEngine;
