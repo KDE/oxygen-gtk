@@ -30,6 +30,7 @@
 #include "oxygenmenustatedata.h"
 #include "../oxygengtkutils.h"
 
+#include <cassert>
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -82,7 +83,10 @@ namespace Oxygen
 
         GdkWindow* window( gtk_widget_get_window( _target ) );
         GdkWindow* childWindow( 0L );
-        int xOffset(0), yOffset(0);
+
+        // reset offset
+        _xOffset = 0;
+        _yOffset = 0;
 
         bool activeFound( false );
         GtkWidget *activeWidget( 0L );
@@ -98,16 +102,19 @@ namespace Oxygen
             // do nothing for disabled child
             if( state == GTK_STATE_INSENSITIVE ) continue;
 
+            // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
             {
+
                 childWindow = gtk_widget_get_window( childWidget );
-                updateOffsets( window, childWindow, xOffset, yOffset );
+                Gtk::gdk_window_translate_origin( window, childWindow, &_xOffset, &_yOffset );
+
             }
 
-            // get allocation and offsets
+            // get allocation and add offsets
             GtkAllocation allocation( childWidget->allocation );
-            allocation.x += xOffset;
-            allocation.y += yOffset;
+            allocation.x += _xOffset;
+            allocation.y += _yOffset;
 
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
@@ -115,7 +122,7 @@ namespace Oxygen
                 activeFound = true;
                 if( state != GTK_STATE_PRELIGHT )
                 {
-                    updateState( childWidget, allocation, true );
+                    updateState( childWidget, childWidget->allocation, true );
                     if( !isLeaveEvent ) gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
                 }
 
@@ -135,31 +142,6 @@ namespace Oxygen
         // disable previous active widget, if either another active widget was found, or this one is not active
         if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
         { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
-
-        return;
-
-    }
-
-    //________________________________________________________________________________
-    void MenuStateData::updateOffsets( GdkWindow* parent, GdkWindow* child, int& x, int& y ) const
-    {
-        x = 0;
-        y = 0;
-        if( !( parent && child ) ) return;
-
-        while( child && GDK_IS_WINDOW( child ) &&
-            child != parent &&
-            gdk_window_get_window_type( child ) != GDK_WINDOW_TOPLEVEL &&
-            gdk_window_get_window_type( child ) != GDK_WINDOW_TEMP
-            )
-        {
-            gint xloc;
-            gint yloc;
-            gdk_window_get_position( child, &xloc, &yloc );
-            x += xloc;
-            y += yloc;
-            child = gdk_window_get_parent( child );
-        }
 
         return;
 
@@ -275,6 +257,13 @@ namespace Oxygen
 
             _dirtyRect = Gtk::gdk_rectangle();
 
+        }
+
+        // add offsets
+        if( Gtk::gdk_rectangle_is_valid( &rect ) )
+        {
+            rect.x += _xOffset;
+            rect.y += _yOffset;
         }
 
         return rect;

@@ -46,7 +46,9 @@ namespace Oxygen
         MenuStateData( void ):
             _target( 0L ),
             _animationsEnabled( true ),
-            _dirtyRect( Gtk::gdk_rectangle() )
+            _dirtyRect( Gtk::gdk_rectangle() ),
+            _xOffset(0),
+            _yOffset(0)
             {}
 
         //! destructor
@@ -116,9 +118,6 @@ namespace Oxygen
         //! update items
         void updateItems( GdkEventType );
 
-        //! update offset between child window and parent
-        void updateOffsets( GdkWindow*, GdkWindow*, int&, int& ) const;
-        
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, bool );
 
@@ -229,6 +228,12 @@ namespace Oxygen
         Data _previous;
         Data _current;
 
+        //@}
+
+        //!@name offsets between painting window and menu window
+        //@{
+        int _xOffset;
+        int _yOffset;
         //@}
 
     };
