@@ -75,13 +75,14 @@ namespace Oxygen
 
         if( !_target ) return;
 
-        if( GTK_IS_MENU( _target ) )
-        { std::cerr << "Oxygen::MenuStateData::updateItems - type: " << type << std::endl; }
-
         const bool isLeaveEvent( type == GDK_LEAVE_NOTIFY );
 
         gint xPointer, yPointer;
         gdk_window_get_pointer( gtk_widget_get_window( _target ), &xPointer, &yPointer, 0L );
+
+        GdkWindow* window( gtk_widget_get_window( _target ) );
+        GdkWindow* childWindow( 0L );
+        int xOffset(0), yOffset(0);
 
         bool activeFound( false );
         GtkWidget *activeWidget( 0L );
@@ -97,7 +98,17 @@ namespace Oxygen
             // do nothing for disabled child
             if( state == GTK_STATE_INSENSITIVE ) continue;
 
-            const GtkAllocation& allocation( childWidget->allocation );
+            if( childWindow != gtk_widget_get_window( childWidget ) )
+            {
+                childWindow = gtk_widget_get_window( childWidget );
+                updateOffsets( window, childWindow, xOffset, yOffset );
+            }
+
+            // get allocation and offsets
+            GtkAllocation allocation( childWidget->allocation );
+            allocation.x += xOffset;
+            allocation.y += yOffset;
+
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
@@ -124,6 +135,31 @@ namespace Oxygen
         // disable previous active widget, if either another active widget was found, or this one is not active
         if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
         { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
+    void MenuStateData::updateOffsets( GdkWindow* parent, GdkWindow* child, int& x, int& y ) const
+    {
+        x = 0;
+        y = 0;
+        if( !( parent && child ) ) return;
+
+        while( child && GDK_IS_WINDOW( child ) &&
+            child != parent &&
+            gdk_window_get_window_type( child ) != GDK_WINDOW_TOPLEVEL &&
+            gdk_window_get_window_type( child ) != GDK_WINDOW_TEMP
+            )
+        {
+            gint xloc;
+            gint yloc;
+            gdk_window_get_position( child, &xloc, &yloc );
+            x += xloc;
+            y += yloc;
+            child = gdk_window_get_parent( child );
+        }
 
         return;
 

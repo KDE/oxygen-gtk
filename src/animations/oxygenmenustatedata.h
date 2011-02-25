@@ -116,6 +116,9 @@ namespace Oxygen
         //! update items
         void updateItems( GdkEventType );
 
+        //! update offset between child window and parent
+        void updateOffsets( GdkWindow*, GdkWindow*, int&, int& ) const;
+        
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, bool );
 
