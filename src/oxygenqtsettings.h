@@ -224,6 +224,17 @@ namespace Oxygen
         MenuBarAnimationType menuBarAnimationType( void ) const
         { return _menuBarAnimationType; }
 
+
+        enum MenuAnimationType
+        {
+            ME_NONE,
+            ME_FADE,
+            ME_FOLLOW_MOUSE
+        };
+
+        MenuAnimationType menuAnimationType( void ) const
+        { return _menuAnimationType; }
+
         enum ToolBarAnimationType
         {
             TB_NONE,
@@ -244,6 +255,9 @@ namespace Oxygen
 
         int menuBarAnimationsDuration( void ) const
         { return _menuBarAnimationsDuration; }
+
+        int menuAnimationsDuration( void ) const
+        { return _menuAnimationsDuration; }
 
         //@}
 
@@ -467,6 +481,9 @@ namespace Oxygen
         //! menubar animations
         MenuBarAnimationType _menuBarAnimationType;
 
+        //! menu animations
+        MenuAnimationType _menuAnimationType;
+
         //! toolbar animation type
         ToolBarAnimationType _toolBarAnimationType;
 
@@ -475,6 +492,9 @@ namespace Oxygen
 
         //! menubar animations
         int _menuBarAnimationsDuration;
+
+        //! menu animations
+        int _menuAnimationsDuration;
 
         //@}
 

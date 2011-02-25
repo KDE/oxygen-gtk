@@ -70,9 +70,11 @@ namespace Oxygen
         _startDragTime( 500 ),
         _genericAnimationsEnabled( true ),
         _menuBarAnimationType( MB_FADE ),
+        _menuAnimationType( ME_FADE ),
         _toolBarAnimationType( TB_FADE ),
         _genericAnimationsDuration( 150 ),
         _menuBarAnimationsDuration( 150 ),
+        _menuAnimationsDuration( 150 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _activeShadowConfiguration( Palette::Active ),
@@ -845,8 +847,14 @@ namespace Oxygen
         else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = MB_FADE;
         else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = MB_FOLLOW_MOUSE;
 
+        // menubar animation type
+        std::string menuAnimationType( oxygen.getValue( "[Style]", "MenuAnimationType", "ME_FADE") );
+        if( menuAnimationType == "ME_NONE" ) _menuAnimationType = ME_NONE;
+        else if( menuAnimationType == "ME_FADE" ) _menuAnimationType = ME_FADE;
+        else if( menuAnimationType == "ME_FOLLOW_MOUSE" ) _menuAnimationType = ME_FOLLOW_MOUSE;
+
         // toolbar animation type
-        std::string toolBarAnimationType( oxygen.getValue( "[Style]", "ToolBarAnimationType", "MB_FADE") );
+        std::string toolBarAnimationType( oxygen.getValue( "[Style]", "ToolBarAnimationType", "TB_FADE") );
         if( toolBarAnimationType == "TB_NONE" ) _toolBarAnimationType = TB_NONE;
         else if( toolBarAnimationType == "TB_FADE" ) _toolBarAnimationType = TB_FADE;
         else if( toolBarAnimationType == "TB_FOLLOW_MOUSE" ) _toolBarAnimationType = TB_FOLLOW_MOUSE;
@@ -854,6 +862,7 @@ namespace Oxygen
         // animations duration
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
         _menuBarAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarAnimationsDuration" ).toVariant<int>(150);
+        _menuAnimationsDuration = oxygen.getOption( "[Style]", "MenuAnimationsDuration" ).toVariant<int>(150);
 
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
