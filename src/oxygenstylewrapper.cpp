@@ -957,8 +957,17 @@ namespace Oxygen
 
                 MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
                 engine.registerWidget(widget);
-                if( engine.isAnimated( widget, AnimationPrevious ) )
+                if( engine.animatedRectangleIsValid( widget ) )
                 {
+
+                    const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+                    StyleOptions options( Hover );
+                    if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
+                    { options |= Blend; }
+
+                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options );
+
+                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
@@ -1092,9 +1101,17 @@ namespace Oxygen
             if( GTK_IS_MENU_BAR( parent ) )
             {
 
-                Style::instance().animations().menuBarStateEngine().registerWidget(parent );
-                if( Style::instance().animations().menuBarStateEngine().widget( parent, AnimationCurrent ) == widget )
-                { data = Style::instance().animations().menuBarStateEngine().animationData( parent, AnimationCurrent ); }
+                MenuBarStateEngine& engine = Style::instance().animations().menuBarStateEngine();
+                engine.registerWidget( parent );
+                if( engine.animatedRectangleIsValid( parent ) )
+                {
+                    return;
+
+                } else if( engine.widget( parent, AnimationCurrent ) == widget ) {
+
+                    data = engine.animationData( parent, AnimationCurrent );
+
+                }
 
             } else if( GTK_IS_MENU( parent ) ) {
 

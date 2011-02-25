@@ -45,7 +45,9 @@ namespace Oxygen
         //! constructor
         MenuBarStateEngine( Animations* parent ):
             GenericEngine<MenuBarStateData>( parent ),
-            _animationsEnabled( true )
+            _animationsEnabled( true ),
+            _followMouse( false ),
+            _followMouseAnimationDuration( 80 )
             {}
 
         //! destructor
@@ -87,6 +89,17 @@ namespace Oxygen
             return false;
         }
 
+        //! enable follow-mouse animation
+        bool setFollowMouse( bool value )
+        {
+            if( _followMouse == value ) return false;
+            _followMouse = value;
+
+            for( DataMap<MenuBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouse( value && !widgetIsBlackListed( iter->first ) ); }
+            return true;
+        }
+
         //@}
 
         //!@name accessors
@@ -112,12 +125,26 @@ namespace Oxygen
         AnimationData animationData( GtkWidget* widget, const AnimationType& type )
         { return data().value( widget ).animationData( type ); }
 
+        //! returns true if animated rectangle is valid
+        bool animatedRectangleIsValid( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangleIsValid(); }
+
+        //! animated rectangle
+        const GdkRectangle& animatedRectangle( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangle(); }
+
         //@}
 
         private:
 
         //! enable animations
         bool _animationsEnabled;
+
+        //! follow-mouse enabled
+        bool _followMouse;
+
+        //! follow-mouse animation duration
+        int _followMouseAnimationDuration;
 
     };
 

@@ -51,6 +51,10 @@ namespace Oxygen
         _current._timeLine.setDirection( TimeLine::Forward );
         _previous._timeLine.setDirection( TimeLine::Backward );
 
+        // follow mouse animation
+        _timeLine.connect( (GSourceFunc)followMouseUpdate, this );
+        _timeLine.setDirection( TimeLine::Forward );
+
     }
 
     //________________________________________________________________________________
@@ -173,10 +177,12 @@ namespace Oxygen
 
             // assign new widget to current and start animation
             const bool animate( !_current.isValid() );
+            GdkRectangle startRect( _current._rect );
             _current.update( widget, rect );
             if( _current.isValid() )
             {
                 if( animate ) _current._timeLine.start();
+                else if( _followMouse ) startAnimation( startRect, _current._rect );
                 else delayedUpdate( this );
             }
 
@@ -195,6 +201,13 @@ namespace Oxygen
 
             // move current to previous; clear current, and animate
             _previous.copy( _current );
+            if( _followMouse && _timeLine.isRunning() )
+            {
+                _timeLine.stop();
+                _previous._rect = _animatedRect;
+                _animatedRect = Gtk::gdk_rectangle();
+            }
+
             _current.clear();
             if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
 
@@ -204,7 +217,7 @@ namespace Oxygen
 
     }
 
-    //_____________________________________________
+    //________________________________________________________________________________
     GdkRectangle MenuBarStateData::dirtyRect( void )
     {
 
@@ -243,6 +256,59 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void MenuBarStateData::startAnimation( const GdkRectangle& startRect, const GdkRectangle& endRect )
+    {
+
+        // copy end rect
+        _endRect = endRect;
+
+        // check timeLine status
+        if( _timeLine.isRunning() && _timeLine.value() < 1.0 )
+        {
+
+            // do some math so that the animation finishes at new endRect without discontinuity
+            const double ratio( _timeLine.value()/(1.0-_timeLine.value() ) );
+            _startRect.x += double( _animatedRect.x - _endRect.x )*ratio;
+            _startRect.y += double( _animatedRect.y - _endRect.y )*ratio;
+            _startRect.width += double( _animatedRect.width - _endRect.width )*ratio;
+            _startRect.height += double( _animatedRect.height - _endRect.height )*ratio;
+
+        } else {
+
+            if( _timeLine.isRunning() ) _timeLine.stop();
+            _startRect = startRect;
+            _timeLine.start();
+
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
+    void MenuBarStateData::updateAnimatedRect( void )
+    {
+        if( _timeLine.isRunning() &&
+            Gtk::gdk_rectangle_is_valid( &_startRect ) &&
+            Gtk::gdk_rectangle_is_valid( &_endRect ) )
+        {
+
+            _animatedRect.x = _startRect.x + double( _endRect.x - _startRect.x )*_timeLine.value();
+            _animatedRect.y = _startRect.y + double( _endRect.y - _startRect.y )*_timeLine.value();
+            _animatedRect.width = _startRect.width + double( _endRect.width - _startRect.width )*_timeLine.value();
+            _animatedRect.height = _startRect.height + double( _endRect.height - _startRect.height )*_timeLine.value();
+
+        } else {
+
+            _animatedRect = Gtk::gdk_rectangle();
+
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
     gboolean MenuBarStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
         static_cast<MenuBarStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
@@ -272,4 +338,20 @@ namespace Oxygen
 
     }
 
+    //_____________________________________________
+    gboolean MenuBarStateData::followMouseUpdate( gpointer pointer )
+    {
+
+        MenuBarStateData& data( *static_cast<MenuBarStateData*>( pointer ) );
+        if( data._target && data._followMouse )
+        {
+            data.updateAnimatedRect();
+            GdkRectangle dirtyRect;
+            gdk_rectangle_union( &data._startRect, &data._animatedRect, &dirtyRect );
+            Gtk::gtk_widget_queue_draw( data._target );
+        }
+
+        return FALSE;
+
+    }
 }

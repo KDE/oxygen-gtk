@@ -46,7 +46,11 @@ namespace Oxygen
         MenuBarStateData( void ):
             _target( 0L ),
             _animationsEnabled( true ),
-            _dirtyRect( Gtk::gdk_rectangle() )
+            _dirtyRect( Gtk::gdk_rectangle() ),
+            _followMouse( false ),
+            _startRect( Gtk::gdk_rectangle() ),
+            _endRect( Gtk::gdk_rectangle() ),
+            _animatedRect( Gtk::gdk_rectangle() )
             {}
 
         //! destructor
@@ -65,6 +69,7 @@ namespace Oxygen
             _animationsEnabled = value;
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
+            _timeLine.setEnabled( value );
 
             if( !value )
             {
@@ -80,6 +85,14 @@ namespace Oxygen
             _current._timeLine.setDuration( value );
             _previous._timeLine.setDuration( value );
         }
+
+        //! follow-mouse animation
+        void setFollowMouse( bool value )
+        { _followMouse = value; }
+
+        //! follow-mouse animation duration
+        void setFollowMouseAnimationDuration( int value )
+        { _timeLine.setDuration( value ); }
 
         //!@name accessors
         //@{
@@ -109,6 +122,14 @@ namespace Oxygen
                 AnimationData();
         }
 
+        //! returns true if animated rectangle is valid
+        bool animatedRectangleIsValid( void ) const
+        { return _timeLine.isRunning() && Gtk::gdk_rectangle_is_valid( &_animatedRect ); }
+
+        //! animated rectangle
+        const GdkRectangle& animatedRectangle( void ) const
+        { return _animatedRect; }
+
         //@}
 
         protected:
@@ -124,6 +145,17 @@ namespace Oxygen
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );
+
+        //!@name follow mouse animation
+        //@{
+
+        //! start follow-mouse animation
+        void startAnimation( const GdkRectangle&, const GdkRectangle& );
+
+        //! update animated rect
+        void updateAnimatedRect( void );
+
+        //@}
 
         //! animations data
         class Data
@@ -201,6 +233,7 @@ namespace Oxygen
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
         static gboolean delayedUpdate( gpointer );
+        static gboolean followMouseUpdate( gpointer );
         //@}
 
         private:
@@ -225,6 +258,26 @@ namespace Oxygen
 
         Data _previous;
         Data _current;
+
+        //@}
+
+        //!@name follow mouse animated data
+        //@{
+
+        //! true if enabled
+        bool _followMouse;
+
+        //! timeline
+        TimeLine _timeLine;
+
+        //! start rectangle
+        GdkRectangle _startRect;
+
+        //! end rectangle
+        GdkRectangle _endRect;
+
+        //! animated rectangle
+        GdkRectangle _animatedRect;
 
         //@}
 
