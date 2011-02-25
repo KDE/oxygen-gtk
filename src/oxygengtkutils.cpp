@@ -952,6 +952,7 @@ namespace Oxygen
 
     }
 
+    //___________________________________________________________
     GtkWidget* Gtk::dialog_find_button(GtkDialog* dialog,gint response_id)
     {
         GList *children, *tmp_list;
