@@ -195,6 +195,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_menubar( GtkWidget* widget )
     {
 
+        if( !widget ) return 0L;
         for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_MENU_BAR( parent ) ) return parent; }
 
@@ -205,6 +206,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_menu( GtkWidget* widget )
     {
 
+        if( !widget ) return 0L;
         for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( GTK_IS_MENU( parent ) ) return parent; }
 
