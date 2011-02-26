@@ -112,8 +112,7 @@ namespace Oxygen
             const GtkStateType state( gtk_widget_get_state( childWidget ) );
 
             // do nothing for disabled child
-            if( state == GTK_STATE_INSENSITIVE ) continue;
-            //if( GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) continue;
+            if( state == GTK_STATE_INSENSITIVE || GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) continue;
 
             // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
