@@ -259,6 +259,8 @@ namespace Oxygen
         if( _timeLine.isRunning() && _timeLine.value() < 1.0 )
         {
 
+            _dirtyRect = _startRect;
+
             // do some math so that the animation finishes at new endRect without discontinuity
             const double ratio( _timeLine.value()/(1.0-_timeLine.value() ) );
             _startRect.x += double( _animatedRect.x - _endRect.x )*ratio;
@@ -302,6 +304,44 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    GdkRectangle MenuBarStateData::followMouseDirtyRect( void )
+    {
+
+        GdkRectangle rect( Gtk::gdk_rectangle() );
+
+        const GdkRectangle previousRect( _startRect );
+        const GdkRectangle currentRect( _animatedRect );
+
+        if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
+        {
+
+            gdk_rectangle_union( &previousRect, &currentRect, &rect );
+
+        } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
+
+            rect = previousRect;
+
+        } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
+
+            rect = currentRect;
+
+        }
+
+        // also union with dirty rect
+        if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
+        {
+            if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
+            else rect = _dirtyRect;
+
+            _dirtyRect = Gtk::gdk_rectangle();
+
+        }
+
+        return rect;
+
+    }
+
+    //________________________________________________________________________________
     gboolean MenuBarStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
         static_cast<MenuBarStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
@@ -339,10 +379,8 @@ namespace Oxygen
         if( data._target && data._followMouse )
         {
             data.updateAnimatedRect();
-
-            if( !GTK_IS_SEPARATOR_MENU_ITEM( data._current._widget ) )
-            { Gtk::gtk_widget_queue_draw( data._target ); }
-
+            GdkRectangle rect( data.followMouseDirtyRect() );
+            Gtk::gtk_widget_queue_draw( data._target, &rect );
         }
 
         return FALSE;

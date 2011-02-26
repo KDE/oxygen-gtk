@@ -155,6 +155,9 @@ namespace Oxygen
         //! update animated rect
         void updateAnimatedRect( void );
 
+        //! follow-mouse dirty rect
+        GdkRectangle followMouseDirtyRect( void );
+
         //@}
 
         //! animations data
