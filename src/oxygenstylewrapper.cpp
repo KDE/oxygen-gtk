@@ -965,7 +965,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
 
                 } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
@@ -975,7 +975,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options, data );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options, data );
 
                 }
 
@@ -1074,7 +1074,7 @@ namespace Oxygen
                     const GdkRectangle& rect( engine.animatedRectangle( widget ) );
                     StyleOptions options( Hover );
 
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
 
                 } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
@@ -1082,7 +1082,7 @@ namespace Oxygen
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
                     StyleOptions options( Hover );
 
-                    Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options, data );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
                 }
 
