@@ -339,7 +339,10 @@ namespace Oxygen
         if( data._target && data._followMouse )
         {
             data.updateAnimatedRect();
-            Gtk::gtk_widget_queue_draw( data._target );
+
+            if( !GTK_IS_SEPARATOR_MENU_ITEM( data._current._widget ) )
+            { Gtk::gtk_widget_queue_draw( data._target ); }
+
         }
 
         return FALSE;

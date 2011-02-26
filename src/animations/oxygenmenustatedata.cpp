@@ -103,7 +103,8 @@ namespace Oxygen
 
             // do nothing for disabled child
             if( state == GTK_STATE_INSENSITIVE ) continue;
-
+            //if( GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) continue;
+            
             // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
             {
@@ -288,7 +289,10 @@ namespace Oxygen
         _endRect = endRect;
 
         // check timeLine status
-        if( _timeLine.isRunning() && _timeLine.value() < 1.0 )
+        if( _timeLine.isRunning() &&
+            _timeLine.value() < 1.0 &&
+            Gtk::gdk_rectangle_is_valid( &_endRect ) &&
+            Gtk::gdk_rectangle_is_valid( &_animatedRect ) )
         {
 
             // do some math so that the animation finishes at new endRect without discontinuity
@@ -297,6 +301,7 @@ namespace Oxygen
             _startRect.y += double( _animatedRect.y - _endRect.y )*ratio;
             _startRect.width += double( _animatedRect.width - _endRect.width )*ratio;
             _startRect.height += double( _animatedRect.height - _endRect.height )*ratio;
+
 
         } else {
 
@@ -373,7 +378,17 @@ namespace Oxygen
         if( data._target && data._followMouse )
         {
             data.updateAnimatedRect();
-            Gtk::gtk_widget_queue_draw( data._target );
+            GdkRectangle rect( data._target->allocation );
+
+            // this is not good.
+            // should use Menu metrics or dirtyRect
+            rect.x += 5;
+            rect.y += 7;
+            rect.width -= 10;
+            rect.height -= 14;
+
+            Gtk::gtk_widget_queue_draw( data._target, &rect );
+
         }
 
         return FALSE;

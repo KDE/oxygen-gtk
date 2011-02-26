@@ -1073,8 +1073,6 @@ namespace Oxygen
 
                     const GdkRectangle& rect( engine.animatedRectangle( widget ) );
                     StyleOptions options( Hover );
-                    if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
-                    { options |= Blend; }
 
                     Style::instance().renderMenuItemRect( window, clipRect, widget, rect.x, rect.y, rect.width, rect.height, options );
 
