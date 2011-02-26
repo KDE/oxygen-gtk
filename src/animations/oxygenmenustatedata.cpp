@@ -52,6 +52,10 @@ namespace Oxygen
         _current._timeLine.setDirection( TimeLine::Forward );
         _previous._timeLine.setDirection( TimeLine::Backward );
 
+        // follow mouse animation
+        _timeLine.connect( (GSourceFunc)followMouseUpdate, this );
+        _timeLine.setDirection( TimeLine::Forward );
+
     }
 
     //________________________________________________________________________________
@@ -67,7 +71,7 @@ namespace Oxygen
         // disconnect timelines
         _current._timeLine.disconnect();
         _previous._timeLine.disconnect();
-
+        _timeLine.disconnect();
     }
 
     //________________________________________________________________________________
@@ -189,10 +193,12 @@ namespace Oxygen
 
             // assign new widget to current and start animation
             const bool animate( !_current.isValid() );
+            const GdkRectangle startRect( _current._rect );
             _current.update( widget, rect, xOffset, yOffset );
             if( _current.isValid() )
             {
                 if( animate ) _current._timeLine.start();
+                else if( _followMouse ) startAnimation( startRect, _current._rect );
                 else delayedUpdate( this );
             }
 
@@ -275,6 +281,59 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    void MenuStateData::startAnimation( const GdkRectangle& startRect, const GdkRectangle& endRect )
+    {
+
+        // copy end rect
+        _endRect = endRect;
+
+        // check timeLine status
+        if( _timeLine.isRunning() && _timeLine.value() < 1.0 )
+        {
+
+            // do some math so that the animation finishes at new endRect without discontinuity
+            const double ratio( _timeLine.value()/(1.0-_timeLine.value() ) );
+            _startRect.x += double( _animatedRect.x - _endRect.x )*ratio;
+            _startRect.y += double( _animatedRect.y - _endRect.y )*ratio;
+            _startRect.width += double( _animatedRect.width - _endRect.width )*ratio;
+            _startRect.height += double( _animatedRect.height - _endRect.height )*ratio;
+
+        } else {
+
+            if( _timeLine.isRunning() ) _timeLine.stop();
+            _startRect = startRect;
+            _timeLine.start();
+
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
+    void MenuStateData::updateAnimatedRect( void )
+    {
+        if( _timeLine.isRunning() &&
+            Gtk::gdk_rectangle_is_valid( &_startRect ) &&
+            Gtk::gdk_rectangle_is_valid( &_endRect ) )
+        {
+
+            _animatedRect.x = _startRect.x + double( _endRect.x - _startRect.x )*_timeLine.value();
+            _animatedRect.y = _startRect.y + double( _endRect.y - _startRect.y )*_timeLine.value();
+            _animatedRect.width = _startRect.width + double( _endRect.width - _startRect.width )*_timeLine.value();
+            _animatedRect.height = _startRect.height + double( _endRect.height - _startRect.height )*_timeLine.value();
+
+        } else {
+
+            _animatedRect = Gtk::gdk_rectangle();
+
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
     gboolean MenuStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
         static_cast<MenuStateData*>( pointer )->updateItems();
@@ -298,6 +357,23 @@ namespace Oxygen
         {
             const GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
+        }
+
+        return FALSE;
+
+    }
+
+    //_____________________________________________
+    gboolean MenuStateData::followMouseUpdate( gpointer pointer )
+    {
+
+        MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
+
+        // TODO: implement dedicated dirtyRect
+        if( data._target && data._followMouse )
+        {
+            data.updateAnimatedRect();
+            Gtk::gtk_widget_queue_draw( data._target );
         }
 
         return FALSE;

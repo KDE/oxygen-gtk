@@ -45,7 +45,9 @@ namespace Oxygen
         //! constructor
         MenuStateEngine( Animations* parent ):
             GenericEngine<MenuStateData>( parent ),
-            _animationsEnabled( true )
+            _animationsEnabled( true ),
+            _followMouse( false ),
+            _followMouseAnimationsDuration( 40 )
             {}
 
         //! destructor
@@ -60,6 +62,8 @@ namespace Oxygen
             {
                 data().value( widget ).setDuration( duration() );
                 data().value( widget ).setAnimationsEnabled( _animationsEnabled );
+                data().value( widget ).setFollowMouse( _followMouse );
+                data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
             return registered;
         }
@@ -87,6 +91,28 @@ namespace Oxygen
             return false;
         }
 
+        //! enable follow-mouse animation
+        bool setFollowMouse( bool value )
+        {
+            if( _followMouse == value ) return false;
+            _followMouse = value;
+
+            for( DataMap<MenuStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouse( value && !widgetIsBlackListed( iter->first ) ); }
+            return true;
+        }
+
+        //! follow-mouse animations duration
+        bool setFollowMouseAnimationsDuration( int value )
+        {
+            if( _followMouseAnimationsDuration == value ) return false;
+            _followMouseAnimationsDuration = value;
+
+            for( DataMap<MenuStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouseAnimationsDuration( value ); }
+            return true;
+        }
+
         //@}
 
         //!@name accessors
@@ -112,12 +138,26 @@ namespace Oxygen
         AnimationData animationData( GtkWidget* widget, const AnimationType& type )
         { return data().value( widget ).animationData( type ); }
 
+        //! returns true if animated rectangle is valid
+        bool animatedRectangleIsValid( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangleIsValid(); }
+
+        //! animated rectangle
+        const GdkRectangle& animatedRectangle( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangle(); }
+
         //@}
 
         private:
 
         //! enable animations
         bool _animationsEnabled;
+
+        //! follow-mouse enabled
+        bool _followMouse;
+
+        //! follow-mouse animation duration
+        int _followMouseAnimationsDuration;
 
     };
 

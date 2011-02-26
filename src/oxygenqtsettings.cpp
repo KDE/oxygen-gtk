@@ -76,6 +76,7 @@ namespace Oxygen
         _menuBarAnimationsDuration( 150 ),
         _menuBarFollowMouseAnimationsDuration( 80 ),
         _menuAnimationsDuration( 150 ),
+        _menuFollowMouseAnimationsDuration( 40 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
         _activeShadowConfiguration( Palette::Active ),
@@ -863,6 +864,7 @@ namespace Oxygen
         _menuBarAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarAnimationsDuration" ).toVariant<int>(150);
         _menuBarFollowMouseAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarFollowMouseAnimationsDuration" ).toVariant<int>(80);
         _menuAnimationsDuration = oxygen.getOption( "[Style]", "MenuAnimationsDuration" ).toVariant<int>(150);
+        _menuFollowMouseAnimationsDuration = oxygen.getOption( "[Style]", "MenuFollowMouseAnimationsDuration" ).toVariant<int>(40);
 
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );

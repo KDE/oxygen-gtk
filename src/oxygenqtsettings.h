@@ -262,6 +262,9 @@ namespace Oxygen
         int menuAnimationsDuration( void ) const
         { return _menuAnimationsDuration; }
 
+        int menuFollowMouseAnimationsDuration( void ) const
+        { return _menuFollowMouseAnimationsDuration; }
+
         //@}
 
         //!@name window decoration options
@@ -501,6 +504,9 @@ namespace Oxygen
 
         //! menu animations
         int _menuAnimationsDuration;
+
+        //! follow mouse animation
+        int _menuFollowMouseAnimationsDuration;
 
         //@}
 
