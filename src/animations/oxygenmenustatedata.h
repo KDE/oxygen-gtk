@@ -47,6 +47,8 @@ namespace Oxygen
             _target( 0L ),
             _animationsEnabled( true ),
             _dirtyRect( Gtk::gdk_rectangle() ),
+            _verticalPadding(0),
+            _horizontalPadding(0),
             _followMouse( false ),
             _startRect( Gtk::gdk_rectangle() ),
             _endRect( Gtk::gdk_rectangle() ),
@@ -273,6 +275,10 @@ namespace Oxygen
 
         //!@name follow mouse animated data
         //@{
+
+        //! padding
+        gint _verticalPadding;
+        gint _horizontalPadding;
 
         //! true if enabled
         bool _followMouse;

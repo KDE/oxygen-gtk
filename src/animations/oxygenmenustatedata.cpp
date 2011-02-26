@@ -41,6 +41,16 @@ namespace Oxygen
     {
 
         _target = widget;
+
+        // save paddings
+        if( GTK_IS_MENU( widget ) )
+        {
+            gtk_widget_style_get( _target,
+                "vertical-padding", &_verticalPadding,
+                "horizontal-padding", &_horizontalPadding,
+                NULL );
+        }
+
         _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
         _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
 
@@ -104,7 +114,7 @@ namespace Oxygen
             // do nothing for disabled child
             if( state == GTK_STATE_INSENSITIVE ) continue;
             //if( GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) continue;
-            
+
             // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
             {
@@ -374,18 +384,17 @@ namespace Oxygen
 
         MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
 
-        // TODO: implement dedicated dirtyRect
         if( data._target && data._followMouse )
         {
-            data.updateAnimatedRect();
-            GdkRectangle rect( data._target->allocation );
 
-            // this is not good.
-            // should use Menu metrics or dirtyRect
-            rect.x += 5;
-            rect.y += 7;
-            rect.width -= 10;
-            rect.height -= 14;
+            data.updateAnimatedRect();
+
+            // TODO: implement dedicated dirtyRect
+            GdkRectangle rect( data._target->allocation );
+            rect.x += data._horizontalPadding;
+            rect.y += data._verticalPadding;
+            rect.width -= 2*data._horizontalPadding;
+            rect.height -= 2*data._verticalPadding;
 
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
