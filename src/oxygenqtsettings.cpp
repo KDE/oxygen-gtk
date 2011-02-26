@@ -74,6 +74,7 @@ namespace Oxygen
         _toolBarAnimationType( TB_FADE ),
         _genericAnimationsDuration( 150 ),
         _menuBarAnimationsDuration( 150 ),
+        _menuBarFollowMouseAnimationsDuration( 80 ),
         _menuAnimationsDuration( 150 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
@@ -862,6 +863,7 @@ namespace Oxygen
         // animations duration
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);
         _menuBarAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarAnimationsDuration" ).toVariant<int>(150);
+        _menuBarFollowMouseAnimationsDuration = oxygen.getOption( "[Style]", "MenuBarFollowMouseAnimationsDuration" ).toVariant<int>(80);
         _menuAnimationsDuration = oxygen.getOption( "[Style]", "MenuAnimationsDuration" ).toVariant<int>(150);
 
         // window decoration button size

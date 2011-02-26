@@ -256,6 +256,9 @@ namespace Oxygen
         int menuBarAnimationsDuration( void ) const
         { return _menuBarAnimationsDuration; }
 
+        int menuBarFollowMouseAnimationsDuration( void ) const
+        { return _menuBarFollowMouseAnimationsDuration; }
+
         int menuAnimationsDuration( void ) const
         { return _menuAnimationsDuration; }
 
@@ -492,6 +495,9 @@ namespace Oxygen
 
         //! menubar animations
         int _menuBarAnimationsDuration;
+
+        //! follow mouse animation
+        int _menuBarFollowMouseAnimationsDuration;
 
         //! menu animations
         int _menuAnimationsDuration;
