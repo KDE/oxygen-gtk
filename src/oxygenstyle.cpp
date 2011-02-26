@@ -2344,14 +2344,14 @@ namespace Oxygen
                 // draw caption
                 gchar* &caption(windowStrings[0]);
                 const FontInfo& font( settings().WMFont() );
-                PangoFontDescription* fdesc( pango_font_description_new() );
-                const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
-                const int H=WinDeco::getMetric(WinDeco::BorderTop);
-                int textHeight;
                 gint layoutWidth=w-(titleIndentLeft+titleIndentRight);
-
-                if(layoutWidth>0)
+                if( font.isValid() && layoutWidth>0 )
                 {
+                    PangoFontDescription* fdesc( pango_font_description_new() );
+                    const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
+                    const int H=WinDeco::getMetric(WinDeco::BorderTop);
+                    int textHeight;
+
                     pango_font_description_set_family( fdesc, font.family().c_str() );
                     pango_font_description_set_weight( fdesc, PangoWeight( (font.weight()+2)*10 ) );
                     pango_font_description_set_style( fdesc, font.italic() ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL );
