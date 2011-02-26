@@ -201,13 +201,6 @@ namespace Oxygen
 
             // move current to previous; clear current, and animate
             _previous.copy( _current );
-            if( _followMouse && _timeLine.isRunning() )
-            {
-                _timeLine.stop();
-                _previous._rect = _animatedRect;
-                _animatedRect = Gtk::gdk_rectangle();
-            }
-
             _current.clear();
             if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
 

@@ -91,7 +91,7 @@ namespace Oxygen
         { _followMouse = value; }
 
         //! follow-mouse animation duration
-        void setFollowMouseAnimationDuration( int value )
+        void setFollowMouseAnimationsDuration( int value )
         { _timeLine.setDuration( value ); }
 
         //!@name accessors

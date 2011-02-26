@@ -103,8 +103,10 @@ namespace Oxygen
 
         // for now, only MB_FADE animation mode is supported for menubar animations
         menuBarStateEngine().setApplicationName( settings.applicationName() );
-        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() == QtSettings::MB_FADE );
+        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() != QtSettings::MB_NONE );
+        menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == QtSettings::MB_FOLLOW_MOUSE );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
+        menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
         // for now, only MB_FADE animation mode is supported for menubar animations
         menuStateEngine().setApplicationName( settings.applicationName() );

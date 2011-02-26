@@ -47,7 +47,7 @@ namespace Oxygen
             GenericEngine<MenuBarStateData>( parent ),
             _animationsEnabled( true ),
             _followMouse( false ),
-            _followMouseAnimationDuration( 80 )
+            _followMouseAnimationsDuration( 80 )
             {}
 
         //! destructor
@@ -62,6 +62,8 @@ namespace Oxygen
             {
                 data().value( widget ).setDuration( duration() );
                 data().value( widget ).setAnimationsEnabled( _animationsEnabled );
+                data().value( widget ).setFollowMouse( _followMouse );
+                data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
             return registered;
         }
@@ -97,6 +99,17 @@ namespace Oxygen
 
             for( DataMap<MenuBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
             { iter->second.setFollowMouse( value && !widgetIsBlackListed( iter->first ) ); }
+            return true;
+        }
+
+        //! follow-mouse animations duration
+        bool setFollowMouseAnimationsDuration( int value )
+        {
+            if( _followMouseAnimationsDuration == value ) return false;
+            _followMouseAnimationsDuration = value;
+
+            for( DataMap<MenuBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouseAnimationsDuration( value ); }
             return true;
         }
 
@@ -144,7 +157,7 @@ namespace Oxygen
         bool _followMouse;
 
         //! follow-mouse animation duration
-        int _followMouseAnimationDuration;
+        int _followMouseAnimationsDuration;
 
     };
 
