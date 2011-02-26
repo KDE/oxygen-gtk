@@ -339,8 +339,6 @@ namespace Oxygen
         if( data._target && data._followMouse )
         {
             data.updateAnimatedRect();
-            GdkRectangle dirtyRect;
-            gdk_rectangle_union( &data._startRect, &data._animatedRect, &dirtyRect );
             Gtk::gtk_widget_queue_draw( data._target );
         }
 
