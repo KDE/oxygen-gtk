@@ -70,9 +70,12 @@ namespace Oxygen
         //!@name modifiers
         //@{
 
-        //! register widget [overloaded]
+        //! register child
         virtual void registerChild( GtkWidget* widget, GtkWidget* child, bool value = true )
-        { data().value( widget ).registerChild( child, value ); }
+        {
+            if( !enabled() ) return;
+            data().value( widget ).registerChild( child, value );
+        }
 
         //! enable animations
         bool setEnabled( bool value )
