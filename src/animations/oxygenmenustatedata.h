@@ -42,8 +42,8 @@ namespace Oxygen
         MenuStateData( void ):
             _target( 0L ),
             _dirtyRect( Gtk::gdk_rectangle() ),
-            _verticalPadding(0),
-            _horizontalPadding(0)
+            _xPadding(0),
+            _yPadding(0)
             {}
 
         //! destructor
@@ -271,8 +271,8 @@ namespace Oxygen
         //@{
 
         //! padding
-        gint _verticalPadding;
-        gint _horizontalPadding;
+        gint _xPadding;
+        gint _yPadding;
 
         //! delayed animation timeOut
         static const int _timeOut;

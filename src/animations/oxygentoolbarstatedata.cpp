@@ -219,42 +219,20 @@ namespace Oxygen
     {
 
         GdkRectangle rect( Gtk::gdk_rectangle() );
-        const GdkRectangle previousRect( _previous._rect );
-        const GdkRectangle currentRect( _current._rect );
-
-        const bool previousRectValid( Gtk::gdk_rectangle_is_valid( &previousRect ) );
-        const bool currentRectValid( Gtk::gdk_rectangle_is_valid( &currentRect ) );
-
-        if( previousRectValid && currentRectValid ) gdk_rectangle_union( &previousRect, &currentRect, &rect );
-        else if( previousRectValid ) rect = previousRect;
-        else if( currentRectValid ) rect = currentRect;
+        Gtk::gdk_rectangle_union( &_previous._rect, &_current._rect, &rect );
 
         // add _dirtyRect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
-            if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
-            else rect = _dirtyRect;
-
+            Gtk::gdk_rectangle_union( &_dirtyRect, &rect, &rect );
             _dirtyRect = Gtk::gdk_rectangle();
-
         }
 
         // add followMouse dirtyRect
         if( followMouse() )
         {
             const GdkRectangle followMouseRect( FollowMouseData::dirtyRect() );
-            const bool followMouseRectValid( Gtk::gdk_rectangle_is_valid( &followMouseRect ) );
-            if( Gtk::gdk_rectangle_is_valid( &rect ) && followMouseRectValid )
-            {
-
-                gdk_rectangle_union( &followMouseRect, &rect, &rect );
-
-            } else if( followMouseRectValid ) {
-
-                rect = followMouseRect;
-
-            }
-
+            Gtk::gdk_rectangle_union( &followMouseRect, &rect, &rect );
         }
 
         /* Add extra margin to rect. FIXME: this should be triggered from widget's metrics */

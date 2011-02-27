@@ -38,15 +38,15 @@ namespace Oxygen
         if( GTK_IS_MENU( widget ) )
         {
             gtk_widget_style_get( _target,
-                "vertical-padding", &_verticalPadding,
-                "horizontal-padding", &_horizontalPadding,
+                "vertical-padding", &_yPadding,
+                "horizontal-padding", &_xPadding,
                 NULL );
         }
 
         // this accounts for x/y thickness.
         // needs to retrieve it from widget
-        _horizontalPadding += gtk_widget_get_style( widget )->xthickness;
-        _verticalPadding += gtk_widget_get_style( widget )->ythickness;
+        _xPadding += gtk_widget_get_style( widget )->xthickness;
+        _yPadding += gtk_widget_get_style( widget )->ythickness;
 
         // connect signals
         _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
@@ -263,55 +263,44 @@ namespace Oxygen
         GdkRectangle rect( Gtk::gdk_rectangle() );
         const GdkRectangle previousRect( _previous.dirtyRect() );
         const GdkRectangle currentRect( _current.dirtyRect() );
-
-        const bool previousRectValid( Gtk::gdk_rectangle_is_valid( &previousRect ) );
-        const bool currentRectValid( Gtk::gdk_rectangle_is_valid( &currentRect ) );
-
-        if( previousRectValid && currentRectValid ) gdk_rectangle_union( &previousRect, &currentRect, &rect );
-        else if( previousRectValid ) rect = previousRect;
-        else if( currentRectValid ) rect = currentRect;
+        Gtk::gdk_rectangle_union( &previousRect, &currentRect, &rect );
 
         // add _dirtyRect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
-
-            if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
-            else rect = _dirtyRect;
-
+            Gtk::gdk_rectangle_union( &_dirtyRect, &rect, &rect );
             _dirtyRect = Gtk::gdk_rectangle();
-
         }
 
         // add followMouse dirtyRect
         if( followMouse() )
         {
+
+            // retrieve dirty rect and add relevant offsets
             GdkRectangle followMouseRect( FollowMouseData::dirtyRect() );
-            const bool followMouseRectValid( Gtk::gdk_rectangle_is_valid( &followMouseRect ) );
-
-            if( previousRectValid )
+            if( Gtk::gdk_rectangle_is_valid( &_current._rect ) )
             {
-
-                followMouseRect.x += _previous._xOffset;
-                followMouseRect.y += _previous._yOffset;
-
-            } else if( currentRectValid ) {
 
                 followMouseRect.x += _current._xOffset;
                 followMouseRect.y += _current._yOffset;
 
+            } else if( Gtk::gdk_rectangle_is_valid( &_previous._rect ) ) {
+
+                followMouseRect.x += _previous._xOffset;
+                followMouseRect.y += _previous._yOffset;
+
+            } else if( Gtk::gdk_rectangle_is_valid( &followMouseRect ) && _target ) {
+
+                // no valid offset found. Add full allocation
+                followMouseRect = _target->allocation;
+                followMouseRect.x += _xPadding;
+                followMouseRect.y += _yPadding;
+                followMouseRect.width -= 2*_xPadding;
+                followMouseRect.height -= 2*_yPadding;
+
             }
 
-            if( Gtk::gdk_rectangle_is_valid( &rect ) && followMouseRectValid )
-            {
-
-                gdk_rectangle_union( &followMouseRect, &rect, &rect );
-
-            } else if( followMouseRectValid ) {
-
-                rect = followMouseRect;
-
-            }
-
+            Gtk::gdk_rectangle_union( &followMouseRect, &rect, &rect );
         }
 
         return rect;

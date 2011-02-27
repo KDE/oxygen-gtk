@@ -141,13 +141,7 @@ namespace Oxygen
 
         // take the union of both rectangles
         GdkRectangle updateRect( Gtk::gdk_rectangle() );
-        if( Gtk::gdk_rectangle_is_valid( &oldRect ) )
-        {
-
-            if( Gtk::gdk_rectangle_is_valid( &newRect ) ) gdk_rectangle_union( &oldRect, &newRect, &updateRect );
-            else updateRect = oldRect;
-
-        } else updateRect = newRect;
+        Gtk::gdk_rectangle_union( &oldRect, &newRect, &updateRect );
 
         // store new cell info
         _cellInfo = cellInfo;

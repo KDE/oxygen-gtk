@@ -88,33 +88,13 @@ namespace Oxygen
     {
 
         GdkRectangle rect( Gtk::gdk_rectangle() );
-
-        const GdkRectangle previousRect( _startRect );
-        const GdkRectangle currentRect( _animatedRect );
-
-        if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
-        {
-
-            gdk_rectangle_union( &previousRect, &currentRect, &rect );
-
-        } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
-
-            rect = previousRect;
-
-        } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
-
-            rect = currentRect;
-
-        }
+        Gtk::gdk_rectangle_union( &_startRect, &_animatedRect, &rect );
 
         // also union with dirty rect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
-            if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
-            else rect = _dirtyRect;
-
+            Gtk::gdk_rectangle_union( &_dirtyRect, &rect, &rect );
             _dirtyRect = Gtk::gdk_rectangle();
-
         }
 
         return rect;
