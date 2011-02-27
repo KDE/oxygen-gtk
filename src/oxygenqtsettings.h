@@ -207,6 +207,11 @@ namespace Oxygen
         //!@name animation enable state
         //@{
 
+        //! all animations
+        bool animationsEnabled( void ) const
+        { return _animationsEnabled; }
+
+        //! generic animations
         bool genericAnimationsEnabled( void ) const
         { return _genericAnimationsEnabled; }
 
@@ -462,6 +467,9 @@ namespace Oxygen
 
         //!@name animation options
         //@{
+
+        //! all animations
+        bool _animationsEnabled;
 
         //! generic animations
         bool _genericAnimationsEnabled;

@@ -68,6 +68,7 @@ namespace Oxygen
         _windowDragMode( WD_FULL ),
         _startDragDist( 4 ),
         _startDragTime( 500 ),
+        _animationsEnabled( true ),
         _genericAnimationsEnabled( true ),
         _menuBarAnimationType( Fade ),
         _menuAnimationType( Fade ),
@@ -840,6 +841,7 @@ namespace Oxygen
         else _windowDragMode = WD_FULL;
 
         // animations
+        _animationsEnabled = ( oxygen.getOption( "[Style]", "AnimationsEnabled" ).toVariant<std::string>("true") == "true" );
         _genericAnimationsEnabled = ( oxygen.getOption( "[Style]", "GenericAnimationsEnabled" ).toVariant<std::string>("true") == "true" );
 
         // menubar animation type
