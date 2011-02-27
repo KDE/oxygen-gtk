@@ -1156,7 +1156,7 @@ namespace Oxygen
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 2, 0, r2-2 ) );
         cairo_pattern_add_color_stop( pattern, 0.2, dark );
         cairo_pattern_add_color_stop( pattern, 0.5, mid );
-        cairo_pattern_add_color_stop( pattern, 1.0, light );
+        cairo_pattern_add_color_stop( pattern, 0.95, light );
         if( y < yl && y > yd )
         {
             // no middle when color is very light/dark
