@@ -85,7 +85,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MenuStateData::updateItems( void )
+    void MenuStateData::updateItems( GdkEventType )
     {
 
         if( !_target ) return;
@@ -350,14 +350,14 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MenuStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems();
+        static_cast<MenuStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
         return FALSE;
     }
 
     //________________________________________________________________________________
     gboolean MenuStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems();
+        static_cast<MenuStateData*>( pointer )->updateItems( GDK_LEAVE_NOTIFY );
         return FALSE;
     }
 
@@ -397,6 +397,27 @@ namespace Oxygen
 
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
+        }
+
+        return FALSE;
+
+    }
+
+    //_____________________________________________
+    gboolean MenuStateData::delayedAnimate( gpointer pointer )
+    {
+
+        MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
+
+        if( data._target && data._previous.isValid() )
+        {
+
+            // stop timeLine if running (should not)
+            if( data._previous._timeLine.isRunning() )
+            { data._previous._timeLine.stop(); }
+
+            // and restart
+            data._previous._timeLine.start();
         }
 
         return FALSE;

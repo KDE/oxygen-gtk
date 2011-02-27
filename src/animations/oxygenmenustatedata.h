@@ -31,6 +31,7 @@
 #include "../oxygenanimationmodes.h"
 #include "../oxygengtkutils.h"
 #include "oxygensignal.h"
+#include "oxygentimer.h"
 #include "oxygentimeline.h"
 
 #include <gtk/gtk.h>
@@ -137,7 +138,7 @@ namespace Oxygen
         protected:
 
         //! update items
-        void updateItems( void );
+        void updateItems( GdkEventType );
 
         //! update state for given widget
         bool updateState( GtkWidget*, const GdkRectangle&, int, int, bool );
@@ -242,10 +243,22 @@ namespace Oxygen
 
         //!@name callbacks
         //@{
+
+        //! mouse motion events
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+
+        //! mouse leave events
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
+        //! update widget for fade-in/fade-out animation
         static gboolean delayedUpdate( gpointer );
+
+        //! update widget for follow-mouse animation
         static gboolean followMouseUpdate( gpointer );
+
+        //! start delayed fade-out animation
+        static gboolean delayedAnimate( gpointer );
+
         //@}
 
         private:
@@ -285,6 +298,9 @@ namespace Oxygen
 
         //! timeline
         TimeLine _timeLine;
+
+        //! timer of delayed animation
+        Timer _timer;
 
         //! start rectangle
         GdkRectangle _startRect;
