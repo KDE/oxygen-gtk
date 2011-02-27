@@ -23,6 +23,7 @@
 #include "../oxygenanimationdata.h"
 #include "../oxygenanimationmodes.h"
 #include "../oxygengtkutils.h"
+#include "oxygenfollowmousedata.h"
 #include "oxygensignal.h"
 #include "oxygentimeline.h"
 #include "oxygentimer.h"
@@ -32,7 +33,7 @@
 
 namespace Oxygen
 {
-    class ToolBarStateData
+    class ToolBarStateData: public FollowMouseData
     {
 
         public:
@@ -40,12 +41,8 @@ namespace Oxygen
         //! constructor
         ToolBarStateData( void ):
             _target( 0L ),
-            _dirtyRect( Gtk::gdk_rectangle() ),
-            _followMouse( false ),
-            _startRect( Gtk::gdk_rectangle() ),
-            _endRect( Gtk::gdk_rectangle() ),
-            _animatedRect( Gtk::gdk_rectangle() )
-            {}
+            _dirtyRect( Gtk::gdk_rectangle() )
+        { FollowMouseData::setDirtyMargins( 2 ); }
 
         //! destructor
         virtual ~ToolBarStateData( void )
@@ -66,9 +63,10 @@ namespace Oxygen
         //! enable state
         void setEnabled( bool value )
         {
+            FollowMouseData::setEnabled( value );
+
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
-            _timeLine.setEnabled( value );
 
             if( !value )
             {
@@ -84,14 +82,6 @@ namespace Oxygen
             _current._timeLine.setDuration( value );
             _previous._timeLine.setDuration( value );
         }
-
-        //! follow-mouse animation
-        void setFollowMouse( bool value )
-        { _followMouse = value; }
-
-        //! follow-mouse animation duration
-        void setFollowMouseAnimationsDuration( int value )
-        { _timeLine.setDuration( value ); }
 
         //@}
 
@@ -123,14 +113,6 @@ namespace Oxygen
                 AnimationData();
         }
 
-        //! returns true if animated rectangle is valid
-        bool animatedRectangleIsValid( void ) const
-        { return _timeLine.isRunning() && Gtk::gdk_rectangle_is_valid( &_animatedRect ); }
-
-        //! animated rectangle
-        const GdkRectangle& animatedRectangle( void ) const
-        { return _animatedRect; }
-
         //! true when fade out animation is locked (delayed)
         bool isLocked( void ) const
         { return _timer.isRunning(); }
@@ -147,17 +129,6 @@ namespace Oxygen
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );
-
-        //!@name follow mouse animation
-        //@{
-
-        //! start follow-mouse animation
-        void startAnimation( const GdkRectangle&, const GdkRectangle& );
-
-        //! update animated rect
-        void updateAnimatedRect( void );
-
-        //@}
 
         //! animations data
         class Data
@@ -315,31 +286,11 @@ namespace Oxygen
         typedef std::map<GtkWidget*, HoverData> HoverDataMap;
         HoverDataMap _hoverData;
 
-        //!@name follow mouse animated data
-        //@{
-
-        //! true if enabled
-        bool _followMouse;
-
-        //! timeline
-        TimeLine _timeLine;
-
         //! delayed animation timeOut
         static const int _timeOut;
 
         //! timer of delayed animation
         Timer _timer;
-
-        //! start rectangle
-        GdkRectangle _startRect;
-
-        //! end rectangle
-        GdkRectangle _endRect;
-
-        //! animated rectangle
-        GdkRectangle _animatedRect;
-
-        //@}
 
     };
 
