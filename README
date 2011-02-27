@@ -27,6 +27,8 @@ IV.1 Directories
 IV.2 Some details on some files in src
 IV.3 Some details on some files in animations
 
+V. example configuration (aka: how to select the oxygen-gtk style)
+
 I. introduction
 ---------------
 
@@ -209,3 +211,24 @@ a convenience class to handle delayed actions.
 
 oxygensignal: 
 a convenience class to handle signal/callback connections and disconnections.
+
+V. example configuration (aka: how to select the oxygen-gtk style)
+------------------------------------------------------------------
+Below is a 'sampe' .gtkrc-2.0 file used to select oxygen-gtk for a style. 
+For kde users this should be copied to $HOME/.gtkrc-2.0-kde
+For others, in $HOME/.gtkrc-2.0 (or make a soft-link to the file above).
+It is provided here without any warranty, and users should backup their old config file before modifying.
+It is unclear whether this file will work for all configurations, all desktop environments and all systems (your distribution and DM would know better). On the other hand it has worked (by experience) in many cases.
+
+----- begin of file ------
+include "/usr/share/themes/oxygen-gtk/gtk-2.0/gtkrc"
+
+style "user-font"
+{
+	font_name="Sans Serif"
+}
+widget_class "*" style "user-font"
+
+gtk-theme-name="oxygen-gtk"
+gtk-font-name="Sans Serif 8"
+----- end of file -----
