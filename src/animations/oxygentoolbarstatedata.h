@@ -32,6 +32,7 @@
 #include "../oxygengtkutils.h"
 #include "oxygensignal.h"
 #include "oxygentimeline.h"
+#include "oxygentimer.h"
 
 #include <map>
 #include <gtk/gtk.h>
@@ -46,7 +47,11 @@ namespace Oxygen
         //! constructor
         ToolBarStateData( void ):
             _target( 0L ),
-            _dirtyRect( Gtk::gdk_rectangle() )
+            _dirtyRect( Gtk::gdk_rectangle() ),
+            _followMouse( false ),
+            _startRect( Gtk::gdk_rectangle() ),
+            _endRect( Gtk::gdk_rectangle() ),
+            _animatedRect( Gtk::gdk_rectangle() )
             {}
 
         //! destructor
@@ -256,6 +261,32 @@ namespace Oxygen
 
         typedef std::map<GtkWidget*, HoverData> HoverDataMap;
         HoverDataMap _hoverData;
+
+        //!@name follow mouse animated data
+        //@{
+
+        //! true if enabled
+        bool _followMouse;
+
+        //! timeline
+        TimeLine _timeLine;
+
+        //! delayed animation timeOut
+        static const int _timeOut;
+
+        //! timer of delayed animation
+        Timer _timer;
+
+        //! start rectangle
+        GdkRectangle _startRect;
+
+        //! end rectangle
+        GdkRectangle _endRect;
+
+        //! animated rectangle
+        GdkRectangle _animatedRect;
+
+        //@}
 
     };
 
