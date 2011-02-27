@@ -69,9 +69,9 @@ namespace Oxygen
         _startDragDist( 4 ),
         _startDragTime( 500 ),
         _genericAnimationsEnabled( true ),
-        _menuBarAnimationType( MB_FADE ),
-        _menuAnimationType( ME_FADE ),
-        _toolBarAnimationType( TB_FADE ),
+        _menuBarAnimationType( Fade ),
+        _menuAnimationType( Fade ),
+        _toolBarAnimationType( Fade ),
         _genericAnimationsDuration( 150 ),
         _menuBarAnimationsDuration( 150 ),
         _menuBarFollowMouseAnimationsDuration( 80 ),
@@ -843,21 +843,21 @@ namespace Oxygen
 
         // menubar animation type
         std::string menuBarAnimationType( oxygen.getValue( "[Style]", "MenuBarAnimationType", "MB_FADE") );
-        if( menuBarAnimationType == "MB_NONE" ) _menuBarAnimationType = MB_NONE;
-        else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = MB_FADE;
-        else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = MB_FOLLOW_MOUSE;
+        if( menuBarAnimationType == "MB_NONE" ) _menuBarAnimationType = None;
+        else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = Fade;
+        else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = FollowMouse;
 
         // menubar animation type
         std::string menuAnimationType( oxygen.getValue( "[Style]", "MenuAnimationType", "ME_FADE") );
-        if( menuAnimationType == "ME_NONE" ) _menuAnimationType = ME_NONE;
-        else if( menuAnimationType == "ME_FADE" ) _menuAnimationType = ME_FADE;
-        else if( menuAnimationType == "ME_FOLLOW_MOUSE" ) _menuAnimationType = ME_FOLLOW_MOUSE;
+        if( menuAnimationType == "ME_NONE" ) _menuAnimationType = None;
+        else if( menuAnimationType == "ME_FADE" ) _menuAnimationType = Fade;
+        else if( menuAnimationType == "ME_FOLLOW_MOUSE" ) _menuAnimationType = FollowMouse;
 
         // toolbar animation type
         std::string toolBarAnimationType( oxygen.getValue( "[Style]", "ToolBarAnimationType", "TB_FADE") );
-        if( toolBarAnimationType == "TB_NONE" ) _toolBarAnimationType = TB_NONE;
-        else if( toolBarAnimationType == "TB_FADE" ) _toolBarAnimationType = TB_FADE;
-        else if( toolBarAnimationType == "TB_FOLLOW_MOUSE" ) _toolBarAnimationType = TB_FOLLOW_MOUSE;
+        if( toolBarAnimationType == "TB_NONE" ) _toolBarAnimationType = None;
+        else if( toolBarAnimationType == "TB_FADE" ) _toolBarAnimationType = Fade;
+        else if( toolBarAnimationType == "TB_FOLLOW_MOUSE" ) _toolBarAnimationType = FollowMouse;
 
         // animations duration
         _genericAnimationsDuration = oxygen.getOption( "[Style]", "GenericAnimationsDuration" ).toVariant<int>(150);

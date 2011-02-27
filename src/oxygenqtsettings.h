@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenanimationmodes.h"
 #include "oxygenapplicationname.h"
 #include "oxygengtkicons.h"
 #include "oxygengtkrc.h"
@@ -214,35 +215,13 @@ namespace Oxygen
         //!@name animations type
         //@{
 
-        enum MenuBarAnimationType
-        {
-            MB_NONE,
-            MB_FADE,
-            MB_FOLLOW_MOUSE
-        };
-
-        MenuBarAnimationType menuBarAnimationType( void ) const
+        AnimationType menuBarAnimationType( void ) const
         { return _menuBarAnimationType; }
 
-
-        enum MenuAnimationType
-        {
-            ME_NONE,
-            ME_FADE,
-            ME_FOLLOW_MOUSE
-        };
-
-        MenuAnimationType menuAnimationType( void ) const
+        AnimationType menuAnimationType( void ) const
         { return _menuAnimationType; }
 
-        enum ToolBarAnimationType
-        {
-            TB_NONE,
-            TB_FADE,
-            TB_FOLLOW_MOUSE
-        };
-
-        ToolBarAnimationType toolBarAnimationType( void ) const
+        AnimationType toolBarAnimationType( void ) const
         { return _toolBarAnimationType; }
 
         //@}
@@ -485,13 +464,13 @@ namespace Oxygen
         bool _genericAnimationsEnabled;
 
         //! menubar animations
-        MenuBarAnimationType _menuBarAnimationType;
+        AnimationType _menuBarAnimationType;
 
         //! menu animations
-        MenuAnimationType _menuAnimationType;
+        AnimationType _menuAnimationType;
 
         //! toolbar animation type
-        ToolBarAnimationType _toolBarAnimationType;
+        AnimationType _toolBarAnimationType;
 
         //! generic animations
         int _genericAnimationsDuration;

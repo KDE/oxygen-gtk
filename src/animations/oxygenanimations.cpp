@@ -102,20 +102,20 @@ namespace Oxygen
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         menuBarStateEngine().setApplicationName( settings.applicationName() );
-        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() != QtSettings::MB_NONE );
-        menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == QtSettings::MB_FOLLOW_MOUSE );
+        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() != None );
+        menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
         menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
         menuStateEngine().setApplicationName( settings.applicationName() );
-        menuStateEngine().setAnimationsEnabled( settings.menuAnimationType() != QtSettings::ME_NONE );
-        menuStateEngine().setFollowMouse( settings.menuAnimationType() == QtSettings::ME_FOLLOW_MOUSE );
+        menuStateEngine().setAnimationsEnabled( settings.menuAnimationType() != None );
+        menuStateEngine().setFollowMouse( settings.menuAnimationType() == FollowMouse );
         menuStateEngine().setDuration( settings.menuAnimationsDuration() );
         menuStateEngine().setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
 
-        // for now, only TB_FADE animation mode is supported for toolbar animations
+        // for now, only Fade animations mode is supported for toolbar animations
         toolBarStateEngine().setApplicationName( settings.applicationName() );
-        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == QtSettings::TB_FADE );
+        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == Fade );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
     }

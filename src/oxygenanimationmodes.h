@@ -31,7 +31,16 @@
 namespace Oxygen
 {
 
-    //! animation index
+    //! animation type
+    /*! used for menubars, toolbars and menus */
+    enum AnimationType
+    {
+        None,
+        Fade,
+        FollowMouse
+    };
+
+    //! animated widget type
     /*!
     used for engines that keep track of previously(fade-out) and
     currently (fade-in) animated objects
