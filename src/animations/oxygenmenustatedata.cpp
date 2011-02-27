@@ -37,6 +37,7 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
+    const int MenuStateData::_timeOut = 50;
     void MenuStateData::connect( GtkWidget* widget )
     {
 
@@ -224,9 +225,6 @@ namespace Oxygen
 
         } else if( (!state) && widget == _current._widget ) {
 
-            // stop timer
-            if( _timer.isRunning() ) _timer.stop();
-
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
 
@@ -241,9 +239,14 @@ namespace Oxygen
             }
 
             // move current to previous; clear current, and animate
-            if( _followMouse && delayed ) _timer.start( 50, (GSourceFunc)delayedAnimate, this );
-            else {
+            if( _followMouse && delayed ) {
 
+                if( !_timer.isRunning() )
+                { _timer.start( _timeOut, (GSourceFunc)delayedAnimate, this ); }
+
+            } else {
+
+                if( _timer.isRunning() ) _timer.stop();
                 _previous.copy( _current );
                 _current.clear();
                 if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT )

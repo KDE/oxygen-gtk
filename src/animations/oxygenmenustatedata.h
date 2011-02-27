@@ -303,6 +303,9 @@ namespace Oxygen
         //! timeline
         TimeLine _timeLine;
 
+        //! delayed animation timeOut
+        static const int _timeOut;
+
         //! timer of delayed animation
         Timer _timer;
 
