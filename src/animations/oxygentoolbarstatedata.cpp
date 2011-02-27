@@ -104,8 +104,8 @@ namespace Oxygen
             HoverData data;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
             data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
-            data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
-            data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+            data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childEnterNotifyEvent ), this );
+            data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childLeaveNotifyEvent ), this );
 
             // and insert in map
             _hoverData.insert( std::make_pair( widget, data ) );
@@ -249,11 +249,11 @@ namespace Oxygen
     { static_cast<ToolBarStateData*>(data)->unregisterChild( widget ); }
 
         //________________________________________________________________________________
-    gboolean ToolBarStateData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ToolBarStateData::childEnterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ToolBarStateData::enterNotifyEvent -"
+        std::cerr << "Oxygen::ToolBarStateData::childEnterNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -263,11 +263,11 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean ToolBarStateData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
+    gboolean ToolBarStateData::childLeaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ToolBarStateData::leaveNotifyEvent -"
+        std::cerr << "Oxygen::ToolBarStateData::childLeaveNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif

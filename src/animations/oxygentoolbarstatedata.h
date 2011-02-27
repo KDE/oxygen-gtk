@@ -67,11 +67,15 @@ namespace Oxygen
         //! register child
         void registerChild( GtkWidget*, bool = true );
 
+        //!@name modifiers
+        //@{
+
         //! enable state
         void setEnabled( bool value )
         {
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
+            _timeLine.setEnabled( value );
 
             if( !value )
             {
@@ -87,6 +91,16 @@ namespace Oxygen
             _current._timeLine.setDuration( value );
             _previous._timeLine.setDuration( value );
         }
+
+        //! follow-mouse animation
+        void setFollowMouse( bool value )
+        { _followMouse = value; }
+
+        //! follow-mouse animation duration
+        void setFollowMouseAnimationsDuration( int value )
+        { _timeLine.setDuration( value ); }
+
+        //@}
 
         //!@name accessors
         //@{
@@ -116,6 +130,18 @@ namespace Oxygen
                 AnimationData();
         }
 
+        //! returns true if animated rectangle is valid
+        bool animatedRectangleIsValid( void ) const
+        { return _timeLine.isRunning() && Gtk::gdk_rectangle_is_valid( &_animatedRect ); }
+
+        //! animated rectangle
+        const GdkRectangle& animatedRectangle( void ) const
+        { return _animatedRect; }
+
+        //! true when fade out animation is locked (delayed)
+        bool isLocked( void ) const
+        { return _timer.isRunning(); }
+
         //@}
 
         protected:
@@ -128,6 +154,17 @@ namespace Oxygen
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );
+
+        //!@name follow mouse animation
+        //@{
+
+        //! start follow-mouse animation
+        void startAnimation( const GdkRectangle&, const GdkRectangle& );
+
+        //! update animated rect
+        void updateAnimatedRect( void );
+
+        //@}
 
         //! animations data
         class Data
@@ -202,11 +239,28 @@ namespace Oxygen
 
         //!@name callbacks
         //@{
+
+        //! child style has changed
         static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+
+        //! child is destroyed
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
+        //! child entered
+        static gboolean childEnterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
+        //! child left
+        static gboolean childLeaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
+        //! update widget for fade-in/fade-out animation
         static gboolean delayedUpdate( gpointer );
+
+        //! update widget for follow-mouse animation
+        static gboolean followMouseUpdate( gpointer );
+
+        //! start delayed fade-out animation
+        static gboolean delayedAnimate( gpointer );
+
         //@}
 
         private:
