@@ -233,10 +233,19 @@ namespace Oxygen
 
         //!@name callbacks
         //@{
+
+        //! mouse motion events
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
+
+        //! mouse leave events
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
+        //! update widget for fade-in/fade-out animation
         static gboolean delayedUpdate( gpointer );
+
+        //! update widget for follow-mouse animation
         static gboolean followMouseUpdate( gpointer );
+
         //@}
 
         private:
