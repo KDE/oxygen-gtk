@@ -49,7 +49,7 @@ namespace Oxygen
         //@{
 
         //! enable state
-        void setEnabled( bool value )
+        virtual void setEnabled( bool value )
         { _timeLine.setEnabled( value ); }
 
         //! follow-mouse animation
@@ -78,28 +78,28 @@ namespace Oxygen
         protected:
 
         //! connect
-        void connect( GSourceFunc function, gpointer data )
+        virtual void connect( GSourceFunc function, gpointer data )
         {
             _timeLine.connect( function, data );
             _timeLine.setDirection( TimeLine::Forward );
         }
 
         //! disconnect
-        void disconnect( void )
+        virtual void disconnect( void )
         { _timeLine.disconnect(); }
 
         //! true if enabled
-        bool followMouse( void ) const
+        virtual bool followMouse( void ) const
         { return _followMouse; }
 
         //! follow-mouse dirty rect
-        GdkRectangle dirtyRect( void );
+        virtual GdkRectangle dirtyRect( void );
 
         //! start follow-mouse animation
-        void startAnimation( const GdkRectangle&, const GdkRectangle& );
+        virtual void startAnimation( const GdkRectangle&, const GdkRectangle& );
 
         //! update animated rect
-        void updateAnimatedRect( void );
+        virtual void updateAnimatedRect( void );
 
         private:
 
