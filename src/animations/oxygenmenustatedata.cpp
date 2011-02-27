@@ -242,7 +242,14 @@ namespace Oxygen
 
             // move current to previous; clear current, and animate
             if( _followMouse && delayed ) _timer.start( 50, (GSourceFunc)delayedAnimate, this );
-            else delayedAnimate( this );
+            else {
+
+                _previous.copy( _current );
+                _current.clear();
+                if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT )
+                { _previous._timeLine.start(); }
+
+            }
 
             return true;
 
@@ -417,11 +424,11 @@ namespace Oxygen
     gboolean MenuStateData::delayedAnimate( gpointer pointer )
     {
 
-        std::cerr << "Oxygen::MenuStateData::delayedAnimate" << std::endl;
         MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
         data._previous.copy( data._current );
         data._current.clear();
-        if( data._previous.isValid() && gtk_widget_get_state( data._previous._widget ) == GTK_STATE_PRELIGHT )
+
+        if( data._previous.isValid() )
         { data._previous._timeLine.start(); }
 
         return FALSE;

@@ -1076,7 +1076,13 @@ namespace Oxygen
 
                     Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
 
-                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+                } else if( engine.isLocked( widget ) ) {
+
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+                    StyleOptions options( Hover );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+
+               } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
@@ -1084,7 +1090,7 @@ namespace Oxygen
 
                     Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
-                }
+                 }
 
             }
 

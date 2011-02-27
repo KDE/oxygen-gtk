@@ -146,6 +146,10 @@ namespace Oxygen
         const GdkRectangle& animatedRectangle( GtkWidget* widget )
         { return data().value( widget ).animatedRectangle(); }
 
+        //! true when fade out animation is locked (delayed)
+        bool isLocked( GtkWidget* widget )
+        { return data().value( widget ).isLocked(); }
+
         //@}
 
         private:
