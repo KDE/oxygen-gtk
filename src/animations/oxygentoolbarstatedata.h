@@ -245,6 +245,9 @@ namespace Oxygen
         //! child left
         static gboolean childLeaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
 
+        //! mouse leave events
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
+
         //! update widget for fade-in/fade-out animation
         static gboolean delayedUpdate( gpointer );
 
@@ -260,6 +263,9 @@ namespace Oxygen
 
         //! target
         GtkWidget* _target;
+
+        //! signals
+        Signal _leaveId;
 
         //!@name animation data
         //@{

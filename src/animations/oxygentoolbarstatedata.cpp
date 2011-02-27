@@ -42,6 +42,9 @@ namespace Oxygen
         // store widget
         _target = widget;
 
+        // connect signals
+        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
+
         // connect timeLines
         _current._timeLine.connect( (GSourceFunc)delayedUpdate, this );
         _previous._timeLine.connect( (GSourceFunc)delayedUpdate, this );
@@ -68,6 +71,9 @@ namespace Oxygen
         #endif
 
         _target = 0L;
+
+        // disconnect signal
+        _leaveId.disconnect();
 
         // disconnect timelines
         _current._timeLine.disconnect();
@@ -329,7 +335,8 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ToolBarStateData::childEnterNotifyEvent -"
+        std::cerr
+            << "Oxygen::ToolBarStateData::childEnterNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -343,7 +350,8 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ToolBarStateData::childLeaveNotifyEvent -"
+        std::cerr
+            << "Oxygen::ToolBarStateData::childLeaveNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
@@ -351,6 +359,18 @@ namespace Oxygen
         static_cast<ToolBarStateData*>( data )->updateState( widget, false, true );
         return FALSE;
 
+    }
+
+    //________________________________________________________________________________
+    gboolean ToolBarStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ToolBarStateData::leaveNotifyEvent" << std::endl;
+        #endif
+
+        ToolBarStateData& data( *static_cast<ToolBarStateData*>( pointer ) );
+        if( data._current.isValid() ) data.updateState( data._current._widget, false, false );
+        return FALSE;
     }
 
     //_____________________________________________
