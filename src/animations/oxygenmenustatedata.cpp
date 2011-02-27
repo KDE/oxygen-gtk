@@ -82,10 +82,11 @@ namespace Oxygen
         _current._timeLine.disconnect();
         _previous._timeLine.disconnect();
         _timeLine.disconnect();
-    }
+        _timer.stop();
+   }
 
     //________________________________________________________________________________
-    void MenuStateData::updateItems( GdkEventType )
+    void MenuStateData::updateItems( void )
     {
 
         if( !_target ) return;
@@ -100,8 +101,8 @@ namespace Oxygen
         int xOffset(0);
         int yOffset(0);
 
+        bool delayed( false );
         bool activeFound( false );
-        GtkWidget *activeWidget( 0L );
         GList *children( gtk_container_get_children( GTK_CONTAINER( _target ) ) );
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
         {
@@ -112,7 +113,7 @@ namespace Oxygen
             const GtkStateType state( gtk_widget_get_state( childWidget ) );
 
             // do nothing for disabled child
-            if( state == GTK_STATE_INSENSITIVE || GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) continue;
+            const bool active( state != GTK_STATE_INSENSITIVE && !GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) );
 
             // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
@@ -131,22 +132,26 @@ namespace Oxygen
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
-                activeFound = true;
-                if( state != GTK_STATE_PRELIGHT )
-                { updateState( childWidget, childWidget->allocation, xOffset, yOffset, true ); }
+                if( active )
+                {
 
-            } else if( state != GTK_STATE_NORMAL ) {
+                    activeFound = true;
+                    if( state != GTK_STATE_PRELIGHT )
+                    { updateState( childWidget, childWidget->allocation, xOffset, yOffset, true ); }
 
-                activeWidget = childWidget;
+                } else delayed = true;
+
+                break;
 
             }
+
         }
 
         if( children ) g_list_free( children );
 
         // fade-out current
         if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
-        { updateState( _current._widget, _current._rect, _current._xOffset, _current._yOffset, false ); }
+        { updateState( _current._widget, _current._rect, _current._xOffset, _current._yOffset, false, delayed ); }
 
         return;
 
@@ -173,7 +178,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset, bool state )
+    bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset, bool state, bool delayed )
     {
 
         // do nothing if animations are disabled
@@ -181,6 +186,9 @@ namespace Oxygen
 
         if( state && widget != _current._widget )
         {
+
+            // stop timer
+            if( _timer.isRunning() ) _timer.stop();
 
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
@@ -216,6 +224,9 @@ namespace Oxygen
 
         } else if( (!state) && widget == _current._widget ) {
 
+            // stop timer
+            if( _timer.isRunning() ) _timer.stop();
+
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
 
@@ -230,9 +241,8 @@ namespace Oxygen
             }
 
             // move current to previous; clear current, and animate
-            _previous.copy( _current );
-            _current.clear();
-            if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
+            if( _followMouse && delayed ) _timer.start( 50, (GSourceFunc)delayedAnimate, this );
+            else delayedAnimate( this );
 
             return true;
 
@@ -350,14 +360,14 @@ namespace Oxygen
     //________________________________________________________________________________
     gboolean MenuStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems( GDK_MOTION_NOTIFY );
+        static_cast<MenuStateData*>( pointer )->updateItems();
         return FALSE;
     }
 
     //________________________________________________________________________________
     gboolean MenuStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
     {
-        static_cast<MenuStateData*>( pointer )->updateItems( GDK_LEAVE_NOTIFY );
+        static_cast<MenuStateData*>( pointer )->updateItems();
         return FALSE;
     }
 
@@ -407,18 +417,12 @@ namespace Oxygen
     gboolean MenuStateData::delayedAnimate( gpointer pointer )
     {
 
+        std::cerr << "Oxygen::MenuStateData::delayedAnimate" << std::endl;
         MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
-
-        if( data._target && data._previous.isValid() )
-        {
-
-            // stop timeLine if running (should not)
-            if( data._previous._timeLine.isRunning() )
-            { data._previous._timeLine.stop(); }
-
-            // and restart
-            data._previous._timeLine.start();
-        }
+        data._previous.copy( data._current );
+        data._current.clear();
+        if( data._previous.isValid() && gtk_widget_get_state( data._previous._widget ) == GTK_STATE_PRELIGHT )
+        { data._previous._timeLine.start(); }
 
         return FALSE;
 

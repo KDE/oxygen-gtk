@@ -133,15 +133,19 @@ namespace Oxygen
         const GdkRectangle& animatedRectangle( void ) const
         { return _animatedRect; }
 
+        //! true when fade out animation is locked (delayed)
+        bool isLocked( void ) const
+        { return _timer.isRunning(); }
+
         //@}
 
         protected:
 
         //! update items
-        void updateItems( GdkEventType );
+        void updateItems( void );
 
         //! update state for given widget
-        bool updateState( GtkWidget*, const GdkRectangle&, int, int, bool );
+        bool updateState( GtkWidget*, const GdkRectangle&, int, int, bool state, bool delayed = false );
 
         //! true if menu item is active (pressed down)
         bool menuItemIsActive( GtkWidget* ) const;
