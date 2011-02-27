@@ -31,6 +31,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <X11/Xatom.h>
+
 namespace Oxygen
 {
 
@@ -2150,7 +2152,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight, bool gradient )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2162,7 +2164,13 @@ namespace Oxygen
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
         }
-        renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
+        if( gradient )
+            renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
+        else
+        {
+            cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
+            cairo_paint( context );
+        }
 
         StyleOptions options( hasAlpha ? Alpha : Blend );
 
@@ -2200,13 +2208,43 @@ namespace Oxygen
            elements:
             windowStrings[0]: caption
             windowStrings[1]: WMCLASS
+            windowStrings[2]: (gpointer)XID
         */
         /*
            caches layout:
                left&right border height: h
                top&bottom border width: w-BorderLeft-BorderRight
         */
-        WindecoBorderKey key(wopt,w,h);
+
+        // enable gradient if XID is not passed
+        bool gradient=true;
+
+        if( windowStrings && windowStrings[2] )
+        {
+            Window window((Window)windowStrings[2]);
+            Display* display( GDK_DISPLAY_XDISPLAY(gdk_display_get_default()) );
+            Atom _backgroundGradientAtom = XInternAtom( display, "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
+            if(_backgroundGradientAtom)
+            {
+                Atom type_ret;
+                int format_ret;
+                unsigned long items_ret;
+                unsigned long after_ret;
+                unsigned char *prop_data = 0;
+
+                if( !(XGetWindowProperty(display, window, _backgroundGradientAtom, 0, G_MAXLONG, False,
+                        XA_CARDINAL, &type_ret, &format_ret, &items_ret, &after_ret, &prop_data) == Success
+                            && items_ret == 1
+                            && format_ret == 32) )
+                {
+                    // if the window doesn't have this property set, it's likely
+                    // non-oxygenized, thus shouldn't have windeco bg gradient
+                    gradient=false;
+                }
+            }
+        }
+
+        WindecoBorderKey key(wopt,w,h,gradient);
 
         {
             // draw left border with cache
@@ -2221,7 +2259,7 @@ namespace Oxygen
                 left=helper().createSurface(sw,h);
 
                 Cairo::Context context(left);
-                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight);
+                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient);
 
                 helper().windecoLeftBorderCache().insert(key,left);
             }
@@ -2248,7 +2286,7 @@ namespace Oxygen
                 right=helper().createSurface(sw,h);
 
                 Cairo::Context context(right);
-                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight );
+                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoRightBorderCache().insert(key,right);
             }
@@ -2278,7 +2316,7 @@ namespace Oxygen
                 top=helper().createSurface(sw,sh);
 
                 Cairo::Context context(top);
-                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight );
+                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoTopBorderCache().insert(key,top);
             }
@@ -2350,7 +2388,7 @@ namespace Oxygen
                 bottom=helper().createSurface(sw,sh);
 
                 Cairo::Context context(bottom);
-                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight );
+                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoBottomBorderCache().insert(key,bottom);
             }
