@@ -60,6 +60,7 @@ namespace Oxygen
             if( registered )
             {
                 data().value( widget ).setDuration( duration() );
+                data().value( widget ).setEnabled( enabled() );
                 data().value( widget ).setFollowMouse( _followMouse );
                 data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
