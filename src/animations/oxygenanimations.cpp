@@ -108,7 +108,7 @@ namespace Oxygen
         menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
         menuStateEngine().setApplicationName( settings.applicationName() );
-        menuStateEngine().setAnimationsEnabled( settings.menuAnimationType() != None );
+        menuStateEngine().setEnabled( settings.menuAnimationType() != None );
         menuStateEngine().setFollowMouse( settings.menuAnimationType() == FollowMouse );
         menuStateEngine().setDuration( settings.menuAnimationsDuration() );
         menuStateEngine().setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );

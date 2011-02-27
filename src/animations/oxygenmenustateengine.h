@@ -45,7 +45,6 @@ namespace Oxygen
         //! constructor
         MenuStateEngine( Animations* parent ):
             GenericEngine<MenuStateData>( parent ),
-            _animationsEnabled( true ),
             _followMouse( false ),
             _followMouseAnimationsDuration( 40 )
             {}
@@ -61,7 +60,6 @@ namespace Oxygen
             if( registered )
             {
                 data().value( widget ).setDuration( duration() );
-                data().value( widget ).setAnimationsEnabled( _animationsEnabled );
                 data().value( widget ).setFollowMouse( _followMouse );
                 data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
@@ -71,14 +69,17 @@ namespace Oxygen
         //!@name modifiers
         //@{
 
-        //! enable animations
-        bool setAnimationsEnabled( bool value )
+        //! enable state
+        virtual bool setEnabled( bool value )
         {
-            if( _animationsEnabled == value ) return false;
-            _animationsEnabled = value;
-
+            if( !BaseEngine::setEnabled( value ) ) return false;
             for( DataMap<MenuStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
-            { iter->second.setAnimationsEnabled( value && !widgetIsBlackListed( iter->first ) ); }
+            {
+                iter->second.setEnabled( value );
+                if( enabled() && !widgetIsBlackListed( iter->first ) ) iter->second.connect( iter->first );
+                else iter->second.disconnect( iter->first );
+            }
+
             return true;
         }
 
@@ -153,9 +154,6 @@ namespace Oxygen
         //@}
 
         private:
-
-        //! enable animations
-        bool _animationsEnabled;
 
         //! follow-mouse enabled
         bool _followMouse;

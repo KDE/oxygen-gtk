@@ -46,7 +46,6 @@ namespace Oxygen
         //! constructor
         MenuStateData( void ):
             _target( 0L ),
-            _animationsEnabled( true ),
             _dirtyRect( Gtk::gdk_rectangle() ),
             _verticalPadding(0),
             _horizontalPadding(0),
@@ -66,10 +65,12 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
+        //!@name modifiers
+        //@{
+
         //! enable state
-        void setAnimationsEnabled( bool value )
+        void setEnabled( bool value )
         {
-            _animationsEnabled = value;
             _current._timeLine.setEnabled( value );
             _previous._timeLine.setEnabled( value );
             _timeLine.setEnabled( value );
@@ -96,6 +97,8 @@ namespace Oxygen
         //! follow-mouse animation duration
         void setFollowMouseAnimationsDuration( int value )
         { _timeLine.setDuration( value ); }
+
+        //@}
 
         //!@name accessors
         //@{
