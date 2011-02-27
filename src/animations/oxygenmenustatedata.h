@@ -178,6 +178,16 @@ namespace Oxygen
                 _rect = Gtk::gdk_rectangle();
             }
 
+            //! dirty rect
+            /*! properly adds offsets between widget window and painting window */
+            GdkRectangle dirtyRect( void ) const
+            {
+                GdkRectangle rect( _rect );
+                rect.x += _xOffset;
+                rect.y += _yOffset;
+                return rect;
+            }
+
             //! timeline
             TimeLine _timeLine;
 

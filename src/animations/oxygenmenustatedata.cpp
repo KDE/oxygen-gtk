@@ -261,37 +261,17 @@ namespace Oxygen
     {
 
         GdkRectangle rect( Gtk::gdk_rectangle() );
-        GdkRectangle previousRect( _previous._rect );
-        GdkRectangle currentRect( _current._rect );
+        const GdkRectangle previousRect( _previous.dirtyRect() );
+        const GdkRectangle currentRect( _current.dirtyRect() );
 
-        if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
-        {
+        const bool previousRectValid( Gtk::gdk_rectangle_is_valid( &previousRect ) );
+        const bool currentRectValid( Gtk::gdk_rectangle_is_valid( &currentRect ) );
 
-            previousRect.x += _previous._xOffset;
-            previousRect.y += _previous._yOffset;
+        if( previousRectValid && currentRectValid ) gdk_rectangle_union( &previousRect, &currentRect, &rect );
+        else if( previousRectValid ) rect = previousRect;
+        else if( currentRectValid ) rect = currentRect;
 
-            currentRect.x += _current._xOffset;
-            currentRect.y += _current._yOffset;
-
-            gdk_rectangle_union( &previousRect, &currentRect, &rect );
-
-        } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
-
-            previousRect.x += _previous._xOffset;
-            previousRect.y += _previous._yOffset;
-
-            rect = previousRect;
-
-        } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
-
-            currentRect.x += _current._xOffset;
-            currentRect.y += _current._yOffset;
-
-            rect = currentRect;
-
-        }
-
-        // also union with dirty rect
+        // add _dirtyRect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
 
@@ -299,6 +279,38 @@ namespace Oxygen
             else rect = _dirtyRect;
 
             _dirtyRect = Gtk::gdk_rectangle();
+
+        }
+
+        // add followMouse dirtyRect
+        if( followMouse() )
+        {
+            GdkRectangle followMouseRect( FollowMouseData::dirtyRect() );
+            const bool followMouseRectValid( Gtk::gdk_rectangle_is_valid( &followMouseRect ) );
+
+            if( previousRectValid )
+            {
+
+                followMouseRect.x += _previous._xOffset;
+                followMouseRect.y += _previous._yOffset;
+
+            } else if( currentRectValid ) {
+
+                followMouseRect.x += _current._xOffset;
+                followMouseRect.y += _current._yOffset;
+
+            }
+
+            if( Gtk::gdk_rectangle_is_valid( &rect ) && followMouseRectValid )
+            {
+
+                gdk_rectangle_union( &followMouseRect, &rect, &rect );
+
+            } else if( followMouseRectValid ) {
+
+                rect = followMouseRect;
+
+            }
 
         }
 
@@ -346,14 +358,7 @@ namespace Oxygen
         {
 
             data.updateAnimatedRect();
-
-            // TODO: implement dedicated dirtyRect
-            GdkRectangle rect( data._target->allocation );
-            rect.x += data._horizontalPadding;
-            rect.y += data._verticalPadding;
-            rect.width -= 2*data._horizontalPadding;
-            rect.height -= 2*data._verticalPadding;
-
+            const GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
         }

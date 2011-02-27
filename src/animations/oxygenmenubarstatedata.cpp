@@ -216,32 +216,41 @@ namespace Oxygen
     {
 
         GdkRectangle rect( Gtk::gdk_rectangle() );
-
         const GdkRectangle previousRect( _previous._rect );
         const GdkRectangle currentRect( _current._rect );
 
-        if( Gtk::gdk_rectangle_is_valid( &previousRect ) && Gtk::gdk_rectangle_is_valid( &currentRect ) )
-        {
+        const bool previousRectValid( Gtk::gdk_rectangle_is_valid( &previousRect ) );
+        const bool currentRectValid( Gtk::gdk_rectangle_is_valid( &currentRect ) );
 
-            gdk_rectangle_union( &previousRect, &currentRect, &rect );
+        if( previousRectValid && currentRectValid ) gdk_rectangle_union( &previousRect, &currentRect, &rect );
+        else if( previousRectValid ) rect = previousRect;
+        else if( currentRectValid ) rect = currentRect;
 
-        } else if( Gtk::gdk_rectangle_is_valid( &previousRect ) ) {
-
-            rect = previousRect;
-
-        } else if( Gtk::gdk_rectangle_is_valid( &currentRect ) ) {
-
-            rect = currentRect;
-
-        }
-
-        // also union with dirty rect
+        // add _dirtyRect
         if( Gtk::gdk_rectangle_is_valid( &_dirtyRect ) )
         {
             if( Gtk::gdk_rectangle_is_valid( &rect ) ) gdk_rectangle_union( &_dirtyRect, &rect, &rect );
             else rect = _dirtyRect;
 
             _dirtyRect = Gtk::gdk_rectangle();
+
+        }
+
+        // add followMouse dirtyRect
+        if( followMouse() )
+        {
+            const GdkRectangle followMouseRect( FollowMouseData::dirtyRect() );
+            const bool followMouseRectValid( Gtk::gdk_rectangle_is_valid( &followMouseRect ) );
+            if( Gtk::gdk_rectangle_is_valid( &rect ) && followMouseRectValid )
+            {
+
+                gdk_rectangle_union( &followMouseRect, &rect, &rect );
+
+            } else if( followMouseRectValid ) {
+
+                rect = followMouseRect;
+
+            }
 
         }
 
@@ -287,7 +296,7 @@ namespace Oxygen
         if( data._target && data.followMouse() )
         {
             data.updateAnimatedRect();
-            GdkRectangle rect( data.FollowMouseData::dirtyRect() );
+            GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
         }
 

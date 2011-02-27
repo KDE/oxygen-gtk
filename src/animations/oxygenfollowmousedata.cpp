@@ -117,14 +117,6 @@ namespace Oxygen
 
         }
 
-        if( Gtk::gdk_rectangle_is_valid( &rect ) && _dirtyMargins != 0 )
-        {
-            rect.x -= _dirtyMargins;
-            rect.y -= _dirtyMargins;
-            rect.width += 2*_dirtyMargins;
-            rect.height += 2*_dirtyMargins;
-        }
-
         return rect;
 
     }

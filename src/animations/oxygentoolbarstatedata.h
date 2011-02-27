@@ -42,7 +42,7 @@ namespace Oxygen
         ToolBarStateData( void ):
             _target( 0L ),
             _dirtyRect( Gtk::gdk_rectangle() )
-        { FollowMouseData::setDirtyMargins( 2 ); }
+        {}
 
         //! destructor
         virtual ~ToolBarStateData( void )

@@ -38,8 +38,7 @@ namespace Oxygen
             _startRect( Gtk::gdk_rectangle() ),
             _endRect( Gtk::gdk_rectangle() ),
             _animatedRect( Gtk::gdk_rectangle() ),
-            _dirtyRect( Gtk::gdk_rectangle() ),
-            _dirtyMargins( 0 )
+            _dirtyRect( Gtk::gdk_rectangle() )
         {}
 
         //! destructor
@@ -96,10 +95,6 @@ namespace Oxygen
         //! follow-mouse dirty rect
         GdkRectangle dirtyRect( void );
 
-        //! dirty margins
-        void setDirtyMargins( int value )
-        { _dirtyMargins = value; }
-
         //! start follow-mouse animation
         void startAnimation( const GdkRectangle&, const GdkRectangle& );
 
@@ -125,9 +120,6 @@ namespace Oxygen
 
         //! dirty rect
         GdkRectangle _dirtyRect;
-
-        //! extra margins for dirty rect
-        int _dirtyMargins;
 
     };
 
