@@ -80,42 +80,44 @@ namespace Oxygen
     void Animations::initialize( const QtSettings& settings )
     {
 
+        const bool animationsEnabled( settings.animationsEnabled() );
+
         // pass animations configuration to engines
         widgetStateEngine().setApplicationName( settings.applicationName() );
-        widgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        widgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         widgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         arrowStateEngine().setApplicationName( settings.applicationName() );
-        arrowStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        arrowStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         arrowStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         scrollBarStateEngine().setApplicationName( settings.applicationName() );
-        scrollBarStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        scrollBarStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         scrollBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         tabWidgetStateEngine().setApplicationName( settings.applicationName() );
-        tabWidgetStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        tabWidgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         tabWidgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         treeViewStateEngine().setApplicationName( settings.applicationName() );
-        treeViewStateEngine().setEnabled( settings.genericAnimationsEnabled() );
+        treeViewStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
         menuBarStateEngine().setApplicationName( settings.applicationName() );
-        menuBarStateEngine().setAnimationsEnabled( settings.menuBarAnimationType() != None );
+        menuBarStateEngine().setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != None) );
         menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
         menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
         menuStateEngine().setApplicationName( settings.applicationName() );
-        menuStateEngine().setEnabled( settings.menuAnimationType() != None );
+        menuStateEngine().setEnabled( animationsEnabled && (settings.menuAnimationType() != None) );
         menuStateEngine().setFollowMouse( settings.menuAnimationType() == FollowMouse );
         menuStateEngine().setDuration( settings.menuAnimationsDuration() );
         menuStateEngine().setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
 
         // for now, only Fade animations mode is supported for toolbar animations
         toolBarStateEngine().setApplicationName( settings.applicationName() );
-        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() != None );
+        toolBarStateEngine().setEnabled( animationsEnabled && (settings.toolBarAnimationType() != None) );
         toolBarStateEngine().setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
         toolBarStateEngine().setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
