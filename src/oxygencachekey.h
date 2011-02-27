@@ -688,10 +688,11 @@ namespace Oxygen
         public:
 
         //! constructor
-        WindecoBorderKey( WinDeco::Options wopt, const int width, const int height ):
+        WindecoBorderKey( WinDeco::Options wopt, const int width, const int height, bool gradient ):
             _wopt(wopt),
             _width(width),
-            _height(height)
+            _height(height),
+            _gradient(gradient)
         {}
 
         //! equal to operator
@@ -699,7 +700,8 @@ namespace Oxygen
         {
             return _width == other._width &&
                 _height == other._height &&
-                _wopt == other._wopt;
+                _wopt == other._wopt &&
+                _gradient == other._gradient;
         }
 
         //! less than operator
@@ -707,6 +709,7 @@ namespace Oxygen
         {
             if( _width != other._width ) return _width < other._width;
             else if( _height != other._height ) return _height < other._height;
+            else if( _gradient != other._gradient ) return _gradient < other._gradient;
             else return _wopt < other._wopt;
         }
 
@@ -715,6 +718,7 @@ namespace Oxygen
         WinDeco::Options _wopt;
         int _width;
         int _height;
+        bool _gradient;
     };
 
     //! key for other windeco borders
