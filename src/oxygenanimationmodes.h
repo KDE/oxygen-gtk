@@ -36,7 +36,7 @@ namespace Oxygen
     used for engines that keep track of previously(fade-out) and
     currently (fade-in) animated objects
     */
-    enum AnimationType
+    enum WidgetType
     {
         AnimationCurrent,
         AnimationPrevious

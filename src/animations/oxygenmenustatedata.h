@@ -105,19 +105,19 @@ namespace Oxygen
         { return isAnimated( AnimationCurrent ) || isAnimated( AnimationPrevious ); }
 
         //! true if given animation type is animated
-        bool isAnimated( const AnimationType& type ) const
+        bool isAnimated( const WidgetType& type ) const
         { return data( type )._timeLine.isRunning(); }
 
         //! widget for current animation type
-        GtkWidget* widget( const AnimationType& type ) const
+        GtkWidget* widget( const WidgetType& type ) const
         { return data( type )._widget; }
 
         //! rect for given animation type
-        const GdkRectangle& rectangle( const AnimationType& type ) const
+        const GdkRectangle& rectangle( const WidgetType& type ) const
         { return data( type )._rect; }
 
         //! animation data
-        AnimationData animationData( const AnimationType& type ) const
+        AnimationData animationData( const WidgetType& type ) const
         {
             const Data& data( this->data( type ) );
             return data._timeLine.isRunning() ?
@@ -220,7 +220,7 @@ namespace Oxygen
         };
 
         //! get data for given animation type
-        Data& data( const AnimationType& type )
+        Data& data( const WidgetType& type )
         {
             switch( type )
             {
@@ -231,7 +231,7 @@ namespace Oxygen
         }
 
         //! get data for given animation type
-        const Data& data( const AnimationType& type ) const
+        const Data& data( const WidgetType& type ) const
         {
             switch( type )
             {

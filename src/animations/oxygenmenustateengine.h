@@ -123,19 +123,19 @@ namespace Oxygen
         { return data().value( widget ).isAnimated(); }
 
         //! true if given animation type is animated
-        bool isAnimated( GtkWidget* widget, const AnimationType& type )
+        bool isAnimated( GtkWidget* widget, const WidgetType& type )
         { return data().value( widget ).isAnimated( type ); }
 
         //! animated widget for given parent and type
-        GtkWidget* widget( GtkWidget* widget, const AnimationType& type )
+        GtkWidget* widget( GtkWidget* widget, const WidgetType& type )
         { return data().value( widget ).widget( type ); }
 
         //! animated rect for given widget and type
-        const GdkRectangle& rectangle( GtkWidget* widget, const AnimationType& type )
+        const GdkRectangle& rectangle( GtkWidget* widget, const WidgetType& type )
         { return data().value( widget ).rectangle( type ); }
 
         //! animation data for given widget and type
-        AnimationData animationData( GtkWidget* widget, const AnimationType& type )
+        AnimationData animationData( GtkWidget* widget, const WidgetType& type )
         { return data().value( widget ).animationData( type ); }
 
         //! returns true if animated rectangle is valid
