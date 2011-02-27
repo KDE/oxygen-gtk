@@ -115,6 +115,17 @@ namespace Oxygen
         inline bool gdk_rectangle_is_valid( const GdkRectangle* rect )
         { return rect && rect->width > 0 && rect->height > 0; }
 
+        //! performs union of two rectangle, properly accounting for their validity
+        inline void gdk_rectangle_union( const GdkRectangle* first, const GdkRectangle* second, GdkRectangle* out )
+        {
+            if( !out ) return;
+            const bool firstIsValid( Gtk::gdk_rectangle_is_valid( first ) );
+            const bool secondIsValid( Gtk::gdk_rectangle_is_valid( second ) );
+            if( firstIsValid && secondIsValid )  ::gdk_rectangle_union( first, second, out );
+            else if( secondIsValid ) *out = *second;
+            else *out = *first;
+        }
+
         //! returns true if given rectangle contains point
         inline bool gdk_rectangle_contains( const GdkRectangle* rect, int x, int y )
         {
