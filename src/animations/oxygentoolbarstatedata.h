@@ -150,7 +150,7 @@ namespace Oxygen
         void unregisterChild( GtkWidget* );
 
         //! update state for given widget
-        bool updateState( GtkWidget*, bool );
+        bool updateState( GtkWidget*, bool state, bool delayed );
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );

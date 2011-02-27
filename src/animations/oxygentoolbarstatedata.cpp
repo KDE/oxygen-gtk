@@ -37,6 +37,7 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
+    const int ToolBarStateData::_timeOut = 50;
     void ToolBarStateData::connect( GtkWidget* widget )
     {
 
@@ -58,6 +59,10 @@ namespace Oxygen
         _current._timeLine.setDirection( TimeLine::Forward );
         _previous._timeLine.setDirection( TimeLine::Backward );
 
+        // follow mouse animation
+        _timeLine.connect( (GSourceFunc)followMouseUpdate, this );
+        _timeLine.setDirection( TimeLine::Forward );
+
     }
 
     //________________________________________________________________________________
@@ -76,6 +81,8 @@ namespace Oxygen
         // disconnect timelines
         _current._timeLine.disconnect();
         _previous._timeLine.disconnect();
+        _timeLine.disconnect();
+        _timer.stop();
 
         // disconnect all children
         for( HoverDataMap::iterator iter = _hoverData.begin(); iter != _hoverData.end(); ++iter )
@@ -109,7 +116,7 @@ namespace Oxygen
 
             // and insert in map
             _hoverData.insert( std::make_pair( widget, data ) );
-            updateState( widget, value );
+            updateState( widget, value, false );
 
 
         }
@@ -138,13 +145,16 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    bool ToolBarStateData::updateState( GtkWidget* widget, bool state )
+    bool ToolBarStateData::updateState( GtkWidget* widget, bool state, bool delayed )
     {
 
         const GdkRectangle rect( widget ? widget->allocation : Gtk::gdk_rectangle() );
 
         if( state && widget != _current._widget )
         {
+
+            // stop timer
+            if( _timer.isRunning() ) _timer.stop();
 
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
@@ -162,8 +172,15 @@ namespace Oxygen
             }
 
             // assign new widget to current and start animation
+            const GdkRectangle startRect( _current._rect );
+            const bool animate( !_current.isValid() );
             _current.update( widget, rect );
-            if( _current.isValid() ) _current._timeLine.start();
+            if( _current.isValid() )
+            {
+                if( animate || !_followMouse ) _current._timeLine.start();
+                else startAnimation( startRect, _current._rect );
+
+            }
 
             return true;
 
@@ -179,9 +196,20 @@ namespace Oxygen
             { _dirtyRect = _previous._rect; }
 
             // move current to previous; clear current, and animate
-            _previous.copy( _current );
-            _current.clear();
-            if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
+            if( _followMouse && delayed ) {
+
+                if( !_timer.isRunning() )
+                { _timer.start( _timeOut, (GSourceFunc)delayedAnimate, this ); }
+
+            } else {
+
+                if( _timer.isRunning() ) _timer.stop();
+                _previous.copy( _current );
+                _current.clear();
+                if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT )
+                { _previous._timeLine.start(); }
+
+            }
 
             return true;
 
@@ -231,6 +259,63 @@ namespace Oxygen
 
     }
 
+    //________________________________________________________________________________
+    void ToolBarStateData::startAnimation( const GdkRectangle& startRect, const GdkRectangle& endRect )
+    {
+
+        // copy end rect
+        _endRect = endRect;
+
+        // check timeLine status
+        if( _timeLine.isRunning() &&
+            _timeLine.value() < 1.0 &&
+            Gtk::gdk_rectangle_is_valid( &_endRect ) &&
+            Gtk::gdk_rectangle_is_valid( &_animatedRect ) )
+        {
+
+            // do some math so that the animation finishes at new endRect without discontinuity
+            const double ratio( _timeLine.value()/(1.0-_timeLine.value() ) );
+            _startRect.x += double( _animatedRect.x - _endRect.x )*ratio;
+            _startRect.y += double( _animatedRect.y - _endRect.y )*ratio;
+            _startRect.width += double( _animatedRect.width - _endRect.width )*ratio;
+            _startRect.height += double( _animatedRect.height - _endRect.height )*ratio;
+
+
+        } else {
+
+            if( _timeLine.isRunning() ) _timeLine.stop();
+            _startRect = startRect;
+            _timeLine.start();
+
+        }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________
+    void ToolBarStateData::updateAnimatedRect( void )
+    {
+        if( _timeLine.isRunning() &&
+            Gtk::gdk_rectangle_is_valid( &_startRect ) &&
+            Gtk::gdk_rectangle_is_valid( &_endRect ) )
+        {
+
+            _animatedRect.x = _startRect.x + double( _endRect.x - _startRect.x )*_timeLine.value();
+            _animatedRect.y = _startRect.y + double( _endRect.y - _startRect.y )*_timeLine.value();
+            _animatedRect.width = _startRect.width + double( _endRect.width - _startRect.width )*_timeLine.value();
+            _animatedRect.height = _startRect.height + double( _endRect.height - _startRect.height )*_timeLine.value();
+
+        } else {
+
+            _animatedRect = Gtk::gdk_rectangle();
+
+        }
+
+        return;
+
+    }
+
     //____________________________________________________________________________________________
     gboolean ToolBarStateData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
     {
@@ -258,7 +343,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        static_cast<ToolBarStateData*>( data )->updateState( widget, true );
+        static_cast<ToolBarStateData*>( data )->updateState( widget, true, false );
         return FALSE;
     }
 
@@ -272,7 +357,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        static_cast<ToolBarStateData*>( data )->updateState( widget, false );
+        static_cast<ToolBarStateData*>( data )->updateState( widget, false, true );
         return FALSE;
 
     }
@@ -293,4 +378,39 @@ namespace Oxygen
 
     }
 
+    //_____________________________________________
+    gboolean ToolBarStateData::followMouseUpdate( gpointer pointer )
+    {
+
+        ToolBarStateData& data( *static_cast<ToolBarStateData*>( pointer ) );
+
+        if( data._target && data._followMouse )
+        {
+
+            data.updateAnimatedRect();
+
+            // TODO: implement dedicated dirtyRect
+            GdkRectangle rect( data._target->allocation );
+            Gtk::gtk_widget_queue_draw( data._target, &rect );
+
+        }
+
+        return FALSE;
+
+    }
+
+    //_____________________________________________
+    gboolean ToolBarStateData::delayedAnimate( gpointer pointer )
+    {
+
+        ToolBarStateData& data( *static_cast<ToolBarStateData*>( pointer ) );
+        data._previous.copy( data._current );
+        data._current.clear();
+
+        if( data._previous.isValid() )
+        { data._previous._timeLine.start(); }
+
+        return FALSE;
+
+    }
 }

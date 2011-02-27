@@ -118,6 +118,10 @@ namespace Oxygen
         toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == Fade );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
+        // TODO: use QtSettings
+        toolBarStateEngine().setFollowMouse( true );
+        toolBarStateEngine().setFollowMouseAnimationsDuration( 50 );
+
     }
 
     //____________________________________________________________________________________________

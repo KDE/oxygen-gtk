@@ -44,7 +44,9 @@ namespace Oxygen
 
         //! constructor
         ToolBarStateEngine( Animations* parent ):
-            GenericEngine<ToolBarStateData>( parent )
+            GenericEngine<ToolBarStateData>( parent ),
+            _followMouse( false ),
+            _followMouseAnimationsDuration( 50 )
             {}
 
         //! destructor
@@ -59,6 +61,8 @@ namespace Oxygen
             {
                 data().value( widget ).setDuration( duration() );
                 data().value( widget ).setEnabled( enabled() );
+                data().value( widget ).setFollowMouse( _followMouse );
+                data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
             return registered;
         }
@@ -91,6 +95,28 @@ namespace Oxygen
             for( DataMap<ToolBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
             { iter->second.setDuration( value ); }
             return false;
+        }
+
+        //! enable follow-mouse animation
+        bool setFollowMouse( bool value )
+        {
+            if( _followMouse == value ) return false;
+            _followMouse = value;
+
+            for( DataMap<ToolBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouse( value && !widgetIsBlackListed( iter->first ) ); }
+            return true;
+        }
+
+        //! follow-mouse animations duration
+        bool setFollowMouseAnimationsDuration( int value )
+        {
+            if( _followMouseAnimationsDuration == value ) return false;
+            _followMouseAnimationsDuration = value;
+
+            for( DataMap<ToolBarStateData>::Map::iterator iter = data().map().begin(); iter != data().map().end(); iter++ )
+            { iter->second.setFollowMouseAnimationsDuration( value ); }
+            return true;
         }
 
         //@}
@@ -128,6 +154,14 @@ namespace Oxygen
         { return data().value( widget ).animationData( type ); }
 
         //@}
+
+        private:
+
+        //! follow-mouse enabled
+        bool _followMouse;
+
+        //! follow-mouse animation duration
+        int _followMouseAnimationsDuration;
 
     };
 
