@@ -282,9 +282,6 @@ namespace Oxygen
         //!@name animation data
         //@{
 
-        //! true if menu item mouse-over is animated
-        bool _animationsEnabled;
-
         //! additional dirty rect
         GdkRectangle _dirtyRect;
 
