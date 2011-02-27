@@ -67,13 +67,32 @@ namespace Oxygen
 
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
         engine.registerWidget(widget);
-        if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE )
+
+        if( engine.animatedRectangleIsValid( widget ) )
         {
+
+            const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+
+            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options );
+
+        } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
+
+            const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+
+            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options );
+
+        } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
+
             const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
             const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
             StyleOptions options( Flat );
             options |= Hover;
             Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
+
         }
 
     }
@@ -913,21 +932,27 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // register to ToolBarState engine
-                if( GtkWidget* parent = Style::instance().animations().toolBarStateEngine().findParent( widget ) )
+                ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+                if( GtkWidget* parent = engine.findParent( widget ) )
                 {
 
                     // register child
-                    Style::instance().animations().toolBarStateEngine().registerChild( parent, widget, options&Hover );
-
+                    engine.registerChild( parent, widget, options&Hover );
                     useWidgetState = false;
-                    if( Style::instance().animations().toolBarStateEngine().widget( parent, AnimationCurrent ) == widget )
-                    {
 
-                        data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationCurrent );
+                    if( engine.animatedRectangleIsValid( parent ) && !(options&Sunken) ) {
 
-                    } else if( (options & Sunken ) && Style::instance().animations().toolBarStateEngine().widget( parent, AnimationPrevious ) == widget ) {
+                        return;
 
-                        data = Style::instance().animations().toolBarStateEngine().animationData( parent, AnimationPrevious );
+                    } if( engine.widget( parent, AnimationCurrent ) == widget ) {
+
+                        data = engine.animationData( parent, AnimationCurrent );
+
+                        if( engine.isLocked( parent ) ) options |= Hover;
+
+                    } else if( (options & Sunken ) && engine.widget( parent, AnimationPrevious ) == widget ) {
+
+                        data = engine.animationData( parent, AnimationPrevious );
 
                     }
 

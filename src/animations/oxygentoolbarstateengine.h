@@ -153,6 +153,18 @@ namespace Oxygen
         AnimationData animationData( GtkWidget* widget, const WidgetType& type )
         { return data().value( widget ).animationData( type ); }
 
+        //! returns true if animated rectangle is valid
+        bool animatedRectangleIsValid( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangleIsValid(); }
+
+        //! animated rectangle
+        const GdkRectangle& animatedRectangle( GtkWidget* widget )
+        { return data().value( widget ).animatedRectangle(); }
+
+        //! true when fade out animation is locked (delayed)
+        bool isLocked( GtkWidget* widget )
+        { return data().value( widget ).isLocked(); }
+
         //@}
 
         private:

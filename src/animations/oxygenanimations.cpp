@@ -115,12 +115,10 @@ namespace Oxygen
 
         // for now, only Fade animations mode is supported for toolbar animations
         toolBarStateEngine().setApplicationName( settings.applicationName() );
-        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() == Fade );
+        toolBarStateEngine().setEnabled( settings.toolBarAnimationType() != None );
+        toolBarStateEngine().setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
-
-        // TODO: use QtSettings
-        toolBarStateEngine().setFollowMouse( true );
-        toolBarStateEngine().setFollowMouseAnimationsDuration( 50 );
+        toolBarStateEngine().setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
 
     }
 
