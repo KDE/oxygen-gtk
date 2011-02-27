@@ -52,6 +52,11 @@ namespace Oxygen
                 NULL );
         }
 
+        // this accounts for x/y thickness.
+        // needs to retrieve it from widget
+        _horizontalPadding += gtk_widget_get_style( widget )->xthickness;
+        _verticalPadding += gtk_widget_get_style( widget )->ythickness;
+
         _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
         _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
 
