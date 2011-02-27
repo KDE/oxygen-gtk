@@ -55,15 +55,15 @@ namespace Oxygen
         //! enable state
         void setEnabled( bool value )
         {
-            data( GTK_ARROW_UP )._timeLine.setEnabled( value );
-            data( GTK_ARROW_DOWN )._timeLine.setEnabled( value );
+            _upArrowData._timeLine.setEnabled( value );
+            _downArrowData._timeLine.setEnabled( value );
         }
 
         //! duration
         void setDuration( int value )
         {
-            data( GTK_ARROW_UP )._timeLine.setDuration( value );
-            data( GTK_ARROW_DOWN )._timeLine.setDuration( value );
+            _upArrowData._timeLine.setDuration( value );
+            _downArrowData._timeLine.setDuration( value );
         }
 
         //! true if timeline for give arrow type is running
