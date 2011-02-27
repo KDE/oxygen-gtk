@@ -654,7 +654,8 @@ namespace Oxygen
 
             // hole inside
             cairo_set_source( context, base );
-            cairo_ellipse( context, 3.4, 3.4, 7.2, 7.2 );
+            //cairo_ellipse( context, 3.4, 3.4, 7.2, 7.2 );
+            cairo_ellipse( context, 3.7, 3.7, 6.6, 6.6 );
             cairo_fill( context );
 
         }
