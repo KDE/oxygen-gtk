@@ -187,9 +187,6 @@ namespace Oxygen
     bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset, bool state, bool delayed )
     {
 
-        // do nothing if animations are disabled
-        if( !_animationsEnabled ) return true;
-
         if( state && widget != _current._widget )
         {
 
