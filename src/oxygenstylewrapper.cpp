@@ -91,6 +91,7 @@ namespace Oxygen
             const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
             StyleOptions options( Flat );
             options |= Hover;
+
             Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
 
         }
@@ -1731,7 +1732,13 @@ namespace Oxygen
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
             if( !Style::instance().settings().applicationName().isOpenOffice() )
-            { Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 ); }
+            {
+                Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 );
+
+                // also draw possible animated tool button
+                draw_animated_button( window, clipRect, widget );
+
+            }
 
             Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
