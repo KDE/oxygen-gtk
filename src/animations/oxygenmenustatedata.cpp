@@ -209,11 +209,13 @@ namespace Oxygen
             // assign new widget to current and start animation
             const bool animate( !_current.isValid() );
             const GdkRectangle startRect( _current._rect );
+            const int startOffset( _current._yOffset );
             _current.update( widget, rect, xOffset, yOffset );
+
             if( _current.isValid() )
             {
                 if( animate ) _current._timeLine.start();
-                else if( followMouse() ) startAnimation( startRect, _current._rect );
+                else if( followMouse() && (startOffset == _current._yOffset ) ) startAnimation( startRect, _current._rect );
                 else delayedUpdate( this );
             }
 
