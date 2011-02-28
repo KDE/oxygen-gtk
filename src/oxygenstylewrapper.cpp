@@ -1000,7 +1000,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options, data );
+                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
                 }
 
