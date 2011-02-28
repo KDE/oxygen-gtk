@@ -195,6 +195,7 @@ namespace Oxygen
             // move current to previous; clear current, and animate
             if( followMouse() && delayed ) {
 
+                // start delayed animation
                 if( !_timer.isRunning() )
                 { _timer.start( _timeOut, (GSourceFunc)delayedAnimate, this ); }
 
@@ -203,8 +204,9 @@ namespace Oxygen
                 if( _timer.isRunning() ) _timer.stop();
                 _previous.copy( _current );
                 _current.clear();
-                if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT )
-                { _previous._timeLine.start(); }
+
+                // start fade-out timeLine
+                if( _previous.isValid() ) _previous._timeLine.start();
 
             }
 
@@ -264,7 +266,7 @@ namespace Oxygen
     void ToolBarStateData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
     { static_cast<ToolBarStateData*>(data)->unregisterChild( widget ); }
 
-        //________________________________________________________________________________
+    //________________________________________________________________________________
     gboolean ToolBarStateData::childEnterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )
     {
 
@@ -296,10 +298,13 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    gboolean ToolBarStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
+    gboolean ToolBarStateData::leaveNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer pointer )
     {
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ToolBarStateData::leaveNotifyEvent" << std::endl;
+        std::cerr
+            << "Oxygen::ToolBarStateData::leaveNotifyEvent -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
         #endif
 
         ToolBarStateData& data( *static_cast<ToolBarStateData*>( pointer ) );
