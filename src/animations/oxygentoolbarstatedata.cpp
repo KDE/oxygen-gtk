@@ -334,7 +334,6 @@ namespace Oxygen
 
             data.updateAnimatedRect();
 
-            // TODO: implement dedicated dirtyRect
             GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
