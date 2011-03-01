@@ -349,20 +349,64 @@ namespace Oxygen
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
-            const int xOffset( style ? style->xthickness + 1 - Style::Entry_SideMargin : 3 );
-            const int yOffset( style ? style->ythickness + 1 : 3);
+            const int xOffset( style->xthickness + 1 - Style::Entry_SideMargin );
 
-            // there is no need to render anything if both offsets are larger than 4
-            if( xOffset > 4 && yOffset > 4 ) return;
-
-            // adjust rect using offsets above
+            // adjust horizontal positioning and width
             x -= xOffset;
-            y -= yOffset;
             w += 2*xOffset;
-            h += 2*yOffset;
 
-            if( GTK_IS_SPIN_BUTTON( widget ) )
+            if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
             {
+
+                // check if parent is in style map
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
+                Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+
+                if( state != GTK_STATE_INSENSITIVE )
+                {
+                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    else options &= ~Focus;
+
+                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    else options &= ~Hover;
+                }
+
+                /*
+                for some reason, adjusting y and h using ythickness does not work for combobox_entry
+                one need to use parent allocation instead
+                */
+                y -= (parent->allocation.height-h + 1)/2;
+                h = parent->allocation.height;
+
+                // partial highlight
+                TileSet::Tiles tiles( TileSet::Ring );
+
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    // hide left part and increase width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, tiles );
+
+                } else {
+
+                    // hide right part and increase width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
+
+                }
+
+            } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
+
+                const int yOffset( style->ythickness + 1 );
+
+                // there is no need to render anything if both offsets are larger than 4
+                if( xOffset > 4 && yOffset > 4 ) return;
+
+                // adjust vertical positioning and height
+                y -= yOffset;
+                h += 2*yOffset;
 
                 // for openoffice only draw solid window background
                 // the rest of the spinbutton is painted on top, in draw_box and draw_shadow
@@ -399,44 +443,16 @@ namespace Oxygen
 
                 }
 
-            } else if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) ) {
+            } else  {
 
-                // check if parent is in style map
-                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
-                Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
-                Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+                const int yOffset( style->ythickness + 1 );
 
-                if( state != GTK_STATE_INSENSITIVE )
-                {
-                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
-                    else options &= ~Focus;
+                // there is no need to render anything if both offsets are larger than 4
+                if( xOffset > 4 && yOffset > 4 ) return;
 
-                    if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
-                    else options &= ~Hover;
-                }
-
-                // since combobox entry is drawn in the combobox full height, we'll have to adjust glow height
-                y -= (parent->allocation.height-h)/2;
-                h = parent->allocation.height;
-
-                // partial highlight
-                TileSet::Tiles tiles( TileSet::Ring );
-
-                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
-                {
-
-                    // hide left part and increase width
-                    tiles &= ~TileSet::Left;
-                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, tiles );
-
-                } else {
-
-                    // hide right part and increase width
-                    tiles &= ~TileSet::Right;
-                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, tiles );
-
-                }
-            } else {
+                // adjust vertical positioning and height
+                y -= yOffset;
+                h += 2*yOffset;
 
                 if(
                     Style::instance().animations().hoverEngine().contains( widget ) &&
