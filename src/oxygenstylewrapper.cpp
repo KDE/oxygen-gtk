@@ -3136,7 +3136,7 @@ namespace Oxygen
             } else if( useEffect && state == GTK_STATE_PRELIGHT ) {
 
                 stated = gdk_pixbuf_copy( scaled );
-                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.5 ) )
+                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
                 {
                     // FIXME: correct the value to match KDE
                     /*
