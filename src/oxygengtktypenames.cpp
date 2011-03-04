@@ -202,15 +202,17 @@ namespace Oxygen
         { GTK_RESPONSE_YES, "yes" },
         { GTK_RESPONSE_NO, "no" },
         { GTK_RESPONSE_APPLY, "apply" },
-        { GTK_RESPONSE_HELP, "help" }
+        { GTK_RESPONSE_HELP, "help" },
+        { (GtkResponseType)1, "id 1" }
     };
+    const int responseTypeMapSize=sizeof(responseTypeMap)/sizeof(responseTypeMap[0]);
 
     //__________________________________________________________________
     GtkResponseType Gtk::TypeNames::matchResponse( const char*  cssResponseType )
-    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, 11 ).findGtk( cssResponseType, GTK_RESPONSE_NONE ); }
+    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, responseTypeMapSize ).findGtk( cssResponseType, GTK_RESPONSE_NONE ); }
 
     //__________________________________________________________________
     const char*  Gtk::TypeNames::response( GtkResponseType gtkResponseType )
-    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, 11 ).findCss( gtkResponseType ); }
+    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, responseTypeMapSize ).findCss( gtkResponseType ); }
 
 }
