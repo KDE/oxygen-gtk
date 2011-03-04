@@ -20,6 +20,7 @@
 
 #include "oxygendialogengine.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 namespace Oxygen
 {
