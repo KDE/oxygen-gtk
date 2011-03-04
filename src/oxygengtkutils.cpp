@@ -997,16 +997,25 @@ namespace Oxygen
 
         children = gtk_container_get_children (GTK_CONTAINER (dialog->action_area));
 
+        #if OXYGEN_DEBUG
+        std::cerr << "rid: ";
+        #endif
         for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
         {
             gint rid = gtk_dialog_get_response_for_widget(dialog, GTK_WIDGET(tmp_list->data));
 
+            #if OXYGEN_DEBUG
+            std::cerr << Gtk::TypeNames::response( (GtkResponseType)rid ) << ", ";
+            #endif
             if (rid == response_id)
             {
                 child = GTK_WIDGET(tmp_list->data);
                 break;
             }
         }
+        #if OXYGEN_DEBUG
+        std::cerr << std::endl;
+        #endif
 
         g_list_free (children);
 

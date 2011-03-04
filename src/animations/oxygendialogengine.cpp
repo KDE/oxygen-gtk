@@ -36,6 +36,7 @@ namespace Oxygen
 
         GtkResponseType responses[]={
             GTK_RESPONSE_HELP,
+            (GtkResponseType)1, // FIXME: This id is commonly used, but doesn't seem to be documented anywhere...
             GTK_RESPONSE_OK,
             GTK_RESPONSE_YES,
             GTK_RESPONSE_ACCEPT,
@@ -47,13 +48,24 @@ namespace Oxygen
         };
         const int numOfResponseIDs=sizeof(responses)/sizeof(responses[0]);
 
+        #if OXYGEN_DEBUG
+        std::cerr<<"Initial response table: ";
+        for(int i=0; i<numOfResponseIDs; i++)
+        {
+            std::cerr << Gtk::TypeNames::response( responses[i] ) << ", ";
+        }
+        std::cerr<<std::endl;
+        #endif
+
+        GtkWidget* button;
         int numOfResponsesFound=0;
         for(int i=0; i<numOfResponseIDs; i++)
         {
-            if(Gtk::dialog_find_button(dialog,responses[i]))
+            button=Gtk::dialog_find_button(dialog,responses[i]);
+            if(button)
             {
                 #if OXYGEN_DEBUG
-                std::cerr << "responseID found: " << Gtk::TypeNames::response( responses[i] ) << std::endl;
+                std::cerr << "responseID found: " << Gtk::TypeNames::response( responses[i] ) << "; button \"" << gtk_button_get_label(GTK_BUTTON(button)) << "\""  << std::endl;
                 #endif
                 // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
                 responses[numOfResponsesFound]=responses[i];
@@ -62,6 +74,13 @@ namespace Oxygen
         }
         #if OXYGEN_DEBUG
         std::cerr << "numOfResponsesFound: " << numOfResponsesFound << std::endl;
+        for(int i=0; i<numOfResponseIDs; i++)
+        {
+            std::cerr << Gtk::TypeNames::response( responses[i] ) << ", ";
+            if(i==numOfResponsesFound-1)
+                std::cerr<<"_END_of_found_,";
+        }
+        std::cerr << "\n\n";
         #endif
 
         // change order
