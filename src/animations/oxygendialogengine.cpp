@@ -19,6 +19,7 @@
 */
 
 #include "oxygendialogengine.h"
+#include "../oxygengtktypenames.h"
 #include "../oxygengtkutils.h"
 #include "../config.h"
 
@@ -31,7 +32,7 @@ namespace Oxygen
 
         GtkDialog* dialog(GTK_DIALOG(widget));
 
-        gint responses[]={
+        GtkResponseType responses[]={
             GTK_RESPONSE_HELP,
             GTK_RESPONSE_OK,
             GTK_RESPONSE_YES,
@@ -50,7 +51,7 @@ namespace Oxygen
             if(Gtk::dialog_find_button(dialog,responses[i]))
             {
                 #if OXYGEN_DEBUG
-                std::cerr << "responseID found: " << responses[i] << std::endl;
+                std::cerr << "responseID found: " << Gtk::TypeNames::response( responses[i] ) << std::endl;
                 #endif
                 // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
                 responses[numOfResponsesFound]=responses[i];
@@ -62,7 +63,7 @@ namespace Oxygen
         #endif
 
         // change order
-        gtk_dialog_set_alternative_button_order_from_array( dialog, numOfResponsesFound,responses );
+        gtk_dialog_set_alternative_button_order_from_array( dialog, numOfResponsesFound, (gint*) responses );
 
         // insert in set
         _data.insert( widget );
