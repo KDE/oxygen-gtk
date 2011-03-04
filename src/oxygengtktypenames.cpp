@@ -188,4 +188,29 @@ namespace Oxygen
     const char*  Gtk::TypeNames::expanderStyle( GtkExpanderStyle gtkExpanderStyle )
     { return Gtk::TypeNames::Finder<GtkExpanderStyle>( expanderStyleMap, 4 ).findCss( gtkExpanderStyle ); }
 
+    //__________________________________________________________________
+    typedef Gtk::TypeNames::Entry<GtkResponseType> ResponseTypeMap;
+    static const ResponseTypeMap responseTypeMap[] =
+    {
+        { GTK_RESPONSE_NONE, "none" },
+        { GTK_RESPONSE_REJECT, "reject" },
+        { GTK_RESPONSE_ACCEPT, "accept" },
+        { GTK_RESPONSE_DELETE_EVENT, "delete" },
+        { GTK_RESPONSE_OK, "ok" },
+        { GTK_RESPONSE_CANCEL, "cancel" },
+        { GTK_RESPONSE_CLOSE, "close" },
+        { GTK_RESPONSE_YES, "yes" },
+        { GTK_RESPONSE_NO, "no" },
+        { GTK_RESPONSE_APPLY, "apply" },
+        { GTK_RESPONSE_HELP, "help" }
+    };
+
+    //__________________________________________________________________
+    GtkResponseType Gtk::TypeNames::matchResponse( const char*  cssResponseType )
+    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, 11 ).findGtk( cssResponseType, GTK_RESPONSE_NONE ); }
+
+    //__________________________________________________________________
+    const char*  Gtk::TypeNames::response( GtkResponseType gtkResponseType )
+    { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, 11 ).findCss( gtkResponseType ); }
+
 }

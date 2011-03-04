@@ -40,21 +40,32 @@ namespace Oxygen
             public:
             //@{
 
+            //! widget state
             static const char* state( GtkStateType );
 
+            //! shadow type
             static const char* shadow( GtkShadowType );
 
+            //! arrow type
             static const char* arrow( GtkArrowType );
 
+            //! position
             static const char* position( GtkPositionType );
 
+            //! edge
             static const char* windowEdge( GdkWindowEdge );
 
+            //! window type
             static const char* windowTypeHint( GdkWindowTypeHint );
 
+            //! widget orientation
             static const char* orientation( GtkOrientation );
 
+            //! tree expander style
             static const char* expanderStyle( GtkExpanderStyle );
+
+            //! Gtk dialogs response IDs
+            static const char* response( GtkResponseType );
 
             //@}
 
@@ -125,6 +136,7 @@ namespace Oxygen
             static GdkWindowTypeHint matchWindowTypeHint( const char* );
             static GtkOrientation matchOrientation( const char* );
             static GtkExpanderStyle	matchExpanderStyle( const char* );
+            static GtkResponseType matchResponse( const char* );
 
         };
     }
