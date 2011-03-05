@@ -240,9 +240,20 @@ namespace Oxygen
 
         //@}
 
-        //! true if a progressbar is horizontal
-        /*! adapted from QtCurve code */
-        bool gtk_progress_bar_is_horizontal( GtkWidget* );
+        //! true if a widget (orientable) is horizontal
+        inline bool gtk_widget_is_horizontal( GtkWidget* widget )
+        {
+            if( !GTK_IS_ORIENTABLE( widget ) ) return true;
+            return gtk_orientable_get_orientation( GTK_ORIENTABLE( widget ) ) == GTK_ORIENTATION_HORIZONTAL;
+        }
+
+
+        //! true if a widget (orientable) is vertical
+        inline bool gtk_widget_is_vertical( GtkWidget* widget )
+        {
+            if( !GTK_IS_ORIENTABLE( widget ) ) return false;
+            return gtk_orientable_get_orientation( GTK_ORIENTABLE( widget ) ) == GTK_ORIENTATION_VERTICAL;
+        }
 
         //! true if scrolled window must be forced to have a sunken frame
         bool gtk_scrolled_window_force_sunken( GtkWidget* );

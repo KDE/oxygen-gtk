@@ -743,26 +743,6 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_progress_bar_is_horizontal( GtkWidget* widget )
-    {
-
-        if( !GTK_IS_PROGRESS_BAR( widget ) ) return true;
-
-        switch( gtk_progress_bar_get_orientation( GTK_PROGRESS_BAR( widget ) ) )
-        {
-            default:
-            case GTK_PROGRESS_LEFT_TO_RIGHT:
-            case GTK_PROGRESS_RIGHT_TO_LEFT:
-            return true;
-
-            case GTK_PROGRESS_BOTTOM_TO_TOP:
-            case GTK_PROGRESS_TOP_TO_BOTTOM:
-            return false;
-        }
-
-    }
-
-    //________________________________________________________
     bool Gtk::gtk_scrolled_window_force_sunken( GtkWidget* widget)
     {
 
