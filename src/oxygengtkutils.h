@@ -318,7 +318,7 @@ namespace Oxygen
         //@}
 
         //! returns a widget which has response_id as response id for dialog
-        GtkWidget* dialog_find_button(GtkDialog* dialog,gint response_id);
+        GtkWidget* gtk_dialog_find_button(GtkDialog* dialog,gint response_id);
 
     }
 

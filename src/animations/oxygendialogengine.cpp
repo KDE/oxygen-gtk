@@ -44,39 +44,37 @@ namespace Oxygen
             GTK_RESPONSE_NO,
             GTK_RESPONSE_CANCEL
         };
+
         const int numOfResponseIDs=sizeof(responses)/sizeof(responses[0]);
 
         #if OXYGEN_DEBUG
-        std::cerr<<"Initial response table: ";
+        std::cerr<<"DialogEngine::registerWidget - Initial response table: ";
         for(int i=0; i<numOfResponseIDs; i++)
-        {
-            std::cerr << Gtk::TypeNames::response( responses[i] ) << ", ";
-        }
+        { std::cerr << Gtk::TypeNames::response( responses[i] ) << ", "; }
         std::cerr<<std::endl;
         #endif
 
-        GtkWidget* button;
         int numOfResponsesFound=0;
         for(int i=0; i<numOfResponseIDs; i++)
         {
-            button=Gtk::dialog_find_button(dialog,responses[i]);
-            if(button)
-            {
-                #if OXYGEN_DEBUG
-                std::cerr << "responseID found: " << Gtk::TypeNames::response( responses[i] ) << "; button \"" << gtk_button_get_label(GTK_BUTTON(button)) << "\""  << std::endl;
-                #endif
-                // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
-                responses[numOfResponsesFound]=responses[i];
-                numOfResponsesFound++;
-            }
+            if( !Gtk::gtk_dialog_find_button(dialog,responses[i]) ) continue;
+
+            #if OXYGEN_DEBUG
+            std::cerr << "DialogEngine::registerWidget - responseID found: " << Gtk::TypeNames::response( responses[i] ) << "; button \"" << gtk_button_get_label(GTK_BUTTON(button)) << "\""  << std::endl;
+            #endif
+
+            // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
+            responses[numOfResponsesFound]=responses[i];
+            numOfResponsesFound++;
+
         }
+
         #if OXYGEN_DEBUG
-        std::cerr << "numOfResponsesFound: " << numOfResponsesFound << std::endl;
+        std::cerr << "DialogEngine::registerWidget - numOfResponsesFound: " << numOfResponsesFound << std::endl;
         for(int i=0; i<numOfResponseIDs; i++)
         {
             std::cerr << Gtk::TypeNames::response( responses[i] ) << ", ";
-            if(i==numOfResponsesFound-1)
-                std::cerr<<"_END_of_found_,";
+            if(i==numOfResponsesFound-1) std::cerr<<"_END_of_found_,";
         }
         std::cerr << "\n\n";
         #endif
