@@ -98,12 +98,15 @@ namespace Oxygen
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
             if( gtk_widget_get_state( GTK_WIDGET( child->data ) ) == GTK_STATE_INSENSITIVE ) continue;
 
+            GtkMenuItem* menuItem( GTK_MENU_ITEM(child->data) );
+            GtkWidget* submenu( gtk_menu_item_get_submenu( menuItem ) );
+
             // this is terrible code. I hate gtk. (hugo)
-            if( (!GTK_IS_MENU(GTK_MENU_ITEM(child->data)->submenu)) ||
-                (!(GTK_WIDGET_REALIZED(GTK_MENU_ITEM(child->data)->submenu) &&
-                GTK_WIDGET_VISIBLE(GTK_MENU_ITEM(child->data)->submenu) &&
-                GTK_WIDGET_REALIZED(GTK_MENU(GTK_MENU_ITEM(child->data)->submenu)->toplevel) &&
-                GTK_WIDGET_VISIBLE(GTK_MENU(GTK_MENU_ITEM(child->data)->submenu)->toplevel))))
+            if( (!GTK_IS_MENU( submenu ) ) ||
+                (!(GTK_WIDGET_REALIZED( submenu ) &&
+                GTK_WIDGET_VISIBLE( submenu ) &&
+                GTK_WIDGET_REALIZED( gtk_widget_get_toplevel( submenu ) ) &&
+                GTK_WIDGET_VISIBLE( gtk_widget_get_toplevel( submenu ) ) ) ) )
             { gtk_widget_set_state( GTK_WIDGET(child->data), GTK_STATE_NORMAL ); }
         }
 
