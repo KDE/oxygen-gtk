@@ -80,10 +80,13 @@ namespace Oxygen
         { if( g_object_is_a( G_OBJECT( widget ), names[i] ) || name.find( names[i] ) == 0  ) return true; }
 
         // also check parent
-        if( !widget->parent ) return false;
-        name = G_OBJECT_TYPE_NAME( widget->parent );
-        for( unsigned int i = 0; names[i]; ++i )
-        { if( g_object_is_a( G_OBJECT( widget->parent ), names[i] ) || name.find( names[i] ) == 0 ) return true; }
+        if( GtkWidget* parent = gtk_widget_get_parent( widget ) )
+        {
+            name = G_OBJECT_TYPE_NAME( parent );
+            for( unsigned int i = 0; names[i]; ++i )
+            { if( g_object_is_a( G_OBJECT( parent ), names[i] ) || name.find( names[i] ) == 0 ) return true; }
+
+        }
 
         return false;
 
