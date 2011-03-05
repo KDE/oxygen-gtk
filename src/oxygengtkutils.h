@@ -148,6 +148,20 @@ namespace Oxygen
         //! set all buttons in the container to state NORMAL
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
+        //! returns widget allocation
+        inline GtkAllocation gtk_widget_get_allocation( GtkWidget* widget )
+        {
+            #if GTK_CHECK_VERSION(2, 18, 0)
+            GtkAllocation allocation = { 0, 0, -1, -1 };
+            ::gtk_widget_get_allocation( widget, &allocation );
+            return allocation;
+            #else
+            assert( widget );
+            return widget->allocation;
+            #endif
+
+        }
+
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );
 

@@ -252,7 +252,7 @@ namespace Oxygen
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                const GtkAllocation& allocation( widget->allocation );
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                 const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                 if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
                 {
@@ -435,8 +435,9 @@ namespace Oxygen
                 for some reason, adjusting y and h using ythickness does not work for combobox_entry
                 one need to use parent allocation instead
                 */
-                y -= (parent->allocation.height-h + 1)/2;
-                h = parent->allocation.height;
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
+                y -= (allocation.height-h + 1)/2;
+                h = allocation.height;
 
                 // partial highlight
                 TileSet::Tiles tiles( TileSet::Ring );
@@ -527,7 +528,7 @@ namespace Oxygen
                 if( widget && window != widgetWindow && GDK_IS_WINDOW( window ) && widgetWindow == gdk_window_get_parent( window )  )
                 {
 
-                    const int widgetWindowWidth( widget->allocation.width );
+                    const int widgetWindowWidth( Gtk::gtk_widget_get_allocation( widget ).width );
                     int localWindowX( 0 );
                     int localWindowWidth( 0 );
                     gdk_window_get_position( window, &localWindowX, 0L );
@@ -1079,7 +1080,7 @@ namespace Oxygen
 
                         // make menus appear rounded using XShape extension if screen isn't composited
                         Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                        const GtkAllocation& allocation( widget->allocation );
+                        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                         if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                         {
                             GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
@@ -1468,7 +1469,7 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
             // store parent allocation
-            GtkAllocation allocation(parent->allocation);
+            GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
 
             if( !(options&Alpha) )
             {
@@ -1488,15 +1489,16 @@ namespace Oxygen
             {
                 widget=GTK_WIDGET( g_list_first(children)->data );
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, widget->allocation.width, widget->allocation.height) )
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                 {
 
                     // offset is needed to make combobox list border 3px wide instead of default 2
                     // additional pixel is for ugly shadow
                     const gint offset( options&Alpha ? 0:1 );
                     GdkPixmap* mask( Style::instance().helper().roundMask(
-                        widget->allocation.width - 2*offset,
-                        widget->allocation.height - 2*offset,
+                        allocation.width - 2*offset,
+                        allocation.height - 2*offset,
                         3 ) );
 
                     gdk_window_shape_combine_mask( gtk_widget_get_window( widget ), mask, offset, offset );
@@ -1511,6 +1513,7 @@ namespace Oxygen
             GdkWindow* parentWindow( gtk_widget_get_window( parent ) );
             Style::instance().renderMenuBackground( parentWindow, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
             Style::instance().drawFloatFrame( parentWindow, clipRect, allocation.x, allocation.y, allocation.width, allocation.height, options );
+
             return;
 
         } else if( d.isBase() && GTK_IS_MENU( widget ) ) {
@@ -1535,7 +1538,7 @@ namespace Oxygen
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
-            const GtkAllocation& allocation(parent->allocation);
+            const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
             if( !(options&Alpha) )
             {
                 // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
@@ -2102,7 +2105,7 @@ namespace Oxygen
             if( widget )
             {
                 // do not draw side hlines because they conflict with selection rect
-                const GtkAllocation& allocation( widget->allocation );
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                 if( x1 <= allocation.x + 5 || x2 >= allocation.x + allocation.width - 5 )
                 { accepted = false; }
             }
@@ -2902,11 +2905,12 @@ namespace Oxygen
             if( drawTabBarBase )
             {
 
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                 int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
-                int xBase( widget->allocation.x + borderWidth );
-                int yBase( widget->allocation.y + borderWidth );
-                int wBase( widget->allocation.width - 2*borderWidth );
-                int hBase( widget->allocation.height - 2*borderWidth );
+                int xBase( allocation.x + borderWidth );
+                int yBase( allocation.y + borderWidth );
+                int wBase( allocation.width - 2*borderWidth );
+                int hBase( allocation.height - 2*borderWidth );
 
                 Gtk::Gap gap;
                 switch( position )

@@ -35,7 +35,7 @@ namespace Oxygen
         if( state != GTK_STATE_ACTIVE ) (*this) |= CurrentTab;
 
         // get allocated size
-        const GtkAllocation& allocation( widget->allocation );
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
         int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
 
 

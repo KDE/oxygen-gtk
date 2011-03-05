@@ -47,7 +47,8 @@ namespace Oxygen
 
             gint xPointer,yPointer;
             gdk_window_get_pointer( gtk_widget_get_window( widget ), &xPointer, &yPointer, 0L);
-            GdkRectangle rect = { 0, 0, widget->allocation.width, widget->allocation.height };
+            const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+            const GdkRectangle rect( Gtk::gdk_rectangle( 0, 0, allocation.width, allocation.height ) );
             setHovered( widget, Gtk::gdk_rectangle_contains( &rect, xPointer, yPointer ) );
 
         } else {
