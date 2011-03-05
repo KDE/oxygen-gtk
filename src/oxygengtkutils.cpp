@@ -116,13 +116,7 @@ namespace Oxygen
 
         if( !widget ) return false;
         if( !gdk_default_screen_is_composited() ) return false;
-
-        GdkVisual *visual( gtk_widget_get_visual (widget) );
-        return
-            visual->depth == 32 &&
-            visual->red_mask   == 0xff0000 &&
-            visual->green_mask == 0x00ff00 &&
-            visual->blue_mask  == 0x0000ff;
+        return gdk_visual_has_rgba( gtk_widget_get_visual (widget) );
 
     }
 
@@ -161,8 +155,13 @@ namespace Oxygen
         if( !window ) return false;
 
         if( !gdk_default_screen_is_composited() ) return false;
+        return gdk_visual_has_rgba( gdk_drawable_get_visual( GDK_DRAWABLE( window ) ) );
 
-        GdkVisual *visual( gdk_drawable_get_visual( GDK_DRAWABLE( window ) ) );
+    }
+
+    //________________________________________________________
+    bool Gtk::gdk_visual_has_rgba( GdkVisual* visual )
+    {
         return
             visual->depth == 32 &&
             visual->red_mask   == 0xff0000 &&

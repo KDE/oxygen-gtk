@@ -95,6 +95,9 @@ namespace Oxygen
         //! returns true if window supports rgba
         bool gdk_window_has_rgba( GdkWindow* );
 
+        //! true if visual supports rgba
+        bool gdk_visual_has_rgba( GdkVisual* );
+
         //! returns true if window is a base window
         bool gdk_window_is_base( GdkWindow* );
 
