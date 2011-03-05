@@ -42,10 +42,11 @@ namespace Oxygen
         {
             int x,y;
             GtkWidget* button=GTK_WIDGET(container);
+            GtkAllocation allocation( gtk_widget_get_allocation( button ) );
             gtk_widget_get_pointer(button,&x,&y);
             if( !(x>0 && y>0 &&
-                    x < button->allocation.width &&
-                    y < button->allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
+                x < allocation.width &&
+                y < allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
             { gtk_widget_set_state(button,GTK_STATE_NORMAL); }
 
             gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
@@ -485,7 +486,7 @@ namespace Oxygen
         GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
 
         // get allocted size and compare to position
-        const GtkAllocation& allocation( tabLabel->allocation );
+        const GtkAllocation allocation( gtk_widget_get_allocation( tabLabel ) );
         return Gtk::gdk_rectangle_contains( &allocation, x, y );
 
     }
@@ -512,7 +513,7 @@ namespace Oxygen
             if(!tabLabel) continue;
 
             // get allocted size and compare to position
-            const GtkAllocation& allocation( tabLabel->allocation );
+            const GtkAllocation allocation( gtk_widget_get_allocation( tabLabel ) );
 
             // get manhattan length
             const int distance = int(
@@ -604,7 +605,7 @@ namespace Oxygen
         }
 
         // removes page allocated size from rect, based on tabwidget orientation
-        const GtkAllocation& pageAllocation( page->allocation );
+        const GtkAllocation pageAllocation( gtk_widget_get_allocation( page ) );
         switch( gtk_notebook_get_tab_pos( notebook ) )
         {
             case GTK_POS_BOTTOM:
