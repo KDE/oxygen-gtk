@@ -109,7 +109,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
+        widget->style = gtk_style_attach( style, window );
 
         // if widget is a container, we need to do the same for its children
         if( !GTK_IS_CONTAINER( widget ) ) return;
