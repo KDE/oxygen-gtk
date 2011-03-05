@@ -383,13 +383,14 @@ namespace Oxygen
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
+            const GtkAllocation local( Gtk::gtk_widget_get_allocation( widget ) );
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
-            allocation.x += wx - widget->allocation.x;
-            allocation.y += wy - widget->allocation.y;
+            allocation.x += wx - local.x;
+            allocation.y += wy - local.y;
 
         } else {
 
-            allocation = widget->allocation;
+            allocation = Gtk::gtk_widget_get_allocation( widget );
             allocation.x = wx;
             allocation.y = wy;
 

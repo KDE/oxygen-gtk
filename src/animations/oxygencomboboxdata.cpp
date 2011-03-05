@@ -145,7 +145,7 @@ namespace Oxygen
         const int offset = 4;
 
         // get allocation
-        const GtkAllocation& allocation( widget->allocation );
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
         gdk_window_move_resize( window, allocation.x-offset, allocation.y, allocation.width+offset, allocation.height );
 
     }

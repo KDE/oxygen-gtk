@@ -131,13 +131,21 @@ namespace Oxygen
 
         // prepare update area
         // get old rectangle
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
         GdkRectangle oldRect( _cellInfo.backgroundRect( treeView ) );
-        if( _fullWidth ) { oldRect.x = 0; oldRect.width = widget->allocation.width; }
+        if( _fullWidth )
+        {
+            oldRect.x = 0;
+            oldRect.width = allocation.width;
+        }
 
         // get new rectangle and update position
         GdkRectangle newRect( cellInfo.backgroundRect( treeView ) );
         if( cellInfo.isValid() && _fullWidth )
-        { newRect.x = 0; newRect.width = widget->allocation.width; }
+        {
+            newRect.x = 0;
+            newRect.width = allocation.width;
+        }
 
         // take the union of both rectangles
         GdkRectangle updateRect;
@@ -173,7 +181,7 @@ namespace Oxygen
         // prepare update area
         GdkRectangle updateRect( _cellInfo.backgroundRect( treeView ) );
         updateRect.x = 0;
-        updateRect.width = widget->allocation.width;
+        updateRect.width = Gtk::gtk_widget_get_allocation( widget ).width;
 
         // clear path and column
         _cellInfo.clear();
