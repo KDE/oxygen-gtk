@@ -973,36 +973,39 @@ namespace Oxygen
     }
 
     //___________________________________________________________
-    GtkWidget* Gtk::dialog_find_button(GtkDialog* dialog,gint response_id)
+    GtkWidget* Gtk::gtk_dialog_find_button(GtkDialog* dialog,gint response_id)
     {
-        GList *children, *tmp_list;
-        GtkWidget *child = NULL;
 
-        children = gtk_container_get_children (GTK_CONTAINER (dialog->action_area));
+        // get children of dialog's action area
+        GList* children( gtk_container_get_children( GTK_CONTAINER( gtk_dialog_get_action_area( dialog ) ) ) );
+        GtkWidget* button( 0L );
 
         #if OXYGEN_DEBUG
-        std::cerr << "rid: ";
+        std::cerr << "Oxygen::Gtk::gtk_dialog_find_button - butons: ";
         #endif
-        for (tmp_list = children; tmp_list; tmp_list = tmp_list->next)
+
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
         {
-            gint rid = gtk_dialog_get_response_for_widget(dialog, GTK_WIDGET(tmp_list->data));
+
+            // check data
+            if( !GTK_IS_WIDGET( child->data ) ) continue;
+            GtkWidget* childWidget( GTK_WIDGET( child->data ) );
+
+            const gint id( gtk_dialog_get_response_for_widget(dialog, childWidget ) );
 
             #if OXYGEN_DEBUG
-            std::cerr << Gtk::TypeNames::response( (GtkResponseType)rid ) << ", ";
+            std::cerr << Gtk::TypeNames::response( (GtkResponseType) id ) << ", ";
             #endif
-            if (rid == response_id)
-            {
-                child = GTK_WIDGET(tmp_list->data);
-                break;
-            }
+            if( id == response_id ) return childWidget;
+
         }
+
         #if OXYGEN_DEBUG
         std::cerr << std::endl;
         #endif
 
-        g_list_free (children);
-
-        return child;
+        if( children ) g_list_free( children );
+        return 0L;
 
     }
 
