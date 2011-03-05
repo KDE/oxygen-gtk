@@ -85,6 +85,9 @@ namespace Oxygen
     //! rounded rectangle
     void cairo_rounded_rectangle_negative( cairo_t*, double x, double y, double width, double height, double radius, Corners corners = CornersAll );
 
+    //! negative rectangle
+    void cairo_rectangle_negative( cairo_t*, double x, double y, double width, double height );
+
     //! ellipse
     void cairo_ellipse( cairo_t*, double x, double y, double width, double height );
 
