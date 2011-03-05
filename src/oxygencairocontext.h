@@ -63,8 +63,8 @@ namespace Oxygen
             //! set clipping
             void setClipping( GdkRectangle* ) const;
 
-            //! set clipping
-            void setClipping( GdkRegion* ) const;
+//             //! set clipping
+//             void setClipping( GdkRegion* ) const;
 
             private:
 
