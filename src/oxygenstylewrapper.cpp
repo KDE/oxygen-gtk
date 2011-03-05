@@ -944,7 +944,7 @@ namespace Oxygen
 
         } else if( d.isTroughAny() && GTK_IS_SCALE( widget ) ) {
 
-            const bool vertical( gtk_orientable_get_orientation( GTK_ORIENTABLE( widget ) ) == GTK_ORIENTATION_VERTICAL );
+            const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
             const int offset( 6 );
             if( vertical ) {
 
@@ -983,7 +983,7 @@ namespace Oxygen
                 }
 
                 StyleOptions options;
-                if( !Gtk::gtk_progress_bar_is_horizontal( widget ) ) options |= Vertical;
+                if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
                 Style::instance().renderProgressBarHole( window, clipRect, x, y, w, h, options );
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
