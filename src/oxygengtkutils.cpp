@@ -941,7 +941,6 @@ namespace Oxygen
 
         // get children of dialog's action area
         GList* children( gtk_container_get_children( GTK_CONTAINER( gtk_dialog_get_action_area( dialog ) ) ) );
-        GtkWidget* button( 0L );
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::Gtk::gtk_dialog_find_button - butons: ";
