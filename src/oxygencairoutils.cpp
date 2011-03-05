@@ -100,6 +100,12 @@ namespace Oxygen
     void cairo_rounded_rectangle_negative( cairo_t* context, double x, double y, double w, double h, double r, Corners corners )
     {
 
+        if( corners == CornersNone )
+        {
+            cairo_rectangle_negative( context, x, y, w, h );
+            return;
+        }
+
         if( corners & CornersTopRight )
         {
             cairo_move_to( context, x+w, y+r );

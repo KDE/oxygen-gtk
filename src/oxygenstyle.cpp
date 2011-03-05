@@ -3167,38 +3167,31 @@ namespace Oxygen
         if( gap.width() <= 0 ) return;
 
         // store current rect in
-        GdkRectangle r = { x, y, w, h };
-        GdkRegion* region = gdk_region_rectangle( &r );
+        GdkRectangle mask( Gtk::gdk_rectangle() );
 
-        GdkRectangle mask_r;
-        GdkRegion* mask = 0L;
         switch( gap.position() )
         {
             case GTK_POS_TOP:
             {
-                mask_r = Gtk::gdk_rectangle( x+gap.x(), y, gap.width(), gap.height() );
-                mask = gdk_region_rectangle( &mask_r );
+                mask = Gtk::gdk_rectangle( x+gap.x(), y, gap.width(), gap.height() );
                 break;
             }
 
             case GTK_POS_BOTTOM:
             {
-                mask_r = Gtk::gdk_rectangle( x+gap.x(), y+h-gap.height(), gap.width(), gap.height() );
-                mask = gdk_region_rectangle( &mask_r );
+                mask = Gtk::gdk_rectangle( x+gap.x(), y+h-gap.height(), gap.width(), gap.height() );
                 break;
             }
 
             case GTK_POS_LEFT:
             {
-                mask_r = Gtk::gdk_rectangle( x, y+gap.x(), gap.height(), gap.width() );
-                mask = gdk_region_rectangle( &mask_r );
+                mask = Gtk::gdk_rectangle( x, y+gap.x(), gap.height(), gap.width() );
                 break;
             }
 
             case GTK_POS_RIGHT:
             {
-                mask_r = Gtk::gdk_rectangle( x + w - gap.height(), y+gap.x(), gap.height(), gap.width() );
-                mask = gdk_region_rectangle( &mask_r );
+                mask = Gtk::gdk_rectangle( x + w - gap.height(), y+gap.x(), gap.height(), gap.width() );
                 break;
             }
 
@@ -3208,16 +3201,13 @@ namespace Oxygen
         if( false )
         {
             cairo_set_source( context, ColorUtils::Rgba( 1, 0, 0, 0.3 ) );
-            gdk_cairo_rectangle( context, &mask_r );
+            gdk_cairo_rectangle( context, &mask );
             cairo_fill( context );
         }
 
-        gdk_region_subtract( region, mask );
-        gdk_cairo_region( context, region );
+        cairo_rectangle( context, x, y, w, h );
+        cairo_rectangle_negative( context, mask.x, mask.y, mask.width, mask.height );
         cairo_clip( context );
-
-        gdk_region_destroy( region );
-        gdk_region_destroy( mask );
 
         return;
 
