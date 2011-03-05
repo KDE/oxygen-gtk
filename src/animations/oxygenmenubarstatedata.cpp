@@ -99,7 +99,7 @@ namespace Oxygen
             // do nothing for disabled child
             if( state == GTK_STATE_INSENSITIVE ) continue;
 
-            const GtkAllocation& allocation( childWidget->allocation );
+            const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( childWidget ) );
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 

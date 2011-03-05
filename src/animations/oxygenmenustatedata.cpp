@@ -125,7 +125,7 @@ namespace Oxygen
             }
 
             // get allocation and add offsets
-            GtkAllocation allocation( childWidget->allocation );
+            GtkAllocation allocation( Gtk::gtk_widget_get_allocation( childWidget ) );
             allocation.x += xOffset;
             allocation.y += yOffset;
 
@@ -137,7 +137,7 @@ namespace Oxygen
 
                     activeFound = true;
                     if( state != GTK_STATE_PRELIGHT )
-                    { updateState( childWidget, childWidget->allocation, xOffset, yOffset, true ); }
+                    { updateState( childWidget, Gtk::gtk_widget_get_allocation( childWidget ), xOffset, yOffset, true ); }
 
                 } else delayed = true;
 
@@ -294,7 +294,7 @@ namespace Oxygen
             } else if( Gtk::gdk_rectangle_is_valid( &followMouseRect ) && _target ) {
 
                 // no valid offset found. Add full allocation
-                followMouseRect = _target->allocation;
+                followMouseRect = Gtk::gtk_widget_get_allocation( _target );
                 followMouseRect.x += _xPadding;
                 followMouseRect.y += _yPadding;
                 followMouseRect.width -= 2*_xPadding;

@@ -145,7 +145,7 @@ namespace Oxygen
     bool ToolBarStateData::updateState( GtkWidget* widget, bool state, bool delayed )
     {
 
-        const GdkRectangle rect( widget ? widget->allocation : Gtk::gdk_rectangle() );
+        const GdkRectangle rect( widget ? Gtk::gtk_widget_get_allocation( widget ) : Gtk::gdk_rectangle() );
 
         if( state && widget != _current._widget )
         {

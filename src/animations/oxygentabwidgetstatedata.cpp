@@ -127,7 +127,8 @@ namespace Oxygen
 
         } else {
 
-            return _target->allocation;
+            return Gtk::gtk_widget_get_allocation( _target );
+
         }
 
     }
