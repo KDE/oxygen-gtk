@@ -129,6 +129,18 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    void cairo_rectangle_negative( cairo_t* context, double x, double y, double w, double h )
+    {
+
+        cairo_move_to( context, x+w, y );
+        cairo_line_to( context, x, y );
+        cairo_line_to( context, x, y+h );
+        cairo_line_to( context, x+w, y+h );
+        cairo_close_path( context );
+
+    }
+
+    //__________________________________________________________________
     void cairo_ellipse( cairo_t* context, double x, double y, double w, double h )
     {
         cairo_save( context );
