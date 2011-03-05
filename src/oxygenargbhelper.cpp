@@ -93,7 +93,7 @@ namespace Oxygen
     {
 
         // retrieve widget style and check
-        GtkStyle* style( widget->style );
+        GtkStyle* style( gtk_widget_get_style( widget ) );
         if( !( style && style->depth >= 0 ) ) return;
 
         // adjust depth
@@ -109,7 +109,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        widget->style = gtk_style_attach( style, window );
+        gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
 
         // if widget is a container, we need to do the same for its children
         if( !GTK_IS_CONTAINER( widget ) ) return;
