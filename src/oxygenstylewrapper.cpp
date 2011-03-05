@@ -2879,7 +2879,7 @@ namespace Oxygen
                 if( dragInProgress )
                 {
                     drawTabBarBase = ((tabOptions & FirstTab) && !isCurrentTab) ||
-                        ((tabOptions & LastTab) && Gtk::gtk_notebook_get_current_tab( notebook ) == 0 );
+                        ((tabOptions & LastTab) && gtk_notebook_get_current_page( notebook ) == 0 );
                 }
 
                 if( !isCurrentTab )

@@ -324,9 +324,6 @@ namespace Oxygen
         /*! arrows are dimmed visible if at least one of the child tab_labels is unmapped */
         bool gtk_notebook_has_visible_arrows( GtkNotebook* );
 
-        //! index of current page
-        int gtk_notebook_get_current_tab( GtkNotebook* );
-
         // make all the buttons on the tabs normal
         bool gtk_notebook_update_close_buttons( GtkNotebook*);
 
