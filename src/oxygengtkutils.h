@@ -290,10 +290,10 @@ namespace Oxygen
         GdkPixbuf* gdk_pixbuf_set_alpha( const GdkPixbuf*, double );
 
         //! changes the gamma value of an image
-        bool gdk_pixbuf_to_gamma( GdkPixbuf* pixbuf, double value );
+        bool gdk_pixbuf_to_gamma( GdkPixbuf*, double );
 
         //! resize pixbuf
-        GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf* src, int width, int height );
+        GdkPixbuf* gdk_pixbuf_resize( GdkPixbuf*, int width, int height );
 
         //! returns initialized GdkRectangle
         inline GdkRectangle gdk_rectangle( int x = 0, int y = 0, int w = -1, int h = -1 )
@@ -318,7 +318,7 @@ namespace Oxygen
         //@}
 
         //! returns a widget which has response_id as response id for dialog
-        GtkWidget* gtk_dialog_find_button(GtkDialog* dialog,gint response_id);
+        GtkWidget* gtk_dialog_find_button( GtkDialog*, gint );
 
     }
 
