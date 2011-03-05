@@ -63,24 +63,4 @@ namespace Oxygen
         cairo_clip( _cr );
     }
 
-    //_________________________________________________
-    void Cairo::Context::setClipping( GdkRegion* clipRegion ) const
-    {
-        if( !clipRegion ) return;
-
-        int numRects(0);
-        GdkRectangle *rects;
-        gdk_region_get_rectangles( clipRegion, &rects, &numRects );
-
-        cairo_new_path( _cr );
-        while( numRects-- )
-        {
-            const GdkRectangle& rect( rects[numRects] );
-            cairo_rectangle( _cr, rect.x, rect.y, rect.width, rect.height );
-        }
-
-        cairo_clip( _cr );
-        g_free( rects );
-    }
-
 }
