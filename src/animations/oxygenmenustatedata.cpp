@@ -165,7 +165,7 @@ namespace Oxygen
         if( !GTK_IS_MENU_ITEM( widget ) ) return false;
 
         // check menu
-        GtkWidget* menu( GTK_MENU_ITEM( widget )->submenu );
+        GtkWidget* menu( gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( !GTK_IS_MENU( menu ) ) return false;
 
         GtkWidget* topLevel( gtk_widget_get_toplevel( menu ) );
