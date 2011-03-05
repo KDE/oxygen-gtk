@@ -71,7 +71,7 @@ namespace Oxygen
         {
             #if GTK_CHECK_VERSION(2, 18, 0)
             GtkAllocation allocation = { 0, 0, -1, -1 };
-            gtk_widget_get_allocation( widget, &allocation );
+            ::gtk_widget_get_allocation( widget, &allocation );
             return allocation;
             #else
             assert( widget );
