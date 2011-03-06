@@ -114,9 +114,10 @@ namespace Oxygen
 
         //@}
 
-        //! rounded mask
-        /*! used for non-composited tooltips and menus */
-        GdkPixmap* roundMask( int w, int h, int radius = 6 ) const;
+        // TODO: re-implement for gtk+3.0
+//         //! rounded mask
+//         /*! used for non-composited tooltips and menus */
+//         GdkPixmap* roundMask( int w, int h, int radius = 6 ) const;
 
         //!@name holes
         //@{
