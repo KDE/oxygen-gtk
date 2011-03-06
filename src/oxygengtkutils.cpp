@@ -251,7 +251,7 @@ namespace Oxygen
     {
 
         for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_COMBO_BOX_ENTRY( parent ) ) return parent; }
+        { if( GTK_IS_COMBO_BOX( parent ) && gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) ) return parent; }
 
         return 0L;
     }
