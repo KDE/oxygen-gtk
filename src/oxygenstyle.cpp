@@ -2183,8 +2183,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderTreeExpander(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkExpanderStyle style,
         const StyleOptions& options,
@@ -2210,7 +2209,7 @@ namespace Oxygen
         const int radius( ( 9 - 4 ) / 2 );
 
         // create context and translate to center
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         cairo_set_line_width( context, 1.0 );
         cairo_set_source( context, base );
 
@@ -2228,6 +2227,7 @@ namespace Oxygen
         }
 
         cairo_stroke( context );
+        cairo_restore( context );
 
     }
 
