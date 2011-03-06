@@ -525,13 +525,14 @@ namespace Oxygen
     void Style::renderHeaderLines( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
 
-        // add horizontal lines
+        // save context
+        cairo_save( context );
+        cairo_set_line_width( context, 1.0 );
+
+        // store colors
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-
-        cairo_save( context );
-        cairo_set_line_width( context, 1.0 );
 
         // dark line
         cairo_set_source( context, dark );
@@ -544,6 +545,8 @@ namespace Oxygen
         cairo_move_to( context, x, y+h-1.5 );
         cairo_line_to( context, x+w, y+h-1.5 );
         cairo_stroke( context );
+
+        // restore
         cairo_restore( context );
 
     }
@@ -1602,7 +1605,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderHole(
-        GdkWindow* window,
+        cairo_t* context,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
         const StyleOptions& options,
@@ -1625,8 +1628,8 @@ namespace Oxygen
             fill = settings().palette().color( group, Palette::Base );
         }
 
-        // create context, add mask, and render hole
-        Cairo::Context context( window, clipRect );
+        // save context, add mask, and render hole
+        cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
 
         if( fill.isValid() ) tiles |= TileSet::Center;
@@ -1634,6 +1637,9 @@ namespace Oxygen
         const ColorUtils::Rgba glow( holeShadowColor( options, animationData ) );
         if( glow.isValid() ) helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
         else helper().hole( base, fill, 0, 7 ).render( context, x, y, w, h, tiles );
+
+        // restore
+        cairo_restore( context );
 
     }
 
@@ -1794,7 +1800,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderSelection(
-        GdkWindow* window,
+        cairo_t* context,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         TileSet::Tiles tiles,
@@ -1805,6 +1811,8 @@ namespace Oxygen
         // do nothing if not selected nor hovered
         if( !options & (Hover|Selected ) ) return;
 
+        cairo_save( context );
+
         Palette::Group group( (options & Focus) ? Palette::Active : Palette::Inactive );
         ColorUtils::Rgba base( settings().palette().color( group, Palette::Selected ) );
         if( options & Hover  )
@@ -1813,11 +1821,11 @@ namespace Oxygen
             else base = base.light( 110 );
         }
 
-        // create context
-        Cairo::Context context( window, clipRect );
         if( !(tiles&TileSet::Left) ) { x -= 8; w+=8; }
         if( !(tiles&TileSet::Right) ) { w += 8; }
         helper().selection( base, h, false ).render( context, x, y, w, h, tiles );
+
+        cairo_restore( context );
 
     }
 
@@ -3524,7 +3532,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::generateGapMask( Cairo::Context& context, gint x, gint y, gint w, gint h, const Gtk::Gap& gap ) const
+    void Style::generateGapMask( cairo_t* context, gint x, gint y, gint w, gint h, const Gtk::Gap& gap ) const
     {
 
         if( gap.width() <= 0 ) return;

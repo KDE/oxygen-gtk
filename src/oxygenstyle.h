@@ -197,13 +197,13 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles = TileSet::Ring );
+        void renderHole( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles = TileSet::Ring );
 
-        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, AnimationData(), tiles ); }
+        void renderHole( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHole( context, r, x, y, w, h, Gtk::Gap(), o, AnimationData(), tiles ); }
 
-        void renderHole( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, const AnimationData& animationData, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHole( window, r, x, y, w, h, Gtk::Gap(), o, animationData, tiles ); }
+        void renderHole( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, const AnimationData& animationData, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHole( context, r, x, y, w, h, Gtk::Gap(), o, animationData, tiles ); }
 
         //@}
 
@@ -218,7 +218,7 @@ namespace Oxygen
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! selection
-        void renderSelection( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
+        void renderSelection( cairo_t*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
 
         //! arrow
         void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize, const StyleOptions&, const AnimationData&, Palette::Role ) const;
@@ -404,7 +404,7 @@ namespace Oxygen
         void centerRect( GdkRectangle*, GdkRectangle* ) const;
 
         // generate map from gap
-        void generateGapMask( Cairo::Context&, gint, gint, gint, gint, const Gtk::Gap& ) const;
+        void generateGapMask( cairo_t*, gint, gint, gint, gint, const Gtk::Gap& ) const;
 
         //@}
 
