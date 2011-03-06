@@ -130,7 +130,7 @@ namespace Oxygen
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
-        void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        void renderTooltipBackground( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
         void renderHeaderBackground( cairo_t*, GdkWindow*, GdkRectangle*, gint, gint, gint, gint );

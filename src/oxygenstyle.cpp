@@ -434,21 +434,23 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderTooltipBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    void Style::renderTooltipBackground( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
+
+        // save context and translate
+        cairo_save( context );
+        cairo_translate( context, x, y );
 
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Tooltip ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
 
-        // create context and translate
-        Cairo::Context context( window, clipRect );
-        cairo_translate( context, x, y );
 
         // paint translucent first
         const bool hasAlpha( (options&Alpha) );
-        bool round( GDK_IS_WINDOW( window ) && (options&Round) );
+        //bool round( GDK_IS_WINDOW( window ) && (options&Round) );
+        const bool round( options&Round );
 
         if( hasAlpha )
         {
@@ -488,6 +490,9 @@ namespace Oxygen
             cairo_set_source( context, pattern );
             cairo_stroke( context );
         }
+
+        // restore
+        cairo_restore( context );
 
         return;
 
