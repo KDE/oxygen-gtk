@@ -834,8 +834,16 @@ namespace Oxygen
 
         if( GdkWindow* topLevel = gdk_window_get_toplevel( window ) )
         {
-            gdk_drawable_get_size( topLevel, w, h );
-        } else gdk_drawable_get_size( window, w, h );
+
+            if( w ) *w = gdk_window_get_width( topLevel );
+            if( h ) *h = gdk_window_get_height( topLevel );
+
+        } else {
+
+            if( w ) *w = gdk_window_get_width( window );
+            if( h ) *h = gdk_window_get_height( window );
+
+        }
 
         return;
 
