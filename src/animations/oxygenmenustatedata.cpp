@@ -172,9 +172,9 @@ namespace Oxygen
         if( !topLevel ) return false;
 
         return
-            GTK_WIDGET_VISIBLE( menu ) &&
-            GTK_WIDGET_REALIZED( topLevel ) &&
-            GTK_WIDGET_VISIBLE( topLevel );
+            gtk_widget_get_visible( menu ) &&
+            gtk_widget_get_realized( topLevel ) &&
+            gtk_widget_get_visible( topLevel );
     }
 
     //________________________________________________________________________________
