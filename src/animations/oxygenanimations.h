@@ -24,7 +24,6 @@
 #include "oxygenarrowstateengine.h"
 #include "oxygenbackgroundhintengine.h"
 #include "oxygenbaseengine.h"
-#include "oxygencomboengine.h"
 #include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
 #include "oxygendialogengine.h"
@@ -85,10 +84,6 @@ namespace Oxygen
         //! enabled state
         bool enabled( void ) const
         { return _enabled; }
-
-        //! combo engine
-        ComboEngine& comboEngine( void ) const
-        { return *_comboEngine; }
 
         //! combobox engine
         ComboBoxEngine& comboBoxEngine( void ) const
@@ -196,9 +191,6 @@ namespace Oxygen
 
         //! background hint engine
         BackgroundHintEngine* _backgroundHintEngine;
-
-        //! combobox engine
-        ComboEngine* _comboEngine;
 
         //! combobox engine
         ComboBoxEngine* _comboBoxEngine;
