@@ -174,26 +174,29 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options )
+    void Style::drawSeparator( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // define colors
         ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        if( options & Blend )
-        {
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            if( wh > 0 )
-            {
-                if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-                else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-            }
+// TODO: reimplement for gtk3
+//         if( options & Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             if( wh > 0 )
+//             {
+//                 if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+//                 else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+//             }
+//
+//         }
 
-        }
-
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         helper().drawSeparator( context, base, x, y, w, h, (options&Vertical) );
+        cairo_restore( context );
 
     }
 
@@ -219,7 +222,7 @@ namespace Oxygen
         gint ww(0), wh(0);
         gint wx(0), wy(0);
 
-        // if we aren't going to draw window decorations...
+        // TODO: make sure this new test (on window) does not break Ruslan's decorations
         if( window )
         {
 

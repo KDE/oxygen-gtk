@@ -2074,16 +2074,15 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_hline(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x1,
         gint x2,
         gint y )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2109,17 +2108,18 @@ namespace Oxygen
             {
                 // render background, this is needed to prevent a plain rect to be rendered (by gtk) where the item is
                 // rectangle is adjusted manually so that it matches
+                GdkWindow* window( gtk_widget_get_window( widget ) );
                 if(
                     widget &&
                     GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
                     gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
                 {
 
-                    Style::instance().renderWindowBackground( window, widget, clipRect, x1-4, y-7, x2-x1+10, 20 );
+                    Style::instance().renderWindowBackground( context, window, widget, x1-4, y-7, x2-x1+10, 20 );
 
                 } else {
 
-                    Style::instance().renderMenuBackground( window, clipRect, x1-4, y-7, x2-x1+8, 20, Menu );
+                    Style::instance().renderMenuBackground( context, window, x1-4, y-7, x2-x1+8, 20, Menu );
                 }
 
             }
@@ -2135,7 +2135,7 @@ namespace Oxygen
             }
 
             if( accepted )
-            { Style::instance().drawSeparator( window, clipRect, x1, y+1, x2-x1, 0, StyleOptions() ); }
+            { Style::instance().drawSeparator( context, x1, y+1, x2-x1, 0, StyleOptions() ); }
 
         } else {
 
@@ -2146,7 +2146,7 @@ namespace Oxygen
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
             }
 
-            Style::instance().drawSeparator( window, clipRect, x1, y, x2-x1, 0, options );
+            Style::instance().drawSeparator( context, x1, y, x2-x1, 0, options );
 
         }
 
@@ -2154,16 +2154,15 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_vline( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint y1,
         gint y2,
         gint x )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2185,7 +2184,8 @@ namespace Oxygen
                 options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
             }
-            Style::instance().drawSeparator( window, clipRect, x+1, y1, 0, y2-y1, options );
+
+            Style::instance().drawSeparator( context, x+1, y1, 0, y2-y1, options );
 
         }
 

@@ -51,7 +51,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void StyleHelper::drawSeparator( Cairo::Context& context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
+    void StyleHelper::drawSeparator( cairo_t* context, const ColorUtils::Rgba& base, int x, int y, int w, int h, bool vertical )
     {
 
         // get surface

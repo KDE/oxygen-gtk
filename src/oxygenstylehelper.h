@@ -50,7 +50,7 @@ namespace Oxygen
         {}
 
         //! separators
-        void drawSeparator( Cairo::Context&, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
+        void drawSeparator( cairo_t*, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
 
         //! clear caches
         void clearCaches( void )
