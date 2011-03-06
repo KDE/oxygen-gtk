@@ -180,6 +180,8 @@ namespace Oxygen
         gdk_visual_get_blue_pixel_details( visual, &blueMask, 0L, 0L );
         if( blueMask != 0x0000ff ) return false;
 
+        return true;
+
     }
 
     //________________________________________________________
