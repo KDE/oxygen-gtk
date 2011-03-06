@@ -238,7 +238,7 @@ namespace Oxygen
 
             // mozilla and openoffice get square non Argb tooltips no matter what
             if(
-                Style::instance().settings().applicationName().isOpenOffice() &&
+                Style::instance().settings().applicationName().isOpenOffice() ||
                 Style::instance().settings().applicationName().isMozilla() )
             {
                 Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, StyleOptions() );
