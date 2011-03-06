@@ -182,10 +182,9 @@ namespace Oxygen
         //!@name generic slab
         //@{
 
-        void renderSlab( GdkWindow* window, GdkRectangle* clipRect, int x, gint y, gint w, gint h, const StyleOptions& options, const AnimationData& animationData = AnimationData() )
-        { renderSlab( window, clipRect, x, y, w, h, Gtk::Gap(), options, animationData ); }
-
-        void renderSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderSlab( cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderSlab( cairo_t* context, int x, gint y, gint w, gint h, const StyleOptions& options, const AnimationData& animationData = AnimationData() )
+        { renderSlab( context, x, y, w, h, Gtk::Gap(), options, animationData ); }
 
         //@}
 
@@ -207,9 +206,11 @@ namespace Oxygen
 
         //!@name dock frame
         //@{
-        void renderDockFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
-        void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o )
-        { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
+
+        void renderDockFrame( cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
+        void renderDockFrame( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& o )
+        { renderDockFrame( context, x, y, w, h, Gtk::Gap(), o ); }
+
         //@}
 
         //! menu item
@@ -376,7 +377,7 @@ namespace Oxygen
         ColorUtils::Rgba holeShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
+        void renderSlab( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */

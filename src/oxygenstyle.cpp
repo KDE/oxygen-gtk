@@ -1289,32 +1289,34 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderSlab(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
         const StyleOptions& options,
         const AnimationData& animationData )
     {
 
-        // define colors
-        ColorUtils::Rgba base;
-        if( options&Blend )
-        {
+// TODO: reimplement for gtk3
+//         // define colors
+//         ColorUtils::Rgba base;
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+//
+//         } else {
+//
+//             base = settings().palette().color( Palette::Window );
+//
+//         }
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
-        } else {
-
-            base = settings().palette().color( Palette::Window );
-
-        }
-
-        // create context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
         renderSlab( context, x, y, w, h, base, options, animationData, TileSet::Ring );
+        cairo_restore( context );
 
     }
 
@@ -1643,33 +1645,37 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderDockFrame(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
     {
 
         // do nothing if not enough room
         if( w < 9 || h < 9 )  return;
 
-        // define colors
-        ColorUtils::Rgba base;
-        if( options&Blend )
-        {
+// TODO: reimplement for gtk3
+//         // define colors
+//         ColorUtils::Rgba base;
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+//
+//         } else {
+//
+//             base = settings().palette().color( Palette::Window );
+//
+//         }
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = settings().palette().color( Palette::Window );
-
-        }
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // create context, add mask, and render
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
         helper().dockFrame( base, w ).render( context, x, y, w, h );
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
@@ -3370,7 +3376,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderSlab(
-        Cairo::Context& context,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const ColorUtils::Rgba& base,
         const StyleOptions& options,
