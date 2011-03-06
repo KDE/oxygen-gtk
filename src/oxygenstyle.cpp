@@ -2504,9 +2504,8 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::sanitizeSize( GdkWindow* window, gint& w, gint& h ) const
     {
-        if( w < 0 && h < 0 ) gdk_drawable_get_size( window, &w, &h );
-        else if( w < 0 ) gdk_drawable_get_size( window, &w, 0L );
-        else if( h < 0 ) gdk_drawable_get_size( window, 0L, &h );
+        if( w < 0 ) w = gdk_window_get_width( window );
+        if( h < 0 ) h = gdk_window_get_height( window );
     }
 
     //__________________________________________________________________
