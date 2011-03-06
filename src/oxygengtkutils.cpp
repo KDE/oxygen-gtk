@@ -155,18 +155,30 @@ namespace Oxygen
         if( !window ) return false;
 
         if( !gdk_default_screen_is_composited() ) return false;
-        return gdk_visual_has_rgba( gdk_drawable_get_visual( GDK_DRAWABLE( window ) ) );
+        return gdk_visual_has_rgba( gdk_window_get_visual( window ) );
 
     }
 
     //________________________________________________________
     bool Gtk::gdk_visual_has_rgba( GdkVisual* visual )
     {
-        return
-            visual->depth == 32 &&
-            visual->red_mask   == 0xff0000 &&
-            visual->green_mask == 0x00ff00 &&
-            visual->blue_mask  == 0x0000ff;
+        // check depth
+        if( gdk_visual_get_depth( visual ) != 32 ) return false;
+
+        // check red pixel
+        guint32 redMask;
+        gdk_visual_get_red_pixel_details( visual, &redMask, 0L, 0L );
+        if( redMask != 0xff0000 ) return false;
+
+        // check green pixel
+        guint32 greenMask;
+        gdk_visual_get_green_pixel_details( visual, &greenMask, 0L, 0L );
+        if( greenMask != 0x00ff00 ) return false;
+
+        // check blue pixel
+        guint32 blueMask;
+        gdk_visual_get_blue_pixel_details( visual, &blueMask, 0L, 0L );
+        if( blueMask != 0x0000ff ) return false;
 
     }
 
