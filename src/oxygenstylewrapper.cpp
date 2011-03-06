@@ -1893,11 +1893,11 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________________________
-    static void draw_check( GtkStyle* style,
-        GdkWindow* window,
+    static void draw_check(
+        GtkStyle* style,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -1905,9 +1905,9 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -1960,18 +1960,19 @@ namespace Oxygen
 
             }
 
-            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
+            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options, data );
 
         } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill );
-            Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options );
+            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options );
 
         } else {
 
-            StyleWrapper::parentClass()->draw_check( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_check(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h );
         }
 

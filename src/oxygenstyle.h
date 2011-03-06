@@ -167,17 +167,16 @@ namespace Oxygen
         void drawFloatFrame( cairo_t*, gint, gint, gint, gint, const StyleOptions&, Palette::Role = Palette::Window ) const;
 
         //! button slab
+        void renderButtonSlab( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
         void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
         { renderButtonSlab( context, x, y, w, h, options, AnimationData(), tiles ); }
 
-        void renderButtonSlab( cairo_t* context, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
-
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderCheckBox( cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! radio button
-        void renderRadioButton( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderRadioButton( cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //!@name generic slab
         //@{

@@ -1359,8 +1359,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderCheckBox(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
         const AnimationData& animationData )
@@ -1374,25 +1373,30 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         // define colors
-        ColorUtils::Rgba base;
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const Palette::Role role( options&Flat ? Palette::Window : Palette::Button );
-        if( options&Blend )
-        {
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
+// TODO: reimplement for Gtk3
+//         ColorUtils::Rgba base;
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
+//
+//         } else {
+//
+//             base = settings().palette().color( group, role );
+//
+//         }
 
-        } else {
+        const ColorUtils::Rgba base( settings().palette().color( group, role ) );
 
-            base = settings().palette().color( group, role );
+        // save context
+        cairo_save( context );
 
-        }
-
-        // draw slab
-        Cairo::Context context( window, clipRect );
-
+        // slab
         if( options & Flat )
         {
 
@@ -1499,12 +1503,13 @@ namespace Oxygen
 
         }
 
+        cairo_restore( context );
+
     }
 
     //___________________________________________________________________
     void Style::renderRadioButton(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
         const AnimationData& animationData )
@@ -1530,22 +1535,26 @@ namespace Oxygen
         y = child.y;
 
         // define colors
-        ColorUtils::Rgba base;
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-        if( options&Blend )
-        {
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+// TODO: reimplement for Gtk3
+//         ColorUtils::Rgba base;
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//
+//             if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+//             else base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+//
+//         } else {
+//
+//             base = settings().palette().color( group, Palette::Button );
+//
+//         }
 
-            if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-            else base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = settings().palette().color( group, Palette::Button );
-
-        }
+        const ColorUtils::Rgba base( settings().palette().color( group, Palette::Button ) );
 
         // glow
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
@@ -1554,7 +1563,6 @@ namespace Oxygen
         const Cairo::Surface& surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
 
         // create context
-        Cairo::Context context( window, clipRect );
         cairo_save( context );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, child.width, child.height );
@@ -1562,6 +1570,7 @@ namespace Oxygen
         cairo_fill( context );
         cairo_restore( context );
 
+        cairo_save( context );
         if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
         {
             double radius( shadow == GTK_SHADOW_IN ? 2.6:1.4 );
@@ -1600,6 +1609,8 @@ namespace Oxygen
             }
 
         }
+
+        cairo_restore( context );
 
         return;
     }
