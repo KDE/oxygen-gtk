@@ -149,10 +149,14 @@ namespace Oxygen
     void Style::fill( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
+        cairo_save( context );
+
         // define colors
         cairo_rectangle( context, x, y, w, h );
         cairo_set_source( context, color );
         cairo_fill( context );
+
+        cairo_restore( context );
 
     }
 
@@ -490,20 +494,19 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderHeaderBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h )
+    void Style::renderHeaderBackground( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h )
     {
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // render normal window background
-        renderWindowBackground( window, clipRect, x, y, w, h );
+        renderWindowBackground( context, window, clipRect, x, y, w, h );
 
         // render lines
-        renderHeaderLines( window, clipRect, x, y, w, h );
+        renderHeaderLines( context, clipRect, x, y, w, h );
 
         // render side dots
-        Cairo::Context context( window, clipRect );
         int yCenter( y + h/2 );
         int xDots( x + w - 1 );
         helper().renderDot( context, base, xDots, yCenter - 3 );
@@ -514,7 +517,7 @@ namespace Oxygen
 
 
     //__________________________________________________________________
-    void Style::renderHeaderLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    void Style::renderHeaderLines( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
     {
 
         // add horizontal lines
@@ -522,7 +525,7 @@ namespace Oxygen
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
 
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         cairo_set_line_width( context, 1.0 );
 
         // dark line
@@ -536,6 +539,7 @@ namespace Oxygen
         cairo_move_to( context, x, y+h-1.5 );
         cairo_line_to( context, x+w, y+h-1.5 );
         cairo_stroke( context );
+        cairo_restore( context );
 
     }
 
@@ -652,6 +656,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderHoleBackground(
+        cairo_t* context,
         GdkWindow* window,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
@@ -664,7 +669,7 @@ namespace Oxygen
         pass "NoFill" option to renderWindowBackground,
         to indicate one must make a "hole" in the center
         */
-        renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
+        renderWindowBackground( context, window, clipRect, x, y, w, h, NoFill, tiles);
     }
 
     //__________________________________________________________________

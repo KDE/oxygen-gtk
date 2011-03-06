@@ -117,11 +117,14 @@ namespace Oxygen
         /*! returns true if window gradient could be rendered */
         void renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
 
-        void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
-        { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+        void renderWindowBackground( cairo_t* context, GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        { renderWindowBackground( context, window, 0L, r, x, y, w, h, o, tiles ); }
 
-        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-        { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
+//         void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
+//         { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+
+//         void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+//         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -130,17 +133,17 @@ namespace Oxygen
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
-        void renderHeaderBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint );
+        void renderHeaderBackground( cairo_t*, GdkWindow*, GdkRectangle*, gint, gint, gint, gint );
 
         //! tree view header
-        void renderHeaderLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint ) const;
+        void renderHeaderLines( cairo_t*, GdkRectangle*, gint, gint, gint, gint ) const;
 
         //! tree view lines
         void renderTreeLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, const StyleOptions& ) const;
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t*, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
