@@ -2481,10 +2481,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_diamond( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const char* detail,
         gint x,
@@ -2492,8 +2491,8 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
-        Style::instance().sanitizeSize( window, w, h );
+        g_return_if_fail( style && context );
+        //Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2504,8 +2503,9 @@ namespace Oxygen
             detail );
         #endif
 
-        StyleWrapper::parentClass()->draw_diamond( style, window, state,
-            shadow, clipRect, widget, detail,
+        StyleWrapper::parentClass()->draw_diamond(
+            style, context, state,
+            shadow, widget, detail,
             x, y, w, h );
     }
 
