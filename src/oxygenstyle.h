@@ -97,15 +97,15 @@ namespace Oxygen
         //@{
 
         //! fill given rectangle with flat color
-        void fill( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Role role ) const
-        { fill( context, r, x, y, w, h, settings().palette().color( Palette::Active, role ) ); }
+        void fill( cairo_t* context, gint x, gint y, gint w, gint h, Palette::Role role ) const
+        { fill( context, x, y, w, h, settings().palette().color( Palette::Active, role ) ); }
 
         //! fill given rectangle with flat color
-        void fill( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Group group, Palette::Role role ) const
-        { fill( context, r, x, y, w, h, settings().palette().color( group, role ) ); }
+        void fill( cairo_t* context, gint x, gint y, gint w, gint h, Palette::Group group, Palette::Role role ) const
+        { fill( context, x, y, w, h, settings().palette().color( group, role ) ); }
 
         //! fill given rectangle with flat color
-        void fill( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
+        void fill( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
         //! outline given rectangle with flat color
         void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
@@ -115,10 +115,10 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        void renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
+        void renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
 
-        void renderWindowBackground( cairo_t* context, GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-        { renderWindowBackground( context, window, 0L, r, x, y, w, h, o, tiles ); }
+        void renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        { renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
 //         void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
 //         { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
@@ -133,17 +133,17 @@ namespace Oxygen
         void renderTooltipBackground( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
-        void renderHeaderBackground( cairo_t*, GdkWindow*, GdkRectangle*, gint, gint, gint, gint );
+        void renderHeaderBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint );
 
         //! tree view header
-        void renderHeaderLines( cairo_t*, GdkRectangle*, gint, gint, gint, gint ) const;
+        void renderHeaderLines( cairo_t*, gint, gint, gint, gint ) const;
 
         //! tree view lines
-        void renderTreeLines( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, const StyleOptions& ) const;
+        void renderTreeLines( cairo_t*, gint, gint, gint, gint, const Gtk::CellInfoFlags&, const StyleOptions& ) const;
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( cairo_t*, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
@@ -169,10 +169,10 @@ namespace Oxygen
         { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
-        void renderButtonSlab( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
-        { renderButtonSlab( context, clipRect, x, y, w, h, options, AnimationData(), tiles ); }
+        void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
+        { renderButtonSlab( context, x, y, w, h, options, AnimationData(), tiles ); }
 
-        void renderButtonSlab( cairo_t* context, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
+        void renderButtonSlab( cairo_t* context, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */

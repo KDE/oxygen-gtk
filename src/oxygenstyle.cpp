@@ -146,7 +146,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::fill( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
+    void Style::fill( cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
         cairo_save( context );
@@ -200,7 +200,7 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
-        GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
+        gint x, gint y, gint w, gint h,
         const StyleOptions& options, TileSet::Tiles tiles )
     {
 
@@ -222,12 +222,6 @@ namespace Oxygen
         // if we aren't going to draw window decorations...
         if( window )
         {
-
-            if( clipRect )
-            {
-                cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
-                cairo_clip(context);
-            }
 
             // add hole if required (this can be done before translating the context
             if( options&NoFill )
@@ -296,19 +290,20 @@ namespace Oxygen
         // store rectangle
         GdkRectangle rect = { x, y, w, h };
 
-        /*
-        if there is a valid clipRect,
-        intersects it with painting Rect, for performances
-        */
-        if( clipRect )
-        {
-
-            GdkRectangle localClip( *clipRect );
-            localClip.x += wx;
-            localClip.y += wy;
-            gdk_rectangle_intersect( &rect, &localClip, &rect );
-
-        }
+// TODO: see if should be re-implemented for gtk+3
+//         /*
+//         if there is a valid clipRect,
+//         intersects it with painting Rect, for performances
+//         */
+//         if( clipRect )
+//         {
+//
+//             GdkRectangle localClip( *clipRect );
+//             localClip.x += wx;
+//             localClip.y += wy;
+//             gdk_rectangle_intersect( &rect, &localClip, &rect );
+//
+//         }
 
         // upper rect
         GdkRectangle upperRect = { 0, 0, ww, splitY };
@@ -499,17 +494,17 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderHeaderBackground( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h )
+    void Style::renderHeaderBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h )
     {
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // render normal window background
-        renderWindowBackground( context, window, clipRect, x, y, w, h );
+        renderWindowBackground( context, window, x, y, w, h );
 
         // render lines
-        renderHeaderLines( context, clipRect, x, y, w, h );
+        renderHeaderLines( context, x, y, w, h );
 
         // render side dots
         int yCenter( y + h/2 );
@@ -522,7 +517,7 @@ namespace Oxygen
 
 
     //__________________________________________________________________
-    void Style::renderHeaderLines( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h ) const
+    void Style::renderHeaderLines( cairo_t* context, gint x, gint y, gint w, gint h ) const
     {
 
         // save context
@@ -552,7 +547,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderTreeLines( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, const StyleOptions& options ) const
+    void Style::renderTreeLines( cairo_t* context, gint x, gint y, gint w, gint h, const Gtk::CellInfoFlags& cellFlags, const StyleOptions& options ) const
     {
 
         // define pen color
@@ -562,7 +557,8 @@ namespace Oxygen
             settings().palette().color( group, Palette::Window ),
             0.8 ) );
 
-        Cairo::Context context( window, clipRect );
+        // save context
+        cairo_save( context );
         cairo_set_source( context, base );
         cairo_set_line_width( context, 1.0 );
 
@@ -659,6 +655,8 @@ namespace Oxygen
 
         }
 
+        // restore
+        cairo_restore( context );
         return;
     }
 
@@ -666,7 +664,6 @@ namespace Oxygen
     void Style::renderHoleBackground(
         cairo_t* context,
         GdkWindow* window,
-        GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
@@ -677,7 +674,7 @@ namespace Oxygen
         pass "NoFill" option to renderWindowBackground,
         to indicate one must make a "hole" in the center
         */
-        renderWindowBackground( context, window, clipRect, x, y, w, h, NoFill, tiles);
+        renderWindowBackground( context, window, x, y, w, h, NoFill, tiles);
     }
 
     //__________________________________________________________________
@@ -1193,7 +1190,6 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::renderButtonSlab(
         cairo_t* context,
-        GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
         const AnimationData& animationData,
@@ -1236,7 +1232,6 @@ namespace Oxygen
             y = child.y;
             w = child.width;
             h = child.height;
-            clipRect = 0L;
         }
 
 
@@ -2220,7 +2215,7 @@ namespace Oxygen
             cairo_clip(context);
         }
         if( gradient )
-            renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
+            renderWindowBackground( context, 0L, 0L, x, y, w, h );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
