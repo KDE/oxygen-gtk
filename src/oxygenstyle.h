@@ -227,7 +227,7 @@ namespace Oxygen
         void renderSliderGroove( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
 
         //! slider handle
-        void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderSliderHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! size grip
         void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
@@ -250,7 +250,7 @@ namespace Oxygen
             const TabOptions& );
 
         //! tabwidget frame
-        void renderTabBarFrame( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
+        void renderTabBarFrame( cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
 
         //! tree 'standard' expanders (that is: +!-)
         void renderTreeExpander( cairo_t*, gint, gint, gint, gint, GtkExpanderStyle, const StyleOptions&, const AnimationData&, Palette::Role ) const;

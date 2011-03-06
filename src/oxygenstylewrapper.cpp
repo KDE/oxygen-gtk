@@ -2510,11 +2510,11 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________________________
-    static void draw_tab( GtkStyle* style,
-        GdkWindow* window,
+    static void draw_tab(
+        GtkStyle* style,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const char* detail,
         gint x,
@@ -2522,9 +2522,9 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2548,13 +2548,14 @@ namespace Oxygen
             // disable hover and focus
             options &= ~(Hover|Focus);
 
-            Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options );
+            Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options );
             return;
 
         } else {
 
-            StyleWrapper::parentClass()->draw_tab( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_tab(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h );
         }
 
@@ -2562,10 +2563,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_shadow_gap( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -2576,9 +2576,9 @@ namespace Oxygen
         gint gap_x,
         gint gap_w )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2596,22 +2596,23 @@ namespace Oxygen
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderHoleBackground( context, window, x-1, y-1, w+2, h+2 );
 
                 x += Style::Entry_SideMargin;
                 w -= 2*Style::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
+                Style::instance().renderHole( context, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
 
                 StyleOptions options( NoFill );
                 options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
                 options &= ~(Hover|Focus);
-                Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap, options );
+                Style::instance().renderSlab( context, x-1, y-4, w+2, h+4, gap, options );
 
             } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
 
-                Style::instance().renderDockFrame( window, clipRect, x, y-1, w, h+1, gap, Blend );
+                Style::instance().renderDockFrame( context, x, y-1, w, h+1, gap, Blend );
 
             }
 
@@ -2619,8 +2620,9 @@ namespace Oxygen
 
         } else {
 
-            StyleWrapper::parentClass()->draw_shadow_gap( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_shadow_gap(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h,
                 position, gap_x, gap_w );
         }
@@ -2629,10 +2631,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_box_gap( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -2643,9 +2644,9 @@ namespace Oxygen
         gint gap_x,
         gint gap_w )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2681,7 +2682,7 @@ namespace Oxygen
                 the second call must be discarded somehow
                 */
                 if( h>12 )
-                { Style::instance().renderSlab( window, clipRect, x, y-3, w, h-4, gap, options ); }
+                { Style::instance().renderSlab( context, x, y-3, w, h-4, gap, options ); }
 
             } else {
 
@@ -2736,14 +2737,15 @@ namespace Oxygen
                 }
 
                 gap.setHeight( 8 );
-                Style::instance().renderTabBarFrame( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
+                Style::instance().renderTabBarFrame( context, x-1, y-1, w+2, h+2, gap, options );
 
             }
 
         } else {
 
-            StyleWrapper::parentClass()->draw_box_gap( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_box_gap(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h,
                 position, gap_x, gap_w );
         }
@@ -2752,7 +2754,7 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_slider( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
         GdkRectangle* clipRect,
@@ -2764,8 +2766,8 @@ namespace Oxygen
         gint h,
         GtkOrientation orientation )
     {
-        g_return_if_fail( style && window );
-        Style::instance().sanitizeSize( window, w, h );
+        g_return_if_fail( style && context );
+        //Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2787,7 +2789,7 @@ namespace Oxygen
 
             // retrieve animation state and render accordingly
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-            Style::instance().renderSliderHandle( window, clipRect, x, y, w, h, options, data );
+            Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
 
             return;
 
@@ -2796,18 +2798,19 @@ namespace Oxygen
             StyleOptions options( Vertical );
             options |= StyleOptions( widget, state, shadow );
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w-1, h, options, data );
+            Style::instance().renderScrollBarHandle( context, x, y, w-1, h, options, data );
 
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-            Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options, data );
+            Style::instance().renderScrollBarHandle( context, x, y, w, h-1, options, data );
 
         } else {
 
-            StyleWrapper::parentClass()->draw_slider( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_slider(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h,
                 orientation );
         }

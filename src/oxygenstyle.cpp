@@ -1970,8 +1970,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderSliderHandle(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
         const AnimationData& animationData )
@@ -1979,23 +1978,26 @@ namespace Oxygen
 
         // define colors
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-        ColorUtils::Rgba base;
-        if( options&Blend )
-        {
+//         ColorUtils::Rgba base;
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+//
+//         } else {
+//
+//             base = settings().palette().color( group, Palette::Button );
+//
+//         }
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-
-        } else {
-
-            base = settings().palette().color( group, Palette::Button );
-
-        }
+        const ColorUtils::Rgba base( settings().palette().color( group, Palette::Button ) );
 
         // render slab
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         renderSlab( context, x, y, w, h, base, options, animationData );
+        cairo_restore( context );
 
     }
 
@@ -2164,8 +2166,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderTabBarFrame(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const Gtk::Gap& gap,
         const StyleOptions& options )
@@ -2175,9 +2176,10 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // create context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
         renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
+        cairo_restore( context );
 
     }
 
