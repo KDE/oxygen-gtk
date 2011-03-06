@@ -2406,16 +2406,15 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_expander(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const char* detail,
         gint x,
         gint y,
         GtkExpanderStyle expander_style )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2457,21 +2456,21 @@ namespace Oxygen
 
                 // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
                 const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
-                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, data, role );
+                Style::instance().renderArrow( context, arrow, x-3, y-4, 10, 10, arrowSize, options, data, role );
 
             } else {
 
                 options |= Contrast;
                 const QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-                Style::instance().renderArrow( window, clipRect, arrow, x-3, y-5, 10, 10, arrowSize, options, data, role );
+                Style::instance().renderArrow( context, arrow, x-3, y-5, 10, 10, arrowSize, options, data, role );
 
             }
 
         } else if( d.isTreeView() ) {
 
             // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
-            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, data, role );
+            Style::instance().renderTreeExpander( context, x-3, y-4, 10, 10, expander_style, options, data, role );
 
         } else {
 
