@@ -106,8 +106,8 @@ namespace Oxygen
         std::cerr
             << "Oxygen::ArgbHelper::attachStyle -"
             << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " style depth: " << style->depth
-            << " window depth: " << gdk_drawable_get_depth( window )
+            //<< " style depth: " << style->depth
+            //<< " window depth: " << gdk_drawable_get_depth( window )
             << std::endl;
         #endif
 
