@@ -54,7 +54,7 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_animated_button(
-        GdkWindow* window,
+        cairo_t* context,
         GdkRectangle* clipRect,
         GtkWidget* widget )
     {
@@ -75,7 +75,7 @@ namespace Oxygen
             StyleOptions options( Flat );
             options |= Hover;
 
-            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options );
+            Style::instance().renderButtonSlab( context, clipRect, rect.x, rect.y, rect.width, rect.height, options );
 
         } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
 
@@ -83,7 +83,7 @@ namespace Oxygen
             StyleOptions options( Flat );
             options |= Hover;
 
-            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options );
+            Style::instance().renderButtonSlab( context, clipRect, rect.x, rect.y, rect.width, rect.height, options );
 
         } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
 
@@ -92,7 +92,7 @@ namespace Oxygen
             StyleOptions options( Flat );
             options |= Hover;
 
-            Style::instance().renderButtonSlab( window, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
+            Style::instance().renderButtonSlab( context, clipRect, rect.x, rect.y, rect.width, rect.height, options, data );
 
         }
 
@@ -101,7 +101,7 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_flat_box(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
         GdkRectangle* clipRect,
@@ -112,8 +112,9 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
-        Style::instance().sanitizeSize( window, w, h );
+        g_return_if_fail( style && context );
+
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -133,12 +134,13 @@ namespace Oxygen
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
                 if( !GTK_IS_TOOLBAR( widget ) )
-                { Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window ); }
+                { Style::instance().fill( context, clipRect, x, y, w, h, Palette::Window ); }
 
                 return;
             }
 
             // do nothing for mozilla, acrobat, gnome applets, and other hint-specific windows
+            GdkWindow* window( gtk_widget_get_window( widget ) );
             if(
                 Style::instance().settings().applicationName().useFlatBackground( widget ) ||
                 Gtk::gtk_widget_is_applet( widget ) ||
@@ -153,7 +155,7 @@ namespace Oxygen
             */
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
-                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+                Style::instance().fill( context, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
             }
 
@@ -184,10 +186,10 @@ namespace Oxygen
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
 
             // render background gradient
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( context, window, clipRect, x, y, w, h );
 
             // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
+            draw_animated_button( context, clipRect, widget );
 
             return;
 
@@ -200,7 +202,7 @@ namespace Oxygen
             // fill with flat color
             if( Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
-                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
+                Style::instance().fill( context, clipRect, x, y, w, h, Palette::Window );
                 return;
             }
 
@@ -210,7 +212,7 @@ namespace Oxygen
             // for modified bg, fill with flat custom color
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
-                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+                Style::instance().fill( context, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
 
             } else {
 
@@ -219,13 +221,16 @@ namespace Oxygen
                 if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
                 { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
+                // get window from widget
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+
                 // render background gradient
-                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+                Style::instance().renderWindowBackground( context, window, widget, clipRect, x, y, w, h );
 
             }
 
             // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
+            draw_animated_button( context, clipRect, widget );
 
             return;
 
@@ -241,7 +246,7 @@ namespace Oxygen
                 Style::instance().settings().applicationName().isOpenOffice() &&
                 Style::instance().settings().applicationName().isMozilla() )
             {
-                Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, StyleOptions() );
+                Style::instance().renderTooltipBackground( context, clipRect, x, y, w, h, StyleOptions() );
                 return;
             }
 
