@@ -94,11 +94,13 @@ namespace Oxygen
 
         // retrieve widget style and check
         GtkStyle* style( gtk_widget_get_style( widget ) );
-        if( !( style && style->depth >= 0 ) ) return;
+        if( !style ) return;
 
-        // adjust depth
-        if( style->depth == gdk_drawable_get_depth( window ) )
-        { return; }
+        // TODO: check whether there is an equivalent for Gtk3
+//         if( !( style && style->depth >= 0 ) ) return;
+//         // adjust depth
+//         if( style->depth == gdk_drawable_get_depth( window ) )
+//         { return; }
 
         #if OXYGEN_DEBUG
         std::cerr
@@ -109,7 +111,10 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        widget->style = gtk_style_attach( style, window );
+        // TODO: check whether this is needed for gtk+3, and if yes, if working
+        // This is known *not* to work for gtk+2
+        gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
+//        widget->style = gtk_style_attach( style, window );
 
         // if widget is a container, we need to do the same for its children
         if( !GTK_IS_CONTAINER( widget ) ) return;
@@ -173,7 +178,7 @@ namespace Oxygen
             #endif
 
             // assign argb colormap to widget
-            gtk_widget_set_colormap( widget, gdk_screen_get_rgba_colormap( screen ) );
+            gtk_widget_set_visual( widget, gdk_screen_get_rgba_visual( screen ) );
 
         }
 
