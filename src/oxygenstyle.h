@@ -97,15 +97,15 @@ namespace Oxygen
         //@{
 
         //! fill given rectangle with flat color
-        void fill( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Role role ) const
-        { fill( window, r, x, y, w, h, settings().palette().color( Palette::Active, role ) ); }
+        void fill( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Role role ) const
+        { fill( context, r, x, y, w, h, settings().palette().color( Palette::Active, role ) ); }
 
         //! fill given rectangle with flat color
-        void fill( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Group group, Palette::Role role ) const
-        { fill( window, r, x, y, w, h, settings().palette().color( group, role ) ); }
+        void fill( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Group group, Palette::Role role ) const
+        { fill( context, r, x, y, w, h, settings().palette().color( group, role ) ); }
 
         //! fill given rectangle with flat color
-        void fill( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
+        void fill( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
         //! outline given rectangle with flat color
         void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
@@ -166,10 +166,10 @@ namespace Oxygen
         { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
 
         //! button slab
-        void renderButtonSlab( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
-        { renderButtonSlab( window, clipRect, x, y, w, h, options, AnimationData(), tiles ); }
+        void renderButtonSlab( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
+        { renderButtonSlab( context, clipRect, x, y, w, h, options, AnimationData(), tiles ); }
 
-        void renderButtonSlab( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
+        void renderButtonSlab( cairo_t* context, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */

@@ -110,7 +110,7 @@ namespace Oxygen
         const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
         const Cairo::Surface& roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
-        void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
+        void fillSlab( cairo_t* context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
         //@}
 

@@ -146,11 +146,10 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
+    void Style::fill( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
         // define colors
-        Cairo::Context context( window, clipRect );
         cairo_rectangle( context, x, y, w, h );
         cairo_set_source( context, color );
         cairo_fill( context );
@@ -201,7 +200,8 @@ namespace Oxygen
         const StyleOptions& options, TileSet::Tiles tiles )
     {
 
-        bool needToDestroyContext;
+        // always save context
+        cairo_save(context);
 
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
@@ -216,13 +216,8 @@ namespace Oxygen
         gint wx(0), wy(0);
 
         // if we aren't going to draw window decorations...
-        if(!context)
+        if( window )
         {
-
-            // create context and translate to toplevel coordinates
-            // make it the old good way since context is cairo_t* instead Cairo::Context
-            context = gdk_cairo_create(window);
-            needToDestroyContext=true;
 
             if( clipRect )
             {
@@ -267,7 +262,7 @@ namespace Oxygen
                 cairo_set_source(context,base);
                 cairo_rectangle(context,x,y,w,h);
                 cairo_fill(context);
-                cairo_destroy(context);
+                cairo_restore( context );
                 return;
 
             }
@@ -285,8 +280,6 @@ namespace Oxygen
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
-            needToDestroyContext=false;
-            cairo_save(context);
             cairo_translate(context,x,y);
             x=0;
             y=0;
@@ -361,8 +354,8 @@ namespace Oxygen
 
         }
 
-        if(needToDestroyContext) cairo_destroy(context);
-        else cairo_restore(context);
+        // restore context
+        cairo_restore(context);
 
         return;
 
@@ -1186,7 +1179,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderButtonSlab(
-        GdkWindow* window,
+        cairo_t* context,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
@@ -1206,14 +1199,12 @@ namespace Oxygen
             if( options & Sunken )
             {
 
-                Cairo::Context context( window, clipRect );
                 const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
                 if( glow.isValid() ) helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
                 else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
 
             } else if( glow.isValid() ) {
 
-                Cairo::Context context( window, clipRect );
                 helper().slitFocused( glow ).render( context, x, y, w, h, tiles );
 
             }
@@ -1238,19 +1229,18 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base( color( group, Palette::Button, options ) );
-        if( options&Blend )
-        {
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( base, wh, y+wy+h/2 );
-
-        }
+// TODO: reimplement for Gtk3
+//         if( options&Blend )
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             base = ColorUtils::backgroundColor( base, wh, y+wy+h/2 );
+//
+//         }
 
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-
-        // create context
-        Cairo::Context context( window, clipRect );
 
         // fill with appropriate pattern
         Cairo::Pattern pattern;

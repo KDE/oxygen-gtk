@@ -508,7 +508,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& tiles ) const
+    void StyleHelper::fillSlab( cairo_t* context, int x, int y, int w, int h, const TileSet::Tiles& tiles ) const
     {
 
         const double s( 3.6 + ( 0.5 * _slabThickness )  );
