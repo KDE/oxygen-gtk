@@ -429,7 +429,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderTooltipBackground( cairo_t* context, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    void Style::renderTooltipBackground( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         // save context and translate
@@ -1601,7 +1601,6 @@ namespace Oxygen
     //____________________________________________________________________________________
     void Style::renderHole(
         cairo_t* context,
-        GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap,
         const StyleOptions& options,
         const AnimationData& animationData,
@@ -1796,7 +1795,6 @@ namespace Oxygen
     //____________________________________________________________________________________
     void Style::renderSelection(
         cairo_t* context,
-        GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         TileSet::Tiles tiles,
         const StyleOptions& options

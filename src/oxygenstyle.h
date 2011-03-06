@@ -130,7 +130,7 @@ namespace Oxygen
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
-        void renderTooltipBackground( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        void renderTooltipBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
         void renderHeaderBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint );
@@ -197,13 +197,13 @@ namespace Oxygen
         //!@name hole
         //@{
 
-        void renderHole( cairo_t*, GdkRectangle*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles = TileSet::Ring );
+        void renderHole( cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles = TileSet::Ring );
 
-        void renderHole( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHole( context, r, x, y, w, h, Gtk::Gap(), o, AnimationData(), tiles ); }
+        void renderHole( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHole( context, x, y, w, h, Gtk::Gap(), o, AnimationData(), tiles ); }
 
-        void renderHole( cairo_t* context, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, const AnimationData& animationData, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHole( context, r, x, y, w, h, Gtk::Gap(), o, animationData, tiles ); }
+        void renderHole( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& o, const AnimationData& animationData, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHole( context, x, y, w, h, Gtk::Gap(), o, animationData, tiles ); }
 
         //@}
 
@@ -218,7 +218,7 @@ namespace Oxygen
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! selection
-        void renderSelection( cairo_t*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
+        void renderSelection( cairo_t*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
 
         //! arrow
         void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize, const StyleOptions&, const AnimationData&, Palette::Role ) const;
