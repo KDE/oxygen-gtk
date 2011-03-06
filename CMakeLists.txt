@@ -82,7 +82,7 @@ exec_program(
 	ARGS --variable=gtk_binary_version gtk+-3.0
 	OUTPUT_VARIABLE GTK_VERSION )
 
-set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/2.4.0/engines )" )
+set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/2.4.0/engines )" )
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
