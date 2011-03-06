@@ -2757,7 +2757,6 @@ namespace Oxygen
         cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -2819,10 +2818,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_extension( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -2832,9 +2830,9 @@ namespace Oxygen
         GtkPositionType position )
     {
 
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2888,7 +2886,9 @@ namespace Oxygen
                 // update drag in progress flag
                 if( isCurrentTab )
                 {
-                    bool drag( widget && (window != gtk_widget_get_window( widget ) ) );
+                    // TODO: reimplement with gtk+3
+                    // const bool drag( widget && (window != gtk_widget_get_window( widget ) ) );
+                    const bool drag( false );
                     Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
                 }
 
@@ -2911,14 +2911,14 @@ namespace Oxygen
                 // draw background since OOo won't draw it as it should
                 // in addition, it passes wrong rectangle to the theme
                 Style::instance().fill(
-                    window, clipRect, x-1, y, w+2, h+1,
+                    context, x-1, y, w+2, h+1,
                     Style::instance().settings().palette().color( Palette::Window ) );
             }
 
             // render
             if( isMozilla ) tabOptions |= Mozilla;
 
-            Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions, data );
+            Style::instance().renderTab( context, x, y, w, h, position, options, tabOptions, data );
 
             // render tabbar base if current tab
             if( drawTabBarBase )
@@ -2954,11 +2954,11 @@ namespace Oxygen
 
                 gap.setHeight( 8 );
 
-                Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
+                Style::instance().renderTabBarBase( context, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
 
             }
 
-            Gtk::gtk_notebook_update_close_buttons(GTK_NOTEBOOK(widget));
+            Gtk::gtk_notebook_update_close_buttons( GTK_NOTEBOOK( widget ) );
         }
 
     }
@@ -2966,9 +2966,8 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_focus(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const char* detail,
         gint x,
@@ -2976,10 +2975,6 @@ namespace Oxygen
         gint w,
         gint h )
     {
-
-        g_return_if_fail( style && window );
-
-        Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2994,10 +2989,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_handle( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -3006,9 +3000,10 @@ namespace Oxygen
         gint h,
         GtkOrientation orientation )
     {
-        g_return_if_fail( style && window );
 
-        Style::instance().sanitizeSize( window, w, h );
+        g_return_if_fail( style && context );
+
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -3030,35 +3025,38 @@ namespace Oxygen
 
             } else if( Gtk::g_object_is_a( G_OBJECT( widget ), "GtkPizza" ) ) {
 
-                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
                 if( w>h ) options |= Vertical;
 
             }
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-            Style::instance().renderSplitter( window, 0L, x, y, w, h, options, data );
+            Style::instance().renderSplitter( context, x, y, w, h, options, data );
 
         } else if( d.isHandleBox() ) {
 
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
 
-                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+                Style::instance().fill( context, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
 
             } else if( !Gtk::gtk_widget_is_applet( widget ) ) {
 
-                Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
 
             }
 
             StyleOptions options( widget, state, shadow );
             if( orientation == GTK_ORIENTATION_VERTICAL ) options |= Vertical;
-            Style::instance().renderToolBarHandle( window, clipRect, x, y, w, h, options );
+            Style::instance().renderToolBarHandle( context, x, y, w, h, options );
 
         } else {
 
-            StyleWrapper::parentClass()->draw_handle( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_handle(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h,
                 orientation );
         }
@@ -3068,9 +3066,8 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_resize_grip(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const char* detail,
         GdkWindowEdge edge,
@@ -3079,7 +3076,6 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -3123,10 +3119,11 @@ namespace Oxygen
             screen = gtk_widget_get_screen( widget );
             settings = gtk_settings_get_for_screen( screen );
 
-        } else if (style->colormap) {
-
-            screen = gdk_colormap_get_screen( style->colormap );
-            settings = gtk_settings_get_for_screen( screen );
+// TODO: reimplement (if needed) for gtk3
+//         } else if (style->colormap) {
+//
+//             screen = gdk_colormap_get_screen( style->colormap );
+//             settings = gtk_settings_get_for_screen( screen );
 
         } else {
 
@@ -3195,10 +3192,9 @@ namespace Oxygen
     //___________________________________________________________________________________________________________
     static void draw_layout(
         GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         gboolean use_text,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x, gint y,
@@ -3216,13 +3212,14 @@ namespace Oxygen
         const Gtk::Detail d(detail);
 
         // draw progressbar text white if above indicator, black if not
-        if( GTK_IS_PROGRESS( widget ) || GTK_IS_PROGRESS_BAR( widget ) || d.isProgressBar() )
+        if( GTK_IS_PROGRESS_BAR( widget ) || d.isProgressBar() )
         {
-            Cairo::Context context( window,clipRect );
+            cairo_save( context );
             if(state==GTK_STATE_PRELIGHT) gdk_cairo_set_source_color(context, &style->text[GTK_STATE_SELECTED]);
             else gdk_cairo_set_source_color(context, &style->text[state]);
             cairo_translate(context,x,y);
             pango_cairo_show_layout(context,layout);
+            cairo_restore( context );
             return;
         }
 
@@ -3231,7 +3228,7 @@ namespace Oxygen
 
             // for inactive text, we do the painting ourselves
             // to prevent 'emboss' inactive text rendering from gtk
-            Cairo::Context context( window, clipRect );
+            cairo_save( context );
             gdk_cairo_set_source_color( context, use_text ? &style->text[state] : &style->fg[state] );
             const PangoMatrix* matrix( pango_context_get_matrix( pango_layout_get_context( layout ) ) );
             if( matrix )
@@ -3252,13 +3249,14 @@ namespace Oxygen
             } else cairo_translate( context, x, y );
 
             pango_cairo_show_layout( context, layout );
+            cairo_restore( context );
 
         } else {
 
             // in all other cases, fallback on default rendering, for now
             StyleWrapper::parentClass()->draw_layout(
-                style, window, state, use_text,
-                clipRect, widget, detail, x, y, layout );
+                style, context, state, use_text,
+                widget, detail, x, y, layout );
 
         }
     }
