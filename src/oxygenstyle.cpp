@@ -361,7 +361,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    bool Style::renderMenuBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
@@ -379,7 +379,7 @@ namespace Oxygen
         y+=wy;
 
         // create context and translate
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
@@ -423,6 +423,9 @@ namespace Oxygen
             cairo_fill( context );
 
         }
+
+        // restore
+        cairo_restore( context );
 
         return true;
 
@@ -769,23 +772,22 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderProgressBarHole(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const ColorUtils::Rgba base(settings().palette().color( group, Palette::Window ) );
 
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         renderScrollBarHole( context, x, y, w, h, base, (options&Vertical) );
+        cairo_restore( context );
 
     }
 
     //____________________________________________________________________________________
     void Style::renderProgressBarHandle(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
@@ -794,15 +796,16 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
         const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Selected ) );
 
-        /* need to adjust clipRect */
-        if( clipRect )
-        {
-            clipRect->y -= 2;
-            clipRect->height += 4;
-        }
-
         // context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
+
+// TODO: check whether clipping has to be fixed for Gtk3
+//         /* need to adjust clipRect */
+//         if( clipRect )
+//         {
+//             clipRect->y -= 2;
+//             clipRect->height += 4;
+//         }
 
         // validate rect
         if(w<0 || h<0) return;
@@ -820,12 +823,13 @@ namespace Oxygen
             cairo_fill( context );
         }
 
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
     void Style::renderScrollBarHole(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
@@ -834,15 +838,15 @@ namespace Oxygen
         const ColorUtils::Rgba base(settings().palette().color( group, Palette::Window ) );
 
         // context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         renderScrollBarHole( context, x, y, w, h, base, options&Vertical );
+        cairo_restore( context );
 
     }
 
     //____________________________________________________________________________________
     void Style::renderScrollBarHandle(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
         const AnimationData& data ) const
@@ -875,7 +879,7 @@ namespace Oxygen
         if( wf <= 0 || hf <= 0 ) return;
 
         // context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
 
         // glow, shadow
         {
@@ -994,19 +998,21 @@ namespace Oxygen
 
         }
 
+        // restore
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
     void Style::renderToolBarHandle(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
 
         const bool vertical( options & Vertical );
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         int counter(0);
         if( vertical )
         {
@@ -1029,12 +1035,13 @@ namespace Oxygen
 
         }
 
+        cairo_restore( context );
         return;
 
     }
 
     //__________________________________________________________________
-    void Style::drawFloatFrame( cairo_t* context, GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options, Palette::Role role ) const
+    void Style::drawFloatFrame( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, Palette::Role role ) const
     {
 
         // define colors
@@ -1047,19 +1054,6 @@ namespace Oxygen
         const bool drawUglyShadow( !hasAlpha );
         const bool rounded( options&Round );
 
-        // if we aren't drawing window decoration
-        if( !context )
-        {
-            // create context
-            // make it the old good way since context is cairo_t* instead Cairo::Context
-            context=gdk_cairo_create(window);
-            if(clipRect)
-            {
-                cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
-                cairo_clip(context);
-            }
-        }
-
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, double(y)+0.5, 0, y+h-1 ) );
 
         // add vertical offset
@@ -1068,6 +1062,9 @@ namespace Oxygen
             y += Menu_VerticalOffset;
             h -= 2*Menu_VerticalOffset;
         }
+
+        // save context
+        cairo_save( context );
 
         if( drawUglyShadow )
         {
@@ -1185,6 +1182,9 @@ namespace Oxygen
         cairo_set_source( context, pattern );
         cairo_set_line_width( context, 0.8 );
         cairo_stroke( context );
+
+        // restore
+        cairo_restore( context );
     }
 
     //__________________________________________________________________
@@ -1930,8 +1930,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderSliderGroove(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
@@ -1943,8 +1942,9 @@ namespace Oxygen
         GdkRectangle child = { 0, 0, vertical ? Slider_GrooveWidth:w, vertical ? h:Slider_GrooveWidth };
         centerRect( &parent, &child );
 
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         helper().groove( base, 0 ).render( context, child.x, child.y, child.width, child.height );
+        cairo_restore( context );
 
     }
 
@@ -2240,7 +2240,7 @@ namespace Oxygen
         if(wopt & WinDeco::Active) options|=Focus;
 
         if( !isMaximized )
-        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options, Palette::InactiveWindowBackground ); }
+        { drawFloatFrame( context, x, y, w, h, options, Palette::InactiveWindowBackground ); }
 
         if( drawResizeHandle )
         {
@@ -3438,7 +3438,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderScrollBarHole( Cairo::Context& context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool vertical, TileSet::Tiles tiles )
+    void Style::renderScrollBarHole( cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& base, bool vertical, TileSet::Tiles tiles )
     {
 
         // use tileset from helper

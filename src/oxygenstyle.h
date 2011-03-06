@@ -127,7 +127,7 @@ namespace Oxygen
 //         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! window background
-        bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        bool renderMenuBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
         void renderTooltipBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -150,23 +150,21 @@ namespace Oxygen
 
         //!@name progressbar
         //@{
-        void renderProgressBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
-        void renderProgressBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderProgressBarHole( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
+        void renderProgressBarHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
         //@}
 
         //!@name scrollbar
         //@{
-        void renderScrollBarHole( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
-        void renderScrollBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
+        void renderScrollBarHole( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
+        void renderScrollBarHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
         //@}
 
         //! toolbar handle
-        void renderToolBarHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        void renderToolBarHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! frame
-        void drawFloatFrame( cairo_t* context, GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, Palette::Role = Palette::Window ) const;
-        void drawFloatFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& opt, Palette::Role role = Palette::Window) const
-        { drawFloatFrame( 0L, window, r, x, y, w, h, opt, role ); }
+        void drawFloatFrame( cairo_t*, gint, gint, gint, gint, const StyleOptions&, Palette::Role = Palette::Window ) const;
 
         //! button slab
         void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
@@ -226,7 +224,7 @@ namespace Oxygen
         { renderArrow( context, type, x, y, w, h, size, options, AnimationData(), role ); }
 
         //! slider groove
-        void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderSliderGroove( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
 
         //! slider handle
         void renderSliderHandle( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
@@ -382,7 +380,7 @@ namespace Oxygen
 
         //! progressbar hole (groove)
         /*! also used for progress bars */
-        void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full );
+        void renderScrollBarHole( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
