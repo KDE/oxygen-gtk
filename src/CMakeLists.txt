@@ -55,7 +55,6 @@ set( oxygen_gtk_SOURCES
     oxygenstyle.cpp
     oxygenstylehelper.cpp
     oxygenstyleoptions.cpp
-    oxygenstylewrapper.cpp
     oxygentaboptions.cpp
     oxygentheme.cpp
     oxygentileset.cpp
@@ -63,6 +62,7 @@ set( oxygen_gtk_SOURCES
     oxygenwindecooptions.cpp
     oxygenwindowmanager.cpp
     oxygenwindowshadow.cpp
+    oxygenstylewrapper.cpp
 )
 
 add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
