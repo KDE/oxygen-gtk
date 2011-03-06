@@ -57,12 +57,12 @@ namespace Oxygen
         int numOfResponsesFound=0;
         for(int i=0; i<numOfResponseIDs; i++)
         {
-            if( !Gtk::gtk_dialog_find_button(dialog,responses[i]) ) continue;
+            GtkWidget* button( Gtk::gtk_dialog_find_button(dialog,responses[i]) );
+            if( !button ) continue;
 
             #if OXYGEN_DEBUG
-            std::cerr << "DialogEngine::registerWidget - responseID found: " << Gtk::TypeNames::response( responses[i] ) << "; button \"" << gtk_button_get_label(GTK_BUTTON(button)) << "\""  << std::endl;
+            std::cerr << "responseID found: " << Gtk::TypeNames::response( responses[i] ) << "; button \"" << gtk_button_get_label(GTK_BUTTON(button)) << "\""  << std::endl;
             #endif
-
             // i is always >= numOfResponsesFound, so this will copy response id nearer to start, but never to end
             responses[numOfResponsesFound]=responses[i];
             numOfResponsesFound++;
