@@ -2193,10 +2193,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_arrow( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         GtkArrowType arrow,
@@ -2207,8 +2206,8 @@ namespace Oxygen
         gint h )
     {
 
-        g_return_if_fail( style && window );
-        Style::instance().sanitizeSize( window, w, h );
+        g_return_if_fail( style && context );
+        //Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2261,7 +2260,10 @@ namespace Oxygen
                 gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT &&
                 GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
                 gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
-            { Style::instance().renderWindowBackground( window, widget, clipRect, x-8, y-8, w+16, h+16); }
+            {
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x-8, y-8, w+16, h+16);
+            }
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
@@ -2325,13 +2327,6 @@ namespace Oxygen
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             { x+=2; }
 
-        } else if( Gtk::gtk_parent_combo( widget ) ) {
-
-            role = Palette::WindowText;
-
-            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
-            { x+=2; }
-
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
             useWidgetStateEngine = false;
@@ -2344,8 +2339,7 @@ namespace Oxygen
 
         } else if(
             Gtk::gtk_parent_button( widget ) &&
-            !Gtk::gtk_parent_tree_view( widget ) &&
-            !Gtk::gtk_parent_combo( widget ) )
+            !Gtk::gtk_parent_tree_view( widget ) )
         {
 
             useWidgetStateEngine = false;
@@ -2370,7 +2364,8 @@ namespace Oxygen
 
                 // need to render background behind arrows from calendar
                 // offsets are empirical
-                Style::instance().renderWindowBackground( window, widget, clipRect, x-2, y-3, w+4, h+6 );
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x-2, y-3, w+4, h+6 );
                 role = Palette::WindowText;
 
             }
@@ -2403,7 +2398,7 @@ namespace Oxygen
 
         // render arrow
         if( useWidgetStateEngine ) data = Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover );
-        Style::instance().renderArrow( window, clipRect, arrow, x, y, w, h, arrowSize, options, data, role );
+        Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
 
     }
 
