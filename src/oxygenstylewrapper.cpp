@@ -2438,7 +2438,6 @@ namespace Oxygen
             if( d.isTreeView() )
             {
 
-                // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
                 const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
                 Style::instance().renderArrow( window, clipRect, arrow, x-3, y-4, 10, 10, arrowSize, options, data, role );
 
@@ -2453,7 +2452,6 @@ namespace Oxygen
 
         } else if( d.isTreeView() ) {
 
-            // FIXME: right now, can't animate TreeView expanders. Will need dedicated engine
             Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, data, role );
 
         } else {
