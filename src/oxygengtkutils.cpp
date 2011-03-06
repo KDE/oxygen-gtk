@@ -551,11 +551,14 @@ namespace Oxygen
     int Gtk::gtk_notebook_find_first_tab( GtkWidget* widget )
     {
 
-        if( !GTK_IS_NOTEBOOK( widget ) ) return 0;
+        // TODO: reimplement with gtk+3.0
+        return 0;
 
-        // cast to notebook
-        GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
-        return g_list_position( notebook->children, notebook->first_tab );
+//         if( !GTK_IS_NOTEBOOK( widget ) ) return 0;
+//
+//         // cast to notebook
+//         GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+//         return g_list_position( notebook->children, notebook->first_tab );
 
     }
 
