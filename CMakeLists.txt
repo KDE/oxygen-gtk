@@ -46,7 +46,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
     exec_program(
         ${PKGCONFIG_EXECUTABLE}
-        ARGS --variable=prefix gtk+-2.0
+        ARGS --variable=prefix gtk+-3.0
         OUTPUT_VARIABLE GTK_PREFIX )
 
     set(CMAKE_INSTALL_PREFIX
@@ -62,7 +62,7 @@ find_package( X11 REQUIRED )
 find_package(PkgConfig REQUIRED )
 
 # GTK
-pkg_check_modules( GTK REQUIRED gtk+-2.0 )
+pkg_check_modules( GTK REQUIRED gtk+-3.0 )
 
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
@@ -79,10 +79,10 @@ endif( DBUS_FOUND )
 ##########################
 exec_program(
 	${PKGCONFIG_EXECUTABLE}
-	ARGS --variable=gtk_binary_version gtk+-2.0
+	ARGS --variable=gtk_binary_version gtk+-3.0
 	OUTPUT_VARIABLE GTK_VERSION )
 
-set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
+set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/2.4.0/engines )" )
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
