@@ -28,7 +28,6 @@ namespace Oxygen
         _cr( 0L )
     {
 
-        if( !GDK_IS_DRAWABLE(window) ) return;
         _cr= static_cast<cairo_t*>( gdk_cairo_create(window) );
         setClipping( clipRect );
 
