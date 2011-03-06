@@ -108,7 +108,7 @@ namespace Oxygen
         void fill( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
 
         //! outline given rectangle with flat color
-        void outline( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
+        void outline( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
 
         //! separators
         void drawSeparator( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
@@ -146,7 +146,7 @@ namespace Oxygen
         void renderHoleBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
 
         //! splitters
-        void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
+        void renderSplitter( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //!@name progressbar
         //@{
@@ -230,11 +230,11 @@ namespace Oxygen
         void renderSliderHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! size grip
-        void renderSizeGrip( GdkWindow*, GdkRectangle*, GdkWindowEdge, gint, gint, gint, gint ) const;
+        void renderSizeGrip( cairo_t*, GdkWindowEdge, gint, gint, gint, gint ) const;
 
         //! tab
         void renderTab(
-            GdkWindow*, GdkRectangle*,
+            cairo_t*,
             gint, gint, gint, gint,
             GtkPositionType,
             const StyleOptions&,
@@ -243,7 +243,7 @@ namespace Oxygen
 
         //! tabbar base
         void renderTabBarBase(
-            GdkWindow*, GdkRectangle*,
+            cairo_t*,
             gint, gint, gint, gint,
             GtkPositionType, Gtk::Gap,
             const StyleOptions&,
@@ -345,7 +345,7 @@ namespace Oxygen
 
         //! tab
         void renderActiveTab(
-            GdkWindow*, GdkRectangle*,
+            cairo_t*,
             gint, gint, gint, gint,
             GtkPositionType,
             const StyleOptions&,
@@ -353,7 +353,7 @@ namespace Oxygen
 
         //! tab
         void renderInactiveTab_Plain(
-            GdkWindow*, GdkRectangle*,
+            cairo_t*,
             gint, gint, gint, gint,
             GtkPositionType,
             const StyleOptions&,
@@ -362,7 +362,7 @@ namespace Oxygen
 
         //! tab
         void renderInactiveTab_Single(
-            GdkWindow*, GdkRectangle*,
+            cairo_t*,
             gint, gint, gint, gint,
             GtkPositionType,
             const StyleOptions&,

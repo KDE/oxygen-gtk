@@ -161,15 +161,16 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::outline( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
+    void Style::outline( cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
 
         // define colors
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         cairo_rectangle( context, 0.5+x, 0.5+y, w-1, h-1 );
         cairo_set_line_width( context, 1 );
         cairo_set_source( context, color );
         cairo_stroke( context );
+        cairo_restore( context );
 
     }
 
@@ -685,7 +686,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderSplitter(
-        GdkWindow* window, GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
         const AnimationData& data ) const
@@ -698,7 +699,7 @@ namespace Oxygen
         const ColorUtils::Rgba& base( settings().palette().color( Palette::Window ) );
 
         // context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
 
         // hover color
         ColorUtils::Rgba highlight;
@@ -717,7 +718,6 @@ namespace Oxygen
         if( highlight.isValid() )
         {
 
-            Cairo::Context context( window, clipRect );
             Cairo::Pattern pattern;
             double a(0.1);
             if( vertical )
@@ -770,6 +770,8 @@ namespace Oxygen
             }
 
         }
+
+        cairo_restore( context );
 
     }
 
@@ -2003,8 +2005,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderSizeGrip(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         GdkWindowEdge edge,
         gint x, gint y, gint w, gint h ) const
     {
@@ -2055,7 +2056,7 @@ namespace Oxygen
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
 
         // context
-        Cairo::Context context( window, clipRect );
+        cairo_save( context );
         cairo_set_line_width( context, 1.0 );
 
         // fill
@@ -2074,13 +2075,13 @@ namespace Oxygen
         cairo_line_to( context, a[0].x(), a[0].y() );
         cairo_set_source( context, light );
         cairo_stroke( context );
+        cairo_restore( context );
 
     }
 
     //____________________________________________________________________________________
     void Style::renderTab(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
@@ -2092,14 +2093,14 @@ namespace Oxygen
         if( tabOptions & CurrentTab )
         {
 
-            return renderActiveTab( window, clipRect, x, y, w, h, side, options, tabOptions );
+            return renderActiveTab( context, x, y, w, h, side, options, tabOptions );
 
         } else {
 
             switch( settings().tabStyle() )
             {
-                case QtSettings::TS_SINGLE: return renderInactiveTab_Single( window, clipRect, x, y, w, h, side, options, tabOptions, data );
-                case QtSettings::TS_PLAIN: return renderInactiveTab_Plain( window, clipRect, x, y, w, h, side, options, tabOptions, data );
+                case QtSettings::TS_SINGLE: return renderInactiveTab_Single( context, x, y, w, h, side, options, tabOptions, data );
+                case QtSettings::TS_PLAIN: return renderInactiveTab_Plain( context, x, y, w, h, side, options, tabOptions, data );
                 default: return;
             }
 
@@ -2109,8 +2110,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderTabBarBase(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         Gtk::Gap gap,
@@ -2125,8 +2125,8 @@ namespace Oxygen
         if( tabOptions & FirstTabAligned ) { gap.setX( gap.x()-3 ); gap.setWidth( gap.width()+3 ); }
         if( tabOptions & LastTabAligned ) { gap.setWidth( gap.width()+3 ); }
 
-        // create context
-        Cairo::Context context( window, 0L );
+        // context
+        cairo_save( context );
 
         // generate mask and main slab
         SlabRect tabSlab;
@@ -2160,6 +2160,8 @@ namespace Oxygen
 
         // render
         helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        cairo_restore( context );
+
         return;
 
     }
@@ -2569,8 +2571,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderActiveTab(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
@@ -2586,8 +2587,8 @@ namespace Oxygen
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
-        // create context
-        Cairo::Context context( window, clipRect );
+        // save context
+        cairo_save( context );
 
         // borders and connections to tabs
         // this is quite painfull and slipery code.
@@ -2671,7 +2672,9 @@ namespace Oxygen
 
             }
 
-            default: return;
+            default:
+            assert( false );
+            return;
         }
 
         // render tab
@@ -2715,7 +2718,9 @@ namespace Oxygen
             pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
             break;
 
-            default: return;
+            default:
+            assert( false );
+            return;
 
         }
 
@@ -2742,12 +2747,14 @@ namespace Oxygen
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
         { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
+        // restore
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
     void Style::renderInactiveTab_Single(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
@@ -2765,8 +2772,8 @@ namespace Oxygen
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
-        // create context
-        Cairo::Context context( window, clipRect );
+        // save context
+        cairo_save( context );
 
         // borders and connections to tabs
         // this is quite painfull and slipery code.
@@ -2840,7 +2847,9 @@ namespace Oxygen
                 break;
             }
 
-            default: return;
+            default:
+            assert( false );
+            return;
         }
 
         // render tab
@@ -2889,7 +2898,9 @@ namespace Oxygen
             pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
             break;
 
-            default: return;
+            default:
+            assert( false );
+            return;
 
         }
 
@@ -2917,12 +2928,15 @@ namespace Oxygen
 
             }
         }
+
+        // restore
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
     void Style::renderInactiveTab_Plain(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         GtkPositionType side,
         const StyleOptions& options,
@@ -2942,8 +2956,8 @@ namespace Oxygen
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
-        // create context
-        Cairo::Context context( window, clipRect );
+        // save context
+        cairo_save( context );
 
         // borders and connections to tabs
         // this is quite painfull and slipery code.
@@ -3070,7 +3084,10 @@ namespace Oxygen
                 break;
             }
 
-            default: return;
+            default:
+            assert( false );
+            return;
+
         }
 
         const bool isFirstTab( tabOptions & FirstTab );
@@ -3248,19 +3265,23 @@ namespace Oxygen
             }
             break;
 
-            default: return;
+            default:
+            assert( false );
+            return;
 
         }
 
         ColorUtils::Rgba backgroundColor( base );
-        {
 
-            gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-            if( wh > 0 )
-            {  backgroundColor = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ); }
-
-        }
+// TODO: reimplement for gtk3
+//         {
+//
+//             gint wh, wy;
+//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//             if( wh > 0 )
+//             {  backgroundColor = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 ); }
+//
+//         }
 
         const ColorUtils::Rgba midColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.4 ) );
         const ColorUtils::Rgba darkColor( ColorUtils::alphaColor( ColorUtils::darkColor( backgroundColor ), 0.8 ) );
@@ -3291,6 +3312,9 @@ namespace Oxygen
             }
 
         }
+
+        // restore
+        cairo_restore( context );
 
     }
 
