@@ -1029,7 +1029,7 @@ namespace Oxygen
 
         } else if( d.isMenu() ) {
 
-            if( GTK_IS_MENU( widget ) && GTK_MENU( widget )->torn_off )
+            if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
             {
 
                 if(
@@ -2076,7 +2076,10 @@ namespace Oxygen
             {
                 // render background, this is needed to prevent a plain rect to be rendered (by gtk) where the item is
                 // rectangle is adjusted manually so that it matches
-                if( widget && GTK_IS_MENU( gtk_widget_get_parent( widget ) ) && GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
+                if(
+                    widget &&
+                    GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
+                    gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
                 {
 
                     Style::instance().renderWindowBackground( window, widget, clipRect, x1-4, y-7, x2-x1+10, 20 );
@@ -2224,7 +2227,7 @@ namespace Oxygen
             if( widget &&
                 gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT &&
                 GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
-                GTK_MENU( gtk_widget_get_parent( widget ) )->torn_off )
+                gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
             { Style::instance().renderWindowBackground( window, widget, clipRect, x-8, y-8, w+16, h+16); }
 
             // disable highlight in menus, for consistancy with oxygen qt style
