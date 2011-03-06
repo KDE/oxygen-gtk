@@ -215,9 +215,6 @@ namespace Oxygen
         GtkWidget* gtk_parent_toolbar( GtkWidget* );
 
         //! return parent combobox if any.
-        GtkWidget* gtk_parent_combo( GtkWidget* );
-
-        //! return parent combobox if any.
         GtkWidget* gtk_parent_combobox( GtkWidget* );
 
         //! return parent combobox if any.

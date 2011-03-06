@@ -237,16 +237,6 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_combo( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_COMBO( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
     GtkWidget* Gtk::gtk_parent_combobox( GtkWidget* widget )
     {
 
