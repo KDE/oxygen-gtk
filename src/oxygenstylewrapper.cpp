@@ -617,10 +617,9 @@ namespace Oxygen
 
     //___________________________________________________________________________________________________________
     static void draw_box( GtkStyle* style,
-        GdkWindow* window,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -628,7 +627,7 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -639,13 +638,13 @@ namespace Oxygen
             detail?detail:"0x0" );
         #endif
 
-        Style::instance().sanitizeSize( window, w, h );
+        //Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
         // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
         if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
         {
-            Style::instance().fill( window, clipRect, x, y, w-2, h-1, Palette::Window );
+            Style::instance().fill( context, x, y, w-2, h-1, Palette::Window );
             return;
         }
 
@@ -653,7 +652,7 @@ namespace Oxygen
         if( d.isInfoBar() )
         {
 
-            Style::instance().renderInfoBar( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+            Style::instance().renderInfoBar( context, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
 
 
         } else if( d.isButton() || d.isOptionMenu() || d.isToggleButton() ) {
@@ -693,7 +692,7 @@ namespace Oxygen
                             } else w -= 10;
                         }
 
-                        Style::instance().renderSelection(window,clipRect,x,y,w,h,TileSet::Full,options);
+                        Style::instance().renderSelection( context, x, y, w, h, TileSet::Full, options );
                     }
                 }
 
@@ -702,8 +701,8 @@ namespace Oxygen
 
                     options |= Contrast;
 
-                    if( reversed ) Style::instance().renderArrow(window,NULL,GTK_ARROW_LEFT, x+3,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
-                    else Style::instance().renderArrow(window,NULL,GTK_ARROW_RIGHT,x+w-8,y,5,h,QtSettings::ArrowNormal, options, Palette::WindowText);
+                    if( reversed ) Style::instance().renderArrow( context, GTK_ARROW_LEFT, x+3, y, 5, h, QtSettings::ArrowNormal, options, Palette::WindowText);
+                    else Style::instance().renderArrow( context, GTK_ARROW_RIGHT, x+w-8, y, 5, h, QtSettings::ArrowNormal, options, Palette::WindowText);
 
                 }
 
@@ -722,7 +721,8 @@ namespace Oxygen
                 { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
 
                 // treevew header
-                Style::instance().renderHeaderBackground( window, clipRect, x, y, w, h );
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderHeaderBackground( context, window, x, y, w, h );
                 return;
 
             }
@@ -756,7 +756,7 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+                Style::instance().fill( context, x, y, w, h, background );
 
                 // update option accordingly
                 if( state == GTK_STATE_INSENSITIVE ) options &= ~(Hover|Focus);
@@ -774,6 +774,7 @@ namespace Oxygen
                 }
 
                 // render
+                GdkWindow* window( gtk_widget_get_window( widget ) );
                 TileSet::Tiles tiles( TileSet::Ring);
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -781,20 +782,20 @@ namespace Oxygen
 
                     // hide right and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground(window,clipRect, x-1, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( context, window, x-1, y, w+6, h, tiles );
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( context, x-1, y, w+6, h, options, data, tiles  );
 
                 } else {
 
                     // hide left and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( context, window, x-5, y, w+6, h, tiles );
 
                     w -= Style::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( context, x-5, y, w+6, h, options, data, tiles  );
 
                 }
 
@@ -836,12 +837,12 @@ namespace Oxygen
                     {
 
                         tiles &= ~TileSet::Right;
-                        Style::instance().renderButtonSlab( window, clipRect, x, y, w+7, h, options, data, tiles );
+                        Style::instance().renderButtonSlab( context, x, y, w+7, h, options, data, tiles );
 
                     } else {
 
                         tiles &= ~TileSet::Left;
-                        Style::instance().renderButtonSlab( window, clipRect, x-7, y, w+7, h, options, data, tiles );
+                        Style::instance().renderButtonSlab( context, x-7, y, w+7, h, options, data, tiles );
 
                     }
 
@@ -851,41 +852,8 @@ namespace Oxygen
 
                     options |= Flat;
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
-                    if( reversed ) Style::instance().renderButtonSlab( window, clipRect, x+1, y, w, h, options );
-                    else Style::instance().renderButtonSlab( window, clipRect, x-1, y, w, h, options );
-                    return;
-
-                }
-
-            }
-
-            // combo button
-            if( ( parent = Gtk::gtk_parent_combo( widget ) ) )
-            {
-
-                StyleOptions options( Blend );
-                options |= StyleOptions( widget, state, shadow );
-
-                if( Style::instance().settings().applicationName().isOpenOffice() )
-                {
-
-                    // Hover doesn't work correctly in OpenOffice, so disable it
-                    options &= ~(Hover|Focus);
-                    TileSet::Tiles tiles( TileSet::Full );
-                    tiles &= ( ~TileSet::Left );
-                    Style::instance().renderHole( window, clipRect, x-8, y-1, w+9, h+2, options, tiles );
-                    return;
-
-                } else {
-
-                    /*
-                    make button flat; disable focus and hover
-                    (this is handled when rendering the arrow
-                    This doesn't work for OpenOffice.
-                    */
-                    options |= Flat;
-                    options &= ~(Hover|Focus);
-                    Style::instance().animations().comboEngine().registerWidget( parent );
+                    if( reversed ) Style::instance().renderButtonSlab( context, x+1, y, w, h, options );
+                    else Style::instance().renderButtonSlab( context, x-1, y, w, h, options );
                     return;
 
                 }
@@ -914,9 +882,10 @@ namespace Oxygen
                     y=y+(h-height)/2;
 
                     // render the image
-                    Cairo::Context context( window, clipRect );
+                    cairo_save( context );
                     cairo_set_source_surface( context, surface, x, y);
                     cairo_paint(context);
+                    cairo_restore( context );
 
                 }
 
@@ -992,7 +961,7 @@ namespace Oxygen
             { data = Style::instance().animations().widgetStateEngine().get( widget, options ); }
 
             // render
-            Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
+            Style::instance().renderButtonSlab( context, x, y, w, h, options, data );
 
         } else if( d.isMenuBar() ) {
 
@@ -1001,7 +970,10 @@ namespace Oxygen
 
             if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
                 !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
+            {
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, x, y, w, h );
+            }
 
             // check animation state
             if( GTK_IS_MENU_BAR( widget ) )
@@ -1009,6 +981,11 @@ namespace Oxygen
 
                 MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
                 engine.registerWidget(widget);
+
+                // get window
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+
+                // draw animated or fade-out rect
                 if( engine.animatedRectangleIsValid( widget ) )
                 {
 
@@ -1017,7 +994,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+                    Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
 
                 } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
@@ -1027,7 +1004,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().useFlatBackground( widget ) )
                     { options |= Blend; }
 
-                    Style::instance().renderMenuItemRect( window, clipRect, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+                    Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
                 }
 
@@ -1041,11 +1018,13 @@ namespace Oxygen
                 Gtk::gtk_widget_is_applet( widget ) )
                 { return; }
 
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+
             Style::instance().windowManager().registerWidget( widget );
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
             // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
+            draw_animated_button( context, widget );
             return;
 
         } else if( d.isMenu() ) {

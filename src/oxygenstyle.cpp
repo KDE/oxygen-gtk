@@ -1320,19 +1320,20 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderInfoBar(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         gint x, gint y, gint w, gint h,
         const ColorUtils::Rgba& glow )
     {
 
-        // define colors
-        gint wh, wy;
-        Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-        const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
+// TODO: reimplement for gtk+3
+//         // define colors
+//         gint wh, wy;
+//         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+//         const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
+        const ColorUtils::Rgba base( settings().palette().color( Palette::Button ) );
 
-        // create context
-        Cairo::Context context( window, clipRect );
+        // save context
+        cairo_save( context );
 
         // fill
         {
@@ -1348,6 +1349,9 @@ namespace Oxygen
 
         // slab
         helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+
+        // restore
+        cairo_restore( context );
 
     }
 
@@ -1670,8 +1674,8 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderMenuItemRect(
+        cairo_t* context,
         GdkWindow* window,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
@@ -1755,10 +1759,13 @@ namespace Oxygen
 
         }
 
+        // save context
+        cairo_save( context );
+
+        // perform painting
         bool hasSubMenu( isInMenu && GTK_IS_MENU_ITEM( widget ) && gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
         if( hasSubMenu )
         {
-            Cairo::Context context( window, clipRect );
             cairo_translate( context, x, y );
 
             // draw item rect in a group
@@ -1786,10 +1793,13 @@ namespace Oxygen
 
         } else {
 
-            Cairo::Context context( window, clipRect );
             helper().holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
 
         }
+
+        // restore
+        cairo_restore( context );
+
     }
 
     //____________________________________________________________________________________
@@ -1824,8 +1834,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderArrow(
-        GdkWindow* window,
-        GdkRectangle* clipRect,
+        cairo_t* context,
         GtkArrowType orientation,
         gint x, gint y, gint w, gint h,
         QtSettings::ArrowSize arrowSize,
@@ -1853,8 +1862,8 @@ namespace Oxygen
         const int xcenter = x + w/2;
         const int ycenter = y + h/2;
 
-        // create context and translate to center
-        Cairo::Context context( window, clipRect );
+        // save context and translate to center
+        cairo_save( context );
         cairo_translate( context, xcenter, ycenter );
 
         switch( orientation )
@@ -1913,6 +1922,9 @@ namespace Oxygen
         cairo_polygon( context, arrow );
         cairo_set_source( context, base );
         cairo_stroke( context );
+
+        // restore
+        cairo_restore( context );
 
     }
 

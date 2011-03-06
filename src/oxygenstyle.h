@@ -192,7 +192,7 @@ namespace Oxygen
         //@}
 
         //! info bar
-        void renderInfoBar( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& );
+        void renderInfoBar( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& );
 
         //!@name hole
         //@{
@@ -215,15 +215,15 @@ namespace Oxygen
         //@}
 
         //! menu item
-        void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderMenuItemRect( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
         //! selection
         void renderSelection( cairo_t*, gint, gint, gint, gint, TileSet::Tiles tiles, const StyleOptions& );
 
         //! arrow
-        void renderArrow( GdkWindow*, GdkRectangle*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize, const StyleOptions&, const AnimationData&, Palette::Role ) const;
-        void renderArrow( GdkWindow* window, GdkRectangle* clipRect, GtkArrowType type, gint x, gint y, gint w, gint h, QtSettings::ArrowSize size = QtSettings::ArrowNormal, const StyleOptions& options = Contrast, Palette::Role role = Palette::ButtonText ) const
-        { renderArrow( window, clipRect, type, x, y, w, h, size, options, AnimationData(), role ); }
+        void renderArrow( cairo_t*, GtkArrowType, gint, gint, gint, gint, QtSettings::ArrowSize, const StyleOptions&, const AnimationData&, Palette::Role ) const;
+        void renderArrow( cairo_t* context, GtkArrowType type, gint x, gint y, gint w, gint h, QtSettings::ArrowSize size = QtSettings::ArrowNormal, const StyleOptions& options = Contrast, Palette::Role role = Palette::ButtonText ) const
+        { renderArrow( context, type, x, y, w, h, size, options, AnimationData(), role ); }
 
         //! slider groove
         void renderSliderGroove( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
