@@ -1368,13 +1368,13 @@ namespace Oxygen
                 if( Gtk::gtk_widget_is_vertical( widget ) )
                 { options |= Vertical; }
 
-                Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
+                Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
 
             } else {
 
                 // most likely it's progressbar in the list
                 // FIXME: is it always the case ? Should we check on TREE_VIEW, CELL_VIEW, like done with scrollbar hole ?
-                Style::instance().renderProgressBarHandle( window, clipRect, x, y+2, w, h-4, options );
+                Style::instance().renderProgressBarHandle( context, x, y+2, w, h-4, options );
 
             }
 
@@ -1383,7 +1383,7 @@ namespace Oxygen
         } else if( d.isEntryProgress() ) {
 
             StyleOptions options( widget, state, shadow );
-            Style::instance().renderProgressBarHandle( window, clipRect, x-1, y+1, w+2, h-2, options );
+            Style::instance().renderProgressBarHandle( context, x-1, y+1, w+2, h-2, options );
 
         } else if( d.isTroughFillLevel () ) {
 
@@ -1391,12 +1391,13 @@ namespace Oxygen
 
         } else if( d.isRuler() ) {
 
-            Style::instance().renderWindowBackground(window,widget,clipRect,x,y,w,h);
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+            Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
 
         } else {
 
-            StyleWrapper::parentClass()->draw_box( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_box( style, context, state,
+                shadow, widget, detail,
                 x, y, w, h );
         }
 
