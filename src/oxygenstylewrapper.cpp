@@ -1979,11 +1979,11 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________________________
-    static void draw_option( GtkStyle* style,
-        GdkWindow* window,
+    static void draw_option(
+        GtkStyle* style,
+        cairo_t* context,
         GtkStateType state,
         GtkShadowType shadow,
-        GdkRectangle* clipRect,
         GtkWidget* widget,
         const gchar* detail,
         gint x,
@@ -1991,9 +1991,9 @@ namespace Oxygen
         gint w,
         gint h )
     {
-        g_return_if_fail( style && window );
+        g_return_if_fail( style && context );
 
-        Style::instance().sanitizeSize( window, w, h );
+        // Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
         g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
@@ -2013,7 +2013,7 @@ namespace Oxygen
 
             // retrieve animation state and render accordingly
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, data );
+            Style::instance().renderRadioButton( context, x, y, w, h, shadow, options, data );
 
         } else if( d.isOption() || d.isCellRadio() ) {
 
@@ -2059,12 +2059,13 @@ namespace Oxygen
 
             }
 
-            Style::instance().renderRadioButton( window, clipRect, x, y, w, h, shadow, options, data );
+            Style::instance().renderRadioButton( context, x, y, w, h, shadow, options, data );
 
         } else {
 
-            StyleWrapper::parentClass()->draw_option( style, window, state,
-                shadow, clipRect, widget, detail,
+            StyleWrapper::parentClass()->draw_option(
+                style, context, state,
+                shadow, widget, detail,
                 x, y, w, h );
 
         }
