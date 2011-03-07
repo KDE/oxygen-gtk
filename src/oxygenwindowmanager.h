@@ -58,13 +58,6 @@ namespace Oxygen
         //! initialize hooks
         void initializeHooks( void );
 
-        //! register widget
-        /*! returns true if widget is effictively registered */
-        virtual bool registerWidget( GtkWidget* );
-
-        //! unregister widget
-        virtual void unregisterWidget( GtkWidget* );
-
         //! window grab mode
         enum Mode
         {
@@ -111,6 +104,13 @@ namespace Oxygen
         static gboolean buttonReleaseHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //@}
+
+        //! register widget
+        /*! returns true if widget is effictively registered */
+        virtual bool registerWidget( GtkWidget* );
+
+        //! unregister widget
+        virtual void unregisterWidget( GtkWidget* );
 
         //! start dragging widget
         bool startDrag( GtkWidget*, GdkEventMotion* );
