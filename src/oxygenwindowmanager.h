@@ -55,12 +55,12 @@ namespace Oxygen
         //! destructor
         virtual ~WindowManager();
 
-        //! initialize hoooks
+        //! initialize hooks
         void initializeHooks( void );
 
         //! register widget
         /*! returns true if widget is effictively registered */
-        virtual void registerWidget( GtkWidget* );
+        virtual bool registerWidget( GtkWidget* );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
@@ -103,6 +103,9 @@ namespace Oxygen
 
         //! delayed drag
         static gboolean startDelayedDrag( gpointer );
+
+        //! style-set hook
+        static gboolean styleSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! mouse button release event hook
         static gboolean buttonReleaseHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
@@ -205,6 +208,9 @@ namespace Oxygen
 
         //! true when hooks are initialized
         bool _hooksInitialized;
+
+        //! style set hook. Used to register widgets
+        Hook _styleSetHook;
 
         //! mouse button release event hook
         Hook _buttonReleaseHook;

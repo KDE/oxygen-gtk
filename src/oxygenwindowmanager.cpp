@@ -56,6 +56,7 @@ namespace Oxygen
     //_________________________________________________
     WindowManager::~WindowManager( void )
     {
+        _styleSetHook.disconnect();
         _buttonReleaseHook.disconnect();
         _map.disconnectAll();
         _map.clear();
@@ -66,32 +67,25 @@ namespace Oxygen
     {
 
         if( _hooksInitialized ) return;
+        _styleSetHook.connect( "style-set", (GSignalEmissionHook)styleSetHook, this );
         _buttonReleaseHook.connect( "button-release-event", (GSignalEmissionHook)buttonReleaseHook, this );
         _hooksInitialized = true;
 
     }
 
     //_________________________________________________
-    void WindowManager::registerWidget( GtkWidget* widget )
+    bool WindowManager::registerWidget( GtkWidget* widget )
     {
 
-        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return;
+        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return false;
 
         // Window with no decorations (set by app), let window manage it self
-        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return;
+        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return false;
 
         // widgets used in tabs also must be ignored (happens, unfortunately)
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
         if( GTK_IS_NOTEBOOK( parent ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( parent ), widget ) )
-        { return; }
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::WindowManager::registerWidget -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " " << gtk_widget_get_name( widget )
-            << std::endl;
-        #endif
+        { return false; }
 
         /*
         check event mask (for now we only need to do that for GtkWindow)
@@ -103,7 +97,15 @@ namespace Oxygen
             std::string( G_OBJECT_TYPE_NAME( widget ) ) == "GtkWindow" &&
             (gtk_widget_get_events ( widget ) &
             (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) )
-        { return; }
+        { return false; }
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::WindowManager::registerWidget -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " " << gtk_widget_get_name( widget )
+            << std::endl;
+        #endif
 
         // Force widget to listen to relevant events
         gtk_widget_add_events( widget,
@@ -117,6 +119,7 @@ namespace Oxygen
 
         // connect signals
         if( _mode != Disabled ) connect( widget, data );
+        return true;
 
     }
 
@@ -205,6 +208,56 @@ namespace Oxygen
     {
         static_cast<WindowManager*>( data )->startDrag();
         return FALSE;
+    }
+
+    //_________________________________________________________________
+    gboolean WindowManager::styleSetHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // never register widgets that are possibly applets
+        if( Gtk::gtk_widget_is_applet( widget ) ) return TRUE;
+
+        // cast data to window manager
+        WindowManager &manager( *static_cast<WindowManager*>(data ) );
+
+
+        bool registered( false );
+        if( GTK_IS_WINDOW( widget ) ||
+            GTK_IS_VIEWPORT( widget ) ||
+            GTK_IS_TOOLBAR( widget ) ||
+            GTK_IS_MENU_BAR( widget ) ||
+            GTK_IS_NOTEBOOK( widget ) )
+        {
+
+            // top-level windows
+            registered = manager.registerWidget( widget );
+
+        } else if(
+            Gtk::gtk_button_is_in_path_bar(widget) &&
+            Gtk::g_object_is_a( G_OBJECT( gtk_widget_get_parent( widget ) ),  "GtkPathBar" ) ) {
+
+            // path bar widgets
+            registered = manager.registerWidget( widget );
+
+        }
+
+        #if OXYGEN_DEBUG
+        if( registered )
+        {
+            std::cerr
+                << "Oxygen::WindowManager::styleSetHook -"
+                << " registering: " << widget
+                << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << std::endl;
+        }
+        #endif
+
+        return TRUE;
+
     }
 
     //_________________________________________________________________
