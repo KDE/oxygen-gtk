@@ -65,6 +65,8 @@ void theme_init( GTypeModule* module )
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
 
+    Oxygen::Style::instance().windowManager().initializeHooks();
+
 }
 
 //_________________________________________________

@@ -173,10 +173,7 @@ namespace Oxygen
             if( Gtk::gdk_window_is_base( window ) &&
                 !( GTK_IS_EVENT_BOX( widget ) &&
                 !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
-            {
-                Style::instance().windowManager().registerWidget( widget );
-                Style::instance().animations().backgroundHintEngine().registerWidget( widget );
-            }
+            { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
 
             // change gtk dialog button order
             GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
@@ -203,9 +200,6 @@ namespace Oxygen
                 Style::instance().fill( context, x, y, w, h, Palette::Window );
                 return;
             }
-
-            //register to window manager
-            Style::instance().windowManager().registerWidget( widget );
 
             // for modified bg, fill with flat custom color
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
@@ -663,13 +657,6 @@ namespace Oxygen
 
                 // https://bugzilla.gnome.org/show_bug.cgi?id=635511
                 std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
-
-                // NautilusPathBar doesn't have any problem so only for GtkPathBar
-                if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
-                    !Style::instance().settings().applicationName().isOpenOffice()
-                    && name == "GtkPathBar" )
-                { Style::instance().windowManager().registerWidget( widget ); }
-
                 Style::instance().animations().hoverEngine().registerWidget( widget );
 
                 // only two style options possible: hover or don't draw
@@ -965,9 +952,6 @@ namespace Oxygen
 
         } else if( d.isMenuBar() ) {
 
-            if( !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().windowManager().registerWidget( widget ); }
-
             if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
                 !Gtk::gtk_widget_is_applet( widget ) )
             {
@@ -1019,8 +1003,6 @@ namespace Oxygen
                 { return; }
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
-
-            Style::instance().windowManager().registerWidget( widget );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
             // also draw possible animated tool button
@@ -2660,12 +2642,6 @@ namespace Oxygen
         const Gtk::Detail d( detail );
         if( d.isNotebook() )
         {
-
-            // https://bugzilla.gnome.org/show_bug.cgi?id=635511
-            if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
-                !Style::instance().settings().applicationName().isAcrobat( widget ) &&
-                !Style::instance().settings().applicationName().isOpenOffice() )
-            { Style::instance().windowManager().registerWidget( widget ); }
 
             // this might move to drawShadowGap
             StyleOptions options( NoFill );
