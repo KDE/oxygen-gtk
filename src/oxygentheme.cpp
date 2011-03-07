@@ -40,6 +40,7 @@
 
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
+extern "C" G_MODULE_EXPORT void create_engine( void );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
 extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
@@ -57,6 +58,7 @@ extern "C" G_MODULE_EXPORT unsigned long getWindecoABIVersion(void);
 void theme_init( GTypeModule* module )
 {
 
+    std::cerr << "Oxygen::theme_init" << std::endl;
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
 
@@ -66,8 +68,12 @@ void theme_init( GTypeModule* module )
 }
 
 //_________________________________________________
+void create_engine( void )
+{ std::cerr << "Oxygen::create_engine" << std::endl; }
+
+//_________________________________________________
 void theme_exit( void )
-{}
+{ std::cerr << "Oxygen::theme_exit" << std::endl; }
 
 //_________________________________________________
 GtkRcStyle* theme_create_rc_style( void )
