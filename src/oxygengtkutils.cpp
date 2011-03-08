@@ -332,7 +332,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_button_is_in_path_bar( GtkWidget* widget )
     {
-        if( !GTK_IS_BUTTON( widget ) ) return false;
+        if( !( GTK_IS_BUTTON( widget ) && gtk_widget_get_parent( widget ) ) ) return false;
 
         std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
         return name == "GtkPathBar" || name == "NautilusPathBar";
