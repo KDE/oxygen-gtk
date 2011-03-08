@@ -25,7 +25,6 @@
 #include "config.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
-#include "oxygenstylewrapper.h"
 #include "oxygenthemingengine.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindowshadow.h"
@@ -39,13 +38,14 @@
 #include <vector>
 #include <sys/stat.h>
 
+#define OXYGEN_DEBUG 1
+
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
 
 extern "C" G_MODULE_EXPORT GtkThemingEngine* create_engine( void );
 
-extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
 
 // exports for WM theming
@@ -61,9 +61,10 @@ extern "C" G_MODULE_EXPORT unsigned long getWindecoABIVersion(void);
 void theme_init( GTypeModule* module )
 {
 
+    #if OXYGEN_DEBUG
     std::cerr << "Oxygen::theme_init" << std::endl;
-    Oxygen::RCStyle::registerType( module );
-    Oxygen::StyleWrapper::registerType( module );
+    #endif
+
     Oxygen::ThemingEngine::registerType( module );
 
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
@@ -76,17 +77,22 @@ void theme_init( GTypeModule* module )
 //_________________________________________________
 GtkThemingEngine* create_engine( void )
 {
+
+    #if OXYGEN_DEBUG
     std::cerr << "Oxygen::create_engine" << std::endl;
+    #endif
+
     return GTK_THEMING_ENGINE( g_object_new( Oxygen::ThemingEngine::type(), 0L) );
+
 }
 
 //_________________________________________________
 void theme_exit( void )
-{ std::cerr << "Oxygen::theme_exit" << std::endl; }
-
-//_________________________________________________
-GtkRcStyle* theme_create_rc_style( void )
-{ return GTK_RC_STYLE( g_object_new( Oxygen::RCStyle::type(), NULL ) ); }
+{
+    #if OXYGEN_DEBUG
+    std::cerr << "Oxygen::theme_exit" << std::endl;
+    #endif
+}
 
 //_________________________________________________
 const gchar* g_module_check_init( GModule *module )
