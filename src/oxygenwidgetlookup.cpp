@@ -73,6 +73,7 @@ namespace Oxygen
         }
 
         // look for type in stored widgets
+        /* we loop backward, since last added widgets are more likely to be looked up */
         for( std::vector<GtkWidget*>::const_reverse_iterator iter = _widgets.rbegin(); iter != _widgets.rend(); ++iter )
         {
             // compare types and return if matched
