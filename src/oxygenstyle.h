@@ -34,6 +34,7 @@
 #include "oxygenstyleoptions.h"
 #include "oxygentaboptions.h"
 #include "oxygentileset.h"
+#include "oxygenwidgetlookup.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowmanager.h"
@@ -89,6 +90,10 @@ namespace Oxygen
         //! window manager
         WindowManager& windowManager( void )
         { return _windowManager; }
+
+        //! widget lookup
+        WidgetLookup& widgetLookup( void )
+        { return _widgetLookup; }
 
         //! return tabCloseButton for given set of options
         Cairo::Surface tabCloseButton( const StyleOptions& );
@@ -457,6 +462,9 @@ namespace Oxygen
 
         //! window manager
         WindowManager _windowManager;
+
+        //! widget lookup
+        WidgetLookup _widgetLookup;
 
         //! Tab close buttons
         class TabCloseButtons

@@ -37,8 +37,6 @@
 #include <vector>
 #include <sys/stat.h>
 
-#define OXYGEN_DEBUG 1
-
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
@@ -70,6 +68,7 @@ void theme_init( GTypeModule* module )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
 
     Oxygen::Style::instance().windowManager().initializeHooks();
+    Oxygen::Style::instance().widgetLookup().initializeHooks();
 
 }
 

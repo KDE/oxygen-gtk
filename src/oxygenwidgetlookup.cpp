@@ -24,6 +24,10 @@
 #include "oxygenwidgetlookup.h"
 #include "config.h"
 
+#include <iostream>
+#include <cairo.h>
+#include <cairo-gobject.h>
+
 namespace Oxygen
 {
 
@@ -61,14 +65,30 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean WidgetLookup::drawHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
+    gboolean WidgetLookup::drawHook( GSignalInvocationHint*, guint numParams, const GValue* params, gpointer )
     {
+
+        // check number of parameters
+        if( numParams < 2 ) return FALSE;
 
         // get widget from params
         GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        const bool isContext( G_TYPE_CHECK_VALUE_TYPE( params+1, CAIRO_GOBJECT_TYPE_CONTEXT ) );
+
+        // get context
+        //cairo_t* context( CAIRO_GOBJECT_TYPE_CONTEXT( g_value_get_object( params + 1 ) ) );
+        // cairo_t* context( reinterpret_cast<cairo_t*>( g_value_get_pointer( params + 1 ) ) );
+
+        std::cerr
+            << "Oxygen::WidgetLookup::drawHook -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " context: " << isContext
+            << std::endl;
+
         return TRUE;
 
     }
