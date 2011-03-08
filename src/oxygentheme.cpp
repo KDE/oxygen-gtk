@@ -23,9 +23,9 @@
 */
 
 #include "config.h"
-#include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
+#include "oxygenstylewrapper.h"
 #include "oxygenwindecooptions.h"
 
 #include <gmodule.h>
