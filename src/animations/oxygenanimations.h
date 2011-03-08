@@ -175,9 +175,6 @@ namespace Oxygen
         //! destruction callback
         static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
-        //! destruction callback
-        static void styleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
-
         //! combobox list size adjustment hook
         static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
@@ -278,7 +275,6 @@ namespace Oxygen
             {}
 
             Signal _destroyId;
-            Signal _styleChangeId;
         };
 
         //! keep track of all registered widgets, and associated destroy callback

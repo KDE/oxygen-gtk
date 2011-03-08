@@ -138,7 +138,6 @@ namespace Oxygen
             // allocate new Hover data
             ChildData data;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
             data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
             data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
             data._focusInId.connect( G_OBJECT(widget), "focus-in-event", G_CALLBACK( focusInNotifyEvent ), this );
@@ -204,7 +203,6 @@ namespace Oxygen
         #endif
 
         _destroyId.disconnect();
-        _styleChangeId.disconnect();
         _enterId.disconnect();
         _leaveId.disconnect();
         _focusInId.disconnect();
@@ -226,10 +224,6 @@ namespace Oxygen
         static_cast<ScrolledWindowData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void ScrolledWindowData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<ScrolledWindowData*>(data)->unregisterChild( widget ); }
 
     //________________________________________________________________________________
     gboolean ScrolledWindowData::enterNotifyEvent( GtkWidget* widget, GdkEventCrossing* event, gpointer data )

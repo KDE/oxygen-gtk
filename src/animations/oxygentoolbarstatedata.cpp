@@ -107,7 +107,6 @@ namespace Oxygen
             // allocate new Hover data
             HoverData data;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
             data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childEnterNotifyEvent ), this );
             data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childLeaveNotifyEvent ), this );
 
@@ -261,10 +260,6 @@ namespace Oxygen
         static_cast<ToolBarStateData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void ToolBarStateData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<ToolBarStateData*>(data)->unregisterChild( widget ); }
 
     //________________________________________________________________________________
     gboolean ToolBarStateData::childEnterNotifyEvent( GtkWidget* widget, GdkEventCrossing*, gpointer data )

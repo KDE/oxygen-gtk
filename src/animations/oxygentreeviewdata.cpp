@@ -225,7 +225,6 @@ namespace Oxygen
         // make sure widget is not already in map
         data._widget = widget;
         data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         data._valueChangedId.connect( G_OBJECT(widget), "value-changed", G_CALLBACK( childValueChanged ), this );
 
     }
@@ -243,10 +242,6 @@ namespace Oxygen
         static_cast<TreeViewData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void TreeViewData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<TreeViewData*>(data)->unregisterChild( widget ); }
 
     //________________________________________________________________________________
     void TreeViewData::childValueChanged( GtkRange* widget, gpointer data )
@@ -280,7 +275,6 @@ namespace Oxygen
         #endif
 
         _destroyId.disconnect();
-        _styleChangeId.disconnect();
         _valueChangedId.disconnect();
         _widget = 0L;
 

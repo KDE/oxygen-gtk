@@ -204,9 +204,6 @@ namespace Oxygen
         //!@name callbacks
         //@{
 
-        //! child style has changed
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
-
         //! child is destroyed
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
 
@@ -268,7 +265,6 @@ namespace Oxygen
             virtual void disconnect( void )
             {
                 _destroyId.disconnect();
-                _styleChangeId.disconnect();
                 _enterId.disconnect();
                 _leaveId.disconnect();
             }
@@ -276,7 +272,6 @@ namespace Oxygen
             //!@name callback ids
             //@{
             Signal _destroyId;
-            Signal _styleChangeId;
             Signal _enterId;
             Signal _leaveId;
             //@}

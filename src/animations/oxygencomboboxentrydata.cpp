@@ -51,7 +51,6 @@ namespace Oxygen
         assert( !_button._widget );
 
         _button._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        _button._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         _button._enterId.connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _button._leaveId.connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _button._toggledId.connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
@@ -69,7 +68,6 @@ namespace Oxygen
         #endif
 
         _entry._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-        _entry._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
         _entry._enterId.connect( G_OBJECT(widget), "enter-notify-event", (GCallback)enterNotifyEvent, this );
         _entry._leaveId.connect( G_OBJECT(widget), "leave-notify-event", (GCallback)leaveNotifyEvent, this );
         _entry._widget = widget;
@@ -126,7 +124,6 @@ namespace Oxygen
 
         if( !_widget ) return;
         _destroyId.disconnect();
-        _styleChangeId.disconnect();
         _enterId.disconnect();
         _leaveId.disconnect();
         _toggledId.disconnect();
@@ -142,11 +139,6 @@ namespace Oxygen
         static_cast<ComboBoxEntryData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void ComboBoxEntryData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<ComboBoxEntryData*>(data)->unregisterChild( widget ); }
-
 
     //____________________________________________________________________________________________
     void ComboBoxEntryData::childToggledEvent( GtkWidget* widget, gpointer data)

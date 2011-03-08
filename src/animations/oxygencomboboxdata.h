@@ -128,7 +128,6 @@ namespace Oxygen
         //!@name callbacks
         //@{
 
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childToggledEvent( GtkWidget*, gpointer );
         static void childSizeAllocateEvent( GtkWidget*, GtkAllocation*, gpointer );
@@ -172,11 +171,8 @@ namespace Oxygen
             //! widget
             GtkWidget* _widget;
 
-            //!@name callback ids
-            //@{
+            //!callback id
             Signal _destroyId;
-            Signal _styleChangeId;
-            //@}
 
         };
 

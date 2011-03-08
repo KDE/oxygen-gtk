@@ -207,7 +207,6 @@ namespace Oxygen
             // allocate new ChildData
             ChildData data;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
             data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
             data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( childCrossingNotifyEvent ), this );
 
@@ -259,10 +258,6 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________________
-    void TabWidgetData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<TabWidgetData*>(data)->unregisterChild( widget ); }
-
-    //____________________________________________________________________________________________
     void TabWidgetData::childAddedEvent( GtkContainer* parent, GtkWidget*, gpointer data )
     {
         static_cast<TabWidgetData*>(data)->updateRegisteredChildren();
@@ -285,7 +280,6 @@ namespace Oxygen
     {
 
         _destroyId.disconnect();
-        _styleChangeId.disconnect();
         _enterId.disconnect();
         _leaveId.disconnect();
         _addId.disconnect();

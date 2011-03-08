@@ -112,7 +112,6 @@ namespace Oxygen
 
             _cell._widget = GTK_WIDGET( child->data );
             _cell._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            _cell._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
 
             updateCellViewColor();
 
@@ -204,7 +203,6 @@ namespace Oxygen
             HoverData data;
             data._widget = widget;
             data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
-            data._styleChangeId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( childStyleChangeNotifyEvent ), this );
             data._enterId.connect( G_OBJECT(widget), "enter-notify-event", G_CALLBACK( enterNotifyEvent ), this );
             data._leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
 
@@ -268,7 +266,6 @@ namespace Oxygen
         #endif
 
         _destroyId.disconnect();
-        _styleChangeId.disconnect();
         _widget = 0L;
     }
 
@@ -316,10 +313,6 @@ namespace Oxygen
         static_cast<ComboBoxData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void ComboBoxData::childStyleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<ComboBoxData*>(data)->unregisterChild( widget ); }
 
     //____________________________________________________________________________________________
     void ComboBoxData::childToggledEvent( GtkWidget* widget, gpointer data)

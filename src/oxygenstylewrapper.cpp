@@ -1044,8 +1044,7 @@ namespace Oxygen
                 options |= Round;
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
-// TODO: reimplement for gtk3
-//                 // add mask if needed
+                // add mask if needed
 //                 if( GTK_IS_MENU(widget) )
 //                 {
 //                     if( !(options&Alpha) )
@@ -1457,46 +1456,44 @@ namespace Oxygen
 
             GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
 
+            // always register to widget size engine
+            Style::instance().animations().widgetSizeEngine().registerWidget( parent );
+            const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) );
+
+            if( sizeChanged )
+            {
+
 // TODO: reimplement for gtk3
-//             if( !(options&Alpha) )
-//             {
-//                 // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
-//                 // make background window rounded
-//                 Style::instance().animations().widgetSizeEngine().registerWidget( parent );
-//                 if( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) )
+//                 // update window shape
+//                 if( !(options&Alpha) )
 //                 {
+//                     // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+//                     // make background window rounded
 //                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
 //                     gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
 //                     gdk_pixmap_unref( mask );
 //                 }
-//
-//             }
 
-// TODO: reimplement for gtk3
-//             if( GList* children=gtk_container_get_children(GTK_CONTAINER( widget )) )
-//             {
-//
-//                 widget=GTK_WIDGET( g_list_first(children)->data );
-//                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-//                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-//                 if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
-//                 {
-//
-//                     // offset is needed to make combobox list border 3px wide instead of default 2
-//                     // additional pixel is for ugly shadow
-//                     const gint offset( options&Alpha ? 0:1 );
-//                     GdkPixmap* mask( Style::instance().helper().roundMask(
-//                         allocation.width - 2*offset,
-//                         allocation.height - 2*offset,
-//                         3 ) );
-//
-//                     gdk_window_shape_combine_mask( gtk_widget_get_window( widget ), mask, offset, offset );
-//                     gdk_pixmap_unref( mask );
-//                 }
-//
-//
-//                 if( children ) g_list_free( children );
-//             }
+                // also sets inner list mask
+                if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
+                {
+
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
+
+                    // offset is needed to make combobox list border 3px wide instead of default 2
+                    // additional pixel is for ugly shadow
+                    const gint offset( options&Alpha ? 0:1 );
+                    GdkPixmap* mask( Style::instance().helper().roundMask(
+                        allocation.width - 2*offset,
+                        allocation.height - 2*offset,
+                        3 ) );
+
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( child ), mask, offset, offset );
+                    gdk_pixmap_unref( mask );
+
+                }
+
+            }
 
             // menu background and float frame
             GdkWindow* parentWindow( gtk_widget_get_window( parent ) );

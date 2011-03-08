@@ -76,7 +76,6 @@ namespace Oxygen
 
         //!@ callbacks
         //@{
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
@@ -113,7 +112,6 @@ namespace Oxygen
             bool _focused;
 
             Signal _destroyId;
-            Signal _styleChangeId;
             Signal _enterId;
             Signal _leaveId;
             Signal _focusInId;

@@ -147,7 +147,6 @@ namespace Oxygen
 
         WidgetData data;
         data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( destroyNotifyEvent ), this );
-        data._styleChangeId.connect( G_OBJECT( widget ), "style-set", G_CALLBACK( styleChangeNotifyEvent ), this );
         _allWidgets.insert( std::make_pair( widget, data ) );
         return true;
 
@@ -167,7 +166,6 @@ namespace Oxygen
 
         // disconnect signal
         iter->second._destroyId.disconnect();
-        iter->second._styleChangeId.disconnect();
 
         // erase from map
         _allWidgets.erase( widget );
@@ -193,10 +191,6 @@ namespace Oxygen
         static_cast<Animations*>(data)->unregisterWidget( widget );
         return FALSE;
     }
-
-    //____________________________________________________________________________________________
-    void Animations::styleChangeNotifyEvent( GtkWidget* widget, GtkStyle*, gpointer data )
-    { static_cast<Animations*>(data)->unregisterWidget( widget ); }
 
     //____________________________________________________________________________________________
     gboolean Animations::comboBoxHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )

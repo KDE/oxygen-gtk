@@ -119,7 +119,6 @@ namespace Oxygen
 
             GtkWidget* _widget;
             Signal _destroyId;
-            Signal _styleChangeId;
             Signal _valueChangedId;
         };
 
@@ -133,7 +132,6 @@ namespace Oxygen
         //!@name static callbacks
         //@{
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
         static void childValueChanged( GtkRange*, gpointer );
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
         //@}
