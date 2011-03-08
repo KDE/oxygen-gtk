@@ -1475,23 +1475,25 @@ namespace Oxygen
 //                 }
 
                 // also sets inner list mask
-                if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
-                {
 
-                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
-
-                    // offset is needed to make combobox list border 3px wide instead of default 2
-                    // additional pixel is for ugly shadow
-                    const gint offset( options&Alpha ? 0:1 );
-                    GdkPixmap* mask( Style::instance().helper().roundMask(
-                        allocation.width - 2*offset,
-                        allocation.height - 2*offset,
-                        3 ) );
-
-                    gdk_window_shape_combine_mask( gtk_widget_get_window( child ), mask, offset, offset );
-                    gdk_pixmap_unref( mask );
-
-                }
+// TODO: reimplement for gtk3
+//                 if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
+//                 {
+//
+//                     const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
+//
+//                     // offset is needed to make combobox list border 3px wide instead of default 2
+//                     // additional pixel is for ugly shadow
+//                     const gint offset( options&Alpha ? 0:1 );
+//                     GdkPixmap* mask( Style::instance().helper().roundMask(
+//                         allocation.width - 2*offset,
+//                         allocation.height - 2*offset,
+//                         3 ) );
+//
+//                     gdk_window_shape_combine_mask( gtk_widget_get_window( child ), mask, offset, offset );
+//                     gdk_pixmap_unref( mask );
+//
+//                 }
 
             }
 

@@ -23,9 +23,10 @@
 */
 
 #include "config.h"
-#include "oxygenstylewrapper.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
+#include "oxygenstylewrapper.h"
+#include "oxygenthemingengine.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindowshadow.h"
 
@@ -61,6 +62,7 @@ void theme_init( GTypeModule* module )
     std::cerr << "Oxygen::theme_init" << std::endl;
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
+    Oxygen::ThemingEngine::registerType( module );
 
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
