@@ -26,8 +26,6 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 

@@ -38,7 +38,6 @@
 #include "oxygengtkdetails.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
-#include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenwindowmanager.h"
 

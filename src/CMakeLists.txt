@@ -49,7 +49,6 @@ set( oxygen_gtk_SOURCES
     oxygenpalette.cpp
     oxygenpathlist.cpp
     oxygenqtsettings.cpp
-    oxygenrcstyle.cpp
     oxygenrgba.cpp
     oxygenshadowconfiguration.cpp
     oxygenstyle.cpp
@@ -60,6 +59,7 @@ set( oxygen_gtk_SOURCES
     oxygentheme.cpp
     oxygenthemingengine.cpp
     oxygentileset.cpp
+    oxygenwidgetlookup.cpp
     oxygenwindecobutton.cpp
     oxygenwindecooptions.cpp
     oxygenwindowmanager.cpp
