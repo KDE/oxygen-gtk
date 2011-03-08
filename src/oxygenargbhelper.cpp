@@ -26,13 +26,9 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
-#include <sys/stat.h>
 
 #include <cassert>
-#include <fstream>
 #include <iostream>
-#include <string>
-#include <vector>
 
 namespace Oxygen
 {

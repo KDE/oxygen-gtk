@@ -24,7 +24,6 @@
 #include "oxygenhook.h"
 
 #include <gtk/gtk.h>
-#include <string>
 
 namespace Oxygen
 {
