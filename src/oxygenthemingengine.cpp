@@ -27,8 +27,6 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
@@ -41,7 +39,6 @@ namespace Oxygen
     //! streamer for GtkWidgetPath
     std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path )
     {
-        out << "Widget path: ";
         if( !path )
         {
 
@@ -51,8 +48,7 @@ namespace Oxygen
 
             for( gint pos=0; pos<gtk_widget_path_length( path ); ++pos )
             {
-                GType type=gtk_widget_path_iter_get_object_type( path, pos );
-                const char* name( g_type_name( type ) );
+                const char* name( g_type_name( gtk_widget_path_iter_get_object_type( path, pos ) ) );
                 if(!name) break;
                 std::cerr << "/" << name;
             }
@@ -70,11 +66,13 @@ namespace Oxygen
         std::cerr
             << "Oxygen::render_line -"
             << " context: " << context
-            << " positions: (" << x0 << "," << y0 << ")"
-            << " (" << x1 << "," << y1 << ")"
-            << " " << gtk_theming_engine_get_path(engine)
+            << " positions: (" << x0 << "," << y0 << ") (" << x1 << "," << y1 << ")"
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         // in all other cases, fallback on default rendering, for now
         ThemingEngine::parentClass()->render_line( engine, context, x0, y0, x1, y1 );
@@ -90,9 +88,12 @@ namespace Oxygen
             << "Oxygen::render_background -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
@@ -107,9 +108,12 @@ namespace Oxygen
             << "Oxygen::render_frame -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_frame( engine, context, x, y, w, h );
 
@@ -130,9 +134,12 @@ namespace Oxygen
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " side: " << Gtk::TypeNames::position( gap_side )
             << " gap: (" << xy0_gap << "," << xy1_gap << ")"
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, gap_side, xy0_gap, xy1_gap );
 
@@ -151,9 +158,12 @@ namespace Oxygen
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " side: " << Gtk::TypeNames::position( gap_side )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_extension( engine, context, x, y, w, h, gap_side );
 
@@ -168,9 +178,12 @@ namespace Oxygen
             << "Oxygen::render_check -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
 
@@ -185,9 +198,12 @@ namespace Oxygen
             << "Oxygen::render_option -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
 
@@ -206,9 +222,12 @@ namespace Oxygen
             << " angle: " << angle
             << " position: (" << x << "," << y << ")"
             << " size: " << size
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_arrow( engine, context, angle, x, y, size );
 
@@ -223,9 +242,12 @@ namespace Oxygen
             << "Oxygen::render_expander -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_expander( engine, context, x, y, w, h );
 
@@ -240,9 +262,12 @@ namespace Oxygen
             << "Oxygen::render_focus -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_focus( engine, context, x, y, w, h );
 
@@ -260,9 +285,12 @@ namespace Oxygen
             << " context: " << context
             << " position: (" << x << "," << y << ")"
             << " layout: " << layout
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
@@ -281,9 +309,12 @@ namespace Oxygen
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " orientation: " << Gtk::TypeNames::orientation( orientation )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
 
@@ -298,9 +329,12 @@ namespace Oxygen
             << "Oxygen::render_handle -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
@@ -315,9 +349,12 @@ namespace Oxygen
             << "Oxygen::render_handle -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // lookup
+        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
@@ -331,7 +368,7 @@ namespace Oxygen
             << "Oxygen::render_handle -"
             << " source: " << source
             << " size: " << size
-            << " " << gtk_theming_engine_get_path(engine)
+            << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
 
