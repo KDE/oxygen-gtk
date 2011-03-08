@@ -18,9 +18,12 @@
 * MA 02110-1301, USA.
 */
 
+#include "config.h"
 #include "oxygenthemingengine.h"
 #include "oxygendbus.h"
 #include "oxygenstyle.h"
+
+#define OXYGEN_DEBUG 1
 
 namespace Oxygen
 {
@@ -34,6 +37,11 @@ namespace Oxygen
     //_______________________________________________________________________________________________________________
     void ThemingEngine::instanceInit( OxygenThemingEngine* self )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ThemingEngine::instanceInit" << std::endl;
+        #endif
+
 
         // hooks
         Style::instance().animations().initializeHooks();
@@ -53,6 +61,10 @@ namespace Oxygen
     //_______________________________________________________________________________________________________________
     void ThemingEngine::classInit( OxygenThemingEngineClass* klass )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ThemingEngine::classInit" << std::endl;
+        #endif
 
         GtkThemingEngineClass* theming_engine_class( GTK_THEMING_ENGINE_CLASS( klass ) );
 
@@ -112,7 +124,7 @@ namespace Oxygen
             };
 
             _typeInfo = info;
-            _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenThemingEngine", &_typeInfo, GTypeFlags(0 ) );
+            _type = g_type_module_register_type( module, GTK_TYPE_THEMING_ENGINE, "OxygenThemingEngine", &_typeInfo, GTypeFlags(0 ) );
         }
     }
 

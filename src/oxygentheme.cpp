@@ -41,8 +41,10 @@
 
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
-extern "C" G_MODULE_EXPORT void create_engine( void );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
+
+extern "C" G_MODULE_EXPORT GtkThemingEngine* create_engine( void );
+
 extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
 extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
 
@@ -72,8 +74,11 @@ void theme_init( GTypeModule* module )
 }
 
 //_________________________________________________
-void create_engine( void )
-{ std::cerr << "Oxygen::create_engine" << std::endl; }
+GtkThemingEngine* create_engine( void )
+{
+    std::cerr << "Oxygen::create_engine" << std::endl;
+    return GTK_THEMING_ENGINE( g_object_new( Oxygen::ThemingEngine::type(), 0L) );
+}
 
 //_________________________________________________
 void theme_exit( void )
