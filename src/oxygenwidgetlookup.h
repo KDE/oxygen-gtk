@@ -23,7 +23,10 @@
 
 #include "oxygenhook.h"
 
+#include <cairo/cairo.h>
 #include <gtk/gtk.h>
+
+#include <vector>
 
 namespace Oxygen
 {
@@ -43,7 +46,15 @@ namespace Oxygen
         //! initialize hooks
         void initializeHooks( void );
 
+        //! lookup widget matching given context and type
+        GtkWidget* lookup( cairo_t*, const GtkWidgetPath* ) const;
+
+        //! lookup widget matching given context and type
+        GtkWidget* lookup( cairo_t*, GType ) const;
         protected:
+
+        //! bind widget to context
+        void bind( GtkWidget*, cairo_t* );
 
         //! hook connected to widget's "draw" signal
         static gboolean drawHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
@@ -55,6 +66,12 @@ namespace Oxygen
 
         //! hook connected to widget's "draw" signal
         Hook _drawHook;
+
+        //! store current context
+        cairo_t* _context;
+
+        //! store list of associated widgets
+        std::vector< GtkWidget* > _widgets;
 
     };
 

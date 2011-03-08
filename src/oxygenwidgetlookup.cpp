@@ -25,15 +25,15 @@
 #include "config.h"
 
 #include <iostream>
-#include <cairo.h>
-#include <cairo-gobject.h>
+#include <cairo/cairo-gobject.h>
 
 namespace Oxygen
 {
 
     //__________________________________________________________________
     WidgetLookup::WidgetLookup( void ):
-        _hooksInitialized( false )
+        _hooksInitialized( false ),
+        _context( 0L )
     {}
 
 
@@ -44,6 +44,73 @@ namespace Oxygen
         // disconnect hooks
         _drawHook.disconnect();
 
+    }
+
+    //_____________________________________________________
+    GtkWidget* WidgetLookup::lookup( cairo_t* context, const GtkWidgetPath* path ) const
+    {
+
+        // check path
+        if( !path ) return 0L;
+
+        // get length and check
+        const gint length( gtk_widget_path_length( path ) );
+        if( length < 1 ) return 0L;
+
+        // lookup last type
+        return lookup( context, gtk_widget_path_iter_get_object_type( path, length-1 ) );
+
+    }
+
+    //_____________________________________________________
+    GtkWidget* WidgetLookup::lookup( cairo_t* context, GType type ) const
+    {
+        // check context
+        if( context != _context )
+        {
+            std::cerr << "Oxygen::WidgetLookup::lookup - invalid context: " << context << std::endl;
+            return 0L;
+        }
+
+        // look for type in stored widgets
+        for( std::vector<GtkWidget*>::const_reverse_iterator iter = _widgets.rbegin(); iter != _widgets.rend(); ++iter )
+        {
+            // compare types and return if matched
+            if( G_OBJECT_TYPE( *iter ) == type )
+            { return *iter; }
+        }
+
+        std::cerr
+            << "Oxygen::WidgetLookup::lookup -"
+            << " context: " << context
+            << " type: " << g_type_name( type )
+            << " - no match found"
+            << std::endl;
+
+        return 0L;
+
+    }
+
+    //_____________________________________________________
+    void WidgetLookup::bind( GtkWidget* widget, cairo_t* context )
+    {
+        // check if context has changed and clear widgets if yes
+        if( context != _context )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WidgetLookup::bind -"
+                << " context: " << _context
+                << " widgets: " << _widgets.size()
+                << std::endl;
+            #endif
+
+            _context = context;
+            _widgets.clear();
+        }
+
+        _widgets.push_back( widget );
     }
 
     //_____________________________________________________
@@ -65,7 +132,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean WidgetLookup::drawHook( GSignalInvocationHint*, guint numParams, const GValue* params, gpointer )
+    gboolean WidgetLookup::drawHook( GSignalInvocationHint*, guint numParams, const GValue* params, gpointer data )
     {
 
         // check number of parameters
@@ -91,6 +158,9 @@ namespace Oxygen
             << " context: " << context
             << std::endl;
         #endif
+
+        // bind widget and context
+        static_cast<WidgetLookup*>( data )->bind( widget, context );
 
         return TRUE;
 
