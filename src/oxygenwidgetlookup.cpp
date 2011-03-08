@@ -78,7 +78,9 @@ namespace Oxygen
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
         const bool isContext( G_TYPE_CHECK_VALUE_TYPE( params+1, CAIRO_GOBJECT_TYPE_CONTEXT ) );
+        if( !isContext ) return FALSE;
 
+        cairo_t* context( reinterpret_cast<cairo_t*>( (params+1)->data[0].v_pointer ) );
         // get context
         //cairo_t* context( CAIRO_GOBJECT_TYPE_CONTEXT( g_value_get_object( params + 1 ) ) );
         // cairo_t* context( reinterpret_cast<cairo_t*>( g_value_get_pointer( params + 1 ) ) );
@@ -86,7 +88,7 @@ namespace Oxygen
         std::cerr
             << "Oxygen::WidgetLookup::drawHook -"
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " context: " << isContext
+            << " context: " << context
             << std::endl;
 
         return TRUE;
