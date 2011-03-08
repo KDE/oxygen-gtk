@@ -193,6 +193,9 @@ namespace Oxygen
     void TabWidgetData::registerChild( GtkWidget* widget )
     {
 
+        // do nothing if child is invalid (might happen: not checked at calling stage)
+        if( !widget ) return;
+
         // make sure widget is not already in map
         if( _childrenData.find( widget ) == _childrenData.end() )
         {
