@@ -94,21 +94,20 @@ namespace Oxygen
         //! set current tab
         void setHoveredTab( GtkWidget*, int );
 
-        //!@name static callbacks
-        //@{
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
-        static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer );
-        //@}
-
-        //! child registration and callback
+        //! child registration
         //@{
 
         void updateRegisteredChildren( GtkWidget* = 0L );
         void registerChild( GtkWidget* );
         void unregisterChild( GtkWidget* );
 
-        static void childStyleChangeNotifyEvent( GtkWidget*, GtkStyle*, gpointer );
+        //@}
+
+        //!@name static callbacks
+        //@{
+        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
+        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
+        static void pageAddedEvent( GtkNotebook*, GtkWidget*, guint, gpointer );
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static gboolean childCrossingNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static void childAddedEvent( GtkContainer*, GtkWidget*, gpointer );
@@ -171,7 +170,6 @@ namespace Oxygen
             void disconnect( void );
 
             Signal _destroyId;
-            Signal _styleChangeId;
             Signal _addId;
             Signal _enterId;
             Signal _leaveId;
