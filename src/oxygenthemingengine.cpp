@@ -72,7 +72,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         // in all other cases, fallback on default rendering, for now
         ThemingEngine::parentClass()->render_line( engine, context, x0, y0, x1, y1 );
@@ -93,7 +93,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
@@ -113,7 +113,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_frame( engine, context, x, y, w, h );
 
@@ -139,7 +139,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, gap_side, xy0_gap, xy1_gap );
 
@@ -163,7 +163,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_extension( engine, context, x, y, w, h, gap_side );
 
@@ -183,7 +183,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
 
@@ -203,7 +203,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
 
@@ -227,7 +227,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_arrow( engine, context, angle, x, y, size );
 
@@ -247,7 +247,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_expander( engine, context, x, y, w, h );
 
@@ -267,7 +267,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_focus( engine, context, x, y, w, h );
 
@@ -290,7 +290,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
@@ -314,7 +314,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
 
@@ -334,7 +334,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
@@ -354,7 +354,7 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().lookup( context, gtk_theming_engine_get_path(engine) );
+        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
         ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 

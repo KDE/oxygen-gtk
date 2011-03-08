@@ -31,7 +31,8 @@
 namespace Oxygen
 {
 
-    //! handles argb support on a per-application, per-widget basis
+    //! uses the widget's "draw" signal to bind GtkWidget and cairo context
+    /*! this allows us to retrieve painted widgets from ThemingEngine rendering primitives */
     class WidgetLookup
     {
 
@@ -46,11 +47,11 @@ namespace Oxygen
         //! initialize hooks
         void initializeHooks( void );
 
-        //! lookup widget matching given context and type
-        GtkWidget* lookup( cairo_t*, const GtkWidgetPath* ) const;
+        //! find widget matching given context and type
+        GtkWidget* find( cairo_t*, const GtkWidgetPath* ) const;
 
-        //! lookup widget matching given context and type
-        GtkWidget* lookup( cairo_t*, GType ) const;
+        //! find widget matching given context and type
+        GtkWidget* find( cairo_t*, GType ) const;
         protected:
 
         //! bind widget to context

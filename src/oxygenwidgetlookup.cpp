@@ -47,7 +47,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    GtkWidget* WidgetLookup::lookup( cairo_t* context, const GtkWidgetPath* path ) const
+    GtkWidget* WidgetLookup::find( cairo_t* context, const GtkWidgetPath* path ) const
     {
 
         // check path
@@ -58,17 +58,17 @@ namespace Oxygen
         if( length < 1 ) return 0L;
 
         // lookup last type
-        return lookup( context, gtk_widget_path_iter_get_object_type( path, length-1 ) );
+        return find( context, gtk_widget_path_iter_get_object_type( path, length-1 ) );
 
     }
 
     //_____________________________________________________
-    GtkWidget* WidgetLookup::lookup( cairo_t* context, GType type ) const
+    GtkWidget* WidgetLookup::find( cairo_t* context, GType type ) const
     {
         // check context
         if( context != _context )
         {
-            std::cerr << "Oxygen::WidgetLookup::lookup - invalid context: " << context << std::endl;
+            std::cerr << "Oxygen::WidgetLookup::find - invalid context: " << context << std::endl;
             return 0L;
         }
 
@@ -82,7 +82,7 @@ namespace Oxygen
         }
 
         std::cerr
-            << "Oxygen::WidgetLookup::lookup -"
+            << "Oxygen::WidgetLookup::find -"
             << " context: " << context
             << " type: " << g_type_name( type )
             << " - no match found"
