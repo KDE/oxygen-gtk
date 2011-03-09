@@ -314,9 +314,6 @@ namespace Oxygen
 
         protected:
 
-        // get home directory
-        std::string home( void ) const;
-
         //! icon path
         PathList kdeConfigPathList( void ) const;
 
