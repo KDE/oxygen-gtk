@@ -227,7 +227,7 @@ namespace Oxygen
         // get context
         GtkStyleContext* context( gtk_widget_get_style_context( widget ) );
         gtk_style_context_remove_provider( context, provider );
-        gtk_style_context_add_provider( context, provider, GTK_STYLE_PROVIDER_PRIORITY_SETTINGS + 10 );
+        gtk_style_context_add_provider( context, provider, GTK_STYLE_PROVIDER_PRIORITY_THEME + 10 );
 
         return TRUE;
 
