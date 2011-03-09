@@ -19,7 +19,6 @@
 */
 
 #include "oxygenanimations.h"
-#include "../oxygenstyle.h"
 #include "../oxygengtkutils.h"
 #include "../oxygenqtsettings.h"
 #include "../config.h"
@@ -242,7 +241,8 @@ namespace Oxygen
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
-        Style::instance().animations().backgroundHintEngine().registerWidget( widget );
+        Animations& animations( *static_cast<Animations*>(data) );
+        animations.backgroundHintEngine().registerWidget( widget );
 
         return TRUE;
     }
