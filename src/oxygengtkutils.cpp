@@ -189,7 +189,7 @@ namespace Oxygen
     {
 
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
-        { if( G_OBJECT_TYPE( parent ) == type ) return parent; }
+        { if( G_TYPE_CHECK_INSTANCE_TYPE( parent, type ) ) return parent; }
 
         return 0L;
     }
