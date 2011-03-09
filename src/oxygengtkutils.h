@@ -199,38 +199,51 @@ namespace Oxygen
         //!@name check parent type
         //@{
 
+        //! return parent of given type if any
+        GtkWidget* gtk_widget_find_parent( GtkWidget*, GType );
+
         //! return parent button if any.
-        GtkWidget* gtk_parent_button( GtkWidget* );
+        inline GtkWidget* gtk_parent_button( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_BUTTON ); }
 
         //! return parent menu if any
-        GtkWidget* gtk_parent_menubar( GtkWidget* );
+        inline GtkWidget* gtk_parent_menubar( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_MENU_BAR ); }
 
         //! return parent menu if any
-        GtkWidget* gtk_parent_menu( GtkWidget* );
+        inline GtkWidget* gtk_parent_menu( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_MENU ); }
 
         //! return parent treeview if any.
-        GtkWidget* gtk_parent_tree_view( GtkWidget* );
+        inline GtkWidget* gtk_parent_tree_view( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_TREE_VIEW ); }
 
         //! return parent toolbar if any.
         GtkWidget* gtk_parent_toolbar( GtkWidget* );
 
         //! return parent combobox if any.
-        GtkWidget* gtk_parent_combo( GtkWidget* );
+        inline GtkWidget* gtk_parent_combo( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_COMBO ); }
 
         //! return parent combobox if any.
-        GtkWidget* gtk_parent_combobox( GtkWidget* );
+        inline GtkWidget* gtk_parent_combobox( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_COMBO_BOX ); }
 
         //! return parent combobox if any.
-        GtkWidget* gtk_parent_combobox_entry( GtkWidget* );
+        inline GtkWidget* gtk_parent_combobox_entry( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_COMBO_BOX_ENTRY ); }
 
         //! return parent scrolled window if any.
-        GtkWidget* gtk_parent_scrolled_window( GtkWidget* );
+        inline GtkWidget* gtk_parent_scrolled_window( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_SCROLLED_WINDOW ); }
 
         //! return parent statusbar if any.
-        GtkWidget* gtk_parent_statusbar( GtkWidget* );
+        inline GtkWidget* gtk_parent_statusbar( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_STATUSBAR ); }
 
         //! return parent combobox if any.
-        GtkWidget* gtk_parent_notebook( GtkWidget* );
+        inline GtkWidget* gtk_parent_notebook( GtkWidget* widget )
+        { return gtk_widget_find_parent( widget, GTK_TYPE_NOTEBOOK ); }
 
         //! returns true if potentialParent is (maybe indirect) parent of widget
         bool gtk_widget_is_parent( GtkWidget*, GtkWidget* potentialParent );
