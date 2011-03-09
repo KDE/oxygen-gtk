@@ -224,7 +224,7 @@ namespace Oxygen
         gint wx(0), wy(0);
 
         // TODO: make sure this new test (on window) does not break Ruslan's decorations
-        if( window )
+        if( window || widget )
         {
 
             // add hole if required (this can be done before translating the context

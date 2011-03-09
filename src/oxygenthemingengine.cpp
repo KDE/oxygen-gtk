@@ -92,10 +92,28 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+
+        if( widget && gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) )
+        {
+
+            // register to engines
+            Style::instance().animations().mainWindowEngine().registerWidget( widget );
+            Style::instance().animations().backgroundHintEngine().registerWidget( widget );
+
+            // render background gradient
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+            Style::instance().renderWindowBackground( context, window, x, y, w, h );
+
+        } else {
+
+            ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+
+        }
 
     }
 
@@ -112,10 +130,25 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        ThemingEngine::parentClass()->render_frame( engine, context, x, y, w, h );
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+
+        if(
+            gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) )
+        {
+
+            // render background gradient
+            Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+
+        } else {
+
+            ThemingEngine::parentClass()->render_frame( engine, context, x, y, w, h );
+
+        }
 
     }
 
