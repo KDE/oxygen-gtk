@@ -195,7 +195,10 @@ namespace Oxygen
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        if( widget && gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) )
+        if( widget && (
+                   gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
+                   gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK )
+                   ) )
         {
 
             // register to engines
@@ -205,10 +208,14 @@ namespace Oxygen
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON )||
+                   gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) )
+        {
 
             // no flat background rendered for buttons
             // everything is dealt with in render_frame.
+
+            // don't draw anything on scrollbars because their background is drawn on parent
             return;
 
         } else {
@@ -232,6 +239,10 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        int X(x),
+            Y(y),
+            W(w),
+            H(h);
         // load state
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
@@ -245,6 +256,18 @@ namespace Oxygen
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
+
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
+                GTK_IS_SCROLLBAR( widget ) )
+        {
+            guint vertical;
+            g_object_get(G_OBJECT(widget),"orientation",&vertical,NULL);
+            StyleOptions options( vertical ? Vertical : StyleOptions() );
+            Style::instance().adjustScrollBarHole( X, Y, W, H, options );
+            if(W>0 && H>0)
+                Style::instance().renderScrollBarHole( context, X, Y, W, H, options );
+            return;
+        }
 
         // adjust shadow type for some known widgets
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
