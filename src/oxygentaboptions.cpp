@@ -28,11 +28,11 @@ namespace Oxygen
 {
 
     //______________________________________________________________________
-    TabOptions::TabOptions( GtkWidget* widget, GtkStateType state, GtkPositionType position, int x, int y, int w, int h )
+    TabOptions::TabOptions( GtkWidget* widget, GtkStateFlags state, GtkPositionType position, int x, int y, int w, int h )
     {
 
         // strange: all tabs but the current one are painted with the active flag
-        if( state != GTK_STATE_ACTIVE ) (*this) |= CurrentTab;
+        if( state&GTK_STATE_ACTIVE ) (*this) |= CurrentTab;
 
         // get allocated size
         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );

@@ -61,7 +61,7 @@ namespace Oxygen
         {}
 
         //! constructor
-        TabOptions( GtkWidget*, GtkStateType, GtkPositionType, int x, int y, int w, int h );
+        TabOptions( GtkWidget*, GtkStateFlags, GtkPositionType, int x, int y, int w, int h );
 
         //! destructor
         virtual ~TabOptions( void )

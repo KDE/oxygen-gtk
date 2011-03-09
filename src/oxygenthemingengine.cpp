@@ -637,7 +637,7 @@ namespace Oxygen
     void render_frame_gap(
         GtkThemingEngine* engine, cairo_t* context,
         gdouble x, gdouble y, gdouble w, gdouble h,
-        GtkPositionType gap_side,
+        GtkPositionType position,
         gdouble xy0_gap, gdouble xy1_gap)
     {
 
@@ -646,7 +646,7 @@ namespace Oxygen
             << "Oxygen::render_frame_gap -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " side: " << Gtk::TypeNames::position( gap_side )
+            << " side: " << Gtk::TypeNames::position( position )
             << " gap: (" << xy0_gap << "," << xy1_gap << ")"
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
@@ -659,10 +659,78 @@ namespace Oxygen
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, gap_side, xy0_gap, xy1_gap );
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+
+        if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) )
+        {
+
+            // this might move to drawShadowGap
+            StyleOptions options( NoFill );
+            options |= StyleOptions( widget, state );
+            options &= ~(Hover|Focus);
+
+            if( GTK_IS_NOTEBOOK( widget ) && !Gtk::gdk_default_screen_is_composited() )
+            {
+
+                // this trick ensures that tabbar is always redrawn
+                Style::instance().animations().tabWidgetEngine().registerWidget( widget );
+                if( Style::instance().animations().tabWidgetEngine().isDirty( widget ) )
+                {
+                    Style::instance().animations().tabWidgetEngine().setDirty( widget, false );
+
+                } else {
+
+                    Style::instance().animations().tabWidgetEngine().setDirty( widget, true );
+
+                }
+
+            }
+
+            Gtk::Gap gap;
+
+            // need adjustment depending on gap side
+            const int adjust = 2;
+            switch( position )
+            {
+
+                case GTK_POS_TOP:
+                gap = Gtk::Gap( 0, w+2, position );
+                y -= adjust;
+                h += adjust;
+                break;
+
+                case GTK_POS_BOTTOM:
+                gap = Gtk::Gap( 0, w+2, position );
+                h += adjust;
+                break;
+
+                case GTK_POS_LEFT:
+                gap = Gtk::Gap( 0, h+2, position );
+                x -= adjust;
+                w +=  adjust;
+                break;
+
+                case GTK_POS_RIGHT:
+                gap = Gtk::Gap( 0, h+2, position );
+                w += adjust;
+                break;
+
+                default: return;
+
+            }
+
+            gap.setHeight( 8 );
+            Style::instance().renderTabBarFrame( context, x-1, y-1, w+2, h+2, gap, options );
+
+        } else {
+
+            ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, position, xy0_gap, xy1_gap );
+
+        }
 
     }
 
@@ -670,7 +738,7 @@ namespace Oxygen
     void render_extension(
         GtkThemingEngine* engine, cairo_t* context,
         gdouble x, gdouble y, gdouble w, gdouble h,
-        GtkPositionType gap_side )
+        GtkPositionType position )
     {
 
         #if OXYGEN_DEBUG
@@ -678,15 +746,120 @@ namespace Oxygen
             << "Oxygen::render_extension -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " side: " << Gtk::TypeNames::position( gap_side )
+            << " side: " << Gtk::TypeNames::position( position )
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // load state
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
-        ThemingEngine::parentClass()->render_extension( engine, context, x, y, w, h, gap_side );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+        if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) )
+        {
+
+            StyleOptions options( widget, state );
+            TabOptions tabOptions( widget, state, position, x, y, w, h );
+
+            const bool isCurrentTab( tabOptions & CurrentTab );
+            bool drawTabBarBase( isCurrentTab );
+            bool dragInProgress( false );
+
+            /*
+            see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
+            (or open office) app, because the latter do not pass the actual tab rect as argument
+            */
+            AnimationData data;
+            if( GTK_IS_NOTEBOOK( widget ) )
+            {
+
+                // make sure widget is registered
+                Style::instance().animations().tabWidgetEngine().registerWidget( widget );
+
+                // get current tab, update tabRect and see if current tab is hovered
+                const int tabIndex( Gtk::gtk_notebook_find_tab( widget, x+w/2, y+h/2 ) );
+                Style::instance().animations().tabWidgetEngine().updateTabRect( widget, tabIndex, x, y, w, h );
+                if( tabIndex == Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) )
+                { options |= Hover; }
+
+                // check tab position and add relevant option flags
+                GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+                if( tabIndex == 0 ) tabOptions |= FirstTab;
+                if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) tabOptions |= LastTab;
+
+                const int current( gtk_notebook_get_current_page( notebook ) );
+                if( tabIndex == current-1 ) tabOptions |= LeftOfSelected;
+                else if( tabIndex == current+1 ) tabOptions |= RightOfSelected;
+
+                // update drag in progress flag
+                if( isCurrentTab )
+                {
+                    // TODO: reimplement with gtk+3
+                    // const bool drag( widget && (window != gtk_widget_get_window( widget ) ) );
+                    const bool drag( false );
+                    Style::instance().animations().tabWidgetEngine().setDragInProgress( widget, drag );
+                }
+
+                dragInProgress = Style::instance().animations().tabWidgetEngine().dragInProgress( widget );
+
+                // this does not work when the first tab is being grabbed
+                if( dragInProgress )
+                {
+                    drawTabBarBase = ((tabOptions & FirstTab) && !isCurrentTab) ||
+                        ((tabOptions & LastTab) && gtk_notebook_get_current_page( notebook ) == 0 );
+                }
+
+                if( !isCurrentTab )
+                { data = Style::instance().animations().tabWidgetStateEngine().get( widget, tabIndex, options ); }
+
+            }
+
+            Style::instance().renderTab( context, x, y, w, h, position, options, tabOptions, data );
+
+            // render tabbar base if current tab
+            if( drawTabBarBase )
+            {
+
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
+                int xBase( allocation.x + borderWidth );
+                int yBase( allocation.y + borderWidth );
+                int wBase( allocation.width - 2*borderWidth );
+                int hBase( allocation.height - 2*borderWidth );
+
+                Gtk::Gap gap;
+                switch( position )
+                {
+                    case GTK_POS_BOTTOM:
+                    case GTK_POS_TOP:
+                    if( !dragInProgress ) gap = Gtk::Gap( x - xBase + 5, w - 6, position );
+                    yBase = y;
+                    hBase = h;
+                    break;
+
+                    case GTK_POS_LEFT:
+                    case GTK_POS_RIGHT:
+                    if( !dragInProgress ) gap = Gtk::Gap( y - yBase + 5, h - 6, position );
+                    xBase = x;
+                    wBase = w;
+                    break;
+
+                    default: break;
+
+                }
+
+                gap.setHeight( 8 );
+
+                Style::instance().renderTabBarBase( context, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
+
+            }
+
+            Gtk::gtk_notebook_update_close_buttons( GTK_NOTEBOOK( widget ) );
+        }
 
     }
 
