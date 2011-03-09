@@ -163,11 +163,32 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        // in all other cases, fallback on default rendering, for now
-        ThemingEngine::parentClass()->render_line( engine, context, x0, y0, x1, y1 );
+        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) && !Style::instance().settings().toolBarDrawItemSeparator() )
+        {
+            // no separators in toolbars, if requested accordingly
+            return;
+
+        } else {
+
+            // standard separators
+            // lookup widget
+            // Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+
+            StyleOptions options;
+            options |= Blend;
+
+            // get orientation
+            // TODO: is there a better way ?
+            const bool vertical( abs( y1 - y0 ) > abs( x1 - x0 ) );
+            if( vertical ) options |= Vertical;
+
+            Style::instance().drawSeparator( context, x0, y0, x1-x0, y1-y0, options );
+
+
+        }
 
     }
 

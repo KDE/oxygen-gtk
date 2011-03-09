@@ -189,6 +189,10 @@ namespace Oxygen
 
         }
 
+        //! returns true if given path as given type
+        bool gtk_widget_path_has_type( GtkWidgetPath*, GType )
+        { return false; }
+
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );
 
