@@ -71,6 +71,7 @@ namespace Oxygen
     //_________________________________________________
     void Gtk::CSS::addSection( const std::string& name )
     {
+
         if( std::find( _sections.begin(), _sections.end(), name ) != _sections.end() )
         {
 
@@ -102,7 +103,8 @@ namespace Oxygen
     //_________________________________________________
     void Gtk::CSS::setCurrentSection( const std::string& name )
     {
-        if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
+
+        if( std::find_if( _sections.begin(), _sections.end(), Section::SameNameFTor( Section( name ) ) ) == _sections.end() )
         {
 
             std::cerr << "Gtk::CSS::setCurrentSection - unable to find section named " << name << std::endl;
