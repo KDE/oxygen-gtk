@@ -63,15 +63,32 @@ namespace Oxygen
             Flags<StyleOption>( f )
         {}
 
-        //! constructor from widget
-        StyleOptions( GtkWidget* widget, GtkStateType state, GtkShadowType shadow = GTK_SHADOW_NONE )
+        //! constructor from state flags
+        StyleOptions( GtkStateFlags flags )
         {
-            if( state == GTK_STATE_INSENSITIVE ) (*this) |= Disabled;
-            else if( state == GTK_STATE_PRELIGHT ) (*this) |= Hover;
-            else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
 
-            if( shadow == GTK_SHADOW_IN ) (*this) |= Sunken;
+            if( flags & GTK_STATE_FLAG_INSENSITIVE ) (*this) |= Disabled;
+            if( flags & GTK_STATE_FLAG_PRELIGHT ) (*this) |= Hover;
+            if( flags & GTK_STATE_FLAG_SELECTED ) (*this) |= Selected;
+            if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
+
+            // TODO: check whether one should use this, or gtk_widget_has_focus
+            if( flags & GTK_STATE_FLAG_FOCUSED ) (*this) |= Focus;
+
+        }
+
+        //! constructor from widget and state flags
+        StyleOptions( GtkWidget* widget, GtkStateFlags flags )
+        {
+
+            if( flags & GTK_STATE_FLAG_INSENSITIVE ) (*this) |= Disabled;
+            if( flags & GTK_STATE_FLAG_PRELIGHT ) (*this) |= Hover;
+            if( flags & GTK_STATE_FLAG_SELECTED ) (*this) |= Selected;
+            if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
+
+            // TODO: check whether one should use this, or gtk_widget_has_focus
             if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
+
         }
 
         //! destructor

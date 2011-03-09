@@ -21,6 +21,7 @@
 
 #include "oxygenthemingengine.h"
 
+#include "oxygencairoutils.h"
 #include "oxygendbus.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
@@ -56,6 +57,35 @@ namespace Oxygen
         }
 
         return out;
+
+    }
+
+    //_____________________________________________________________________________________
+    Cairo::Surface processTabCloseButton(GtkWidget* widget, GtkStateFlags state)
+    {
+
+        #if OXYGEN_DEBUG
+        std::cout << "Oxygen::processTabCloseButton" << std::endl;
+        #endif
+
+        if( state & GTK_STATE_FLAG_PRELIGHT ) return Style::instance().tabCloseButton( Focus );
+        if( state & GTK_STATE_FLAG_ACTIVE ) return Style::instance().tabCloseButton( Focus );
+        else {
+
+            // check if our button is on active page and if not, make it gray
+            GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
+            GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+            if( !page ) return 0L;
+
+            GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+            if( !tabLabel ) return 0L;
+
+            if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) ) return Style::instance().tabCloseButton( Disabled );
+            else return Style::instance().tabCloseButton( StyleOptions() );
+
+        }
+
+        return 0L;
 
     }
 
@@ -109,6 +139,12 @@ namespace Oxygen
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
+
+            // no flat background rendered for buttons
+            // everything is dealt with in render_frame.
+            return;
+
         } else {
 
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
@@ -135,6 +171,7 @@ namespace Oxygen
 
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+        GtkWidget* parent( 0L );
 
         if(
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ||
@@ -143,6 +180,314 @@ namespace Oxygen
 
             // render background gradient
             Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+
+        } else if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
+
+            // load state
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
+            // pathbar buttons
+            if( Gtk::gtk_button_is_in_path_bar(widget) )
+            {
+
+                // https://bugzilla.gnome.org/show_bug.cgi?id=635511
+                std::string name(G_OBJECT_TYPE_NAME( gtk_widget_get_parent( widget ) ) );
+                Style::instance().animations().hoverEngine().registerWidget( widget );
+
+                // only two style options possible: hover or don't draw
+                StyleOptions options;
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+                const bool isLast( Gtk::gtk_path_bar_button_is_last( widget ) );
+                if( !( state & (GTK_STATE_FLAG_NORMAL|GTK_STATE_FLAG_INSENSITIVE ) ) )
+                {
+                    if( !(state&GTK_STATE_FLAG_ACTIVE) || Style::instance().animations().hoverEngine().hovered( widget ) )
+                    {
+                        options |= Hover;
+                        if( isLast )
+                        {
+                            if( reversed )
+                            {
+
+                                x += 10;
+                                w-=10;
+
+                            } else w -= 10;
+                        }
+
+                        Style::instance().renderSelection( context, x, y, w, h, TileSet::Full, options );
+                    }
+                }
+
+                if( GTK_IS_TOGGLE_BUTTON(widget) && !isLast )
+                {
+
+                    options |= Contrast;
+
+                    if( reversed ) Style::instance().renderArrow( context, GTK_ARROW_LEFT, x+3, y, 5, h, QtSettings::ArrowNormal, options, Palette::WindowText);
+                    else Style::instance().renderArrow( context, GTK_ARROW_RIGHT, x+w-8, y, 5, h, QtSettings::ArrowNormal, options, Palette::WindowText);
+
+                }
+
+                return;
+
+            }
+
+            // treeview headers
+            if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
+
+                // register to scrolled window engine if any
+                if(
+                    GTK_IS_SCROLLED_WINDOW( parent = gtk_widget_get_parent( parent ) ) &&
+                    Style::instance().animations().scrolledWindowEngine().contains( parent )
+                    )
+                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
+
+                // treevew header
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderHeaderBackground( context, window, x, y, w, h );
+                return;
+
+            }
+
+            // combobox entry buttons
+            if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
+
+                // combobox entry buttons
+                // keep track of whether button is active (pressed-down) or pre-lighted
+                const bool buttonActive( state&(GTK_STATE_FLAG_ACTIVE|GTK_STATE_FLAG_PRELIGHT) );
+
+                // get the state from the combobox
+                /* this fixes rendering issues when the arrow is disabled, but not the entry */
+                state = gtk_widget_get_state_flags(parent);
+
+                /*
+                editable combobox button get a hole (with left corner hidden), and a background
+                that match the corresponding text entry background.
+                */
+
+                StyleOptions options( widget, state );
+                if(
+                    !Style::instance().settings().applicationName().isOpenOffice() &&
+                    !Style::instance().settings().applicationName().isGoogleChrome() )
+                { options |= NoFill; }
+
+                options |= Blend;
+
+                // focus handling
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
+
+                // FIXME: reimplement for Gtk
+                // ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
+                // Style::instance().fill( context, x, y, w, h, background );
+                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
+
+                // update option accordingly
+                if( state&GTK_STATE_FLAG_INSENSITIVE ) options &= ~(Hover|Focus);
+                else {
+
+                    Style::instance().animations().comboBoxEntryEngine().setButtonFocus( parent, options & Focus );
+                    if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                    else options &= ~Focus;
+
+                    // properly set button hover state. Pressed-down buttons are marked hovered, consistently with Qt
+                    Style::instance().animations().comboBoxEntryEngine().setButtonHovered( parent, buttonActive );
+                    if( Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                    else options &= ~Hover;
+
+                }
+
+                // render
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                TileSet::Tiles tiles( TileSet::Ring);
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    // hide right and adjust width
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( context, window, x-1, y, w+6, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( context, x-1, y, w+6, h, options, data, tiles  );
+
+                } else {
+
+                    // hide left and adjust width
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( context, window, x-5, y, w+6, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( context, x-5, y, w+6, h, options, data, tiles  );
+
+                }
+
+                return;
+
+            }
+
+            // combobox buttons
+            if(
+                ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
+                !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                Gtk::gtk_combobox_appears_as_list( parent )
+                )
+            {
+
+                // combobox buttons
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+
+                // StyleOptions options( widget, state, shadow );
+                StyleOptions options( widget, state );
+                options |= Blend;
+
+                Style::instance().animations().comboBoxEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEngine().setButton( parent, widget );
+                Style::instance().animations().comboBoxEngine().setButtonFocus( parent, options & Focus );
+
+                if( Gtk::gtk_combobox_has_frame( parent ) )
+                {
+                    if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
+
+                    // tiles
+                    TileSet::Tiles tiles( TileSet::Ring );
+
+                    // animation state
+                    const AnimationData data( (options&Sunken) ?
+                        AnimationData():
+                        Style::instance().animations().widgetStateEngine().get( parent, options ) );
+
+                    if( reversed )
+                    {
+
+                        tiles &= ~TileSet::Right;
+                        Style::instance().renderButtonSlab( context, x, y, w+7, h, options, data, tiles );
+
+                    } else {
+
+                        tiles &= ~TileSet::Left;
+                        Style::instance().renderButtonSlab( context, x-7, y, w+7, h, options, data, tiles );
+
+                    }
+
+                    return;
+
+                } else {
+
+                    options |= Flat;
+                    if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
+                    if( reversed ) Style::instance().renderButtonSlab( context, x+1, y, w, h, options );
+                    else Style::instance().renderButtonSlab( context, x-1, y, w, h, options );
+                    return;
+
+                }
+
+            }
+
+            // notebook close buttons
+            if( Gtk::gtk_notebook_is_close_button(widget))
+            {
+
+                if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
+                { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
+
+                if( Cairo::Surface surface = processTabCloseButton( widget, state ) )
+                {
+
+                    // hide previous image
+                    // show ours instead
+                    if( GtkWidget* image = Gtk::gtk_button_find_image(widget) )
+                    { gtk_widget_hide(image); }
+
+                    // center the button image
+                    const int height( cairo_surface_get_height( surface ) );
+                    const int width( cairo_surface_get_width( surface ) );
+                    x=x+(w-width)/2;
+                    y=y+(h-height)/2;
+
+                    // render the image
+                    cairo_save( context );
+                    cairo_set_source_surface( context, surface, x, y);
+                    cairo_paint(context);
+                    cairo_restore( context );
+
+                }
+
+                return;
+
+            }
+
+            #if GTK_CHECK_VERSION(2, 20, 0)
+            // tool itemgroup buttons
+            if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
+            #endif
+
+            // for google chrome, make GtkChromeButton appear as flat
+            if(
+                Style::instance().settings().applicationName().isGoogleChrome() &&
+                !Gtk::gtk_button_is_flat( widget ) &&
+                Gtk::g_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
+            { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
+
+            StyleOptions options( Blend );
+            //options |= StyleOptions( widget, state, shadow );
+            options |= StyleOptions( widget, state );
+
+            // TODO: reimplement with Gtk3
+            // if( style )
+            // { options._customColors.insert( options&Flat ? Palette::Window:Palette::Button, Gtk::gdk_get_color( style->bg[state] ) ); }
+
+            // flat buttons
+            bool useWidgetState( true );
+            AnimationData data;
+            if( widget && Gtk::gtk_button_is_flat( widget ) )
+            {
+
+                // set button as flat and disable focus
+                options |= Flat;
+                options &= ~Focus;
+
+                // register to Hover engine and check state
+                Style::instance().animations().hoverEngine().registerWidget( widget );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                { options |= Hover; }
+
+                // register to ToolBarState engine
+                ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+                if( GtkWidget* parent = engine.findParent( widget ) )
+                {
+
+                    // register child
+                    engine.registerChild( parent, widget, options&Hover );
+                    useWidgetState = false;
+
+                    if( engine.animatedRectangleIsValid( parent ) && !(options&Sunken) ) {
+
+                        return;
+
+                    } if( engine.widget( parent, AnimationCurrent ) == widget ) {
+
+                        data = engine.animationData( parent, AnimationCurrent );
+
+                        if( engine.isLocked( parent ) ) options |= Hover;
+
+                    } else if( (options & Sunken ) && engine.widget( parent, AnimationPrevious ) == widget ) {
+
+                        data = engine.animationData( parent, AnimationPrevious );
+
+                    }
+
+                }
+
+            }
+
+            // retrieve animation
+            if( useWidgetState )
+            { data = Style::instance().animations().widgetStateEngine().get( widget, options ); }
+
+            // render
+            Style::instance().renderButtonSlab( context, x, y, w, h, options, data );
 
         } else {
 
@@ -299,10 +644,8 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
-
-        ThemingEngine::parentClass()->render_focus( engine, context, x, y, w, h );
+        // no focus whatsoever with oxygen. It is handled elsewhere
+        return;
 
     }
 
