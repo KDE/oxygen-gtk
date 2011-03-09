@@ -171,8 +171,26 @@ namespace Oxygen
     { return Gtk::TypeNames::Finder<GtkOrientation>( orientationMap, 2 ).findCss( gtkOrientation ); }
 
     //__________________________________________________________________
-    typedef Gtk::TypeNames::Entry<GtkExpanderStyle> EpanderStyleMap;
-    static const EpanderStyleMap expanderStyleMap[] =
+    typedef Gtk::TypeNames::Entry<GtkBorderStyle> BorderStyleMap;
+    static const BorderStyleMap borderStyleMap[] =
+    {
+        { GTK_BORDER_STYLE_NONE, "none" },
+        { GTK_BORDER_STYLE_SOLID, "solid" },
+        { GTK_BORDER_STYLE_INSET, "inset" },
+        { GTK_BORDER_STYLE_OUTSET, "outset" }
+    };
+
+    //__________________________________________________________________
+    GtkBorderStyle Gtk::TypeNames::matchBorderStyle( const char*  cssBorderStyle )
+    { return Gtk::TypeNames::Finder<GtkBorderStyle>( borderStyleMap, 4 ).findGtk( cssBorderStyle, GTK_BORDER_STYLE_NONE ); }
+
+    //__________________________________________________________________
+    const char*  Gtk::TypeNames::borderStyle( GtkBorderStyle gtkBorderStyle )
+    { return Gtk::TypeNames::Finder<GtkBorderStyle>( borderStyleMap, 4 ).findCss( gtkBorderStyle ); }
+
+    //__________________________________________________________________
+    typedef Gtk::TypeNames::Entry<GtkExpanderStyle> ExpanderStyleMap;
+    static const ExpanderStyleMap expanderStyleMap[] =
     {
         { GTK_EXPANDER_COLLAPSED, "collapsed" },
         { GTK_EXPANDER_SEMI_COLLAPSED, "semi-collapsed" },

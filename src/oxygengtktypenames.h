@@ -64,6 +64,9 @@ namespace Oxygen
             //! tree expander style
             static const char* expanderStyle( GtkExpanderStyle );
 
+            //! tree border style
+            static const char* borderStyle( GtkBorderStyle );
+
             //! Gtk dialogs response IDs
             static const char* response( GtkResponseType );
 
@@ -135,6 +138,7 @@ namespace Oxygen
             static GdkWindowEdge matchWindowEdge	( const char* );
             static GdkWindowTypeHint matchWindowTypeHint( const char* );
             static GtkOrientation matchOrientation( const char* );
+            static GtkBorderStyle	matchBorderStyle( const char* );
             static GtkExpanderStyle	matchExpanderStyle( const char* );
             static GtkResponseType matchResponse( const char* );
 
