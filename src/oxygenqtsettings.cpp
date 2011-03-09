@@ -782,12 +782,24 @@ namespace Oxygen
         _activeShadowConfiguration.initialize( oxygen );
         _inactiveShadowConfiguration.initialize( oxygen );
 
+        // copy relevant options to to gtk
+        // scrollbar width
+        _css.setCurrentSection( Gtk::CSS::defaultSection() );
+        _css.addToCurrentSection( Gtk::CSSOption<int>(
+            "-GtkScrollbar-slider-width",
+            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+
+        _css.addToCurrentSection( Gtk::CSSOption<bool>("-GtkScrollbar-has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
+        _css.addToCurrentSection( Gtk::CSSOption<bool>("-GtkScrollbar-has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
+
+        // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
+        _css.addToCurrentSection( Gtk::CSSOption<bool>("-GtkScrollbar-has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
+        _css.addToCurrentSection( Gtk::CSSOption<bool>("-GtkScrollbar-has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+
         // mnemonics
         const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", showMnemonics, "oxygen-gtk" );
-
-        // TODO: re-implement writting to css for GTK3
 
     }
 
