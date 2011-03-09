@@ -1,4 +1,88 @@
+/*
+* this file is part of the oxygen gtk engine
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or( at your option ) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+*/
+
 * {
-    engine: oxygen-gtk;
-    theme: oxygen-gtk;
+    -GtkPaned-handle-size: 3;
+    -GtkButton-child_displacement_x: 0;
+    -GtkButton-child_displacement_y: 0;
+
+    /* TODO: make sure the values are ordered properly */
+    -GtkButton-default_border: 0 0 0 0;
+    -GtkButton-default_outside_border: 0 0 0 0;
+    -GtkButton-inner-border: 2 2 1 0;
+    -GtkToggleButton-inner-border: 0 0 1 0;
+
+    -GtkCalendar-inner-border: 0;
+    -GtkCalendar-horizontal-separation: 0;
+    -GtkCheckButton-indicator-size: 18;
+    -GtkComboBox-appears-as-list: 1;
+    -GtkEntry-honors-transparent-bg-hint: 1;
+
+    -GtkExpander-expander-size: 15;
+
+    -GtkMenu-horizontal-padding: 3;
+    -GtkMenu-vertical-padding: 5;
+    -GtkMenu-horizontal-offset: -7;
+    -GtkCheckMenuItem-indicator-size: 16;
+
+    -GtkScale-slider-width: 23;
+    -GtkScale-slider-length: 15;
+
+    -GtkScrollbar-trough-border:1;
+    -GtkScrollbar-stepper-size:12;
+    -GtkScrolledWindow-scrollbar-spacing:1;
+    -GtkStatusbar-has-resize-grip: false;
+
+    -GtkTreeView-allow-rules: 1;
+    -GtkTreeView-row-ending-details: 1;
+    -GtkTreeView-expander-size: 15;
+
+    -GtkMenuBar-shadow-type: GTK_SHADOW_NONE;
+    -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
+    -GtkToolbar-shadow-type: GTK_SHADOW_NONE;
+
+     engine: oxygen-gtk;
+     theme: oxygen-gtk;
+}
+
+GtkMenuBar {
+    padding: 1;
+}
+
+GtkMenuItem {
+    padding: 0 3;
+}
+
+GtkMenu.GtkMenuItem {
+    padding: 5 1;
+}
+
+GtkMenu.GtkSeparatorMenuItem {
+    padding: 1;
+}
+
+GtkNotebook {
+    padding: 4;
+}
+
+GtkFrame, GtkScrolledWindow, GtkViewport, GtkProgressBar {
+    padding: 2;
 }
