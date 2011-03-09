@@ -28,6 +28,9 @@ namespace Oxygen
 {
 
     //_________________________________________________
+    const std::string Gtk::CSS::_defaultSectionName = "*";
+
+    //_________________________________________________
     void Gtk::CSS::commit( GtkCssProvider* provider )
     {
 
@@ -104,7 +107,7 @@ namespace Oxygen
     void Gtk::CSS::setCurrentSection( const std::string& name )
     {
 
-        if( std::find_if( _sections.begin(), _sections.end(), Section::SameNameFTor( Section( name ) ) ) == _sections.end() )
+        if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
         {
 
             std::cerr << "Gtk::CSS::setCurrentSection - unable to find section named " << name << std::endl;

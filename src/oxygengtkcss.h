@@ -101,6 +101,10 @@ namespace Oxygen
             void addToCurrentSection( const std::string& content )
             { addToSection( _currentSection, content ); }
 
+            //! default section name
+            static const std::string& defaultSection( void )
+            { return _defaultSectionName; }
+
             //! convert to string
             std::string toString( void ) const
             {
@@ -113,7 +117,7 @@ namespace Oxygen
 
             //! initialize default sections
             void init( void )
-            {}
+            { addSection( _defaultSectionName ); }
 
             //! describes each style section in resource list
             class Section
@@ -189,6 +193,9 @@ namespace Oxygen
             };
 
             private:
+
+            //! default section
+            static const std::string _defaultSectionName;
 
             //! list of sections
             Section::List _sections;
