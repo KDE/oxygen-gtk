@@ -180,11 +180,11 @@ namespace Oxygen
         if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
         {
 
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 0 0 10" );
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 0 0 10;" );
 
         } else {
 
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 10 0 0" );
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 10 0 0;" );
 
         }
 
@@ -598,6 +598,18 @@ namespace Oxygen
 
             // store in map
             fonts[iter->first] = local;
+
+        }
+
+        // pass fonts to GtkSettings and css
+        if( fonts[FontInfo::Default].isValid() )
+        {
+            // pass to settings
+            GtkSettings* settings( gtk_settings_get_default() );
+            gtk_settings_set_string_property( settings, "gtk-font-name", std::string( fonts[FontInfo::Default] ).c_str(), "oxygen-gtk" );
+
+            _css.addSection( "*" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Default] ) );
 
         }
 
