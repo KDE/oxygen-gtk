@@ -116,7 +116,9 @@ namespace Oxygen
         void outline( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& color = ColorUtils::Rgba( 1, 0, 0 ) ) const;
 
         //! separators
-        void drawSeparator( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
+        void drawSeparator( GtkWidget*, cairo_t*, gint, gint, gint, gint, const StyleOptions& );
+        void drawSeparator( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options )
+        { drawSeparator( 0L, context, x, y, w, h, options ); }
 
         //! window background
         /*! returns true if window gradient could be rendered */
