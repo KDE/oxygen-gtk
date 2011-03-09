@@ -64,6 +64,7 @@ namespace Oxygen
         return 0L;
 
     }
+
     //___________________________________________________________________________________________________________
     static void render_animated_button(
         cairo_t* context,
@@ -232,12 +233,49 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        // load state
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
+        // load border style
+        GtkBorderStyle borderStyle;
+        gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
+
         // get path
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
+
+        // adjust shadow type for some known widgets
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
+            GTK_IS_SCROLLED_WINDOW( widget ) &&
+            borderStyle !=  GTK_BORDER_STYLE_INSET &&
+            Gtk::gtk_scrolled_window_force_sunken( widget ) )
+        {
+
+            // make sure that scrolled windows containing a treeView have sunken frame
+            borderStyle = GTK_BORDER_STYLE_INSET;
+            gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+
+        } else if(
+            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
+            GTK_IS_FRAME( widget ) &&
+            borderStyle == GTK_BORDER_STYLE_SOLID &&
+            Gtk::gtk_scrolled_window_force_sunken( widget )
+            )
+        {
+
+            // make sure that entry shadows are drawn
+            borderStyle = GTK_BORDER_STYLE_INSET;
+            gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN );
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
+
+            // make sure that entry shadows are drawn
+            borderStyle = GTK_BORDER_STYLE_INSET;
+
+        }
 
         if(
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ||
@@ -251,10 +289,6 @@ namespace Oxygen
             render_animated_button( context, widget );
 
         } else if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
-
-            // buttons
-            // load state
-            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
             // pathbar buttons
             if( Gtk::gtk_button_is_in_path_bar(widget) )
@@ -559,9 +593,58 @@ namespace Oxygen
             // render
             Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
 
-        } else {
+        } else if( borderStyle == GTK_BORDER_STYLE_INSET && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) ) {
 
-            ThemingEngine::parentClass()->render_frame( engine, context, x, y, w, h );
+            if( widget && GTK_IS_FRAME( widget ) )
+            {
+
+                /*
+                check for scrolled windows embedded in frames, that contain a treeview.
+                if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
+                this should improve rendering of most mandriva drake tools
+                */
+                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                if(
+                    GTK_IS_SCROLLED_WINDOW( child ) &&
+                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) )
+                {
+                    gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_NONE );
+
+                    // also change scrolled window shadow if needed
+                    GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
+                    if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
+                    { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
+
+                    return;
+                }
+
+            }
+
+            // default shadow_in frame
+            // hole background is needed for some special cases
+            if( GTK_IS_CALENDAR( widget ) )
+            {
+
+                GdkWindow* window( gtk_widget_get_window( parent ) );
+                Style::instance().renderHoleBackground(
+                    context, window,
+                    x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+            }
+
+            // hole
+            Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
+
+//         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
+//
+//             // default etched frame
+//             Style::instance().renderDockFrame( context, x, y+1, w, h-2, Blend );
+//
+//         } else if( shadow == GTK_SHADOW_OUT ) {
+//
+//             // default shadow_out frame
+//             StyleOptions options( Blend );
+//             options |= NoFill;
+//             Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
 
         }
 
@@ -577,7 +660,7 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::render_frame -"
+            << "Oxygen::render_frame_gap -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " side: " << Gtk::TypeNames::position( gap_side )
@@ -585,6 +668,13 @@ namespace Oxygen
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // load state
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
+        // load border style
+        GtkBorderStyle borderStyle;
+        gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
 
         // lookup
         Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
