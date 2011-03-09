@@ -86,7 +86,6 @@ namespace Oxygen
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
         _KDESession( false ),
-        _hooksInitialized( false ),
         _provider( gtk_css_provider_new() )
     {}
 
@@ -94,23 +93,8 @@ namespace Oxygen
     QtSettings::~QtSettings( void )
     {
 
-        // disconnect hooks
-        _styleHook.disconnect();
-
         // free provider
         g_free( _provider );
-
-    }
-
-    //_____________________________________________________
-    void QtSettings::initializeHooks( void )
-    {
-
-        // lookup relevant signal
-        const guint signalId( g_signal_lookup("style-set", GTK_TYPE_WINDOW ) );
-        if( signalId <= 0 ) return;
-
-        _styleHook.connect( "style-set", (GSignalEmissionHook)styleHook, this );
 
     }
 
@@ -217,37 +201,17 @@ namespace Oxygen
         // pass all resources to gtk and clear
         _css.commit( _provider );
 
+        if( GdkScreen* screen = gdk_screen_get_default() )
+        {
+            gtk_style_context_remove_provider_for_screen( screen, GTK_STYLE_PROVIDER( _provider ) );
+            gtk_style_context_add_provider_for_screen( screen, GTK_STYLE_PROVIDER( _provider ), GTK_STYLE_PROVIDER_PRIORITY_THEME + 10 );
+        }
+
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
         #endif
 
         return;
-
-    }
-
-    //_____________________________________________________
-    gboolean QtSettings::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
-    {
-
-        // get widget from params
-        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
-
-        // check type
-        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::styleHook - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget) << ")" << std::endl;
-        #endif
-
-        // get provider
-        GtkStyleProvider* provider( GTK_STYLE_PROVIDER( static_cast<QtSettings*>( data )->_provider ) );
-
-        // get context
-        GtkStyleContext* context( gtk_widget_get_style_context( widget ) );
-        gtk_style_context_remove_provider( context, provider );
-        gtk_style_context_add_provider( context, provider, GTK_STYLE_PROVIDER_PRIORITY_THEME + 10 );
-
-        return TRUE;
 
     }
 
