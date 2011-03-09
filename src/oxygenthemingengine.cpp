@@ -260,8 +260,7 @@ namespace Oxygen
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
                 GTK_IS_SCROLLBAR( widget ) )
         {
-            guint vertical;
-            g_object_get(G_OBJECT(widget),"orientation",&vertical,NULL);
+            const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
             StyleOptions options( vertical ? Vertical : StyleOptions() );
             Style::instance().adjustScrollBarHole( X, Y, W, H, options );
             if(W>0 && H>0)
