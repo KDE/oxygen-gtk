@@ -221,12 +221,13 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-        // get context, add internal provider
+        // get provider
+        GtkStyleProvider* provider( GTK_STYLE_PROVIDER( static_cast<QtSettings*>( data )->_provider ) );
+
+        // get context
         GtkStyleContext* context( gtk_widget_get_style_context( widget ) );
-        gtk_style_context_add_provider(
-            context,
-            GTK_STYLE_PROVIDER( static_cast<QtSettings*>( data )->_provider ),
-            GTK_STYLE_PROVIDER_PRIORITY_SETTINGS + 10 );
+        gtk_style_context_remove_provider( context, provider );
+        gtk_style_context_add_provider( context, provider, GTK_STYLE_PROVIDER_PRIORITY_SETTINGS + 10 );
 
         return TRUE;
 
