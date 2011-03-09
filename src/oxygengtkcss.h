@@ -40,9 +40,9 @@ namespace Oxygen
             //! constructor
             CSSOption( std::string name, const T& value )
             {
-                std::ostringstream stream;
-                stream << name << ": " << value << ";";
-                _value = stream.str();
+                std::ostringstream out;
+                out << "  "<< name << ": " << value << ";";
+                _value = out.str();
             }
 
             //! cast to cairo_t
@@ -76,6 +76,9 @@ namespace Oxygen
                 init();
             }
 
+            //! returns true if empty
+            bool empty( void ) const
+            { return _sections.empty(); }
 
             //! merge
             void merge( const CSS& );

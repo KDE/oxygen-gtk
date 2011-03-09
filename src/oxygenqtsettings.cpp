@@ -169,10 +169,10 @@ namespace Oxygen
         }
 
         // print generated Gtkrc and commit
-        #if OXYGEN_DEBUG
+        // #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - GtkCss: " << std::endl;
         std::cerr << _css << std::endl;
-        #endif
+        // #endif
 
         // pass all resources to gtk and clear
         _css.commit();
@@ -506,6 +506,13 @@ namespace Oxygen
         _palette.setGroup( Palette::Active );
 
         // TODO: re-implement writting to css for GTK3
+        _css.addSection( "*" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "background-color", _palette.color( Palette::Window ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "color", _palette.color( Palette::WindowText ) ) );
+
+        _css.addSection( "*:selected" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "background-color", _palette.color( Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "color", _palette.color( Palette::WindowText ) ) );
 
     }
 
