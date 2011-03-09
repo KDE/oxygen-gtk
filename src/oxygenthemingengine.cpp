@@ -154,6 +154,13 @@ namespace Oxygen
             // Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
             StyleOptions options;
+            if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
+            {
+                options |= Blend;
+                if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_MENU ) )
+                { options |= Menu; }
+            }
+
             options |= Blend;
 
             // get orientation

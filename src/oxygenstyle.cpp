@@ -175,25 +175,23 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawSeparator( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options )
+    void Style::drawSeparator( GtkWidget* widget, cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
 
         // define colors
         ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+        if( widget && (options&Blend) )
+        {
 
-// TODO: reimplement for gtk3
-//         if( options & Blend )
-//         {
-//
-//             gint wh, wy;
-//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//             if( wh > 0 )
-//             {
-//                 if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-//                 else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-//             }
-//
-//         }
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+            if( wh > 0 )
+            {
+                if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+                else base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            }
+
+        }
 
         cairo_save( context );
         helper().drawSeparator( context, base, x, y, w, h, (options&Vertical) );
@@ -1243,9 +1241,7 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base( color( group, Palette::Button, options ) );
-
-// TODO: reimplement for Gtk3
-        if( options&Blend )
+        if( widget && (options&Blend) )
         {
 
             gint wh, wy;
