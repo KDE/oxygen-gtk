@@ -613,10 +613,20 @@ namespace Oxygen
 
         }
 
+        if( fonts[FontInfo::Menu].isValid() )
+        {
+            _css.addSection( "GtkMenuItem" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Menu] ) );
+        }
+
+        if( fonts[FontInfo::ToolBar].isValid() )
+        {
+            _css.addSection( "GtkToolbar" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::ToolBar] ) );
+        }
+
         // don't check for section and tag presence - use default font if not present
         _WMFont=FontInfo::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeFont", "Sans Serif,8,-1,5,50,0,0,0,0,0" ) );
-
-        // TODO: re-implement writting to css for GTK3
 
     }
 
