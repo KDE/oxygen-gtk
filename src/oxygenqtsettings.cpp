@@ -194,6 +194,20 @@ namespace Oxygen
             generateGtkColors();
         }
 
+        // deal with pathbar button margins
+        // this needs to be done programatically in order to properly account for RTL locales
+        _css.addSection( "GtkPathBar>GtkToggleButton" );
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
+        {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 0 0 10" );
+
+        } else {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 10 0 0" );
+
+        }
+
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - GtkCss: " << std::endl;

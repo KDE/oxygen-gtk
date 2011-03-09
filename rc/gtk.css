@@ -25,10 +25,10 @@
     -GtkButton-child_displacement_y: 0;
 
     /* TODO: make sure the values are ordered properly */
-    -GtkButton-default_border: 0 0 0 0;
-    -GtkButton-default_outside_border: 0 0 0 0;
-    -GtkButton-inner-border: 2 2 1 0;
-    -GtkToggleButton-inner-border: 0 0 1 0;
+    -GtkButton-default_border: 0;
+    -GtkButton-default_outside_border: 0;
+    -GtkButton-inner-border: 1 2 0;
+    -GtkToggleButton-inner-border: 1 0 0;
 
     -GtkCalendar-inner-border: 0;
     -GtkCalendar-horizontal-separation: 0;
