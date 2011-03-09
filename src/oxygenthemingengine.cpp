@@ -1163,7 +1163,7 @@ namespace Oxygen
         // lookup
         Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
 
-        ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
+        ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
 
     }
 
