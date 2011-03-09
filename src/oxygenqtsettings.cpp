@@ -508,7 +508,7 @@ namespace Oxygen
         _palette.setGroup( Palette::Active );
 
         // default
-        _css.addSection( "*" );
+        _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
@@ -608,7 +608,7 @@ namespace Oxygen
             GtkSettings* settings( gtk_settings_get_default() );
             gtk_settings_set_string_property( settings, "gtk-font-name", std::string( fonts[FontInfo::Default] ).c_str(), "oxygen-gtk" );
 
-            _css.addSection( "*" );
+            _css.setCurrentSection( Gtk::CSS::defaultSection() );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Default] ) );
 
         }
