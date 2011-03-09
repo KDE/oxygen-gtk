@@ -40,6 +40,7 @@ set( oxygen_gtk_SOURCES
     oxygencolorutils.cpp
     oxygendbus.cpp
     oxygenfontinfo.cpp
+    oxygengtkcss.cpp
     oxygengtkcellinfo.cpp
     oxygengtkicons.cpp
     oxygengtkrc.cpp
