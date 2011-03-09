@@ -1131,7 +1131,6 @@ namespace Oxygen
         #endif
 
         // hooks
-        Style::instance().settings().initializeHooks();
         Style::instance().animations().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
