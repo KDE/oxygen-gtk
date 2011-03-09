@@ -178,6 +178,9 @@ namespace Oxygen
         //! combobox list size adjustment hook
         static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! background hint setting hook
+        static gboolean backgroundHintHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state
@@ -256,6 +259,9 @@ namespace Oxygen
 
         //! combobox hook
         Hook _comboBoxHook;
+
+        //! background hint hook
+        Hook _backgroundHintHook;
 
 
         //@}
