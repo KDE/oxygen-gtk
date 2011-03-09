@@ -218,9 +218,6 @@ namespace Oxygen
         inline GtkWidget* gtk_parent_tree_view( GtkWidget* widget )
         { return gtk_widget_find_parent( widget, GTK_TYPE_TREE_VIEW ); }
 
-        //! return parent toolbar if any.
-        GtkWidget* gtk_parent_toolbar( GtkWidget* );
-
         //! return parent combobox if any.
         inline GtkWidget* gtk_parent_combo( GtkWidget* widget )
         { return gtk_widget_find_parent( widget, GTK_TYPE_COMBO ); }
