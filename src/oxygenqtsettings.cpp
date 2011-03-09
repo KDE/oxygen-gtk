@@ -107,10 +107,10 @@ namespace Oxygen
     {
 
         // lookup relevant signal
-        const guint signalId( g_signal_lookup("style-updated", GTK_TYPE_WINDOW ) );
+        const guint signalId( g_signal_lookup("style-set", GTK_TYPE_WINDOW ) );
         if( signalId <= 0 ) return;
 
-        _styleHook.connect( "style-updated", (GSignalEmissionHook)styleHook, this );
+        _styleHook.connect( "style-set", (GSignalEmissionHook)styleHook, this );
 
     }
 
@@ -195,10 +195,10 @@ namespace Oxygen
         }
 
         // print generated Gtkrc and commit
-        // #if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - GtkCss: " << std::endl;
         std::cerr << _css << std::endl;
-        // #endif
+        #endif
 
         // pass all resources to gtk and clear
         _css.commit( _provider );
@@ -220,6 +220,10 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::styleHook - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget) << ")" << std::endl;
+        #endif
 
         // get provider
         GtkStyleProvider* provider( GTK_STYLE_PROVIDER( static_cast<QtSettings*>( data )->_provider ) );
@@ -553,14 +557,40 @@ namespace Oxygen
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
-        // TODO: re-implement writting to css for GTK3
+        // default
         _css.addSection( "*" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "background-color", _palette.color( Palette::Window ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "color", _palette.color( Palette::WindowText ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
         _css.addSection( "*:selected" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "background-color", _palette.color( Palette::Selected ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "color", _palette.color( Palette::WindowText ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
+
+        _css.addSection( "*:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
+
+        // entries
+        _css.addSection( "GtkEntry, GtkTreeView, GtkTextView" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
+
+// FIXME: following does not work
+//         _css.addSection( "GtkEntry:active, GtkTreeView:active, GtkTextView:active" );
+//         if( _inactiveChangeSelectionColor ) _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
+//         else _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
+
+        _css.addSection( "GtkEntry:selected, GtkTreeView:selected, GtkTextView:selected" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
+
+        // buttons
+        _css.addSection( "GtkButton" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Button ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::ButtonText ) ) );
+
+        _css.addSection( "GtkButton:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Button ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
 
     }
 
