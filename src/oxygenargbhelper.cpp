@@ -65,11 +65,11 @@ namespace Oxygen
         if( _hooksInitialized ) return;
 
         // lookup relevant signal
-        const guint signalId( g_signal_lookup("style-set", GTK_TYPE_WINDOW ) );
+        const guint signalId( g_signal_lookup("style-updated", GTK_TYPE_WINDOW ) );
         if( signalId <= 0 ) return;
 
         // install hooks
-        _colormapHook.connect( "style-set", (GSignalEmissionHook)colormapHook, 0L );
+        _colormapHook.connect( "style-updated", (GSignalEmissionHook)colormapHook, 0L );
         _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, this );
 
         /*

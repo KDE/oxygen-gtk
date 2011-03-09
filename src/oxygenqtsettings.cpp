@@ -86,6 +86,7 @@ namespace Oxygen
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
         _KDESession( false ),
+        _hooksInitialized( false ),
         _provider( gtk_css_provider_new() )
     {}
 
@@ -93,8 +94,23 @@ namespace Oxygen
     QtSettings::~QtSettings( void )
     {
 
+        // disconnect hooks
+        _styleHook.disconnect();
+
         // free provider
         g_free( _provider );
+
+    }
+
+    //_____________________________________________________
+    void QtSettings::initializeHooks( void )
+    {
+
+        // lookup relevant signal
+        const guint signalId( g_signal_lookup("style-updated", GTK_TYPE_WINDOW ) );
+        if( signalId <= 0 ) return;
+
+        _styleHook.connect( "style-updated", (GSignalEmissionHook)styleHook, this );
 
     }
 
@@ -192,6 +208,27 @@ namespace Oxygen
         #endif
 
         return;
+
+    }
+
+    //_____________________________________________________
+    gboolean QtSettings::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // get context, add internal provider
+        GtkStyleContext* context( gtk_widget_get_style_context( widget ) );
+        gtk_style_context_add_provider(
+            context,
+            GTK_STYLE_PROVIDER( static_cast<QtSettings*>( data )->_provider ),
+            GTK_STYLE_PROVIDER_PRIORITY_SETTINGS + 10 );
+
+        return TRUE;
 
     }
 

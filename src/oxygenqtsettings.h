@@ -23,6 +23,7 @@
 #include "oxygenanimationmodes.h"
 #include "oxygenapplicationname.h"
 #include "oxygengtkcss.h"
+#include "oxygenhook.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -51,6 +52,9 @@ namespace Oxygen
 
         //! destructor
         virtual ~QtSettings( void );
+
+        //! initialize hooks
+        void initializeHooks( void );
 
         //! load kdeglobals settings into optionMap
         void loadKdeGlobals( void );
@@ -312,8 +316,8 @@ namespace Oxygen
 
         protected:
 
-        // get home directory
-        std::string home( void ) const;
+        //! depth adjustment hook
+        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! icon path
         PathList kdeConfigPathList( void ) const;
@@ -534,6 +538,12 @@ namespace Oxygen
 
         //! KDE running flags
         bool _KDESession;
+
+        //! true if hooks are initialized
+        bool _hooksInitialized;
+
+        //! style hook
+        Hook _styleHook;
 
         //! internal gtk style sheet
         Gtk::CSS _css;

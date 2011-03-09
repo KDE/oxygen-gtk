@@ -97,7 +97,7 @@ namespace Oxygen
         //! delayed drag
         static gboolean startDelayedDrag( gpointer );
 
-        //! style-set hook
+        //! style-updated hook
         static gboolean styleSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! mouse button release event hook
