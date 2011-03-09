@@ -63,26 +63,40 @@
      theme: oxygen-gtk;
 }
 
-GtkMenuBar {
-    padding: 1;
-}
+/* entries */
+/* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
+GtkEntry { border-width: 5 2; }
 
-GtkMenuItem {
-    padding: 0 3;
-}
+/* menuitems padding */
+GtkMenuBar { padding: 1; }
+GtkMenuItem { padding: 0 3; }
+GtkMenu.GtkMenuItem { padding: 5 1; }
+GtkMenu.GtkSeparatorMenuItem { padding: 1; }
 
-GtkMenu.GtkMenuItem {
-    padding: 5 1;
-}
+/* notebooks */
+GtkNotebook { padding: 4; }
 
-GtkMenu.GtkSeparatorMenuItem {
-    padding: 1;
-}
+/* combo boxes */
+GtkComboBox { padding: 2 0; }
+GtkComboBox.GtkFrame { padding: 4; }
 
-GtkNotebook {
-    padding: 4;
-}
+/*
+TODO: how do I deal with Combobox-Entry settings
+Possibly install non-default provider in style hook
+*/
 
-GtkFrame, GtkScrolledWindow, GtkViewport, GtkProgressBar {
-    padding: 2;
-}
+/* option menu */
+GtkOptionMenu { padding: 0 4; }
+
+/* vertical separators */
+GtkVSeparator { padding: 2 3; }
+
+/* frames */
+GtkFrame { padding: 2; }
+GtkScrolledWindow { padding: 2; }
+GtkViewport { padding: 2; }
+GtkProgressBar { padding: 2; }
+
+/* headers */
+GtkTreeView>GtkButton { border-width: 0 2; }
+GtkList>GtkButton { border-width: 0 2; }
