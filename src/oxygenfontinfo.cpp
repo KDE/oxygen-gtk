@@ -30,9 +30,9 @@ namespace Oxygen
     FontInfo::operator std::string ( void ) const
     {
         std::ostringstream out;
-        out << "\"" << family() << " " << weightString() << " ";
+        out << family() << " " << weightString() << " ";
         if( _italic ) out << italicString() << " ";
-        out << size() << "\"";
+        out << size();
         return out.str();
     }
 
