@@ -85,8 +85,18 @@ namespace Oxygen
         _initialized( false ),
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
-        _KDESession( false )
+        _KDESession( false ),
+        _provider( gtk_css_provider_new() )
     {}
+
+    //_________________________________________________________
+    QtSettings::~QtSettings( void )
+    {
+
+        // free provider
+        g_free( _provider );
+
+    }
 
     //_________________________________________________________
     void QtSettings::loadKdeGlobals( void )
@@ -175,7 +185,7 @@ namespace Oxygen
         // #endif
 
         // pass all resources to gtk and clear
-        _css.commit();
+        _css.commit( _provider );
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;

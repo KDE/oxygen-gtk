@@ -50,8 +50,7 @@ namespace Oxygen
         QtSettings( void );
 
         //! destructor
-        virtual ~QtSettings( void )
-        {}
+        virtual ~QtSettings( void );
 
         //! load kdeglobals settings into optionMap
         void loadKdeGlobals( void );
@@ -536,8 +535,11 @@ namespace Oxygen
         //! KDE running flags
         bool _KDESession;
 
-        //! gtkrc
+        //! internal gtk style sheet
         Gtk::CSS _css;
+
+        //! internal gtk style provided
+        GtkCssProvider* _provider;
 
     };
 

@@ -20,6 +20,8 @@
 * MA 02110-1301, USA.
 */
 
+#include <gtk/gtk.h>
+
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -80,6 +82,9 @@ namespace Oxygen
             bool empty( void ) const
             { return _sections.empty(); }
 
+            //! commit to gtk and clear
+            void commit( GtkCssProvider* );
+
             //! merge
             void merge( const CSS& );
 
@@ -103,9 +108,6 @@ namespace Oxygen
                 out << *this << std::endl;
                 return out.str();
             }
-
-            //! commit to gtk and clear
-            void commit( void );
 
             protected:
 

@@ -28,13 +28,13 @@ namespace Oxygen
 {
 
     //_________________________________________________
-    void Gtk::CSS::commit( void )
+    void Gtk::CSS::commit( GtkCssProvider* provider )
     {
 
         // do nothing if empty
         if( empty() ) return;
 
-        GtkCssProvider* provider( gtk_css_provider_get_default() );
+        assert( provider );
         GError *error( 0L );
         const std::string contents( toString() );
         gtk_css_provider_load_from_data( provider, contents.c_str(), contents.size(), &error );
