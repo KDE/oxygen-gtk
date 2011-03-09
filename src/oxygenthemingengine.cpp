@@ -95,9 +95,11 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=animated_button",
-            G_OBJECT_TYPE_NAME( widget ) );
+        std::cerr
+            << "Oxygen::render_animated_button -"
+            << " context: " << context
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
         #endif
 
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
@@ -106,7 +108,12 @@ namespace Oxygen
         if( engine.animatedRectangleIsValid( widget ) )
         {
 
-            const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+            // TODO: see if offsetting is robust, and can be moved upstream
+            GdkRectangle rect( engine.animatedRectangle( widget ) );
+            const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
+            rect.x -= allocation.x;
+            rect.y -= allocation.y;
+
             StyleOptions options( Flat );
             options |= Hover;
 
@@ -114,7 +121,12 @@ namespace Oxygen
 
         } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
 
-            const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+            // TODO: see if offsetting is robust, and can be moved upstream
+            GdkRectangle rect( engine.rectangle( widget, AnimationCurrent ) );
+            const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
+            rect.x -= allocation.x;
+            rect.y -= allocation.y;
+
             StyleOptions options( Flat );
             options |= Hover;
 
@@ -122,8 +134,14 @@ namespace Oxygen
 
         } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
 
+            // TODO: see if offsetting is robust, and can be moved upstream
+            GdkRectangle rect( engine.rectangle( widget, AnimationPrevious ) );
+            const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
+            rect.x -= allocation.x;
+            rect.y -= allocation.y;
+
             const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
-            const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+
             StyleOptions options( Flat );
             options |= Hover;
 
@@ -226,7 +244,7 @@ namespace Oxygen
             Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
 
             /* TODO: fix issues with positionning, and re-enable */
-            // render_animated_button( context, widget );
+            render_animated_button( context, widget );
 
         } else if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
 

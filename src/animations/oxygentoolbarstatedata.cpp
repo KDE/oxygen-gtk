@@ -114,7 +114,6 @@ namespace Oxygen
             _hoverData.insert( std::make_pair( widget, data ) );
             updateState( widget, value, false );
 
-
         }
 
     }
