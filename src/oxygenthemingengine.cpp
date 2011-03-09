@@ -36,30 +36,6 @@ namespace Oxygen
     GTypeInfo ThemingEngine::_typeInfo;
     GType ThemingEngine::_type = 0L;
 
-    //___________________________________________________________________________________________________________
-    //! streamer for GtkWidgetPath
-    std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path )
-    {
-        if( !path )
-        {
-
-            out << " (null)";
-
-        } else {
-
-            for( gint pos=0; pos<gtk_widget_path_length( path ); ++pos )
-            {
-                const char* name( g_type_name( gtk_widget_path_iter_get_object_type( path, pos ) ) );
-                if(!name) break;
-                std::cerr << "/" << name;
-            }
-
-        }
-
-        return out;
-
-    }
-
     //_____________________________________________________________________________________
     Cairo::Surface processTabCloseButton(GtkWidget* widget, GtkStateFlags state)
     {

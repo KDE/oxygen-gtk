@@ -48,31 +48,10 @@ namespace Oxygen
     }
 
     //! GtkStateFlags streamer
-    inline std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags )
-    {
-        std::vector<std::string> values;
-        if( !flags ) values.push_back( "normal" );
-        if( flags&GTK_STATE_FLAG_ACTIVE ) values.push_back( "active" );
-        if( flags&GTK_STATE_FLAG_PRELIGHT ) values.push_back( "prelight" );
-        if( flags&GTK_STATE_FLAG_SELECTED  ) values.push_back( "selected" );
-        if( flags&GTK_STATE_FLAG_INSENSITIVE ) values.push_back( "insensitive" );
-        if( flags&GTK_STATE_FLAG_INCONSISTENT ) values.push_back( "inconsistent" );
-        if( flags&GTK_STATE_FLAG_FOCUSED  ) values.push_back( "focused" );
+    std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags );
 
-        // print
-        if( values.empty() ) out << "none";
-        else {
-
-            for( unsigned int i=0; i<values.size(); ++i )
-            {
-                if( i==0) out << values[i];
-                else out << "|" << values[i];
-            }
-        }
-
-        return out;
-
-    }
+    //! streamer for GtkWidgetPath
+    std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path );
 
     namespace Gtk
     {
@@ -190,8 +169,7 @@ namespace Oxygen
         }
 
         //! returns true if given path as given type
-        inline bool gtk_widget_path_has_type( const GtkWidgetPath*, GType )
-        { return false; }
+        bool gtk_widget_path_has_type( const GtkWidgetPath*, GType );
 
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );

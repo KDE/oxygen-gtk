@@ -35,6 +35,58 @@
 namespace Oxygen
 {
 
+    //_____________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags )
+    {
+        std::vector<std::string> values;
+        if( !flags ) values.push_back( "normal" );
+        if( flags&GTK_STATE_FLAG_ACTIVE ) values.push_back( "active" );
+        if( flags&GTK_STATE_FLAG_PRELIGHT ) values.push_back( "prelight" );
+        if( flags&GTK_STATE_FLAG_SELECTED  ) values.push_back( "selected" );
+        if( flags&GTK_STATE_FLAG_INSENSITIVE ) values.push_back( "insensitive" );
+        if( flags&GTK_STATE_FLAG_INCONSISTENT ) values.push_back( "inconsistent" );
+        if( flags&GTK_STATE_FLAG_FOCUSED  ) values.push_back( "focused" );
+
+        // print
+        if( values.empty() ) out << "none";
+        else {
+
+            for( unsigned int i=0; i<values.size(); ++i )
+            {
+                if( i==0) out << values[i];
+                else out << "|" << values[i];
+            }
+        }
+
+        return out;
+
+    }
+
+    //_____________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path )
+    {
+        if( !path )
+        {
+
+            out << " (null)";
+
+        } else {
+
+            for( gint pos=0; pos<gtk_widget_path_length( path ); ++pos )
+            {
+                const char* name( g_type_name( gtk_widget_path_iter_get_object_type( path, pos ) ) );
+                if(!name) break;
+                std::cerr << "/" << name;
+            }
+
+        }
+
+        return out;
+
+    }
+
+
+
     //____________________________________________________________
     void Gtk::gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
     {
@@ -58,6 +110,18 @@ namespace Oxygen
 
         if(GTK_IS_CONTAINER(container))
         { gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,0L); }
+
+    }
+
+    //____________________________________________________________
+    bool Gtk::gtk_widget_path_has_type( const GtkWidgetPath* path, GType type )
+    {
+
+        if( !path ) return false;
+        for( gint pos=0; pos<gtk_widget_path_length( path ); ++pos )
+        { if( gtk_widget_path_iter_get_object_type( path, pos ) == type ) return true; }
+
+        return false;
 
     }
 
