@@ -28,39 +28,53 @@
     -GtkButton-default_border: 0;
     -GtkButton-default_outside_border: 0;
     -GtkButton-inner-border: 1 2 0;
-    -GtkToggleButton-inner-border: 1 0 0;
 
     -GtkCalendar-inner-border: 0;
     -GtkCalendar-horizontal-separation: 0;
     -GtkCheckButton-indicator-size: 18;
     -GtkComboBox-appears-as-list: 1;
-    -GtkEntry-honors-transparent-bg-hint: 1;
 
     -GtkExpander-expander-size: 15;
 
     -GtkMenu-horizontal-padding: 3;
     -GtkMenu-vertical-padding: 5;
     -GtkMenu-horizontal-offset: -7;
-    -GtkCheckMenuItem-indicator-size: 16;
 
-    -GtkScale-slider-width: 23;
-    -GtkScale-slider-length: 15;
-
-    -GtkScrollbar-trough-border:1;
-    -GtkScrollbar-stepper-size:12;
     -GtkScrolledWindow-scrollbar-spacing:1;
-    -GtkStatusbar-has-resize-grip: false;
 
     -GtkTreeView-allow-rules: 1;
-    -GtkTreeView-row-ending-details: 1;
     -GtkTreeView-expander-size: 15;
 
     -GtkMenuBar-shadow-type: GTK_SHADOW_NONE;
     -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
     -GtkToolbar-shadow-type: GTK_SHADOW_NONE;
 
-     engine: oxygen-gtk;
-     theme: oxygen-gtk;
+    -GtkWindow-resize-grip-height: 0;
+    -GtkWindow-resize-grip-width: 0;
+
+    /*
+    Apparently the following have become obsolete
+    -GtkTreeView-row-ending-details: 1;
+    -GtkCheckMenuItem-indicator-size: 16;
+    -GtkStatusbar-has-resize-grip: false;
+    -GtkEntry-honors-transparent-bg-hint: 1;
+    */
+
+    engine: oxygen-gtk;
+    theme: oxygen-gtk;
+}
+
+/* specialization of default widgets style properties */
+GtkToggleButton { -GtkButton-inner-border: 1 0 0; }
+
+GtkScale {
+    -GtkRange-slider-width: 23;
+    -GtkScale-slider-length: 15;
+}
+
+GtkScrollbar {
+    -GtkRange-stepper-size:12;
+    -GtkRange-trough-border:1;
 }
 
 /* entries */
