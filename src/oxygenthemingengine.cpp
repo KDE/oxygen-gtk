@@ -148,11 +148,12 @@ namespace Oxygen
             // no separators in toolbars, if requested accordingly
             return;
 
-        } else {
+        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
 
-            // standard separators
-            // lookup widget
-            // Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+            // no separators in buttons
+            return;
+
+        } else {
 
             StyleOptions options;
             if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
@@ -900,7 +901,7 @@ namespace Oxygen
 
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+//        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         GtkStateFlags stateFlags( gtk_theming_engine_get_state(engine) );
 
         // TODO: implement correct logic for checkboxes in cells
@@ -921,11 +922,6 @@ namespace Oxygen
             if(false)
             {
 
-                /*
-                TODO: use dedicated engine to handle animations.
-                It should use Widget and CellInfo for tagging, and work like
-                TabWidgetState engine
-                */
                 options &= ~(Focus|Hover);
                 if( GTK_IS_TREE_VIEW( widget ) )
                 {
