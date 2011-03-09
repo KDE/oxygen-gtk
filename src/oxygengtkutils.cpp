@@ -76,7 +76,7 @@ namespace Oxygen
             {
                 const char* name( g_type_name( gtk_widget_path_iter_get_object_type( path, pos ) ) );
                 if(!name) break;
-                std::cerr << "/" << name;
+                out << "/" << name;
             }
 
         }
