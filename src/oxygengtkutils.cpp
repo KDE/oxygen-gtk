@@ -119,7 +119,11 @@ namespace Oxygen
 
         if( !path ) return false;
         for( gint pos=0; pos<gtk_widget_path_length( path ); ++pos )
-        { if( gtk_widget_path_iter_get_object_type( path, pos ) == type ) return true; }
+        {
+            const GType local( gtk_widget_path_iter_get_object_type( path, pos ) );
+            if( local == type || g_type_is_a( local, type ) )
+            { return true; }
+        }
 
         return false;
 
