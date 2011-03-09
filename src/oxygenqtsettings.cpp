@@ -447,6 +447,11 @@ namespace Oxygen
         _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
+        // store to settings
+        GtkSettings* settings( gtk_settings_get_default() );
+        gtk_settings_set_string_property( settings, "gtk-icon-theme-name", _kdeIconTheme.c_str(), "oxygen-gtk" );
+        gtk_settings_set_string_property( settings, "gtk-fallback-icon-theme-name", _kdeFallbackIconTheme.c_str(), "oxygen-gtk" );
+
         // check show icons on push buttons kde option
         const std::string showIconsOnPushButton( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) );
 
@@ -778,6 +783,8 @@ namespace Oxygen
 
         // mnemonics
         const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
+        GtkSettings* settings( gtk_settings_get_default() );
+        gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", showMnemonics, "oxygen-gtk" );
 
         // TODO: re-implement writting to css for GTK3
 
