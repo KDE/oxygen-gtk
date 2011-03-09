@@ -899,11 +899,72 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        GtkStateFlags stateFlags( gtk_theming_engine_get_state(engine) );
 
-        ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
+        // TODO: implement correct logic for checkboxes in cells
 
+//        if( d.isCheckButton() || d.isCellCheck() )
+        if(true)
+        {
+
+            StyleOptions options( widget, stateFlags );
+//            if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
+            {
+                // enable blending
+                options |= Blend;
+            }
+
+            AnimationData data;
+//            if( d.isCellCheck() )
+            if(false)
+            {
+
+                /*
+                TODO: use dedicated engine to handle animations.
+                It should use Widget and CellInfo for tagging, and work like
+                TabWidgetState engine
+                */
+                options &= ~(Focus|Hover);
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                    if( cellInfo.isValid() &&
+                        Style::instance().animations().treeViewEngine().contains( widget ) &&
+                        Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                    { options |= Hover; }
+
+                    // retrieve animation state
+                    data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+
+                }
+
+            } else {
+
+                // retrieve animation state
+                data = Style::instance().animations().widgetStateEngine().get( widget, options );
+
+            }
+
+            // shadow type defines checkmark presence and type
+            GtkShadowType shadow( (stateFlags&GTK_STATE_FLAG_ACTIVE) ? GTK_SHADOW_IN : GTK_SHADOW_OUT );
+            if(stateFlags&GTK_STATE_FLAG_INCONSISTENT)
+                shadow=GTK_SHADOW_ETCHED_IN;
+
+            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options, data );
+
+        } /*else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
+
+            StyleOptions options( widget, state, shadow );
+            options |= (Blend|Flat|NoFill );
+            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options );
+
+        }*/ else {
+            ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
+        }
     }
 
     //________________________________________________________________________________________________
