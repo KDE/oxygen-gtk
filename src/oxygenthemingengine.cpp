@@ -303,7 +303,7 @@ namespace Oxygen
                 const bool isLast( Gtk::gtk_path_bar_button_is_last( widget ) );
                 if( !( state & (GTK_STATE_FLAG_NORMAL|GTK_STATE_FLAG_INSENSITIVE ) ) )
                 {
-                    if( !(state&GTK_STATE_FLAG_ACTIVE) || Style::instance().animations().hoverEngine().hovered( widget ) )
+                    if( (state&GTK_STATE_FLAG_PRELIGHT) || Style::instance().animations().hoverEngine().hovered( widget ) )
                     {
                         options |= Hover;
                         if( isLast )
