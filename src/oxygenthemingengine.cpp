@@ -1028,8 +1028,25 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        // get path
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+
+        // lookup widget
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
+                GTK_IS_SCROLLBAR( widget ) )
+        {
+            guint vertical;
+            g_object_get(G_OBJECT(widget),"orientation",&vertical,NULL);
+            StyleOptions options(widget,gtk_theming_engine_get_state(engine));
+            if(vertical)
+                options |= Vertical;
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
+
+            return;
+        }
 
         ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
 
