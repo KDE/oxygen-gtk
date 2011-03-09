@@ -42,8 +42,6 @@ set( oxygen_gtk_SOURCES
     oxygenfontinfo.cpp
     oxygengtkcss.cpp
     oxygengtkcellinfo.cpp
-    oxygengtkicons.cpp
-    oxygengtkrc.cpp
     oxygengtktypenames.cpp
     oxygengtkutils.cpp
     oxygenoptionmap.cpp
@@ -55,7 +53,6 @@ set( oxygen_gtk_SOURCES
     oxygenstyle.cpp
     oxygenstylehelper.cpp
     oxygenstyleoptions.cpp
-    oxygenstylewrapper.cpp
     oxygentaboptions.cpp
     oxygentheme.cpp
     oxygenthemingengine.cpp

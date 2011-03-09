@@ -22,7 +22,8 @@
 
 #include "oxygenanimationmodes.h"
 #include "oxygenapplicationname.h"
-#include "oxygengtkcss.h"
+#include "oxygengtkicons.h"
+#include "oxygengtkrc.h"
 #include "oxygenoption.h"
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
@@ -536,8 +537,11 @@ namespace Oxygen
         //! KDE running flags
         bool _KDESession;
 
+        //! gtk icons generator
+        GtkIcons _icons;
+
         //! gtkrc
-        Gtk::CSS _css;
+        Gtk::RC _rc;
 
     };
 

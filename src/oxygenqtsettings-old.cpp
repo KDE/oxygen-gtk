@@ -23,6 +23,8 @@
 #include "oxygencoloreffect.h"
 #include "oxygencolorutils.h"
 #include "oxygenfontinfo.h"
+#include "oxygengtkicons.h"
+#include "oxygengtkrc.h"
 #include "config.h"
 
 #include <gtk/gtk.h>
@@ -130,7 +132,7 @@ namespace Oxygen
         loadKdeGlobals();
 
         // clear gtkrc
-        _css.clear();
+        _rc.clear();
 
         // kde globals options
         if( flags & KdeGlobals )
@@ -168,14 +170,32 @@ namespace Oxygen
             generateGtkColors();
         }
 
+        // deal with pathbar button margins
+        // this needs to be done programatically in order to properly account for RTL locales
+        _rc.addSection( "oxygen-pathbutton", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( "  GtkButton::inner-border = { 2, 2, 1, 0 }" );
+
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
+        {
+
+            _rc.addToCurrentSection( "  GtkToggleButton::inner-border={ 10, 0, 1, 0 }" );
+
+        } else {
+
+            _rc.addToCurrentSection( "  GtkToggleButton::inner-border={ 0, 10, 1, 0 }" );
+
+        }
+
+        _rc.addToRootSection( "widget_class \"*PathBar.GtkToggleButton\" style \"oxygen-pathbutton\"" );
+
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::initialize - GtkCss: " << std::endl;
-        std::cerr << _css << std::endl;
+        std::cerr << "Oxygen::QtSettings::initialize - Gtkrc: " << std::endl;
+        std::cerr << _rc << std::endl;
         #endif
 
         // pass all resources to gtk and clear
-        _css.commit();
+        _rc.commit();
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::initialize - done. " << std::endl;
@@ -417,8 +437,17 @@ namespace Oxygen
         _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
+        std::ostringstream themeNameStr;
+        themeNameStr << "gtk-icon-theme-name=\"" << _kdeIconTheme << "\"" << std::endl;
+        themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
+        _rc.addToHeaderSection( themeNameStr.str() );
+
         // check show icons on push buttons kde option
         const std::string showIconsOnPushButton( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) );
+
+        // add option
+        if( showIconsOnPushButton == "false" )
+        {   _rc.addToHeaderSection( "gtk-button-images = 0\n" );  }
 
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
@@ -428,12 +457,26 @@ namespace Oxygen
         const int smallIconSize( _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
         const int toolbarIconSize( _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 22 ) );
 
+        // set gtk icon sizes
+        _icons.setIconSize( "panel-menu", smallIconSize );
+        _icons.setIconSize( "panel", panelIconSize );
+        _icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
+        _icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-button", smallIconSize );
+        _icons.setIconSize( "gtk-menu", smallIconSize );
+        _icons.setIconSize( "gtk-dialog", dialogIconSize );
+        _icons.setIconSize( "", smallIconSize );
+
+        // load translation table, generate full translation list, and path to gtk
+        _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
+
         // generate full path list
         PathList iconThemeList;
         addIconTheme( iconThemeList, _kdeIconTheme );
         addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
-        // TODO: re-implement writting to css for GTK3
+        _rc.merge( _icons.generate( iconThemeList ) );
 
     }
 
@@ -505,7 +548,127 @@ namespace Oxygen
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
-        // TODO: re-implement writting to css for GTK3
+        // default colors
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[ACTIVE]", _palette.color( Palette::Window ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[SELECTED]", _palette.color( Palette::Selected ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Window ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::WindowText ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[NORMAL]", _palette.color( Palette::Base ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[ACTIVE]", _palette.color( Palette::Inactive, Palette::Selected ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[PRELIGHT]", _palette.color( Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[SELECTED]", _palette.color( Palette::Selected ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
+
+        if( _inactiveChangeSelectionColor ) _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::Text ) ) );
+        else _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::SelectedText ) ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::Text ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::SelectedText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Text ) ) );
+
+        // buttons
+        _rc.addSection( "oxygen-buttons", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[ACTIVE]", _palette.color( Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[PRELIGHT]", _palette.color( Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Button ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
+        _rc.addToRootSection( "class \"GtkOptionMenu\" style \"oxygen-buttons\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkButton>.<GtkLabel>\" style \"oxygen-buttons\"" );
+
+        _rc.addSection( "oxygen-combobox", "oxygen-buttons" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::ButtonText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::ButtonText ) ) );        _rc.addToRootSection( "class \"*Button\" style \"oxygen-buttons\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkComboBox>.<GtkCellView>\" style \"oxygen-combobox\"" );
+
+        // checkboxes and radio buttons
+        _rc.addSection( "oxygen-checkbox-buttons", "oxygen-buttons" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::WindowText ) ) );
+        _rc.addToRootSection( "widget_class \"*<GtkCheckButton>.<GtkLabel>\" style \"oxygen-checkbox-buttons\"" );
+
+        // progressbar labels
+        _rc.addSection( "oxygen-progressbar-labels", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::WindowText ) ) );
+
+        _rc.addToRootSection( "class \"GtkProgressBar\" style \"oxygen-progressbar-labels\"" );
+
+        // menu items
+        _rc.addSection( "oxygen-menubar-item", "oxygen-menu-font" );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::Text ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::WindowText ) ) );
+
+        if( _menuHighlightMode == MM_STRONG )
+        {
+
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::Text ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::SelectedText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::SelectedText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::SelectedText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::SelectedText ) ) );
+
+        } else {
+
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::Text ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::Text ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::Text ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::WindowText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[SELECTED]", _palette.color( Palette::WindowText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::WindowText ) ) );
+
+        }
+        _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menubar-item\"" );
+
+
+        if( _menuHighlightMode == MM_STRONG )
+        {
+            _rc.addSection( "oxygen-menu-item", "oxygen-menubar-item" );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::SelectedText ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::SelectedText ) ) );
+            _rc.addToRootSection( "widget_class \"*<GtkMenu>.<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-item\"" );
+        }
+
+        // text entries
+        _rc.addSection( "oxygen-entry", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
+        _rc.addToRootSection( "class \"GtkSpinButton\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "class \"GtkEntry\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkComboBoxEntry>.<GtkButton>\" style \"oxygen-entry\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkCombo>.<GtkButton>\" style \"oxygen-entry\"" );
+
+        // tooltips
+        _rc.addSection( "oxygen-tooltips", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Tooltip ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
+        _rc.addToRootSection( "widget \"gtk-tooltip*\" style \"oxygen-tooltips\"" );
 
     }
 
@@ -560,10 +723,32 @@ namespace Oxygen
 
         }
 
+        // pass fonts to RC
+        if( fonts[FontInfo::Default].isValid() )
+        { _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-font-name", fonts[FontInfo::Default] ) ); }
+
+        if( fonts[FontInfo::Default].isValid() )
+        {
+            _rc.setCurrentSection( Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Default] ) );
+        }
+
+        if( fonts[FontInfo::Menu].isValid() )
+        {
+            _rc.addSection( "oxygen-menu-font", Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::Menu] ) );
+            _rc.addToRootSection( "widget_class \"*<GtkMenuItem>.<GtkLabel>\" style \"oxygen-menu-font\"" );
+        }
+
+        if( fonts[FontInfo::ToolBar].isValid() )
+        {
+            _rc.addSection( "oxygen-toolbar-font", Gtk::RC::defaultSection() );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  font_name", fonts[FontInfo::ToolBar] ) );
+            _rc.addToRootSection( "widget_class \"*<GtkToolbar>.*\" style \"oxygen-toolbar-font\"" );
+        }
+
         // don't check for section and tag presence - use default font if not present
         _WMFont=FontInfo::fromKdeOption( _kdeGlobals.getValue( "[WM]", "activeFont", "Sans Serif,8,-1,5,50,0,0,0,0,0" ) );
-
-        // TODO: re-implement writting to css for GTK3
 
     }
 
@@ -576,8 +761,11 @@ namespace Oxygen
         #endif
 
         // toolbar style
-        // TODO: re-implement writting to css for GTK3
         std::string toolbarTextPosition( _kdeGlobals.getOption( "[Toolbar style]", "ToolButtonStyle" ).toVariant<std::string>( "TextBelowIcon" ) );
+        if( toolbarTextPosition == "TextOnly" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_TEXT" ) );
+        else if( toolbarTextPosition == "TextBesideIcon" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH_HORIZ" ) );
+        else if( toolbarTextPosition == "NoText" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_ICONS" ) );
+        else _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH" ) );
 
         // active icon effects
         _useIconEffect = _kdeGlobals.getOption( "[MainToolbarIcons]", "ActiveEffect" ).toVariant<std::string>( "gamma" ) != "none";
@@ -713,10 +901,23 @@ namespace Oxygen
         _activeShadowConfiguration.initialize( oxygen );
         _inactiveShadowConfiguration.initialize( oxygen );
 
+        // copy relevant options to to gtk
+        // scrollbar width
+        _rc.setCurrentSection( Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<int>(
+            "  GtkScrollbar::slider-width",
+            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
+
+        // note the inversion for add and sub, due to the fact that kde options refer to the button location, and not its direction
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-backward-stepper", _scrollBarAddLineButtons > 1 ) );
+        _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
+
         // mnemonics
         const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
-
-        // TODO: re-implement writting to css for GTK3
+        _rc.addToHeaderSection( Gtk::RCOption<int>( "gtk-auto-mnemonics", !showMnemonics ) );
 
     }
 
