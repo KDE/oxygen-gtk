@@ -171,10 +171,16 @@ namespace Oxygen
         //! frame
         void drawFloatFrame( cairo_t*, gint, gint, gint, gint, const StyleOptions&, Palette::Role = Palette::Window ) const;
 
-        //! button slab
-        void renderButtonSlab( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
+        //!@name button slab
+        //@{
+        void renderButtonSlab( GtkWidget*, cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData&, TileSet::Tiles = TileSet::Ring );
+
+        void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, const AnimationData& data, TileSet::Tiles tiles = TileSet::Ring )
+        { renderButtonSlab( 0L, context, x, y, w, h, options, data, tiles ); }
+
         void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
-        { renderButtonSlab( context, x, y, w, h, options, AnimationData(), tiles ); }
+        { renderButtonSlab( 0L, context, x, y, w, h, options, AnimationData(), tiles ); }
+        //@}
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */

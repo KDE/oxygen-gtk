@@ -88,6 +88,50 @@ namespace Oxygen
         return 0L;
 
     }
+    //___________________________________________________________________________________________________________
+    static void render_animated_button(
+        cairo_t* context,
+        GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
+            "widget=%s, primitive=animated_button",
+            G_OBJECT_TYPE_NAME( widget ) );
+        #endif
+
+        ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+        engine.registerWidget(widget);
+
+        if( engine.animatedRectangleIsValid( widget ) )
+        {
+
+            const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options );
+
+        } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
+
+            const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options );
+
+        } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
+
+            const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+            const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+            StyleOptions options( Flat );
+            options |= Hover;
+
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options, data );
+
+        }
+
+    }
 
     //________________________________________________________________________________________________
     void render_line( GtkThemingEngine* engine, cairo_t* context, gdouble x0, gdouble y0, gdouble x1, gdouble y1)
@@ -178,11 +222,15 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) )
         {
 
-            // render background gradient
+            // for menubars and toolbars, render background gradient
             Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+
+            /* TODO: fix issues with positionning, and re-enable */
+            // render_animated_button( context, widget );
 
         } else if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
 
+            // buttons
             // load state
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
@@ -487,7 +535,7 @@ namespace Oxygen
             { data = Style::instance().animations().widgetStateEngine().get( widget, options ); }
 
             // render
-            Style::instance().renderButtonSlab( context, x, y, w, h, options, data );
+            Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
 
         } else {
 

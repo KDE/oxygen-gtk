@@ -1194,6 +1194,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderButtonSlab(
+        GtkWidget* widget,
         cairo_t* context,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
@@ -1244,14 +1245,14 @@ namespace Oxygen
         ColorUtils::Rgba base( color( group, Palette::Button, options ) );
 
 // TODO: reimplement for Gtk3
-//         if( options&Blend )
-//         {
-//
-//             gint wh, wy;
-//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//             base = ColorUtils::backgroundColor( base, wh, y+wy+h/2 );
-//
-//         }
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+            base = ColorUtils::backgroundColor( base, wh, y+wy+h/2 );
+
+        }
 
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
 
