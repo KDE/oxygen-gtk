@@ -1522,14 +1522,6 @@ namespace Oxygen
         gint tileSize( CheckBox_Size/3 );
         double scale( 1.0 );
 
-        if( settings().applicationName().isOpenOffice() )
-        {
-            const gint dimension = std::min( w, h );
-            cbw = std::min( 3*( 1 + dimension/3 ), (int)CheckBox_Size );
-            scale = double(cbw)/CheckBox_Size;
-            tileSize = cbw/3;
-        }
-
         GdkRectangle parent = {x, y, w, h };
         GdkRectangle child = {0, 0, cbw, cbw };
         centerRect( &parent, &child );
@@ -1745,20 +1737,9 @@ namespace Oxygen
         if( isInMenuBar )
         {
 
-            // we force ytickness in gtkrc to emulate Qt menubar/menu space separation
-            // so adjust vertical extent of the rect in menubar
-            if( settings().applicationName().isMozilla() )
-            {
+            y+=1;
+            h-=2;
 
-                y+=3;
-                h-=6;
-
-            } else {
-
-                y+=1;
-                h-=2;
-
-            }
         } else if ( isInMenu ) {
 
             // we force ytickness to 5 in gtkrc to emulate Qt menuitems space separation

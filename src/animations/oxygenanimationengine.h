@@ -20,8 +20,6 @@
 * MA 02110-1301, USA.
 */
 
-#include "../oxygenapplicationname.h"
-
 namespace Oxygen
 {
 
@@ -39,10 +37,6 @@ namespace Oxygen
         virtual ~AnimationEngine( void )
         {}
 
-        //! application name
-        virtual void setApplicationName( const ApplicationName& applicationName )
-        { _applicationName = applicationName; }
-
         //! duration
         const int& duration( void ) const
         { return _duration; }
@@ -58,19 +52,11 @@ namespace Oxygen
 
         protected:
 
-        //! returs true if widget is black listed (based notably on application name)
+        //! returs true if widget is black listed
         bool widgetIsBlackListed( GtkWidget* widget ) const
-        {
-
-            // for now, only Mozilla applications need blacklisting
-            return _applicationName.isMozilla( widget );
-
-        }
+        { return false; }
 
         private:
-
-        //! application name
-        ApplicationName _applicationName;
 
         //! animation duration
         int _duration;

@@ -369,11 +369,7 @@ namespace Oxygen
                 */
 
                 StyleOptions options( widget, state );
-                if(
-                    !Style::instance().settings().applicationName().isOpenOffice() &&
-                    !Style::instance().settings().applicationName().isGoogleChrome() )
-                { options |= NoFill; }
-
+                options |= NoFill;
                 options |= Blend;
 
                 // focus handling
@@ -431,11 +427,7 @@ namespace Oxygen
             }
 
             // combobox buttons
-            if(
-                ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
-                !Style::instance().settings().applicationName().isMozilla( widget ) &&
-                Gtk::gtk_combobox_appears_as_list( parent )
-                )
+            if( ( parent = Gtk::gtk_parent_combobox( widget ) ) && Gtk::gtk_combobox_appears_as_list( parent ) )
             {
 
                 // combobox buttons
@@ -526,15 +518,7 @@ namespace Oxygen
             if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
             #endif
 
-            // for google chrome, make GtkChromeButton appear as flat
-            if(
-                Style::instance().settings().applicationName().isGoogleChrome() &&
-                !Gtk::gtk_button_is_flat( widget ) &&
-                Gtk::g_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
-            { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
-
             StyleOptions options( Blend );
-            //options |= StyleOptions( widget, state, shadow );
             options |= StyleOptions( widget, state );
 
             // TODO: reimplement with Gtk3
@@ -920,16 +904,16 @@ namespace Oxygen
         #endif
 
         // hooks
+        Style::instance().settings().initializeHooks();
         Style::instance().animations().initializeHooks();
+        Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
 
         // also initialize dbus
         Oxygen::DBus::instance();
 
         // initialize argb hooks
-        if(
-            Style::instance().settings().argbEnabled() &&
-            !Style::instance().settings().applicationName().isMozilla() )
+        if( Style::instance().settings().argbEnabled() )
         { Style::instance().argbHelper().initializeHooks(); }
 
     }

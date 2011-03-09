@@ -83,40 +83,32 @@ namespace Oxygen
         const bool animationsEnabled( settings.animationsEnabled() );
 
         // pass animations configuration to engines
-        widgetStateEngine().setApplicationName( settings.applicationName() );
         widgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         widgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        arrowStateEngine().setApplicationName( settings.applicationName() );
         arrowStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         arrowStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        scrollBarStateEngine().setApplicationName( settings.applicationName() );
         scrollBarStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         scrollBarStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        tabWidgetStateEngine().setApplicationName( settings.applicationName() );
         tabWidgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         tabWidgetStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        treeViewStateEngine().setApplicationName( settings.applicationName() );
         treeViewStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
 
-        menuBarStateEngine().setApplicationName( settings.applicationName() );
         menuBarStateEngine().setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != None) );
         menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
         menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
         menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
-        menuStateEngine().setApplicationName( settings.applicationName() );
         menuStateEngine().setEnabled( animationsEnabled && (settings.menuAnimationType() != None) );
         menuStateEngine().setFollowMouse( settings.menuAnimationType() == FollowMouse );
         menuStateEngine().setDuration( settings.menuAnimationsDuration() );
         menuStateEngine().setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
 
         // for now, only Fade animations mode is supported for toolbar animations
-        toolBarStateEngine().setApplicationName( settings.applicationName() );
         toolBarStateEngine().setEnabled( animationsEnabled && (settings.toolBarAnimationType() != None) );
         toolBarStateEngine().setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );

@@ -32,7 +32,6 @@ set( oxygen_gtk_SOURCES
     animations/oxygentreeviewstatedata.cpp
     animations/oxygenwidgetstatedata.cpp
     animations/oxygenwidgetstateengine.cpp
-    oxygenapplicationname.cpp
     oxygenargbhelper.cpp
     oxygencairocontext.cpp
     oxygencairoutils.cpp
