@@ -93,12 +93,11 @@ namespace Oxygen
             {
                 std::ostringstream out;
                 out
-                    << "\"#"
+                    << "#"
                     << std::hex
                     << std::setw( 2 ) << std::setfill( '0' ) << guint32( _red >> 8 )
                     << std::setw( 2 ) << std::setfill( '0' ) << guint32( _green >> 8 )
-                    << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue >> 8 )
-                    << "\"";
+                    << std::setw( 2 ) << std::setfill( '0' ) << guint32( _blue >> 8 );
                 return out.str();
             }
 
