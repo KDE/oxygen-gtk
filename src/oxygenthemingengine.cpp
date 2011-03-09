@@ -199,7 +199,6 @@ namespace Oxygen
 
             // register to engines
             Style::instance().animations().mainWindowEngine().registerWidget( widget );
-            Style::instance().animations().backgroundHintEngine().registerWidget( widget );
 
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );

@@ -19,6 +19,7 @@
 */
 
 #include "oxygenanimations.h"
+#include "../oxygenstyle.h"
 #include "../oxygengtkutils.h"
 #include "../oxygenqtsettings.h"
 #include "../config.h"
@@ -70,6 +71,7 @@ namespace Oxygen
 
         // clear hooks
         _comboBoxHook.disconnect();
+        _backgroundHintHook.disconnect();
 
         // FIXME: should we also clear the allWidgets list ?
 
@@ -131,6 +133,8 @@ namespace Oxygen
         # if ENABLE_COMBOBOX_LIST_RESIZE
         _comboBoxHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxHook, this );
         #endif
+
+        _backgroundHintHook.connect( "realize", (GSignalEmissionHook)backgroundHintHook, this );
 
         _hooksInitialized = true;
     }
@@ -226,6 +230,21 @@ namespace Oxygen
 
         return TRUE;
 
+    }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::backgroundHintHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
+
+        Style::instance().animations().backgroundHintEngine().registerWidget( widget );
+
+        return TRUE;
     }
 
 }
