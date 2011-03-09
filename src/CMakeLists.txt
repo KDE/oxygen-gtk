@@ -41,6 +41,7 @@ set( oxygen_gtk_SOURCES
     oxygenfontinfo.cpp
     oxygengtkcss.cpp
     oxygengtkcellinfo.cpp
+    oxygengtkicons.cpp
     oxygengtktypenames.cpp
     oxygengtkutils.cpp
     oxygenoptionmap.cpp

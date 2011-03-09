@@ -25,9 +25,6 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygengtkrc.h"
-#include "oxygenpathlist.h"
-
 #include <string>
 #include <map>
 #include <vector>
@@ -50,26 +47,17 @@ namespace Oxygen
         //! load translations
         void loadTranslations( const std::string& filename );
 
-        //! generate rc file
-        Gtk::RC generate( const PathList& pathList );
-
         //! set icon size
         void setIconSize( const std::string&, unsigned int value );
 
-        protected:
+        //! true if dirty
+        bool isDirty( void ) const
+        { return _dirty; }
 
-        //! generate rc code for given option
-        std::string generate( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
+        //! generate icon sizes string
+        std::string generate( void );
 
         private:
-
-        //!@name icon map
-        //@{
-        typedef std::pair<std::string, std::string> IconPair;
-        typedef std::map<std::string, std::string> IconMap;
-
-        IconMap _icons;
-        //@}
 
         //!@name icon sizes
         //@{
@@ -97,24 +85,10 @@ namespace Oxygen
             std::string _tag;
         };
 
-        //@}
+       //@}
 
-        //!@name local storage, to prevent unnecessary reloading
-        //@{
-
-        //! local translations filename
-        std::string _filename;
-
-        //! local path list
-        PathList _pathList;
-
-        //! local GtkRC
-        Gtk::RC _rc;
-
-        //! dirty flag. Set to true when gtkrc needs regenerating
+        //! dirty flag. Set to true when options needs update
         bool _dirty;
-
-        //@}
 
 
     };

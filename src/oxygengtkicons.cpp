@@ -70,155 +70,21 @@ namespace Oxygen
     }
 
     //_________________________________________
-    void GtkIcons::loadTranslations( const std::string& filename )
+    std::string GtkIcons::generate( void )
     {
 
-        if( filename == _filename )
-        { return; }
-
-        _filename = filename;
-        _dirty = true;
-        _icons.clear();
-
-        std::ifstream in( filename.c_str() );
-        if( !in )
-        {
-            std::cerr << "Oxygen::GtkIcons::loadTranslations - could not open " << filename << std::endl;
-            return;
-        }
-
-        std::string line;
-        while( std::getline( in, line, '\n' ) )
-        {
-
-            if( line.empty() ) continue;
-
-            IconPair iconPair;
-            std::istringstream stream( line.c_str() );
-            stream >> iconPair.first >> iconPair.second;
-            if( ( stream.rdstate() & std::ios::failbit ) != 0 )
-            { continue; }
-
-            _icons.insert( iconPair );
-
-        }
-
-    }
-
-    //_________________________________________
-    Gtk::RC GtkIcons::generate( const PathList& pathList )
-    {
-
-        if( (!_dirty) && _pathList == pathList ) return _rc;
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::GtkIcons::generate - regenerating translation tables" << std::endl;
-        #endif
-
-        _pathList = pathList;
-        _rc.clear();
-
-        // generate icon size string
-        std::ostringstream iconSizesStr;
-        iconSizesStr << "gtk-icon-sizes = \"";
+        std::ostringstream out;
         for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
         {
             if( iter->first.empty() ) continue;
-            if( iter != _sizes.begin() ) iconSizesStr << ": ";
-            iconSizesStr << iter->first << " = " << iter->second << "," << iter->second;
-        }
-        iconSizesStr << "\"";
-        _rc.addToHeaderSection( iconSizesStr.str() );
-
-        // generate pixmap path
-        // this must be passed to gtk before any icon settings, otherwise
-        // other icons are not recognized
-        std::ostringstream pixmapPathStr;
-        pixmapPathStr << "pixmap_path \"";
-        for( PathList::const_iterator iter = pathList.begin(); iter != pathList.end(); ++iter )
-        {
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::GtkIcons::generate - adding path: " << *iter << std::endl;
-            #endif
-
-            if( iter != pathList.begin() ) pixmapPathStr << ":";
-            pixmapPathStr << *iter;
-        }
-        pixmapPathStr << "\"";
-        _rc.addToHeaderSection( pixmapPathStr.str() );
-
-        // loop over icons
-        _rc.setCurrentSection( Gtk::RC::defaultSection() );
-        for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
-        {
-
-            std::string stock( generate( iconIter->first, iconIter->second, pathList ) );
-            if( !stock.empty() ) _rc.addToCurrentSection( stock );
-
-        }
-
-        // extra settings for entries
-        std::string stock( generate( "gtk-clear", "actions/edit-clear-locationbar-rtl.png", pathList ) );
-        if( !stock.empty() )
-        {
-            _rc.addSection( "oxygen-icons-editor", Gtk::RC::defaultSection() );
-            _rc.addToCurrentSection( stock );
-            _rc.addToRootSection( "class \"*Entry*\" style \"oxygen-icons-editor\"" );
+            if( iter != _sizes.begin() ) out << ": ";
+            out << iter->first << " = " << iter->second << "," << iter->second;
         }
 
         _dirty = false;
-        return _rc;
+
+        return out.str();
 
     }
-
-    //__________________________________________________________________
-    std::string GtkIcons::generate(
-        const std::string& gtkIconName,
-        const std::string& kdeIconName,
-        const PathList& pathList ) const
-    {
-
-
-        if( kdeIconName == "NONE" ) return std::string();
-
-        bool empty( true );
-        std::ostringstream stockOut;
-
-        // new stock
-        stockOut << "  stock[\"" << gtkIconName << "\"]={" << std::endl;
-
-        // loop over iconSizes
-        for( SizeMap::const_iterator sizeIter = _sizes.begin(); sizeIter != _sizes.end(); ++sizeIter )
-        {
-
-            // generate full icon name
-            std::ostringstream iconFileStream;
-            iconFileStream << sizeIter->second << "x" << sizeIter->second << "/" << kdeIconName;
-
-            // loop over provided path to see if at least one icon is found
-            bool found( false );
-            for( PathList::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); ++pathIter )
-            {
-                std::string filename( *pathIter + '/' + iconFileStream.str() );
-                if( !std::ifstream( filename.c_str() ) ) continue;
-                found = true;
-                break;
-            }
-
-            if( !found ) continue;
-            empty = false;
-            if( sizeIter->first.empty() ) stockOut << "    { \"" << iconFileStream.str() << "\" }" << std::endl;
-            else stockOut << "    { \"" << iconFileStream.str() << "\", *, *, \"" << sizeIter->first << "\" }," << std::endl;
-
-
-        }
-
-        stockOut << "  }" << std::endl;
-
-        return empty ? std::string() : stockOut.str();
-
-    }
-
-
 
 }

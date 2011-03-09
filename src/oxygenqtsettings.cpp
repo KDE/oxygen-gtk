@@ -162,11 +162,7 @@ namespace Oxygen
 
             // reload icons
             #if OXYGEN_ICON_HACK
-            if( flags & Icons )
-            {
-                _kdeIconPathList = kdeIconPathList();
-                loadKdeIcons();
-            }
+            if( flags & Icons ) loadKdeIcons();
             #endif
 
         }
@@ -394,57 +390,10 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::addIconTheme( PathList& pathList, const std::string& theme )
-    {
-
-        // do nothing if theme have already been included in the loop
-        if( _iconThemes.find( theme ) != _iconThemes.end() ) return;
-        _iconThemes.insert( theme );
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::QtSettings::addIconTheme - adding " << theme << std::endl;
-        #endif
-
-        // add all possible path (based on _kdeIconPathList) and look for possible parent
-        std::string parentTheme;
-        for( PathList::const_iterator iter = _kdeIconPathList.begin(); iter != _kdeIconPathList.end(); ++iter )
-        {
-
-            // create path and check for existence
-            std::string path( sanitizePath( *iter + '/' + theme ) );
-            struct stat st;
-            if( stat( path.c_str(), &st ) != 0 ) continue;
-
-            // add to path list
-            pathList.push_back( path );
-            if( parentTheme.empty() )
-            {
-                const std::string index( sanitizePath( *iter + '/' + theme + "/index.theme" ) );
-                OptionMap themeOptions( index );
-                parentTheme = themeOptions.getValue( "[Icon Theme]", "Inherits" );
-            }
-
-        }
-
-        // add parent if needed
-        if( !parentTheme.empty() )
-        {
-            // split using "," as a separator
-            PathList parentThemes( parentTheme, "," );
-            for( PathList::const_iterator iter = parentThemes.begin(); iter != parentThemes.end(); ++iter )
-            { addIconTheme( pathList, *iter ); }
-        }
-
-        return;
-
-    }
-
-    //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
 
         // load icon theme and path to gtk
-        _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
         // store to settings
@@ -463,13 +412,31 @@ namespace Oxygen
         const int smallIconSize( _kdeGlobals.getOption( "[SmallIcons]", "Size" ).toInt( 16 ) );
         const int toolbarIconSize( _kdeGlobals.getOption( "[ToolbarIcons]", "Size" ).toInt( 22 ) );
 
-        // generate full path list
-        PathList iconThemeList;
-        addIconTheme( iconThemeList, _kdeIconTheme );
-        addIconTheme( iconThemeList, _kdeFallbackIconTheme );
+        // set gtk icon sizes
+        _icons.setIconSize( "panel-menu", smallIconSize );
+        _icons.setIconSize( "panel", panelIconSize );
+        _icons.setIconSize( "gtk-small-toolbar", toolbarIconSize );
+        _icons.setIconSize( "gtk-large-toolbar", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-dnd", mainToolbarIconSize );
+        _icons.setIconSize( "gtk-button", smallIconSize );
+        _icons.setIconSize( "gtk-menu", smallIconSize );
+        _icons.setIconSize( "gtk-dialog", dialogIconSize );
+        _icons.setIconSize( "", smallIconSize );
 
-        // TODO: re-implement writting to css for GTK3
+        if( _icons.isDirty() )
+        {
+            const std::string iconSizes( _icons.generate() );
 
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::QtSettings::loadKdeIcons - "
+                << "icons: " << iconSizes
+                << std::endl;
+            #endif
+
+            gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizes.c_str(), "oxygen-gtk" );
+
+        }
     }
 
     //_________________________________________________________
