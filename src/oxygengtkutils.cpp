@@ -185,101 +185,11 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_button( GtkWidget* widget )
+    GtkWidget* Gtk::gtk_widget_find_parent( GtkWidget* widget, GType type )
     {
 
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_BUTTON( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_menubar( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_MENU_BAR( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_menu( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_MENU( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_tree_view( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_TREE_VIEW( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_combo( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_COMBO( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_combobox( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_COMBO_BOX( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_combobox_entry( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_COMBO_BOX_ENTRY( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_scrolled_window( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_SCROLLED_WINDOW( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_statusbar( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_STATUSBAR( parent ) ) return parent; }
-
-        return 0L;
-    }
-
-    //________________________________________________________
-    GtkWidget* Gtk::gtk_parent_notebook( GtkWidget* widget )
-    {
-
-        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
-        { if( GTK_IS_NOTEBOOK( parent ) ) return parent; }
+        for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
+        { if( G_OBJECT_TYPE( parent ) == type ) return parent; }
 
         return 0L;
     }
