@@ -1725,13 +1725,8 @@ namespace Oxygen
         }
 
 
-        if( isInMenuBar )
+        if ( isInMenu )
         {
-
-            //y+=1;
-            //h-=2;
-
-        } else if ( isInMenu ) {
 
             // we force ytickness to 5 in gtkrc to emulate Qt menuitems space separation
             // so adjust vertical extent of the rect in menus to 21 (size with standard ytickness)
