@@ -2524,7 +2524,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::adjustScrollBarHole( int& x, int& y, int& w, int& h, const StyleOptions& options ) const
+    void Style::adjustScrollBarHole( gdouble& x, gdouble& y, gdouble& w, gdouble& h, const StyleOptions& options ) const
     {
 
         const int buttonSize( 12 );

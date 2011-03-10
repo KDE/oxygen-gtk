@@ -240,10 +240,6 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        int X(x),
-            Y(y),
-            W(w),
-            H(h);
         // load state
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
@@ -258,19 +254,17 @@ namespace Oxygen
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
-                GTK_IS_SCROLLBAR( widget ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) && GTK_IS_SCROLLBAR( widget ) )
         {
             StyleOptions options;
-            if ( Gtk::gtk_widget_is_vertical( widget ) )
-            { options |= Vertical; }
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
-            Style::instance().adjustScrollBarHole( X, Y, W, H, options );
+            Style::instance().adjustScrollBarHole( x, y, w, h, options );
 
-            if( W>0 && H>0 )
+            if( w>0 && h>0 )
             {
-                if( options&Vertical ) Style::instance().renderScrollBarHole( context, X, Y+1, W, H-1, options );
-                else  Style::instance().renderScrollBarHole( context, X+1, Y, W-2, H, options );
+                if( options&Vertical ) Style::instance().renderScrollBarHole( context, x, y+1, w, h-1, options );
+                else  Style::instance().renderScrollBarHole( context, x+1, y, w-2, h, options );
             }
 
             return;
@@ -1100,9 +1094,9 @@ namespace Oxygen
 
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) && GTK_IS_SCROLLBAR( widget ) )
         {
+
             StyleOptions options(widget,stateFlags);
-            if( Gtk::gtk_widget_is_vertical( widget ) )
-            { options |= Vertical; }
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );

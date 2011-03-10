@@ -288,7 +288,7 @@ namespace Oxygen
         void drawWindecoButton(cairo_t*,WinDeco::ButtonType,WinDeco::ButtonStatus,WinDeco::Options, gint,gint,gint,gint);
 
         // adjust scrollbar hole, depending on orientation and buttons settings
-        void adjustScrollBarHole( int& x, int& y, int& w, int& h, const StyleOptions& ) const;
+        void adjustScrollBarHole( gdouble& x, gdouble& y, gdouble& w, gdouble& h, const StyleOptions& ) const;
 
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
