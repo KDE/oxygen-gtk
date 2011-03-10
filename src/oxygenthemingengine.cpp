@@ -256,25 +256,8 @@ namespace Oxygen
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) && GTK_IS_SCROLLBAR( widget ) )
-        {
-            StyleOptions options;
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
-
-            Style::instance().adjustScrollBarHole( x, y, w, h, options );
-
-            if( w>0 && h>0 )
-            {
-                if( options&Vertical ) Style::instance().renderScrollBarHole( context, x, y+1, w, h-1, options );
-                else  Style::instance().renderScrollBarHole( context, x+1, y, w-2, h, options );
-            }
-
-            return;
-        }
-
         // adjust shadow type for some known widgets
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
-            GTK_IS_SCROLLED_WINDOW( widget ) &&
             borderStyle !=  GTK_BORDER_STYLE_INSET &&
             Gtk::gtk_scrolled_window_force_sunken( widget ) )
         {
@@ -285,7 +268,6 @@ namespace Oxygen
 
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
-            GTK_IS_FRAME( widget ) &&
             borderStyle == GTK_BORDER_STYLE_SOLID &&
             Gtk::gtk_scrolled_window_force_sunken( widget )
             )
@@ -767,6 +749,156 @@ namespace Oxygen
 
             Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
 
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ) {
+
+            StyleOptions options;
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+
+            Style::instance().adjustScrollBarHole( x, y, w, h, options );
+
+            if( w>0 && h>0 )
+            {
+                if( options&Vertical ) Style::instance().renderScrollBarHole( context, x, y+1, w, h-1, options );
+                else  Style::instance().renderScrollBarHole( context, x+1, y, w-2, h, options );
+            }
+
+            return;
+
+        } else if( (
+            gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW )
+            ) && borderStyle == GTK_BORDER_STYLE_INSET )
+        {
+
+            StyleOptions options( widget, state );
+            options |= NoFill;
+
+            if( GtkWidget* parent = Gtk::gtk_parent_combobox_entry( widget ) )
+            {
+
+                // check if parent is in style map
+                Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
+                Style::instance().animations().comboBoxEntryEngine().setEntry( parent, widget );
+                Style::instance().animations().comboBoxEntryEngine().setEntryFocus( parent, options & Focus );
+
+                if( Style::instance().animations().comboBoxEntryEngine().hasFocus( parent ) ) options |= Focus;
+                else options &= ~Focus;
+
+                if(  Style::instance().animations().comboBoxEntryEngine().hovered( parent ) ) options |= Hover;
+                else options &= ~Hover;
+
+                // render
+                TileSet::Tiles tiles( TileSet::Ring );
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+
+                GdkWindow* window( gtk_widget_get_window( parent ) );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( context, window, x-6, y, w+7, h, tiles );
+
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( context, x-6, y, w+7, h, options, data, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( context, window, x-1, y, w+7, h, tiles );
+
+                    x += Style::Entry_SideMargin;
+                    w -= Style::Entry_SideMargin;
+                    Style::instance().renderHole( context, x-1, y, w+7, h, options, data, tiles );
+
+                }
+
+            } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
+
+                // register to hover engine
+                Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                { options |= Hover; }
+
+                // fill the inside of the spinbox manually
+                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
+
+                // basic adjustments
+                x-=1; w+=2;
+
+                // animation data
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+
+                TileSet::Tiles tiles( TileSet::Ring );
+
+                GdkWindow* window( gtk_widget_get_window( parent ) );
+                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                {
+
+                    tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( context, window, x, y, w, h, tiles );
+                    w-= Style::Entry_SideMargin;
+
+                    Style::instance().renderHole( context, x-5, y, w+5, h, options, data, tiles );
+
+                } else {
+
+                    tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( context, window, x, y, w, h, tiles );
+                    x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
+
+                    Style::instance().renderHole( context, x, y, w+5, h, options, data, tiles );
+
+                }
+
+            } else {
+
+                // register to hover engine
+                if( GTK_IS_ENTRY( widget ) )
+                {
+
+                    Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                    { options |= Hover; }
+
+                } else if( GTK_IS_SCROLLED_WINDOW( widget ) ) {
+
+                    Style::instance().animations().scrolledWindowEngine().registerWidget( widget );
+
+                    options &= ~(Hover|Focus);
+                    if( Style::instance().animations().scrolledWindowEngine().focused( widget ) ) options |= Focus;
+                    if( Style::instance().animations().scrolledWindowEngine().hovered( widget ) ) options |= Hover;
+
+
+                } else {
+
+                    options &= ~(Hover|Focus);
+
+                }
+
+
+                // basic adjustments
+                x-=1; y-=1;
+                w+=2; h+=2;
+
+                Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h );
+
+                // shrink entry by 3px at each side
+                if( GTK_IS_ENTRY( widget ) )
+                {
+
+                    x += Style::Entry_SideMargin;
+                    w -= 2*Style::Entry_SideMargin;
+
+                }
+
+                // animation
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+                Style::instance().renderHole( context, x, y, w, h, options, data );
+
+            }
+
+            return;
 
         } else if(
             (parent = Gtk::gtk_parent_combobox( widget )) &&
