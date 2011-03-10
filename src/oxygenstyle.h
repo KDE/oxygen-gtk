@@ -176,6 +176,9 @@ namespace Oxygen
         void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, const AnimationData& data, TileSet::Tiles tiles = TileSet::Ring )
         { renderButtonSlab( 0L, context, x, y, w, h, options, data, tiles ); }
 
+        void renderButtonSlab( GtkWidget* widget, cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
+        { renderButtonSlab( widget, context, x, y, w, h, options, AnimationData(), tiles ); }
+
         void renderButtonSlab( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles = TileSet::Ring )
         { renderButtonSlab( 0L, context, x, y, w, h, options, AnimationData(), tiles ); }
         //@}

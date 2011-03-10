@@ -90,10 +90,6 @@ GtkMenu>GtkSeparatorMenuItem { padding: 1; }
 /* notebooks */
 GtkNotebook { padding: 4; }
 
-/* combo boxes */
-GtkComboBox { padding: 2 0; }
-GtkComboBox.GtkFrame { padding: 4; }
-
 /*
 TODO: how do I deal with Combobox-Entry settings
 Possibly install non-default provider in style hook
@@ -106,10 +102,14 @@ GtkOptionMenu { padding: 0 4; }
 GtkVSeparator { padding: 2 3; }
 
 /* frames */
-GtkFrame { padding: 2; }
-GtkScrolledWindow { padding: 2; }
-GtkViewport { padding: 2; }
-GtkProgressBar { padding: 2; }
+GtkFrame { padding: 1; }
+GtkScrolledWindow { padding: 1; }
+GtkViewport { padding: 1; }
+GtkProgressBar { padding: 1; }
+
+/* combo boxes */
+GtkComboBox { border-width: 2 0; }
+GtkComboBox>GtkFrame { border-width: 4; }
 
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }

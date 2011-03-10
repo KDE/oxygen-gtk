@@ -199,9 +199,9 @@ namespace Oxygen
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         if( widget && (
-                   gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-                   gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK )
-                   ) )
+            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK )
+            ) )
         {
 
             // register to engines
@@ -480,12 +480,12 @@ namespace Oxygen
                     {
 
                         tiles &= ~TileSet::Right;
-                        Style::instance().renderButtonSlab( context, x, y, w+7, h, options, data, tiles );
+                        Style::instance().renderButtonSlab( widget, context, x, y, w+7, h, options, data, tiles );
 
                     } else {
 
                         tiles &= ~TileSet::Left;
-                        Style::instance().renderButtonSlab( context, x-7, y, w+7, h, options, data, tiles );
+                        Style::instance().renderButtonSlab( widget, context, x-7, y, w+7, h, options, data, tiles );
 
                     }
 
@@ -495,8 +495,8 @@ namespace Oxygen
 
                     options |= Flat;
                     if( Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
-                    if( reversed ) Style::instance().renderButtonSlab( context, x+1, y, w, h, options );
-                    else Style::instance().renderButtonSlab( context, x-1, y, w, h, options );
+                    if( reversed ) Style::instance().renderButtonSlab( widget, context, x+1, y, w, h, options );
+                    else Style::instance().renderButtonSlab( widget, context, x-1, y, w, h, options );
                     return;
 
                 }
@@ -767,6 +767,46 @@ namespace Oxygen
 
             Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
 
+
+        } else if(
+            (parent = Gtk::gtk_parent_combobox( widget )) &&
+            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) &&
+            !GTK_IS_CELL_VIEW( widget ) )
+        {
+
+            Style::instance().animations().comboBoxEngine().registerWidget( parent );
+            Style::instance().animations().comboBoxEngine().registerChild( parent, widget );
+
+            StyleOptions options( widget, state );
+            options |= Blend;
+
+            if( Style::instance().animations().comboBoxEngine().pressed( parent ) ) options |= Sunken;
+            else options &= ~Sunken;
+
+            if( Style::instance().animations().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
+            else options &= ~Focus;
+
+            if(  Style::instance().animations().comboBoxEngine().hovered( parent ) ) options |= Hover;
+            else options &= ~Hover;
+
+            // animation state
+            const AnimationData data( (options&Sunken) ? AnimationData():Style::instance().animations().widgetStateEngine().get( parent, options ) );
+
+            // tiles
+            TileSet::Tiles tiles( TileSet::Ring );
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            {
+
+                tiles &= ~TileSet::Left;
+                Style::instance().renderButtonSlab( widget, context, x-10, y, w+10, h, options, data, tiles );
+
+            } else {
+
+                tiles &= ~TileSet::Right;
+                Style::instance().renderButtonSlab( widget, context, x, y, w+10, h, options, data, tiles );
+
+            }
 
         } else if( borderStyle == GTK_BORDER_STYLE_INSET && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) ) {
 
