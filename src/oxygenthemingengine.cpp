@@ -423,7 +423,7 @@ namespace Oxygen
                 }
 
                 // render
-                GdkWindow* window( gtk_widget_get_window( widget ) );
+                // GdkWindow* window( gtk_widget_get_window( widget ) );
                 TileSet::Tiles tiles( TileSet::Ring);
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
@@ -431,7 +431,7 @@ namespace Oxygen
 
                     // hide right and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( context, window, x-1, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-1, y, w+6, h, tiles );
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
@@ -441,7 +441,7 @@ namespace Oxygen
 
                     // hide left and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( context, window, x-5, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-5, y, w+6, h, tiles );
 
                     w -= Style::Entry_SideMargin;
                     Style::instance().renderHole( context, x-5, y, w+6, h, options, data, tiles  );
@@ -634,9 +634,9 @@ namespace Oxygen
             if( GTK_IS_CALENDAR( widget ) )
             {
 
-                GdkWindow* window( gtk_widget_get_window( parent ) );
+                // GdkWindow* window( gtk_widget_get_window( parent ) );
                 Style::instance().renderHoleBackground(
-                    context, window,
+                    context, 0L, widget,
                     x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
             }
 
