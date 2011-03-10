@@ -548,6 +548,27 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<int>( "padding", 3 ) );
 
+        /*
+        this is stupid. Setting the color to all widgets, like above, erases the .info, warning, etc. colors.
+        Need to reset them here. This is copied from gtkcssprovider.c
+        */
+        _css.addSection( ".info" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@info_bg_color" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@info_fg_color" ) );
+
+        _css.addSection( ".warning" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@warning_bg_color" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@warning_fg_color" ) );
+
+        _css.addSection( ".question" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@question_bg_color" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@question_fg_color" ) );
+
+        _css.addSection( ".error" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@error_bg_color" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@error_fg_color" ) );
+
+
     }
 
     //_________________________________________________________
