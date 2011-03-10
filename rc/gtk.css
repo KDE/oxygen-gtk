@@ -79,7 +79,10 @@ GtkScrollbar {
 
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
-GtkEntry { border-width: 5 2; }
+GtkEntry {
+    padding: 1 5;
+    border-width: 2 5;
+}
 
 /* menuitems padding */
 GtkMenuBar { padding: 1; }
@@ -110,6 +113,7 @@ GtkProgressBar { padding: 1; }
 /* combo boxes */
 GtkComboBox { border-width: 2 0; }
 GtkComboBox>GtkFrame { border-width: 4; }
+GtkComboBox>GtkEntry { border-width: 2; }
 
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }
