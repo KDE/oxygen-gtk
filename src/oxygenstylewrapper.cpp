@@ -2254,10 +2254,7 @@ namespace Oxygen
 
             } else if( shadow == GTK_SHADOW_OUT ) {
 
-                StyleOptions options( NoFill );
-                options |= StyleOptions( widget, GTK_STATE_NORMAL, shadow );
-                options &= ~(Hover|Focus);
-                Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap, options );
+                Style::instance().renderSlab( window, clipRect, x-1, y-4, w+2, h+4, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT ) {
 
