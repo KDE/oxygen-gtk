@@ -214,13 +214,10 @@ namespace Oxygen
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_MENU ) )
+            gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) )
         {
 
-            // no flat background rendered for buttons
-            // everything is dealt with in render_frame.
-
-            // don't draw anything on scrollbars because their background is drawn on parent
+            // no flat background rendered for widgets above
             return;
 
         } else {
@@ -615,7 +612,7 @@ namespace Oxygen
                 StyleOptions options( Hover );
                 options |= Blend;
 
-                Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
 
             } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
@@ -624,7 +621,7 @@ namespace Oxygen
                 StyleOptions options( Hover );
                 options |= Blend;
 
-                Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
             }
 
@@ -689,6 +686,83 @@ namespace Oxygen
                 Style::instance().drawFloatFrame( context, x, y, w, h, options );
 
             }
+
+            // TODO: this check is probably not necessary
+            if( GTK_IS_MENU( widget ) )
+            {
+
+                // check animation state
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                MenuStateEngine& engine( Style::instance().animations().menuStateEngine() );
+                engine.registerWidget(widget);
+
+                if( engine.animatedRectangleIsValid( widget ) )
+                {
+
+                    const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+                    StyleOptions options( Hover );
+
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+
+                } else if( engine.isLocked( widget ) ) {
+
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
+                    StyleOptions options( Hover );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+
+               } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+
+                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    StyleOptions options( Hover );
+
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+
+                 }
+
+            }
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+
+            GtkWidget* parent( gtk_widget_get_parent( widget ) );
+            AnimationData data;
+            if( GTK_IS_MENU_BAR( parent ) )
+            {
+
+                MenuBarStateEngine& engine = Style::instance().animations().menuBarStateEngine();
+                engine.registerWidget( parent );
+                if( engine.animatedRectangleIsValid( parent ) )
+                {
+                    return;
+
+                } else if( engine.widget( parent, AnimationCurrent ) == widget ) {
+
+                    data = engine.animationData( parent, AnimationCurrent );
+
+                }
+
+            } else if( GTK_IS_MENU( parent ) ) {
+
+                MenuStateEngine& engine = Style::instance().animations().menuStateEngine();
+                engine.registerWidget( parent );
+
+                if( engine.animatedRectangleIsValid( parent ) ) {
+
+                    return;
+
+                } else if( engine.widget( parent, AnimationCurrent ) == widget ) {
+
+                    data = engine.animationData( parent, AnimationCurrent );
+
+                }
+
+            }
+
+            StyleOptions options( widget, state );
+            options |= Blend;
+
+            Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
+
 
         } else if( borderStyle == GTK_BORDER_STYLE_INSET && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) ) {
 
