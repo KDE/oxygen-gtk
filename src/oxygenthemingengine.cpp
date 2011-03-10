@@ -1092,7 +1092,7 @@ namespace Oxygen
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) && GTK_IS_SCROLLBAR( widget ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) )
         {
 
             StyleOptions options(widget,stateFlags);
@@ -1101,12 +1101,12 @@ namespace Oxygen
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) && GTK_IS_SCALE( widget ) ) {
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) ) {
 
             StyleOptions options( Blend );
             options |= StyleOptions( widget, stateFlags );
             options &= ~Sunken;
-            if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
             // retrieve animation state and render accordingly
             // TODO: re-introduce blending
