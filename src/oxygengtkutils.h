@@ -69,6 +69,7 @@ namespace Oxygen
         //@{
 
         //! returns OxygenRgba color from GdkColor
+        /*! TODO: remove as obsolete */
         inline ColorUtils::Rgba gdk_get_color( const GdkColor& color )
         {
             return ColorUtils::Rgba(
@@ -76,6 +77,10 @@ namespace Oxygen
                 double(color.green)/0xffff,
                 double(color.blue)/0xffff );
         }
+
+        //! returns OxygenRgba color from GdkColor
+        inline ColorUtils::Rgba gdk_get_color( const GdkRGBA& color )
+        { return ColorUtils::Rgba( color.red, color.green, color.blue, color.alpha ); }
 
         //! map widget origin to top level
         /*!
