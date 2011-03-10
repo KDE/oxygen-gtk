@@ -363,49 +363,38 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderMenuBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    bool Style::renderMenuBackground( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
+
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
 
-        // get window dimension and position
-        gint ww, wh;
-        gint wx, wy;
-        if( !Gtk::gdk_map_to_toplevel( window, 0L, &wx, &wy, &ww, &wh, true ) )
-        { return false; }
-
-        // translate to toplevel coordinates
-        x+=wx;
-        y+=wy;
-
         // create context and translate
         cairo_save( context );
-        cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );
         const bool round( options&Round );
 
-        GdkRectangle rect = { x, y, w, h };
-
         // paint translucent first
         if( hasAlpha )
         {
-            cairo_rectangle( context, 0, 0, ww, wh );
+            cairo_rectangle( context, x, y, w, h );
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
             cairo_fill( context );
         }
 
-        const int splitY( std::min(200, 3*wh/4 ) );
+        const int splitY( std::min(200, 3*h/4 ) );
         const int verticalOffset( (isMenu && round) ? Menu_VerticalOffset:0 );
 
-        GdkRectangle upperRect = { 0, verticalOffset, ww, splitY - verticalOffset };
+        GdkRectangle rect = { x, y, w, h };
+        GdkRectangle upperRect = { x, y + verticalOffset, w, splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
             // upper rect
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, splitY ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y + verticalOffset, 0, y + splitY ) );
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
@@ -415,7 +404,7 @@ namespace Oxygen
 
         }
 
-        GdkRectangle lowerRect = { 0, splitY, w, wh-splitY - verticalOffset };
+        GdkRectangle lowerRect = { x, y + splitY, w, h - splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
@@ -669,6 +658,7 @@ namespace Oxygen
     void Style::renderHoleBackground(
         cairo_t* context,
         GdkWindow* window,
+        GtkWidget* widget,
         gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
@@ -679,7 +669,8 @@ namespace Oxygen
         pass "NoFill" option to renderWindowBackground,
         to indicate one must make a "hole" in the center
         */
-        renderWindowBackground( context, window, x, y, w, h, NoFill, tiles);
+        renderWindowBackground( context, window, widget, x, y, w, h, NoFill, tiles);
+
     }
 
     //__________________________________________________________________

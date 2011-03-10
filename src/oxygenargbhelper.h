@@ -48,6 +48,9 @@ namespace Oxygen
         //! attach style of widget to passed window [recursive]
         void attachStyle( GtkWidget*, GdkWindow* ) const;
 
+        //! check if widget should have argb helper
+        static bool acceptWidget( GtkWidget* );
+
         //! argb hook
         static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 

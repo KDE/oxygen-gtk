@@ -127,14 +127,8 @@ namespace Oxygen
         void renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
         { renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
-//         void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
-//         { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
-
-//         void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-//         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
-
         //! window background
-        bool renderMenuBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, const StyleOptions& ) const;
+        bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
         void renderTooltipBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -150,7 +144,9 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHoleBackground( context, window, 0L, x, y, w, h, tiles ); }
 
         //! splitters
         void renderSplitter( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
