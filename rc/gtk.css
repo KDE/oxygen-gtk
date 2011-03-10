@@ -84,8 +84,8 @@ GtkEntry { border-width: 5 2; }
 /* menuitems padding */
 GtkMenuBar { padding: 1; }
 GtkMenuItem { padding: 0 3; }
-GtkMenu.GtkMenuItem { padding: 5 1; }
-GtkMenu.GtkSeparatorMenuItem { padding: 1; }
+GtkMenu>GtkMenuItem { padding: 5 1; }
+GtkMenu>GtkSeparatorMenuItem { padding: 1; }
 
 /* notebooks */
 GtkNotebook { padding: 4; }
