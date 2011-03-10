@@ -214,7 +214,8 @@ namespace Oxygen
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) )
+            gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
         {
 
             // no flat background rendered for widgets above
@@ -301,8 +302,15 @@ namespace Oxygen
 
         }
 
-        if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
         {
+
+            // get background color
+            GdkRGBA *background;
+            gtk_theming_engine_get( engine, state, "background-color", &background, NULL );
+            Style::instance().renderInfoBar( widget, context, x, y, w, h, Gtk::gdk_get_color( *background ) );
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
 
             // pathbar buttons
             if( Gtk::gtk_button_is_in_path_bar(widget) )
