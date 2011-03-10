@@ -150,7 +150,9 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHoleBackground( context, window, 0L, x, y, w, h, tiles ); }
 
         //! splitters
         void renderSplitter( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;

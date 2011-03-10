@@ -669,6 +669,7 @@ namespace Oxygen
     void Style::renderHoleBackground(
         cairo_t* context,
         GdkWindow* window,
+        GtkWidget* widget,
         gint x, gint y, gint w, gint h, TileSet::Tiles tiles )
     {
 
@@ -679,7 +680,8 @@ namespace Oxygen
         pass "NoFill" option to renderWindowBackground,
         to indicate one must make a "hole" in the center
         */
-        renderWindowBackground( context, window, x, y, w, h, NoFill, tiles);
+        renderWindowBackground( context, window, widget, x, y, w, h, NoFill, tiles);
+
     }
 
     //__________________________________________________________________
