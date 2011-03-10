@@ -2562,10 +2562,7 @@ namespace Oxygen
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
-
-                x += Style::Entry_SideMargin;
-                w -= 2*Style::Entry_SideMargin;
+                Style::instance().renderHoleBackground( window, clipRect, x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
