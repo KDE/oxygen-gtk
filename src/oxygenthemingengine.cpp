@@ -261,11 +261,18 @@ namespace Oxygen
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
                 GTK_IS_SCROLLBAR( widget ) )
         {
-            const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
-            StyleOptions options( vertical ? Vertical : StyleOptions() );
+            StyleOptions options;
+            if ( Gtk::gtk_widget_is_vertical( widget ) )
+            { options |= Vertical; }
+
             Style::instance().adjustScrollBarHole( X, Y, W, H, options );
-            if(W>0 && H>0)
-                Style::instance().renderScrollBarHole( context, X, Y, W, H, options );
+
+            if( W>0 && H>0 )
+            {
+                if( options&Vertical ) Style::instance().renderScrollBarHole( context, X, Y+1, W, H-1, options );
+                else  Style::instance().renderScrollBarHole( context, X+1, Y, W-2, H, options );
+            }
+
             return;
         }
 
@@ -1087,37 +1094,35 @@ namespace Oxygen
         // get path
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkStateFlags stateFlags( gtk_theming_engine_get_state(engine) );
+
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) &&
-                GTK_IS_SCROLLBAR( widget ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) && GTK_IS_SCROLLBAR( widget ) )
         {
             StyleOptions options(widget,stateFlags);
-            guint vertical;
-            g_object_get(G_OBJECT(widget),"orientation",&vertical,NULL);
-            if(vertical)
-                options |= Vertical;
+            if( Gtk::gtk_widget_is_vertical( widget ) )
+            { options |= Vertical; }
+
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
 
-            return;
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) &&
-                GTK_IS_SCALE( widget ) )
-        {
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) && GTK_IS_SCALE( widget ) ) {
+
             StyleOptions options( Blend );
             options |= StyleOptions( widget, stateFlags );
             options &= ~Sunken;
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
 
             // retrieve animation state and render accordingly
+            // TODO: re-introduce blending
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
             Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
 
-            return;
-        } else
-        {
+        } else {
+
             ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
+
         }
 
     }
