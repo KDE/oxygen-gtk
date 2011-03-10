@@ -28,6 +28,8 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
+#include <cmath>
+
 namespace Oxygen
 {
 
@@ -641,17 +643,17 @@ namespace Oxygen
             // hole
             Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
 
-//         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
-//
-//             // default etched frame
-//             Style::instance().renderDockFrame( context, x, y+1, w, h-2, Blend );
-//
-//         } else if( shadow == GTK_SHADOW_OUT ) {
-//
-//             // default shadow_out frame
-//             StyleOptions options( Blend );
-//             options |= NoFill;
-//             Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
+        } else if( borderStyle == GTK_BORDER_STYLE_SOLID && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+
+            // default etched frame
+            Style::instance().renderDockFrame( context, x, y+1, w, h-2, Blend );
+
+        } else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) {
+
+            // default shadow_out frame
+            StyleOptions options( Blend );
+            options |= NoFill;
+            Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
 
         }
 
@@ -749,6 +751,27 @@ namespace Oxygen
 
             gap.setHeight( 8 );
             Style::instance().renderTabBarFrame( context, x-1, y-1, w+2, h+2, gap, options );
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
+
+            const Gtk::Gap gap( std::min( xy0_gap, xy1_gap ), std::abs(xy1_gap-xy0_gap), position );
+
+            if( borderStyle == GTK_BORDER_STYLE_INSET )
+            {
+
+                Style::instance().renderHoleBackground( context, 0L, widget, x - 1 - Style::Entry_SideMargin, y-1, w + 2 + 2*Style::Entry_SideMargin, h+2 );
+                Style::instance().renderHole( context, x-1, y-1, w+2, h+1, gap, NoFill );
+
+            } else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) {
+
+                Style::instance().renderSlab( context, x-1, y-4, w+2, h+4, gap, NoFill );
+
+            } else if( borderStyle == GTK_BORDER_STYLE_SOLID ) {
+
+                Style::instance().renderDockFrame( context, x, y-1, w, h+1, gap, Blend );
+
+            }
+
 
         } else {
 
