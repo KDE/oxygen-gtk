@@ -601,9 +601,6 @@ namespace Oxygen
             MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
             engine.registerWidget(widget);
 
-            // get window
-            GdkWindow* window( gtk_widget_get_window( widget ) );
-
             // draw animated or fade-out rect
             if( engine.animatedRectangleIsValid( widget ) )
             {
@@ -692,7 +689,6 @@ namespace Oxygen
             {
 
                 // check animation state
-                GdkWindow* window( gtk_widget_get_window( widget ) );
                 MenuStateEngine& engine( Style::instance().animations().menuStateEngine() );
                 engine.registerWidget(widget);
 
@@ -1371,7 +1367,6 @@ namespace Oxygen
         #endif
 
         // hooks
-        Style::instance().animations().setEnabled( false );
         Style::instance().animations().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();

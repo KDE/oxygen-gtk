@@ -1728,8 +1728,8 @@ namespace Oxygen
         if( isInMenuBar )
         {
 
-            y+=1;
-            h-=2;
+            //y+=1;
+            //h-=2;
 
         } else if ( isInMenu ) {
 
