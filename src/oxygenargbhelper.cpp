@@ -127,7 +127,44 @@ namespace Oxygen
 
     }
 
+    //_________________________________________________________________
+    bool ArgbHelper::acceptWidget( GtkWidget* widget )
+    {
 
+        // check type
+        if( !GTK_IS_WINDOW( widget ) ) return false;
+
+        // if widget is already realized, then its tool late
+        if( gtk_widget_get_realized( widget ) ) return false;
+
+        // cast to window and check type hint
+        GtkWindow* window( GTK_WINDOW( widget ) );
+        GdkWindowTypeHint hint = gtk_window_get_type_hint( window );
+
+        // TODO: file a bug to GTK3.
+        // Menu windows don't get the GDK_WINDOW_TYPE_HINT_MENU hint any more
+        bool isMenu( GTK_IS_BIN( widget ) && GTK_IS_MENU( gtk_bin_get_child( GTK_BIN( widget ) ) ) );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ArgbHelper::colormapHook - "
+            << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
+            << " isMenu: " << isMenu
+            << std::endl;
+        #endif
+
+        if(
+            isMenu ||
+            hint == GDK_WINDOW_TYPE_HINT_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
+            hint == GDK_WINDOW_TYPE_HINT_COMBO
+            )
+        { return true; }
+
+        return false;
+    }
 
     //_____________________________________________________
     gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
@@ -138,45 +175,23 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
-        // make sure widget has not been realized already
-        #if GTK_CHECK_VERSION(2, 20, 0)
-        if( gtk_widget_get_realized( widget ) ) return TRUE;
-        #else
-        if( GTK_WIDGET_REALIZED( widget ) ) return TRUE;
-        #endif
-
-        // cast to window
-        GtkWindow* window( GTK_WINDOW( widget ) );
-
-        // check type hint
-        GdkWindowTypeHint hint = gtk_window_get_type_hint( window );
+        // check widget validity
+        if( !acceptWidget( widget ) ) return TRUE;
 
         // screen
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return TRUE;
 
-        if(
-            hint == GDK_WINDOW_TYPE_HINT_MENU ||
-            hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
-            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
-            hint == GDK_WINDOW_TYPE_HINT_COMBO
-            )
-        {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ArgbHelper::colormapHook - "
+            << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
+            << std::endl;
+        #endif
 
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::ArgbHelper::colormapHook - "
-                << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-                << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
-                << std::endl;
-            #endif
-
-            // assign argb colormap to widget
-            gtk_widget_set_visual( widget, gdk_screen_get_rgba_visual( screen ) );
-
-        }
+        // assign argb colormap to widget
+        gtk_widget_set_visual( widget, gdk_screen_get_rgba_visual( screen ) );
 
         return TRUE;
 
