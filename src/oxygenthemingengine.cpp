@@ -211,8 +211,10 @@ namespace Oxygen
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON )||
-                   gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) )
+        } else if(
+            gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_MENU ) )
         {
 
             // no flat background rendered for buttons
@@ -302,18 +304,8 @@ namespace Oxygen
 
         }
 
-        if(
-            gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) )
+        if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) )
         {
-
-            // for menubars and toolbars, render background gradient
-            Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
-
-            /* TODO: fix issues with positionning, and re-enable */
-            render_animated_button( context, widget );
-
-        } else if( widget && gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
 
             // pathbar buttons
             if( Gtk::gtk_button_is_in_path_bar(widget) )
@@ -601,6 +593,102 @@ namespace Oxygen
 
             // render
             Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
+
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ) {
+
+            // render background
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
+
+            MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
+            engine.registerWidget(widget);
+
+            // get window
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+
+            // draw animated or fade-out rect
+            if( engine.animatedRectangleIsValid( widget ) )
+            {
+
+                const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+                StyleOptions options( Hover );
+                options |= Blend;
+
+                Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+
+            } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+
+                const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                StyleOptions options( Hover );
+                options |= Blend;
+
+                Style::instance().renderMenuItemRect( context, window, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+
+            }
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) ) {
+
+            // no background for Gtk applets
+            if( Gtk::gtk_widget_is_applet( widget ) ) return;
+
+            Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+
+            // also draw possible animated tool button
+            render_animated_button( context, widget );
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
+
+            if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
+            {
+
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                if( Gtk::gdk_window_is_base( window ) )
+                { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
+
+                Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
+
+            } else {
+
+                StyleOptions options( Menu );
+
+                options |= Round;
+
+                // this is not working.
+                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+                // add mask if needed
+//                 if( GTK_IS_MENU(widget) )
+//                 {
+//                     if( !(options&Alpha) )
+//                     {
+//
+//                         // make menus appear rounded using XShape extension if screen isn't composited
+//                         Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+//                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+//                         if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+//                         {
+//                             GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
+//                             gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
+//                             gdk_pixmap_unref(mask);
+//                         }
+//
+//                     } else {
+//
+//                         // reset mask if compositing has appeared after we had set a mask
+//                         gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), NULL, 0, 0);
+//
+//                     }
+//                 }
+
+                // if rendering of menu background fails, assume square window
+                if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )
+                { options &= ~Round; }
+
+                Style::instance().drawFloatFrame( context, x, y, w, h, options );
+
+            }
 
         } else if( borderStyle == GTK_BORDER_STYLE_INSET && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) ) {
 
@@ -1209,6 +1297,7 @@ namespace Oxygen
         #endif
 
         // hooks
+        Style::instance().animations().setEnabled( false );
         Style::instance().animations().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
