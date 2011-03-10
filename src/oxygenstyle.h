@@ -197,7 +197,9 @@ namespace Oxygen
         //@}
 
         //! info bar
-        void renderInfoBar( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& );
+        void renderInfoBar( GtkWidget*, cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba& );
+        void renderInfoBar( cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color )
+        { renderInfoBar( 0L, context, x, y, w, h, color ); }
 
         //!@name hole
         //@{

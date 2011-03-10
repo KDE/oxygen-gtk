@@ -1315,17 +1315,16 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderInfoBar(
+        GtkWidget* widget,
         cairo_t* context,
         gint x, gint y, gint w, gint h,
         const ColorUtils::Rgba& glow )
     {
 
-// TODO: reimplement for gtk+3
-//         // define colors
-//         gint wh, wy;
-//         Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//         const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
-        const ColorUtils::Rgba base( settings().palette().color( Palette::Button ) );
+        // define colors
+        gint wh, wy;
+        Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+        const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
 
         // save context
         cairo_save( context );
@@ -1688,7 +1687,6 @@ namespace Oxygen
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, widget, 0L, &wy, 0L, &wh );
         const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
-        const bool isInMenuBar( Gtk::gtk_parent_menubar( widget ) );
 
         if( wh > 0 )
         {
