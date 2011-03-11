@@ -251,6 +251,7 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
         {
 
@@ -1821,7 +1822,7 @@ namespace Oxygen
                 options |= Contrast;
                 const QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-                Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
+                Style::instance().renderArrow( context, arrow, x, y-2, w, h, arrowSize, options, data, role );
 
             }
 
@@ -1832,7 +1833,7 @@ namespace Oxygen
         } else {
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-            Style::instance().renderTreeExpander( context, x, y, w, h, expander_style, options, data, role );
+            Style::instance().renderTreeExpander( context, x, y-2, w, h, expander_style, options, data, role );
 
         }
 
