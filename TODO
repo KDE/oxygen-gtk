@@ -47,7 +47,7 @@ Icons: customize hover effect, and implement custom disable effect.
 
 ProgressBars
 Slider trough
-SizeGrips
+Splitter handles
 Toolbar grips
 
 Gtk3-Demo -> offscreen pixmap -> effects 
