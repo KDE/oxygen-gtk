@@ -19,12 +19,19 @@
 * MA 02110-1301, USA.
 */
 
+/*
+INFO: css border and padding ordering is either:
+   - all-sides;
+   - top/bottom left/right;
+   - top left/right bottom;
+   - top right bottom left;
+*/
+
 * {
     -GtkPaned-handle-size: 3;
     -GtkButton-child_displacement_x: 0;
     -GtkButton-child_displacement_y: 0;
 
-    /* TODO: make sure the values are ordered properly */
     -GtkButton-default_border: 0;
     -GtkButton-default_outside_border: 0;
     -GtkButton-inner-border: 1 2 0;
@@ -64,6 +71,12 @@
     engine: oxygen-gtk;
     theme: oxygen-gtk;
 }
+
+/*
+    TODO:
+    look at default values from GtkCssProvider for better style definitions
+    (class based, rather than widget based)
+*/
 
 /* specialization of default widgets style properties */
 GtkToggleButton { -GtkButton-inner-border: 1 0 0; }
