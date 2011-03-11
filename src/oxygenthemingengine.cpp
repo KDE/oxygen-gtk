@@ -258,6 +258,12 @@ namespace Oxygen
             // no flat background rendered for widgets above
             return;
 
+        } else if(
+            gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) &&
+            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) ) {
+
+            return;
+
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
@@ -413,19 +419,15 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // load state
+        // load state, path, and widget
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+        GtkWidget* parent( 0L );
 
         // load border style
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
-
-        // get path
-        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
-
-        // lookup widget
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
-        GtkWidget* parent( 0L );
 
         // adjust shadow type for some known widgets
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
@@ -557,7 +559,7 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
-                // FIXME: reimplement for Gtk
+                // TODO: reimplement for Gtk3
                 // ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
                 // Style::instance().fill( context, x, y, w, h, background );
                 Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
@@ -941,7 +943,7 @@ namespace Oxygen
             return;
 
         } else if( (
-            gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW )
             ) && borderStyle == GTK_BORDER_STYLE_INSET )
@@ -986,43 +988,6 @@ namespace Oxygen
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
                     Style::instance().renderHole( context, x-1, y, w+7, h, options, data, tiles );
-
-                }
-
-            } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
-
-                // register to hover engine
-                Style::instance().animations().hoverEngine().registerWidget( widget, true );
-                if( Style::instance().animations().hoverEngine().hovered( widget ) )
-                { options |= Hover; }
-
-                // fill the inside of the spinbox manually
-                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
-
-                // basic adjustments
-                x-=1; w+=2;
-
-                // animation data
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-
-                TileSet::Tiles tiles( TileSet::Ring );
-
-                if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
-                {
-
-                    tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h, tiles );
-                    w-= Style::Entry_SideMargin;
-
-                    Style::instance().renderHole( context, x-5, y, w+5, h, options, data, tiles );
-
-                } else {
-
-                    tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h, tiles );
-                    x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
-
-                    Style::instance().renderHole( context, x, y, w+5, h, options, data, tiles );
 
                 }
 
@@ -1072,6 +1037,10 @@ namespace Oxygen
                 Style::instance().renderHole( context, x, y, w, h, options, data );
 
             }
+
+            return;
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) ) {
 
             return;
 
@@ -1654,8 +1623,8 @@ namespace Oxygen
             if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=1;
             else x-=1;
 
-            //if( arrow == GTK_ARROW_UP ) y+= 1;
-            if( arrow == GTK_ARROW_DOWN ) y -= 2;
+            if( arrow == GTK_ARROW_UP ) y -= 1;
+            else if( arrow == GTK_ARROW_DOWN ) y -= 2;
 
             // disable contrast
             options &= ~Contrast;
