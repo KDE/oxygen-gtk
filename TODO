@@ -4,24 +4,19 @@ You can also add your name on which of the item you are either already working o
 
 Reminder: fixing existing bugs on bugs.kde.org should always have the highest priority :)
 
-argb branch:
-- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
-- add hooks to deal with combobox/comboboxentry list resize. DONE
-- also add hooks for GtkCombo list resize. DONE.
-
-- try find a way to avoid flicker (not sure whether this actually is possible or not).
-
-main branch:
-
 - merge the argb branch when stable enough. DONE
 - test the style with a Right-To-Left layout. DONE
 - use Cairo_surface_t instead of GdkPixbuf. DONE
+- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
+- implement smooth animations (notably hover and focus smooth glow). DONE (!!)
+
+- add hooks to deal with combobox/comboboxentry list resize. DONE
+also add hooks for GtkCombo list resize. DONE.
+try find a way to avoid flicker (not sure whether this actually is possible or not).
 
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
-
-- implement smooth animations (notably hover and focus smooth glow)
+TRIED, but it actually does not unclutter the code much, and creates other issues. So post-poned.
 
 - try implement some "true" inner-shadow (and glow) for GtkListView
-
 - better support for using oxygen-gtk in a non-kde environment.
 
