@@ -98,11 +98,6 @@ GtkEntry {
     border-width: 2 5;
 }
 
-GtkSpinButton {
-    padding: 4 5;
-    border-width: 5 5;
-}
-
 /* menuitems padding */
 GtkMenuBar { padding: 1; }
 GtkMenuItem { padding: 0 3; }
