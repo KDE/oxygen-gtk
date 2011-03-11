@@ -4,24 +4,51 @@ You can also add your name on which of the item you are either already working o
 
 Reminder: fixing existing bugs on bugs.kde.org should always have the highest priority :)
 
-argb branch:
-- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
-- add hooks to deal with combobox/comboboxentry list resize. DONE
-- also add hooks for GtkCombo list resize. DONE.
-
-- try find a way to avoid flicker (not sure whether this actually is possible or not).
-
-main branch:
-
 - merge the argb branch when stable enough. DONE
 - test the style with a Right-To-Left layout. DONE
 - use Cairo_surface_t instead of GdkPixbuf. DONE
+- remove Oxygen::OptionMenuEngine::Data/Engine, since it is obsoleted by the ArgbHelper class. DONE
+- implement smooth animations (notably hover and focus smooth glow). DONE (!!)
+
+- add hooks to deal with combobox/comboboxentry list resize. DONE
+also add hooks for GtkCombo list resize. DONE.
+try find a way to avoid flicker (not sure whether this actually is possible or not).
 
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
-
-- implement smooth animations (notably hover and focus smooth glow)
+TRIED, but it actually does not unclutter the code much, and creates other issues. So post-poned.
 
 - try implement some "true" inner-shadow (and glow) for GtkListView
-
 - better support for using oxygen-gtk in a non-kde environment.
 
+GTK3 branch:
+
+Arrows:
+scrollbars: ok
+menus: ok.
+treeviews: ok
+TreeView selection: OK.
+Spin buttons: OK
+
+Menu Expander: no selection. OK.
+
+Menus: ok, but:
+- issues with scrollbar background
+- tearoff menus are totally broken. Part of it might be gtk3 issue. 
+
+Combobox entry: completly fucked up
+Seems like gtk3 bug. Also broken with Raleigh. 
+TODO: file bug report.
+
+Notebooks:
+OK, but vertical positionning of text in tabs is broken. 
+Might also be gtk3 bug, but needs investigation.
+
+Icons: customize hover effect, and implement custom disable effect.
+
+ProgressBars
+Slider trough
+SizeGrips
+Toolbar grips
+
+Gtk3-Demo -> offscreen pixmap -> effects 
+crash.
