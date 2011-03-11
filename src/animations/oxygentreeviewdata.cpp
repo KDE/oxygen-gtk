@@ -47,7 +47,9 @@ namespace Oxygen
         // get full-width flag
         if( GTK_IS_TREE_VIEW( widget ) )
         {
-            gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
+            /* TODO: row_ending_details is gone. See if there is a replacement */
+            // gtk_widget_style_get( widget, "row_ending_details", &_fullWidth, NULL );
+            _fullWidth = true;
 
             if( hovered() )
             {

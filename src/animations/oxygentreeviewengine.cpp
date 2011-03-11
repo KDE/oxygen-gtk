@@ -35,6 +35,7 @@ namespace Oxygen
             /* tree lines are rendered by the style, in order to be able to draw them with custom color */
             GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
             gtk_tree_view_set_enable_tree_lines( treeView, false );
+            gtk_tree_view_set_rules_hint( treeView, true );
 
             GtkWidget* parent( gtk_widget_get_parent( widget ) );
             GtkScrolledWindow* scrolledWindow(0);

@@ -221,6 +221,149 @@ namespace Oxygen
             // no flat background rendered for widgets above
             return;
 
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
+
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+            StyleOptions options( widget, state );
+
+            // select palete colorgroup for cell background
+            Palette::Group group( Palette::Active );
+            if( options & Disabled ) group = Palette::Disabled;
+            else if( !(options&Focus) ) group = Palette::Inactive;
+
+            if( Gtk::gtk_combobox_is_tree_view( widget ) )
+            {
+                // combobox tree view have simplified rendering
+                // background
+                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( group, Palette::Base ) );
+
+                // draw flat selection in combobox list
+                if( state & GTK_STATE_FLAG_SELECTED)
+                {
+                    ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
+                    Style::instance().fill( context, x, y, w, h, selection );
+                }
+
+                return;
+
+            } else {
+
+                GtkRegionFlags flags;
+                const bool isRow( gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_ROW, &flags ) );
+                const bool isOdd( isRow && ( flags& GTK_REGION_ODD ) && !Gtk::gtk_combobox_is_tree_view( widget ) );
+
+                // render background
+                ColorUtils::Rgba background;
+                if( isOdd ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
+                else background = Style::instance().settings().palette().color( group, Palette::Base );
+                if( background.isValid() ) Style::instance().fill( context, x, y, w, h, background );
+
+                // cell selection and tree lines rendering
+                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+
+                // draw rounded selection in normal list,
+                // and detect hover
+                bool forceCellStart( false );
+                bool forceCellEnd( false );
+
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+
+                    Style::instance().animations().treeViewEngine().registerWidget( widget );
+                    if( Style::instance().animations().treeViewEngine().isDirty( widget ) )
+                    { Style::instance().animations().treeViewEngine().updateHoveredCell( widget ); }
+
+                    /*
+                    TODO: our treeview hove might not be necessary, since it is now implemented nativelly;
+                    however, one must then make sure that the hover state is stored for rendering checkboxes, radio buttons,
+                    and expander arrows
+                    */
+                    if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
+                    { options |= Hover; }
+
+                    const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
+                    if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
+                    {
+
+                        // tree lines
+                        if( Style::instance().settings().viewDrawTreeBranchLines() && showExpanders )
+                        {
+
+                            // generate flags from cell info
+                            Gtk::CellInfoFlags cellFlags( treeView, cellInfo );
+                            if( reversed ) cellFlags._flags |= Gtk::CellInfoFlags::Reversed;
+
+                            // set proper options
+                            StyleOptions options( widget, state );
+
+                            // and render
+                            Style::instance().renderTreeLines( context, x, y, w, h, cellFlags, options );
+
+                        }
+
+                        // change selection rect so that it does not overlap with expander
+                        if( reversed ) forceCellEnd = true;
+                        else forceCellStart = true;
+
+                        forceCellStart = true;
+                        if( options&(Selected|Hover) )
+                        {
+
+                            // get expander size from widget
+                            int depth( cellInfo.depth() );
+                            int expanderSize(0);
+                            gtk_widget_style_get( widget, "expander-size", &expanderSize, NULL );
+
+                            int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
+
+                            if( reversed ) w-= offset;
+                            else {
+
+                                x += offset;
+                                w -= offset;
+
+                            }
+
+                        }
+
+                    } else if( showExpanders && (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLeftOfExpanderColumn( treeView ) ) {
+
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
+
+                    }
+
+                    // check if column is last
+                    if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLastVisibleColumn( treeView ) )
+                    {
+                        if( reversed ) forceCellStart = true;
+                        else forceCellEnd = true;
+                    }
+
+                }
+
+                if( options & (Selected|Hover) )
+                {
+
+                    GtkRegionFlags flags;
+                    gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN, &flags );
+
+                    TileSet::Tiles tiles( TileSet::Center );
+                    if( flags&GTK_REGION_FIRST ) tiles |= TileSet::Left;
+                    if( flags&GTK_REGION_LAST ) tiles |= TileSet::Right;
+
+                    if( forceCellStart ) tiles |= TileSet::Left;
+                    if( forceCellEnd ) tiles |= TileSet::Right;
+
+                    Style::instance().renderSelection( context, x, y, w, h, tiles, options );
+
+                }
+
+            }
+
         } else {
 
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
