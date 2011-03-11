@@ -1351,6 +1351,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderCheckBox(
+        GtkWidget* widget,
         cairo_t* context,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
@@ -1368,22 +1369,19 @@ namespace Oxygen
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
         const Palette::Role role( options&Flat ? Palette::Window : Palette::Button );
 
-// TODO: reimplement for Gtk3
-//         ColorUtils::Rgba base;
-//         if( options&Blend )
-//         {
-//
-//             gint wh, wy;
-//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//             base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
-//
-//         } else {
-//
-//             base = settings().palette().color( group, role );
-//
-//         }
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
 
-        const ColorUtils::Rgba base( settings().palette().color( group, role ) );
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+            base = ColorUtils::backgroundColor( settings().palette().color( group, role ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( group, role );
+
+        }
 
         // save context
         cairo_save( context );

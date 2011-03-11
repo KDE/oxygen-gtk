@@ -185,7 +185,9 @@ namespace Oxygen
 
         //! checkbox
         /*! shadow type is used to decide whether check is on/off or tristate */
-        void renderCheckBox( cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderCheckBox( GtkWidget*, cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderCheckBox( cairo_t* context, gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options, const AnimationData& data = AnimationData() )
+        { renderCheckBox( 0L, context, x, y, w, h, shadow, options, data ); }
 
         //! radio button
         void renderRadioButton( cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );

@@ -1311,7 +1311,7 @@ namespace Oxygen
             if(stateFlags&GTK_STATE_FLAG_INCONSISTENT)
                 shadow=GTK_SHADOW_ETCHED_IN;
 
-            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options, data );
+            Style::instance().renderCheckBox( widget, context, x, y, w, h, shadow, options, data );
 
         } /*else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
 
