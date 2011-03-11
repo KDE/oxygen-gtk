@@ -37,33 +37,20 @@ namespace Oxygen
 
         //! constructor
         TreeViewData( void ):
-            _target(0L),
-            _fullWidth( false ),
-            _x(-1),
-            _y(-1),
-            _dirty( false )
+            _fullWidth( false )
         {}
 
         //! destructor
         virtual ~TreeViewData( void )
         {}
 
-        //! setup connections
-        void connect( GtkWidget* );
-
-        //! disconnect
-        void disconnect( GtkWidget* );
-
         //! full width flag
         void setFullWidth( bool value )
         { _fullWidth = value; }
 
-        //! true when hovered cell needs update
-        bool isDirty( void ) const
-        { return _dirty; }
-
         //! update hovered cell using stored position
-        void updateHoveredCell( void );
+        void setHoveredCell( const Gtk::CellInfo& cellInfo )
+        { _cellInfo = cellInfo; }
 
         //! true if cell info is hovered
         bool isCellHovered( const Gtk::CellInfo& cellInfo ) const
@@ -73,98 +60,13 @@ namespace Oxygen
         bool isCellHovered( const Gtk::CellInfo& cellInfo, bool fullWidth ) const
         { return hovered() && (fullWidth || cellInfo.sameColumn( _cellInfo ) ) && cellInfo.samePath( _cellInfo ); }
 
-        protected:
-
-        //! mark as dirty
-        /* returns true if dirty state changed */
-        bool setDirty( bool value )
-        {
-            if( _dirty == value ) return false;
-            _dirty = value;
-            return true;
-        }
-
-        //! set mouse over state
-        virtual bool setHovered( GtkWidget* widget, bool value );
-
-        //! update hovered cell based on pointer position
-        void updatePosition( GtkWidget*, int x, int y );
-
-        //! update hovered cell based on previous pointer position
-        void updatePosition( GtkWidget* widget )
-        { updatePosition( widget, _x, _y ); }
-
-        //! update pointer position
-        void clearPosition( GtkWidget* = 0L );
-
-        //! repaint selection
-        void triggerRepaint( void );
-
-        //! handles scrollbar value change
-        class ScrollBarData
-        {
-            public:
-
-            //! constructor
-            ScrollBarData( void ):
-                _widget( 0L )
-            {}
-
-            //! destructor
-            virtual ~ScrollBarData( void )
-            {}
-
-            //! disconnect all signals
-            void disconnect( void );
-
-            GtkWidget* _widget;
-            Signal _destroyId;
-            Signal _valueChangedId;
-        };
-
-        //!@name child (scrollbars) handling
-        //@{
-        void registerScrollBars( GtkWidget* );
-        void registerChild( GtkWidget*, ScrollBarData& );
-        void unregisterChild( GtkWidget* );
-        //@}
-
-        //!@name static callbacks
-        //@{
-        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
-        static void childValueChanged( GtkRange*, gpointer );
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
-        //@}
-
         private:
-
-        //! target widget
-        GtkWidget* _target;
-
-        //! callbacks ids
-        Signal _motionId;
 
         //! true if hover works on full width
         bool _fullWidth;
 
         //! keep track of the hovered path and column
         Gtk::CellInfo _cellInfo;
-
-        /*!
-        keep last position (window_bin coordinates) used to find
-        hovered cell
-        */
-        int _x;
-        int _y;
-
-        //! true when hovered cell needs to be updated
-        bool _dirty;
-
-        //! vertical scrollbar data
-        ScrollBarData _vScrollBar;
-
-        //! horizontal scrollbar data
-        ScrollBarData _hScrollBar;
 
     };
 

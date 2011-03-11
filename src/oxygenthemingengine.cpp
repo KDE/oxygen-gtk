@@ -273,16 +273,18 @@ namespace Oxygen
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
-                    if( Style::instance().animations().treeViewEngine().isDirty( widget ) )
-                    { Style::instance().animations().treeViewEngine().updateHoveredCell( widget ); }
+                    if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
+
+                    //if( Style::instance().animations().treeViewEngine().isDirty( widget ) )
+                    //{ Style::instance().animations().treeViewEngine().updateHoveredCell( widget ); }
 
                     /*
                     TODO: our treeview hove might not be necessary, since it is now implemented nativelly;
                     however, one must then make sure that the hover state is stored for rendering checkboxes, radio buttons,
                     and expander arrows
                     */
-                    if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
-                    { options |= Hover; }
+                    //if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
+                    //{ options |= Hover; }
 
                     const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
                     if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
