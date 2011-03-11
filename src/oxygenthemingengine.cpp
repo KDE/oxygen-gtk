@@ -1007,12 +1007,11 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
 
-                GdkWindow* window( gtk_widget_get_window( parent ) );
                 if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( context, window, x, y, w, h, tiles );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h, tiles );
                     w-= Style::Entry_SideMargin;
 
                     Style::instance().renderHole( context, x-5, y, w+5, h, options, data, tiles );
@@ -1020,7 +1019,7 @@ namespace Oxygen
                 } else {
 
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( context, window, x, y, w, h, tiles );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h, tiles );
                     x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
 
                     Style::instance().renderHole( context, x, y, w+5, h, options, data, tiles );
@@ -1148,7 +1147,6 @@ namespace Oxygen
             if( GTK_IS_CALENDAR( widget ) )
             {
 
-                // GdkWindow* window( gtk_widget_get_window( parent ) );
                 Style::instance().renderHoleBackground(
                     context, 0L, widget,
                     x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
