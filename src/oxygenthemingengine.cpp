@@ -151,13 +151,14 @@ namespace Oxygen
 
         // get path
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) && !Style::instance().settings().toolBarDrawItemSeparator() )
         {
             // no separators in toolbars, if requested accordingly
             return;
 
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
 
             // no separators in buttons
             return;
@@ -165,10 +166,10 @@ namespace Oxygen
         } else {
 
             StyleOptions options;
-            if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
+            if( !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
             {
                 options |= Blend;
-                if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_MENU ) )
+                if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) )
                 { options |= Menu; }
             }
 
@@ -179,7 +180,7 @@ namespace Oxygen
             const bool vertical( abs( y1 - y0 ) > abs( x1 - x0 ) );
             if( vertical ) options |= Vertical;
 
-            Style::instance().drawSeparator( context, x0, y0, x1-x0, y1-y0, options );
+            Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
 
         }
@@ -201,8 +202,6 @@ namespace Oxygen
 
         // get path
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
-
-        // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
@@ -470,7 +469,13 @@ namespace Oxygen
             // do nothing for tooltips
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
+
+            // no frame for scrollbar buttons and spin buttons
+            if(
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) )
+            { return; }
 
             // pathbar buttons
             if( Gtk::gtk_button_is_in_path_bar(widget) )
@@ -928,7 +933,11 @@ namespace Oxygen
 
             Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ) {
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) &&
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) )
+        {
+
 
             StyleOptions options;
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
@@ -1160,20 +1169,16 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // load state
+        // load state path and widget
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         // load border style
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
 
-        // get path
-        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
-
-        // lookup widget
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-
-        if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) )
         {
 
             // this might move to drawShadowGap
@@ -1234,7 +1239,7 @@ namespace Oxygen
             gap.setHeight( 8 );
             Style::instance().renderTabBarFrame( context, x-1, y-1, w+2, h+2, gap, options );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) ) {
 
             const Gtk::Gap gap( std::min( xy0_gap, xy1_gap ), std::abs(xy1_gap-xy0_gap), position );
 
@@ -1280,15 +1285,13 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // load state
+        // load state, path and widget
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-
-        // get path
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        // lookup widget
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-        if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) )
+        // check classs
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) )
         {
 
             StyleOptions options( widget, state );
@@ -1563,9 +1566,9 @@ namespace Oxygen
         gint h( size );
 
         // lookup widget, path and state flags
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         // get arrow type
         /* TODO: is it robust */
@@ -1608,14 +1611,14 @@ namespace Oxygen
 
             useWidgetStateEngine = false;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
             role = Palette::WindowText;
             useWidgetStateEngine = false;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) ) {
 
             // use dedicated engine to get animation state
             data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
@@ -1632,7 +1635,7 @@ namespace Oxygen
 
             role = Palette::Text;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) ) {
 
             // use dedicated engine to get animation state
             data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
@@ -1669,8 +1672,8 @@ namespace Oxygen
             { x+=2; }
 
         } else if(
-            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) &&
-            !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) &&
+            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) ) {
 
             useWidgetStateEngine = false;
             options &= ~( Focus|Hover );
@@ -1683,7 +1686,7 @@ namespace Oxygen
 
             }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_CALENDAR ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CALENDAR ) ) {
 
             // FIXME: needs dedicated engine to
             // handle smooth animations
@@ -1700,7 +1703,7 @@ namespace Oxygen
 
             }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
 
             x+= 1;
 
@@ -1865,14 +1868,14 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // get path
-        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        // get flags, path and widget
         GtkStateFlags stateFlags( gtk_theming_engine_get_state(engine) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         // lookup widget
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) )
         {
 
             StyleOptions options(widget,stateFlags);
@@ -1881,7 +1884,7 @@ namespace Oxygen
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ) {
 
             StyleOptions options( Blend );
             options |= StyleOptions( widget, stateFlags );
