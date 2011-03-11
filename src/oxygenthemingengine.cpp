@@ -205,22 +205,8 @@ namespace Oxygen
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BACKGROUND ) &&
-            widget && (
-            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
-            ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
-
-            // register to engines
-            Style::instance().animations().mainWindowEngine().registerWidget( widget );
-
-            // render background gradient
-            GdkWindow* window( gtk_widget_get_window( widget ) );
-            Style::instance().renderWindowBackground( context, window, x, y, w, h );
-
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) ) {
 
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
@@ -246,7 +232,21 @@ namespace Oxygen
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
-        } else if(
+        } else if( widget && (
+            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
+            ) )
+        {
+
+            // register to engines
+            Style::instance().animations().mainWindowEngine().registerWidget( widget );
+
+            // render background gradient
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+            Style::instance().renderWindowBackground( context, window, x, y, w, h );
+
+       } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ||
@@ -1589,10 +1589,178 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        /* define rectangle dimensions */
+        gint w( size );
+        gint h( size );
 
-        ThemingEngine::parentClass()->render_arrow( engine, context, angle, x, y, size );
+        // lookup widget, path and state flags
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+
+        // get arrow type
+        /* TODO: is it robust */
+        const GtkArrowType arrow( Gtk::gtk_arrow_get_type( angle ) );
+
+        // get arrow size (disregard the value passed as argument)
+        QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
+
+        // define default color role
+        Palette::Role role( Palette::ButtonText );
+
+        // define options
+        StyleOptions options( Contrast );
+        options |= StyleOptions( widget, state );
+
+        // Arrows which are active are painted as hovered
+        if( state&GTK_STATE_FLAG_ACTIVE ) options |= Hover;
+
+        // animation data
+        AnimationData data;
+
+        // if true, widgetStateEngine is used to decide on animation state
+        // use either custom engine, or disable animation, otherwise
+        bool useWidgetStateEngine( true );
+
+        GtkWidget* parent( 0L );
+        if( gtk_widget_path_is_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) )
+        {
+            if( widget &&
+                gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT &&
+                GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
+                gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
+            {
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x-8, y-8, w+16, h+16);
+            }
+
+            // disable highlight in menus, for consistancy with oxygen qt style
+            options &= ~( Focus|Hover );
+
+            useWidgetStateEngine = false;
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
+
+            // disable highlight in menus, for consistancy with oxygen qt style
+            options &= ~( Focus|Hover );
+            role = Palette::WindowText;
+            useWidgetStateEngine = false;
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) ) {
+
+            // use dedicated engine to get animation state
+            data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
+            useWidgetStateEngine = false;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
+            else x-=1;
+
+            if( arrow == GTK_ARROW_UP ) y+= 1;
+            else if( arrow == GTK_ARROW_DOWN ) y -= 1;
+
+            // disable contrast
+            options &= ~Contrast;
+
+            role = Palette::Text;
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
+
+            // use dedicated engine to get animation state
+            data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
+            useWidgetStateEngine = false;
+
+            const int offset = 6;
+            switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( widget ) ) )
+            {
+                default:
+                case GTK_POS_TOP: h += offset; break;
+                case GTK_POS_LEFT: w += offset; break;
+                case GTK_POS_BOTTOM: y-=offset; h+=offset; break;
+                case GTK_POS_RIGHT: x -= offset; w += offset; break;
+            }
+
+            role = Palette::WindowText;
+
+        } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
+
+            if( !( state&GTK_STATE_FLAG_INSENSITIVE ) ) options &= ~Contrast;
+            role = Palette::Text;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
+        } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
+
+            useWidgetStateEngine = false;
+
+            options &= ~( Focus|Hover );
+            role = Palette::ButtonText;
+
+            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            { x+=2; }
+
+        } else if(
+            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) &&
+            !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
+
+            useWidgetStateEngine = false;
+            options &= ~( Focus|Hover );
+
+            if( gtk_widget_path_is_type( path, GTK_TYPE_ARROW ) )
+            {
+
+                x += 1;
+                role = Palette::WindowText;
+
+            }
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_CALENDAR ) ) {
+
+            // FIXME: needs dedicated engine to
+            // handle smooth animations
+            useWidgetStateEngine = false;
+
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            {
+
+                // need to render background behind arrows from calendar
+                // offsets are empirical
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                Style::instance().renderWindowBackground( context, window, widget, x-2, y-3, w+4, h+6 );
+                role = Palette::WindowText;
+
+            }
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ) {
+
+            x+= 1;
+
+            // use dedicated engine to get animation state
+            useWidgetStateEngine = false;
+            data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
+
+            GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkStateType widgetState=gtk_widget_get_state(widget);
+            role = Palette::WindowText;
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
+
+        }
+
+        // render arrow
+        if( useWidgetStateEngine ) data = Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover );
+        Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
 
     }
 

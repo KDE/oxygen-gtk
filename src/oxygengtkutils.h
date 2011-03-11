@@ -24,11 +24,13 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenrgba.h"
+
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <string>
 
-#include "oxygenrgba.h"
+#include <cmath>
+#include <string>
 
 namespace Oxygen
 {
@@ -151,6 +153,16 @@ namespace Oxygen
         }
 
         //@}
+
+        //! get arrow orientation from angle
+        inline GtkArrowType gtk_arrow_get_type( const double& angle )
+        {
+            static const double delta( 0.001 );
+            if( std::abs( angle ) < delta ) return GTK_ARROW_UP;
+            else if( std::abs( angle - M_PI/2 ) < delta ) return GTK_ARROW_RIGHT;
+            else if( std::abs( angle - M_PI ) < delta ) return GTK_ARROW_DOWN;
+            else return GTK_ARROW_LEFT;
+        }
 
         //! returns true if widget's layout is reversed
         inline bool gtk_widget_layout_is_reversed( GtkWidget* widget )
