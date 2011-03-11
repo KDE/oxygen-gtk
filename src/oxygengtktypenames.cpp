@@ -23,8 +23,37 @@
 
 #include "oxygengtktypenames.h"
 
+#include <vector>
+
 namespace Oxygen
 {
+
+    //_____________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags )
+    {
+        std::vector<std::string> values;
+        if( !flags ) values.push_back( "normal" );
+        if( flags&GTK_STATE_FLAG_ACTIVE ) values.push_back( "active" );
+        if( flags&GTK_STATE_FLAG_PRELIGHT ) values.push_back( "prelight" );
+        if( flags&GTK_STATE_FLAG_SELECTED  ) values.push_back( "selected" );
+        if( flags&GTK_STATE_FLAG_INSENSITIVE ) values.push_back( "insensitive" );
+        if( flags&GTK_STATE_FLAG_INCONSISTENT ) values.push_back( "inconsistent" );
+        if( flags&GTK_STATE_FLAG_FOCUSED  ) values.push_back( "focused" );
+
+        // print
+        if( values.empty() ) out << "none";
+        else {
+
+            for( unsigned int i=0; i<values.size(); ++i )
+            {
+                if( i==0) out << values[i];
+                else out << "|" << values[i];
+            }
+        }
+
+        return out;
+
+    }
 
     //_______________________________________________
     typedef Gtk::TypeNames::Entry<GtkStateType> StateMap;

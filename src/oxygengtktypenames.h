@@ -33,6 +33,10 @@ namespace Oxygen
 
     namespace Gtk
     {
+
+        //! GtkStateFlags streamer
+        std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags );
+
         //! css to gtk mapping
         class TypeNames
         {

@@ -49,9 +49,6 @@ namespace Oxygen
         return out;
     }
 
-    //! GtkStateFlags streamer
-    std::ostream& operator << ( std::ostream& out, const GtkStateFlags& flags );
-
     //! streamer for GtkWidgetPath
     std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path );
 
