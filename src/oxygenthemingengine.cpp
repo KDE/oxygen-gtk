@@ -1930,7 +1930,7 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::render_handle -"
+            << "Oxygen::render_activity-"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " path: " << gtk_theming_engine_get_path(engine)
@@ -1949,7 +1949,7 @@ namespace Oxygen
     {
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::render_handle -"
+            << "Oxygen::render_icon_pixbuf-"
             << " source: " << source
             << " size: " << size
             << " path: " << gtk_theming_engine_get_path(engine)
