@@ -34,6 +34,7 @@ Menu Expander: no selection. OK.
 Menus: ok, but:
 - issues with scrollbar background
 - tearoff menus are totally broken. Part of it might be gtk3 issue. 
+- XShape not yet used for non-composited WM case (same for combobox popups and tooltips)
 
 Combobox entry: completly fucked up
 Seems like gtk3 bug. Also broken with Raleigh. 
