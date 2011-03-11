@@ -33,6 +33,13 @@
 namespace Oxygen
 {
 
+    /*
+    TODO:
+    for now most of the switch are performed using the widget calls (from gtk_widget_path_is_type).
+    try modify to use gtk_theming_engine_is_class() instead, as much as possible.
+    Available classes are described at: http://library.gnome.org/devel/gtk/unstable/GtkStyleContext.html
+    */
+
     //___________________________________________________________________________________________________________
     GtkThemingEngineClass* ThemingEngine::_parentClass = 0L;
     GTypeInfo ThemingEngine::_typeInfo;
@@ -198,9 +205,11 @@ namespace Oxygen
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        if( widget && (
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BACKGROUND ) &&
+            widget && (
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK )
+            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
             ) )
         {
 
@@ -211,9 +220,36 @@ namespace Oxygen
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) ) {
+
+            StyleOptions options( Round );
+            if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+// TODO: reimplement mask for gtk3
+//             GdkWindow* window( gtk_widget_get_window( widget ) );
+//             if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
+//             {
+//
+//                 // make tooltips appear rounded using XShape extension if screen isn't composited
+//                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+//                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+//                 const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+//                 if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
+//                 {
+//                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+//                     gdk_window_shape_combine_mask( window, mask, x, y );
+//                     gdk_pixmap_unref( mask );
+//                 }
+//
+//             }
+
+            Style::instance().renderTooltipBackground( context, x, y, w, h, options );
+            return;
+
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
         {
@@ -274,17 +310,6 @@ namespace Oxygen
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
                     if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
-
-                    //if( Style::instance().animations().treeViewEngine().isDirty( widget ) )
-                    //{ Style::instance().animations().treeViewEngine().updateHoveredCell( widget ); }
-
-                    /*
-                    TODO: our treeview hove might not be necessary, since it is now implemented nativelly;
-                    however, one must then make sure that the hover state is stored for rendering checkboxes, radio buttons,
-                    and expander arrows
-                    */
-                    //if( cellInfo.isValid() && Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo ) )
-                    //{ options |= Hover; }
 
                     const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
                     if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
@@ -436,6 +461,11 @@ namespace Oxygen
             GdkRGBA *background;
             gtk_theming_engine_get( engine, state, "background-color", &background, NULL );
             Style::instance().renderInfoBar( widget, context, x, y, w, h, Gtk::gdk_get_color( *background ) );
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) ) {
+
+            // do nothing for tooltips
+            return;
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ) {
 
