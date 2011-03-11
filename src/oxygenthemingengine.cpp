@@ -724,8 +724,9 @@ namespace Oxygen
                 { options |= Hover; }
 
                 // register to ToolBarState engine
+                GtkWidget* parent( 0L );
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
-                if( GtkWidget* parent = engine.findParent( widget ) )
+                if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOL_PALETTE ) && (parent = engine.findParent( widget ) ) )
                 {
 
                     // register child
