@@ -122,8 +122,15 @@ namespace Oxygen
             detail );
         #endif
 
+
+        #if GTK_CHECK_VERSION(2, 20, 0)
+        // tool itemgroup buttons
+        if( GTK_IS_TOOL_ITEM_GROUP( widget ) )
+        { std::cout << "toolitemgroup" << std::endl; }
+        #endif
+
         const Gtk::Detail d( detail );
-        if( d.isBase() || d.isEventBox())
+        if( d.isBase() || d.isEventBox() )
         {
 
             // special case for openoffice
@@ -915,7 +922,8 @@ namespace Oxygen
 
                 // register to ToolBarState engine
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
-                if( GtkWidget* parent = engine.findParent( widget ) )
+                GtkWidget* parent( 0L );
+                if( !Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE ) && (parent = engine.findParent( widget ) ) )
                 {
 
                     // register child
