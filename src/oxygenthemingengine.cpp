@@ -1261,20 +1261,21 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup widget
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
-        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
-
-        // TODO: implement correct logic for checkboxes in cells
         if( gtk_theming_engine_has_class( engine,  GTK_STYLE_CLASS_CHECK ) )
         {
+
+            // lookup widget
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+            const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+            const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
 
             // style options
             StyleOptions options( widget, state );
 
             // animation data
             AnimationData data;
+
+            // check widget type
             if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
             {
 
@@ -1333,10 +1334,66 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        if( gtk_theming_engine_has_class( engine,  GTK_STYLE_CLASS_RADIO ) )
+        {
 
-        ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
+            // lookup widget
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+            const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+            const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+
+            // style options
+            StyleOptions options( widget, state );
+
+            // animation data
+            AnimationData data;
+
+            // check widget type
+            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
+            {
+                options &= ~(Focus|Hover);
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                if( cellInfo.isValid() &&
+                    Style::instance().animations().treeViewEngine().contains( widget ) &&
+                    Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                { options |= Hover; }
+
+                // also add vertical offset
+                x-=1;
+                y-=1;
+
+                data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+
+            } else if( gtk_widget_path_is_type( path, GTK_TYPE_CHECK_MENU_ITEM ) ) {
+
+                // menu checkboxes
+                options &= ~(Focus|Hover);
+                options |= Blend;
+
+                // also add vertical offset
+                x-=1;
+                y-=1;
+
+            } else {
+
+                options |= Blend;
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+
+            }
+
+            // shadow type defines checkmark presence and type
+            GtkShadowType shadow( GTK_SHADOW_OUT );
+            if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
+            else if( state&GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
+            Style::instance().renderRadioButton( context, x, y, w, h, shadow, options, data );
+
+        } else {
+
+            // parent
+            ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
+
+        }
 
     }
 
