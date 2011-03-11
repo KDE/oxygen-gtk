@@ -1671,6 +1671,31 @@ namespace Oxygen
             if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
             { x+=2; }
 
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
+
+            x+= 1;
+
+            // use dedicated engine to get animation state
+            useWidgetStateEngine = false;
+            data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
+
+            GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
+            GtkStateType widgetState=gtk_widget_get_state(widget);
+            role = Palette::WindowText;
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
+            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
+
+            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
+            { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
+
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) &&
             !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) ) {
@@ -1702,31 +1727,6 @@ namespace Oxygen
                 role = Palette::WindowText;
 
             }
-
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
-
-            x+= 1;
-
-            // use dedicated engine to get animation state
-            useWidgetStateEngine = false;
-            data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
-
-            GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
-            GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
-            GtkStateType widgetState=gtk_widget_get_state(widget);
-            role = Palette::WindowText;
-
-            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
-
-            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
-
-            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
-
-            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
-            { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
 
         }
 
