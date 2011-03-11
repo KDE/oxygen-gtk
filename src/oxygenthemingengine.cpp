@@ -1778,9 +1778,63 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+        const GtkExpanderStyle expander_style( (state&GTK_STATE_FLAG_ACTIVE) ? GTK_EXPANDER_EXPANDED:GTK_EXPANDER_COLLAPSED );
 
-        ThemingEngine::parentClass()->render_expander( engine, context, x, y, w, h );
+        StyleOptions options( widget, state );
+        const bool isTreeView( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) );
+        const Palette::Role role( isTreeView ? Palette::Text : Palette::WindowText );
+
+        //
+
+        /*
+        TODO: For TreeViews, use dedicated engine to handle animations.
+        It should use Widget and CellInfo for tagging, and work like
+        TabWidgetState engine.
+        */
+        AnimationData data;
+        if( isTreeView )
+        {
+            GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+            const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+            data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+        }
+
+        if( Style::instance().settings().viewDrawTriangularExpander() )
+        {
+
+            GtkArrowType arrow;
+            if( expander_style == GTK_EXPANDER_EXPANDED ) arrow = GTK_ARROW_DOWN;
+            else if( Gtk::gtk_widget_layout_is_reversed( widget ) ) arrow = GTK_ARROW_LEFT;
+            else arrow = GTK_ARROW_RIGHT;
+
+            if( isTreeView )
+            {
+
+                const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
+                Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
+
+            } else {
+
+                options |= Contrast;
+                const QtSettings::ArrowSize arrowSize = QtSettings::ArrowNormal;
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+                Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
+
+            }
+
+        } else if( isTreeView ) {
+
+            Style::instance().renderTreeExpander( context, x, y, w, h, expander_style, options, data, role );
+
+        } else {
+
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            Style::instance().renderTreeExpander( context, x, y, w, h, expander_style, options, data, role );
+
+        }
 
     }
 
