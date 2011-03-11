@@ -97,8 +97,9 @@ GtkNotebook { padding: 4; }
 /* option menu */
 GtkOptionMenu { padding: 0 4; }
 
-/* vertical separators */
-GtkVSeparator { padding: 2 3; }
+/* separators */
+GtkSeparator { border-width: 2; }
+GtkVSeparator { border-width: 2 3; }
 
 /* frames */
 GtkFrame { padding: 1; }
