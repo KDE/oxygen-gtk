@@ -296,7 +296,7 @@ namespace Oxygen
                 if( background.isValid() ) Style::instance().fill( context, x, y, w, h, background );
 
                 // cell selection and tree lines rendering
-                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+                const bool reversed( Gtk::gtk_theming_engine_layout_is_reversed( engine ) );
 
                 // draw rounded selection in normal list,
                 // and detect hover
@@ -480,7 +480,7 @@ namespace Oxygen
 
                 // only two style options possible: hover or don't draw
                 StyleOptions options;
-                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+                const bool reversed( Gtk::gtk_theming_engine_layout_is_reversed( engine ) );
                 const bool isLast( Gtk::gtk_path_bar_button_is_last( widget ) );
                 if( !( state & (GTK_STATE_FLAG_NORMAL|GTK_STATE_FLAG_INSENSITIVE ) ) )
                 {
@@ -581,7 +581,7 @@ namespace Oxygen
                 // GdkWindow* window( gtk_widget_get_window( widget ) );
                 TileSet::Tiles tiles( TileSet::Ring);
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
                     // hide right and adjust width
@@ -612,7 +612,7 @@ namespace Oxygen
             {
 
                 // combobox buttons
-                const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
+                const bool reversed( Gtk::gtk_theming_engine_layout_is_reversed( engine ) );
 
                 // StyleOptions options( widget, state, shadow );
                 StyleOptions options( widget, state );
@@ -969,7 +969,7 @@ namespace Oxygen
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
                 GdkWindow* window( gtk_widget_get_window( parent ) );
-                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
                     tiles &= ~TileSet::Left;
@@ -1008,7 +1008,7 @@ namespace Oxygen
                 TileSet::Tiles tiles( TileSet::Ring );
 
                 GdkWindow* window( gtk_widget_get_window( parent ) );
-                if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+                if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
                     tiles &= ~TileSet::Left;
@@ -1103,7 +1103,7 @@ namespace Oxygen
             // tiles
             TileSet::Tiles tiles( TileSet::Ring );
 
-            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
             {
 
                 tiles &= ~TileSet::Left;
@@ -1653,7 +1653,7 @@ namespace Oxygen
             data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
             useWidgetStateEngine = false;
 
-            if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=1;
             else x-=1;
 
             if( arrow == GTK_ARROW_UP ) y+= 1;
@@ -1687,7 +1687,7 @@ namespace Oxygen
             if( !( state&GTK_STATE_FLAG_INSENSITIVE ) ) options &= ~Contrast;
             role = Palette::Text;
 
-            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
             { x+=2; }
 
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
@@ -1697,7 +1697,7 @@ namespace Oxygen
             options &= ~( Focus|Hover );
             role = Palette::ButtonText;
 
-            if( Gtk::gtk_widget_layout_is_reversed( widget ) )
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
             { x+=2; }
 
         } else if(
@@ -1808,7 +1808,7 @@ namespace Oxygen
 
             GtkArrowType arrow;
             if( expander_style == GTK_EXPANDER_EXPANDED ) arrow = GTK_ARROW_DOWN;
-            else if( Gtk::gtk_widget_layout_is_reversed( widget ) ) arrow = GTK_ARROW_LEFT;
+            else if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) arrow = GTK_ARROW_LEFT;
             else arrow = GTK_ARROW_RIGHT;
 
             if( isTreeView )

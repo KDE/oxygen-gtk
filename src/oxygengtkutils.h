@@ -168,6 +168,10 @@ namespace Oxygen
         inline bool gtk_widget_layout_is_reversed( GtkWidget* widget )
         { return widget ? gtk_widget_get_direction( widget ) == GTK_TEXT_DIR_RTL : false; }
 
+        //! returns true if widget's layout is reversed
+        inline bool gtk_theming_engine_layout_is_reversed( GtkThemingEngine* engine )
+        { return engine ? gtk_theming_engine_get_direction( engine ) == GTK_TEXT_DIR_RTL : false; }
+
         //! set all buttons in the container to state NORMAL
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
