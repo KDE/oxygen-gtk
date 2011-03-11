@@ -428,6 +428,19 @@ namespace Oxygen
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
 
+        if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_TROUGH))
+        {
+            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_CELL) || 
+                   GTK_IS_PROGRESS_BAR(widget) )
+            {
+                StyleOptions options(widget, state);
+                if(GTK_IS_PROGRESS_BAR(widget) && Gtk::gtk_widget_is_vertical(widget))
+                    options|=Vertical;
+                Style::instance().renderProgressBarHole( context, x, y, w, h, options );
+                return;
+            }
+        }
+
         // adjust shadow type for some known widgets
         if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
             borderStyle !=  GTK_BORDER_STYLE_INSET &&
@@ -1938,9 +1951,27 @@ namespace Oxygen
         #endif
 
         // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+        GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
+        GtkStateFlags state(gtk_theming_engine_get_state(engine));
 
-        ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
+        if(gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ))
+        {
+            StyleOptions options( widget, state);
+            if( Gtk::gtk_widget_is_vertical( widget ) )
+            { options |= Vertical; }
+            if( GTK_IS_PROGRESS_BAR(widget) )
+            {
+                y++;
+                h-=2;
+                x++;
+                w-=2;
+            }
+            Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
+
+        } else
+        {
+            ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
+        }
 
     }
 
