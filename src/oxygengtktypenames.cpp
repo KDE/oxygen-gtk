@@ -55,6 +55,31 @@ namespace Oxygen
 
     }
 
+    //_____________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const GtkJunctionSides& junctions )
+    {
+        std::vector<std::string> values;
+        if( !junctions ) values.push_back( "none" );
+        if( junctions&GTK_JUNCTION_CORNER_TOPLEFT ) values.push_back( "top-left" );
+        if( junctions&GTK_JUNCTION_CORNER_TOPRIGHT ) values.push_back( "top-right" );
+        if( junctions&GTK_JUNCTION_CORNER_BOTTOMLEFT ) values.push_back( "bottom-left" );
+        if( junctions&GTK_JUNCTION_CORNER_BOTTOMRIGHT ) values.push_back( "bottom-right" );
+
+        // print
+        if( values.empty() ) out << "none";
+        else {
+
+            for( unsigned int i=0; i<values.size(); ++i )
+            {
+                if( i==0) out << values[i];
+                else out << "|" << values[i];
+            }
+        }
+
+        return out;
+
+    }
+
     //_______________________________________________
     typedef Gtk::TypeNames::Entry<GtkStateType> StateMap;
     static const StateMap stateMap[] =
