@@ -526,6 +526,10 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Hover ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
+        _css.addSection( ".highlight" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Focus ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
+
         _css.addSection( "*:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Window ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
