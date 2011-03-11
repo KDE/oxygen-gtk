@@ -1263,65 +1263,61 @@ namespace Oxygen
 
         // lookup widget
         GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
-//        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
-        GtkStateFlags stateFlags( gtk_theming_engine_get_state(engine) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
 
         // TODO: implement correct logic for checkboxes in cells
-
-//        if( d.isCheckButton() || d.isCellCheck() )
-        if(true)
+        if( gtk_theming_engine_has_class( engine,  GTK_STYLE_CLASS_CHECK ) )
         {
 
-            StyleOptions options( widget, stateFlags );
-//            if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
-            {
-                // enable blending
-                options |= Blend;
-            }
+            // style options
+            StyleOptions options( widget, state );
 
+            // animation data
             AnimationData data;
-//            if( d.isCellCheck() )
-            if(false)
+            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
             {
 
+                // TreeView checkboxes
                 options &= ~(Focus|Hover);
-                if( GTK_IS_TREE_VIEW( widget ) )
-                {
-                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                    const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
-                    if( cellInfo.isValid() &&
-                        Style::instance().animations().treeViewEngine().contains( widget ) &&
-                        Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
-                    { options |= Hover; }
+                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                if( cellInfo.isValid() &&
+                    Style::instance().animations().treeViewEngine().contains( widget ) &&
+                    Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                { options |= Hover; }
 
-                    // retrieve animation state
-                    data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+                // retrieve animation state
+                data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
 
-                }
+            } else if( gtk_widget_path_is_type( path, GTK_TYPE_CHECK_MENU_ITEM ) ) {
+
+                // menu checkboxes
+                options &= ~(Focus|Hover);
+                options |= (Blend|Flat|NoFill );
 
             } else {
 
+                // normal checkboxes
                 // retrieve animation state
+                options |= Blend;
                 data = Style::instance().animations().widgetStateEngine().get( widget, options );
 
             }
 
             // shadow type defines checkmark presence and type
-            GtkShadowType shadow( (stateFlags&GTK_STATE_FLAG_ACTIVE) ? GTK_SHADOW_IN : GTK_SHADOW_OUT );
-            if(stateFlags&GTK_STATE_FLAG_INCONSISTENT)
-                shadow=GTK_SHADOW_ETCHED_IN;
+            GtkShadowType shadow( GTK_SHADOW_OUT );
+            if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
+            else if( state&GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
 
             Style::instance().renderCheckBox( widget, context, x, y, w, h, shadow, options, data );
 
-        } /*else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
+        } else {
 
-            StyleOptions options( widget, state, shadow );
-            options |= (Blend|Flat|NoFill );
-            Style::instance().renderCheckBox( context, x, y, w, h, shadow, options );
-
-        }*/ else {
             ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
+
         }
+
     }
 
     //________________________________________________________________________________________________

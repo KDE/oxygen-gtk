@@ -31,10 +31,8 @@
 
     -GtkCalendar-inner-border: 0;
     -GtkCalendar-horizontal-separation: 0;
-    -GtkCheckButton-indicator-size: 18;
     -GtkComboBox-appears-as-list: 1;
 
-    -GtkExpander-expander-size: 15;
 
     -GtkMenu-horizontal-padding: 3;
     -GtkMenu-vertical-padding: 5;
@@ -42,8 +40,12 @@
 
     -GtkScrolledWindow-scrollbar-spacing:1;
 
-    -GtkTreeView-allow-rules: 1;
+    -GtkCheckButton-indicator-size: 18;
+    -GtkCheckMenuItem-indicator-size: 16;
+    -GtkExpander-expander-size: 15;
     -GtkTreeView-expander-size: 15;
+
+    -GtkTreeView-allow-rules: 1;
 
     -GtkMenuBar-shadow-type: GTK_SHADOW_NONE;
     -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
@@ -55,7 +57,6 @@
     /*
     Apparently the following have become obsolete
     -GtkTreeView-row-ending-details: 1;
-    -GtkCheckMenuItem-indicator-size: 16;
     -GtkStatusbar-has-resize-grip: false;
     -GtkEntry-honors-transparent-bg-hint: 1;
     */
@@ -88,15 +89,10 @@ GtkEntry {
 GtkMenuBar { padding: 1; }
 GtkMenuItem { padding: 0 3; }
 GtkMenu>GtkMenuItem { padding: 5 1; }
-GtkMenu>GtkSeparatorMenuItem { padding: 1; }
+GtkMenu>GtkSeparatorMenuItem { padding: 1 1; }
 
 /* notebooks */
 GtkNotebook { padding: 4; }
-
-/*
-TODO: how do I deal with Combobox-Entry settings
-Possibly install non-default provider in style hook
-*/
 
 /* option menu */
 GtkOptionMenu { padding: 0 4; }
@@ -113,6 +109,17 @@ GtkProgressBar { padding: 1; }
 /* combo boxes */
 GtkComboBox { border-width: 2 0; }
 GtkComboBox>GtkFrame { border-width: 4; }
+
+/*
+TODO: how do I deal with Combobox-Entry settings
+Possibly install non-default provider in style hook.
+*/
+
+/*
+At the moment GtkComboBox(entry) look totally broken,
+possibly due to internal Gtk issues, triggered by the
+"appears-as-list" flag.
+*/
 
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }
