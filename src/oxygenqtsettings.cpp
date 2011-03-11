@@ -504,6 +504,12 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::generateGtkColors" << std::endl;
         #endif
 
+        /*
+        TODO:
+        look at default values from GtkCssProvider for better style definitions
+        (class based, rather than widget based)
+        */
+
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
@@ -514,6 +520,10 @@ namespace Oxygen
 
         _css.addSection( "*:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
+
+        _css.addSection( "*:hover" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Hover ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
         _css.addSection( "*:insensitive" );
