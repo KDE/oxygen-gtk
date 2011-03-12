@@ -245,25 +245,6 @@ namespace Oxygen
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
-       } else if(
-            gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_SCROLLBAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) ||
-             gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
-        {
-
-            // no flat background rendered for widgets above
-            return;
-
-        } else if(
-            gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) &&
-            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) ) {
-
-            return;
-
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
@@ -397,6 +378,26 @@ namespace Oxygen
                 }
 
             }
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) &&
+            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) )
+        {
+
+            return;
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) )
+        {
+
+            return;
+
 
         } else {
 
