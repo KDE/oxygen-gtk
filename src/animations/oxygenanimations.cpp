@@ -197,8 +197,25 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
+        GtkWidget* parent( 0L );
+        if( GTK_IS_ENTRY( widget ) && (parent = Gtk::gtk_parent_combobox_entry( widget ) ) )
+        {
+            // TODO: remove when bug is fixed upstream
+            GtkAllocation rect( Gtk::gtk_widget_get_allocation( widget ) );
+            GtkAllocation parentRect( Gtk::gtk_widget_get_allocation( parent ) );
+
+            if( rect.y != parentRect.y )
+            {
+                GtkAllocation newRect( Gtk::gdk_rectangle( rect.x, parentRect.y, rect.width, parentRect.height ) );
+                gtk_widget_size_allocate( widget, &newRect );
+            }
+
+            return true;
+
+        }
+
+        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
         GtkWindow* window( GTK_WINDOW( widget ) );
         if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
 

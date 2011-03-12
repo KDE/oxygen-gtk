@@ -134,6 +134,14 @@ GtkProgressBar { padding: 1; }
 GtkComboBox { border-width: 2 0; }
 GtkComboBox>GtkFrame { border-width: 4; }
 
+/* entries */
+/* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
+GtkComboBox>GtkEntry {
+    padding: 4 5;
+    border-width: 4 5;
+}
+
+
 /*
 TODO: how do I deal with Combobox-Entry settings
 Possibly install non-default provider in style hook.

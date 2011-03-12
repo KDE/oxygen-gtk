@@ -468,7 +468,7 @@ namespace Oxygen
 //             }
 
             // menu background and float frame
-            GdkWindow* window( gtk_widget_get_window( parent ) );
+            // GdkWindow* window( gtk_widget_get_window( parent ) );
             Style::instance().renderMenuBackground( context, x, y, w, h, options );
             Style::instance().drawFloatFrame( context, x, y, w, h, options );
 
@@ -1046,12 +1046,16 @@ namespace Oxygen
                 TileSet::Tiles tiles( TileSet::Ring );
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
-                GdkWindow* window( gtk_widget_get_window( parent ) );
+                // background color
+                // TODO: use correct Palette::Group depending on state
+                const ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Base ) );
+
                 if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( context, window, x-6, y, w+7, h, tiles );
+                    Style::instance().fill( context, x-6, y, w+7, h, background );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-6, y, w+7, h, tiles );
 
                     w -= Style::Entry_SideMargin;
                     Style::instance().renderHole( context, x-6, y, w+7, h, options, data, tiles );
@@ -1059,7 +1063,9 @@ namespace Oxygen
                 } else {
 
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( context, window, x-1, y, w+7, h, tiles );
+
+                    Style::instance().fill( context, x-1, y, w+7, h, background );
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-1, y, w+7, h, tiles );
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
