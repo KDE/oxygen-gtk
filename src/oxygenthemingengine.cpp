@@ -2019,31 +2019,13 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        // copied from gtkthemingengine.c
         GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
         g_return_val_if_fail( base_pixbuf != 0L, 0L );
 
-// TODO: re-implement for gtk3
-//         // retrieve screen and settings
-//         GdkScreen *screen( 0L );
-//         GtkSettings *settings( 0L );
-//         if( widget && gtk_widget_has_screen( widget ) )
-//         {
-//
-//             screen = gtk_widget_get_screen( widget );
-//             settings = gtk_settings_get_for_screen( screen );
-//
-//         } else if (style->colormap) {
-//
-//             screen = gdk_colormap_get_screen( style->colormap );
-//             settings = gtk_settings_get_for_screen( screen );
-//
-//         } else {
-//
-//             settings = gtk_settings_get_default();
-//
-//         }
+        GdkScreen *screen( gtk_theming_engine_get_screen( engine ) );
+        GtkSettings *settings( gtk_settings_get_for_screen( screen ) );
 
-        GtkSettings *settings( gtk_settings_get_default() );
         int width = 1;
         int height = 1;
         if( size != (GtkIconSize)-1 && !gtk_icon_size_lookup_for_settings( settings, size, &width, &height ) )
@@ -2052,8 +2034,10 @@ namespace Oxygen
             return 0L;
         }
 
-        /* If the size was wildcarded, and we're allowed to scale, then scale; otherwise,
-        * leave it alone. */
+        /*
+        If the size was wildcarded, and we're allowed to scale, then scale;
+        otherwise, leave it alone.
+        */
         GdkPixbuf *scaled( 0L);
         if( size != (GtkIconSize)-1 && gtk_icon_source_get_size_wildcarded( source ) )
         {
