@@ -158,9 +158,10 @@ namespace Oxygen
             // no separators in toolbars, if requested accordingly
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
+        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
 
             // no separators in buttons
+            /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
             return;
 
         } else {
