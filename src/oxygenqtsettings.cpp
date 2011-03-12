@@ -442,13 +442,6 @@ namespace Oxygen
         themeNameStr << "gtk-fallback-icon-theme=\"" << _kdeFallbackIconTheme << "\"";
         _rc.addToHeaderSection( themeNameStr.str() );
 
-        // check show icons on push buttons kde option
-        const std::string showIconsOnPushButton( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) );
-
-        // add option
-        if( showIconsOnPushButton == "false" )
-        {   _rc.addToHeaderSection( "gtk-button-images = 0\n" );  }
-
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
         const int dialogIconSize( _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
@@ -766,6 +759,10 @@ namespace Oxygen
         else if( toolbarTextPosition == "TextBesideIcon" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH_HORIZ" ) );
         else if( toolbarTextPosition == "NoText" ) _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_ICONS" ) );
         else _rc.addToHeaderSection( Gtk::RCOption<std::string>( "gtk-toolbar-style", "GTK_TOOLBAR_BOTH" ) );
+
+        // icons on buttons
+        if( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) == "false" )
+        { _rc.addToHeaderSection( "gtk-button-images = 0\n" ); }
 
         // active icon effects
         _useIconEffect = _kdeGlobals.getOption( "[MainToolbarIcons]", "ActiveEffect" ).toVariant<std::string>( "gamma" ) != "none";
