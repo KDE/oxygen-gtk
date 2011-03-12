@@ -598,7 +598,8 @@ namespace Oxygen
             }
 
             // treeview headers
-            if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
+            if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) )
+            {
 
                 // register to scrolled window engine if any
                 if(
@@ -608,8 +609,7 @@ namespace Oxygen
                 { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
 
                 // treevew header
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                Style::instance().renderHeaderBackground( context, window, x, y, w, h );
+                Style::instance().renderHeaderBackground( context, 0L, widget, x, y, w, h );
                 return;
 
             }

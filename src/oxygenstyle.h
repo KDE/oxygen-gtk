@@ -134,7 +134,9 @@ namespace Oxygen
         void renderTooltipBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tree view header
-        void renderHeaderBackground( cairo_t*, GdkWindow*, gint, gint, gint, gint );
+        void renderHeaderBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint );
+        void renderHeaderBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h )
+        { renderHeaderBackground( context, window, 0L, x, y, w, y ); }
 
         //! tree view header
         void renderHeaderLines( cairo_t*, gint, gint, gint, gint ) const;

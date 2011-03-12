@@ -488,14 +488,14 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderHeaderBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h )
+    void Style::renderHeaderBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, gint x, gint y, gint w, gint h )
     {
 
         // load color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
 
         // render normal window background
-        renderWindowBackground( context, window, x, y, w, h );
+        renderWindowBackground( context, window, widget, x, y, w, h );
 
         // render lines
         renderHeaderLines( context, x, y, w, h );
