@@ -22,52 +22,51 @@ TRIED, but it actually does not unclutter the code much, and creates other issue
 
 GTK3 branch:
 
-Arrows: ok.
-scrollbars: ok
-menus: ok.
-treeviews: ok
+Arrows: DONE.
+scrollbars: DONE
+menus: DONE.
+ProgressBars: DONE
+Slider trough: DONE
+Splitter handles: DONE
+
+Toolbar grips: DONE (but untested)
+
+treeviews: DONE
 But there is a problem with background in header buttons. Fixed.
 There is also a problem in rendering buttons in cells (because of how header buttons are detected.) This is also true for Gtk2
 
-TreeView selection: OK.
-Spin buttons: OK
+TreeView selection: DONE.
+Spin buttons: DONE
 
-Menu Expander: no selection. OK.
+Menu Expander: no selection. DONE.
+Icons: customize hover effect, and implement custom disable effect. DONE.
 
-Menus: ok, but:
+Menus: DONE, but:
 - issues with scrollbar background
 - tearoff menus are totally broken. Part of it might be gtk3 issue. 
-- XShape not yet used for non-composited WM case (same for combobox popups and tooltips)
+- XShape not yet used for non-composited WM case (same for combobox popups and tooltips). DONE.
 
-Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient: OK
+Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient: DONE
+ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed.
 
 Combobox entry: completly broken.
 Seems like gtk3 bug. Also broken with Raleigh. 
-TODO: file bug report. Done.
+TODO: file bug report. DONE.
 Implemented workaround in the meanwhile.
 
-Notebooks:
-OK, but vertical positionning of text in tabs is broken. 
+Notebooks: DONE, but vertical positionning of text in tabs is broken. 
 Might also be gtk3 bug, but needs investigation.
 
-Icons: customize hover effect, and implement custom disable effect.
+try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3.  DONE
 
-ProgressBars: OK
-Slider trough: OK
-Splitter handles: OK
-Toolbar grips: OK (but untested)
-
-- try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3.  OK
-- backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. Should be more robust.
-OK
-
-Gtk3-Demo -> offscreen pixmap -> effects 
-crash.
+backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. 
+Should be more robust. DONE
+- try backport icon remapping too.
 
 - Use as much of gtk_theming_engine_has_class, rather than gtk_widget_path_it_type.
 - in gtk.css: same thing. Try use Style_classes rather than widget types.
 - fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row.
 
-- try backport icon remapping too.
 
-ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed.
+Gtk3-Demo -> offscreen pixmap -> effects crashes
+
