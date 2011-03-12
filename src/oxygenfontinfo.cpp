@@ -27,12 +27,18 @@ namespace Oxygen
 {
 
     //_____________________________________________
-    FontInfo::operator std::string ( void ) const
+    std::string FontInfo::toString( bool addQuotes ) const
     {
         std::ostringstream out;
-        out << "\"" << family() << " " << weightString() << " ";
+
+        if( addQuotes ) out << "\"";
+
+        out << family() << " " << weightString() << " ";
         if( _italic ) out << italicString() << " ";
-        out << size() << "\"";
+        out << size() ;
+
+        if( addQuotes ) out << "\"";
+
         return out.str();
     }
 
