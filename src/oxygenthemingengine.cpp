@@ -211,23 +211,21 @@ namespace Oxygen
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
-// TODO: reimplement mask for gtk3
-//             GdkWindow* window( gtk_widget_get_window( widget ) );
-//             if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
-//             {
-//
-//                 // make tooltips appear rounded using XShape extension if screen isn't composited
-//                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-//                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-//                 const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-//                 if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
-//                 {
-//                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-//                     gdk_window_shape_combine_mask( window, mask, x, y );
-//                     gdk_pixmap_unref( mask );
-//                 }
-//
-//             }
+            GdkWindow* window( gtk_widget_get_window( widget ) );
+            if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
+            {
+
+                // make tooltips appear rounded using XShape extension if screen isn't composited
+                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
+                {
+                    Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_region( window, mask, x, y );
+                }
+
+            }
 
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
@@ -452,20 +450,18 @@ namespace Oxygen
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
-// TODO: reimplement for gtk3
-//             const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
-//             if( !(options&Alpha) )
-//             {
-//                 // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
-//                 // make background window rounded
-//                 Style::instance().animations().widgetSizeEngine().registerWidget(parent);
-//                 if( Style::instance().animations().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
-//                 {
-//                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-//                     gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
-//                     gdk_pixmap_unref(mask);
-//                 }
-//             }
+            const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
+            if( !(options&Alpha) )
+            {
+                // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+                // make background window rounded
+                Style::instance().animations().widgetSizeEngine().registerWidget(parent);
+                if( Style::instance().animations().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+                {
+                    Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_region( gtk_widget_get_window( parent ), mask, 0, 0 );
+                }
+            }
 
             // menu background and float frame
             // GdkWindow* window( gtk_widget_get_window( parent ) );
@@ -893,28 +889,28 @@ namespace Oxygen
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
                 // add mask if needed
-//                 if( GTK_IS_MENU(widget) )
-//                 {
-//                     if( !(options&Alpha) )
-//                     {
-//
-//                         // make menus appear rounded using XShape extension if screen isn't composited
-//                         Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-//                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-//                         if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
-//                         {
-//                             GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
-//                             gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
-//                             gdk_pixmap_unref(mask);
-//                         }
-//
-//                     } else {
-//
-//                         // reset mask if compositing has appeared after we had set a mask
-//                         gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), NULL, 0, 0);
-//
-//                     }
-//                 }
+                if( GTK_IS_MENU(widget) )
+                {
+                    GdkWindow* window( gtk_widget_get_parent_window(widget) );
+                    if( !(options&Alpha) )
+                    {
+
+                        // make menus appear rounded using XShape extension if screen isn't composited
+                        Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                        {
+                            Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
+                            gdk_window_shape_combine_region( window, mask, 0, Style::Menu_VerticalOffset );
+                        }
+
+                    } else {
+
+                        // reset mask if compositing has appeared after we had set a mask
+                        gdk_window_shape_combine_region( window, 0L, 0, 0);
+
+                    }
+                }
 
                 // if rendering of menu background fails, assume square window
                 if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )

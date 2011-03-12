@@ -21,6 +21,7 @@
 */
 
 #include "oxygencachekey.h"
+#include "oxygencairoregion.h"
 #include "oxygencairosurface.h"
 #include "oxygencairosurfacecache.h"
 #include "oxygentileset.h"
@@ -114,10 +115,8 @@ namespace Oxygen
 
         //@}
 
-        // TODO: re-implement for gtk+3.0
-//         //! rounded mask
-//         /*! used for non-composited tooltips and menus */
-//         GdkPixmap* roundMask( int w, int h, int radius = 6 ) const;
+        //! returns a region matching given rect, with rounded corners
+        virtual Cairo::Region roundMask( int width, int height ) const;
 
         //!@name holes
         //@{

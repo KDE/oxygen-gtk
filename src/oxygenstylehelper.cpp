@@ -532,33 +532,20 @@ namespace Oxygen
         cairo_fill( context );
     }
 
-    // TODO: reimplement for gtk+ 3.0
-//     //__________________________________________________________________
-//     GdkPixmap* StyleHelper::roundMask( int w, int h, int radius ) const
-//     {
-//
-//         GdkPixmap* mask( gdk_pixmap_new( 0L, w, h, 1 ) );
-//
-//         {
-//             Cairo::Context context( GDK_DRAWABLE(mask) );
-//
-//             // clear the window
-//             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
-//             cairo_set_source( context, ColorUtils::Rgba::transparent() );
-//             cairo_paint( context );
-//
-//             // now draw roundrect mask
-//             cairo_set_operator( context, CAIRO_OPERATOR_OVER );
-//             cairo_set_source( context, ColorUtils::Rgba::black() );
-//
-//             // FIXME: radius found empirically
-//             cairo_rounded_rectangle( context, 0, 0, w, h, radius );
-//             cairo_fill( context );
-//         }
-//
-//         return mask;
-//
-//     }
+    //_______________________________________________________________________
+    Cairo::Region StyleHelper::roundMask( int w, int h ) const
+    {
+        cairo_rectangle_int_t rectangles[4] =
+        {
+            { 4, 0, w-8, h },
+            { 0, 4, w, h-8 },
+            { 2, 1, w-4, h-2 },
+            { 1, 2, w-2, h-4 }
+        };
+
+        return Cairo::Region( cairo_region_create_rectangles( rectangles, 4 ) );
+
+    }
 
     //________________________________________________________________________________________________________
     const TileSet& StyleHelper::hole( const ColorUtils::Rgba &base, const ColorUtils::Rgba& fill, double shade, int size )
