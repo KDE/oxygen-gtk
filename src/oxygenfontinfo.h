@@ -88,7 +88,7 @@ namespace Oxygen
         { return _family; }
 
         //! convert to gtk string
-        operator std::string ( void ) const;
+        std::string toString( bool addQuotes = true ) const;
 
         //! utilities
         static FontInfo fromKdeOption( std::string );

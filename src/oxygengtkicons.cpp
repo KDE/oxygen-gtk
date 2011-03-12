@@ -31,6 +31,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <gtk/gtk.h>
+
 namespace Oxygen
 {
 
@@ -120,15 +122,16 @@ namespace Oxygen
 
         // generate icon size string
         std::ostringstream iconSizesStr;
-        iconSizesStr << "gtk-icon-sizes = \"";
         for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
         {
             if( iter->first.empty() ) continue;
             if( iter != _sizes.begin() ) iconSizesStr << ": ";
             iconSizesStr << iter->first << " = " << iter->second << "," << iter->second;
         }
-        iconSizesStr << "\"";
-        _rc.addToHeaderSection( iconSizesStr.str() );
+
+        // pass to settings
+        GtkSettings* settings( gtk_settings_get_default() );
+        gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizesStr.str().c_str(), "oxygen-gtk" );
 
         // generate pixmap path
         // this must be passed to gtk before any icon settings, otherwise
