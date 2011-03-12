@@ -48,7 +48,7 @@ Might also be gtk3 bug, but needs investigation.
 Icons: customize hover effect, and implement custom disable effect.
 
 ProgressBars: OK
-Slider trough: OK, but no background gradient
+Slider trough: OK
 Splitter handles: OK
 Toolbar grips
 
