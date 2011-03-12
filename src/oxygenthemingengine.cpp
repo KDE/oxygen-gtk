@@ -1982,8 +1982,8 @@ namespace Oxygen
         #endif
 
         // lookup widget and state
-        GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
-        GtkStateFlags state(gtk_theming_engine_get_state(engine));
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
@@ -2050,16 +2050,18 @@ namespace Oxygen
 
         }
 
-        // retrieve state
-        GtkStateFlags state(gtk_theming_engine_get_state(engine));
+        // retrieve state and path
+        GtkStateFlags state(gtk_theming_engine_get_state( engine ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
         /* If the state was wildcarded, then generate a state. */
         GdkPixbuf *stated( scaled );
 
-        // TODO: re-implement for gtk3
-        // // non-flat pushbuttons don't have any icon effect
-        // const bool useEffect( Style::instance().settings().useIconEffect() && Gtk::gtk_button_is_flat( Gtk::gtk_parent_button( widget ) ) );
-        const bool useEffect( Style::instance().settings().useIconEffect() );
+        // non-flat pushbuttons don't have any icon effect
+        /* since we can't access the button directly, we enable effect only for toolbutton widgets */
+        const bool useEffect(
+            Style::instance().settings().useIconEffect() &&
+            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOL_BUTTON ) );
 
         if( gtk_icon_source_get_state_wildcarded( source ) )
         {
