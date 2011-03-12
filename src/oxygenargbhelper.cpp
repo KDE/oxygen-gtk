@@ -141,10 +141,6 @@ namespace Oxygen
         GtkWindow* window( GTK_WINDOW( widget ) );
         GdkWindowTypeHint hint = gtk_window_get_type_hint( window );
 
-        // TODO: file a bug to GTK3.
-        // Menu windows don't get the GDK_WINDOW_TYPE_HINT_MENU hint any more
-        bool isMenu( GTK_IS_BIN( widget ) && GTK_IS_MENU( gtk_bin_get_child( GTK_BIN( widget ) ) ) );
-
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::ArgbHelper::colormapHook - "
             << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
@@ -154,7 +150,7 @@ namespace Oxygen
         #endif
 
         if(
-            isMenu ||
+            //isMenu ||
             hint == GDK_WINDOW_TYPE_HINT_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
