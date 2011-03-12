@@ -393,16 +393,22 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CHECK ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) )
         {
 
+            /*
+            Note: widget_path is used above instead of engine_class,
+            because some widgets do not pass the correct "class"
+            when rendering background
+            */
             return;
-
 
         } else {
 
