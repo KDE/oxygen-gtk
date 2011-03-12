@@ -22,7 +22,7 @@ TRIED, but it actually does not unclutter the code much, and creates other issue
 
 GTK3 branch:
 
-Arrows:
+Arrows: ok.
 scrollbars: ok
 menus: ok.
 treeviews: ok
@@ -36,7 +36,7 @@ Menus: ok, but:
 - tearoff menus are totally broken. Part of it might be gtk3 issue. 
 - XShape not yet used for non-composited WM case (same for combobox popups and tooltips)
 
-Comboboxes: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient
+Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient
 Combobox entry: completly fucked up
 Seems like gtk3 bug. Also broken with Raleigh. 
 TODO: file bug report.
@@ -50,9 +50,12 @@ Icons: customize hover effect, and implement custom disable effect.
 ProgressBars: OK
 Slider trough: OK
 Splitter handles: OK
-Toolbar grips
+Toolbar grips: OK (but untested)
 
 Gtk3-Demo -> offscreen pixmap -> effects 
 crash.
 
 XShape: combobox popups, tooltips, menus
+
+- Use as much of gtk_theming_engine_has_class, rather than gtk_widget_path_it_type.
+- in gtk.css: same thing. Try use Style_classes rather than widget types.
