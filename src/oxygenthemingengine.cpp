@@ -1730,22 +1730,20 @@ namespace Oxygen
 
             if( gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) )
             {
+
                 if( !( state&GTK_STATE_FLAG_INSENSITIVE ) ) options &= ~Contrast;
                 role = Palette::Text;
+
+            } else {
+
+                useWidgetStateEngine = false;
+                options &= ~( Focus|Hover );
+                role = Palette::ButtonText;
+
             }
 
             if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=2;
             else x -= 2;
-
-        } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
-
-            useWidgetStateEngine = false;
-
-            options &= ~( Focus|Hover );
-            role = Palette::ButtonText;
-
-            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
-            { x+=2; }
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
 
