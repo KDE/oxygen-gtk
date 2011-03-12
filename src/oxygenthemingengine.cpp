@@ -2054,15 +2054,14 @@ namespace Oxygen
         GtkStateFlags state(gtk_theming_engine_get_state( engine ) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        /* If the state was wildcarded, then generate a state. */
-        GdkPixbuf *stated( scaled );
-
         // non-flat pushbuttons don't have any icon effect
         /* since we can't access the button directly, we enable effect only for toolbutton widgets */
         const bool useEffect(
             Style::instance().settings().useIconEffect() &&
             Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOL_BUTTON ) );
 
+        /* If the state was wildcarded, then generate a state. */
+        GdkPixbuf *stated( scaled );
         if( gtk_icon_source_get_state_wildcarded( source ) )
         {
 
