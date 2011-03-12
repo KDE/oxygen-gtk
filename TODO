@@ -59,3 +59,4 @@ XShape: combobox popups, tooltips, menus
 
 - Use as much of gtk_theming_engine_has_class, rather than gtk_widget_path_it_type.
 - in gtk.css: same thing. Try use Style_classes rather than widget types.
+- try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3. Should also work better for gtk2.
