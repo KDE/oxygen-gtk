@@ -54,9 +54,7 @@ INFO: css border and padding ordering is either:
 
     -GtkTreeView-allow-rules: 1;
 
-    -GtkMenuBar-shadow-type: GTK_SHADOW_NONE;
     -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
-    -GtkToolbar-shadow-type: GTK_SHADOW_NONE;
 
     -GtkWindow-resize-grip-height: 0;
     -GtkWindow-resize-grip-width: 0;
@@ -71,6 +69,11 @@ INFO: css border and padding ordering is either:
     engine: oxygen-gtk;
     theme: oxygen-gtk;
 }
+
+/* customize border styles */
+.toolbar { border-style: none; }
+.menubar { border-style: none; }
+GtkStatusBar { border-style: none; }
 
 /*
     TODO:

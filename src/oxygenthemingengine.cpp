@@ -385,11 +385,14 @@ namespace Oxygen
         {
 
             return;
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
+
+            render_animated_button( context, widget );
+            return;
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
@@ -429,7 +432,7 @@ namespace Oxygen
 
         // load border style
         GtkBorderStyle borderStyle;
-        gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
+        gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_STYLE, &borderStyle, NULL );
 
         if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_TROUGH))
         {
@@ -825,10 +828,7 @@ namespace Oxygen
 
             }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) ) {
-
-            // also draw possible animated tool button
-            render_animated_button( context, widget );
+        //} else if( gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) ) {
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
 
@@ -1118,7 +1118,7 @@ namespace Oxygen
 
             }
 
-        } else if( borderStyle == GTK_BORDER_STYLE_INSET && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) ) {
+        } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
 
             if( widget && GTK_IS_FRAME( widget ) )
             {
@@ -1200,7 +1200,7 @@ namespace Oxygen
 
         // load border style
         GtkBorderStyle borderStyle;
-        gtk_theming_engine_get( engine, state, "border-style", &borderStyle, NULL );
+        gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_STYLE, &borderStyle, NULL );
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) )
         {
