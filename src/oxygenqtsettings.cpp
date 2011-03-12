@@ -732,10 +732,6 @@ namespace Oxygen
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-toolbar-style", toolbarStyle, "oxygen-gtk" );
 
-        // icons on buttons
-        if( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) == "false" )
-        { gtk_settings_set_long_property( settings, "gtk-button-images", 0, "oxygen-gtk" ); }
-
         // dialog button ordering
         gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
 
