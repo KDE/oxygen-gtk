@@ -26,8 +26,8 @@ Arrows: ok.
 scrollbars: ok
 menus: ok.
 treeviews: ok
-But there is a problem with background in header buttons.
-There is also a problem in rendering buttons in cells (because of how header buttons are detected.)
+But there is a problem with background in header buttons. Fixed.
+There is also a problem in rendering buttons in cells (because of how header buttons are detected.) This is also true for Gtk2
 
 TreeView selection: OK.
 Spin buttons: OK
