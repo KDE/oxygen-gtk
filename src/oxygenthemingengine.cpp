@@ -2019,7 +2019,92 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        return ThemingEngine::parentClass()->render_icon_pixbuf( engine, source, size );
+        GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
+        g_return_val_if_fail( base_pixbuf != 0L, 0L );
+
+// TODO: re-implement for gtk3
+//         // retrieve screen and settings
+//         GdkScreen *screen( 0L );
+//         GtkSettings *settings( 0L );
+//         if( widget && gtk_widget_has_screen( widget ) )
+//         {
+//
+//             screen = gtk_widget_get_screen( widget );
+//             settings = gtk_settings_get_for_screen( screen );
+//
+//         } else if (style->colormap) {
+//
+//             screen = gdk_colormap_get_screen( style->colormap );
+//             settings = gtk_settings_get_for_screen( screen );
+//
+//         } else {
+//
+//             settings = gtk_settings_get_default();
+//
+//         }
+
+        GtkSettings *settings( gtk_settings_get_default() );
+        int width = 1;
+        int height = 1;
+        if( size != (GtkIconSize)-1 && !gtk_icon_size_lookup_for_settings( settings, size, &width, &height ) )
+        {
+            g_warning (G_STRLOC ": invalid icon size '%d'", size);
+            return 0L;
+        }
+
+        /* If the size was wildcarded, and we're allowed to scale, then scale; otherwise,
+        * leave it alone. */
+        GdkPixbuf *scaled( 0L);
+        if( size != (GtkIconSize)-1 && gtk_icon_source_get_size_wildcarded( source ) )
+        {
+
+            scaled = Gtk::gdk_pixbuf_resize( base_pixbuf, width, height );
+
+        } else {
+
+            scaled = static_cast<GdkPixbuf*>( g_object_ref( base_pixbuf ) );
+
+        }
+
+        // retrieve state
+        GtkStateFlags state(gtk_theming_engine_get_state(engine));
+
+        /* If the state was wildcarded, then generate a state. */
+        GdkPixbuf *stated( scaled );
+
+        // TODO: re-implement for gtk3
+        // // non-flat pushbuttons don't have any icon effect
+        // const bool useEffect( Style::instance().settings().useIconEffect() && Gtk::gtk_button_is_flat( Gtk::gtk_parent_button( widget ) ) );
+        const bool useEffect( Style::instance().settings().useIconEffect() );
+
+        if( gtk_icon_source_get_state_wildcarded( source ) )
+        {
+
+            if( state&GTK_STATE_INSENSITIVE )
+            {
+
+                stated = Gtk::gdk_pixbuf_set_alpha( scaled, 0.3 );
+                gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
+                g_object_unref (scaled);
+
+            } else if( useEffect && (state&GTK_STATE_PRELIGHT) ) {
+
+                stated = gdk_pixbuf_copy( scaled );
+                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
+                {
+                    // FIXME: correct the value to match KDE
+                    /*
+                    in fact KDE allows one to set many different effects on icon
+                    not sure we want to copy this code all over the place, especially since nobody changes the default settings,
+                    as far as I know */
+                    gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
+                }
+                g_object_unref( scaled );
+
+            }
+        }
+
+        return stated;
 
     }
 
