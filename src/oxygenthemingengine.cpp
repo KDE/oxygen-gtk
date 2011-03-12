@@ -439,6 +439,19 @@ namespace Oxygen
                 Style::instance().renderProgressBarHole( context, x, y, w, h, options );
                 return;
             }
+            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_SCALE) && GTK_IS_SCALE(widget))
+            {
+                const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
+                const int offset( 6 );
+                if( vertical ) {
+
+                    Style::instance().renderSliderGroove( context, x, y + offset, w, h - 2*offset, Vertical );
+                } else {
+
+                    Style::instance().renderSliderGroove( context, x + offset, y, w - 2*offset, h, StyleOptions() );
+                }
+                return;
+            }
         }
 
         // adjust shadow type for some known widgets
