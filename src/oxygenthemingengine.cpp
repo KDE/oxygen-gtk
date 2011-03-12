@@ -1556,7 +1556,7 @@ namespace Oxygen
             } else {
 
                 options |= Blend;
-                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+                data=Style::instance().animations().widgetStateEngine().get( widget, options );
 
             }
 
