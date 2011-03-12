@@ -133,25 +133,10 @@ GtkProgressBar { padding: 1; }
 /* combo boxes */
 GtkComboBox { border-width: 1 0; }
 GtkComboBox>GtkFrame { border-width: 4; }
-
-/* entries */
-/* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
 GtkComboBox>GtkEntry {
     padding: 4 5;
     border-width: 2 5;
 }
-
-
-/*
-TODO: how do I deal with Combobox-Entry settings
-Possibly install non-default provider in style hook.
-*/
-
-/*
-At the moment GtkComboBox(entry) look totally broken,
-possibly due to internal Gtk issues, triggered by the
-"appears-as-list" flag.
-*/
 
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }
