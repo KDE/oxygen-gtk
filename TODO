@@ -40,9 +40,11 @@ Menus: ok, but:
 - XShape not yet used for non-composited WM case (same for combobox popups and tooltips)
 
 Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient: OK
-Combobox entry: completly fucked up
+
+Combobox entry: completly broken.
 Seems like gtk3 bug. Also broken with Raleigh. 
-TODO: file bug report.
+TODO: file bug report. Done.
+Implemented workaround in the meanwhile.
 
 Notebooks:
 OK, but vertical positionning of text in tabs is broken. 
@@ -67,3 +69,5 @@ crash.
 - fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row.
 
 - try backport icon remapping too.
+
+ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed.
