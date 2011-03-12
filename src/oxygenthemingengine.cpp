@@ -351,10 +351,18 @@ namespace Oxygen
                     }
 
                     // check if column is last
-                    if( (options&(Selected|Hover)) && cellInfo.isValid() && cellInfo.isLastVisibleColumn( treeView ) )
+                    if( (options&(Selected|Hover)) && cellInfo.isValid() )
                     {
-                        if( reversed ) forceCellStart = true;
-                        else forceCellEnd = true;
+                        if(cellInfo.isLastVisibleColumn( treeView ))
+                        {
+                            if( reversed ) forceCellStart = true;
+                            else forceCellEnd = true;
+                        }
+                        if(cellInfo.isFirstVisibleColumn( treeView ))
+                        {
+                            if( reversed ) forceCellEnd = true;
+                            else forceCellStart = true;
+                        }
                     }
 
                 }
