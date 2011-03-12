@@ -1981,11 +1981,11 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
+        // lookup widget and state
         GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
         GtkStateFlags state(gtk_theming_engine_get_state(engine));
 
-        if(gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ))
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
             StyleOptions options( widget, state);
             if( Gtk::gtk_widget_is_vertical( widget ) )
@@ -1999,9 +1999,10 @@ namespace Oxygen
             }
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
 
-        } else
-        {
+        } else {
+
             ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
+
         }
 
     }
