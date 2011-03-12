@@ -36,6 +36,7 @@ Menus: ok, but:
 - tearoff menus are totally broken. Part of it might be gtk3 issue. 
 - XShape not yet used for non-composited WM case (same for combobox popups and tooltips)
 
+Comboboxes: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient
 Combobox entry: completly fucked up
 Seems like gtk3 bug. Also broken with Raleigh. 
 TODO: file bug report.
@@ -46,10 +47,12 @@ Might also be gtk3 bug, but needs investigation.
 
 Icons: customize hover effect, and implement custom disable effect.
 
-ProgressBars
-Slider trough
-Splitter handles
+ProgressBars: OK
+Slider trough: OK, but no background gradient
+Splitter handles: OK
 Toolbar grips
 
 Gtk3-Demo -> offscreen pixmap -> effects 
 crash.
+
+XShape: combobox popups, tooltips, menus
