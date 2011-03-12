@@ -1942,23 +1942,28 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
+        // lookup widget and state
         GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
         GtkStateFlags state(gtk_theming_engine_get_state(engine));
 
-        if(gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PANE_SEPARATOR))
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PANE_SEPARATOR) )
         {
-            StyleOptions options(widget, state);
-            if( Gtk::gtk_widget_is_vertical( widget ) )
-            {
-                options |= Vertical;
-            }
+
+            StyleOptions options( widget, state );
+            if( Gtk::gtk_widget_is_vertical( widget ) )  options |= Vertical;
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderSplitter( context, x, y, w, h, options, data );
-        }
-        else
-        {
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR) ) {
+
+            StyleOptions options( widget, state );
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            Style::instance().renderToolBarHandle( context, x, y, w, h, options );
+
+        } else {
+
             ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
+
         }
 
     }
