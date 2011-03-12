@@ -131,14 +131,14 @@ GtkViewport { padding: 1; }
 GtkProgressBar { padding: 1; }
 
 /* combo boxes */
-GtkComboBox { border-width: 2 0; }
+GtkComboBox { border-width: 1 0; }
 GtkComboBox>GtkFrame { border-width: 4; }
 
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
 GtkComboBox>GtkEntry {
     padding: 4 5;
-    border-width: 4 5;
+    border-width: 2 5;
 }
 
 

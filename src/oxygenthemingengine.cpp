@@ -1726,13 +1726,16 @@ namespace Oxygen
 
             role = Palette::WindowText;
 
-        } else if( Gtk::gtk_parent_combobox_entry( widget ) ) {
+        } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
-            if( !( state&GTK_STATE_FLAG_INSENSITIVE ) ) options &= ~Contrast;
-            role = Palette::Text;
+            if( gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) )
+            {
+                if( !( state&GTK_STATE_FLAG_INSENSITIVE ) ) options &= ~Contrast;
+                role = Palette::Text;
+            }
 
-            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
-            { x+=2; }
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=2;
+            else x -= 2;
 
         } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) ) {
 
