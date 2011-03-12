@@ -51,8 +51,7 @@ namespace Oxygen
         void loadTranslations( const std::string& filename );
 
         //! generate icons
-        /*! returns "size" string, to be passed to GtkSettings */
-        std::string generate( const PathList& );
+        void generate( const PathList& );
 
         //! set icon size
         void setIconSize( const std::string&, unsigned int value );

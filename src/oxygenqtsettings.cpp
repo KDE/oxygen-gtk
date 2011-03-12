@@ -482,10 +482,9 @@ namespace Oxygen
         // load translation table
         _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
-        // generate internal icons factory and pass icon sizes to settings
-        const std::string iconSizes( _icons.generate( iconThemeList ) );
-        if( !iconSizes.empty() )
-        { gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizes.c_str(), "oxygen-gtk" ); }
+        // generate internal icons factory
+        _icons.generate( iconThemeList );
+
     }
 
     //_________________________________________________________
@@ -690,23 +689,23 @@ namespace Oxygen
         {
             // pass to settings
             GtkSettings* settings( gtk_settings_get_default() );
-            gtk_settings_set_string_property( settings, "gtk-font-name", std::string( fonts[FontInfo::Default] ).c_str(), "oxygen-gtk" );
+            gtk_settings_set_string_property( settings, "gtk-font-name", fonts[FontInfo::Default].toString( false ).c_str(), "oxygen-gtk" );
 
             _css.setCurrentSection( Gtk::CSS::defaultSection() );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Default] ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Default].toString( false ) ) );
 
         }
 
         if( fonts[FontInfo::Menu].isValid() )
         {
             _css.addSection( "GtkMenuItem" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Menu] ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Menu].toString( false ) ) );
         }
 
         if( fonts[FontInfo::ToolBar].isValid() )
         {
             _css.addSection( "GtkToolbar" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::ToolBar] ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::ToolBar].toString( false ) ) );
         }
 
         // don't check for section and tag presence - use default font if not present

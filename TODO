@@ -26,6 +26,9 @@ Arrows: ok.
 scrollbars: ok
 menus: ok.
 treeviews: ok
+But there is a problem with background in header buttons.
+There is also a problem in rendering buttons in cells (because of how header buttons are detected.)
+
 TreeView selection: OK.
 Spin buttons: OK
 
@@ -52,13 +55,15 @@ Slider trough: OK
 Splitter handles: OK
 Toolbar grips: OK (but untested)
 
+- try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3.  OK
+- backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. Should be more robust.
+OK
+
 Gtk3-Demo -> offscreen pixmap -> effects 
 crash.
 
 - Use as much of gtk_theming_engine_has_class, rather than gtk_widget_path_it_type.
 - in gtk.css: same thing. Try use Style_classes rather than widget types.
-- try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3. Should also work better for gtk2.
 - fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row.
 
-- backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. Should be more robust.
 - try backport icon remapping too.

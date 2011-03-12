@@ -31,6 +31,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <gtk/gtk.h>
+
 namespace Oxygen
 {
 
@@ -117,10 +119,10 @@ namespace Oxygen
     }
 
     //_________________________________________
-    std::string GtkIcons::generate( const PathList& pathList )
+    void GtkIcons::generate( const PathList& pathList )
     {
 
-        if( !_dirty && _pathList == pathList ) return std::string();
+        if( !_dirty && _pathList == pathList ) return;
 
         // save path list
         _pathList = pathList;
@@ -134,6 +136,19 @@ namespace Oxygen
 
         // create new
         _factory = gtk_icon_factory_new();
+
+        // generate icon size string
+        std::ostringstream iconSizesStr;
+        for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
+        {
+            if( iter->first.empty() ) continue;
+            if( iter != _sizes.begin() ) iconSizesStr << ": ";
+            iconSizesStr << iter->first << " = " << iter->second << "," << iter->second;
+        }
+
+        // pass to settings
+        GtkSettings* settings( gtk_settings_get_default() );
+        gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizesStr.str().c_str(), "oxygen-gtk" );
 
         // loop over icons
         bool empty( true );
@@ -158,18 +173,9 @@ namespace Oxygen
 
         } else gtk_icon_factory_add_default( _factory );
 
-        // sizes string
-        std::ostringstream out;
-        for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
-        {
-            if( iter->first.empty() ) continue;
-            if( iter != _sizes.begin() ) out << ": ";
-            out << iter->first << " = " << iter->second << "," << iter->second;
-        }
-
         _dirty = false;
 
-        return out.str();
+        return;
 
     }
 
