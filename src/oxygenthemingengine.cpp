@@ -441,6 +441,41 @@ namespace Oxygen
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_STYLE, &borderStyle, NULL );
 
+        if( Gtk::gtk_combobox_is_scrolled_window( widget ) ) {
+
+            // make GtkCombo list look a bit better
+            // retrieve proper parent and check
+            GtkWidget* parent=gtk_widget_get_parent(widget);
+            if( !( parent && GTK_IS_WINDOW(parent) ) ) return;
+
+            // setup options
+            StyleOptions options( Round );
+            if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
+
+// TODO: reimplement for gtk3
+//             const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
+//             if( !(options&Alpha) )
+//             {
+//                 // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
+//                 // make background window rounded
+//                 Style::instance().animations().widgetSizeEngine().registerWidget(parent);
+//                 if( Style::instance().animations().widgetSizeEngine().updateSize(parent,allocation.width,allocation.height))
+//                 {
+//                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+//                     gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
+//                     gdk_pixmap_unref(mask);
+//                 }
+//             }
+
+            // menu background and float frame
+            GdkWindow* window( gtk_widget_get_window( parent ) );
+            Style::instance().renderMenuBackground( context, x, y, w, h, options );
+            Style::instance().drawFloatFrame( context, x, y, w, h, options );
+
+            return;
+
+        }
+
         if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_TROUGH))
         {
             if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_CELL) ||
