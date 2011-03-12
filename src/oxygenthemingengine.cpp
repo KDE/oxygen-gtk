@@ -389,10 +389,11 @@ namespace Oxygen
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) )
         {
 
@@ -825,11 +826,6 @@ namespace Oxygen
             }
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) ) {
-
-            // no background for Gtk applets
-            if( Gtk::gtk_widget_is_applet( widget ) ) return;
-
-            Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
 
             // also draw possible animated tool button
             render_animated_button( context, widget );
