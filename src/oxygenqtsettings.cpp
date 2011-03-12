@@ -133,11 +133,6 @@ namespace Oxygen
             initArgb();
         }
 
-
-        // dialog button ordering
-        GtkSettings* settings( gtk_settings_get_default() );
-        gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
-
         // configuration path
         _kdeConfigPathList = kdeConfigPathList();
 
@@ -687,6 +682,9 @@ namespace Oxygen
 
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-toolbar-style", toolbarStyle, "oxygen-gtk" );
+
+        // dialog button ordering
+        gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
 
         // active icon effects
         _useIconEffect = _kdeGlobals.getOption( "[MainToolbarIcons]", "ActiveEffect" ).toVariant<std::string>( "gamma" ) != "none";
