@@ -117,6 +117,7 @@ namespace Oxygen
 
         //! returns a region matching given rect, with rounded corners
         virtual Cairo::Region roundMask( int width, int height ) const;
+        virtual Cairo::Region innerRoundMask( int width, int height ) const;
 
         //!@name holes
         //@{

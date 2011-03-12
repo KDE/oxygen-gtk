@@ -535,7 +535,7 @@ namespace Oxygen
     //_______________________________________________________________________
     Cairo::Region StyleHelper::roundMask( int w, int h ) const
     {
-        cairo_rectangle_int_t rectangles[4] =
+        cairo_rectangle_int_t rectangles[] =
         {
             { 4, 0, w-8, h },
             { 0, 4, w, h-8 },
@@ -544,6 +544,18 @@ namespace Oxygen
         };
 
         return Cairo::Region( cairo_region_create_rectangles( rectangles, 4 ) );
+
+    }
+    //_______________________________________________________________________
+    Cairo::Region StyleHelper::innerRoundMask( int w, int h ) const
+    {
+        cairo_rectangle_int_t rectangles[] =
+        {
+            { 1, 0, w-2, h },
+            { 0, 1, w, h-2 }
+        };
+
+        return Cairo::Region( cairo_region_create_rectangles( rectangles, 2 ) );
 
     }
 
