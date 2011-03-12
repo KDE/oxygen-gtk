@@ -452,9 +452,6 @@ namespace Oxygen
         gtk_settings_set_string_property( settings, "gtk-icon-theme-name", _kdeIconTheme.c_str(), "oxygen-gtk" );
         gtk_settings_set_string_property( settings, "gtk-fallback-icon-theme-name", _kdeFallbackIconTheme.c_str(), "oxygen-gtk" );
 
-        // check show icons on push buttons kde option
-        const std::string showIconsOnPushButton( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) );
-
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
         const int dialogIconSize( _kdeGlobals.getOption( "[DialogIcons]", "Size" ).toInt( 32 ) );
@@ -741,6 +738,10 @@ namespace Oxygen
 
         // dialog button ordering
         gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+
+        // icons on buttons
+        if( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) == "false" )
+        { gtk_settings_set_long_property( settings, "gtk-button-images", 0, "oxygen-gtk" ); }
 
         // active icon effects
         _useIconEffect = _kdeGlobals.getOption( "[MainToolbarIcons]", "ActiveEffect" ).toVariant<std::string>( "gamma" ) != "none";
