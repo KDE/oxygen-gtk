@@ -251,6 +251,7 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_EXPANDER ) ||
+             gtk_widget_path_is_type( path, GTK_TYPE_SCALE ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
         {
 
@@ -430,7 +431,7 @@ namespace Oxygen
 
         if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_TROUGH))
         {
-            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_CELL) || 
+            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_CELL) ||
                    GTK_IS_PROGRESS_BAR(widget) )
             {
                 StyleOptions options(widget, state);
