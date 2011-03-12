@@ -1636,8 +1636,9 @@ namespace Oxygen
 
             useWidgetStateEngine = false;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
+            /* note: can't use gtk_theming_engine_has_class here, cause MENUITEM is not passed */
             // disable highlight in menus, for consistancy with oxygen qt style
             options &= ~( Focus|Hover );
             role = Palette::WindowText;
@@ -1722,15 +1723,18 @@ namespace Oxygen
             { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
 
         } else if(
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) &&
-            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) ) {
+            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) &&
+            !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
+        {
 
+            /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
             useWidgetStateEngine = false;
             options &= ~( Focus|Hover );
 
             if( gtk_widget_path_is_type( path, GTK_TYPE_ARROW ) )
             {
 
+                /* TODO: fixed margins for arrow buttons */
                 x += 1;
                 role = Palette::WindowText;
 
