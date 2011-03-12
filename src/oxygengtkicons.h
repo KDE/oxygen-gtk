@@ -25,9 +25,13 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenpathlist.h"
+
 #include <string>
 #include <map>
 #include <vector>
+
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
@@ -41,11 +45,14 @@ namespace Oxygen
         GtkIcons( void );
 
         //! destructor
-        virtual ~GtkIcons( void )
-        {}
+        virtual ~GtkIcons( void );
 
         //! load translations
         void loadTranslations( const std::string& filename );
+
+        //! generate icons
+        /*! returns "size" string, to be passed to GtkSettings */
+        std::string generate( const PathList& );
 
         //! set icon size
         void setIconSize( const std::string&, unsigned int value );
@@ -54,10 +61,20 @@ namespace Oxygen
         bool isDirty( void ) const
         { return _dirty; }
 
-        //! generate icon sizes string
-        std::string generate( void );
+        protected:
+
+        //! generate iconSet for given option
+        GtkIconSet* generate( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
 
         private:
+
+        //!@name icon map
+        //@{
+        typedef std::pair<std::string, std::string> IconPair;
+        typedef std::map<std::string, std::string> IconMap;
+
+        IconMap _icons;
+        //@}
 
         //!@name icon sizes
         //@{
@@ -85,11 +102,24 @@ namespace Oxygen
             std::string _tag;
         };
 
-       //@}
+        //@}
+
+        //!@name local storage, to prevent unnecessary reloading
+        //@{
+
+        //! local translations filename
+        std::string _filename;
+
+        //! local path list
+        PathList _pathList;
+
+        //! icon factory
+        GtkIconFactory* _factory;
 
         //! dirty flag. Set to true when options needs update
         bool _dirty;
 
+        //@}
 
     };
 

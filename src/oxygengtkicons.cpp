@@ -36,6 +36,7 @@ namespace Oxygen
 
     //_________________________________________
     GtkIcons::GtkIcons( void ):
+        _factory( 0L ),
         _dirty( true )
     {
 
@@ -50,6 +51,16 @@ namespace Oxygen
         _sizes.push_back( std::make_pair( "gtk-dialog", 32 ) );
         _sizes.push_back( std::make_pair( "", 16 ) );
 
+    }
+
+    //_________________________________________
+    GtkIcons::~GtkIcons( void )
+    {
+        if( _factory )
+        {
+            gtk_icon_factory_remove_default( _factory );
+            g_object_unref( G_OBJECT( _factory ) );
+        }
     }
 
     //_________________________________________
@@ -70,9 +81,84 @@ namespace Oxygen
     }
 
     //_________________________________________
-    std::string GtkIcons::generate( void )
+    void GtkIcons::loadTranslations( const std::string& filename )
     {
 
+        if( filename == _filename )
+        { return; }
+
+        _filename = filename;
+        _dirty = true;
+        _icons.clear();
+
+        std::ifstream in( filename.c_str() );
+        if( !in )
+        {
+            std::cerr << "Oxygen::GtkIcons::loadTranslations - could not open " << filename << std::endl;
+            return;
+        }
+
+        std::string line;
+        while( std::getline( in, line, '\n' ) )
+        {
+
+            if( line.empty() ) continue;
+
+            IconPair iconPair;
+            std::istringstream stream( line.c_str() );
+            stream >> iconPair.first >> iconPair.second;
+            if( ( stream.rdstate() & std::ios::failbit ) != 0 )
+            { continue; }
+
+            _icons.insert( iconPair );
+
+        }
+
+    }
+
+    //_________________________________________
+    std::string GtkIcons::generate( const PathList& pathList )
+    {
+
+        if( !_dirty && _pathList == pathList ) return std::string();
+
+        // save path list
+        _pathList = pathList;
+
+        // reset factory
+        if( _factory )
+        {
+            gtk_icon_factory_remove_default( _factory );
+            g_object_unref( G_OBJECT( _factory ) );
+        }
+
+        // create new
+        _factory = gtk_icon_factory_new();
+
+        // loop over icons
+        bool empty( true );
+        for( IconMap::const_iterator iconIter = _icons.begin(); iconIter != _icons.end(); ++iconIter )
+        {
+
+            GtkIconSet* iconSet( generate( iconIter->first, iconIter->second, pathList ) );
+            if( iconSet )
+            {
+                gtk_icon_factory_add( _factory, iconIter->first.c_str(), iconSet );
+                gtk_icon_set_unref( iconSet );
+                empty = false;
+            }
+
+        }
+
+        if( empty )
+        {
+
+            g_object_unref( G_OBJECT( _factory ) );
+            _factory = 0L;
+
+        } else gtk_icon_factory_add_default( _factory );
+
+        // sizes string
         std::ostringstream out;
         for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
         {
@@ -84,6 +170,76 @@ namespace Oxygen
         _dirty = false;
 
         return out.str();
+
+    }
+
+    //__________________________________________________________________
+    GtkIconSet* GtkIcons::generate(
+        const std::string& gtkIconName,
+        const std::string& kdeIconName,
+        const PathList& pathList ) const
+    {
+
+
+        if( kdeIconName == "NONE" ) return 0L;
+
+        bool empty( true );
+
+        // create iconSet
+        GtkIconSet* iconSet = gtk_icon_set_new();
+
+        // loop over iconSizes
+        for( SizeMap::const_iterator sizeIter = _sizes.begin(); sizeIter != _sizes.end(); ++sizeIter )
+        {
+
+            // generate full icon name
+            std::ostringstream iconFileStream;
+            iconFileStream << sizeIter->second << "x" << sizeIter->second << "/" << kdeIconName;
+
+            // loop over provided path to see if at least one icon is found
+            for( PathList::const_iterator pathIter = pathList.begin(); pathIter != pathList.end(); ++pathIter )
+            {
+                std::string filename( *pathIter + '/' + iconFileStream.str() );
+                if( !std::ifstream( filename.c_str() ) ) continue;
+
+                empty = false;
+                GtkIconSource* iconSource( gtk_icon_source_new() );
+
+                // set name
+                gtk_icon_source_set_filename( iconSource, filename.c_str() );
+
+                // set direction and state wildcarded
+                gtk_icon_source_set_direction_wildcarded( iconSource, TRUE );
+                gtk_icon_source_set_state_wildcarded( iconSource, TRUE );
+
+                // set size
+                if( sizeIter->first.empty() ) gtk_icon_source_set_size_wildcarded( iconSource, TRUE );
+                else {
+
+                    GtkIconSize size = gtk_icon_size_from_name( sizeIter->first.c_str() );
+                    if (size != GTK_ICON_SIZE_INVALID)
+                    {
+                        gtk_icon_source_set_size_wildcarded( iconSource, FALSE );
+                        gtk_icon_source_set_size( iconSource, size );
+                    }
+                }
+
+                // add source to iconSet
+                gtk_icon_set_add_source( iconSet, iconSource );
+                break;
+
+            }
+
+        }
+
+        // if nothing found, return;
+        if( empty )
+        {
+
+            gtk_icon_set_unref( iconSet );
+            return 0L;
+
+        } else return iconSet;
 
     }
 

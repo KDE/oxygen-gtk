@@ -314,6 +314,9 @@ namespace Oxygen
         //! icon path
         PathList kdeIconPathList( void ) const;
 
+        //! add icon theme to path list, accounting for theme inheritance (recursively)
+        void addIconTheme( PathList&, const std::string& );
+
         //! init user config dir
         void initUserConfigDir( void );
 
@@ -365,10 +368,16 @@ namespace Oxygen
         /*! todo: respect user settings here */
         std::string _kdeFallbackIconTheme;
 
+        //! loaded icon themes
+        std::set<std::string> _iconThemes;
+
         //@}
 
         //! config path
         PathList _kdeConfigPathList;
+
+        //! icon path
+        PathList _kdeIconPathList;
 
         //! default icon path
         static const std::string _defaultKdeIconPath;

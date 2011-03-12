@@ -162,7 +162,11 @@ namespace Oxygen
 
             // reload icons
             #if OXYGEN_ICON_HACK
-            if( flags & Icons ) loadKdeIcons();
+            if( flags & Icons )
+            {
+                _kdeIconPathList = kdeIconPathList();
+                loadKdeIcons();
+            }
             #endif
 
         }
@@ -390,10 +394,57 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    void QtSettings::addIconTheme( PathList& pathList, const std::string& theme )
+    {
+
+        // do nothing if theme have already been included in the loop
+        if( _iconThemes.find( theme ) != _iconThemes.end() ) return;
+        _iconThemes.insert( theme );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::QtSettings::addIconTheme - adding " << theme << std::endl;
+        #endif
+
+        // add all possible path (based on _kdeIconPathList) and look for possible parent
+        std::string parentTheme;
+        for( PathList::const_iterator iter = _kdeIconPathList.begin(); iter != _kdeIconPathList.end(); ++iter )
+        {
+
+            // create path and check for existence
+            std::string path( sanitizePath( *iter + '/' + theme ) );
+            struct stat st;
+            if( stat( path.c_str(), &st ) != 0 ) continue;
+
+            // add to path list
+            pathList.push_back( path );
+            if( parentTheme.empty() )
+            {
+                const std::string index( sanitizePath( *iter + '/' + theme + "/index.theme" ) );
+                OptionMap themeOptions( index );
+                parentTheme = themeOptions.getValue( "[Icon Theme]", "Inherits" );
+            }
+
+        }
+
+        // add parent if needed
+        if( !parentTheme.empty() )
+        {
+            // split using "," as a separator
+            PathList parentThemes( parentTheme, "," );
+            for( PathList::const_iterator iter = parentThemes.begin(); iter != parentThemes.end(); ++iter )
+            { addIconTheme( pathList, *iter ); }
+        }
+
+        return;
+
+    }
+
+    //_________________________________________________________
     void QtSettings::loadKdeIcons( void )
     {
 
         // load icon theme and path to gtk
+        _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
         // store to settings
@@ -423,20 +474,21 @@ namespace Oxygen
         _icons.setIconSize( "gtk-dialog", dialogIconSize );
         _icons.setIconSize( "", smallIconSize );
 
-        if( _icons.isDirty() )
-        {
-            const std::string iconSizes( _icons.generate() );
+        // load translation table, generate full translation list, and path to gtk
+        _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::QtSettings::loadKdeIcons - "
-                << "icons: " << iconSizes
-                << std::endl;
-            #endif
+        // generate full path list
+        PathList iconThemeList;
+        addIconTheme( iconThemeList, _kdeIconTheme );
+        addIconTheme( iconThemeList, _kdeFallbackIconTheme );
 
-            gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizes.c_str(), "oxygen-gtk" );
+        // load translation table
+        _icons.loadTranslations( sanitizePath( std::string( GTK_THEME_DIR ) + "/icons4" ) );
 
-        }
+        // generate internal icons factory and pass icon sizes to settings
+        const std::string iconSizes( _icons.generate( iconThemeList ) );
+        if( !iconSizes.empty() )
+        { gtk_settings_set_string_property( settings, "gtk-icon-sizes", iconSizes.c_str(), "oxygen-gtk" ); }
     }
 
     //_________________________________________________________
@@ -682,6 +734,10 @@ namespace Oxygen
 
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-toolbar-style", toolbarStyle, "oxygen-gtk" );
+
+        // icons on buttons
+        if( _kdeGlobals.getValue( "[KDE]", "ShowIconsOnPushButtons", "true" ) == "false" )
+        { gtk_settings_set_long_property( settings, "gtk-button-images", 0, "oxygen-gtk" ); }
 
         // dialog button ordering
         gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
