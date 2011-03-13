@@ -650,7 +650,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
+    bool Gtk::gdk_window_map_to_toplevel( GdkWindow* window, gint* x, gint* y, gint* w, gint* h, bool frame )
     {
 
         // always initialize arguments (to invalid values)
@@ -659,37 +659,47 @@ namespace Oxygen
         if( w ) *w = -1;
         if( h ) *h = -1;
 
-        if( !( window && GDK_IS_WINDOW( window ) ) )
+        if( !( window && GDK_IS_WINDOW( window ) ) ) return false;
+
+        // get window size and height
+        if( frame ) gdk_toplevel_get_frame_size( window, w, h );
+        else gdk_toplevel_get_size( window, w, h );
+        Gtk::gdk_window_get_toplevel_origin( window, x, y );
+        return ((!w) || *w > 0) && ((!h) || *h>0);
+
+    }
+
+    //________________________________________________________
+    bool Gtk::gtk_widget_map_to_toplevel( GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame )
+    {
+
+        // always initialize arguments (to invalid values)
+        if( x ) *x=0;
+        if( y ) *y=0;
+        if( w ) *w = -1;
+        if( h ) *h = -1;
+
+        if( !widget ) return false;
+
+        // this is an alternative way to get widget position with respect to top level window
+        // and top level window size. This is used in case the GdkWindow passed as argument is
+        // actually a 'non window' drawable
+        GdkWindow* window( gtk_widget_get_parent_window( widget ) );
+        if( !( window && GDK_IS_WINDOW( window ) ) ) return false;
+
+        if( frame ) gdk_toplevel_get_frame_size( window, w, h );
+        else gdk_toplevel_get_size( window, w, h );
+        int xlocal, ylocal;
+        const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
+        if( success )
         {
-            if( !widget ) return false;
 
-            // this is an alternative way to get widget position with respect to top level window
-            // and top level window size. This is used in case the GdkWindow passed as argument is
-            // actually a 'non window' drawable
-            window = gtk_widget_get_parent_window( widget );
-            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
-            else gdk_toplevel_get_size( window, w, h );
-            int xlocal, ylocal;
-            const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
-            if( success )
-            {
-
-                if( x ) *x=xlocal;
-                if( y ) *y=ylocal;
-
-            }
-
-            return success && ((!w) || *w > 0) && ((!h) || *h>0);
-
-        } else {
-
-            // get window size and height
-            if( frame ) gdk_toplevel_get_frame_size( window, w, h );
-            else gdk_toplevel_get_size( window, w, h );
-            Gtk::gdk_window_get_toplevel_origin( window, x, y );
-            return ((!w) || *w > 0) && ((!h) || *h>0);
+            if( x ) *x=xlocal;
+            if( y ) *y=ylocal;
 
         }
+
+        return success && ((!w) || *w > 0) && ((!h) || *h>0);
 
     }
 
