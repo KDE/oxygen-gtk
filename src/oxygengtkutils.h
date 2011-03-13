@@ -86,19 +86,29 @@ namespace Oxygen
         x and y correspond to (0,0) maped to toplevel window;
         w and h correspond to toplevel window frame size
         */
-        bool gdk_map_to_toplevel( GdkWindow*, GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
-
-        //! translate origin of child window into parent
-        /*! returns true on success */
-        bool gdk_window_translate_origin( GdkWindow*, GdkWindow*, gint*, gint* );
+        bool gdk_window_map_to_toplevel( GdkWindow*, gint*, gint*, gint*, gint*, bool frame = false );
 
         //! map widget origin to top level
         /*!
         x and y correspond to (0,0) maped to toplevel window;
         w and h correspond to toplevel window frame size
         */
+        bool gtk_widget_map_to_toplevel( GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
+
+        //! map window/widget origin to top level
+        inline bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame = false )
+        {
+            if( window && GDK_IS_WINDOW( window ) ) return gdk_window_map_to_toplevel( window, x, y, w, h, frame );
+            else return gtk_widget_map_to_toplevel( widget, x, y, w, h, frame );
+        }
+
+        //! map window origin to top level
         inline bool gdk_map_to_toplevel( GdkWindow* window, gint* x, gint* y, gint* w, gint* h, bool frame = false )
-        { return gdk_map_to_toplevel( window, 0L, x, y, w, h, frame ); }
+        { return gdk_window_map_to_toplevel( window, x, y, w, h, frame ); }
+
+        //! translate origin of child window into parent
+        /*! returns true on success */
+        bool gdk_window_translate_origin( GdkWindow*, GdkWindow*, gint*, gint* );
 
         //! get top level windows dimension
         void gdk_toplevel_get_size( GdkWindow*, gint*, gint* );

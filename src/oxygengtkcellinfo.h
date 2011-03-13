@@ -104,6 +104,7 @@ namespace Oxygen
 
             //! returns true if column is the last one
             bool isLastVisibleColumn( GtkTreeView* ) const;
+
             //! returns true if column is the first one
             bool isFirstVisibleColumn( GtkTreeView* ) const;
 
