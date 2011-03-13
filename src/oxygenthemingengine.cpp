@@ -1076,6 +1076,11 @@ namespace Oxygen
                 // TODO: use correct Palette::Group depending on state
                 const ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Base ) );
 
+                // TODO: remove when bug is fixed upstream
+                int offset( ( h + 2 - Gtk::gtk_widget_get_allocation( parent ).height )/2 );
+                y += offset;
+                h -= 2*offset;
+
                 if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) )
                 {
 
