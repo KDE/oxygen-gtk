@@ -718,6 +718,7 @@ namespace Oxygen
         if( h ) *h = -1;
 
         if( !( window && GDK_IS_WINDOW( window ) ) ) return false;
+        if( gdk_window_get_window_type( window ) == GDK_WINDOW_OFFSCREEN ) return false;
 
         // get window size and height
         if( frame ) gdk_toplevel_get_frame_size( window, w, h );
@@ -744,6 +745,7 @@ namespace Oxygen
         // actually a 'non window' drawable
         GdkWindow* window( gtk_widget_get_parent_window( widget ) );
         if( !( window && GDK_IS_WINDOW( window ) ) ) return false;
+        if( gdk_window_get_window_type( window ) == GDK_WINDOW_OFFSCREEN ) return false;
 
         if( frame ) gdk_toplevel_get_frame_size( window, w, h );
         else gdk_toplevel_get_size( window, w, h );
