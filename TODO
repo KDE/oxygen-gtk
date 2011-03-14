@@ -50,7 +50,7 @@ Menus: DONE, but:
 
 Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient: DONE
 ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed. FIXED
-No need for resize hook any more. Use asymetric margins and mask out the sides.
+No need for resize hook any more. Use asymetric margins and mask out the sides. TODO: check if it doesn't get broken by scrollable popups
 
 Combobox entry: completly broken.
 Seems like gtk3 bug. Also broken with Raleigh. 
