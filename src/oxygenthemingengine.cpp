@@ -164,6 +164,25 @@ namespace Oxygen
             /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
             return;
 
+        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) ) {
+
+            // separators
+            bool accepted( true );
+            if( widget )
+            {
+                // do not draw side hlines because they conflict with selection rect
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                if( x0 <= allocation.x + 5 || x1 >= allocation.x + allocation.width - 5 )
+                { accepted = false; }
+            }
+
+            if( accepted )
+            {
+                StyleOptions options( Blend );
+                options |= Menu;
+                Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
+            }
+
         } else {
 
             StyleOptions options;
