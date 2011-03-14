@@ -45,7 +45,8 @@ namespace Oxygen
         GoogleChrome,
         Opera,
         Java,
-        JavaSwt
+        JavaSwt,
+        Eclipse
     };
 
     //! stores application name and provides some utility functions
@@ -91,6 +92,7 @@ namespace Oxygen
         bool isJava( void ) const { return _name == Java; }
         bool isJavaSwt( void ) const { return _name == JavaSwt; }
         bool isOpera( void ) const { return _name == Opera; }
+        bool isEclipse( void ) const { return _name == Eclipse; }
 
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
