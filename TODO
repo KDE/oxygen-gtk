@@ -47,7 +47,8 @@ Menus: DONE, but:
 - XShape not yet used for non-composited WM case (same for combobox popups and tooltips). DONE.
 
 Comboboxes dropdown lists: shadow shouldn't look like usual focus/hover - should instead have float frame on background gradient: DONE
-ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed.
+ComboBox resize: apparently this is not working (unlike for gtk2). The window is moved properly, but its width is not changed. FIXED
+No need for resize hook any more. Use asymetric margins and mask out the sides.
 
 Combobox entry: completly broken.
 Seems like gtk3 bug. Also broken with Raleigh. 
@@ -59,16 +60,17 @@ Might also be gtk3 bug, but needs investigation.
 
 try remapping icons using GtkStockIcon directly, rather than gtkrc, seems it is not available for gtk3.  DONE
 
-backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. 
+- backport to master and 1.0, the use of gtksettings in oxygenqtsettings, in place of addToHeaderSection. 
 Should be more robust. DONE
 - try backport icon remapping too.
 
 - Use as much of gtk_theming_engine_has_class, rather than gtk_widget_path_it_type.
 - in gtk.css: same thing. Try use Style_classes rather than widget types.
+Look at gtkcssprovider.c for examples
+
 - fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row.
 
 - widget alignments:
 For the moment ComboBoxes are too high (by one pixel)
 
-Gtk3-Demo -> offscreen pixmap -> effects crashes
-
+Gtk3-Demo -> offscreen pixmap -> effects crashes. FIXED
