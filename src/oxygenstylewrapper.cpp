@@ -1039,11 +1039,15 @@ namespace Oxygen
 
         } else if( d.isToolBar() ) {
 
-            if( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
-                Gtk::gtk_widget_is_applet( widget ) )
+            // eclipse works ok with animations, though should have flat background
+            bool isEclipse(Style::instance().settings().applicationName().isEclipse());
+
+            if( ( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
+                Gtk::gtk_widget_is_applet( widget ) ) && !isEclipse )
                 { return; }
 
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+            if(!isEclipse)
+            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
 
             // also draw possible animated tool button
             draw_animated_button( window, clipRect, widget );
