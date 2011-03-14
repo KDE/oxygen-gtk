@@ -296,7 +296,7 @@ namespace Oxygen
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
-                    if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
+                    // if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
 
                     const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
                     if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))

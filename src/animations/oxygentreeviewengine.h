@@ -58,10 +58,6 @@ namespace Oxygen
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }
 
-        //! update hovered cell for given widget
-        void setHoveredCell( GtkWidget* widget, const Gtk::CellInfo& info )
-        { return data().value( widget ).setHoveredCell( info ); }
-
         //! true if given cell is hovered
         bool isCellHovered( GtkWidget* widget, const Gtk::CellInfo& info )
         { return data().value( widget ).isCellHovered( info ); }
