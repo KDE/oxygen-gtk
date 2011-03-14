@@ -31,14 +31,14 @@
 namespace Oxygen
 {
 
+    //! GtkStateFlags streamer
+    std::ostream& operator << ( std::ostream&, const GtkStateFlags& );
+
+    //! GtkJunctionSides streamer
+    std::ostream& operator << ( std::ostream& out, const GtkJunctionSides& );
+
     namespace Gtk
     {
-
-        //! GtkStateFlags streamer
-        std::ostream& operator << ( std::ostream&, const GtkStateFlags& );
-
-        //! GtkJunctionSides streamer
-        std::ostream& operator << ( std::ostream& out, const GtkJunctionSides& );
 
         //! css to gtk mapping
         class TypeNames
