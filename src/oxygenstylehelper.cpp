@@ -543,7 +543,9 @@ namespace Oxygen
             { 1, 2, w-2, h-4 }
         };
 
-        return Cairo::Region( cairo_region_create_rectangles( rectangles, 4 ) );
+        int numOfRectangles(sizeof(rectangles)/sizeof(cairo_rectangle_int_t));
+
+        return Cairo::Region( cairo_region_create_rectangles( rectangles, numOfRectangles ) );
 
     }
     //_______________________________________________________________________
@@ -555,7 +557,9 @@ namespace Oxygen
             { 0, 1, w, h-2 }
         };
 
-        return Cairo::Region( cairo_region_create_rectangles( rectangles, 2 ) );
+        int numOfRectangles(sizeof(rectangles)/sizeof(cairo_rectangle_int_t));
+
+        return Cairo::Region( cairo_region_create_rectangles( rectangles, numOfRectangles ) );
 
     }
 
