@@ -953,7 +953,13 @@ namespace Oxygen
                 // register to ToolBarState engine
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
                 GtkWidget* parent( 0L );
-                if( !Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE ) && (parent = engine.findParent( widget ) ) )
+
+                bool toolPalette(false);
+                #if GTK_CHECK_VERSION(2,20,0)
+                toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
+                #endif
+
+                if( !toolPalette && (parent = engine.findParent( widget ) ) )
                 {
 
                     // register child
