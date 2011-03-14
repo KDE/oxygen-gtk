@@ -1731,9 +1731,6 @@ namespace Oxygen
             if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=1;
             else x-=1;
 
-            if( arrow == GTK_ARROW_UP ) y -= 1;
-            else if( arrow == GTK_ARROW_DOWN ) y -= 2;
-
             // disable contrast
             options &= ~Contrast;
 
