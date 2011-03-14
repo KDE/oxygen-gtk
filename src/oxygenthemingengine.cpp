@@ -1952,10 +1952,11 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+
 // TODO: re-implement for GTK3. Code below is not working anymore
 //         // lookup
 //         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
-//         const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
 //
 //         // draw progressbar text white if above indicator, black if not
 //         if(
@@ -1975,7 +1976,49 @@ namespace Oxygen
 //
 //         }
 
-        ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
+        if( state&GTK_STATE_FLAG_INSENSITIVE )
+        {
+
+            // for inactive text, we do the painting ourselves
+            // to prevent 'emboss' inactive text rendering from gtk
+
+            cairo_save( context );
+            if( const PangoMatrix* matrix = pango_context_get_matrix( pango_layout_get_context( layout ) ) )
+            {
+
+                cairo_matrix_t cairo_matrix;
+                cairo_matrix_init(
+                    &cairo_matrix,
+                    matrix->xx, matrix->yx,
+                    matrix->xy, matrix->yy,
+                    matrix->x0, matrix->y0 );
+
+                PangoRectangle rect;
+                pango_layout_get_extents( layout, 0L, &rect );
+                pango_matrix_transform_rectangle( matrix, &rect );
+                pango_extents_to_pixels (&rect, 0L );
+
+                cairo_matrix.x0 += x - rect.x;
+                cairo_matrix.y0 += y - rect.y;
+
+                cairo_set_matrix( context, &cairo_matrix );
+
+            } else cairo_move_to( context, x, y);
+
+            GdkRGBA *fg_color;
+            gtk_theming_engine_get( engine, state, "color", &fg_color, NULL );
+
+            gdk_cairo_set_source_rgba( context, fg_color );
+            pango_cairo_show_layout( context, layout );
+            cairo_restore( context );
+
+            gdk_rgba_free( fg_color );
+
+        } else {
+
+            ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
+
+        }
 
     }
 

@@ -25,11 +25,13 @@ GTK3 branch:
 Arrows: DONE.
 scrollbars: DONE
 menus: DONE.
-ProgressBars: DONE
 Slider trough: DONE
 Splitter handles: DONE
 
 Toolbar grips: DONE (but untested)
+
+ProgressBars: DONE
+But still needs to implement text color change
 
 treeviews: DONE
 But there is a problem with background in header buttons. Fixed.
