@@ -501,10 +501,10 @@ namespace Oxygen
 
         }
 
-        if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_TROUGH))
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) )
         {
-            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_CELL) ||
-                   GTK_IS_PROGRESS_BAR(widget) )
+
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) || gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) )
             {
                 StyleOptions options(widget, state);
                 if(GTK_IS_PROGRESS_BAR(widget) && Gtk::gtk_widget_is_vertical(widget))
@@ -512,7 +512,8 @@ namespace Oxygen
                 Style::instance().renderProgressBarHole( context, x, y, w, h, options );
                 return;
             }
-            if(gtk_theming_engine_has_class(engine,GTK_STYLE_CLASS_SCALE) && GTK_IS_SCALE(widget))
+
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) && GTK_IS_SCALE( widget ) )
             {
                 const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
                 const int offset( 6 );
@@ -1388,8 +1389,8 @@ namespace Oxygen
         #endif
 
         // load state, path and widget
-        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         // check classs
@@ -1514,9 +1515,9 @@ namespace Oxygen
         {
 
             // lookup widget
-            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
             const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
             const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
             // style options
             StyleOptions options( widget, state );
@@ -1587,9 +1588,9 @@ namespace Oxygen
         {
 
             // lookup widget
-            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
             const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
             const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
             // style options
             StyleOptions options( widget, state );
@@ -1668,8 +1669,8 @@ namespace Oxygen
         gint h( size );
 
         // lookup widget, path and state flags
-        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         // get arrow type
@@ -1857,10 +1858,10 @@ namespace Oxygen
         #endif
 
         // lookup
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
         const GtkExpanderStyle expander_style( (state&GTK_STATE_FLAG_ACTIVE) ? GTK_EXPANDER_EXPANDED:GTK_EXPANDER_COLLAPSED );
+        GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
         StyleOptions options( widget, state );
         const bool isTreeView( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) );
@@ -1951,8 +1952,28 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup
-        Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) );
+// TODO: re-implement for GTK3. Code below is not working anymore
+//         // lookup
+//         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+//         const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
+//
+//         // draw progressbar text white if above indicator, black if not
+//         if(
+//             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) &&
+//             ( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) || gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ) )
+//         {
+//
+//             cairo_save( context );
+//             if( state&GTK_STATE_FLAG_SELECTED ) cairo_set_source( context, Style::instance().settings().palette().color( Palette::SelectedText ) );
+//             else cairo_set_source( context, Style::instance().settings().palette().color( Palette::Text ) );
+//
+//             cairo_translate(context,x,y);
+//             pango_cairo_show_layout(context,layout);
+//             cairo_restore( context );
+//
+//             return;
+//
+//         }
 
         ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
