@@ -138,6 +138,8 @@ GtkComboBox>GtkEntry {
     border-width: 2 5;
 }
 
+#gtk-combobox-popup-window{ border-width: 2 5; }
+
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }
 GtkList>GtkButton { border-width: 0 2; }
