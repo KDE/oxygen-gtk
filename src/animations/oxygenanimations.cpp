@@ -197,6 +197,7 @@ namespace Oxygen
         if( !GTK_IS_ENTRY( widget ) ) return true;
 
         // get parent combobox
+        #if ENABLE_COMBOBOX_ENTRY_HACK
         GtkWidget* parent( Gtk::gtk_parent_combobox_entry( widget ) );
         if( !parent ) return true;
 
@@ -209,6 +210,7 @@ namespace Oxygen
             GtkAllocation newRect( Gtk::gdk_rectangle( rect.x, parentRect.y, rect.width, parentRect.height ) );
             gtk_widget_size_allocate( widget, &newRect );
         }
+        #endif
 
         return true;
 
