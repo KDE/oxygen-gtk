@@ -54,6 +54,9 @@ void theme_init( GTypeModule* module )
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
 
+    // initialize ref surface
+    Oxygen::Style::instance().helper().initializeRefSurface();
+
     if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
     { Oxygen::Style::instance().animations().setEnabled( false ); }
 }
