@@ -750,7 +750,8 @@ namespace Oxygen
                     !Style::instance().settings().applicationName().isGoogleChrome() )
                 { options |= NoFill; }
 
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
 
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
@@ -816,7 +817,8 @@ namespace Oxygen
                 const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
 
                 StyleOptions options( widget, state, shadow );
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
 
                 Style::instance().animations().comboBoxEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEngine().setButton( parent, widget );
@@ -906,7 +908,9 @@ namespace Oxygen
                 Gtk::g_object_is_a( G_OBJECT( widget ), "GtkChromeButton" ) )
             { gtk_button_set_relief( GTK_BUTTON( widget ), GTK_RELIEF_NONE ); }
 
-            StyleOptions options( Blend );
+            StyleOptions options;
+            if(!Style::instance().settings().applicationName().useFlatBackground(widget))
+                options|=Blend;
             options |= StyleOptions( widget, state, shadow );
 
             // default case
@@ -931,7 +935,13 @@ namespace Oxygen
                 // register to ToolBarState engine
                 ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
                 GtkWidget* parent( 0L );
-                if( !Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE ) && (parent = engine.findParent( widget ) ) )
+
+                bool toolPalette(false);
+                #if GTK_CHECK_VERSION(2,20,0)
+                toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
+                #endif
+
+                if( !toolPalette && (parent = engine.findParent( widget ) ) )
                 {
 
                     // register child
@@ -1013,8 +1023,11 @@ namespace Oxygen
 
         } else if( d.isToolBar() ) {
 
-            if( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
-                Gtk::gtk_widget_is_applet( widget ) )
+            // eclipse works ok with animations, though should have flat background
+            bool isEclipse(Style::instance().settings().applicationName().isEclipse());
+
+            if( ( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
+                Gtk::gtk_widget_is_applet( widget ) ) && !isEclipse )
                 { return; }
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
@@ -1783,7 +1796,9 @@ namespace Oxygen
             Style::instance().fill( context, x-2, y-2, w+4, h+4, Gtk::gdk_get_color( style->base[state] ) );
             Style::instance().renderWindowBackground( context, window, widget, x+2, y+2, w-4, h-6 );
 
-            StyleOptions options( Blend );
+            StyleOptions options;
+            if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                options |= Blend;
             options |= NoFill;
             Style::instance().renderSlab( context, x-2, y-2, w+4, h+2, options );
 
@@ -1796,7 +1811,8 @@ namespace Oxygen
             Style::instance().animations().comboBoxEngine().registerChild( parent, widget );
             GtkShadowType shadow( Style::instance().animations().comboBoxEngine().pressed( parent ) ? GTK_SHADOW_IN:GTK_SHADOW_OUT );
             StyleOptions options( widget, state, shadow );
-            options |= Blend;
+            if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                options |= Blend;
 
             if( Style::instance().animations().comboBoxEngine().hasFocus( parent ) ) options |= Focus;
             else options &= ~Focus;
@@ -1879,7 +1895,9 @@ namespace Oxygen
         } else if( shadow == GTK_SHADOW_OUT ) {
 
             // default shadow_out frame
-            StyleOptions options( Blend );
+            StyleOptions options;
+            if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                options |= Blend;
             options |= NoFill;
             Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
 
@@ -1922,7 +1940,8 @@ namespace Oxygen
             if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
             {
                 // enable blending
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
             }
 
             AnimationData data;
@@ -2005,7 +2024,9 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_tree_view( widget ) ) options |= Blend;
+            if( !Gtk::gtk_parent_tree_view( widget ) &&
+                   !Style::instance().settings().applicationName().useFlatBackground(widget))
+            { options |= Blend; }
 
             // retrieve animation state and render accordingly
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
@@ -2017,7 +2038,8 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             if( !( d.isCellRadio() || Gtk::gtk_parent_tree_view( widget ) ) )
             {
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) )
                 {
 
@@ -2138,7 +2160,8 @@ namespace Oxygen
             StyleOptions options;
             if( !Gtk::gtk_parent_tree_view( widget ) )
             {
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
             }
 
@@ -2177,7 +2200,8 @@ namespace Oxygen
             StyleOptions options( Vertical );
             if( !Gtk::gtk_parent_tree_view( widget ) )
             {
-                options |= Blend;
+                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                    options |= Blend;
                 if( Gtk::gtk_parent_menu( widget ) ) options |= Menu;
             }
 
@@ -2764,7 +2788,9 @@ namespace Oxygen
         if( d.isScale() )
         {
 
-            StyleOptions options( Blend );
+            StyleOptions options;
+            if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
+                options |= Blend;
             options |= StyleOptions( widget, state, shadow );
             options &= ~Sunken;
             if( GTK_IS_VSCALE( widget ) ) options |= Vertical;
