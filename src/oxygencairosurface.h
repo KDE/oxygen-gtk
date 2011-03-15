@@ -63,6 +63,10 @@ namespace Oxygen
                 return *this;
             }
 
+            //! returns true if valid
+            bool isValid( void ) const
+            { return (bool) _surface; }
+
             //! set surface
             void set( cairo_surface_t* surface )
             {

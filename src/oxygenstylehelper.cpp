@@ -38,7 +38,15 @@ namespace Oxygen
 
     //__________________________________________________________________
     StyleHelper::StyleHelper( void )
+    {}
+
+    //__________________________________________________________________
+    void StyleHelper::initializeRefSurface( void )
     {
+
+        // make sure that surface is not already initialized
+        if( _refSurface.isValid() ) return;
+
         /*
         create dummy widget, get its window,
         creates surface for it, and assign to ref surface
@@ -48,6 +56,7 @@ namespace Oxygen
         Cairo::Context context( gtk_widget_get_window( widget ) );
         _refSurface = Cairo::Surface( cairo_surface_create_similar( cairo_get_target( context ), CAIRO_CONTENT_ALPHA, 1, 1 ) );
         gtk_widget_destroy( widget );
+
     }
 
     //__________________________________________________________________
