@@ -513,8 +513,16 @@ namespace Oxygen
             }
 
             // menu background and float frame
-            Style::instance().renderMenuBackground( context, x, y, w, h, options, Style::Entry_SideMargin );
-            Style::instance().drawFloatFrame( context, x + Style::Entry_SideMargin, y, w - 2*Style::Entry_SideMargin, h, options );
+            {
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                Style::instance().renderMenuBackground(
+                    context, allocation.x, allocation.y, allocation.width, allocation.height,
+                    options, Style::Entry_SideMargin );
+
+                Style::instance().drawFloatFrame( context,
+                    allocation.x + Style::Entry_SideMargin, allocation.y, allocation.width - 2*Style::Entry_SideMargin, allocation.height,
+                    options );
+            }
 
             return;
 
