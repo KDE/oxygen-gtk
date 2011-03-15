@@ -50,6 +50,9 @@ namespace Oxygen
         virtual ~StyleHelper( void )
         {}
 
+        //! initialize ref surface
+        void initializeRefSurface( void );
+
         //! separators
         void drawSeparator( cairo_t*, const ColorUtils::Rgba& color, int x, int y, int w, int h, bool vertical );
 
