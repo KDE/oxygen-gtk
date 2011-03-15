@@ -240,6 +240,18 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    std::string Gtk::gtk_widget_path( GtkWidget* widget )
+    {
+
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        const std::string  out( widgetPath );
+        g_free( widgetPath );
+        return out;
+
+    }
+
+    //________________________________________________________
     GtkWidget* Gtk::gtk_widget_find_parent( GtkWidget* widget, GType type )
     {
 
@@ -386,49 +398,30 @@ namespace Oxygen
     {
         // check types
         if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
-
-        // retrieve widget path, compare and free
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
-        bool out( std::string( widgetPath ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView" );
-        g_free( widgetPath );
-        return out;
+        return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView";
     }
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
         if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
-
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
-        bool out( std::string( widgetPath ) == "gtk-combobox-popup-window.GtkScrolledWindow" );
-        g_free( widgetPath );
-        return out;
+        return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow";
     }
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_viewport( GtkWidget* widget )
     {
         if( !GTK_IS_VIEWPORT(widget) ) return false;
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
         static const std::string match( "gtk-combo-popup-window" );
-        bool out = ( std::string( widgetPath ).substr( 0, match.size() ) == match );
-        g_free( widgetPath );
-        return out;
+        return Gtk::gtk_widget_path( widget ).substr( 0, match.size() ) == match;
     }
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_frame( GtkWidget* widget )
     {
         if( !GTK_IS_FRAME(widget) ) return false;
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
         static const std::string match( "gtk-combo-popup-window" );
-        bool out = ( std::string( widgetPath ).substr( 0, match.size() ) == match );
-        g_free( widgetPath );
-        return out;
+        return Gtk::gtk_widget_path( widget ).substr( 0, match.size() ) == match;
     }
 
     //________________________________________________________
