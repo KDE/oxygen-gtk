@@ -70,7 +70,7 @@ Should be more robust. DONE
 - in gtk.css: same thing. Try use Style_classes rather than widget types.
 Look at gtkcssprovider.c for examples
 
-- fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row.
+- fix checkbox hover in trees. Need to tag the current column being hovered, and not only the full-row. DONE.
 
 - widget alignments:
 For the moment ComboBoxes are too high (by one pixel)

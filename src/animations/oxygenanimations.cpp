@@ -122,7 +122,7 @@ namespace Oxygen
     {
         if( _hooksInitialized ) return;
 
-        # if ENABLE_COMBOBOX_LIST_RESIZE
+        #if ENABLE_COMBOBOX_LIST_RESIZE || ENABLE_COMBOBOX_ENTRY_HACK
         _comboBoxHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxHook, this );
         #endif
 
@@ -196,15 +196,15 @@ namespace Oxygen
         GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
 
         // check type
-        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+        if( !GTK_IS_WIDGET( widget ) ) return false;
 
+        #if ENABLE_COMBOBOX_ENTRY_HACK
         GtkWidget* parent( 0L );
         if( GTK_IS_ENTRY( widget ) && (parent = Gtk::gtk_parent_combobox_entry( widget ) ) )
         {
             // TODO: remove when bug is fixed upstream
             GtkAllocation rect( Gtk::gtk_widget_get_allocation( widget ) );
             GtkAllocation parentRect( Gtk::gtk_widget_get_allocation( parent ) );
-
             if( rect.y != parentRect.y )
             {
                 GtkAllocation newRect( Gtk::gdk_rectangle( rect.x, parentRect.y, rect.width, parentRect.height ) );
@@ -214,30 +214,38 @@ namespace Oxygen
             return true;
 
         }
+        #endif
 
-        if( !GTK_IS_WINDOW( widget ) ) return TRUE;
-        GtkWindow* window( GTK_WINDOW( widget ) );
-        if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
+        #if ENABLE_COMBOBOX_LIST_RESIZE
+        if( GTK_IS_WINDOW( widget ) )
+        {
+            GtkWindow* window( GTK_WINDOW( widget ) );
+            if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
 
-        Animations& animations( *static_cast<Animations*>(data) );
-        GtkWidget* combobox = animations.comboBoxEngine().find( widget );
-        if( !combobox ) combobox = animations.comboBoxEntryEngine().find( widget );
-        if( !combobox ) return true;
+            Animations& animations( *static_cast<Animations*>(data) );
+            GtkWidget* combobox = animations.comboBoxEngine().find( widget );
+            if( !combobox ) combobox = animations.comboBoxEntryEngine().find( widget );
+            if( !combobox ) return true;
 
-        int w, h;
-        gtk_window_get_size( window, &w, &h );
+            int w, h;
+            gtk_window_get_size( window, &w, &h );
 
-        gint targetX, dummy, y;
-        gtk_window_get_position( window, &dummy, &y );
-        gdk_window_get_origin( gtk_widget_get_window( combobox ), &targetX, &dummy );
+            gint targetX, dummy, y;
+            gtk_window_get_position( window, &dummy, &y );
+            gdk_window_get_origin( gtk_widget_get_window( combobox ), &targetX, &dummy );
 
-        const GtkAllocation comboAllocation( Gtk::gtk_widget_get_allocation( combobox ) );
-        gtk_window_move( window, targetX + comboAllocation.x + 3, y );
+            const GtkAllocation comboAllocation( Gtk::gtk_widget_get_allocation( combobox ) );
+            gtk_window_move( window, targetX + comboAllocation.x + 3, y );
 
-        const GtkAllocation widgetAllocation( Gtk::gtk_widget_get_allocation( widget ) );
-        gtk_widget_set_size_request( widget, comboAllocation.width - 6, widgetAllocation.height );
+            const GtkAllocation widgetAllocation( Gtk::gtk_widget_get_allocation( widget ) );
+            gtk_widget_set_size_request( widget, comboAllocation.width - 6, widgetAllocation.height );
 
-        return TRUE;
+            return true;
+
+        }
+        #endif
+
+        return true;
 
     }
 
