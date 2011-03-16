@@ -43,7 +43,7 @@ namespace Oxygen
         {}
 
         //! connect
-        void connect( GObject*, const std::string&, GCallback, gpointer );
+        void connect( GObject*, const std::string&, GCallback, gpointer, bool after=false );
 
         //! disconnect
         void disconnect( void );

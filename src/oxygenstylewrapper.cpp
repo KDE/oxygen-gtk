@@ -1745,7 +1745,8 @@ namespace Oxygen
 
                     // animation
                     const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-                    Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
+                    if(!GTK_IS_SCROLLED_WINDOW(widget))
+                        Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
 
                 }
 

@@ -38,7 +38,9 @@ namespace Oxygen
 
         //! constructor
         ScrolledWindowData( void ):
-            _target(0)
+            _target(0),
+            _initiallyComposited(false),
+            _compositeEnabled(false)
         {}
 
         //! destructor
@@ -82,12 +84,16 @@ namespace Oxygen
         static gboolean focusInNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
         static gboolean focusOutNotifyEvent( GtkWidget*, GdkEvent*, gpointer );
         static void childAddedEvent( GtkContainer* parent, GtkWidget*, gpointer );
+        static gboolean targetExposeEvent( GtkWidget*, GdkEventExpose*, gpointer );
         //@}
 
         private:
 
         //! target widget
         GtkWidget* _target;
+        Signal _exposeId;
+        bool _initiallyComposited;
+        bool _compositeEnabled;
 
         //! child data
         class ChildData
