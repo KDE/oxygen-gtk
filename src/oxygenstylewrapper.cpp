@@ -2894,7 +2894,7 @@ namespace Oxygen
                 if( dragInProgress )
                 {
                     int firstTabIndex( Gtk::gtk_notebook_find_first_tab( widget ) );
-                    int focusTabIndex( Gtk::gtk_notebook_find_focus_tab( widget ) );
+                    int focusTabIndex( gtk_notebook_get_current_page( notebook ) );
                     drawTabBarBase = (tabIndex == firstTabIndex && !isCurrentTab ) || (firstTabIndex == focusTabIndex && tabIndex == firstTabIndex+1 );
                 }
 
