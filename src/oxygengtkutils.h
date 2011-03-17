@@ -242,6 +242,9 @@ namespace Oxygen
         //! returns index of first visible tab
         int gtk_notebook_find_first_tab( GtkWidget* );
 
+        //! returns index of first visible tab
+        int gtk_notebook_find_focus_tab( GtkWidget* );
+
         //! returns true if widget is one of the notebook's tab labels
         bool gtk_notebook_is_tab_label( GtkNotebook*, GtkWidget* );
 
