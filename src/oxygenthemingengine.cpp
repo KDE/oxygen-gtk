@@ -2002,6 +2002,24 @@ namespace Oxygen
 //
 //         }
 
+        // identify gtk notebook labels, and translate context vertically if found
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
+        {
+
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+            if( widget && GTK_IS_NOTEBOOK( gtk_widget_get_parent( widget ) ) )
+            {
+
+                cairo_save( context );
+                cairo_translate( context, 0, 1 );
+                ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
+                cairo_restore( context );
+                return;
+
+            }
+        }
+
         if( state&GTK_STATE_FLAG_INSENSITIVE )
         {
 
