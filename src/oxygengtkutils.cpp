@@ -455,6 +455,19 @@ namespace Oxygen
 
     }
 
+
+    //________________________________________________________
+    int Gtk::gtk_notebook_find_focus_tab( GtkWidget* widget )
+    {
+
+        if( !GTK_IS_NOTEBOOK( widget ) ) return 0;
+
+        // cast to notebook
+        GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
+        return g_list_position( notebook->children, notebook->focus_tab );
+
+    }
+
     //____________________________________________________________
     bool Gtk::gtk_notebook_is_tab_label(GtkNotebook* notebook, GtkWidget* widget )
     {
