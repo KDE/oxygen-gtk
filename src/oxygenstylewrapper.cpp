@@ -2874,7 +2874,7 @@ namespace Oxygen
 
                 // check tab position and add relevant option flags
                 GtkNotebook* notebook( GTK_NOTEBOOK( widget ) );
-                if( tabIndex == 0 || tabIndex == Gtk::gtk_notebook_find_first_tab( widget ) ) tabOptions |= FirstTab;
+                if( tabIndex == 0 ) tabOptions |= FirstTab;
                 if( tabIndex == gtk_notebook_get_n_pages( notebook ) - 1 ) tabOptions |= LastTab;
 
                 const int current( gtk_notebook_get_current_page( notebook ) );
