@@ -1,5 +1,5 @@
 ########### next target ###############
-set( deco_test_SOURCES main.c )
+set( deco_test_SOURCES oxygengtkdeco_main.cpp )
 
 add_executable( oxygen-gtk-deco ${deco_test_SOURCES} )
 
