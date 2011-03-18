@@ -83,6 +83,10 @@ namespace Oxygen
         bool hasFocus( GtkWidget* widget )
         { return data().value( widget ).hasFocus(); }
 
+        //! true if button is sensitive
+        bool isSensitive( GtkWidget* widget )
+        { return data().value( widget ).isSensitive(); }
+
         //! true if comboBox is hovered
         bool hovered( GtkWidget* widget )
         { return data().value( widget ).hovered(); }

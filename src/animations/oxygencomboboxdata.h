@@ -95,6 +95,10 @@ namespace Oxygen
         bool hasFocus( void ) const
         { return _button._focus; }
 
+        //! true if sensitive
+        bool isSensitive( void ) const
+        { return _button._widget && gtk_widget_is_sensitive( _button._widget ); }
+
         //! true if either button or entry has hover
         bool hovered( void ) const
         { return std::find_if( _hoverData.begin(), _hoverData.end(), HoveredFTor() ) != _hoverData.end(); }

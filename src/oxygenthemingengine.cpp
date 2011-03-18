@@ -1198,6 +1198,8 @@ namespace Oxygen
             StyleOptions options( widget, state );
             options |= Blend;
 
+            if( !Style::instance().animations().comboBoxEngine().isSensitive( parent ) ) options |= Disabled;
+
             if( Style::instance().animations().comboBoxEngine().pressed( parent ) ) options |= Sunken;
             else options &= ~Sunken;
 
