@@ -32,6 +32,8 @@
 #include <map>
 #include <vector>
 
+#include <gtk/gtk.h>
+
 namespace Oxygen
 {
 
@@ -44,22 +46,28 @@ namespace Oxygen
         GtkIcons( void );
 
         //! destructor
-        virtual ~GtkIcons( void )
-        {}
+        virtual ~GtkIcons( void );
 
         //! load translations
         void loadTranslations( const std::string& filename );
 
         //! generate rc file
-        Gtk::RC generate( const PathList& pathList );
+        Gtk::RC generate( const PathList& );
 
         //! set icon size
         void setIconSize( const std::string&, unsigned int value );
 
+        //! true if dirty
+        bool isDirty( void ) const
+        { return _dirty; }
+
         protected:
 
+        //! generate iconSet for given option
+        GtkIconSet* generate( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
+
         //! generate rc code for given option
-        std::string generate( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
+        std::string generateString( const std::string& gtkIconName, const std::string& kdeIconName, const PathList& pathList ) const;
 
         private:
 
@@ -108,14 +116,16 @@ namespace Oxygen
         //! local path list
         PathList _pathList;
 
+        //! icon factory
+        GtkIconFactory* _factory;
+
         //! local GtkRC
         Gtk::RC _rc;
 
-        //! dirty flag. Set to true when gtkrc needs regenerating
+        //! dirty flag. Set to true when options needs update
         bool _dirty;
 
         //@}
-
 
     };
 
