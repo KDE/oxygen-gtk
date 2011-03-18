@@ -489,8 +489,8 @@ namespace Oxygen
                 {
                     // the same as with menus and tooltips (but changed a bit to take scrollbars into account)
                     // make background window rounded
-                    Cairo::Region mask( Style::instance().helper().roundMask( allocation.width - 2*Style::Entry_SideMargin, allocation.height ) );
-                    gdk_window_shape_combine_region( gtk_widget_get_window( parent ), mask, Style::Entry_SideMargin, 0 );
+                    Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                    gdk_window_shape_combine_region( gtk_widget_get_window( parent ), mask, 0, 0 );
                 }
 
                 // also sets inner list mask
@@ -516,11 +516,10 @@ namespace Oxygen
             {
                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                 Style::instance().renderMenuBackground(
-                    context, allocation.x, allocation.y, allocation.width, allocation.height,
-                    options, Style::Entry_SideMargin );
+                    context, allocation.x, allocation.y, allocation.width, allocation.height, options );
 
                 Style::instance().drawFloatFrame( context,
-                    allocation.x + Style::Entry_SideMargin, allocation.y, allocation.width - 2*Style::Entry_SideMargin, allocation.height,
+                    allocation.x, allocation.y, allocation.width, allocation.height,
                     options );
             }
 

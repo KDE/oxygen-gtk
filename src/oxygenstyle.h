@@ -128,7 +128,7 @@ namespace Oxygen
         { renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
         //! window background
-        bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const int padding = 0 ) const;
+        bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
         void renderTooltipBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
