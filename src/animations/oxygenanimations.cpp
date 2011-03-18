@@ -234,11 +234,12 @@ namespace Oxygen
             gtk_window_get_position( window, &dummy, &y );
             gdk_window_get_origin( gtk_widget_get_window( combobox ), &targetX, &dummy );
 
+            // store allocations
             const GtkAllocation comboAllocation( Gtk::gtk_widget_get_allocation( combobox ) );
-            gtk_window_move( window, targetX + comboAllocation.x + 3, y );
-
             const GtkAllocation widgetAllocation( Gtk::gtk_widget_get_allocation( widget ) );
-            gtk_widget_set_size_request( widget, comboAllocation.width - 6, widgetAllocation.height );
+
+            // perform move-resize
+            gdk_window_move_resize( gtk_widget_get_window( widget ), targetX + comboAllocation.x + 3, y, comboAllocation.width - 6, widgetAllocation.height );
 
             return true;
 
