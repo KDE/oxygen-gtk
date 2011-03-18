@@ -60,11 +60,25 @@ namespace Oxygen
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
 
+        // model
+        GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
+        const char* columns[] = {
+            "First item",
+            "Second item",
+            "Third item"
+        };
+
+        for( unsigned int i=0; i<3; i++ )
+        {
+            GtkTreeIter iter;
+            gtk_list_store_append( model, &iter );
+            gtk_list_store_set( model, &iter, 0, columns[i], -1 );
+        }
+
+        // combobox
         GtkWidget* comboBox(0L);
-        gtk_table_attach_defaults( GTK_TABLE( _mainWidget ), comboBox = gtk_combo_box_entry_new_text(), 1, 2, 2, 3 );
-        gtk_combo_box_append_text( GTK_COMBO_BOX( comboBox ), "First item" );
-        gtk_combo_box_append_text( GTK_COMBO_BOX( comboBox ), "Second item" );
-        gtk_combo_box_append_text( GTK_COMBO_BOX( comboBox ), "Third item" );
+        gtk_table_attach_defaults( GTK_TABLE( _mainWidget ), comboBox = gtk_combo_box_new_with_model_and_entry( GTK_TREE_MODEL( model ) ), 1, 2, 2, 3 );
+        gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( comboBox ), 0 );
         gtk_widget_show( comboBox );
 
 
