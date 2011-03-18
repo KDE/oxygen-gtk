@@ -70,6 +70,8 @@ INFO: css border and padding ordering is either:
     theme: oxygen-gtk;
 }
 
+GtkScrolledWindow { border-width: 1; }
+
 /* customize border styles */
 .toolbar { border-style: none; }
 .menubar { border-style: none; }
