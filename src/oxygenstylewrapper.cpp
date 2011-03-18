@@ -742,7 +742,7 @@ namespace Oxygen
                 { options |= NoFill; }
 
                 if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
-                    options |= Blend;
+                { options |= Blend; }
 
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
