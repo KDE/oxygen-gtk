@@ -23,6 +23,8 @@
 
 #include "oxygeninputdemowidget.h"
 
+#include <string>
+
 namespace Oxygen
 {
 
@@ -31,12 +33,13 @@ namespace Oxygen
     {
 
         // main widget
-        _mainWidget = gtk_vbox_new( false, 0 );
+        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        setMainWidget( mainWidget );
 
         // create top table
-        GtkWidget* table = gtk_table_new( 5, 2, false );
+        GtkWidget* table = gtk_table_new( 5, 3, false );
         gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-        gtk_box_pack_start( GTK_BOX( _mainWidget ), table, false, true, 0 );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), table, false, true, 0 );
         gtk_widget_show( table );
 
         // generic label
@@ -86,21 +89,54 @@ namespace Oxygen
         GtkWidget* comboBox(0L);
         gtk_table_attach_defaults( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_model_and_entry( GTK_TREE_MODEL( model ) ), 1, 2, 2, 3 );
         gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( comboBox ), 0 );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
         gtk_widget_show( comboBox );
 
         // separator
         GtkWidget* separator( gtk_hseparator_new() );
-        gtk_box_pack_start( GTK_BOX( _mainWidget ), separator, false, true, 0 );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), separator, false, true, 0 );
         gtk_widget_show( separator );
 
         // text view
-        gtk_box_pack_start( GTK_BOX( _mainWidget ), label = gtk_label_new( "Multi-line text editor: " ), false, true, 0 );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), label = gtk_label_new( "Multi-line text editor: " ), false, true, 0 );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
 
-        GtkWidget* textView( gtk_text_view_new() );
-        gtk_box_pack_start( GTK_BOX( _mainWidget ), textView, true, true, 0 );
+        const std::string content( "Lorem ipsum dolor sit amet, consectetur "
+            "adipisicing elit, sed do eiusmod tempor incididunt ut labore "
+            "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+            "exercitation ullamco laboris nisi ut aliquip ex ea commodo "
+            "consequat. Duis aute irure dolor in reprehenderit in voluptate "
+            "velit esse cillum dolore eu fugiat nulla pariatur. Excepteur "
+            "sint occaecat cupidatat non proident, sunt in culpa qui officia "
+            "deserunt mollit anim id est laborum.\n"
+            "\n"
+            "Sed ut perspiciatis unde omnis iste natus error sit voluptatem "
+            "accusantium doloremque laudantium, totam rem aperiam, eaque "
+            "ipsa quae ab illo inventore veritatis et quasi architecto beatae "
+            "vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia "
+            "voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur "
+            "magni dolores eos qui ratione voluptatem sequi nesciunt. "
+            "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, "
+            "consectetur, adipisci velit, sed quia non numquam eius modi "
+            "tempora incidunt ut labore et dolore magnam aliquam quaerat "
+            "voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem "
+            "ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi "
+            "consequatur? Quis autem vel eum iure reprehenderit qui in ea "
+            "voluptate velit esse quam nihil molestiae consequatur, vel illum "
+            "qui dolorem eum fugiat quo voluptas nulla pariatur?" );
+
+        GtkTextTagTable* tags( gtk_text_tag_table_new() );
+        GtkTextBuffer* buffer( gtk_text_buffer_new( tags ) );
+        gtk_text_buffer_set_text( buffer, content.c_str(), content.size() );
+        GtkWidget* textView( gtk_text_view_new_with_buffer( buffer ) );
+        gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( textView ), GTK_WRAP_WORD );
         gtk_widget_show( textView );
+
+        GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );
+        gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolledWindow ), textView );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), scrolledWindow, true, true, 0 );
+        gtk_widget_show( scrolledWindow );
 
     }
 

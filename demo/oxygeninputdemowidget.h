@@ -42,15 +42,6 @@ namespace Oxygen
         //! destructor
         virtual ~InputDemoWidget( void );
 
-        //! main widget
-        virtual GtkWidget* mainWidget( void ) const
-        { return _mainWidget; }
-
-        private:
-
-        //! main widget
-        GtkWidget* _mainWidget;
-
     };
 
 }

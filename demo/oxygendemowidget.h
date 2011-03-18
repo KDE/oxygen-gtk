@@ -25,6 +25,7 @@
 */
 
 #include <gtk/gtk.h>
+#include <cassert>
 
 namespace Oxygen
 {
@@ -35,7 +36,9 @@ namespace Oxygen
         public:
 
         //! constructor
-        DemoWidget( void )
+        DemoWidget( void ):
+            _mainWidget( 0L ),
+            _enabled( true )
         {}
 
         //! destructor
@@ -43,7 +46,48 @@ namespace Oxygen
         {}
 
         //! main widget
-        virtual GtkWidget* mainWidget( void ) const = 0;
+        virtual GtkWidget* mainWidget( void )
+        {
+            assert( _mainWidget );
+            return _mainWidget;
+        }
+
+        //! enable state
+        virtual void setEnabled( bool value )
+        {
+            _enabled = value;
+            if( _mainWidget )
+            { gtk_widget_set_sensitive( _mainWidget, _enabled ); }
+        }
+
+        protected:
+
+        //! assign main widget
+        virtual void setMainWidget( GtkWidget *widget )
+        {
+            assert( !_mainWidget );
+            _mainWidget = widget;
+            setEnabled( _enabled );
+        }
+
+        private:
+
+        //! copy constructor
+        DemoWidget( const DemoWidget& )
+        { assert( false ); }
+
+        //! assignment operator
+        DemoWidget& operator = (const DemoWidget& )
+        {
+            assert( false );
+            return *this;
+        }
+
+        //! main widget
+        GtkWidget* _mainWidget;
+
+        //! enable state
+        bool _enabled;
 
     };
 
