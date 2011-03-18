@@ -684,7 +684,8 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
+                // background
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
                 Style::instance().fill( window, clipRect, x, y, w, h, background );
 
                 // update option accordingly
