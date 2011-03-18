@@ -137,6 +137,16 @@ namespace Oxygen
         // create new
         _factory = gtk_icon_factory_new();
 
+        // reset factory
+        if( _factory )
+        {
+            gtk_icon_factory_remove_default( _factory );
+            g_object_unref( G_OBJECT( _factory ) );
+        }
+
+        // create new
+        _factory = gtk_icon_factory_new();
+
         // generate icon size string
         std::ostringstream iconSizesStr;
         for( SizeMap::const_iterator iter = _sizes.begin(); iter != _sizes.end(); ++iter )
