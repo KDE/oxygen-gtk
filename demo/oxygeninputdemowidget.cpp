@@ -29,34 +29,41 @@ namespace Oxygen
     //____________________________________________________
     InputDemoWidget::InputDemoWidget( void )
     {
+
         // main widget
-        _mainWidget = gtk_table_new( 5, 2, false );
-        gtk_table_set_row_spacings( GTK_TABLE( _mainWidget ), 5 );
+        _mainWidget = gtk_vbox_new( false, 0 );
+
+        // create top table
+        GtkWidget* table = gtk_table_new( 5, 2, false );
+        gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
+        gtk_box_pack_start( GTK_BOX( _mainWidget ), table, false, true, 0 );
+        gtk_widget_show( table );
+
         // generic label
         GtkWidget* label( 0L );
 
         // simple line editor
-        gtk_table_attach( GTK_TABLE( _mainWidget ), label = gtk_label_new( "Single line text editor: " ), 0, 1, 0, 1, GTK_SHRINK, GTK_FILL, 2, 2  );
+        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Single line text editor: " ), 0, 1, 0, 1, GTK_SHRINK, GTK_FILL, 2, 2  );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
 
         GtkWidget* lineEditor( 0L );
-        gtk_table_attach_defaults( GTK_TABLE( _mainWidget ), lineEditor = gtk_entry_new(), 1, 2, 0, 1 );
+        gtk_table_attach_defaults( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 0, 1 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_widget_show( lineEditor );
 
         // invisible line editor
-        gtk_table_attach( GTK_TABLE( _mainWidget ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 2, GTK_SHRINK, GTK_FILL, 2, 2 );
+        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 2, GTK_SHRINK, GTK_FILL, 2, 2 );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
 
-        gtk_table_attach_defaults( GTK_TABLE( _mainWidget ), lineEditor = gtk_entry_new(), 1, 2, 1, 2 );
+        gtk_table_attach_defaults( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 1, 2 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_entry_set_visibility( GTK_ENTRY( lineEditor ), false );
         gtk_widget_show( lineEditor );
 
         // combobox
-        gtk_table_attach( GTK_TABLE( _mainWidget ), label = gtk_label_new( "Editable combobox: " ), 0, 1, 2, 3, GTK_SHRINK, GTK_FILL, 2, 2 );
+        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Editable combobox: " ), 0, 1, 2, 3, GTK_SHRINK, GTK_FILL, 2, 2 );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
 
@@ -77,11 +84,23 @@ namespace Oxygen
 
         // combobox
         GtkWidget* comboBox(0L);
-        gtk_table_attach_defaults( GTK_TABLE( _mainWidget ), comboBox = gtk_combo_box_new_with_model_and_entry( GTK_TREE_MODEL( model ) ), 1, 2, 2, 3 );
+        gtk_table_attach_defaults( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_model_and_entry( GTK_TREE_MODEL( model ) ), 1, 2, 2, 3 );
         gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( comboBox ), 0 );
         gtk_widget_show( comboBox );
 
+        // separator
+        GtkWidget* separator( gtk_hseparator_new() );
+        gtk_box_pack_start( GTK_BOX( _mainWidget ), separator, false, true, 0 );
+        gtk_widget_show( separator );
 
+        // text view
+        gtk_box_pack_start( GTK_BOX( _mainWidget ), label = gtk_label_new( "Multi-line text editor: " ), false, true, 0 );
+        gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
+        gtk_widget_show( label );
+
+        GtkWidget* textView( gtk_text_view_new() );
+        gtk_box_pack_start( GTK_BOX( _mainWidget ), textView, true, true, 0 );
+        gtk_widget_show( textView );
 
     }
 
