@@ -2992,6 +2992,17 @@ namespace Oxygen
             detail );
         #endif
 
+        Gtk::Detail d( detail );
+        if( d.isNull() )
+        {
+
+            // TODO: implement something better
+            StyleWrapper::parentClass()->draw_focus( style, window, state,
+                clipRect, widget, detail,
+                x, y, w, h );
+
+        }
+
     }
 
 
