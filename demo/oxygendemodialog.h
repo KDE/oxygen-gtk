@@ -24,13 +24,17 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygeninputdemowidget.h"
 
 #include <gtk/gtk.h>
+#include <map>
 
 namespace Oxygen
 {
 
+    // forward declaration
+    class DemoWidget;
+
+    // main demo dialog
     class DemoDialog
     {
 
@@ -46,13 +50,21 @@ namespace Oxygen
         virtual GtkWidget* mainWidget( void )
         { return _mainWidget; }
 
+        protected:
+
+        //! add page
+        void addPage( DemoWidget* );
+
         private:
 
         //! main widget
         GtkWidget* _mainWidget;
 
-        //! input demo widget
-        InputDemoWidget _inputDemoWidget;
+        //! tab widget
+        GtkWidget* _notebook;
+
+        //! map page index and page widget
+        std::map<int, DemoWidget*> _pages;
 
     };
 

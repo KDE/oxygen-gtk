@@ -27,49 +27,49 @@
 
 namespace Oxygen
 {
-    
+
     //____________________________________________________
     InputDemoWidget::InputDemoWidget( void )
     {
-        
+
         // main widget
         GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
         setMainWidget( mainWidget );
-        
-        // create top table
-        GtkWidget* table = gtk_table_new( 5, 3, false );
+
+        // main container
+        GtkWidget* table = gtk_table_new( 6, 3, false );
         gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
         gtk_box_pack_start( GTK_BOX( mainWidget ), table, false, true, 0 );
         gtk_widget_show( table );
-        
+
         // generic label
         GtkWidget* label( 0L );
-        
+
         // simple line editor
         gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Single line text editor: " ), 0, 1, 0, 1, GTK_SHRINK, GTK_FILL, 2, 2  );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
-        
+
         GtkWidget* lineEditor( 0L );
         gtk_table_attach_defaults( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 0, 1 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_widget_show( lineEditor );
-        
+
         // invisible line editor
         gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 2, GTK_SHRINK, GTK_FILL, 2, 2 );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
-        
+
         gtk_table_attach_defaults( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 1, 2 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_entry_set_visibility( GTK_ENTRY( lineEditor ), false );
         gtk_widget_show( lineEditor );
-        
+
         // combobox
         gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Editable combobox: " ), 0, 1, 2, 3, GTK_SHRINK, GTK_FILL, 2, 2 );
         gtk_label_set_justify( GTK_LABEL( label ), GTK_JUSTIFY_RIGHT );
         gtk_widget_show( label );
-        
+
         // model
         GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
         const char* columns[] = {
