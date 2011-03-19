@@ -1771,13 +1771,11 @@ namespace Oxygen
             if( !Style::instance().settings().applicationName().isOpenOffice() )
             {
                 Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 );
-
-                // also draw possible animated tool button
                 draw_animated_button( window, clipRect, widget );
-
             }
 
-            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
+            if( gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) )
+            { Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill); }
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
