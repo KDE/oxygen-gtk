@@ -134,7 +134,8 @@ namespace Oxygen
         gtk_widget_show( textView );
 
         GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );
-        gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW( scrolledWindow ), textView );
+        gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
+        gtk_container_add( GTK_CONTAINER( scrolledWindow ), textView );
         gtk_box_pack_start( GTK_BOX( mainWidget ), scrolledWindow, true, true, 0 );
         gtk_widget_show( scrolledWindow );
 
