@@ -749,8 +749,12 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
                 // background
-                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
-                Style::instance().fill( window, clipRect, x, y, w, h, background );
+                {
+                    GtkWidget* entry( gtk_bin_get_child( GTK_BIN( parent ) ) );
+                    GtkStyle* style( gtk_widget_get_style( entry ) );
+                    ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
+                    Style::instance().fill( window, clipRect, x, y, w, h, background );
+                }
 
                 // update option accordingly
                 if( state == GTK_STATE_INSENSITIVE ) options &= ~(Hover|Focus);
