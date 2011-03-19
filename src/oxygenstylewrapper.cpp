@@ -1777,7 +1777,8 @@ namespace Oxygen
 
             }
 
-            Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
+            if( gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) )
+            { Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill); }
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
