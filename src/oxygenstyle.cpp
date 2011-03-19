@@ -210,30 +210,7 @@ namespace Oxygen
             // add hole if required (this can be done before translating the context
             if( options&NoFill )
             {
-                // create a rounded-rect antimask for renderHoleBackground
-                GdkRectangle mask = {x+2, y+1, w-4, h-3 };
-                const double maskRadius = 3.5;
-                Corners corners( CornersNone );
-                if( tiles & TileSet::Left )
-                {
-                    mask.x += Entry_SideMargin;
-                    mask.width -= Entry_SideMargin;
-                    if( tiles & TileSet::Top ) corners |= CornersTopLeft;
-                    if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
-                }
-
-                if( tiles & TileSet::Right )
-                {
-                    mask.width -= Entry_SideMargin;
-                    if( tiles & TileSet::Top ) corners |= CornersTopRight;
-                    if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
-                }
-
-                // set clipping mask
-                gdk_cairo_rounded_rectangle_negative(context,&mask,maskRadius,CornersAll);
-                cairo_rectangle(context,x,y,w,h);
-                cairo_clip(context);
-
+                renderHoleMask( context, x, y, w, h, tiles );
             }
 
             // get window dimension and position
@@ -653,30 +630,7 @@ namespace Oxygen
 
             // create a rounded-rect antimask for renderHoleBackground
             Cairo::Context context( window, clipRect );
-
-            GdkRectangle mask = {x+2, y+1, w-4, h-3 };
-            const double maskRadius = 3.5;
-            Corners corners( CornersNone );
-            if( tiles & TileSet::Left )
-            {
-                mask.x += Entry_SideMargin;
-                mask.width -= Entry_SideMargin;
-                if( tiles & TileSet::Top ) corners |= CornersTopLeft;
-                if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
-            }
-
-            if( tiles & TileSet::Right )
-            {
-                mask.width -= Entry_SideMargin;
-                if( tiles & TileSet::Top ) corners |= CornersTopRight;
-                if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
-            }
-
-            // set clipping mask
-            gdk_cairo_rounded_rectangle_negative(context,&mask,maskRadius,CornersAll);
-            cairo_rectangle(context,x,y,w,h);
-            cairo_clip(context);
-
+            renderHoleMask( context, x, y, w, h, tiles );
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
@@ -836,6 +790,37 @@ namespace Oxygen
         // context
         Cairo::Context context( window, clipRect );
         renderScrollBarHole( context, x, y, w, h, base, options&Vertical );
+
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderHoleMask( cairo_t* context, int x, int y, int w, int h, TileSet::Tiles tiles )
+    {
+
+        GdkRectangle mask = {x+2, y+1, w-4, h-3 };
+        const double maskRadius = 3.5;
+        Corners corners( CornersNone );
+        if( tiles & TileSet::Left )
+        {
+            mask.x += Entry_SideMargin;
+            mask.width -= Entry_SideMargin;
+            if( tiles & TileSet::Top ) corners |= CornersTopLeft;
+            if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
+        }
+
+        if( tiles & TileSet::Right )
+        {
+            mask.width -= Entry_SideMargin;
+            if( tiles & TileSet::Top ) corners |= CornersTopRight;
+            if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
+        }
+
+        // set clipping mask
+        gdk_cairo_rounded_rectangle_negative(context,&mask,maskRadius,CornersAll);
+        cairo_rectangle(context,x,y,w,h);
+        cairo_clip(context);
+
+        return;
 
     }
 

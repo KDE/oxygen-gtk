@@ -326,11 +326,14 @@ namespace Oxygen
         ColorUtils::Rgba slabShadowColor( const StyleOptions& ) const;
 
         //! slab
-        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles tiles = TileSet::Ring );
+        void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
 
         //! progressbar hole (groove)
         /*! also used for progress bars */
-        void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full );
+        void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles = TileSet::Full );
+
+        //! add hole mask to context
+        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Full );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
