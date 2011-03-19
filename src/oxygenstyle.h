@@ -138,7 +138,9 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( GdkWindow* window, GdkRectangle* clip, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHoleBackground( window, clip, x, y, w, h, StyleOptions(), tiles ); }
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
