@@ -52,3 +52,6 @@ Toolbar grips
 
 Gtk3-Demo -> offscreen pixmap -> effects 
 crash.
+
+Inner shadows:
+Implement separate check if a particular GtkScrolledWindow has to be registered to ScrolledWindowEngine to allow for checking before registration (in innerShadowHook as well as in draw_shadow())
