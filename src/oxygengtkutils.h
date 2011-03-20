@@ -238,7 +238,21 @@ namespace Oxygen
 
         //! return parent combobox if any.
         inline GtkWidget* gtk_parent_combobox_entry( GtkWidget* widget )
-        { return gtk_widget_find_parent( widget, GTK_TYPE_COMBO_BOX_ENTRY ); }
+        {
+            // try get parent combobox entry
+            GtkWidget* out(0L);
+            if( ( out = gtk_widget_find_parent( widget, GTK_TYPE_COMBO_BOX_ENTRY ) ) ) return out;
+
+            // if not found, get parent combobox and check if it has an entry
+            if( !(out = gtk_widget_find_parent( widget, GTK_TYPE_COMBO_BOX ) ) ) return 0L;
+
+            #if GTK_CHECK_VERSION(2, 24, 0)
+            return gtk_combo_box_get_has_entry( GTK_COMBO_BOX( out ) ) ? out:0L;
+            #else
+            return GTK_IS_ENTRY( gtk_bin_get_child( GTK_BIN( out ) ) ) ? out:0L;
+            #endif
+
+        }
 
         //! return parent scrolled window if any.
         inline GtkWidget* gtk_parent_scrolled_window( GtkWidget* widget )
