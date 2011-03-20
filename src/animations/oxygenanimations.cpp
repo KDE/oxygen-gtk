@@ -247,6 +247,8 @@ namespace Oxygen
 
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
 
+        if( !Gtk::gtk_scrolled_window_force_sunken( parent ) ) return TRUE;
+
         #if OXYGEN_DEBUG
         std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
         gchar* widgetPath;
