@@ -251,7 +251,7 @@ namespace Oxygen
         std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
         gchar* widgetPath;
         gtk_widget_path( widget, 0L, &widgetPath, 0L);
-        std::cerr << "widget path: " << widgetPath << std::endl;
+        std::cerr << "widget path: " << widgetPath << "; Treeview? " << (GTK_IS_TREE_VIEW(widget)?"TRUE":"FALSE") <<"; Textview? " << (GTK_IS_TEXT_VIEW(widget)?"TRUE":"FALSE")<<std::endl;
         g_free( widgetPath );
         #endif
 

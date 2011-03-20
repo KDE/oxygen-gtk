@@ -36,6 +36,12 @@ namespace Oxygen
     {
         GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
         GdkWindow* window=gtk_widget_get_window(child);
+#if OXYGEN_DEBUG
+        std::cerr << "ScrolledWindowData::targetExposeEvent( " << G_OBJECT_TYPE_NAME(widget) << ",, ); child: " << G_OBJECT_TYPE_NAME(child) << "\n";
+#endif
+        // don't do anything if the window isn't composited
+        if(!gdk_window_get_composited(window))
+            return FALSE;
         Cairo::Context context(gtk_widget_get_window(widget));
 
         // set up clipping independently of GTK version
