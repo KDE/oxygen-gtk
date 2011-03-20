@@ -39,7 +39,6 @@ namespace Oxygen
         //! constructor
         ScrolledWindowData( void ):
             _target(0),
-            _initiallyComposited(false),
             _compositeEnabled(false)
         {}
 
@@ -92,7 +91,6 @@ namespace Oxygen
         //! target widget
         GtkWidget* _target;
         Signal _exposeId;
-        bool _initiallyComposited;
         bool _compositeEnabled;
 
         //! child data

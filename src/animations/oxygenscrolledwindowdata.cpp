@@ -83,11 +83,6 @@ namespace Oxygen
         {
             _compositeEnabled=true;
             _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
-            GtkWidget* child=gtk_bin_get_child(GTK_BIN(_target));
-            GdkWindow* window(gtk_widget_get_window(child));
-            _initiallyComposited=gdk_window_get_composited(window);
-            if(!_initiallyComposited)
-                gdk_window_set_composited(window, TRUE);
         }
 
         // register scrollbars
@@ -148,7 +143,7 @@ namespace Oxygen
             {
                 window=gtk_widget_get_window(_target);
                 if(window)
-                    gdk_window_set_composited(window, _initiallyComposited);
+                    gdk_window_set_composited(window, FALSE);
             }
         }
 

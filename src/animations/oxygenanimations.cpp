@@ -133,6 +133,8 @@ namespace Oxygen
         _comboBoxHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxHook, this );
         #endif
 
+        _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
+
         _hooksInitialized = true;
     }
 
@@ -225,6 +227,36 @@ namespace Oxygen
 
         const GtkAllocation widgetAllocation( Gtk::gtk_widget_get_allocation( widget ) );
         gtk_widget_set_size_request( widget, comboAllocation.width - 6, widgetAllocation.height );
+
+        return TRUE;
+
+    }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::innerShadowHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+        if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) ) return TRUE;
+        if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
+
+        GtkWidget* parent(gtk_widget_get_parent(widget));
+
+        if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
+
+        std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
+        gchar* widgetPath;
+        gtk_widget_path( widget, 0L, &widgetPath, 0L);
+        std::cerr << "widget path: " << widgetPath << std::endl;
+
+        GdkWindow* window(gtk_widget_get_window(widget));
+        if(window && gdk_display_supports_composite(gdk_display_get_default()))
+        {
+            gdk_window_set_composited(window,TRUE);
+        }
 
         return TRUE;
 

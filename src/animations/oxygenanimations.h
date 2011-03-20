@@ -183,6 +183,9 @@ namespace Oxygen
         //! combobox list size adjustment hook
         static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! inner shadow composited mode enabling hook
+        static gboolean innerShadowHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state
@@ -264,6 +267,9 @@ namespace Oxygen
 
         //! combobox hook
         Hook _comboBoxHook;
+
+        //! inner shadows hook
+        Hook _innerShadowHook;
 
 
         //@}
