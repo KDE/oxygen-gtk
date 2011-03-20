@@ -251,6 +251,7 @@ namespace Oxygen
         gchar* widgetPath;
         gtk_widget_path( widget, 0L, &widgetPath, 0L);
         std::cerr << "widget path: " << widgetPath << std::endl;
+        g_free( widgetPath );
 
         GdkWindow* window(gtk_widget_get_window(widget));
         if(window && gdk_display_supports_composite(gdk_display_get_default()))
