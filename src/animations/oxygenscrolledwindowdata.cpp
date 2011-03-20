@@ -70,9 +70,11 @@ namespace Oxygen
         int offsetX=basicOffset+Style::Entry_SideMargin;
         int offsetY=basicOffset;
 
-        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), &alloc, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
+        GdkRectangle clipRect={alloc.x,alloc.y,alloc.width,alloc.height};
+
+        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
         offsetX-=Style::Entry_SideMargin;
-        Style::instance().renderHole( gtk_widget_get_window(widget), NULL, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2, options, data );
+        Style::instance().renderHole( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2, options, data );
 
         // let the event propagate
         return FALSE;
