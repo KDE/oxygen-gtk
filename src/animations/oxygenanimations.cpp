@@ -247,11 +247,13 @@ namespace Oxygen
 
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
 
+        #if OXYGEN_DEBUG
         std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
         gchar* widgetPath;
         gtk_widget_path( widget, 0L, &widgetPath, 0L);
         std::cerr << "widget path: " << widgetPath << std::endl;
         g_free( widgetPath );
+        #endif
 
         GdkWindow* window(gtk_widget_get_window(widget));
         if(window && gdk_display_supports_composite(gdk_display_get_default()))
