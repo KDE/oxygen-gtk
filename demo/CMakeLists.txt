@@ -1,6 +1,7 @@
 ########### next target ###############
 set( oxygen_gtk_demo_SOURCES
     oxygendemodialog.cpp
+    oxygendemowidget.cpp
     oxygeninputdemowidget.cpp
     oxygengtkdemo_main.cpp )
 

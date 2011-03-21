@@ -26,6 +26,7 @@
 
 #include <gtk/gtk.h>
 #include <cassert>
+#include <string>
 
 namespace Oxygen
 {
@@ -38,6 +39,7 @@ namespace Oxygen
         //! constructor
         DemoWidget( void ):
             _mainWidget( 0L ),
+            _widget(0L),
             _enabled( true )
         {}
 
@@ -47,28 +49,36 @@ namespace Oxygen
 
         //! main widget
         virtual GtkWidget* mainWidget( void )
-        {
-            assert( _mainWidget );
-            return _mainWidget;
-        }
+        { return _mainWidget; }
 
         //! enable state
         virtual void setEnabled( bool value )
         {
             _enabled = value;
-            if( _mainWidget )
-            { gtk_widget_set_sensitive( _mainWidget, _enabled ); }
+            if( _widget )
+            { gtk_widget_set_sensitive( _widget, _enabled ); }
         }
 
         protected:
 
+        //! name
+        void setName( const std::string name )
+        { _name = name; }
+
+        //! comments
+        void setComments( const std::string comments )
+        { _comments = comments; }
+
+        //! icon name
+        void setIconName( const std::string iconName )
+        { _iconName = iconName; }
+
         //! assign main widget
-        virtual void setMainWidget( GtkWidget *widget )
-        {
-            assert( !_mainWidget );
-            _mainWidget = widget;
-            setEnabled( _enabled );
-        }
+        virtual void setWidget( GtkWidget *widget )
+        { _widget = widget; }
+
+        //! realize widget
+        void realize( void );
 
         private:
 
@@ -83,8 +93,20 @@ namespace Oxygen
             return *this;
         }
 
+        //! page name
+        std::string _name;
+
+        //! page comments
+        std::string _comments;
+
+        //! icon name
+        std::string _iconName;
+
         //! main widget
         GtkWidget* _mainWidget;
+
+        //! contents widget
+        GtkWidget* _widget;
 
         //! enable state
         bool _enabled;
