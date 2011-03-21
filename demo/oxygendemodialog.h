@@ -24,13 +24,18 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygeninputdemowidget.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
+#include <map>
 
 namespace Oxygen
 {
 
+    // forward declaration
+    class DemoWidget;
+
+    // main demo dialog
     class DemoDialog
     {
 
@@ -46,13 +51,46 @@ namespace Oxygen
         virtual GtkWidget* mainWidget( void )
         { return _mainWidget; }
 
+        protected:
+
+        //! add page
+        void addPage( DemoWidget* );
+
+        //!@name callbacks
+        //@{
+
+        static void selectionChanged( GtkIconView*, gpointer );
+        static void toggleEnableState( GtkToggleButton*, gpointer );
+
+        //@}
+
         private:
 
         //! main widget
         GtkWidget* _mainWidget;
 
-        //! input demo widget
-        InputDemoWidget _inputDemoWidget;
+        //! tab widget
+        GtkWidget* _notebook;
+
+        //! model
+        GtkListStore* _model;
+
+        //! map page index and page widget
+        std::map<int, DemoWidget*> _pages;
+
+        //! enable state button
+        GtkWidget* _stateButton;
+
+        //!@name signals
+        //@{
+
+        //! selection change
+        Signal _selectionChangedId;
+
+        //! enable state toggles
+        Signal _toggleEnableStateId;
+
+        //@}
 
     };
 
