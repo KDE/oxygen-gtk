@@ -36,6 +36,7 @@ namespace Oxygen
 
         // create main widget
         _mainWidget = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+        gtk_window_set_default_size( GTK_WINDOW( _mainWidget ), 630, 500 );
         gtk_window_set_title( GTK_WINDOW( _mainWidget ), "Oxygen-gtk Demo" );
 
         // vertical container
