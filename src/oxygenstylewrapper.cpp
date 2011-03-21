@@ -2653,7 +2653,7 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
-        if( d.isNull() )
+        if( d.isNull() && GTK_IS_WINDOW( widget ) )
         {
 
             // TODO: implement something better
