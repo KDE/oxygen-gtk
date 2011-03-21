@@ -66,7 +66,6 @@ namespace Oxygen
 
             gtk_icon_view_set_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_margin( GTK_ICON_VIEW( iconView ), 0 );
-            gtk_icon_view_set_item_padding( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_column_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_row_spacing( GTK_ICON_VIEW( iconView ), 0 );
 
