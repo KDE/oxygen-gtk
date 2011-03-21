@@ -59,6 +59,14 @@ namespace Oxygen
             { gtk_widget_set_sensitive( _widget, _enabled ); }
         }
 
+        //! name
+        const std::string& name( void ) const
+        { return _name; }
+
+        //! icon name
+        const std::string& iconName( void ) const
+        { return _iconName; }
+
         protected:
 
         //! name

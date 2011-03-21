@@ -63,6 +63,9 @@ namespace Oxygen
         //! tab widget
         GtkWidget* _notebook;
 
+        //! model
+        GtkListStore* _model;
+
         //! map page index and page widget
         std::map<int, DemoWidget*> _pages;
 
