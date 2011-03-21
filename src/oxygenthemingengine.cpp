@@ -393,8 +393,11 @@ namespace Oxygen
                     gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN, &flags );
 
                     TileSet::Tiles tiles( TileSet::Center );
-                    if( flags&GTK_REGION_FIRST ) tiles |= TileSet::Left;
-                    if( flags&GTK_REGION_LAST ) tiles |= TileSet::Right;
+                    if( gtk_widget_path_is_type( path, GTK_TYPE_ICON_VIEW ) ) tiles |= (TileSet::Left|TileSet::Right );
+                    else {
+                        if( flags&GTK_REGION_FIRST ) tiles |= TileSet::Left;
+                        if( flags&GTK_REGION_LAST ) tiles |= TileSet::Right;
+                    }
 
                     if( forceCellStart ) tiles |= TileSet::Left;
                     if( forceCellEnd ) tiles |= TileSet::Right;
@@ -923,8 +926,6 @@ namespace Oxygen
 
             }
 
-        //} else if( gtk_widget_path_is_type( path, GTK_TYPE_TOOLBAR ) ) {
-
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
 
             if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
@@ -1227,6 +1228,14 @@ namespace Oxygen
                 Style::instance().renderButtonSlab( widget, context, x, y, w+10, h, options, data, tiles );
 
             }
+
+
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) && GTK_IS_NOTEBOOK( widget ) && !gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) ) {
+
+            // do nothing for notebooks for which tabs are hidden.
+            // this is consistent with Qt Version.
+            return;
 
         } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
 
