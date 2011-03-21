@@ -77,7 +77,8 @@ namespace Oxygen
 
                 // combobox model
                 GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
-                const char* columns[] = {
+                const char* columns[] =
+                {
                     "Small",
                     "Normal",
                     "Large"
@@ -90,9 +91,18 @@ namespace Oxygen
                     gtk_list_store_set( model, &iter, 0, columns[i], -1 );
                 }
 
-                GtkWidget* comboBox(0L);
-                gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_model(GTK_TREE_MODEL( model ) ), 2, 3, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
+                GtkWidget* comboBox( gtk_combo_box_new() );
+                gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
+                g_object_unref( model );
+
+                // text renderer
+                GtkCellRenderer* cell( gtk_cell_renderer_text_new() );
+                gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
+                gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell, "text", 0, NULL );
+
                 gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
+
+                gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
                 gtk_widget_show( comboBox );
 
             }
@@ -105,14 +115,124 @@ namespace Oxygen
 
                 // button
                 GtkWidget* button( gtk_button_new_with_label( "Normal" ) );
+                gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0  );
 
                 GtkIconTheme* theme( gtk_icon_theme_get_default() );
                 GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, "oxygen", 16, (GtkIconLookupFlags) 0, 0L );
                 GtkWidget* image( gtk_image_new_from_pixbuf( icon ) );
+                g_object_unref( icon );
+
                 gtk_button_set_image( GTK_BUTTON( button ), image );
                 gtk_widget_show( button );
+
+                // combobox model
+                GtkListStore* model( gtk_list_store_new( 2, GDK_TYPE_PIXBUF, G_TYPE_STRING ) );
+                const char* columns[] =
+                {
+                    "New",
+                    "Open",
+                    "Save"
+                };
+
+                const char* icons[] =
+                {
+                    "document-new",
+                    "document-open",
+                    "document-save"
+                };
+
+                // store into model
+                for( unsigned int i=0; i<3; i++ )
+                {
+                    GtkTreeIter iter;
+                    gtk_list_store_append( model, &iter );
+
+                    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, icons[i], 16, (GtkIconLookupFlags) 0, 0L );
+                    gtk_list_store_set( model, &iter, 0, icon, 1, columns[i], -1 );
+                    g_object_unref( icon );
+                }
+
+                GtkWidget* comboBox( gtk_combo_box_new() );
+                gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
+                g_object_unref( model );
+
+                {
+                    // pixbuf renderer
+                    GtkCellRenderer* cell = gtk_cell_renderer_pixbuf_new();
+                    gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
+                    gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell,
+                        "pixbuf", 0,
+                        NULL );
+                }
+
+                {
+                    // text renderer
+                    GtkCellRenderer* cell( gtk_cell_renderer_text_new() );
+                    gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
+                    gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell, "text", 1, NULL );
+                }
+
+                gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
+
+                gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_widget_show( comboBox );
+
             }
 
+
+        }
+
+        GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
+        gtk_box_set_spacing( GTK_BOX( hbox ), 5 );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
+        gtk_widget_show( hbox );
+
+        {
+            // checkboxes
+            GtkWidget* frame( gtk_frame_new( "Checkboxes" ) );
+            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
+            gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
+            gtk_widget_show( frame );
+
+            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            gtk_container_add( GTK_CONTAINER( frame ), vbox );
+            gtk_widget_show( vbox );
+
+            GtkWidget* checkbutton;
+            gtk_box_pack_start( GTK_BOX( vbox ), checkbutton = gtk_check_button_new_with_label( "Off" ), false, true, 0 );
+            gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), false );
+            gtk_widget_show( checkbutton );
+
+            gtk_box_pack_start( GTK_BOX( vbox ), checkbutton = gtk_check_button_new_with_label( "Partial" ), false, true, 0 );
+            gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( checkbutton ), true );
+            gtk_widget_show( checkbutton );
+
+            gtk_box_pack_start( GTK_BOX( vbox ), checkbutton = gtk_check_button_new_with_label( "On" ), false, true, 0 );
+            gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), true );
+            gtk_widget_show( checkbutton );
+
+        }
+
+        {
+            // radio buttons
+            GtkWidget* frame( gtk_frame_new( "Radiobuttons" ) );
+            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
+            gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
+            gtk_widget_show( frame );
+
+            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            gtk_container_add( GTK_CONTAINER( frame ), vbox );
+            gtk_widget_show( vbox );
+
+            GtkWidget* radiobutton;
+            gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label( 0L, "First Choice" ), false, true, 0 );
+            gtk_widget_show( radiobutton );
+
+            gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Second Choice" ), false, true, 0 );
+            gtk_widget_show( radiobutton );
+
+            gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Third Choice" ), false, true, 0 );
+            gtk_widget_show( radiobutton );
         }
 
     }

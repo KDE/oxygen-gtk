@@ -99,11 +99,17 @@ namespace Oxygen
 
         GtkWidget* comboBox(0L);
         #if GTK_CHECK_VERSION(2, 24, 0)
-        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_model_and_entry( GTK_TREE_MODEL( model ) ), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_entry(), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
         gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( comboBox ), 0 );
+
         #else
-        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_entry_new_with_model( GTK_TREE_MODEL( model ), 0 ), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_entry_new(), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
+        gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( comboBox ), 0 );
         #endif
+        g_object_unref( model );
+
         gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
         gtk_widget_show( comboBox );
 

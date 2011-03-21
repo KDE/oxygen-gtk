@@ -24,6 +24,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
 #include <map>
@@ -55,6 +56,14 @@ namespace Oxygen
         //! add page
         void addPage( DemoWidget* );
 
+        //!@name callbacks
+        //@{
+
+        static void selectionChanged( GtkIconView*, gpointer );
+        static void toggleEnableState( GtkToggleButton*, gpointer );
+
+        //@}
+
         private:
 
         //! main widget
@@ -68,6 +77,20 @@ namespace Oxygen
 
         //! map page index and page widget
         std::map<int, DemoWidget*> _pages;
+
+        //! enable state button
+        GtkWidget* _stateButton;
+
+        //!@name signals
+        //@{
+
+        //! selection change
+        Signal _selectionChangedId;
+
+        //! enable state toggles
+        Signal _toggleEnableStateId;
+
+        //@}
 
     };
 
