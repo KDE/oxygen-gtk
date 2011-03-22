@@ -66,7 +66,7 @@ set( oxygen_gtk_SOURCES
 
 add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
 
-# Add GTK's cflags
+# Add debug cflags
 set( CMAKE_CXX_FLAGS " -Wall -g ${CMAKE_CXX_FLAGS}" )
 set( CMAKE_C_FLAGS " -Wall -g ${CMAKE_C_FLAGS}" )
 
