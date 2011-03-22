@@ -1684,7 +1684,7 @@ namespace Oxygen
             GtkShadowType shadow( GTK_SHADOW_OUT );
             if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
             else if( state&GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
-            Style::instance().renderRadioButton( context, x, y, w, h, shadow, options, data );
+            Style::instance().renderRadioButton( widget, context, x, y, w, h, shadow, options, data );
 
         } else {
 

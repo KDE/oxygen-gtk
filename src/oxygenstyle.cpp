@@ -1524,6 +1524,7 @@ namespace Oxygen
 
     //___________________________________________________________________
     void Style::renderRadioButton(
+        GtkWidget* widget,
         cairo_t* context,
         gint x, gint y, gint w, gint h, GtkShadowType shadow,
         const StyleOptions& options,
@@ -1544,24 +1545,21 @@ namespace Oxygen
         // define colors
         const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
 
-// TODO: reimplement for Gtk3
-//         ColorUtils::Rgba base;
-//         if( options&Blend )
-//         {
-//
-//             gint wh, wy;
-//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//
-//             if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-//             else base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
-//
-//         } else {
-//
-//             base = settings().palette().color( group, Palette::Button );
-//
-//         }
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
 
-        const ColorUtils::Rgba base( settings().palette().color( group, Palette::Button ) );
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+
+            if( options & Menu ) base = ColorUtils::menuBackgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+            else base = ColorUtils::backgroundColor( settings().palette().color( group, Palette::Button ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( group, Palette::Button );
+
+        }
 
         // glow
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );

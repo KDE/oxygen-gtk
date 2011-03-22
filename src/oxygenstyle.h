@@ -198,7 +198,9 @@ namespace Oxygen
         { renderCheckBox( 0L, context, x, y, w, h, shadow, options, data ); }
 
         //! radio button
-        void renderRadioButton( cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderRadioButton( GtkWidget*, cairo_t*, gint, gint, gint, gint, GtkShadowType, const StyleOptions&, const AnimationData& = AnimationData() );
+        void renderRadioButton( cairo_t* context, gint x, gint y, gint w, gint h, GtkShadowType shadow, const StyleOptions& options, const AnimationData& data = AnimationData() )
+        { renderRadioButton( 0L, context, x, y, w, h, shadow, options, data ); }
 
         //!@name generic slab
         //@{
