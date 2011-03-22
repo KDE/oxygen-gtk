@@ -92,30 +92,27 @@ namespace Oxygen
     void RCStyle::registerType( GTypeModule *module )
     {
 
-        if( !_type )
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::RCStyle::registerType" << std::endl;
+        #endif
+
+        const GTypeInfo info =
         {
+            (guint16)sizeof(OxygenRcStyleClass ),
+            (GBaseInitFunc) NULL,
+            (GBaseFinalizeFunc) NULL,
+            (GClassInitFunc) classInit,
+            (GClassFinalizeFunc) NULL,
+            NULL,
+            (guint16)sizeof( OxygenRcStyle ),
+            0,
+            (GInstanceInitFunc) NULL,
+            NULL
+        };
 
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::RCStyle::registerType" << std::endl;
-            #endif
+        _typeInfo = info;
+        _type = g_type_module_register_type( module, GTK_TYPE_RC_STYLE, "OxygenRcStyle", &_typeInfo, GTypeFlags(0 ) );
 
-            const GTypeInfo info =
-            {
-                (guint16)sizeof(OxygenRcStyleClass ),
-                (GBaseInitFunc) NULL,
-                (GBaseFinalizeFunc) NULL,
-                (GClassInitFunc) classInit,
-                (GClassFinalizeFunc) NULL,
-                NULL,
-                (guint16)sizeof( OxygenRcStyle ),
-                0,
-                (GInstanceInitFunc) NULL,
-                NULL
-            };
-
-            _typeInfo = info;
-            _type = g_type_module_register_type( module, GTK_TYPE_RC_STYLE, "OxygenRcStyle", &_typeInfo, GTypeFlags(0 ) );
-        }
     }
 
     //______________________________________________________________________
