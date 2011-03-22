@@ -2268,14 +2268,14 @@ namespace Oxygen
         if( gtk_icon_source_get_state_wildcarded( source ) )
         {
 
-            if( state&GTK_STATE_INSENSITIVE )
+            if( state&GTK_STATE_FLAG_INSENSITIVE )
             {
 
                 stated = Gtk::gdk_pixbuf_set_alpha( scaled, 0.3 );
                 gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
                 g_object_unref (scaled);
 
-            } else if( useEffect && (state&GTK_STATE_PRELIGHT) ) {
+            } else if( useEffect && (state&GTK_STATE_FLAG_PRELIGHT) ) {
 
                 stated = gdk_pixbuf_copy( scaled );
                 if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
