@@ -590,9 +590,9 @@ namespace Oxygen
         {
 
             // get background color
-            GdkRGBA *background;
-            gtk_theming_engine_get( engine, state, "background-color", &background, NULL );
-            Style::instance().renderInfoBar( widget, context, x, y, w, h, Gtk::gdk_get_color( *background ) );
+            GdkRGBA background;
+            gtk_theming_engine_get_background_color( engine, state, &background );
+            Style::instance().renderInfoBar( widget, context, x, y, w, h, Gtk::gdk_get_color( background ) );
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) ) {
 
@@ -2062,14 +2062,12 @@ namespace Oxygen
 
             } else cairo_move_to( context, x, y);
 
-            GdkRGBA *fg_color;
-            gtk_theming_engine_get( engine, state, "color", &fg_color, NULL );
+            GdkRGBA fg_color;
+            gtk_theming_engine_get_color( engine, state, &fg_color );
 
-            gdk_cairo_set_source_rgba( context, fg_color );
+            gdk_cairo_set_source_rgba( context, &fg_color );
             pango_cairo_show_layout( context, layout );
             cairo_restore( context );
-
-            gdk_rgba_free( fg_color );
 
         } else {
 
