@@ -12,9 +12,9 @@ set( oxygen_gtk_demo_SOURCES
     oxygensignal.cpp
  )
 
-add_executable( oxygen-gtk-demo ${oxygen_gtk_demo_SOURCES} )
-target_link_libraries( oxygen-gtk-demo ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} )
-install( TARGETS oxygen-gtk-demo DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+add_executable( oxygen-gtk3-demo ${oxygen_gtk_demo_SOURCES} )
+target_link_libraries( oxygen-gtk3-demo ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} )
+install( TARGETS oxygen-gtk3-demo DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 
 # ########### next target ###############
 # set( deco_test_SOURCES oxygengtkdeco_main.cpp )
