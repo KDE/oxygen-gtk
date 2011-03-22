@@ -1387,19 +1387,25 @@ namespace Oxygen
 
             const Gtk::Gap gap( std::min( xy0_gap, xy1_gap ), std::abs(xy1_gap-xy0_gap), position );
 
-            if( borderStyle == GTK_BORDER_STYLE_INSET )
-            {
+            GtkShadowType shadow( GTK_SHADOW_NONE );
+            if( GTK_IS_FRAME( widget ) ) shadow = gtk_frame_get_shadow_type( GTK_FRAME( widget ) );
+            else if( borderStyle == GTK_BORDER_STYLE_INSET ) shadow = GTK_SHADOW_IN;
+            else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) shadow = GTK_SHADOW_OUT;
+            else shadow = GTK_SHADOW_ETCHED_IN;
+
+            // draw frame depending on shadow type
+            if( shadow == GTK_SHADOW_IN ) {
 
                 Style::instance().renderHoleBackground( context, 0L, widget, x - 1 - Style::Entry_SideMargin, y-1, w + 2 + 2*Style::Entry_SideMargin, h+2 );
                 Style::instance().renderHole( context, x-1, y-1, w+2, h+1, gap, NoFill );
 
-            } else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) {
+            } else if( shadow == GTK_SHADOW_OUT ) {
 
                 Style::instance().renderSlab( context, x-1, y-4, w+2, h+4, gap, NoFill );
 
-            } else if( borderStyle == GTK_BORDER_STYLE_SOLID ) {
+            } else {
 
-                Style::instance().renderDockFrame( context, x, y-1, w, h+1, gap, Blend );
+                Style::instance().renderDockFrame( widget, context, x, y-1, w, h+1, gap, Blend );
 
             }
 

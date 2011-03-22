@@ -230,9 +230,12 @@ namespace Oxygen
         //!@name dock frame
         //@{
 
-        void renderDockFrame( cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
-        void renderDockFrame( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& o )
-        { renderDockFrame( context, x, y, w, h, Gtk::Gap(), o ); }
+        void renderDockFrame( GtkWidget*, cairo_t*, gint, gint, gint, gint, const Gtk::Gap&, const StyleOptions& );
+        void renderDockFrame( cairo_t* context, gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
+        { renderDockFrame( 0L, context, x, y, w, h, gap, options ); }
+
+        void renderDockFrame( cairo_t* context, gint x, gint y, gint w, gint h, const StyleOptions& options )
+        { renderDockFrame( 0L, context, x, y, w, h, Gtk::Gap(), options ); }
 
         //@}
 

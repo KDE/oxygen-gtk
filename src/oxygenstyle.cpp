@@ -1663,6 +1663,7 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderDockFrame(
+        GtkWidget* widget,
         cairo_t* context,
         gint x, gint y, gint w, gint h, const Gtk::Gap& gap, const StyleOptions& options )
     {
@@ -1670,23 +1671,20 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 9 || h < 9 )  return;
 
-// TODO: reimplement for gtk3
-//         // define colors
-//         ColorUtils::Rgba base;
-//         if( options&Blend )
-//         {
-//
-//             gint wh, wy;
-//             Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-//             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
-//
-//         } else {
-//
-//             base = settings().palette().color( Palette::Window );
-//
-//         }
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
 
-        const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Window );
+
+        }
 
         // create context, add mask, and render
         cairo_save( context );
