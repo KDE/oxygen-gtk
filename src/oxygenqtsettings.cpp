@@ -587,6 +587,10 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
 
+        _css.addSection( "GtkEntry:insensitive, GtkTreeView:insensitive, GtkTextView:insensitive, GtkIconView:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Base ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::Text ) ) );
+
 // FIXME: following does not work
 //         _css.addSection( "GtkEntry:active, GtkTreeView:active, GtkTextView:active" );
 //         if( _inactiveChangeSelectionColor ) _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
