@@ -2322,20 +2322,24 @@ namespace Oxygen
 
             if( !left )
             {
-#if OXYGEN_DEBUG
+
+                #if OXYGEN_DEBUG
                 std::cerr<<"drawWindowDecoration: drawing left border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-#endif
+                #endif
                 left=helper().createSurface(sw,h);
 
                 Cairo::Context context(left);
                 renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient);
 
                 helper().windecoLeftBorderCache().insert(key,left);
-            }
-#if OXYGEN_DEBUG
-            else
+
+            } else {
+
+                #if OXYGEN_DEBUG
                 std::cerr << "drawWindowDecoration: using saved left border" << std::endl;
-#endif
+                #endif
+
+            }
 
             cairo_set_source_surface(context, left, x, y);
             cairo_rectangle(context,x,y,sw,h);
@@ -2349,20 +2353,25 @@ namespace Oxygen
 
             if( !right )
             {
-#if OXYGEN_DEBUG
+
+                #if OXYGEN_DEBUG
                 std::cerr<<"drawWindowDecoration: drawing right border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-#endif
+                #endif
+
                 right=helper().createSurface(sw,h);
 
                 Cairo::Context context(right);
                 renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoRightBorderCache().insert(key,right);
-            }
-#if OXYGEN_DEBUG
-            else
+
+            } else {
+
+                #if OXYGEN_DEBUG
                 std::cerr << "drawWindowDecoration: using saved right border" << std::endl;
-#endif
+                #endif
+
+            }
 
             cairo_set_source_surface(context, right, x+w-sw, y);
             cairo_rectangle(context,x+w-sw,y,sw,h);
@@ -2379,20 +2388,24 @@ namespace Oxygen
 
             if( !top )
             {
-#if OXYGEN_DEBUG
+
+                #if OXYGEN_DEBUG
                 std::cerr<<"drawWindowDecoration: drawing top border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-#endif
+                #endif
                 top=helper().createSurface(sw,sh);
 
                 Cairo::Context context(top);
                 renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoTopBorderCache().insert(key,top);
-            }
-#if OXYGEN_DEBUG
-            else
+
+            } else {
+
+                #if OXYGEN_DEBUG
                 std::cerr << "drawWindowDecoration: using saved top border" << std::endl;
-#endif
+                #endif
+
+            }
 
             cairo_set_source_surface(context, top, x+left, y);
             cairo_rectangle(context,x+left,y,sw,sh);
@@ -2451,20 +2464,24 @@ namespace Oxygen
 
             if( !bottom)
             {
-#if OXYGEN_DEBUG
+
+                #if OXYGEN_DEBUG
                 std::cerr<<"drawWindowDecoration: drawing bottom border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-#endif
+                #endif
                 bottom=helper().createSurface(sw,sh);
 
                 Cairo::Context context(bottom);
                 renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
                 helper().windecoBottomBorderCache().insert(key,bottom);
-            }
-#if OXYGEN_DEBUG
-            else
+
+            } else {
+
+                #if OXYGEN_DEBUG
                 std::cerr << "drawWindowDecoration: using saved bottom border" << std::endl;
-#endif
+                #endif
+
+            }
 
             cairo_set_source_surface(context, bottom, x+left, Y);
             cairo_rectangle(context,x+left,Y,sw,sh);
