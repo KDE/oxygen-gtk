@@ -1,3 +1,7 @@
+# Add debug cflags
+set( CMAKE_CXX_FLAGS " -Wall -g ${CMAKE_CXX_FLAGS}" )
+set( CMAKE_C_FLAGS " -Wall -g ${CMAKE_C_FLAGS}" )
+
 ########### next target ###############
 set( oxygen_gtk_demo_SOURCES
     oxygenbuttondemowidget.cpp
