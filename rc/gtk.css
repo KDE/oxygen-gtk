@@ -123,8 +123,7 @@ GtkNotebook { padding: 4; }
 GtkOptionMenu { padding: 0 4; }
 
 /* separators */
-GtkSeparator { border-width: 2; }
-GtkVSeparator { border-width: 2 3; }
+GtkSeparator { border-width: 3; }
 
 /* frames */
 GtkFrame { padding: 1; }
