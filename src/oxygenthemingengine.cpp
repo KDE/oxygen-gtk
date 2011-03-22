@@ -694,10 +694,9 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
-                // TODO: reimplement for Gtk3
-                // ColorUtils::Rgba background( Gtk::gdk_get_color( style->bg[state] ) );
-                // Style::instance().fill( context, x, y, w, h, background );
-                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
+                // fill background manually
+                Palette::Group group( (options & Disabled) ? Palette::Disabled : Palette::Active );
+                Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( group, Palette::Base ) );
 
                 // update option accordingly
                 if( state&GTK_STATE_FLAG_INSENSITIVE ) options &= ~(Hover|Focus);
@@ -1102,7 +1101,9 @@ namespace Oxygen
 
                 // background color
                 // TODO: use correct Palette::Group depending on state
-                const ColorUtils::Rgba background( Style::instance().settings().palette().color( Palette::Base ) );
+                // fill background manually
+                Palette::Group group( (options & Disabled) ? Palette::Disabled : Palette::Active );
+                const ColorUtils::Rgba background( Style::instance().settings().palette().color( group, Palette::Base ) );
 
                 // TODO: remove when bug is fixed upstream
                 #if ENABLE_COMBOBOX_ENTRY_HACK
