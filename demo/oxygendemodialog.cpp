@@ -113,6 +113,8 @@ namespace Oxygen
             gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
 
+            g_signal_connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
+
         }
 
         addPage( new InputDemoWidget() );
@@ -123,6 +125,7 @@ namespace Oxygen
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
     {
+        //_okButtonClickedId.disconnect();
         //_selectionChangedId.disconnect();
         //_toggleEnableStateId.disconnect();
     }
