@@ -3333,30 +3333,28 @@ namespace Oxygen
     //_______________________________________________________________________________________________________________
     void StyleWrapper::registerType( GTypeModule* module )
     {
-        if( !_type )
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleWrapper::registerType" << std::endl;
+        #endif
+
+        const GTypeInfo info =
         {
+            (guint16)sizeof( OxygenStyleClass ),
+            (GBaseInitFunc) NULL,
+            (GBaseFinalizeFunc) NULL,
+            (GClassInitFunc) classInit,
+            (GClassFinalizeFunc) NULL,
+            NULL,
+            (guint16)sizeof( OxygenStyle ),
+            0,
+            (GInstanceInitFunc) instanceInit,
+            NULL
+        };
 
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::StyleWrapper::registerType" << std::endl;
-            #endif
+        _typeInfo = info;
+        _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
 
-            const GTypeInfo info =
-            {
-                (guint16)sizeof( OxygenStyleClass ),
-                (GBaseInitFunc) NULL,
-                (GBaseFinalizeFunc) NULL,
-                (GClassInitFunc) classInit,
-                (GClassFinalizeFunc) NULL,
-                NULL,
-                (guint16)sizeof( OxygenStyle ),
-                0,
-                (GInstanceInitFunc) instanceInit,
-                NULL
-            };
-
-            _typeInfo = info;
-            _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
-        }
     }
 
     //_______________________________________________________________________________________________________________
