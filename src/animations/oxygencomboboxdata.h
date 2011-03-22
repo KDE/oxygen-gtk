@@ -138,7 +138,7 @@ namespace Oxygen
 
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
-        static void stateChangeEvent( GtkWidget*, GtkStateType, gpointer );
+        static void stateChangeEvent( GtkWidget*, GtkStateFlags, gpointer );
 
 
         //@}
