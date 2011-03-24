@@ -1817,6 +1817,23 @@ namespace Oxygen
         else if( options&Hover ) base = settings().palette().color( Palette::Hover );
         else base = settings().palette().color( Palette::Active, role );
 
+        // merge base color with relevant background, if needed
+        const Palette::Group group( (options&Disabled) ? Palette::Disabled : Palette::Active );
+        switch( role )
+        {
+
+            case Palette::WindowText:
+            base = ColorUtils::decoColor( settings().palette().color( group, Palette::Window ), base );
+            break;
+
+            case Palette::ButtonText:
+            base = ColorUtils::decoColor( settings().palette().color( group, Palette::Button ), base );
+            break;
+
+            default: break;
+
+        }
+
         // need odd width and height
         if( !(w%2) ) w--;
         if( !(h%2) ) h--;
