@@ -184,6 +184,9 @@ namespace Oxygen
         //! background hint setting hook
         static gboolean backgroundHintHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! widget realize hook
+        static gboolean realizationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state
@@ -259,6 +262,9 @@ namespace Oxygen
 
         //! true when hooks are initialized
         bool _hooksInitialized;
+
+        //! realization hook
+        Hook _realizationHook;
 
         //! combobox hook
         Hook _comboBoxEntryHook;
