@@ -46,7 +46,6 @@ namespace Oxygen
         // pushbuttons
         {
             GtkWidget* frame( gtk_frame_new( "Pushbutton" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( mainWidget ), frame, false, true, 0 );
             gtk_widget_show( frame );
 
@@ -190,7 +189,6 @@ namespace Oxygen
         {
             // checkboxes
             GtkWidget* frame( gtk_frame_new( "Checkboxes" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
@@ -216,7 +214,6 @@ namespace Oxygen
         {
             // radio buttons
             GtkWidget* frame( gtk_frame_new( "Radiobuttons" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
