@@ -1234,8 +1234,13 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) && GTK_IS_NOTEBOOK( widget ) && !gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) ) {
 
-            // do nothing for notebooks for which tabs are hidden.
-            // this is consistent with Qt Version.
+            /*
+            disable border padding and paint nothing for notebooks
+            for which tabs are hidden. This is consistent with Qt Version.
+            */
+
+            gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE );
+
             return;
 
         } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
