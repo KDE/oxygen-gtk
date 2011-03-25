@@ -547,6 +547,29 @@ namespace Oxygen
 
     }
 
+    //________________________________________________________________________________________________________
+    const TileSet &StyleHelper::slope( const ColorUtils::Rgba& base, double shade, int size )
+    {
+
+        const SlabKey key( base, shade, size );
+        const TileSet& tileSet( m_slopeCache.value( key ) );
+        if( tileSet.isValid() ) return tileSet;
+
+        const int w( 4*size );
+        const int h( 4*size );
+        Cairo::Surface surface( createSurface( w, h ) );
+
+        {
+            Cairo::Context context( surface );
+            const TileSet &slabTileSet = slab( base, shade, size );
+            slabTileSet.render( context, 0, 0, size*4, size*5, TileSet::Left | TileSet::Right | TileSet::Top );
+
+        }
+
+        return m_slopeCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
+
+    }
+
     //__________________________________________________________________
     void StyleHelper::fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& tiles ) const
     {

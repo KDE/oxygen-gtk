@@ -1893,7 +1893,17 @@ namespace Oxygen
             if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
                 options |= Blend;
             options |= NoFill;
-            Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+            if( d.isFrame() && GTK_IS_FRAME( widget ) )
+            {
+
+                Style::instance().renderGroupBoxFrame( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+            } else {
+
+                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+            }
 
         }
 

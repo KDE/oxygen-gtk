@@ -213,6 +213,9 @@ namespace Oxygen
         { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
 
+        //! groupbox frame
+        void renderGroupBoxFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& );
+
         //! menu item
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 

@@ -1696,6 +1696,48 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    void Style::renderGroupBoxFrame(
+        GdkWindow* window,
+        GdkRectangle* clipRect,
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
+    {
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Window );
+
+        }
+
+        Cairo::Context context( window, clipRect );
+
+        cairo_push_group( context );
+
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y - h + 12, 0, y + 2*h - 19 ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
+        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
+        cairo_set_source( context, pattern );
+        helper().fillSlab( context, x, y, w, h );
+
+        helper().slope( base, w ).render( context, x, y, w, h );
+        cairo_pop_group_to_source( context );
+
+        Cairo::Pattern mask( cairo_pattern_create_linear( 0, y+h-19, 0, y+h ) );
+        cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
+        cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+        cairo_mask( context, mask );
+
+    }
+
+    //____________________________________________________________________________________
     void Style::renderMenuItemRect(
         GdkWindow* window,
         GdkRectangle* clipRect,
