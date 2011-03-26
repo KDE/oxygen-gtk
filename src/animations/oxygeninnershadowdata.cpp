@@ -63,16 +63,25 @@ namespace Oxygen
         gdk_cairo_set_source_window(context,window,alloc.x,alloc.y);
         cairo_paint(context);
 
-        // we only draw shadow_in here
+        // draw the shadow
+
+        int basicOffset=2;
+        // we only draw SHADOW_IN here
         if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
         {
-            #if OXYGEN_DEBUG
-            std::cerr << "Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
-            #endif
-            return FALSE;
+            if( GTK_IS_VIEWPORT(child) && gtk_viewport_get_shadow_type(GTK_VIEWPORT(child)) == GTK_SHADOW_IN )
+            {
+                basicOffset=0;
+            }
+            else
+            {
+                #if OXYGEN_DEBUG
+                std::cerr << "Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
+                #endif
+                return FALSE;
+            }
         }
 
-        // draw the shadow
         StyleOptions options(widget,gtk_widget_get_state(widget));
         options|=NoFill;
         options &= ~(Hover|Focus);
@@ -83,7 +92,6 @@ namespace Oxygen
         }
         const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
-        const int basicOffset=2;
         int offsetX=basicOffset+Style::Entry_SideMargin;
         int offsetY=basicOffset;
 
