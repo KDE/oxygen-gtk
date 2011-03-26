@@ -256,6 +256,7 @@ namespace Oxygen
         #endif
 
         static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );
+        static_cast<Animations*>(data)->innerShadowEngine().registerChild( parent, widget );
 
         return TRUE;
 

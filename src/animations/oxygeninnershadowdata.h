@@ -62,7 +62,7 @@ namespace Oxygen
 
         //!@ callbacks
         //@{
-        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+        static gboolean childUnrealizeNotifyEvent( GtkWidget*, gpointer );
         static gboolean targetExposeEvent( GtkWidget*, GdkEventExpose*, gpointer );
         //@}
 
@@ -89,7 +89,7 @@ namespace Oxygen
             //! disconnect all signals
             void disconnect( GtkWidget* );
 
-            Signal _destroyId;
+            Signal _unrealizeId;
             bool initiallyComposited;
         };
 

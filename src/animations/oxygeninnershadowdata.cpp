@@ -156,7 +156,7 @@ namespace Oxygen
             #endif
 
             ChildData data;
-            data._destroyId.connect( G_OBJECT(widget), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
 
             GdkWindow* window(gtk_widget_get_window(widget));
             if(window && gdk_display_supports_composite(gdk_display_get_default()))
@@ -201,18 +201,18 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        _destroyId.disconnect();
+        _unrealizeId.disconnect();
         GdkWindow* window(gtk_widget_get_window(widget));
         if(GTK_IS_WINDOW(window))
             gdk_window_set_composited(window,initiallyComposited);
     }
 
     //____________________________________________________________________________________________
-    gboolean InnerShadowData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    gboolean InnerShadowData::childUnrealizeNotifyEvent( GtkWidget* widget, gpointer data )
     {
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::InnerShadowData::childDestroyNotifyEvent -"
+            << "Oxygen::InnerShadowData::childUnrealizeNotifyEvent -"
             << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << std::endl;
         #endif
