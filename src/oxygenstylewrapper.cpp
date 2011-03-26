@@ -1782,7 +1782,13 @@ namespace Oxygen
             }
 
             if( gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) )
-            { Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill); }
+            {
+                Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
+            }
+            else
+            {
+                gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE );
+            }
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
 
@@ -2390,27 +2396,10 @@ namespace Oxygen
 
         } else if( GTK_IS_SCROLLBAR( widget ) ) {
 
-
             // use dedicated engine to get animation state
             useWidgetStateEngine = false;
             data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
-
-            GtkSensitivityType lowerOld = gtk_range_get_lower_stepper_sensitivity( GTK_RANGE(widget) );
-            GtkSensitivityType upperOld=gtk_range_get_upper_stepper_sensitivity( GTK_RANGE(widget) );
-            GtkStateType widgetState=gtk_widget_get_state(widget);
             role = Palette::WindowText;
-
-            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
-
-            if( ( lowerOld==GTK_SENSITIVITY_AUTO || lowerOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
-
-            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_ON ) && widgetState==GTK_STATE_INSENSITIVE)
-            { gtk_range_set_lower_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_OFF); }
-
-            if( ( upperOld==GTK_SENSITIVITY_AUTO || upperOld==GTK_SENSITIVITY_OFF ) && widgetState!=GTK_STATE_INSENSITIVE)
-            { gtk_range_set_upper_stepper_sensitivity(GTK_RANGE(widget),GTK_SENSITIVITY_ON); }
 
         }
 
@@ -2697,15 +2686,7 @@ namespace Oxygen
 
                     // this trick ensures that tabbar is always redrawn
                     Style::instance().animations().tabWidgetEngine().registerWidget( widget );
-                    if( Style::instance().animations().tabWidgetEngine().isDirty( widget ) )
-                    {
-                        Style::instance().animations().tabWidgetEngine().setDirty( widget, false );
-
-                    } else {
-
-                        Style::instance().animations().tabWidgetEngine().setDirty( widget, true );
-
-                    }
+                    Style::instance().animations().tabWidgetEngine().toggleDirty( widget );
 
                 }
 

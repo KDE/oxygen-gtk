@@ -44,7 +44,7 @@ namespace Oxygen
         realize();
 
         // main container
-        GtkWidget* table = gtk_table_new( 3, 3, false );
+        GtkWidget* table = gtk_table_new( 4, 3, false );
         gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
         gtk_box_pack_start( GTK_BOX( mainWidget ), table, false, true, 0 );
         gtk_widget_show( table );
@@ -112,6 +112,15 @@ namespace Oxygen
 
         gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
         gtk_widget_show( comboBox );
+
+        // spin button
+        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Spinbox: " ), 0, 1, 3, 4, GTK_FILL, GTK_FILL, 2, 0  );
+        gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
+        gtk_widget_show( label );
+
+        GtkWidget* spinButton( 0L );
+        gtk_table_attach( GTK_TABLE( table ), spinButton = gtk_spin_button_new_with_range( 0, 100, 1 ), 1, 2, 3, 4, GTK_FILL, GTK_FILL, 2, 0  );
+        gtk_widget_show( spinButton );
 
         // separator
         GtkWidget* separator( gtk_hseparator_new() );

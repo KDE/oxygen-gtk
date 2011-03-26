@@ -24,6 +24,7 @@
 
 #include <gtk/gtk.h>
 #include <dlfcn.h>
+#include <string>
 
 enum WinDecoOptions
 {
@@ -93,68 +94,63 @@ const int dh = 23 + 4 + shadowSize*2; // title + bottom
 gboolean initLib()
 {
     void* library;
-    char* error;
-    library=dlopen("/usr/lib/gtk-2.0/2.10.0/engines/liboxygen-gtk.so", RTLD_LAZY);
-    if(!library)
+    char* error=0;
+    char* moduleDir=gtk_rc_get_module_dir();
+    if(moduleDir)
     {
-
-        fprintf(stderr, "%s\n", dlerror());
-        return FALSE;
-
-    } else {
-
-        getWindecoABIVersion=(gint(*)(void))dlsym(library, "getWindecoABIVersion");
-        if((error=dlerror())!=0L)
-        {
-
-            fprintf(stderr, "%s\n", error);
-            return FALSE;
-
-        } else {
-
-            #define EXPECTED_ABI_VERSION 3
-            gint version=getWindecoABIVersion();
-            if(version != EXPECTED_ABI_VERSION)
+        std::string libpath(moduleDir+std::string("/liboxygen-gtk.so"));
+        g_free(moduleDir);
+        library=dlopen(libpath.c_str(),RTLD_LAZY);
+        bool success=false;
+        do{
+            if(!library)
             {
-                fprintf(stderr, "ABI version %d is not equal to expected version %d\n", version, EXPECTED_ABI_VERSION);
-                return FALSE;
+                break;
+            } else {
+
+                getWindecoABIVersion=(gint(*)(void))dlsym(library, "getWindecoABIVersion");
+                if((error=dlerror())!=0L)
+                {
+                    break;
+                } else {
+
+                    #define EXPECTED_ABI_VERSION 3
+                    gint version=getWindecoABIVersion();
+                    if(version != EXPECTED_ABI_VERSION)
+                    {
+                        fprintf(stderr, "ABI version %d is not equal to expected version %d\n", version, EXPECTED_ABI_VERSION);
+                        return FALSE;
+                    }
+
+                }
+
+                // store drawWindowDecoration symbol
+                drawWindowDecoration = (void(*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
+                if((error=dlerror())!=0L)
+                    break;
+
+                // store drawWindecoButton symbol
+                drawWindecoButton = (void (*)(cairo_t*, ButtonType, ButtonStatus, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoButton");
+                if((error=dlerror())!=0L)
+                    break;
+
+                // store drawWindecoShapeMask symbol
+                drawWindecoShapeMask=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoShapeMask");
+                if((error=dlerror())!=0L)
+                    break;
+
+                // store drawWindowShadow symbol
+                drawWindowShadow=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindowShadow");
+                if((error=dlerror())!=0L)
+                    break;
             }
-
         }
-
-        // store drawWindowDecoration symbol
-        drawWindowDecoration = (void(*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
-        if((error=dlerror())!=0L)
+        while(0);
+        if(error)
         {
             fprintf(stderr, "%s\n", error);
             return FALSE;
         }
-
-        // store drawWindecoButton symbol
-        drawWindecoButton = (void (*)(cairo_t*, ButtonType, ButtonStatus, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoButton");
-        if((error=dlerror())!=0L)
-        {
-                fprintf(stderr, "%s\n", error);
-                return FALSE;
-        }
-
-        // store drawWindecoShapeMask symbol
-        drawWindecoShapeMask=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoShapeMask");
-        if((error=dlerror())!=0L)
-        {
-                fprintf(stderr, "%s\n", error);
-                return FALSE;
-        }
-
-        // store drawWindowShadow symbol
-        drawWindowShadow=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindowShadow");
-        if((error=dlerror())!=0L)
-        {
-                fprintf(stderr, "%s\n", error);
-                return FALSE;
-        }
-
-
     }
     return TRUE;
 }

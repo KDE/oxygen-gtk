@@ -36,6 +36,7 @@ namespace Oxygen
 
         // create main widget
         _mainWidget = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+        gtk_window_set_default_size( GTK_WINDOW( _mainWidget ), 630, 500 );
         gtk_window_set_title( GTK_WINDOW( _mainWidget ), "Oxygen-gtk Demo" );
 
         // vertical container
@@ -96,10 +97,23 @@ namespace Oxygen
 
             _toggleEnableStateId.connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
 
+            // button box
+            #if GTK_CHECK_VERSION( 3, 0, 0 )
+            GtkWidget* buttonBox( gtk_button_box_new( GTK_ORIENTATION_HORIZONTAL) );
+            #else
+            GtkWidget* buttonBox( gtk_hbutton_box_new() );
+            #endif
+
+            gtk_button_box_set_layout( GTK_BUTTON_BOX( buttonBox ), GTK_BUTTONBOX_END );
+            gtk_box_pack_end( GTK_BOX( statusBar ), buttonBox, true, true, 0 );
+            gtk_widget_show( buttonBox );
+
             // close button
             GtkWidget* button = gtk_button_new_from_stock( GTK_STOCK_OK );
-            gtk_box_pack_end( GTK_BOX( statusBar ), button, false, true, 0 );
+            gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
+
+            g_signal_connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
 
         }
 
@@ -111,6 +125,7 @@ namespace Oxygen
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
     {
+        //_okButtonClickedId.disconnect();
         //_selectionChangedId.disconnect();
         //_toggleEnableStateId.disconnect();
     }
