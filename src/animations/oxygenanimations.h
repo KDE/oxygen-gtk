@@ -36,6 +36,7 @@
 #include "oxygenscrollbarengine.h"
 #include "oxygenscrollbarstateengine.h"
 #include "oxygenscrolledwindowengine.h"
+#include "oxygeninnershadowengine.h"
 #include "oxygensignal.h"
 #include "oxygentabwidgetengine.h"
 #include "oxygentabwidgetstateengine.h"
@@ -121,6 +122,10 @@ namespace Oxygen
         //! scrolled window engine
         ScrolledWindowEngine& scrolledWindowEngine( void ) const
         { return *_scrolledWindowEngine; }
+
+        //! inner shadow engine
+        InnerShadowEngine& innerShadowEngine( void ) const
+        { return *_innerShadowEngine; }
 
         //! tab widget engine
         TabWidgetEngine& tabWidgetEngine( void ) const
@@ -220,6 +225,9 @@ namespace Oxygen
 
         //! scrolled window engine
         ScrolledWindowEngine* _scrolledWindowEngine;
+
+        //! inner shadow engine
+        InnerShadowEngine* _innerShadowEngine;
 
         //! tab widget engine
         TabWidgetEngine* _tabWidgetEngine;

@@ -32,54 +32,6 @@
 namespace Oxygen
 {
 
-    gboolean ScrolledWindowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
-    {
-        GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
-        GdkWindow* window=gtk_widget_get_window(child);
-
-        #if OXYGEN_DEBUG
-        std::cerr << "ScrolledWindowData::targetExposeEvent( " << G_OBJECT_TYPE_NAME(widget) << ",, ); child: " << G_OBJECT_TYPE_NAME(child) << "\n";
-        #endif
-
-        // don't do anything if the window isn't composited
-        if(!gdk_window_get_composited(window))
-            return FALSE;
-        Cairo::Context context(gtk_widget_get_window(widget));
-
-        // set up clipping independently of GTK version
-        GtkAllocation alloc;
-        gtk_widget_get_allocation(child,&alloc);
-        cairo_rectangle(context,alloc.x,alloc.y,alloc.width,alloc.height);
-        cairo_clip(context);
-        gdk_cairo_region(context,event->region);
-        cairo_clip(context);
-        // draw the child
-        gtk_widget_get_allocation(child,&alloc);
-        gdk_cairo_set_source_window(context,window,alloc.x,alloc.y);
-        cairo_paint(context);
-
-        // draw the shadow
-        StyleOptions options(widget,gtk_widget_get_state(widget));
-        options|=NoFill;
-        options &= ~(Hover|Focus);
-        if( Style::instance().animations().scrolledWindowEngine().focused( widget ) ) options |= Focus;
-        if( Style::instance().animations().scrolledWindowEngine().hovered( widget ) ) options |= Hover;
-        const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-
-        const int basicOffset=2;
-        int offsetX=basicOffset+Style::Entry_SideMargin;
-        int offsetY=basicOffset;
-
-        GdkRectangle clipRect={alloc.x,alloc.y,alloc.width,alloc.height};
-
-        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
-        offsetX-=Style::Entry_SideMargin;
-        Style::instance().renderHole( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2, options, data );
-
-        // let the event propagate
-        return FALSE;
-    }
-
     //_____________________________________________
     void ScrolledWindowData::connect( GtkWidget* widget )
     {
@@ -88,12 +40,6 @@ namespace Oxygen
 
         // store target
         _target = widget;
-
-        if(gdk_display_supports_composite(gdk_display_get_default()))
-        {
-            _compositeEnabled=true;
-            _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
-        }
 
         // register scrollbars
         GtkScrolledWindow* scrolledWindow( GTK_SCROLLED_WINDOW( widget ) );
@@ -143,19 +89,6 @@ namespace Oxygen
         _target = 0;
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
         { iter->second.disconnect( iter->first ); }
-
-        if(_compositeEnabled)
-        {
-            _exposeId.disconnect();
-
-            GdkWindow* window(0);
-            if(GTK_IS_WIDGET(_target))
-            {
-                window=gtk_widget_get_window(_target);
-                if(window)
-                    gdk_window_set_composited(window, FALSE);
-            }
-        }
 
         _childrenData.clear();
     }

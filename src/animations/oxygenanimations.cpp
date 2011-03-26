@@ -45,6 +45,7 @@ namespace Oxygen
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
+        registerEngine( _innerShadowEngine = new InnerShadowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
@@ -244,10 +245,7 @@ namespace Oxygen
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
-
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
-
-        if( !Gtk::gtk_scrolled_window_force_sunken( parent ) ) return TRUE;
 
         #if OXYGEN_DEBUG
         std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
@@ -257,11 +255,7 @@ namespace Oxygen
         g_free( widgetPath );
         #endif
 
-        GdkWindow* window(gtk_widget_get_window(widget));
-        if(window && gdk_display_supports_composite(gdk_display_get_default()))
-        {
-            gdk_window_set_composited(window,TRUE);
-        }
+        static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );
 
         return TRUE;
 

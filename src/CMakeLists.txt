@@ -14,6 +14,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygenfollowmousedata.cpp
     animations/oxygenhook.cpp
     animations/oxygenhoverdata.cpp
+    animations/oxygeninnershadowdata.cpp
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenubarstatedata.cpp
     animations/oxygenmenustatedata.cpp
