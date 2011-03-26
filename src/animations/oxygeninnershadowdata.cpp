@@ -59,7 +59,11 @@ namespace Oxygen
         cairo_clip(context);
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
-        // draw the child
+
+        // first make sure the child window doesn't contain garbage
+        gdk_window_process_updates(window,TRUE);
+
+        // now draw the child
         gdk_cairo_set_source_window(context,window,alloc.x,alloc.y);
         cairo_paint(context);
 
