@@ -30,9 +30,6 @@
 #include <cassert>
 #include <iostream>
 
-#undef OXYGEN_DEBUG
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
