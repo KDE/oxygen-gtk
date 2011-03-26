@@ -44,7 +44,12 @@ namespace Oxygen
 
         // don't do anything if the window isn't composited
         if(!gdk_window_get_composited(window))
+        {
+            #if OXYGEN_DEBUG
+            std::cerr << "Window isn't composited, so not doing anything\n";
+            #endif
             return FALSE;
+        }
         Cairo::Context context(gtk_widget_get_window(widget));
 
         // set up clipping independently of GTK version
@@ -55,9 +60,17 @@ namespace Oxygen
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
         // draw the child
-        gtk_widget_get_allocation(child,&alloc);
         gdk_cairo_set_source_window(context,window,alloc.x,alloc.y);
         cairo_paint(context);
+
+        // we only draw shadow_in here
+        if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
+        {
+            #if OXYGEN_DEBUG
+            std::cerr << "Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
+            #endif
+            return FALSE;
+        }
 
         // draw the shadow
         StyleOptions options(widget,gtk_widget_get_state(widget));

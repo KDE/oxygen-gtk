@@ -1754,7 +1754,7 @@ namespace Oxygen
 
                     // animation
                     const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-                    if(!Style::instance().animations().innerShadowEngine().contains(widget))
+                    if(!Style::instance().animations().innerShadowEngine().contains(widget) || shadow!=GTK_SHADOW_IN)
                     {
                         Style::instance().renderHole( window, clipRect, x, y, w, h, options, data );
                     }
