@@ -235,7 +235,7 @@ namespace Oxygen
         return TRUE;
 
     }
-
+#if GTK_CHECK_VERSION(2,24,2)
     //____________________________________________________________________________________________
     gboolean Animations::innerShadowHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
     {
@@ -268,5 +268,6 @@ namespace Oxygen
         return TRUE;
 
     }
+#endif
 
 }

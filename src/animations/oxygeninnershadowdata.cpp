@@ -32,7 +32,7 @@
 
 namespace Oxygen
 {
-
+#if GTK_CHECK_VERSION(2,24,2)
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
         GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
@@ -235,5 +235,6 @@ namespace Oxygen
         static_cast<InnerShadowData*>(data)->unregisterChild( widget );
         return FALSE;
     }
+#endif
 
 }
