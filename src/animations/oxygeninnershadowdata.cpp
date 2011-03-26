@@ -30,6 +30,9 @@
 #include <cassert>
 #include <iostream>
 
+#undef OXYGEN_DEBUG
+#define OXYGEN_DEBUG 1
+
 namespace Oxygen
 {
 
@@ -39,7 +42,11 @@ namespace Oxygen
         GdkWindow* window=gtk_widget_get_window(child);
 
         #if OXYGEN_DEBUG
-        std::cerr << "InnerShadowData::targetExposeEvent( " << G_OBJECT_TYPE_NAME(widget) << " ); child: " << G_OBJECT_TYPE_NAME(child) << "\n";
+        std::cerr << "InnerShadowData::targetExposeEvent( " << G_OBJECT_TYPE_NAME(widget) << " ); child: " ;
+        char* path;
+        gtk_widget_path(child,NULL,&path,NULL);
+        std::cerr << path << std::endl;
+        g_free(path);
         #endif
 
         // don't do anything if the window isn't composited
