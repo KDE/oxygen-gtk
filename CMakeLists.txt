@@ -36,6 +36,9 @@ set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
 # (may result in flicker on combo popup)
 set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 
+# Set to 0 to disable inner shadows hack
+set( ENABLE_INNER_SHADOWS_HACK 1 )
+
 ##############
 # Requirements
 ##############
@@ -96,6 +99,7 @@ message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
 message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
 message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
 message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
+message( "  ENABLE_INNER_SHADOWS_HACK ${ENABLE_INNER_SHADOWS_HACK}" )
 message( "" )
 message( "Path: " )
 message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
