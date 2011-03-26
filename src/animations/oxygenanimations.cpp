@@ -241,7 +241,7 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-        if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) ) return TRUE;
+        if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
