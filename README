@@ -151,6 +151,9 @@ This may lead to inexpected effects such as not rendered (or rendered as garbage
 Currently no such problems are known.
 To disable this hack, set ENABLE_INNER_SHADOWS_HACK to 0 in CMakeLists.txt.
 
+Note: this feature requires gtk version 2.24 or later.
+
+
 IV. Technical details
 ---------------------
 
