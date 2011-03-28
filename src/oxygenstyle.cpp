@@ -390,30 +390,9 @@ namespace Oxygen
 
         }
 
-
-        // TODO: will need to check bounds and adjust
-        const int y_gradient = y - wy - 1;
-        const int x_gradient = x - wx - 1;
-
-
-        cairo_push_group( context );
-        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y_gradient - wh + 12, 0,  y_gradient + 2*wh - 19 ) );
-        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-        cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
-        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
-        cairo_set_source( context, pattern );
-        //cairo_rectangle( context, x, y, w, h );
-        //cairo_fill( context );
-
-        helper().fillSlab( context, x_gradient, y_gradient, ww, wh );
-        helper().slope( base, ww ).render( context, x_gradient, y_gradient, ww, wh );
-
-        cairo_pop_group_to_source( context );
-
-        Cairo::Pattern mask( cairo_pattern_create_linear( 0,  y_gradient + wh - 19, 0,  y_gradient + wh ) );
-        cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
-        cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
-        cairo_mask( context, mask );
+        const int xGroupBox = x - wx - 1;
+        const int yGroupBox = y - wy - 1;
+        renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
 
     }
 
@@ -1799,23 +1778,7 @@ namespace Oxygen
         }
 
         Cairo::Context context( window, clipRect );
-
-        cairo_push_group( context );
-
-        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y - h + 12, 0, y + 2*h - 19 ) );
-        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-        cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
-        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
-        cairo_set_source( context, pattern );
-        helper().fillSlab( context, x, y, w, h );
-
-        helper().slope( base, w ).render( context, x, y, w, h );
-        cairo_pop_group_to_source( context );
-
-        Cairo::Pattern mask( cairo_pattern_create_linear( 0, y+h-19, 0, y+h ) );
-        cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
-        cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
-        cairo_mask( context, mask );
+        renderGroupBox( context, base, x, y, w, h, options );
 
     }
 
@@ -3538,6 +3501,37 @@ namespace Oxygen
             return settings().palette().color( Palette::Hover );
 
         } else return ColorUtils::Rgba();
+
+    }
+
+    //__________________________________________________________________
+    void Style::renderGroupBox(
+        Cairo::Context& context,
+        const ColorUtils::Rgba& base,
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options )
+    {
+
+        cairo_push_group( context );
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y - h + 12, 0,  y + 2*h - 19 ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
+        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
+        cairo_set_source( context, pattern );
+
+        helper().fillSlab( context, x, y, w, h );
+
+        if( !(options&NoFill) )
+        { helper().slope( base, w ).render( context, x, y, w, h ); }
+
+        cairo_pop_group_to_source( context );
+
+        Cairo::Pattern mask( cairo_pattern_create_linear( 0,  y + h - 19, 0,  y + h ) );
+        cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
+        cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+        cairo_mask( context, mask );
+
+        return;
 
     }
 

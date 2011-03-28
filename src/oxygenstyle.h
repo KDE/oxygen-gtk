@@ -379,6 +379,9 @@ namespace Oxygen
         //! hole glowing color
         ColorUtils::Rgba holeShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
+        //! groupbox
+        void renderGroupBox( Cairo::Context&, const ColorUtils::Rgba&, gint, gint, gint, gint, const StyleOptions& = StyleOptions() );
+
         //! slab
         void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
 
