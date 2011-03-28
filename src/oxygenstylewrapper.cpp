@@ -1008,8 +1008,16 @@ namespace Oxygen
 
             if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
                 !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
+            {
 
+                // window background
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
+                // possible groupbox background
+                if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
+
+            }
             // check animation state
             if( GTK_IS_MENU_BAR( widget ) )
             {
@@ -1052,7 +1060,15 @@ namespace Oxygen
                 { return; }
 
             if(!isEclipse)
-            { Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ); }
+            {
+
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+
+                // possible groupbox background
+                if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
+
+            }
 
             // also draw possible animated tool button
             draw_animated_button( window, clipRect, widget );

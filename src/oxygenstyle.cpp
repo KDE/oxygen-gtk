@@ -366,9 +366,8 @@ namespace Oxygen
         // create context and translate
         Cairo::Context context( window, clipRect );
 
-        //wy -= 1;
         wh += 2;
-
+        ww += 2;
         x+=wx;
         y+=wy;
         cairo_translate( context, -wx, -wy );
@@ -394,6 +393,8 @@ namespace Oxygen
 
         // TODO: will need to check bounds and adjust
         const int y_gradient = y - wy - 1;
+        const int x_gradient = x - wx - 1;
+
 
         cairo_push_group( context );
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y_gradient - wh + 12, 0,  y_gradient + 2*wh - 19 ) );
@@ -401,8 +402,11 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
         cairo_set_source( context, pattern );
-        cairo_rectangle( context, x, y, w, h );
-        cairo_fill( context );
+        //cairo_rectangle( context, x, y, w, h );
+        //cairo_fill( context );
+
+        helper().fillSlab( context, x_gradient, y_gradient, ww, wh );
+        helper().slope( base, ww ).render( context, x_gradient, y_gradient, ww, wh );
 
         cairo_pop_group_to_source( context );
 
