@@ -34,7 +34,7 @@ namespace Oxygen
 
         // main widget
         GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
-        gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
+        gtk_box_set_spacing( GTK_BOX( mainWidget ), 4 );
         setWidget( mainWidget );
 
         // setup
@@ -46,13 +46,13 @@ namespace Oxygen
         // pushbuttons
         {
             GtkWidget* frame( gtk_frame_new( "Pushbutton" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( mainWidget ), frame, false, true, 0 );
             gtk_widget_show( frame );
 
             // inner table
             GtkWidget* table = gtk_table_new( 2, 4, false );
-            gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
+            gtk_container_set_border_width( GTK_CONTAINER( table ), 4 );
+            gtk_table_set_row_spacings( GTK_TABLE( table ), 4 );
             gtk_container_add( GTK_CONTAINER( frame ), table );
             gtk_widget_show( table );
 
@@ -183,18 +183,18 @@ namespace Oxygen
         }
 
         GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
-        gtk_box_set_spacing( GTK_BOX( hbox ), 5 );
+        gtk_box_set_spacing( GTK_BOX( hbox ), 4 );
         gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
         gtk_widget_show( hbox );
 
         {
             // checkboxes
             GtkWidget* frame( gtk_frame_new( "Checkboxes" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
             GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
             gtk_container_add( GTK_CONTAINER( frame ), vbox );
             gtk_widget_show( vbox );
 
@@ -216,12 +216,12 @@ namespace Oxygen
         {
             // radio buttons
             GtkWidget* frame( gtk_frame_new( "Radiobuttons" ) );
-            gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_ETCHED_IN );
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
             GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
             gtk_container_add( GTK_CONTAINER( frame ), vbox );
+            gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
             gtk_widget_show( vbox );
 
             GtkWidget* radiobutton;

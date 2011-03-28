@@ -60,6 +60,7 @@ namespace Oxygen
         {
             m_separatorCache.clear();
             m_slabCache.clear();
+            m_slopeCache.clear();
             m_slabFocusedCache.clear();
             m_slabSunkenCache.clear();
             m_holeCache.clear();
@@ -112,6 +113,9 @@ namespace Oxygen
 
         const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
         const Cairo::Surface& roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+
+        //! groupbox background
+        const TileSet& slope( const ColorUtils::Rgba&, double shade, int size = 7 );
 
         void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
@@ -231,6 +235,9 @@ namespace Oxygen
 
         //! slabs
         TileSetCache<SlabKey> m_slabCache;
+
+        //! slabs
+        TileSetCache<SlabKey> m_slopeCache;
 
         //! slabs
         TileSetCache<SlabFocusedKey> m_slabFocusedCache;

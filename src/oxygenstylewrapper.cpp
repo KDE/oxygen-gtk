@@ -779,7 +779,7 @@ namespace Oxygen
 
                     // hide right and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground(window,clipRect, x-1, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+6, h, tiles );
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
@@ -789,7 +789,7 @@ namespace Oxygen
 
                     // hide left and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground(window,clipRect, x-5, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles );
 
                     w -= Style::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, data, tiles  );
@@ -1346,7 +1346,7 @@ namespace Oxygen
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles ); }
+                { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
                 x += Style::Entry_SideMargin;
@@ -1359,7 +1359,7 @@ namespace Oxygen
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().renderHoleBackground(window,clipRect, x-5, y-1, w+6, h+2, tiles ); }
+                { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
                 w -= Style::Entry_SideMargin;
@@ -1606,7 +1606,7 @@ namespace Oxygen
                 {
 
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( window, clipRect, x-6, y, w+7, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles );
 
                     w -= Style::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, data, tiles );
@@ -1614,7 +1614,7 @@ namespace Oxygen
                 } else {
 
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( window, clipRect, x-1, y, w+7, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+7, h, tiles );
 
                     x += Style::Entry_SideMargin;
                     w -= Style::Entry_SideMargin;
@@ -1670,7 +1670,7 @@ namespace Oxygen
 
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
-                        Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
                         w-= Style::Entry_SideMargin;
                     }
 
@@ -1682,7 +1682,7 @@ namespace Oxygen
 
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
-                        Style::instance().renderHoleBackground( window, clipRect, x, y, w, h, tiles );
+                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
                         x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
                     }
 
@@ -1725,7 +1725,7 @@ namespace Oxygen
                     {
 
                         options &= ~NoFill;
-                        Style::instance().renderHoleBackground( window, clipRect, x-1, y-1, w+2, h+2 );
+                        Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+2, h+2 );
                         Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, options );
 
                     } else {
@@ -1741,7 +1741,7 @@ namespace Oxygen
                     w+=2; h+=2;
 
                     if( !Style::instance().settings().applicationName().isMozilla( widget ) )
-                    { Style::instance().renderHoleBackground( window, clipRect, x, y, w, h ); }
+                    { Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h ); }
 
                     // shrink entry by 3px at each side
                     if( d.isEntry() )
@@ -1881,7 +1881,7 @@ namespace Oxygen
             if( GTK_IS_CALENDAR( widget ) )
             {
                 Style::instance().renderHoleBackground(
-                    window, clipRect,
+                    window, widget, clipRect,
                     x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
             }
 
@@ -1898,9 +1898,20 @@ namespace Oxygen
             // default shadow_out frame
             StyleOptions options;
             if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
-                options |= Blend;
+            { options |= Blend; }
+
             options |= NoFill;
-            Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+            if( d.isFrame() && GTK_IS_FRAME( widget ) )
+            {
+
+                Style::instance().renderGroupBoxFrame( window, widget, clipRect, x-1, y-1, w+2, h+2, options );
+
+            } else {
+
+                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
+
+            }
 
         }
 
@@ -2604,7 +2615,7 @@ namespace Oxygen
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( window, clipRect, x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {

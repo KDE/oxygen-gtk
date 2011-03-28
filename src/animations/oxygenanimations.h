@@ -191,6 +191,9 @@ namespace Oxygen
         //! inner shadow composited mode enabling hook
         static gboolean innerShadowHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! widget realize hook
+        static gboolean realizationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! enabled state
@@ -272,6 +275,9 @@ namespace Oxygen
 
         //! true when hooks are initialized
         bool _hooksInitialized;
+
+        //! realization hook
+        Hook _realizationHook;
 
         //! combobox hook
         Hook _comboBoxHook;

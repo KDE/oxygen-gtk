@@ -120,10 +120,13 @@ namespace Oxygen
         void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
         { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
 
-        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles = TileSet::Center)
         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
-        //! window background
+        //! groupbox background
+        void renderGroupBoxBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
+
+        //! menu background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background
@@ -140,9 +143,9 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
-        void renderHoleBackground( GdkWindow* window, GdkRectangle* clip, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHoleBackground( window, clip, x, y, w, h, StyleOptions(), tiles ); }
+        void renderHoleBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clip, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
+        { renderHoleBackground( window, widget, clip, x, y, w, h, StyleOptions(), tiles ); }
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
@@ -212,6 +215,9 @@ namespace Oxygen
         void renderDockFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o )
         { renderDockFrame( window, r, x, y, w, h, Gtk::Gap(), o ); }
         //@}
+
+        //! groupbox frame
+        void renderGroupBoxFrame( GdkWindow* window, GtkWidget*, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions&  );
 
         //! menu item
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );

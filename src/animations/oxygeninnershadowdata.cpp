@@ -109,7 +109,7 @@ namespace Oxygen
 
         GdkRectangle clipRect={alloc.x,alloc.y,alloc.width,alloc.height};
 
-        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
+        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), widget, &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
         offsetX-=Style::Entry_SideMargin;
         Style::instance().renderHole( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2, options, data );
 
