@@ -187,10 +187,13 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void Animations::setEnabled( bool value )
     {
+
         if( value == _enabled ) return;
+
         _enabled = value;
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->setEnabled( value ); }
+
     }
 
     //____________________________________________________________________________________________
@@ -236,17 +239,20 @@ namespace Oxygen
         return TRUE;
 
     }
-#if GTK_CHECK_VERSION(2,24,2)
+
     //____________________________________________________________________________________________
     gboolean Animations::innerShadowHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
     {
+
+        #if GTK_CHECK_VERSION(2,24,2)
+
         // get widget from params
         GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-//      if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
+        // if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
 
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
 
@@ -257,7 +263,6 @@ namespace Oxygen
         if(child!=widget) return TRUE;
 
         #if OXYGEN_DEBUG
-
         std::cerr
             << "Oxygen::Animations::innerShadowHook -"
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
@@ -266,16 +271,15 @@ namespace Oxygen
             << " isTreeView: " << (GTK_IS_TREE_VIEW(widget)?"true":"false")
             << " isTextView: " << (GTK_IS_TEXT_VIEW(widget)?"true":"false")
             << std::endl;
-
         #endif
 
         static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );
         static_cast<Animations*>(data)->innerShadowEngine().registerChild( parent, widget );
 
+        #endif  // Gtk version
         return TRUE;
 
     }
-#endif
 
     //____________________________________________________________________________________________
     gboolean Animations::realizationHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )

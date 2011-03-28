@@ -37,6 +37,7 @@ namespace Oxygen
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
 
+        #if GTK_CHECK_VERSION(2,24,0)
         GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
         GdkWindow* window=gtk_widget_get_window(child);
 
@@ -60,10 +61,10 @@ namespace Oxygen
         Cairo::Context context(gtk_widget_get_window(widget));
 
         // set up clipping independently of GTK version
-        GtkAllocation alloc;
-        gtk_widget_get_allocation(child,&alloc);
-        cairo_rectangle(context,alloc.x,alloc.y,alloc.width,alloc.height);
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
+        cairo_rectangle(context, allocation.x, allocation.y, allocation.width, allocation.height);
         cairo_clip(context);
+
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
 
@@ -71,11 +72,12 @@ namespace Oxygen
         gdk_window_process_updates(window,TRUE);
 
         // now draw the child
-        gdk_cairo_set_source_window(context,window,alloc.x,alloc.y);
+        gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
 
         // draw the shadow
         int basicOffset=2;
+
         // we only draw SHADOW_IN here
         if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
         {
@@ -102,16 +104,28 @@ namespace Oxygen
             if( Style::instance().animations().scrolledWindowEngine().focused( widget ) ) options |= Focus;
             if( Style::instance().animations().scrolledWindowEngine().hovered( widget ) ) options |= Hover;
         }
+
         const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
         int offsetX=basicOffset+Style::Entry_SideMargin;
         int offsetY=basicOffset;
 
-        GdkRectangle clipRect={alloc.x,alloc.y,alloc.width,alloc.height};
+        // clipRect
+        GdkRectangle clipRect( allocation );
 
-        Style::instance().renderHoleBackground( gtk_widget_get_window(widget), widget, &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2 );
-        offsetX-=Style::Entry_SideMargin;
-        Style::instance().renderHole( gtk_widget_get_window(widget), &clipRect, alloc.x-offsetX, alloc.y-offsetY, alloc.width+offsetX*2, alloc.height+offsetY*2, options, data );
+        // hole background
+        Style::instance().renderHoleBackground(
+            gtk_widget_get_window(widget), widget, &clipRect,
+            allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2 );
+
+        // adjust offset and render hole
+        offsetX -= Style::Entry_SideMargin;
+        Style::instance().renderHole(
+            gtk_widget_get_window(widget), &clipRect,
+            allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
+            options, data );
+
+        #endif // Gtk version
 
         // let the event propagate
         return FALSE;
@@ -223,10 +237,13 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        // disconnect signals
         _unrealizeId.disconnect();
-        GdkWindow* window(gtk_widget_get_window(widget));
-        if(GTK_IS_WINDOW(window))
-            gdk_window_set_composited(window,initiallyComposited);
+
+        // remove compositing flag
+        GdkWindow* window( gtk_widget_get_window( widget ) );
+        if( GTK_IS_WINDOW( window ) )
+        { gdk_window_set_composited(window,initiallyComposited); }
     }
 
     //____________________________________________________________________________________________
