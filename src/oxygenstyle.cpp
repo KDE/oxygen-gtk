@@ -231,10 +231,7 @@ namespace Oxygen
             }
 
             // add hole if required (this can be done before translating the context
-            if( options&NoFill )
-            {
-                renderHoleMask( context, x, y, w, h, tiles );
-            }
+            if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
 
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
@@ -348,7 +345,9 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::renderGroupBoxBackground(
         GdkWindow* window, GtkWidget* widget,
-        GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options )
+        GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        TileSet::Tiles tiles )
     {
 
         // find groupbox parent
@@ -380,6 +379,8 @@ namespace Oxygen
         y+=wy;
         cairo_translate( context, -wx, -wy );
 
+        // add hole if required (this can be done before translating the context
+        if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
 
         // define colors
         ColorUtils::Rgba base;
@@ -387,8 +388,8 @@ namespace Oxygen
         {
 
             gint wwh, wwy;
-            Gtk::gdk_map_to_toplevel( gtk_widget_get_window( parent ), 0L, &wwy, 0L, &wwh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wwh, y+wwy+wh/2 );
+            Gtk::gtk_widget_map_to_toplevel( parent, 0L, &wwy, 0L, &wwh );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wwh, wwy-1+wh/2 );
 
         } else {
 
@@ -396,28 +397,27 @@ namespace Oxygen
 
         }
 
-        // This is duplicated from ::renderGroupBoxFrame
-        /* TODO: put in separate unique method */
-        cairo_push_group( context );
 
         // TODO: will need to check bounds and adjust
-        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y - wy - wh + 12, 0,  y - wy + 2*wh - 19 ) );
+        const int y_gradient = y - wy - 1;
+
+        cairo_push_group( context );
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y_gradient - wh + 12, 0,  y_gradient + 2*wh - 19 ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
         cairo_set_source( context, pattern );
-        cairo_rectangle( context, x, y, ww, wh );
+        cairo_rectangle( context, x, y, w, h );
         cairo_fill( context );
 
         cairo_pop_group_to_source( context );
 
-        Cairo::Pattern mask( cairo_pattern_create_linear( 0,  y -wy + wh - 19, 0,  y -wy + wh ) );
+        Cairo::Pattern mask( cairo_pattern_create_linear( 0,  y_gradient + wh - 19, 0,  y_gradient + wh ) );
         cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
         cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
         cairo_mask( context, mask );
 
     }
-
 
     //__________________________________________________________________
     bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
@@ -735,8 +735,11 @@ namespace Oxygen
 
         } else if( widget && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) {
 
-            renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
-            renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, options );
+            StyleOptions localOptions( NoFill );
+            renderWindowBackground( window, clipRect, x, y, w, h, localOptions, tiles);
+
+            localOptions |= Blend;
+            renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, localOptions, tiles );
 
         } else {
 
@@ -1778,6 +1781,7 @@ namespace Oxygen
     //____________________________________________________________________________________
     void Style::renderGroupBoxFrame(
         GdkWindow* window,
+        GtkWidget* widget,
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {

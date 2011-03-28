@@ -1891,13 +1891,14 @@ namespace Oxygen
             // default shadow_out frame
             StyleOptions options;
             if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
-                options |= Blend;
+            { options |= Blend; }
+
             options |= NoFill;
 
             if( d.isFrame() && GTK_IS_FRAME( widget ) )
             {
 
-                Style::instance().renderGroupBoxFrame( window, clipRect, x-1, y-1, w+2, h+2, options );
+                Style::instance().renderGroupBoxFrame( window, widget, clipRect, x-1, y-1, w+2, h+2, options );
 
             } else {
 

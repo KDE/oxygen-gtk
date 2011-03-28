@@ -120,11 +120,11 @@ namespace Oxygen
         void renderWindowBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
         { renderWindowBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
 
-        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        void renderWindowBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles = TileSet::Center)
         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! groupbox background
-        void renderGroupBoxBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& );
+        void renderGroupBoxBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
         //! menu background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -217,7 +217,7 @@ namespace Oxygen
         //@}
 
         //! groupbox frame
-        void renderGroupBoxFrame( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& );
+        void renderGroupBoxFrame( GdkWindow* window, GtkWidget*, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions&  );
 
         //! menu item
         void renderMenuItemRect( GdkWindow*, GdkRectangle*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
