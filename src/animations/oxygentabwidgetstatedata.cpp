@@ -123,6 +123,11 @@ namespace Oxygen
 
             GdkRectangle rect( Gtk::gdk_rectangle() );
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( _target ), &rect );
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::TabWidgetData::dirtyRect - " << rect << std::endl;
+            #endif
+
             return rect;
 
         } else {

@@ -41,21 +41,25 @@ namespace Oxygen
         GdkWindow* window=gtk_widget_get_window(child);
 
         #if OXYGEN_DEBUG
-        std::cerr << "InnerShadowData::targetExposeEvent( " << G_OBJECT_TYPE_NAME(widget) << " ); child: " ;
         char* path;
         gtk_widget_path(child,NULL,&path,NULL);
-        std::cerr << path << std::endl;
+        std::cerr << "Oxygen::InnerShadowData::targetExposeEvent -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
+            << " child: " << path
+            << " area: " << event->area
+            << std::endl;
         g_free(path);
         #endif
 
-        // don't do anything if the window isn't composited
         if(!gdk_window_get_composited(window))
         {
             #if OXYGEN_DEBUG
-            std::cerr << "Window isn't composited, so not doing anything\n";
+            std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Window isn't composite. Doing nohing\n";
             #endif
             return FALSE;
         }
+
+        // create context
         Cairo::Context context(gtk_widget_get_window(widget));
 
         // set up clipping independently of GTK version
@@ -74,21 +78,22 @@ namespace Oxygen
         cairo_paint(context);
 
         // draw the shadow
-
         int basicOffset=2;
         // we only draw SHADOW_IN here
         if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
         {
             if( GTK_IS_VIEWPORT(child) && gtk_viewport_get_shadow_type(GTK_VIEWPORT(child)) == GTK_SHADOW_IN )
             {
+
                 basicOffset=0;
-            }
-            else
-            {
+
+            } else {
+
                 #if OXYGEN_DEBUG
-                std::cerr << "Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
+                std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
                 #endif
                 return FALSE;
+
             }
         }
 
@@ -127,7 +132,7 @@ namespace Oxygen
 
         if(gdk_display_supports_composite(gdk_display_get_default()))
         {
-            _compositeEnabled=true;
+            _compositeEnabled = true;
             _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
         }
 
@@ -153,11 +158,10 @@ namespace Oxygen
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
         { iter->second.disconnect( iter->first ); }
 
-        if(_compositeEnabled)
-        {
-            _exposeId.disconnect();
-        }
+        // disconnect signals
+        _exposeId.disconnect();
 
+        // clear child data
         _childrenData.clear();
     }
 
