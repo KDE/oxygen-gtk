@@ -135,7 +135,7 @@ namespace Oxygen
         #endif
 
         // https://bugzilla.gnome.org/show_bug.cgi?id=643416
-        #if (GTK_CHECK_VERSION(2,24,2) && ENABLE_INNER_SHADOWS_HACK)
+        #if ENABLE_INNER_SHADOWS_HACK
         _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
         #endif
 

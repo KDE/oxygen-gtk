@@ -32,9 +32,11 @@
 
 namespace Oxygen
 {
-#if GTK_CHECK_VERSION(2,24,2)
+
+    //_________________________________________________________________________________________
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
+
         GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
         GdkWindow* window=gtk_widget_get_window(child);
 
@@ -116,6 +118,7 @@ namespace Oxygen
     //_____________________________________________
     void InnerShadowData::connect( GtkWidget* widget )
     {
+
         assert( GTK_IS_SCROLLED_WINDOW( widget ) );
         assert( !_target );
 
@@ -140,6 +143,7 @@ namespace Oxygen
         #endif
 
         registerChild( child );
+
     }
 
     //_____________________________________________
@@ -160,6 +164,7 @@ namespace Oxygen
     //_____________________________________________
     void InnerShadowData::registerChild( GtkWidget* widget )
     {
+
         // make sure widget is not already in map
         if( _childrenData.find( widget ) == _childrenData.end() )
         {
@@ -235,6 +240,5 @@ namespace Oxygen
         static_cast<InnerShadowData*>(data)->unregisterChild( widget );
         return FALSE;
     }
-#endif
 
 }
