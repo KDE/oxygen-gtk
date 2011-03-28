@@ -37,6 +37,7 @@ set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
 set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 
 # Set to 0 to disable inner shadows hack
+# Note this flag is automatically set to 0 if GTK version is too old (< 2.24.2)
 set( ENABLE_INNER_SHADOWS_HACK 1 )
 
 ##############
