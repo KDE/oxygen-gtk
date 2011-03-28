@@ -244,22 +244,28 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-//        if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
+
+//      if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
+
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
 
         GtkWidget* child(gtk_bin_get_child(GTK_BIN(parent)));
-        if(child!=widget)
-            return TRUE;
+        if(child!=widget) return TRUE;
 
         #if OXYGEN_DEBUG
-        std::cerr << "got " << G_OBJECT_TYPE_NAME(widget) << "; parent " << G_OBJECT_TYPE_NAME(parent) << "; ";
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
-        std::cerr << "widget path: " << widgetPath << "; Treeview? " << (GTK_IS_TREE_VIEW(widget)?"TRUE":"FALSE") <<"; Textview? " << (GTK_IS_TEXT_VIEW(widget)?"TRUE":"FALSE")<<std::endl;
-        g_free( widgetPath );
+
+        std::cerr
+            << "Oxygen::Animations::innerShadowHook -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
+            << " parent: " << parent << " (" << G_OBJECT_TYPE_NAME(parent) << ")"
+            << " widget path: " << Gtk::gtk_widget_path( widget )
+            << " isTreeView: " << (GTK_IS_TREE_VIEW(widget)?"true":"false")
+            << " isTextView: " << (GTK_IS_TEXT_VIEW(widget)?"true":"false")
+            << std::endl;
+
         #endif
 
         static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );

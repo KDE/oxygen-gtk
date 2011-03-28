@@ -41,14 +41,11 @@ namespace Oxygen
         GdkWindow* window=gtk_widget_get_window(child);
 
         #if OXYGEN_DEBUG
-        char* path;
-        gtk_widget_path(child,NULL,&path,NULL);
         std::cerr << "Oxygen::InnerShadowData::targetExposeEvent -"
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
-            << " child: " << path
+            << " child: " << Gtk::gtk_widget_path( child );
             << " area: " << event->area
             << std::endl;
-        g_free(path);
         #endif
 
         if(!gdk_window_get_composited(window))
