@@ -180,6 +180,8 @@ namespace Oxygen
     void InnerShadowData::registerChild( GtkWidget* widget )
     {
 
+        #if GTK_CHECK_VERSION(2,22,0)
+
         // make sure widget is not already in map
         if( _childrenData.find( widget ) == _childrenData.end() )
         {
@@ -204,6 +206,8 @@ namespace Oxygen
             _childrenData.insert( std::make_pair( widget, data ) );
 
         }
+
+        #endif
 
     }
 
