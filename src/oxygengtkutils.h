@@ -209,6 +209,9 @@ namespace Oxygen
         //!@name check parent type
         //@{
 
+        //! returns widget path as a string
+        std::string gtk_widget_path( GtkWidget* );
+
         //! return parent of given type if any
         GtkWidget* gtk_widget_find_parent( GtkWidget*, GType );
 
