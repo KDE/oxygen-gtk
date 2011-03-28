@@ -353,10 +353,7 @@ namespace Oxygen
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) );
         if( !( parent && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_OUT ) )
-        {
-            std::cerr << "Oxygen::Style::renderGroupBoxBackground - failed (invalid widget)" << std::endl;
-            return;
-        }
+        { return; }
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -364,10 +361,7 @@ namespace Oxygen
 
         // map to parent
         if( !Gtk::gtk_widget_map_to_parent( widget, parent, &wx, &wy, &ww, &wh ) )
-        {
-            std::cerr << "Oxygen::Style::renderGroupBoxBackground - mapping failed" << std::endl;
-            return;
-        }
+        { return; }
 
         // create context and translate
         Cairo::Context context( window, clipRect );
