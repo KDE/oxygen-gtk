@@ -67,6 +67,10 @@ namespace Oxygen
         void setDragInProgress( bool value )
         { _dragInProgress = value; }
 
+        //! toggle dirty state
+        void toggleDirty( void )
+        { setDirty( !isDirty() ); }
+
         //! mark as dirty
         void setDirty( bool );
 

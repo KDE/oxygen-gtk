@@ -396,7 +396,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
     {
-        // check types
+        // check types and path
         if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
         return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView";
     }
@@ -404,6 +404,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
+        // check types and path
         if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
         return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow";
     }
