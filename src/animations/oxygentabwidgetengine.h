@@ -73,6 +73,10 @@ namespace Oxygen
         void setDragInProgress( GtkWidget* widget, bool value )
         { data().value( widget ).setDragInProgress( value ); }
 
+        //! toggle dirty state
+        void toggleDirty( GtkWidget* widget )
+        { data().value( widget ).toggleDirty(); }
+
         //! true when tabbar is dirty
         void setDirty( GtkWidget* widget, bool value )
         { data().value( widget ).setDirty( value ); }

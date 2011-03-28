@@ -2690,15 +2690,7 @@ namespace Oxygen
 
                     // this trick ensures that tabbar is always redrawn
                     Style::instance().animations().tabWidgetEngine().registerWidget( widget );
-                    if( Style::instance().animations().tabWidgetEngine().isDirty( widget ) )
-                    {
-                        Style::instance().animations().tabWidgetEngine().setDirty( widget, false );
-
-                    } else {
-
-                        Style::instance().animations().tabWidgetEngine().setDirty( widget, true );
-
-                    }
+                    Style::instance().animations().tabWidgetEngine().toggleDirty( widget );
 
                 }
 
