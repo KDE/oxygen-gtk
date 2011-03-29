@@ -26,6 +26,7 @@
 #include "../oxygencairocontext.h"
 #include "oxygenanimations.h"
 #include "../oxygenstyle.h"
+#include <stdlib.h>
 
 #include <cassert>
 #include <iostream>
@@ -74,6 +75,16 @@ namespace Oxygen
         // now draw the child
         gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
+
+        #if OXYGEN_DEBUG
+        // Show updated parts in random color
+        cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
+        double red=((double)rand())/RAND_MAX;
+        double green=((double)rand())/RAND_MAX;
+        double blue=((double)rand())/RAND_MAX;
+        cairo_set_source_rgba(context,red,green,blue,0.5);
+        cairo_fill(context);
+        #endif
 
         // draw the shadow
         int basicOffset=2;
