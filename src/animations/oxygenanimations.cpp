@@ -240,7 +240,8 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-        if( GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) ) {
+        if( GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
+        {
 
             GtkFrame *frame( GTK_FRAME( gtk_widget_get_parent( widget ) ) );
             if( widget == gtk_frame_get_label_widget( frame ) )
