@@ -127,6 +127,9 @@ namespace Oxygen
         void renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
         { renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
+        //! groupbox background
+        void renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
+
         //! window background
         bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
@@ -241,6 +244,9 @@ namespace Oxygen
 
         //@}
 
+        //! groupbox frame
+        void renderGroupBoxFrame( GdkWindow* window, GtkWidget*, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions&  );
+
         //! menu item
         void renderMenuItemRect( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
 
@@ -290,9 +296,6 @@ namespace Oxygen
 
         //! draw window decorations
         void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint);
-
-        //! internal windeco renderer
-        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint, bool = true);
 
         //! draw window shadow
         void drawWindowShadow( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
@@ -404,6 +407,9 @@ namespace Oxygen
         //! hole glowing color
         ColorUtils::Rgba holeShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
+        //! groupbox
+        void renderGroupBox( cairo_t*, const ColorUtils::Rgba&, gint, gint, gint, gint, const StyleOptions& = StyleOptions() );
+
         //! slab
         void renderSlab( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
 
@@ -424,6 +430,9 @@ namespace Oxygen
 
         //! draw resize handles for window decoration
         void renderWindowDots(cairo_t*, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, WinDeco::Options);
+
+        //! internal windeco renderer
+        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint, bool = true);
 
         //@}
 

@@ -396,7 +396,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
     {
-        // check types
+        // check types and path
         if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
         return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView";
     }
@@ -404,6 +404,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
+        // check types and path
         if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
         return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow";
     }
@@ -733,9 +734,7 @@ namespace Oxygen
 
         if( !widget ) return false;
 
-        // this is an alternative way to get widget position with respect to top level window
-        // and top level window size. This is used in case the GdkWindow passed as argument is
-        // actually a 'non window' drawable
+        // get window
         GdkWindow* window( gtk_widget_get_parent_window( widget ) );
         if( !( window && GDK_IS_WINDOW( window ) ) ) return false;
         if( gdk_window_get_window_type( window ) == GDK_WINDOW_OFFSCREEN ) return false;
@@ -744,6 +743,36 @@ namespace Oxygen
         else gdk_toplevel_get_size( window, w, h );
         int xlocal, ylocal;
         const bool success( gtk_widget_translate_coordinates( widget, gtk_widget_get_toplevel( widget ), 0, 0, &xlocal, &ylocal ) );
+        if( success )
+        {
+
+            if( x ) *x=xlocal;
+            if( y ) *y=ylocal;
+
+        }
+
+        return success && ((!w) || *w > 0) && ((!h) || *h>0);
+
+    }
+
+    //________________________________________________________
+    bool Gtk::gtk_widget_map_to_parent( GtkWidget* widget, GtkWidget* parent, gint* x, gint* y, gint* w, gint* h )
+    {
+
+        // always initialize arguments (to invalid values)
+        if( x ) *x=0;
+        if( y ) *y=0;
+        if( w ) *w = -1;
+        if( h ) *h = -1;
+
+        if( !( widget && parent ) ) return false;
+
+        const GtkAllocation allocation( gtk_widget_get_allocation(  parent ) );
+        if( w ) *w = allocation.width;
+        if( h ) *h = allocation.height;
+
+        int xlocal, ylocal;
+        const bool success( gtk_widget_translate_coordinates( widget, parent, 0, 0, &xlocal, &ylocal ) );
         if( success )
         {
 
