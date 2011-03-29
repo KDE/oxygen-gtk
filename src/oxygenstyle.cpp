@@ -358,7 +358,7 @@ namespace Oxygen
         { return; }
 
         wh += 2;
-        ww += 2;
+        ww += 4;
         x+=wx;
         y+=wy;
         cairo_save( context );
@@ -708,7 +708,7 @@ namespace Oxygen
         } else if( widget && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) {
 
             StyleOptions localOptions( NoFill );
-            renderWindowBackground( context, window, x, y, w, h, localOptions, tiles);
+            renderWindowBackground( context, window, widget, x, y, w, h, localOptions, tiles);
 
             localOptions |= Blend;
             renderGroupBoxBackground( context, widget, x, y, w, h, localOptions, tiles );
@@ -1752,9 +1752,8 @@ namespace Oxygen
 
     //____________________________________________________________________________________
     void Style::renderGroupBoxFrame(
-        GdkWindow* window,
+        cairo_t* context,
         GtkWidget* widget,
-        GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
         // define colors
@@ -1763,7 +1762,7 @@ namespace Oxygen
         {
 
             gint wh, wy;
-            Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
+            Gtk::gtk_widget_map_to_toplevel( widget, 0L, &wy, 0L, &wh );
             base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
 
         } else {
@@ -1772,7 +1771,6 @@ namespace Oxygen
 
         }
 
-        Cairo::Context context( window, clipRect );
         renderGroupBox( context, base, x, y, w, h, options );
 
     }

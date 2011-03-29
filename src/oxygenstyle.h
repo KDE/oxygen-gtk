@@ -245,7 +245,7 @@ namespace Oxygen
         //@}
 
         //! groupbox frame
-        void renderGroupBoxFrame( GdkWindow* window, GtkWidget*, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions&  );
+        void renderGroupBoxFrame( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&  );
 
         //! menu item
         void renderMenuItemRect( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
