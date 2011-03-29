@@ -251,7 +251,7 @@ namespace Oxygen
                 gtk_frame_set_label_align( frame, 0.5, 0.0 );
                 gtk_frame_set_shadow_type( frame, GTK_SHADOW_OUT );
 
-                GdkRectangle allocation( widget->allocation );
+                const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
                 gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
 
             }
