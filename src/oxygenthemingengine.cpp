@@ -554,8 +554,8 @@ namespace Oxygen
 
                     Style::instance().renderSliderGroove( context, x + offset, y, w - 2*offset, h, StyleOptions() );
                 }
-                return;
             }
+
         }
 
         // adjust shadow type for some known widgets
@@ -893,13 +893,17 @@ namespace Oxygen
 
             // render
             Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
-
+            return;
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ) {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
             { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
+
+            // possible groupbox background
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
+            { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
 
             MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
             engine.registerWidget(widget);
@@ -924,6 +928,7 @@ namespace Oxygen
                 Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
 
             }
+            return;
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
 
@@ -1010,6 +1015,7 @@ namespace Oxygen
                  }
 
             }
+            return;
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
@@ -1051,6 +1057,7 @@ namespace Oxygen
             options |= Blend;
 
             Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
+            return;
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) &&
@@ -1230,7 +1237,7 @@ namespace Oxygen
 
             }
 
-
+            return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) && GTK_IS_NOTEBOOK( widget ) && !gtk_notebook_get_show_tabs( GTK_NOTEBOOK( widget ) ) ) {
 
@@ -1243,10 +1250,15 @@ namespace Oxygen
 
             return;
 
-        } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
 
-            if( widget && GTK_IS_FRAME( widget ) )
+            if( gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT )
             {
+
+                Style::instance().renderGroupBoxFrame( context, widget, x-1, y-1, w+2, h+2, Blend );
+                return;
+
+            } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
 
                 /*
                 check for scrolled windows embedded in frames, that contain a treeview.
@@ -1264,11 +1276,15 @@ namespace Oxygen
                     GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
                     if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
                     { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
-
-                    return;
                 }
 
             }
+
+        }
+
+        // fallback
+        if( borderStyle == GTK_BORDER_STYLE_INSET )
+        {
 
             // default shadow_in frame
             // hole background is needed for some special cases

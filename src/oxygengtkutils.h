@@ -95,6 +95,10 @@ namespace Oxygen
         */
         bool gtk_widget_map_to_toplevel( GtkWidget*, gint*, gint*, gint*, gint*, bool frame = false );
 
+        //! map widget onto another (parent) widget
+        /*! second argument can be any parent in widget's ancestry tree */
+        bool gtk_widget_map_to_parent( GtkWidget*, GtkWidget*, gint*, gint*, gint*, gint* );
+
         //! map window/widget origin to top level
         inline bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame = false )
         {

@@ -226,10 +226,7 @@ namespace Oxygen
         {
 
             // add hole if required (this can be done before translating the context
-            if( options&NoFill )
-            {
-                renderHoleMask( context, x, y, w, h, tiles );
-            }
+            if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
 
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
@@ -336,6 +333,59 @@ namespace Oxygen
         cairo_restore(context);
 
         return;
+
+    }
+
+    //__________________________________________________________________
+    void Style::renderGroupBoxBackground(
+        cairo_t* context, GtkWidget* widget,
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options,
+        TileSet::Tiles tiles )
+    {
+
+        // find groupbox parent
+        GtkWidget* parent( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) );
+        if( !( parent && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_OUT ) )
+        { return; }
+
+        // toplevel window information and relative positioning
+        gint ww(0), wh(0);
+        gint wx(0), wy(0);
+
+        // map to parent
+        if( !Gtk::gtk_widget_map_to_parent( widget, parent, &wx, &wy, &ww, &wh ) )
+        { return; }
+
+        wh += 2;
+        ww += 4;
+        x+=wx;
+        y+=wy;
+        cairo_save( context );
+        cairo_translate( context, -wx, -wy );
+
+        // add hole if required (this can be done before translating the context
+        if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
+
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wwh, wwy;
+            Gtk::gtk_widget_map_to_toplevel( parent, 0L, &wwy, 0L, &wwh );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wwh, wwy-1+wh/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Window );
+
+        }
+
+        const int xGroupBox = x - wx - 1;
+        const int yGroupBox = y - wy - 1;
+        renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
+        cairo_restore( context );
 
     }
 
@@ -654,6 +704,14 @@ namespace Oxygen
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
+
+        } else if( widget && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) {
+
+            StyleOptions localOptions( NoFill );
+            renderWindowBackground( context, window, widget, x, y, w, h, localOptions, tiles);
+
+            localOptions |= Blend;
+            renderGroupBoxBackground( context, widget, x, y, w, h, localOptions, tiles );
 
         } else {
 
@@ -1689,6 +1747,31 @@ namespace Oxygen
         generateGapMask( context, x, y, w, h, gap );
         helper().dockFrame( base, w ).render( context, x, y, w, h );
         cairo_restore( context );
+
+    }
+
+    //____________________________________________________________________________________
+    void Style::renderGroupBoxFrame(
+        cairo_t* context,
+        GtkWidget* widget,
+        gint x, gint y, gint w, gint h, const StyleOptions& options )
+    {
+        // define colors
+        ColorUtils::Rgba base;
+        if( options&Blend )
+        {
+
+            gint wh, wy;
+            Gtk::gtk_widget_map_to_toplevel( widget, 0L, &wy, 0L, &wh );
+            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+
+        } else {
+
+            base = settings().palette().color( Palette::Window );
+
+        }
+
+        renderGroupBox( context, base, x, y, w, h, options );
 
     }
 
@@ -3426,6 +3509,37 @@ namespace Oxygen
             return settings().palette().color( Palette::Hover );
 
         } else return ColorUtils::Rgba();
+
+    }
+
+    //__________________________________________________________________
+    void Style::renderGroupBox(
+        cairo_t* context,
+        const ColorUtils::Rgba& base,
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options )
+    {
+
+        cairo_push_group( context );
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y - h + 12, 0,  y + 2*h - 19 ) );
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.4 ) );
+        cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
+        cairo_set_source( context, pattern );
+
+        helper().fillSlab( context, x, y, w, h );
+
+        if( !(options&NoFill) )
+        { helper().slope( base, w ).render( context, x, y, w, h ); }
+
+        cairo_pop_group_to_source( context );
+
+        Cairo::Pattern mask( cairo_pattern_create_linear( 0,  y + h - 19, 0,  y + h ) );
+        cairo_pattern_add_color_stop( mask, 0, ColorUtils::Rgba::black() );
+        cairo_pattern_add_color_stop( mask, 1.0, ColorUtils::Rgba::transparent() );
+        cairo_mask( context, mask );
+
+        return;
 
     }
 

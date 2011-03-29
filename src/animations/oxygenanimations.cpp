@@ -74,7 +74,7 @@ namespace Oxygen
         _comboBoxEntryHook.disconnect();
         _backgroundHintHook.disconnect();
 
-        // FIXME: should we also clear the allWidgets list ?
+        _realizationHook.disconnect();
 
     }
 
@@ -132,6 +132,7 @@ namespace Oxygen
         #endif
 
         _backgroundHintHook.connect( "realize", (GSignalEmissionHook)backgroundHintHook, this );
+        _realizationHook.connect( "realize", (GSignalEmissionHook)realizationHook, this );
 
         _hooksInitialized = true;
     }
@@ -306,6 +307,38 @@ namespace Oxygen
         animations.backgroundHintEngine().registerWidget( widget );
 
         return TRUE;
+    }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::realizationHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+        if( GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
+        {
+
+            GtkFrame *frame( GTK_FRAME( gtk_widget_get_parent( widget ) ) );
+            if( widget == gtk_frame_get_label_widget( frame ) )
+            {
+
+                // modify alignment
+                gtk_frame_set_label_align( frame, 0.5, 0.0 );
+                gtk_frame_set_shadow_type( frame, GTK_SHADOW_OUT );
+
+                // TODO: change margins instead of resizing
+                const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
+
+            }
+
+        }
+
+        return TRUE;
+
     }
 
 }
