@@ -80,8 +80,17 @@ namespace Oxygen
         if( d.isBase() || d.isEventBox())
         {
 
-            // special case for openoffice
-            // we fill the background with flat color unless it is a toolbar
+            // if background pixmap is provided, fallback to default painting
+            if( style->bg_pixmap[state] )
+            {
+                StyleWrapper::parentClass()->draw_flat_box( style, window, state,
+                    shadow, clipRect, widget, detail,
+                    x, y, w, h );
+
+                return;
+            }
+
+            // for openoffice we fill the background with flat color unless it is a toolbar
             if( Style::instance().settings().applicationName().isOpenOffice() )
             {
                 if( !GTK_IS_TOOLBAR( widget ) )
