@@ -1263,39 +1263,35 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
 
-            if( gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT )
+            if( Gtk::gtk_widget_is_groupbox( widget ) )
             {
 
                 Style::instance().renderGroupBoxFrame( context, widget, x-1, y-1, w+2, h+2, Blend );
                 return;
 
-            } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
+            }
 
-                /*
-                check for scrolled windows embedded in frames, that contain a treeview.
-                if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
-                this should improve rendering of most mandriva drake tools
-                */
-                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-                if(
-                    GTK_IS_SCROLLED_WINDOW( child ) &&
-                    GTK_IS_TREE_VIEW( gtk_bin_get_child( GTK_BIN( child ) ) ) )
-                {
-                    gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_NONE );
+            switch( gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) )
+            {
+                case GTK_SHADOW_IN:
+                Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
+                break;
 
-                    // also change scrolled window shadow if needed
-                    GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
-                    if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
-                    { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
-                }
+                case GTK_SHADOW_OUT:
+                Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, NoFill );
+                break;
+
+                default:
+                case GTK_SHADOW_ETCHED_IN:
+                case GTK_SHADOW_ETCHED_OUT:
+                Style::instance().renderDockFrame( context, x, y+1, w, h-2, Blend );
+                break;
 
             }
 
-        }
+            return;
 
-        // fallback
-        if( borderStyle == GTK_BORDER_STYLE_INSET )
-        {
+        } else if( borderStyle == GTK_BORDER_STYLE_INSET ) {
 
             // default shadow_in frame
             // hole background is needed for some special cases
@@ -1309,11 +1305,13 @@ namespace Oxygen
 
             // hole
             Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
+            return;
 
         } else if( borderStyle == GTK_BORDER_STYLE_SOLID && !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
 
             // default etched frame
             Style::instance().renderDockFrame( context, x, y+1, w, h-2, Blend );
+            return;
 
         } else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) {
 
@@ -1321,6 +1319,7 @@ namespace Oxygen
             StyleOptions options( Blend );
             options |= NoFill;
             Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
+            return;
 
         }
 
