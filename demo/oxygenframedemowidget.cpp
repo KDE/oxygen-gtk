@@ -85,7 +85,44 @@ namespace Oxygen
             gtk_widget_show( comboBox );
         }
 
+        {
+            // box
+            _box = gtk_hbox_new( true, 0 );
+            gtk_box_set_spacing( GTK_BOX( _box ), 5 );
+            gtk_box_pack_start( GTK_BOX( mainWidget ), _box, true, true, 0 );
+            gtk_widget_show( _box );
 
+            // named frame
+            {
+                GtkWidget* frame( gtk_frame_new( "GroupBox" ) );
+                gtk_box_pack_start( GTK_BOX( _box ), frame, true, true, 0 );
+                gtk_widget_show( frame );
+
+            }
+
+            // unnamed frame
+            {
+                GtkWidget* frame( gtk_frame_new( 0L ) );
+                gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_OUT );
+                gtk_box_pack_start( GTK_BOX( _box ), frame, true, true, 0 );
+                gtk_widget_show( frame );
+            }
+
+            // notebook
+            {
+                GtkWidget* notebook( gtk_notebook_new() );
+                gtk_box_pack_start( GTK_BOX( _box ), notebook, true, true, 0 );
+                gtk_widget_show( notebook );
+
+                // add empty page
+                GtkWidget* label( gtk_label_new( "Tab Widget" ) );
+                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                gtk_notebook_append_page( GTK_NOTEBOOK( notebook ), vbox, label );
+                gtk_widget_show( label );
+                gtk_widget_show( vbox );
+            }
+
+        }
     }
 
     //____________________________________________________

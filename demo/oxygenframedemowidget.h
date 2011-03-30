@@ -42,6 +42,11 @@ namespace Oxygen
         //! destructor
         virtual ~FrameDemoWidget( void );
 
+        private:
+
+        //! frames box
+        GtkWidget *_box;
+
     };
 
 }
