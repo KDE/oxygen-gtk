@@ -24,6 +24,7 @@
 #include "oxygendemodialog.h"
 #include "oxygeninputdemowidget.h"
 #include "oxygenbuttondemowidget.h"
+#include "oxygenframedemowidget.h"
 
 #include <iostream>
 
@@ -143,6 +144,7 @@ namespace Oxygen
 
         addPage( new InputDemoWidget() );
         addPage( new ButtonDemoWidget() );
+        addPage( new FrameDemoWidget() );
 
     }
 
