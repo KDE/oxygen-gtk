@@ -71,6 +71,28 @@ namespace Oxygen
             gtk_icon_view_set_column_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_row_spacing( GTK_ICON_VIEW( iconView ), 0 );
 
+            // get list of renderers, find text renderer and make font format bold
+            GList* cells( gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( iconView ) ) );
+            for( GList *cell = g_list_first( cells ); cell; cell = g_list_next( cell ) )
+            {
+                if( !GTK_IS_CELL_RENDERER_TEXT( cell->data ) ) continue;
+
+                // create pango attributes list
+                PangoAttrList* attributes( pango_attr_list_new() );
+                pango_attr_list_insert( attributes, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
+
+                GValue val = { 0, };
+                g_value_init(&val, PANGO_TYPE_ATTR_LIST );
+                g_value_set_boxed( &val, attributes );
+                g_object_set_property( G_OBJECT( cell->data ), "attributes", &val );
+
+                pango_attr_list_unref( attributes );
+
+            }
+
+            if( cells ) g_list_free( cells );
+
+            // connect signals
             _selectionChangedId.connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
 
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), iconView );
