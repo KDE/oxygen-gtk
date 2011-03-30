@@ -1924,16 +1924,13 @@ namespace Oxygen
 
         } else if( shadow == GTK_SHADOW_OUT ) {
 
-            StyleOptions options;
             if( d.isFrame() && Gtk::gtk_widget_is_groupbox( widget ) )
             {
-                options |= Blend;
-                Style::instance().renderGroupBoxFrame( window, widget, clipRect, x-1, y-1, w+2, h+2, options );
+                Style::instance().renderGroupBoxFrame( window, widget, clipRect, x-1, y-1, w+2, h+2, Blend );
 
             } else {
 
-                options |= NoFill;
-                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, options );
+                Style::instance().renderSlab( window, clipRect, x-1, y-1, w+2, h+2, NoFill );
 
             }
 
