@@ -83,7 +83,7 @@ namespace Oxygen
         TimeLineServer& server( *static_cast<TimeLineServer*>( data ) );
 
         // loop over timelines
-        for( TimeLineSet::const_iterator iter = server._timeLines.begin(); iter != server._timeLines.end(); iter++ )
+        for( TimeLineSet::const_iterator iter = server._timeLines.begin(); iter != server._timeLines.end(); ++iter )
         { if( (*iter)->update() ) running = true; }
 
         // stop timeout

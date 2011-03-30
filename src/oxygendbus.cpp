@@ -93,7 +93,7 @@ namespace Oxygen
 
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::DBus::signalFilter - recieved signal"
+            << "Oxygen::DBus::signalFilter - received signal"
             << " type: " << dbus_message_get_type( message )
             << " path: " << dbus_message_get_path( message )
             << " interface: " << dbus_message_get_interface( message )

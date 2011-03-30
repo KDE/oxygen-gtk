@@ -47,7 +47,7 @@ namespace Oxygen
         if( flags.empty() ) out << "None";
         else {
 
-            for( std::vector<std::string>::const_iterator iter = flags.begin(); iter != flags.end(); iter++ )
+            for( std::vector<std::string>::const_iterator iter = flags.begin(); iter != flags.end(); ++iter )
             {
                 if( iter == flags.begin() ) out << *iter;
                 else out << "|" << *iter;
