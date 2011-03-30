@@ -163,8 +163,11 @@ namespace Oxygen
         GdkPixbuf* icon( 0L );
         if( !page->iconName().empty() )
         {
+
+            // TODO: should get this icon size from options
             GtkIconTheme* theme( gtk_icon_theme_get_default() );
-            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 22, (GtkIconLookupFlags) 0, 0L );
+            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 32, (GtkIconLookupFlags) 0, 0L );
+
         }
 
         // insert in list
