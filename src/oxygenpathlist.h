@@ -40,11 +40,11 @@ namespace Oxygen
         public:
 
         //! empty constructor
-        PathList( void )
+        explicit PathList( void )
         {}
 
         //! splitting constructor
-        PathList( const std::string& path, const std::string& separator = ":" )
+        explicit PathList( const std::string& path, const std::string& separator = ":" )
         { split( path, separator ); }
 
         //! split string using provided separator and store
