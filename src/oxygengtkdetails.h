@@ -44,6 +44,9 @@ namespace Oxygen
             bool isBase( void ) const { return _value == "base"; }
             bool isButton( void ) const { return _value == "button"; }
 
+            //! iconview
+            bool isIconViewItem( void ) const { return _value == "icon_view_item"; }
+
             //!@name treeview cells
             //@{
 

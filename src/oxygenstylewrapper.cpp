@@ -416,6 +416,17 @@ namespace Oxygen
 
             return;
 
+
+        } else if( d.isIconViewItem() ) {
+
+            StyleOptions options( widget, state );
+            if( options&(Selected|Hover) )
+            {
+                // adjustments have been tuned empirically
+                Style::instance().renderSelection( window, clipRect, x, y, w, h, TileSet::Full, options );
+            }
+            return;
+
         } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
