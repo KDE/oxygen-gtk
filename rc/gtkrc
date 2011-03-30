@@ -124,6 +124,12 @@ style "oxygen-menutoolbutton" = "oxygen-default"
 class "*GtkMenuToolButton" style "oxygen-menutoolbutton"
 widget_class "*.GtkMenuToolButton.*Box.GtkToggleButton" style "oxygen-menutoolbutton"
 
+# icon views
+style "oxygen-iconview" = "oxygen-default"
+{ GtkWidget::focus-line-width=0 }
+
+class "GtkIconView" style "oxygen-iconview"
+
 # notebook settings
 style "oxygen-notebook" = "oxygen-default"
 {
