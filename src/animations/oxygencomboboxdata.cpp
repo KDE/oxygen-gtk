@@ -48,8 +48,7 @@ namespace Oxygen
 
         /*
         need to force the wrap-width property to 0,
-        otherwise the "appears-as-list" flag is not respected, which additionaly breaks the widget rendering.
-        FIXME: this should move to the "polish" method when there is one.
+        otherwise the "appears-as-list" flag is not respected, which aditionaly breaks the widget rendering.
         */
         gtk_combo_box_set_wrap_width( GTK_COMBO_BOX( widget ), 0 );
 
