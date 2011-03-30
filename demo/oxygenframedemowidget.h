@@ -25,6 +25,7 @@
 */
 
 #include "oxygendemowidget.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
 
@@ -42,10 +43,18 @@ namespace Oxygen
         //! destructor
         virtual ~FrameDemoWidget( void );
 
+        protected:
+
+        //! orientation changed
+        static void orientationChanged( GtkComboBox*, gpointer );
+
         private:
 
         //! frames box
         GtkWidget *_box;
+
+        //! selection change
+        Signal _changedId;
 
     };
 

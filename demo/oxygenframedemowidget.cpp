@@ -23,6 +23,7 @@
 
 #include "oxygenframedemowidget.h"
 
+#include <iostream>
 #include <string>
 
 namespace Oxygen
@@ -83,6 +84,10 @@ namespace Oxygen
             gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
             gtk_box_pack_start( GTK_BOX( hbox ), comboBox, false, true, 0 );
             gtk_widget_show( comboBox );
+
+            // connection
+            _changedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( orientationChanged ), this );
+
         }
 
         {
@@ -106,6 +111,16 @@ namespace Oxygen
                 gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_OUT );
                 gtk_box_pack_start( GTK_BOX( _box ), frame, true, true, 0 );
                 gtk_widget_show( frame );
+
+                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                gtk_container_add( GTK_CONTAINER( frame ), vbox );
+                gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
+                gtk_widget_show( vbox );
+
+                GtkWidget* label( gtk_label_new( "Frame" ) );
+                gtk_box_pack_start( GTK_BOX( vbox ), label, false, true, 0 );
+                gtk_widget_show( label );
+
             }
 
             // notebook
@@ -128,5 +143,14 @@ namespace Oxygen
     //____________________________________________________
     FrameDemoWidget::~FrameDemoWidget( void )
     {}
+
+    //____________________________________________________
+    void FrameDemoWidget::orientationChanged( GtkComboBox* comboBox, gpointer data )
+    {
+        const gint id( gtk_combo_box_get_active( comboBox ) );
+        gtk_orientable_set_orientation(
+            GTK_ORIENTABLE( static_cast<FrameDemoWidget*>( data )->_box ),
+            id == 0 ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL );
+    }
 
 }

@@ -150,11 +150,7 @@ namespace Oxygen
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {
-        //_okButtonClickedId.disconnect();
-        //_selectionChangedId.disconnect();
-        //_toggleEnableStateId.disconnect();
-    }
+    {}
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
