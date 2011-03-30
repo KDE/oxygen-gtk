@@ -24,6 +24,7 @@
 #include "oxygendemodialog.h"
 #include "oxygeninputdemowidget.h"
 #include "oxygenbuttondemowidget.h"
+#include "oxygenframedemowidget.h"
 
 #include <iostream>
 
@@ -66,11 +67,34 @@ namespace Oxygen
             gtk_icon_view_set_text_column( GTK_ICON_VIEW( iconView ), 1 );
             gtk_icon_view_set_columns( GTK_ICON_VIEW( iconView ), 1 );
 
+            gtk_icon_view_set_item_width( GTK_ICON_VIEW( iconView ), 108 );
             gtk_icon_view_set_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_margin( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_column_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_row_spacing( GTK_ICON_VIEW( iconView ), 0 );
 
+            // get list of renderers, find text renderer and make font format bold
+            GList* cells( gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( iconView ) ) );
+            for( GList *cell = g_list_first( cells ); cell; cell = g_list_next( cell ) )
+            {
+                if( !GTK_IS_CELL_RENDERER_TEXT( cell->data ) ) continue;
+
+                // create pango attributes list
+                PangoAttrList* attributes( pango_attr_list_new() );
+                pango_attr_list_insert( attributes, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
+
+                GValue val = { 0, };
+                g_value_init(&val, PANGO_TYPE_ATTR_LIST );
+                g_value_set_boxed( &val, attributes );
+                g_object_set_property( G_OBJECT( cell->data ), "attributes", &val );
+
+                pango_attr_list_unref( attributes );
+
+            }
+
+            if( cells ) g_list_free( cells );
+
+            // connect signals
             _selectionChangedId.connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
 
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), iconView );
@@ -120,16 +144,13 @@ namespace Oxygen
 
         addPage( new InputDemoWidget() );
         addPage( new ButtonDemoWidget() );
+        addPage( new FrameDemoWidget() );
 
     }
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {
-        //_okButtonClickedId.disconnect();
-        //_selectionChangedId.disconnect();
-        //_toggleEnableStateId.disconnect();
-    }
+    {}
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
@@ -138,8 +159,11 @@ namespace Oxygen
         GdkPixbuf* icon( 0L );
         if( !page->iconName().empty() )
         {
+
+            // TODO: should get this icon size from options
             GtkIconTheme* theme( gtk_icon_theme_get_default() );
-            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 22, (GtkIconLookupFlags) 0, 0L );
+            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 32, (GtkIconLookupFlags) 0, 0L );
+
         }
 
         // insert in list

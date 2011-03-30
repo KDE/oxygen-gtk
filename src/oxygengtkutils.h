@@ -176,6 +176,15 @@ namespace Oxygen
 
         }
 
+        //! returns true if widget is a groupbox (a la Qt)
+        inline bool gtk_widget_is_groupbox( GtkWidget* widget )
+        {
+            return
+                GTK_IS_FRAME( widget ) &&
+                gtk_frame_get_label_widget( GTK_FRAME( widget ) ) &&
+                gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT;
+        }
+
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );
 
