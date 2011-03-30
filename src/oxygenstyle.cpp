@@ -346,7 +346,7 @@ namespace Oxygen
 
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) );
-        if( !( parent && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_OUT ) )
+        if( !( parent && Gtk::gtk_widget_is_groupbox( parent ) ) )
         { return; }
 
         // toplevel window information and relative positioning

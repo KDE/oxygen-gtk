@@ -24,6 +24,7 @@
 #include "oxygendemodialog.h"
 #include "oxygeninputdemowidget.h"
 #include "oxygenbuttondemowidget.h"
+#include "oxygenframedemowidget.h"
 
 #include <iostream>
 
@@ -143,16 +144,13 @@ namespace Oxygen
 
         addPage( new InputDemoWidget() );
         addPage( new ButtonDemoWidget() );
+        addPage( new FrameDemoWidget() );
 
     }
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {
-        //_okButtonClickedId.disconnect();
-        //_selectionChangedId.disconnect();
-        //_toggleEnableStateId.disconnect();
-    }
+    {}
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
@@ -161,8 +159,11 @@ namespace Oxygen
         GdkPixbuf* icon( 0L );
         if( !page->iconName().empty() )
         {
+
+            // TODO: should get this icon size from options
             GtkIconTheme* theme( gtk_icon_theme_get_default() );
-            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 22, (GtkIconLookupFlags) 0, 0L );
+            icon = gtk_icon_theme_load_icon( theme, page->iconName().c_str(), 32, (GtkIconLookupFlags) 0, 0L );
+
         }
 
         // insert in list
