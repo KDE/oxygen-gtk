@@ -127,7 +127,7 @@ namespace Oxygen
 
         protected:
 
-        //!@name internal constuctors
+        //!@name internal constructors
         //@{
         void init( const Cairo::Surface&, int w1, int h1, int w2, int h2 );
         void init( const Cairo::Surface&, int w1, int h1, int w3, int h3, int x2, int y2, int w2, int h2 );

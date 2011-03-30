@@ -95,7 +95,7 @@ namespace Oxygen
 
         /*
         check event mask (for now we only need to do that for GtkWindow)
-        The idea is that if the window has been set to recieve button_press and button_release events
+        The idea is that if the window has been set to receive button_press and button_release events
         (which is not done by default), it likely means that it does something with such events,
         in which case we should not use them for grabbing
         */
