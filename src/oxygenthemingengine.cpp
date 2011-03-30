@@ -259,6 +259,17 @@ namespace Oxygen
             // register to engines
             Style::instance().animations().mainWindowEngine().registerWidget( widget );
 
+            // check if background image is present
+            Cairo::Pattern pattern;
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+            gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BACKGROUND_IMAGE, &pattern, NULL );
+            if( pattern.isValid() )
+            {
+                // if valid background image is found, fallback to parent style
+                ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+                return;
+            }
+
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );
             Style::instance().renderWindowBackground( context, window, x, y, w, h );
