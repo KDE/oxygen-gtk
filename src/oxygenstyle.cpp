@@ -2275,7 +2275,7 @@ namespace Oxygen
         // create context
         Cairo::Context context( window, clipRect );
         generateGapMask( context, x, y, w, h, gap );
-        renderSlab( context, x, y, w, h, base, options, TileSet::Ring );
+        renderSlab( context, x, y, w, h, base, options );
 
     }
 

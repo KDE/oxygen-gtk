@@ -41,7 +41,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        AnimationData( double opacity = OpacityInvalid, AnimationMode mode = AnimationNone ):
+        explicit AnimationData( double opacity = OpacityInvalid, AnimationMode mode = AnimationNone ):
             _opacity( opacity ),
             _mode( mode )
         {}

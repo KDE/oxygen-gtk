@@ -43,7 +43,7 @@ namespace Oxygen
                 {
                     gint border(0);
                     // for now we think that respectWindowState is always true,
-                    // and WM will remove borders for maximized windows by defaul
+                    // and WM will remove borders for maximized windows by default
                     // TODO: impelement respectWindowState
                     if( wm==BorderBottom && frameBorder >= QtSettings::BorderNoSide ) {
 
