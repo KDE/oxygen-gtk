@@ -84,6 +84,10 @@ namespace Oxygen
                 }
             }
 
+            //! returns true if valid
+            bool isValid( void ) const
+            { return (bool) _pattern; }
+
             //! cast to cairo_pattern_t
             operator cairo_pattern_t* (void) const
             { return _pattern; }
