@@ -902,7 +902,7 @@ namespace Oxygen
         GList* children( gtk_container_get_children( GTK_CONTAINER( gtk_dialog_get_action_area( dialog ) ) ) );
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::Gtk::gtk_dialog_find_button - butons: ";
+        std::cerr << "Oxygen::Gtk::gtk_dialog_find_button - buttons: ";
         #endif
 
         for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
