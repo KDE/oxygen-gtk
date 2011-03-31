@@ -91,8 +91,8 @@ set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
 # adjust flags based on gtk version
-if( ENABLE_INNER_SHADOWS_HACK AND NOT (GTK_VERSION VERSION_EQUAL 2.24.2 OR GTK_VERSION VERSION_GREATER 2.24.2 ) )
-    message("  Disabling ENABLE_INNER_SHADOWS_HACK because Gtk version is too old (<2.24.2) " )
+if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
+    message("  Disabling ENABLE_INNER_SHADOWS_HACK because Gtk version is too old (needed 2.24.2, found ${GTK_VERSION}) " )
     set( ENABLE_INNER_SHADOWS_HACK 0 )
 endif()
 
