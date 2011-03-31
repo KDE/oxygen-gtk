@@ -9,8 +9,9 @@ set( oxygen_gtk_demo_SOURCES
     oxygendemowidget.cpp
     oxygenframedemowidget.cpp
     oxygeninputdemowidget.cpp
-    oxygengtkdemo_main.cpp
     oxygensignal.cpp
+    oxygentabdemowidget.cpp
+    oxygengtkdemo_main.cpp
  )
 
 add_executable( oxygen-gtk3-demo ${oxygen_gtk_demo_SOURCES} )
