@@ -73,7 +73,13 @@ namespace Oxygen
         gdk_window_process_updates(window,TRUE);
 
         // now draw the child
-        gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
+        guint borderWidth=0;
+        // take border width into account (why does GTK not do it for us?!)
+        if(GTK_IS_CONTAINER(child))
+        {
+            borderWidth=gtk_container_get_border_width(GTK_CONTAINER(child));
+        }
+        gdk_cairo_set_source_window( context, window, allocation.x+borderWidth, allocation.y+borderWidth );
         cairo_paint(context);
 
         #if OXYGEN_DEBUG
