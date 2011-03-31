@@ -53,6 +53,9 @@ namespace Oxygen
     void Style::initialize( unsigned int flags )
     {
 
+        // initialize ref surface
+        helper().initializeRefSurface();
+
         // reset caches if colors have changed
         if( flags&QtSettings::Colors )
         {
@@ -81,6 +84,12 @@ namespace Oxygen
             windowManager().setDragDistance( settings().startDragDist() );
             windowManager().setDragDelay( settings().startDragTime() );
         }
+
+        // create window shadow
+        WindowShadow shadow( settings(), helper() );
+        shadowHelper().initialize(
+            (int) shadow.shadowSize(),
+            shadow.tileSet( settings().palette().color(Palette::Window), WindowShadowKey() ) );
 
     }
 

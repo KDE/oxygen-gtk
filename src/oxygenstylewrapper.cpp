@@ -3303,6 +3303,7 @@ namespace Oxygen
         // hooks
         Style::instance().animations().initializeHooks();
         Style::instance().windowManager().initializeHooks();
+        Style::instance().shadowHelper().initializeHooks();
 
         // also initialize dbus
         Oxygen::DBus::instance();

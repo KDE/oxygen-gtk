@@ -30,6 +30,7 @@
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkgap.h"
 #include "oxygenqtsettings.h"
+#include "oxygenshadowhelper.h"
 #include "oxygenstylehelper.h"
 #include "oxygenstyleoptions.h"
 #include "oxygentaboptions.h"
@@ -85,6 +86,10 @@ namespace Oxygen
         //! argb helper
         ArgbHelper& argbHelper( void )
         { return _argbHelper; }
+
+        //! shadow helper
+        ShadowHelper& shadowHelper( void )
+        { return _shadowHelper; }
 
         //! window manager
         WindowManager& windowManager( void )
@@ -467,6 +472,9 @@ namespace Oxygen
 
         //! argb helper
         ArgbHelper _argbHelper;
+
+        //! shadow helper
+        ShadowHelper _shadowHelper;
 
         //! window manager
         WindowManager _windowManager;
