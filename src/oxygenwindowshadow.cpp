@@ -195,6 +195,12 @@ namespace Oxygen
                     cairo_fill(p);
                 }
             }
+
+            cairo_set_source_rgb(p,0,0,0);
+            cairo_set_operator(p,CAIRO_OPERATOR_CLEAR);
+            cairo_ellipse(p, size-3,size-3,6,6);
+            cairo_fill(p);
+
         }
 
         return shadow;
