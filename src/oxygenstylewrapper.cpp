@@ -38,6 +38,7 @@
 #include "oxygengtkdetails.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
+#include "oxygenmetrics.h"
 #include "oxygenstyle.h"
 #include "oxygenwindowmanager.h"
 
@@ -436,7 +437,7 @@ namespace Oxygen
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
-            const int xOffset( style->xthickness + 1 - Style::Entry_SideMargin );
+            const int xOffset( style->xthickness + 1 - Oxygen::Entry_SideMargin );
 
             // adjust horizontal positioning and width
             x -= xOffset;
@@ -801,8 +802,8 @@ namespace Oxygen
                     tiles &= ~TileSet::Right;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+6, h, tiles );
 
-                    x += Style::Entry_SideMargin;
-                    w -= Style::Entry_SideMargin;
+                    x += Oxygen::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, data, tiles  );
 
                 } else {
@@ -811,7 +812,7 @@ namespace Oxygen
                     tiles &= ~TileSet::Left;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles );
 
-                    w -= Style::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, data, tiles  );
 
                 }
@@ -1138,8 +1139,8 @@ namespace Oxygen
                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                         if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                         {
-                            GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
-                            gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Style::Menu_VerticalOffset );
+                            GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
+                            gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Oxygen::Menu_VerticalOffset );
                             gdk_pixmap_unref(mask);
                         }
 
@@ -1385,8 +1386,8 @@ namespace Oxygen
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
-                x += Style::Entry_SideMargin;
-                w -= Style::Entry_SideMargin;
+                x += Oxygen::Entry_SideMargin;
+                w -= Oxygen::Entry_SideMargin;
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, data, tiles );
 
             } else {
@@ -1398,7 +1399,7 @@ namespace Oxygen
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
-                w -= Style::Entry_SideMargin;
+                w -= Oxygen::Entry_SideMargin;
                 Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, data, tiles );
 
             }
@@ -1644,7 +1645,7 @@ namespace Oxygen
                     tiles &= ~TileSet::Left;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles );
 
-                    w -= Style::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, data, tiles );
 
                 } else {
@@ -1652,8 +1653,8 @@ namespace Oxygen
                     tiles &= ~TileSet::Right;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+7, h, tiles );
 
-                    x += Style::Entry_SideMargin;
-                    w -= Style::Entry_SideMargin;
+                    x += Oxygen::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, data, tiles );
 
                 }
@@ -1707,7 +1708,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
-                        w-= Style::Entry_SideMargin;
+                        w-= Oxygen::Entry_SideMargin;
                     }
 
                     Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, data, tiles );
@@ -1719,7 +1720,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
-                        x += Style::Entry_SideMargin; w-= Style::Entry_SideMargin;
+                        x += Oxygen::Entry_SideMargin; w-= Oxygen::Entry_SideMargin;
                     }
 
                     Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, data, tiles );
@@ -1783,8 +1784,8 @@ namespace Oxygen
                     if( d.isEntry() )
                     {
 
-                        x += Style::Entry_SideMargin;
-                        w -= 2*Style::Entry_SideMargin;
+                        x += Oxygen::Entry_SideMargin;
+                        w -= 2*Oxygen::Entry_SideMargin;
 
                     }
 
@@ -1913,7 +1914,7 @@ namespace Oxygen
             {
                 Style::instance().renderHoleBackground(
                     window, widget, clipRect,
-                    x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+                    x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+2 );
             }
 
             // hole
@@ -2638,7 +2639,7 @@ namespace Oxygen
             const Gtk::Gap gap( gap_x, gap_w, position );
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+2 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {

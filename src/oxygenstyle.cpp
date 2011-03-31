@@ -23,10 +23,11 @@
 #include "oxygencairocontext.h"
 #include "oxygencairoutils.h"
 #include "oxygencolorutils.h"
+#include "oxygenfontinfo.h"
 #include "oxygengtkutils.h"
+#include "oxygenmetrics.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowshadow.h"
-#include "oxygenfontinfo.h"
 
 #include <algorithm>
 #include <cmath>
