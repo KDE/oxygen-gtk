@@ -72,7 +72,7 @@ namespace Oxygen
     void ShadowHelper::initialize( const int size, const TileSet& tiles )
     {
         reset();
-        _size = size-4;
+        _size = size;
         _tiles = tiles;
 
         // re-install shadows for all windowId
