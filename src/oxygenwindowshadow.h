@@ -32,6 +32,7 @@ namespace Oxygen
 {
     class WindowShadow
     {
+
         // TODO: implement opacity
         public:
 
@@ -69,6 +70,9 @@ namespace Oxygen
             // you need a minimum size to allow corner rendering
             return std::max(size,5.0);
         }
+
+        //! overlap between shadow pixmap and contents body
+        enum { Overlap = 4 };
 
         protected:
 
