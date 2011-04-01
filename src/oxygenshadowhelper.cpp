@@ -50,11 +50,16 @@ namespace Oxygen
     {
         GdkScreen* screen = gdk_screen_get_default();
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-        for( unsigned int i = 0; i < _data.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _data[i]); }
 
-        // clear data
-        _data.clear();
+        // round pixmaps
+        for( unsigned int i = 0; i < _roundPixmaps.size() && i < numPixmaps; ++i )
+        { XFreePixmap(display, _roundPixmaps[i]); }
+        _roundPixmaps.clear();
+
+        // square pixmaps
+        for( unsigned int i = 0; i < _squarePixmaps.size() && i < numPixmaps; ++i )
+        { XFreePixmap(display, _squarePixmaps[i]); }
+        _squarePixmaps.clear();
 
     }
 
@@ -70,11 +75,21 @@ namespace Oxygen
     }
 
     //______________________________________________
-    void ShadowHelper::initialize( const int size, const TileSet& tiles )
+    void ShadowHelper::initialize( const ColorUtils::Rgba& color, const WindowShadow& shadow )
     {
         reset();
-        _size = size;
-        _tiles = tiles;
+        _size = int(shadow.shadowSize()) - WindowShadow::Overlap;
+
+        // round tiles
+        WindowShadowKey key;
+        key.hasTopBorder = true;
+        key.hasBottomBorder = true;
+        _roundTiles = shadow.tileSet( color, key );
+
+        // square tiles
+        key.hasTopBorder = false;
+        key.hasBottomBorder = false;
+        _squareTiles = shadow.tileSet( color, key );
 
         // re-install shadows for all windowId
         for( WidgetMap::const_iterator iter = _widgets.begin(); iter != _widgets.end(); ++iter )
@@ -136,27 +151,37 @@ namespace Oxygen
             _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
         }
 
-        // make sure pixmaps are not already initialized
-        if( !_data.empty() ) return;
-
         // make sure size is valid
         if( _size <= 0 ) return;
 
-        _data.push_back( createPixmap( _tiles.surface( 1 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 2 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 5 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 8 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 7 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 6 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 3 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 0 ) ) );
+        // make sure pixmaps are not already initialized
+        if( _roundPixmaps.empty() )
+        {
 
-        // push sizes
-        /* kwin requires top, left, bottom and right. For us all 4 sizes are identical */
-        _data.push_back( _size );
-        _data.push_back( _size );
-        _data.push_back( _size );
-        _data.push_back( _size );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 7 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 6 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 3 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 0 ) ) );
+
+        }
+
+        if( _squarePixmaps.empty() )
+        {
+
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 1 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 2 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 5 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 8 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 7 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 6 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 3 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 0 ) ) );
+
+        }
 
     }
 
@@ -199,38 +224,60 @@ namespace Oxygen
         createPixmapHandles();
 
         // check data size
-        if( _data.size() != 12 )
+        if( _roundPixmaps.size() != numPixmaps )
         {
-            std::cerr << "ShadowHelper::installX11Shadows - incorrect _data size: " << _data.size() << std::endl;
+            std::cerr << "ShadowHelper::installX11Shadows - incorrect _roundPixmaps size: " << _roundPixmaps.size() << std::endl;
             return;
         }
 
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
 
-        if( isMenu( widget ) )
+        std::vector<unsigned long> data;
+        const bool isMenu( this->isMenu( widget ) );
+        if( isMenu && _applicationName.isMozilla( widget ) )
         {
 
-            /*
-            for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
-            in painting method (Oxygen::Style::renderMenuBackground)
-            */
-            std::vector<unsigned long> data( _data );
-            data[8] -= Menu_VerticalOffset;
-            data[10] -= Menu_VerticalOffset;
-
-            XChangeProperty(
-                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
-                reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
+            data = _squarePixmaps;
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
 
         } else {
 
-            XChangeProperty(
-                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
-                reinterpret_cast<const unsigned char *>(&_data[0]), _data.size() );
+            data = _roundPixmaps;
+            if( isMenu )
+            {
+
+                /*
+                for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
+                in painting method (Oxygen::Style::renderMenuBackground)
+                */
+                data.push_back( _size - Menu_VerticalOffset );
+                data.push_back( _size );
+                data.push_back( _size - Menu_VerticalOffset );
+                data.push_back( _size );
+
+            } else {
+
+                // all sides have same sizz
+                data.push_back( _size );
+                data.push_back( _size );
+                data.push_back( _size );
+                data.push_back( _size );
+
+            }
+
         }
 
+        // change property
+        XChangeProperty(
+            GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
+            reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
+
     }
+
     //_______________________________________________________
     void ShadowHelper::uninstallX11Shadows( GtkWidget* widget ) const
     {

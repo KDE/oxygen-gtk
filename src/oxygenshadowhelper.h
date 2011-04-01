@@ -20,10 +20,12 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenapplicationname.h"
 #include "oxygencairosurface.h"
 #include "oxygenhook.h"
 #include "oxygensignal.h"
 #include "oxygentileset.h"
+#include "oxygenwindowshadow.h"
 
 #include <vector>
 #include <map>
@@ -52,8 +54,12 @@ namespace Oxygen
         //! initialize hooks
         void initializeHooks( void );
 
+        //! application name
+        void setApplicationName( const ApplicationName& applicationName )
+        { _applicationName = applicationName; }
+
         //! initialize
-        void initialize( const int, const TileSet& );
+        void initialize( const ColorUtils::Rgba&, const WindowShadow& );
 
         //! register widget
         bool registerWidget( GtkWidget* );
@@ -112,7 +118,13 @@ namespace Oxygen
         int _size;
 
         //! shadow tileset
-        TileSet _tiles;
+        TileSet _roundTiles;
+
+        //! shadow tileset
+        TileSet _squareTiles;
+
+        //! application name
+        ApplicationName _applicationName;
 
         //! shadow atom
         Atom _atom;
@@ -121,7 +133,10 @@ namespace Oxygen
         enum { numPixmaps = 8 };
 
         //! property data
-        std::vector<unsigned long> _data;
+        std::vector<unsigned long> _roundPixmaps;
+
+        //! property data
+        std::vector<unsigned long> _squarePixmaps;
 
         //! widget data
         class WidgetData

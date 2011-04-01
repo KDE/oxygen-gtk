@@ -88,9 +88,8 @@ namespace Oxygen
 
         // create window shadow
         WindowShadow shadow( settings(), helper() );
-        shadowHelper().initialize(
-            (int) shadow.shadowSize() - WindowShadow::Overlap,
-            shadow.tileSet( settings().palette().color(Palette::Window), WindowShadowKey() ) );
+        shadowHelper().setApplicationName( settings().applicationName() );
+        shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
     }
 
