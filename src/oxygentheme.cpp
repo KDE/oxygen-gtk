@@ -64,9 +64,6 @@ void theme_init( GTypeModule* module )
 
     Oxygen::ThemingEngine::registerType( module );
 
-    // initialize ref surface
-    Oxygen::Style::instance().helper().initializeRefSurface();
-
 }
 
 //_________________________________________________

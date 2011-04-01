@@ -25,6 +25,7 @@
 #include "oxygendbus.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
+#include "oxygenmetrics.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -735,8 +736,8 @@ namespace Oxygen
                     tiles &= ~TileSet::Right;
                     Style::instance().renderHoleBackground( context, 0L, widget, x-1, y, w+6, h, tiles );
 
-                    x += Style::Entry_SideMargin;
-                    w -= Style::Entry_SideMargin;
+                    x += Oxygen::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( context, x-1, y, w+6, h, options, data, tiles  );
 
                 } else {
@@ -745,7 +746,7 @@ namespace Oxygen
                     tiles &= ~TileSet::Left;
                     Style::instance().renderHoleBackground( context, 0L, widget, x-5, y, w+6, h, tiles );
 
-                    w -= Style::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( context, x-5, y, w+6, h, options, data, tiles  );
 
                 }
@@ -973,8 +974,8 @@ namespace Oxygen
                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                         if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                         {
-                            Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Style::Menu_VerticalOffset ) );
-                            gdk_window_shape_combine_region( window, mask, 0, Style::Menu_VerticalOffset );
+                            Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
+                            gdk_window_shape_combine_region( window, mask, 0, Oxygen::Menu_VerticalOffset );
                         }
 
                     } else {
@@ -1137,7 +1138,7 @@ namespace Oxygen
                     Style::instance().fill( context, x-6, y, w+7, h, background );
                     Style::instance().renderHoleBackground( context, 0L, widget, x-6, y, w+7, h, tiles );
 
-                    w -= Style::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( context, x-6, y, w+7, h, options, data, tiles );
 
                 } else {
@@ -1147,8 +1148,8 @@ namespace Oxygen
                     Style::instance().fill( context, x-1, y, w+7, h, background );
                     Style::instance().renderHoleBackground( context, 0L, widget, x-1, y, w+7, h, tiles );
 
-                    x += Style::Entry_SideMargin;
-                    w -= Style::Entry_SideMargin;
+                    x += Oxygen::Entry_SideMargin;
+                    w -= Oxygen::Entry_SideMargin;
                     Style::instance().renderHole( context, x-1, y, w+7, h, options, data, tiles );
 
                 }
@@ -1189,8 +1190,8 @@ namespace Oxygen
                 if( GTK_IS_ENTRY( widget ) )
                 {
 
-                    x += Style::Entry_SideMargin;
-                    w -= 2*Style::Entry_SideMargin;
+                    x += Oxygen::Entry_SideMargin;
+                    w -= 2*Oxygen::Entry_SideMargin;
 
                 }
 
@@ -1300,7 +1301,7 @@ namespace Oxygen
 
                 Style::instance().renderHoleBackground(
                     context, 0L, widget,
-                    x-1-Style::Entry_SideMargin, y-1, w+2+2*Style::Entry_SideMargin, h+2 );
+                    x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+2 );
             }
 
             // hole
@@ -1427,7 +1428,7 @@ namespace Oxygen
             // draw frame depending on shadow type
             if( shadow == GTK_SHADOW_IN ) {
 
-                Style::instance().renderHoleBackground( context, 0L, widget, x - 1 - Style::Entry_SideMargin, y-1, w + 2 + 2*Style::Entry_SideMargin, h+2 );
+                Style::instance().renderHoleBackground( context, 0L, widget, x - 1 - Oxygen::Entry_SideMargin, y-1, w + 2 + 2*Oxygen::Entry_SideMargin, h+2 );
                 Style::instance().renderHole( context, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
@@ -2327,6 +2328,7 @@ namespace Oxygen
         Style::instance().animations().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
+        Style::instance().shadowHelper().initializeHooks();
 
         // also initialize dbus
         Oxygen::DBus::instance();

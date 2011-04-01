@@ -32,6 +32,7 @@ namespace Oxygen
 {
     class WindowShadow
     {
+
         // TODO: implement opacity
         public:
 
@@ -53,7 +54,7 @@ namespace Oxygen
         Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
 
         // shadow tiles
-        const TileSet& tileSet(const ColorUtils::Rgba& color, WindowShadowKey&);
+        const TileSet& tileSet(const ColorUtils::Rgba& color, WindowShadowKey);
 
         void setWindowState(WinDeco::Options wopt)
         { _wopt=wopt; }
@@ -69,6 +70,9 @@ namespace Oxygen
             // you need a minimum size to allow corner rendering
             return std::max(size,5.0);
         }
+
+        //! overlap between shadow pixmap and contents body
+        enum { Overlap = 4 };
 
         protected:
 
