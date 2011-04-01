@@ -207,14 +207,132 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void WindowShadow::renderGradient(cairo_t* p,const GdkRectangle& rect, cairo_pattern_t* rg, bool hasBorder) const
+    void WindowShadow::renderGradient( cairo_t* p, const GdkRectangle& rect, cairo_pattern_t* rg, bool hasBorder ) const
     {
-        if( hasBorder || true ) // TODO: implement remaining part of this method and remove '|| true '
+        if( hasBorder )
         {
             cairo_set_source(p,rg);
             gdk_cairo_rectangle(p, &rect);
             cairo_fill(p);
             return;
         }
+
+        double size( rect.width/2.0 );
+
+        // get pattern definition
+        double x0(0), y0(0), r0(0);
+        double x1(0), y1(0), r1(0);
+        const cairo_status_t status( cairo_pattern_get_radial_circles( rg, &x0, &y0, &r0, &x1, &y1, &r1 ) );
+        assert( status == CAIRO_STATUS_SUCCESS );
+
+        const double hoffset( x0 - size );
+        const double voffset( y0 - size );
+        const double radius( r1 );
+
+        ColorStop::List stops( cairo_pattern_get_color_stops( rg ) );
+
+        // draw ellipse for the upper rect
+        {
+            cairo_set_source( p, rg );
+            cairo_rectangle( p, hoffset, voffset, 2*size-hoffset, size );
+            cairo_fill( p );
+        }
+
+        // draw square gradients for the lower rect
+        {
+            // vertical lines
+            Cairo::Pattern pattern( cairo_pattern_create_linear( hoffset, 0.0, 2*size+hoffset, 0.0 ) );
+            for( unsigned int i = 0; i < stops.size(); ++i )
+            {
+                const ColorUtils::Rgba c( stops[i]._color );
+                const double x( stops[i]._x * radius );
+                cairo_pattern_add_color_stop( pattern, (size-x)/(2.0*size), c );
+                cairo_pattern_add_color_stop( pattern, (size+x)/(2.0*size), c );
+            }
+
+            cairo_set_source( p, pattern );
+            cairo_rectangle( p, hoffset, size+voffset, 2*size-hoffset, 4 );
+            cairo_fill( p );
+        }
+
+        {
+
+            // horizontal line
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, voffset, 0, 2*size+voffset ) );
+            for( unsigned int i = 0; i < stops.size(); ++i )
+            {
+                const ColorUtils::Rgba c( stops[i]._color );
+                const double x( stops[i]._x * radius );
+                cairo_pattern_add_color_stop( pattern, (size+x)/(2.0*size), c );
+            }
+
+            cairo_set_source( p, pattern );
+            cairo_rectangle( p, size-4+hoffset, size+voffset, 8, size );
+            cairo_fill( p );
+
+        }
+
+        {
+
+            // bottom-left corner
+            Cairo::Pattern pattern( cairo_pattern_create_radial( size+hoffset-4, size+voffset+4, radius ) );
+            for( unsigned int i = 0; i < stops.size(); ++i )
+            {
+                ColorUtils::Rgba c( stops[i]._color );
+                double x( stops[i]._x -4.0/radius );
+                if( x<0 )
+                {
+                    if( i < stops.size()-1 )
+                    {
+                        const double x1( stops[i+1]._x - 4.0/radius );
+                        c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                    }
+
+                    x = 0;
+
+                }
+
+                cairo_pattern_add_color_stop( pattern, x, c );
+
+            }
+
+
+            cairo_set_source( p, pattern );
+            cairo_rectangle( p, hoffset, size+voffset+4, size-4, size );
+            cairo_fill( p );
+
+        }
+
+        {
+
+            // bottom-right corner
+            Cairo::Pattern pattern( cairo_pattern_create_radial( size+hoffset+4, size+voffset+4, radius ) );
+            for( unsigned int i = 0; i < stops.size(); ++i )
+            {
+                ColorUtils::Rgba c( stops[i]._color );
+                double x( stops[i]._x -4.0/radius );
+                if( x<0 )
+                {
+                    if( i < stops.size()-1 )
+                    {
+                        const double x1( stops[i+1]._x - 4.0/radius );
+                        c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                    }
+
+                    x = 0;
+
+                }
+
+                cairo_pattern_add_color_stop( pattern, x, c );
+
+            }
+
+
+            cairo_set_source( p, pattern );
+            cairo_rectangle( p, size+hoffset+4, size+voffset+4, size-4, size );
+            cairo_fill( p );
+
+        }
+
     }
 }
