@@ -21,6 +21,7 @@
 #include "oxygencairocontext.h"
 #include "oxygencairoutils.h"
 #include "oxygengtkutils.h"
+#include "oxygenmetrics.h"
 #include "oxygenrgba.h"
 #include "oxygenshadowhelper.h"
 
@@ -206,9 +207,28 @@ namespace Oxygen
 
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
-        XChangeProperty(
-            GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
-            reinterpret_cast<const unsigned char *>(&_data[0]), _data.size() );
+
+        if( isMenu( widget ) )
+        {
+
+            /*
+            for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
+            in painting method (Oxygen::Style::renderMenuBackground)
+            */
+            std::vector<unsigned long> data( _data );
+            data[8] -= Menu_VerticalOffset;
+            data[10] -= Menu_VerticalOffset;
+
+            XChangeProperty(
+                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
+
+        } else {
+
+            XChangeProperty(
+                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<const unsigned char *>(&_data[0]), _data.size() );
+        }
 
     }
     //_______________________________________________________

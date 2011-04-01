@@ -63,6 +63,17 @@ namespace Oxygen
 
         protected:
 
+        // true if widget is menu
+        inline bool isMenu( GtkWidget* widget ) const
+        {
+            if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
+            const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
+            return
+                hint == GDK_WINDOW_TYPE_HINT_MENU ||
+                hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+                hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU;
+        }
+
         //! returns true if window hint is valid
         inline bool acceptHint( const GdkWindowTypeHint& hint ) const
         {
