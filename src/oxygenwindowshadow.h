@@ -144,7 +144,7 @@ namespace Oxygen
 
         //! draw gradient into rect
         /*! a separate method is used in order to properly account for corners */
-        void renderGradient(cairo_t*,const GdkRectangle&,cairo_pattern_t*, bool hasBorder=true) const;
+        void renderGradient(cairo_t*,const GdkRectangle&,cairo_pattern_t*, bool hasTopBorder=true, bool hasBottomBorder = true ) const;
 
         //! settings
         const QtSettings& _settings;

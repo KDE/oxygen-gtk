@@ -588,7 +588,8 @@ namespace Oxygen
             useOxygenShadows(true),
             isShade(false),
             hasTitleOutline(false),
-            hasBorder( true )
+            hasTopBorder( true ),
+            hasBottomBorder( true )
         {}
 
         //! equal to operator
@@ -599,7 +600,9 @@ namespace Oxygen
                 ( useOxygenShadows == other.useOxygenShadows ) &&
                 ( isShade == other.isShade ) &&
                 ( hasTitleOutline == other.hasTitleOutline ) &&
-                ( hasBorder == other.hasBorder );
+                ( hasTopBorder == other.hasTopBorder ) &&
+                ( hasBottomBorder == other.hasBottomBorder );
+
         }
 
         //! less than operator
@@ -609,14 +612,16 @@ namespace Oxygen
             else if( useOxygenShadows != other.useOxygenShadows ) return useOxygenShadows < other.useOxygenShadows;
             else if( isShade != other.isShade ) return isShade < other.isShade;
             else if( hasTitleOutline != other.hasTitleOutline ) return hasTitleOutline < other.hasTitleOutline;
-            else return hasBorder < other.hasBorder;
+            else if( hasTopBorder != other.hasTopBorder ) return hasTopBorder < other.hasTopBorder;
+            else return hasBottomBorder < other.hasBottomBorder;
         }
 
         bool active;
         bool useOxygenShadows;
         bool isShade;
         bool hasTitleOutline;
-        bool hasBorder;
+        bool hasTopBorder;
+        bool hasBottomBorder;
 
     };
 
