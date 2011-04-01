@@ -55,6 +55,26 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    ColorStop::List cairo_pattern_get_color_stops( cairo_pattern_t* pattern )
+    {
+
+        ColorStop::List out;
+        int count(0);
+        if( cairo_pattern_get_color_stop_count( pattern, &count ) != CAIRO_STATUS_SUCCESS ) return out;
+
+        for( int i = 0; i < count; ++i )
+        {
+            double x(0);
+            double r(0), g(0), b(0), a(0);
+            assert( cairo_pattern_get_color_stop_rgba( pattern, i, &x, &r, &g, &b, &a ) == CAIRO_STATUS_SUCCESS );
+            out.push_back( ColorStop( x, ColorUtils::Rgba( r, g, b, a ) ) );
+        }
+
+        return out;
+
+    }
+
+    //__________________________________________________________________
     void cairo_set_source( cairo_t* context, const ColorUtils::Rgba& color )
     { cairo_set_source_rgba( context, color.red(), color.green(), color.blue(), color.alpha() ); }
 

@@ -50,9 +50,6 @@ namespace Oxygen
 
         void render(cairo_t*, gint x, gint y, gint w, gint h);
 
-        //! simple pixmap
-        Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
-
         // shadow tiles
         const TileSet& tileSet(const ColorUtils::Rgba& color, WindowShadowKey);
 
@@ -75,6 +72,9 @@ namespace Oxygen
         enum { Overlap = 4 };
 
         protected:
+
+        //! simple pixmap
+        Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, const WindowShadowKey& );
 
         //! settings
         const QtSettings& settings( void ) const
@@ -144,7 +144,7 @@ namespace Oxygen
 
         //! draw gradient into rect
         /*! a separate method is used in order to properly account for corners */
-        void renderGradient(cairo_t*,const GdkRectangle&,cairo_pattern_t*, bool hasBorder=true) const;
+        void renderGradient(cairo_t*,const GdkRectangle&,cairo_pattern_t*, bool hasTopBorder=true, bool hasBottomBorder = true ) const;
 
         //! settings
         const QtSettings& _settings;

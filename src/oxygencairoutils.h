@@ -23,25 +23,51 @@
 #include "oxygencairopattern.h"
 #include "oxygenflags.h"
 #include "oxygengeometry.h"
+#include "oxygenrgba.h"
 
 #include <cairo.h>
 #include <gdk/gdk.h>
+#include <vector>
 
 namespace Oxygen
 {
 
-    namespace ColorUtils
-    {
-        class Rgba;
-    }
-
     //! draw arc with the parameters similar to those of QPainter::drawArc() (but using diameter instead of width&height). Also, angles are specified in degrees, not in 16ths of degrees
     void cairo_arc_qt( cairo_t*, double, double, double, double, double );
 
+    //! convenience class for cairo pattern color stops
+    class ColorStop
+    {
+        public:
+
+        //! empty constructor
+        ColorStop( double x = 0, ColorUtils::Rgba color = ColorUtils::Rgba() ):
+            _x( x ),
+            _color( color )
+        {}
+
+        //! offset
+        double _x;
+
+        //! color
+        ColorUtils::Rgba _color;
+
+        typedef std::vector<ColorStop> List;
+
+    };
+
     //!@name color handling
     //@{
+
     //! add color to pattern
-    void cairo_pattern_add_color_stop( cairo_pattern_t*, double x, const ColorUtils::Rgba& );
+    void cairo_pattern_add_color_stop( cairo_pattern_t*, double, const ColorUtils::Rgba& );
+
+    //! add color to pattern
+    inline void cairo_pattern_add_color_stop( cairo_pattern_t* pattern, const ColorStop& colorStop )
+    { Oxygen::cairo_pattern_add_color_stop( pattern, colorStop._x, colorStop._color ); }
+
+    //! get color stops
+    ColorStop::List cairo_pattern_get_color_stops( cairo_pattern_t* );
 
     //! set source from pattern
     inline void cairo_set_source( cairo_t* context, const Cairo::Pattern& pattern )
