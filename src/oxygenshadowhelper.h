@@ -118,7 +118,10 @@ namespace Oxygen
         int _size;
 
         //! shadow tileset
-        TileSet _tiles;
+        TileSet _roundTiles;
+
+        //! shadow tileset
+        TileSet _squareTiles;
 
         //! application name
         ApplicationName _applicationName;
@@ -130,7 +133,10 @@ namespace Oxygen
         enum { numPixmaps = 8 };
 
         //! property data
-        std::vector<unsigned long> _pixmaps;
+        std::vector<unsigned long> _roundPixmaps;
+
+        //! property data
+        std::vector<unsigned long> _squarePixmaps;
 
         //! widget data
         class WidgetData
