@@ -45,14 +45,15 @@ namespace Oxygen
         if( tileSet.isValid() ) return tileSet;
 
         const double size( shadowSize() );
-        return helper().windowShadowCache().insert(key, TileSet( shadowPixmap( color, key.active ), int(size), int(size), 1, 1 ) );
+        return helper().windowShadowCache().insert(key, TileSet( shadowPixmap( color, key ), int(size), int(size), 1, 1 ) );
 
     }
 
     //________________________________________________________________________________
-    Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, bool active)
+    Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, const WindowShadowKey& key )
     {
 
+        const bool active( key.active );
         ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
         static const double fixedSize=25.5;

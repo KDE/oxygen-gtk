@@ -50,9 +50,6 @@ namespace Oxygen
 
         void render(cairo_t*, gint x, gint y, gint w, gint h);
 
-        //! simple pixmap
-        Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, bool active);
-
         // shadow tiles
         const TileSet& tileSet(const ColorUtils::Rgba& color, WindowShadowKey);
 
@@ -75,6 +72,9 @@ namespace Oxygen
         enum { Overlap = 4 };
 
         protected:
+
+        //! simple pixmap
+        Cairo::Surface shadowPixmap(const ColorUtils::Rgba& color, const WindowShadowKey& );
 
         //! settings
         const QtSettings& settings( void ) const
