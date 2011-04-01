@@ -37,7 +37,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    const TileSet& WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey key)
+    const TileSet& WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey key) const
     {
 
         // check if tileset already in cache
@@ -50,11 +50,11 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, const WindowShadowKey& key )
+    Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, const WindowShadowKey& key ) const
     {
 
         const bool active( key.active );
-        ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
+        const ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
         static const double fixedSize=25.5;
         double size( shadowSize() );

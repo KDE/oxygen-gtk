@@ -50,23 +50,23 @@ namespace Oxygen
         { return _enabled; }
 
         //! shadow size
-        double shadowSize()
+        double shadowSize() const
         { return _shadowSize; }
 
         //! horizontal offset
-        double horizontalOffset()
+        double horizontalOffset() const
         { return _horizontalOffset; }
 
         //! vertical offset
-        double verticalOffset()
+        double verticalOffset() const
         { return _verticalOffset; }
 
         //! inner color
-        ColorUtils::Rgba innerColor()
+        ColorUtils::Rgba innerColor() const
         { return _innerColor; }
 
         //! outer color
-        ColorUtils::Rgba outerColor()
+        ColorUtils::Rgba outerColor() const
         { return _outerColor; }
 
         //! initialize from options

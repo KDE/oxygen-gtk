@@ -70,11 +70,11 @@ namespace Oxygen
     }
 
     //______________________________________________
-    void ShadowHelper::initialize( const int size, const TileSet& tiles )
+    void ShadowHelper::initialize( const ColorUtils::Rgba& color, const WindowShadow& shadow )
     {
         reset();
-        _size = size;
-        _tiles = tiles;
+        _size = int(shadow.shadowSize()) - WindowShadow::Overlap;
+        _tiles = shadow.tileSet( color, WindowShadowKey() );
 
         // re-install shadows for all windowId
         for( WidgetMap::const_iterator iter = _widgets.begin(); iter != _widgets.end(); ++iter )

@@ -25,6 +25,7 @@
 #include "oxygenhook.h"
 #include "oxygensignal.h"
 #include "oxygentileset.h"
+#include "oxygenwindowshadow.h"
 
 #include <vector>
 #include <map>
@@ -58,7 +59,7 @@ namespace Oxygen
         { _applicationName = applicationName; }
 
         //! initialize
-        void initialize( const int, const TileSet& );
+        void initialize( const ColorUtils::Rgba&, const WindowShadow& );
 
         //! register widget
         bool registerWidget( GtkWidget* );
