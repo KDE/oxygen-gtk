@@ -235,39 +235,26 @@ namespace Oxygen
 
         std::vector<unsigned long> data;
         const bool isMenu( this->isMenu( widget ) );
-        if( isMenu && _applicationName.isMozilla( widget ) )
+        data = _roundPixmaps;
+        if( isMenu )
         {
 
-            data = _squarePixmaps;
+            /*
+            for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
+            in painting method (Oxygen::Style::renderMenuBackground)
+            */
+            data.push_back( _size - Menu_VerticalOffset );
             data.push_back( _size );
-            data.push_back( _size );
-            data.push_back( _size );
+            data.push_back( _size - Menu_VerticalOffset );
             data.push_back( _size );
 
         } else {
 
-            data = _roundPixmaps;
-            if( isMenu )
-            {
-
-                /*
-                for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
-                in painting method (Oxygen::Style::renderMenuBackground)
-                */
-                data.push_back( _size - Menu_VerticalOffset );
-                data.push_back( _size );
-                data.push_back( _size - Menu_VerticalOffset );
-                data.push_back( _size );
-
-            } else {
-
-                // all sides have same sizz
-                data.push_back( _size );
-                data.push_back( _size );
-                data.push_back( _size );
-                data.push_back( _size );
-
-            }
+            // all sides have same sizz
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
 
         }
 
