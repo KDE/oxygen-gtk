@@ -34,68 +34,73 @@ namespace Oxygen
     class ShadowConfiguration
     {
         public:
-            //! default constructor
-            ShadowConfiguration( Palette::Group );
 
-            //! destructor
-            virtual ~ShadowConfiguration()
-            {}
+        //! default constructor
+        ShadowConfiguration( Palette::Group );
 
-            Palette::Group colorGroup() const
-            { return colorGroup_; }
+        //! destructor
+        virtual ~ShadowConfiguration()
+        {}
 
-            //! enability
-            bool isEnabled() const
-            { return enabled_; }
+        Palette::Group colorGroup() const
+        { return _colorGroup; }
 
-            //! shadow size
-            double shadowSize()
-            { return shadowSize_; }
+        //! enability
+        bool isEnabled() const
+        { return _enabled; }
 
-            //! horizontal offset
-            double horizontalOffset()
-            { return horizontalOffset_; }
+        //! shadow size
+        double shadowSize()
+        { return _shadowSize; }
 
-            //! vertical offset
-            double verticalOffset()
-            { return verticalOffset_; }
+        //! horizontal offset
+        double horizontalOffset()
+        { return _horizontalOffset; }
 
-            //! inner color
-            ColorUtils::Rgba innerColor()
-            { return innerColor_; }
+        //! vertical offset
+        double verticalOffset()
+        { return _verticalOffset; }
 
-            //! outer color
-            ColorUtils::Rgba outerColor()
-            { return outerColor_; }
+        //! inner color
+        ColorUtils::Rgba innerColor()
+        { return _innerColor; }
 
-            //! initialize from options
-            void initialize( const OptionMap& );
+        //! outer color
+        ColorUtils::Rgba outerColor()
+        { return _outerColor; }
 
-            private:
+        //! initialize from options
+        void initialize( const OptionMap& );
 
-            //! color group
-            Palette::Group colorGroup_;
+        private:
 
-            //! enability
-            bool enabled_;
+        //! color group
+        Palette::Group _colorGroup;
 
-            //! shadow size
-            double shadowSize_;
+        //! enability
+        bool _enabled;
 
-            //! horizontal offset
-            double horizontalOffset_;
+        //! shadow size
+        double _shadowSize;
 
-            //! vertical offset
-            double verticalOffset_;
+        //! horizontal offset
+        double _horizontalOffset;
 
-            //! inner color
-            ColorUtils::Rgba innerColor_;
+        //! vertical offset
+        double _verticalOffset;
 
-            //! outer color
-            ColorUtils::Rgba outerColor_;
+        //! inner color
+        ColorUtils::Rgba _innerColor;
 
-            //! use outer color
-            bool useOuterColor_;
+        //! outer color
+        ColorUtils::Rgba _outerColor;
+
+        //! use outer color
+        bool _useOuterColor;
+
+        //! streamer (for debugging)
+        friend std::ostream& operator << (std::ostream&, const ShadowConfiguration& );
+
     };
 }
 

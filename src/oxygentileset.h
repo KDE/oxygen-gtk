@@ -125,6 +125,13 @@ namespace Oxygen
         */
         void render( cairo_t*, int x, int y, int w, int h, unsigned int = Ring) const;
 
+        //! returns surface for given index
+        const Cairo::Surface& surface( unsigned int index ) const
+        {
+            assert( index < _surfaces.size() );
+            return _surfaces[index];
+        }
+
         protected:
 
         //!@name internal constructors

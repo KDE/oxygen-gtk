@@ -876,6 +876,11 @@ namespace Oxygen
         _activeShadowConfiguration.initialize( oxygen );
         _inactiveShadowConfiguration.initialize( oxygen );
 
+        #if OXYGEN_DEBUG
+        std::cerr << _activeShadowConfiguration << std::endl;
+        std::cerr << _inactiveShadowConfiguration << std::endl;
+        #endif
+
         // copy relevant options to to gtk
         // scrollbar width
         _css.addSection( "GtkScrollbar" );
