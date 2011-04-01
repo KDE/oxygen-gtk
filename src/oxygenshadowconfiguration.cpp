@@ -25,6 +25,7 @@
 */
 
 #include "oxygenshadowconfiguration.h"
+#include "config.h"
 
 #include <cassert>
 
@@ -33,31 +34,31 @@ namespace Oxygen
 
     //_________________________________________________________
     ShadowConfiguration::ShadowConfiguration( Palette::Group group ):
-        colorGroup_(group),
-        enabled_(true)
+        _colorGroup(group),
+        _enabled(true)
     {
         assert(group==Palette::Active||group==Palette::Inactive);
 
-        if( colorGroup_ == Palette::Active )
+        if( _colorGroup == Palette::Active )
         {
 
-            shadowSize_ = 40;
-            horizontalOffset_ = 0;
-            verticalOffset_ = 0.1;
+            _shadowSize = 40;
+            _horizontalOffset = 0;
+            _verticalOffset = 0.1;
 
-            innerColor_ = ColorUtils::Rgba( 0.44, 0.94, 1.0 );
-            outerColor_ = ColorUtils::Rgba( 0.33, 0.64, 0.94 );
-            useOuterColor_ = true;
+            _innerColor = ColorUtils::Rgba( 0.44, 0.94, 1.0 );
+            _outerColor = ColorUtils::Rgba( 0.33, 0.64, 0.94 );
+            _useOuterColor = true;
 
         } else {
 
-            shadowSize_ = 40;
-            horizontalOffset_ = 0;
-            verticalOffset_ = 0.2;
+            _shadowSize = 40;
+            _horizontalOffset = 0;
+            _verticalOffset = 0.2;
 
-            innerColor_ = ColorUtils::Rgba::black();
-            outerColor_ = innerColor_;
-            useOuterColor_ = false;
+            _innerColor = ColorUtils::Rgba::black();
+            _outerColor = _innerColor;
+            _useOuterColor = false;
 
         }
 
@@ -68,27 +69,43 @@ namespace Oxygen
     void ShadowConfiguration::initialize( const OptionMap& options )
     {
 
-        if( colorGroup_ == Palette::Active)
+        std::cerr << "Oxygen::ShadowConfiguration::initialize - " << (_colorGroup == Palette::Active ? "Active": "Inactive" ) << std::endl;
+
+        if( _colorGroup == Palette::Active)
         {
 
-            innerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "InnerColor", "112,241,255" ) );
-            outerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "OuterColor", "84,167,240" ) );
+            _innerColor = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "InnerColor", "112,241,255" ) );
+            _outerColor = ColorUtils::Rgba::fromKdeOption( options.getValue( "[ActiveShadow]", "OuterColor", "84,167,240" ) );
 
-            shadowSize_ = options.getOption( "[ActiveShadow]","Size" ).toVariant<double>(40);
-            verticalOffset_ = options.getOption( "[ActiveShadow]","VerticalOffset" ).toVariant<double>(0.1);
-            useOuterColor_ = options.getOption( "[ActiveShadow]","UseOuterColor" ).toVariant<std::string>("true") == "true";
+            _shadowSize = options.getOption( "[ActiveShadow]","Size" ).toVariant<double>(40);
+            _verticalOffset = options.getOption( "[ActiveShadow]","VerticalOffset" ).toVariant<double>(0.1);
+            _useOuterColor = options.getOption( "[ActiveShadow]","UseOuterColor" ).toVariant<std::string>("true") == "true";
 
         } else {
 
-            innerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "InnerColor", "0,0,0" ) );
-            outerColor_ = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "OuterColor", "0,0,0" ) );
+            _innerColor = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "InnerColor", "0,0,0" ) );
+            _outerColor = ColorUtils::Rgba::fromKdeOption( options.getValue( "[InactiveShadow]", "OuterColor", "0,0,0" ) );
 
-            shadowSize_ = options.getOption( "[InactiveShadow]","Size" ).toVariant<double>(40);
-            verticalOffset_ = options.getOption( "[InactiveShadow]","VerticalOffset" ).toVariant<double>(0.2);
-            useOuterColor_ = options.getOption( "[InactiveShadow]", "UseOuterColor" ).toVariant<std::string>("false") == "true";
+            _shadowSize = options.getOption( "[InactiveShadow]","Size" ).toVariant<double>(40);
+            _verticalOffset = options.getOption( "[InactiveShadow]","VerticalOffset" ).toVariant<double>(0.2);
+            _useOuterColor = options.getOption( "[InactiveShadow]", "UseOuterColor" ).toVariant<std::string>("false") == "true";
 
         }
 
     }
 
+    //_________________________________________________________
+    std::ostream& operator << (std::ostream& out, const ShadowConfiguration& configuration )
+    {
+        out << "Oxygen::ShadowConfiguration - (" << (configuration._colorGroup == Palette::Active ? "Active": "Inactive" ) << ")" << std::endl;
+        out << "  enabled: " << (configuration._enabled ? "true":"false" ) << std::endl;
+        out << "  size: " << configuration._shadowSize << std::endl;
+        out << "  offset: " << configuration._verticalOffset << std::endl;
+        out << "  innerColor: " << configuration._innerColor << std::endl;
+        out << "  outerColor: ";
+        if( configuration._useOuterColor ) out << "unused";
+        else out <<  configuration._outerColor;
+        out << std::endl;
+        return out;
+    }
 }
