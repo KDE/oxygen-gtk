@@ -64,11 +64,13 @@ namespace Oxygen
         Cairo::Context p(shadow);
 
         // some gradients rendering are different at bottom corners if client has no border
-        bool hasBorder( true || _wopt&WinDeco::Shaded ); // TODO: true -> hasBorder
+        // TODO: true -> hasBorder
+        bool hasBorder( key.hasBorder );
 
         if( shadowSize )
         {
-            if( active && true ) // TODO: true -> useOxygenShadows
+
+            if( active )
             {
                 {
                     // inner (shark) gradient
