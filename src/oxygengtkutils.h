@@ -394,6 +394,9 @@ namespace Oxygen
 
         //@}
 
+        //! calculates viewport offsets (between view window and bin window
+        void gtk_viewport_get_position( GtkViewport*, gint*, gint* );
+
         //! returns a widget which has response_id as response id for dialog
         GtkWidget* gtk_dialog_find_button( GtkDialog*, gint );
     }

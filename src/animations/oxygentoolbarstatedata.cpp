@@ -235,13 +235,23 @@ namespace Oxygen
             Gtk::gdk_rectangle_union( &followMouseRect, &rect, &rect );
         }
 
-        /* Add extra margin to rect. FIXME: this should be triggered from widget's metrics */
-        if( Gtk::gdk_rectangle_is_valid( &rect ) )
+        // check validity
+        if( !Gtk::gdk_rectangle_is_valid( &rect ) ) return rect;
+
+        /* Add viewport offsets if any */
+        if( GTK_IS_VIEWPORT( _target ) )
         {
-            rect.x -= 2;
-            rect.y -= 2;
-            rect.width += 4;
-            rect.height += 4; }
+            gint xOffset, yOffset;
+            Gtk::gtk_viewport_get_position( GTK_VIEWPORT( _target ), &xOffset, &yOffset );
+            rect.x -= xOffset;
+            rect.y -= yOffset;
+        }
+
+        /* Add extra margin to rect. FIXME: this should be triggered from widget's metrics */
+        rect.x -= 2;
+        rect.y -= 2;
+        rect.width += 4;
+        rect.height += 4;
 
         return rect;
 
