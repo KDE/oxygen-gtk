@@ -973,10 +973,10 @@ namespace Oxygen
 
         // get viewport window positions
         gint xBin(0), yBin(0);
-        gdk_window_get_geometry( gtk_viewport_get_bin_window( viewport ), &xBin, &yBin, 0, 0, 0 );
+        gdk_window_get_geometry( gtk_viewport_get_bin_window( viewport ), &xBin, &yBin, 0, 0 );
 
         gint xView(0), yView(0);
-        gdk_window_get_geometry( gtk_viewport_get_view_window( viewport ), &xView, &yView, 0, 0, 0 );
+        gdk_window_get_geometry( gtk_viewport_get_view_window( viewport ), &xView, &yView, 0, 0 );
 
         if( x ) *x = xView - xBin;
         if( y ) *y = yView - yBin;
