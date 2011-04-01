@@ -68,7 +68,7 @@ namespace Oxygen
             gtkAppName == "chromium" ||
             gtkAppName == "chromium-browser" ||
             gtkAppName == "google-chrome" ) _name = GoogleChrome;
-        else if( gtkAppName == "eclipse" ) _name = Eclipse;
+        else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
         else _name = Unknown;
 
     }
