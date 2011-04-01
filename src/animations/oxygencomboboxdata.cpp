@@ -42,6 +42,7 @@ namespace Oxygen
 
         // connect signals
         _stateChangeId.connect( G_OBJECT(widget), "state-changed", G_CALLBACK( stateChangeEvent ), this );
+        _styleSetId.connect( G_OBJECT(widget), "style-set", G_CALLBACK( styleSetEvent ), this );
 
         // initialize cell view
         initializeCellView( widget );
@@ -62,6 +63,7 @@ namespace Oxygen
         #endif
 
         _stateChangeId.disconnect();
+        _styleSetId.disconnect();
 
         // clear pointers to widgets
         _target = 0L;
@@ -359,6 +361,10 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void ComboBoxData::stateChangeEvent( GtkWidget*, GtkStateType, gpointer data )
+    { static_cast<ComboBoxData*>( data )->updateCellViewColor(); }
+
+    //________________________________________________________________________________
+    void ComboBoxData::styleSetEvent( GtkWidget*, GtkStyle*, gpointer data )
     { static_cast<ComboBoxData*>( data )->updateCellViewColor(); }
 
 }

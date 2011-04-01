@@ -135,7 +135,7 @@ namespace Oxygen
         static gboolean enterNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer );
         static void stateChangeEvent( GtkWidget*, GtkStateType, gpointer );
-
+        static void styleSetEvent( GtkWidget*, GtkStyle*, gpointer );
 
         //@}
 
@@ -147,8 +147,16 @@ namespace Oxygen
         //! drop-down list, if set
         GtkWidget* _list;
 
+        //!@name signals
+        //@{
+
         //! state change signal
         Signal _stateChangeId;
+
+        //! style set
+        Signal _styleSetId;
+
+        //@}
 
         // handle child registration
         class ChildData
