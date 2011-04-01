@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenapplicationname.h"
 #include "oxygencairosurface.h"
 #include "oxygenhook.h"
 #include "oxygensignal.h"
@@ -51,6 +52,10 @@ namespace Oxygen
 
         //! initialize hooks
         void initializeHooks( void );
+
+        //! application name
+        void setApplicationName( const ApplicationName& applicationName )
+        { _applicationName = applicationName; }
 
         //! initialize
         void initialize( const int, const TileSet& );
@@ -114,6 +119,9 @@ namespace Oxygen
         //! shadow tileset
         TileSet _tiles;
 
+        //! application name
+        ApplicationName _applicationName;
+
         //! shadow atom
         Atom _atom;
 
@@ -121,7 +129,7 @@ namespace Oxygen
         enum { numPixmaps = 8 };
 
         //! property data
-        std::vector<unsigned long> _data;
+        std::vector<unsigned long> _pixmaps;
 
         //! widget data
         class WidgetData

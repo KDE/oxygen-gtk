@@ -50,11 +50,11 @@ namespace Oxygen
     {
         GdkScreen* screen = gdk_screen_get_default();
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-        for( unsigned int i = 0; i < _data.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _data[i]); }
+        for( unsigned int i = 0; i < _pixmaps.size() && i < numPixmaps; ++i )
+        { XFreePixmap(display, _pixmaps[i]); }
 
         // clear data
-        _data.clear();
+        _pixmaps.clear();
 
     }
 
@@ -137,26 +137,19 @@ namespace Oxygen
         }
 
         // make sure pixmaps are not already initialized
-        if( !_data.empty() ) return;
+        if( !_pixmaps.empty() ) return;
 
         // make sure size is valid
         if( _size <= 0 ) return;
 
-        _data.push_back( createPixmap( _tiles.surface( 1 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 2 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 5 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 8 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 7 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 6 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 3 ) ) );
-        _data.push_back( createPixmap( _tiles.surface( 0 ) ) );
-
-        // push sizes
-        /* kwin requires top, left, bottom and right. For us all 4 sizes are identical */
-        _data.push_back( _size );
-        _data.push_back( _size );
-        _data.push_back( _size );
-        _data.push_back( _size );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 1 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 2 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 5 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 8 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 7 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 6 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 3 ) ) );
+        _pixmaps.push_back( createPixmap( _tiles.surface( 0 ) ) );
 
     }
 
@@ -199,15 +192,16 @@ namespace Oxygen
         createPixmapHandles();
 
         // check data size
-        if( _data.size() != 12 )
+        if( _pixmaps.size() != numPixmaps )
         {
-            std::cerr << "ShadowHelper::installX11Shadows - incorrect _data size: " << _data.size() << std::endl;
+            std::cerr << "ShadowHelper::installX11Shadows - incorrect _pixmaps size: " << _pixmaps.size() << std::endl;
             return;
         }
 
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
 
+        std::vector<unsigned long> data( _pixmaps );
         if( isMenu( widget ) )
         {
 
@@ -215,20 +209,25 @@ namespace Oxygen
             for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
             in painting method (Oxygen::Style::renderMenuBackground)
             */
-            std::vector<unsigned long> data( _data );
-            data[8] -= Menu_VerticalOffset;
-            data[10] -= Menu_VerticalOffset;
-
-            XChangeProperty(
-                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
-                reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
+            data.push_back( _size - Menu_VerticalOffset );
+            data.push_back( _size );
+            data.push_back( _size - Menu_VerticalOffset );
+            data.push_back( _size );
 
         } else {
 
-            XChangeProperty(
-                GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
-                reinterpret_cast<const unsigned char *>(&_data[0]), _data.size() );
+            // all sides have same sizz
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
+            data.push_back( _size );
+
         }
+
+        // change property
+        XChangeProperty(
+            GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
+            reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
 
     }
     //_______________________________________________________
