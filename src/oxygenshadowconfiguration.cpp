@@ -69,7 +69,9 @@ namespace Oxygen
     void ShadowConfiguration::initialize( const OptionMap& options )
     {
 
+        #if OXYGEN_DEBUG
         std::cerr << "Oxygen::ShadowConfiguration::initialize - " << (_colorGroup == Palette::Active ? "Active": "Inactive" ) << std::endl;
+        #endif
 
         if( _colorGroup == Palette::Active)
         {
