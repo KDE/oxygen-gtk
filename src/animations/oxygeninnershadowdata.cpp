@@ -26,6 +26,7 @@
 #include "../oxygencairocontext.h"
 #include "oxygenanimations.h"
 #include "../oxygenstyle.h"
+#include "../oxygenmetrics.h"
 #include <stdlib.h>
 
 #include <cassert>
@@ -124,7 +125,7 @@ namespace Oxygen
 
         const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
-        int offsetX=basicOffset+Style::Entry_SideMargin;
+        int offsetX=basicOffset+Entry_SideMargin;
         int offsetY=basicOffset;
 
         // clipRect
@@ -136,7 +137,7 @@ namespace Oxygen
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2 );
 
         // adjust offset and render hole
-        offsetX -= Style::Entry_SideMargin;
+        offsetX -= Entry_SideMargin;
         Style::instance().renderHole(
             gtk_widget_get_window(widget), &clipRect,
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
