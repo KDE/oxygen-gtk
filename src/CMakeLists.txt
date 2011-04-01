@@ -53,6 +53,7 @@ set( oxygen_gtk_SOURCES
     oxygenrcstyle.cpp
     oxygenrgba.cpp
     oxygenshadowconfiguration.cpp
+    oxygenshadowhelper.cpp
     oxygenstyle.cpp
     oxygenstylehelper.cpp
     oxygenstyleoptions.cpp

@@ -37,7 +37,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    const TileSet& WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey& key)
+    const TileSet& WindowShadow::tileSet(const ColorUtils::Rgba& color, WindowShadowKey key)
     {
 
         // check if tileset already in cache
@@ -52,6 +52,7 @@ namespace Oxygen
     //________________________________________________________________________________
     Cairo::Surface WindowShadow::shadowPixmap(const ColorUtils::Rgba& color, bool active)
     {
+
         ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
         static const double fixedSize=25.5;
@@ -194,13 +195,13 @@ namespace Oxygen
                     cairo_fill(p);
                 }
             }
+
+            cairo_set_source_rgb(p,0,0,0);
+            cairo_set_operator(p,CAIRO_OPERATOR_CLEAR);
+            cairo_ellipse(p, size-3,size-3,6,6);
+            cairo_fill(p);
+
         }
-/*
-        cairo_set_source_rgb(p,0,0,0);
-        cairo_set_operator(p,CAIRO_OPERATOR_CLEAR);
-        cairo_ellipse(p, size-3,size-3,6,6);
-        cairo_fill(p);
-*/
 
         return shadow;
     }

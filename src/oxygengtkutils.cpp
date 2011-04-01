@@ -895,6 +895,36 @@ namespace Oxygen
     }
 
     //___________________________________________________________
+    void Gtk::gtk_viewport_get_position( GtkViewport* viewport, gint* x, gint* y )
+    {
+
+        // initialize
+        if( x ) *x = 0;
+        if( y ) *y = 0;
+
+        // get viewport window positions
+        gint xBin(0), yBin(0);
+        gdk_window_get_geometry( gtk_viewport_get_bin_window( viewport ), &xBin, &yBin, 0, 0, 0 );
+
+        gint xView(0), yView(0);
+        gdk_window_get_geometry( gtk_viewport_get_view_window( viewport ), &xView, &yView, 0, 0, 0 );
+
+        if( x ) *x = xView - xBin;
+        if( y ) *y = yView - yBin;
+
+        // also correct from widget thickness
+        GtkStyle* style( gtk_widget_get_style( GTK_WIDGET( viewport ) ) );
+        if( style )
+        {
+            if( x ) *x -= style->xthickness;
+            if( y ) *y -= style->ythickness;
+        }
+
+        return;
+
+    }
+
+    //___________________________________________________________
     GtkWidget* Gtk::gtk_dialog_find_button(GtkDialog* dialog,gint response_id)
     {
 
