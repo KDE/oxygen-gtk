@@ -591,34 +591,15 @@ namespace Oxygen
             hasBorder( true )
         {}
 
-        //! constructor from int
-        WindowShadowKey( int hash ):
-            active( (hash>>4)&1 ),
-            useOxygenShadows( (hash>>3)&1 ),
-            isShade( (hash>>2)&1 ),
-            hasTitleOutline( (hash>>1)&1 ),
-            hasBorder( hash&1 )
-        {}
-
-        //! hash function
-        int hash( void ) const
-        {
-
-            // note this can be optimized because not all of the flag configurations are actually relevant
-            // allocate 3 empty bits for flags
-            return
-                ( active << 4 ) |
-                (useOxygenShadows << 3 ) |
-                (isShade<<2) |
-                (hasTitleOutline<<1) |
-                (hasBorder<<0);
-
-        }
-
         //! equal to operator
         bool operator == (const WindowShadowKey& other) const
         {
-            return hash() == other.hash();
+            return
+                ( active == other.active ) &&
+                ( useOxygenShadows == other.useOxygenShadows ) &&
+                ( isShade == other.isShade ) &&
+                ( hasTitleOutline == other.hasTitleOutline ) &&
+                ( hasBorder == other.hasBorder );
         }
 
         //! less than operator
