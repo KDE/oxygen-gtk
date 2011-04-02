@@ -185,6 +185,9 @@ namespace Oxygen
                 gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT;
         }
 
+        //! returns true if widget (or one of its parent) has a custom background
+        bool gtk_widget_has_custom_background( GtkWidget*, GtkStateType = GTK_STATE_NORMAL );
+
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );
 
