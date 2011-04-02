@@ -1973,12 +1973,14 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
-            {
-                // enable blending
-                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
-                    options |= Blend;
-            }
+
+            // enable blending
+            if( !(
+                d.isCellCheck() ||
+                Gtk::gtk_parent_tree_view( widget ) ||
+                Style::instance().settings().applicationName().useFlatBackground( widget )
+                ) )
+            { options |= Blend; }
 
             AnimationData data;
             if( d.isCellCheck() )
