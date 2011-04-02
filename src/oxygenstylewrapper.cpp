@@ -1660,7 +1660,7 @@ namespace Oxygen
             }
 
             // hole
-            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
+            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, NoFill );
 
         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
 
