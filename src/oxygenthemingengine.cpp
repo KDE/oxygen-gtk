@@ -2047,7 +2047,17 @@ namespace Oxygen
             {
 
                 cairo_save( context );
-                cairo_translate( context, 0, 1 );
+
+                switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( gtk_widget_get_parent( widget ) ) ) )
+                {
+                    case GTK_POS_TOP:
+                    case GTK_POS_BOTTOM:
+                    cairo_translate( context, 0, 1 );
+                    break;
+
+                    default: break;
+                }
+
                 ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
                 cairo_restore( context );
                 return;
