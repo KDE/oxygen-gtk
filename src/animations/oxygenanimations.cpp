@@ -244,7 +244,7 @@ namespace Oxygen
         {
 
             GtkFrame *frame( GTK_FRAME( gtk_widget_get_parent( widget ) ) );
-            if( widget == gtk_frame_get_label_widget( frame ) )
+            if( widget == gtk_frame_get_label_widget( frame ) && !Gtk::gtk_widget_find_parent( widget, "GtkPizza" ) )
             {
 
                 // modify alignment
