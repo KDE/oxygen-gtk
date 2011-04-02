@@ -62,7 +62,7 @@ namespace Oxygen
         // create context
         Cairo::Context context(gtk_widget_get_window(widget));
 
-        // set up clipping independently of GTK version
+        // set up clipping
         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
         cairo_rectangle(context, allocation.x, allocation.y, allocation.width, allocation.height);
         cairo_clip(context);
