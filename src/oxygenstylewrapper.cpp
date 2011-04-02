@@ -1974,10 +1974,11 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
 
-            // enable blending
+            // test whether blending should be enabled
             if( !(
                 d.isCellCheck() ||
                 Gtk::gtk_parent_tree_view( widget ) ||
+                Gtk::gtk_widget_has_custom_background( widget ) ||
                 Style::instance().settings().applicationName().useFlatBackground( widget )
                 ) )
             { options |= Blend; }
@@ -2061,8 +2062,10 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_tree_view( widget ) &&
-                   !Style::instance().settings().applicationName().useFlatBackground(widget))
+            if( !(
+                Gtk::gtk_parent_tree_view( widget ) ||
+                Gtk::gtk_widget_has_custom_background( widget ) ||
+                Style::instance().settings().applicationName().useFlatBackground(widget) ) )
             { options |= Blend; }
 
             // retrieve animation state and render accordingly
