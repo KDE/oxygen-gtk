@@ -55,6 +55,7 @@ namespace Oxygen
         {
             out << G_OBJECT_TYPE_NAME(child->data) << " ";
         }
+        g_list_free(children);
         return out;
     }
 
