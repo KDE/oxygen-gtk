@@ -63,7 +63,7 @@ namespace Oxygen
         Cairo::Context context(gtk_widget_get_window(widget));
 
         // set up clipping
-        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
+        GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
         cairo_rectangle(context, allocation.x, allocation.y, allocation.width, allocation.height);
         cairo_clip(context);
 
@@ -106,10 +106,51 @@ namespace Oxygen
 
             } else {
 
-                #if OXYGEN_DEBUG
-                std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
-                #endif
-                return FALSE;
+#if 1 // TODO: implement usage of composited direct GtkFrame children instead of all this hacky logic
+
+                // we still want to draw shadow on GtkFrames with shadow containing GtkScrolledWindow without shadow
+                GtkWidget* box=gtk_widget_get_parent(widget);
+                GtkWidget* frame=0;
+                if(GTK_IS_BOX(box) && GTK_IS_FRAME(frame=gtk_widget_get_parent(box)) &&
+                       gtk_frame_get_shadow_type(GTK_FRAME(frame))==GTK_SHADOW_IN)
+                {
+                    #if OXYGEN_DEBUG
+                    std::cerr << "Oxygen::InnerShadowData::targetExposeEvent: Box children: " << GTK_CONTAINER(box) << std::endl;
+                    #endif
+                    // make sure GtkScrolledWindow is the only visible child
+                    GList* children=gtk_container_get_children(GTK_CONTAINER(box));
+                    for(GList* child=g_list_first(children); child; child=g_list_next(child))
+                    {
+                        GtkWidget* childWidget(GTK_WIDGET(child->data));
+                        if(gtk_widget_get_visible(childWidget) && !GTK_IS_SCROLLED_WINDOW(childWidget))
+                        {
+                            g_list_free(children);
+                            return FALSE;
+                        }
+                    }
+                    int frameX, frameY;
+                    GtkAllocation frameAlloc;
+                    if(gtk_widget_translate_coordinates(frame,widget,0,0,&frameX,&frameY))
+                    {
+                        #if OXYGEN_DEBUG
+                        std::cerr << "coords translation: x=" << frameX << "; y=" << frameY << std::endl;
+                        #endif
+                        gtk_widget_get_allocation(frame,&frameAlloc);
+                        allocation.x+=frameX;
+                        allocation.y+=frameY;
+                        allocation.width=frameAlloc.width;
+                        allocation.height=frameAlloc.height;
+                        basicOffset=0;
+                    }
+                }
+                else
+#endif
+                {
+                    #if OXYGEN_DEBUG
+                    std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
+                    #endif
+                    return FALSE;
+                }
 
             }
         }
