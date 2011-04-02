@@ -62,6 +62,18 @@ namespace Oxygen
     }
 
     //____________________________________________________________
+    bool Gtk::gtk_widget_has_custom_background( GtkWidget* widget, GtkStateType state )
+    {
+
+        // loop over all parents, recursively
+        for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
+        { if( gtk_widget_get_modifier_style(parent)->color_flags[state]&GTK_RC_BG ) return true; }
+
+        return false;
+
+    }
+
+    //____________________________________________________________
     bool Gtk::gtk_widget_is_applet( GtkWidget* widget )
     {
         if( !widget ) return false;

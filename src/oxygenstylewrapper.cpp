@@ -1925,7 +1925,7 @@ namespace Oxygen
             }
 
             // hole
-            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, NoFill );
+            Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+2, NoFill );
 
         } else if( (shadow == GTK_SHADOW_ETCHED_IN || shadow == GTK_SHADOW_ETCHED_OUT) && !Gtk::gtk_parent_button( widget )) {
 
@@ -1980,12 +1980,15 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !(d.isCellCheck() || Gtk::gtk_parent_tree_view( widget ) ) )
-            {
-                // enable blending
-                if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
-                    options |= Blend;
-            }
+
+            // test whether blending should be enabled
+            if( !(
+                d.isCellCheck() ||
+                Gtk::gtk_parent_tree_view( widget ) ||
+                Gtk::gtk_widget_has_custom_background( widget ) ||
+                Style::instance().settings().applicationName().useFlatBackground( widget )
+                ) )
+            { options |= Blend; }
 
             AnimationData data;
             if( d.isCellCheck() )
@@ -2066,8 +2069,10 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            if( !Gtk::gtk_parent_tree_view( widget ) &&
-                   !Style::instance().settings().applicationName().useFlatBackground(widget))
+            if( !(
+                Gtk::gtk_parent_tree_view( widget ) ||
+                Gtk::gtk_widget_has_custom_background( widget ) ||
+                Style::instance().settings().applicationName().useFlatBackground(widget) ) )
             { options |= Blend; }
 
             // retrieve animation state and render accordingly

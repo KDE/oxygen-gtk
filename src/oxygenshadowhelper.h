@@ -20,10 +20,12 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenapplicationname.h"
 #include "oxygencairosurface.h"
 #include "oxygenhook.h"
 #include "oxygensignal.h"
 #include "oxygentileset.h"
+#include "oxygenwindowshadow.h"
 
 #include <vector>
 #include <map>
@@ -52,8 +54,12 @@ namespace Oxygen
         //! initialize hooks
         void initializeHooks( void );
 
+        //! application name
+        void setApplicationName( const ApplicationName& applicationName )
+        { _applicationName = applicationName; }
+
         //! initialize
-        void initialize( const int, const TileSet& );
+        void initialize( const ColorUtils::Rgba&, const WindowShadow& );
 
         //! register widget
         bool registerWidget( GtkWidget* );
@@ -75,13 +81,18 @@ namespace Oxygen
         }
 
         //! returns true if window hint is valid
-        inline bool acceptHint( const GdkWindowTypeHint& hint ) const
+        inline bool acceptWindow( GtkWindow* window ) const
         {
+
+            // for openoffice, accept all non decorated windows
+            if( _applicationName.isOpenOffice() ) return true;
+
+            // otherwise check window hint
+            const GdkWindowTypeHint hint( gtk_window_get_type_hint( window ) );
             return
                 hint == GDK_WINDOW_TYPE_HINT_MENU ||
                 hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_COMBO;
+                hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU;
         }
 
         //! create pixmaps
@@ -112,7 +123,13 @@ namespace Oxygen
         int _size;
 
         //! shadow tileset
-        TileSet _tiles;
+        TileSet _roundTiles;
+
+        //! shadow tileset
+        TileSet _squareTiles;
+
+        //! application name
+        ApplicationName _applicationName;
 
         //! shadow atom
         Atom _atom;
@@ -121,7 +138,10 @@ namespace Oxygen
         enum { numPixmaps = 8 };
 
         //! property data
-        std::vector<unsigned long> _data;
+        std::vector<unsigned long> _roundPixmaps;
+
+        //! property data
+        std::vector<unsigned long> _squarePixmaps;
 
         //! widget data
         class WidgetData
