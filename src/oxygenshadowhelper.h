@@ -127,11 +127,12 @@ namespace Oxygen
         //! number of pixmaps
         enum { numPixmaps = 8 };
 
-        //! property data
-        std::vector<unsigned long> _roundPixmaps;
+        //! round shadows pixmap handles
+        typedef std::vector<unsigned long> PixmapList;
+        PixmapList _roundPixmaps;
 
-        //! property data
-        std::vector<unsigned long> _squarePixmaps;
+        //! square shadows pixmap handles
+        PixmapList _squarePixmaps;
 
         //! widget data
         class WidgetData
