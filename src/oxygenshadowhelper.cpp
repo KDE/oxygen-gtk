@@ -52,13 +52,13 @@ namespace Oxygen
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
 
         // round pixmaps
-        for( unsigned int i = 0; i < _roundPixmaps.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _roundPixmaps[i]); }
+        for( PixmapList::const_iterator iter = _roundPixmaps.begin(); iter != _roundPixmaps.end(); ++iter )
+        { XFreePixmap(display, *iter); }
         _roundPixmaps.clear();
 
         // square pixmaps
-        for( unsigned int i = 0; i < _squarePixmaps.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _squarePixmaps[i]); }
+        for( PixmapList::const_iterator iter = _squarePixmaps.begin(); iter != _squarePixmaps.end(); ++iter )
+        { XFreePixmap(display, *iter); }
         _squarePixmaps.clear();
 
     }
