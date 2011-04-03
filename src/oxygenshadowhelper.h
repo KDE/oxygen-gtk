@@ -76,8 +76,11 @@ namespace Oxygen
         }
 
         //! returns true if window hint is valid
-        inline bool acceptHint( const GdkWindowTypeHint& hint ) const
+        inline bool acceptWindow( GtkWindow* window ) const
         {
+
+            // otherwise check window hint
+            const GdkWindowTypeHint hint( gtk_window_get_type_hint( window ) );
             return
                 hint == GDK_WINDOW_TYPE_HINT_MENU ||
                 hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||

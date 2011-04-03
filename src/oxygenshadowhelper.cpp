@@ -107,11 +107,8 @@ namespace Oxygen
         // make sure that widget is not already registered
         if( _widgets.find( widget ) != _widgets.end() ) return false;
 
-        // cast to window
-        GtkWindow* window( GTK_WINDOW( widget ) );
-
-        // check type hint
-        if( !acceptHint( gtk_window_get_type_hint( window ) ) ) return false;
+        // check if window is accepted
+        if( !acceptWindow( GTK_WINDOW( widget )  ) ) return false;
 
         // try install shadows
         installX11Shadows( widget );

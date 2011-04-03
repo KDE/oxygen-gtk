@@ -212,6 +212,9 @@ namespace Oxygen
                 gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT;
         }
 
+        //! returns true if widget (or one of its parent) has a custom background
+        bool gtk_widget_has_custom_background( GtkWidget*, GtkStateType = GTK_STATE_NORMAL );
+
         //! returns true if is an Gnome applet
         bool gtk_widget_is_applet( GtkWidget* );
 
@@ -254,6 +257,14 @@ namespace Oxygen
 
         //! return parent of given type if any
         GtkWidget* gtk_widget_find_parent( GtkWidget*, GType );
+
+        //! return parent of given type
+        inline GtkWidget* gtk_widget_find_parent( GtkWidget* widget, const std::string& typeName )
+        {
+            const GType tmp( g_type_from_name( typeName.c_str() ) );
+            return tmp ? gtk_widget_find_parent( widget, tmp ): 0L;
+
+        }
 
         //! return parent button if any.
         inline GtkWidget* gtk_parent_button( GtkWidget* widget )
