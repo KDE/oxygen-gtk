@@ -290,12 +290,20 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-        if( GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
+        if( GTK_IS_LABEL( widget ) &&  GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
         {
 
             GtkFrame *frame( GTK_FRAME( gtk_widget_get_parent( widget ) ) );
-            if( widget == gtk_frame_get_label_widget( frame ) )
+            if( widget == gtk_frame_get_label_widget( frame ) && !Gtk::gtk_widget_find_parent( widget, "GtkPizza" ) )
             {
+
+                #if OXYGEN_DEBUG
+                std::cout
+                    << "Oxygen::Animations::realizationHook -"
+                    << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                    << " parent: " << frame << " (" << G_OBJECT_TYPE_NAME( frame ) << ")"
+                    << std::endl;
+                #endif
 
                 // modify alignment
                 gtk_frame_set_label_align( frame, 0.5, 0.0 );
