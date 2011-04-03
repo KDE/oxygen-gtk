@@ -48,18 +48,22 @@ namespace Oxygen
     //______________________________________________
     void ShadowHelper::reset( void )
     {
+
         GdkScreen* screen = gdk_screen_get_default();
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
 
         // round pixmaps
-        for( unsigned int i = 0; i < _roundPixmaps.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _roundPixmaps[i]); }
+        for( PixmapList::const_iterator iter = _roundPixmaps.begin(); iter != _roundPixmaps.end(); ++iter )
+        { XFreePixmap(display, *iter); }
         _roundPixmaps.clear();
 
         // square pixmaps
-        for( unsigned int i = 0; i < _squarePixmaps.size() && i < numPixmaps; ++i )
-        { XFreePixmap(display, _squarePixmaps[i]); }
+        for( PixmapList::const_iterator iter = _squarePixmaps.begin(); iter != _squarePixmaps.end(); ++iter )
+        { XFreePixmap(display, *iter); }
         _squarePixmaps.clear();
+
+        // reset size
+        _size = 0;
 
     }
 
@@ -213,19 +217,8 @@ namespace Oxygen
     void ShadowHelper::installX11Shadows( GtkWidget* widget )
     {
 
-        // check screen composited
-        // TODO: check whether this is necessary
-        // if( !Gtk::gdk_default_screen_is_composited() ) return;
-
         // make sure handles and atom are defined
         createPixmapHandles();
-
-        // check data size
-        if( _roundPixmaps.size() != numPixmaps )
-        {
-            std::cerr << "ShadowHelper::installX11Shadows - incorrect _roundPixmaps size: " << _roundPixmaps.size() << std::endl;
-            return;
-        }
 
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
