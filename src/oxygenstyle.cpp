@@ -713,7 +713,7 @@ namespace Oxygen
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
-        } else if( widget && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) {
+        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) ) {
 
             StyleOptions localOptions( NoFill );
             renderWindowBackground( context, window, widget, x, y, w, h, localOptions, tiles);
@@ -1764,6 +1764,11 @@ namespace Oxygen
         GtkWidget* widget,
         gint x, gint y, gint w, gint h, const StyleOptions& options )
     {
+
+        // register
+        if( widget )
+        { animations().groupBoxEngine().registerWidget( widget ); }
+
         // define colors
         ColorUtils::Rgba base;
         if( options&Blend )

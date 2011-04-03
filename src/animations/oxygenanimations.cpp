@@ -41,6 +41,7 @@ namespace Oxygen
         registerEngine( _comboBoxEngine = new ComboBoxEngine( this ) );
         registerEngine( _comboBoxEntryEngine = new ComboBoxEntryEngine( this ) );
         registerEngine( _dialogEngine = new DialogEngine( this ) );
+        registerEngine( _groupBoxEngine = new GroupBoxEngine( this ) );
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
