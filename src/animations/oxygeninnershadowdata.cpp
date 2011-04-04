@@ -110,9 +110,8 @@ namespace Oxygen
                 basicOffset=0;
 
             } else {
-
-#if 1 // TODO: implement usage of composited direct GtkFrame children instead of all this hacky logic
-
+                // FIXME: do we need this special case?
+                // special_case {
                 // we still want to draw shadow on GtkFrames with shadow containing GtkScrolledWindow without shadow
                 GtkWidget* box=gtk_widget_get_parent(widget);
                 GtkWidget* frame=0;
@@ -149,7 +148,7 @@ namespace Oxygen
                     }
                 }
                 else
-#endif
+                // } // special_case
                 {
                     #if OXYGEN_DEBUG
                     std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
