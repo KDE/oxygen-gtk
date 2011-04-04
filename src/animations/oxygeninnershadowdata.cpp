@@ -46,7 +46,8 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::InnerShadowData::targetExposeEvent -"
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
-            << " child: " << Gtk::gtk_widget_path( child )
+            << " child: " << child << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
+            << " path: " << Gtk::gtk_widget_path( child )
             << " area: " << event->area
             << std::endl;
         #endif
@@ -59,36 +60,26 @@ namespace Oxygen
             return FALSE;
         }
 
-        // create context
-        Cairo::Context context(gtk_widget_get_window(widget));
+        // make sure the child window doesn't contain garbage
+        gdk_window_process_updates(window,TRUE);
 
-        // set up clipping
-        GtkAllocation allocation( Gtk::gtk_widget_get_allocation( child ) );
-        cairo_rectangle(context, allocation.x, allocation.y, allocation.width, allocation.height);
-        cairo_clip(context);
+        // get window geometry
+        GtkAllocation allocation( Gtk::gdk_rectangle() );
+        gdk_window_get_geometry( window, &allocation.x, &allocation.y, &allocation.width, &allocation.height, 0L );
 
+
+        // create context with clipping
+        Cairo::Context context(gtk_widget_get_window(widget), &allocation );
+
+        // add event region
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
 
-        // first make sure the child window doesn't contain garbage
-        gdk_window_process_updates(window,TRUE);
-
-        // now draw the child
-        guint borderWidth=0;
-        // take border width into account (why does GTK not do it for us?!)
-        if(GTK_IS_CONTAINER(child))
-        {
-            borderWidth=gtk_container_get_border_width(GTK_CONTAINER(child));
-        }
-        gdk_cairo_set_source_window( context, window, allocation.x+borderWidth, allocation.y+borderWidth );
+        // draw child
+        gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - borderWidth of GTK_CONTAINER(child): "
-            << borderWidth
-            << "; scrolledWindow's borderWidth: "
-            << gtk_container_get_border_width(GTK_CONTAINER(widget))
-            << "; child allocation: " << allocation << std::endl;
         // Show updated parts in random color
         cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
         double red=((double)rand())/RAND_MAX;
@@ -99,6 +90,11 @@ namespace Oxygen
         #endif
 
         // draw the shadow
+        /*
+        TODO: here child widget's allocation is used instead of window geometry.
+        I think this is the correct thing to do (unlike above), but this is to be double check
+        */
+        allocation = Gtk::gtk_widget_get_allocation( child );
         int basicOffset=2;
 
         // we only draw SHADOW_IN here
@@ -110,6 +106,7 @@ namespace Oxygen
                 basicOffset=0;
 
             } else {
+
                 // FIXME: do we need this special case?
                 // special_case {
                 // we still want to draw shadow on GtkFrames with shadow containing GtkScrolledWindow without shadow
@@ -146,8 +143,7 @@ namespace Oxygen
                         allocation.height=frameAlloc.height;
                         basicOffset=0;
                     }
-                }
-                else
+                } else
                 // } // special_case
                 {
                     #if OXYGEN_DEBUG
