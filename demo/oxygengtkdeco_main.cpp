@@ -236,6 +236,9 @@ gboolean on_configure0(GtkWidget* mw0, GdkEventConfigure* event, gpointer user_d
         on_expose(mw0, 0L, 0L );
         gdk_window_end_paint( gtk_widget_get_window( mw0 ) );
     }
+
+    return FALSE;
+
 }
 
 //___________________________________________________________________
