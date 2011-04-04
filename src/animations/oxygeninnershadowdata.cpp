@@ -84,6 +84,11 @@ namespace Oxygen
         cairo_paint(context);
 
         #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - borderWidth of GTK_CONTAINER(child): "
+            << borderWidth
+            << "; scrolledWindow's borderWidth: "
+            << gtk_container_get_border_width(GTK_CONTAINER(widget))
+            << "; child allocation: " << allocation << std::endl;
         // Show updated parts in random color
         cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
         double red=((double)rand())/RAND_MAX;
