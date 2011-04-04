@@ -971,13 +971,7 @@ namespace Oxygen
         if( x ) *x = 0;
         if( y ) *y = 0;
 
-        // get bin window
-        #if GTK_CHECK_VERSION( 2, 20, 0 )
-        GdkWindow* binWindow( gtk_viewport_get_bin_window( viewport ) );
-        #else
-        GdkWindow* binWindow( viewport->bin_window );
-        #endif
-
+        // get windows and derive offsets
         gint xBin(0), yBin(0);
         gdk_window_get_geometry( gtk_viewport_get_bin_window( viewport ), &xBin, &yBin, 0, 0 );
 
