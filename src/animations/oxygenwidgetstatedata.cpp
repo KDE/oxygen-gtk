@@ -58,7 +58,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::WidgetStateData::updateState - "
-            << _target << " (" << G_OBJECT_TYPE_NAME( _target ) << ")"
+            << _target << " (" << ( _target ? std::string( G_OBJECT_TYPE_NAME( _target ) ) : "none" ) << ")"
             << " state: " << state
             << std::endl;
         #endif
