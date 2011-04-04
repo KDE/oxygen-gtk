@@ -47,6 +47,7 @@ namespace Oxygen
         gtk_container_add( GTK_CONTAINER( _mainWidget ), vbox );
         gtk_widget_show( vbox );
 
+        GtkWidget* iconView(0L);
         {
             // first horizontal container
             GtkWidget* hbox( gtk_hbox_new( false, 8 ) );
@@ -63,7 +64,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( hbox ), scrolledWindow, false, true, 0 );
             gtk_widget_show( scrolledWindow );
 
-            GtkWidget* iconView( gtk_icon_view_new_with_model( GTK_TREE_MODEL( _model ) ) );
+            iconView = gtk_icon_view_new_with_model( GTK_TREE_MODEL( _model ) );
             gtk_icon_view_set_pixbuf_column( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_text_column( GTK_ICON_VIEW( iconView ), 1 );
             gtk_icon_view_set_columns( GTK_ICON_VIEW( iconView ), 1 );
@@ -147,6 +148,10 @@ namespace Oxygen
         addPage( new TabDemoWidget() );
         addPage( new ButtonDemoWidget() );
         addPage( new FrameDemoWidget() );
+
+        // select first raw
+        GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
+        gtk_icon_view_select_path( GTK_ICON_VIEW( iconView ), path );
 
     }
 
