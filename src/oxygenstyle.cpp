@@ -511,7 +511,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0, top );
             cairo_pattern_add_color_stop( pattern, 1, bottom );
 
-            gdk_cairo_rounded_rectangle( context, &rect, 4, round ? CornersAll:CornersNone );
+            gdk_cairo_rounded_rectangle( context, &rect, 3.5, round ? CornersAll:CornersNone );
             cairo_set_source( context, pattern );
             cairo_fill( context );
 
@@ -523,7 +523,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::lightColor( bottom ) );
             cairo_pattern_add_color_stop( pattern, 0.9, bottom );
 
-            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4, round ? CornersAll:CornersNone );
+            cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 3.5, round ? CornersAll:CornersNone );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
             cairo_stroke( context );
