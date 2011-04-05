@@ -69,32 +69,11 @@ namespace Oxygen
 
         protected:
 
-        // true if widget is menu
-        inline bool isMenu( GtkWidget* widget ) const
-        {
-            if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
-            const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
-            return
-                hint == GDK_WINDOW_TYPE_HINT_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU;
-        }
+        //! true if widget is menu
+        bool isMenu( GtkWidget* ) const;
 
-        //! returns true if window hint is valid
-        inline bool acceptWindow( GtkWindow* window ) const
-        {
-
-            // for openoffice, accept all non decorated windows
-            if( _applicationName.isOpenOffice() ) return true;
-
-            // otherwise check window hint
-            const GdkWindowTypeHint hint( gtk_window_get_type_hint( window ) );
-            return
-                hint == GDK_WINDOW_TYPE_HINT_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
-                hint == GDK_WINDOW_TYPE_HINT_COMBO;
-        }
+        //! true if shadow should be installed on widget
+        bool acceptWidget( GtkWidget* ) const;
 
         //! create pixmaps
         void createPixmapHandles( void );
