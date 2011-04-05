@@ -2184,7 +2184,7 @@ namespace Oxygen
 
             StyleOptions options( widget, state );
             if( Gtk::gtk_widget_is_vertical( widget ) )  options |= Vertical;
-            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), options, AnimationHover ) );
             Style::instance().renderSplitter( context, x, y, w, h, options, data );
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR) ) {
