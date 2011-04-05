@@ -21,6 +21,7 @@
 */
 
 #include "oxygentimeline.h"
+#include "../oxygengtkutils.h"
 
 #include <gtk/gtk.h>
 
@@ -35,6 +36,7 @@ namespace Oxygen
         //! constructor
         explicit WidgetStateData( void ):
             _target( 0L ),
+            _dirtyRect( Gtk::gdk_rectangle() ),
             _state( false )
         {}
 
@@ -49,7 +51,11 @@ namespace Oxygen
         void disconnect( GtkWidget* );
 
         //! update state
-        bool updateState( bool );
+        bool updateState( bool value, const GdkRectangle& );
+
+        //! update state
+        bool updateState( bool value )
+        { return updateState( value, Gtk::gdk_rectangle() ); }
 
         //! true if animated
         bool isAnimated( void ) const
@@ -79,6 +85,9 @@ namespace Oxygen
 
         //! timeline
         TimeLine _timeLine;
+
+        //! dirty rect
+        GdkRectangle _dirtyRect;
 
         //! state
         bool _state;

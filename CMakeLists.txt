@@ -39,6 +39,10 @@ set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 # workaround a gtk bug on combobox entries when appears-as-list is selected
 set( ENABLE_COMBOBOX_ENTRY_HACK 1 )
 
+# Set to 0 to disable inner shadows hack
+# Note this flag is automatically set to 0 if GTK version is too old (< 2.24.2)
+set( ENABLE_INNER_SHADOWS_HACK 1 )
+
 ##############
 # Requirements
 ##############
@@ -56,7 +60,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
         )
 
-endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+endif()
 
 # X11
 find_package( X11 REQUIRED )
@@ -75,7 +79,7 @@ set( HAVE_DBUS 0 )
 pkg_check_modules( DBUS dbus-glib-1 )
 if( DBUS_FOUND )
     set( HAVE_DBUS 1 )
-endif( DBUS_FOUND )
+endif()
 
 ##########################
 # installation directories
@@ -83,11 +87,17 @@ endif( DBUS_FOUND )
 exec_program(
 	${PKGCONFIG_EXECUTABLE}
 	ARGS --variable=gtk_binary_version gtk+-3.0
-	OUTPUT_VARIABLE GTK_VERSION )
+	OUTPUT_VARIABLE GTK_BIN_VERSION )
 
-set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/2.4.0/engines )" )
+set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_BIN_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/3.0.0/engines )" )
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
+
+# adjust flags based on gtk version
+if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
+    message("  Disabling ENABLE_INNER_SHADOWS_HACK because Gtk version is too old (needed 2.24.2, found ${GTK_VERSION}) " )
+    set( ENABLE_INNER_SHADOWS_HACK 0 )
+endif()
 
 #########
 # summary
@@ -100,6 +110,7 @@ message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
 message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
 message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
 message( "  ENABLE_COMBOBOX_ENTRY_HACK ${ENABLE_COMBOBOX_ENTRY_HACK}" )
+message( "  ENABLE_INNER_SHADOWS_HACK ${ENABLE_INNER_SHADOWS_HACK}" )
 message( "" )
 message( "Path: " )
 message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )

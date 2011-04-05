@@ -25,14 +25,20 @@ namespace Oxygen
 {
 
     //____________________________________________________________________
-    void Signal::connect( GObject* object, const std::string& signal, GCallback callback, gpointer data )
+    void Signal::connect( GObject* object, const std::string& signal, GCallback callback, gpointer data, bool after )
     {
         // make sure that signal is not already connected
         assert( _object == 0L && _id == 0 );
 
         // store attributes and create connection
         _object = object;
-        _id = g_signal_connect( object, signal.c_str(), callback, data );
+        if(after)
+        {
+            _id = g_signal_connect_after( object, signal.c_str(), callback, data );
+        } else
+        {
+            _id = g_signal_connect( object, signal.c_str(), callback, data );
+        }
     }
 
     //____________________________________________________________________

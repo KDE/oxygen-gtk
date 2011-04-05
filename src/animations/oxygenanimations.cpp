@@ -46,6 +46,7 @@ namespace Oxygen
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
+        registerEngine( _innerShadowEngine = new InnerShadowEngine( this ) );
         registerEngine( _tabWidgetEngine = new TabWidgetEngine( this ) );
         registerEngine( _treeViewEngine = new TreeViewEngine( this ) );
         registerEngine( _widgetSizeEngine = new WidgetSizeEngine( this ) );
@@ -133,6 +134,12 @@ namespace Oxygen
         #endif
 
         _backgroundHintHook.connect( "realize", (GSignalEmissionHook)backgroundHintHook, this );
+
+        // https://bugzilla.gnome.org/show_bug.cgi?id=643416
+        #if ENABLE_INNER_SHADOWS_HACK
+        _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
+        #endif
+
         _realizationHook.connect( "realize", (GSignalEmissionHook)realizationHook, this );
 
         _hooksInitialized = true;
@@ -182,10 +189,13 @@ namespace Oxygen
     //____________________________________________________________________________________________
     void Animations::setEnabled( bool value )
     {
+
         if( value == _enabled ) return;
+
         _enabled = value;
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->setEnabled( value ); }
+
     }
 
     //____________________________________________________________________________________________
@@ -308,6 +318,47 @@ namespace Oxygen
         animations.backgroundHintEngine().registerWidget( widget );
 
         return TRUE;
+    }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::innerShadowHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+
+        #if GTK_CHECK_VERSION(2,24,2)
+
+        // get widget from params
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+
+        // check type
+        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
+
+        if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
+
+        GtkWidget* parent(gtk_widget_get_parent(widget));
+        if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
+
+        GtkWidget* child(gtk_bin_get_child(GTK_BIN(parent)));
+        if(child!=widget) return TRUE;
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::Animations::innerShadowHook -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
+            << " parent: " << parent << " (" << G_OBJECT_TYPE_NAME(parent) << ")"
+            << " widget path: " << Gtk::gtk_widget_path( widget )
+            << " isTreeView: " << (GTK_IS_TREE_VIEW(widget)?"true":"false")
+            << " isTextView: " << (GTK_IS_TEXT_VIEW(widget)?"true":"false")
+            << std::endl;
+        #endif
+
+        static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );
+        static_cast<Animations*>(data)->innerShadowEngine().registerChild( parent, widget );
+
+        #endif  // Gtk version
+        return TRUE;
+
     }
 
     //____________________________________________________________________________________________

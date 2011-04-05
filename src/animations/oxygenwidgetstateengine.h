@@ -120,6 +120,11 @@ namespace Oxygen
         //! retrieve animation data matching a given widget for provided options
         /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
         virtual AnimationData get( GtkWidget* widget, const StyleOptions& options, AnimationModes modes = AnimationHover|AnimationFocus, AnimationMode precedence = AnimationHover )
+        { return get( widget, Gtk::gdk_rectangle(), options, modes, precedence ); }
+
+        //! retrieve animation data matching a given widget for provided options
+        /*! note: for convenience, this method also calls ::registerWidget and ::updateState */
+        virtual AnimationData get( GtkWidget* widget, const GdkRectangle& rect, const StyleOptions& options, AnimationModes modes = AnimationHover|AnimationFocus, AnimationMode precedence = AnimationHover )
         {
 
             // check widget
@@ -133,8 +138,8 @@ namespace Oxygen
             WidgetStateData* focusData( (modes&AnimationFocus) ? &_focusData.value( widget ):0L );
 
             // update state
-            if( hoverData ) hoverData->updateState( (options&Hover) && !(options&Disabled) );
-            if( focusData ) focusData->updateState( (options&Focus) && !(options&Disabled) );
+            if( hoverData ) hoverData->updateState( (options&Hover) && !(options&Disabled), rect );
+            if( focusData ) focusData->updateState( (options&Focus) && !(options&Disabled), rect );
 
             // assume hover takes precedence over focus
             switch( precedence )

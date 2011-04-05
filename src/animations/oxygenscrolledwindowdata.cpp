@@ -22,6 +22,9 @@
 #include "oxygenscrolledwindowdata.h"
 #include "../oxygengtkutils.h"
 #include "../config.h"
+#include "../oxygencairocontext.h"
+#include "oxygenanimations.h"
+#include "../oxygenstyle.h"
 
 #include <cassert>
 #include <iostream>

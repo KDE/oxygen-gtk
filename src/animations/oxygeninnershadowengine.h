@@ -1,9 +1,9 @@
-#ifndef oxygensignal_h
-#define oxygensignal_h
-
+#ifndef oxygeninnershadowengine_h
+#define oxygeninnershadowengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
@@ -21,42 +21,39 @@
 * MA 02110-1301, USA.
 */
 
+
+#include "oxygengenericengine.h"
+#include "oxygendatamap.h"
+#include "oxygeninnershadowdata.h"
+
 #include <gtk/gtk.h>
-#include <cassert>
-#include <string>
 
 namespace Oxygen
 {
-    //! handles gtk signal connections
-    class Signal
+    //! forward declaration
+    class Animations;
+
+    //! stores data associated to editable scrolled windows
+    class InnerShadowEngine: public GenericEngine<InnerShadowData>
     {
+
         public:
 
         //! constructor
-        Signal( void ):
-            _id(0),
-            _object(0L)
-        {}
+        InnerShadowEngine( Animations* widget ):
+            GenericEngine<InnerShadowData>( widget )
+            {}
 
         //! destructor
-        virtual ~Signal( void )
+        virtual ~InnerShadowEngine( void )
         {}
 
-        //! connect
-        void connect( GObject*, const std::string&, GCallback, gpointer, bool after=false );
-
-        //! disconnect
-        void disconnect( void );
-
-        private:
-
-        //! signal id
-        guint _id;
-
-        //! connected object
-        GObject* _object;
+        //! register child
+        void registerChild( GtkWidget* widget, GtkWidget* child )
+        { data().value( widget ).registerChild( child ); }
 
     };
 
 }
+
 #endif

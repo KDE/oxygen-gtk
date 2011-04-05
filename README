@@ -22,6 +22,7 @@ III.7 Button order in dialogs
 III.8 Mouse-over support
 III.9 Tab close buttons
 III.10 Combobox list resize
+III.11 Inner shadows
 
 IV. Technical details
 IV.1 Directories
@@ -141,6 +142,17 @@ III.10 Combobox list resize
 
 We haven't figured out any way to draw combobox button glow outside of the button widget, so the button is drawn reduced by glow dimensions. This leads to combobox list not match button in size (it's 6px wider than the button). To make popped-up combobox look nicer, we resize it on each popup.
 This may result in flicker, so if it's undesirable, this hack can be disabled this in CMakeLists.txt: set ENABLE_COMBOBOX_LIST_RESIZE to 0 instead of default 1.
+
+III.11 Inner shadows
+--------------------
+
+To implement inner shadows so that they get inside their child windows, we make children windows composited (gdk_window_set_composited()).
+This may lead to inexpected effects such as not rendered (or rendered as garbage) children of GtkScrolledWindow and GtkViewport.
+Currently no such problems are known.
+To disable this hack, set ENABLE_INNER_SHADOWS_HACK to 0 in CMakeLists.txt.
+
+Note: this feature requires gtk version 2.24.2 or later.
+
 
 IV. Technical details
 ---------------------

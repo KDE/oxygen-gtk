@@ -76,3 +76,10 @@ Look at gtkcssprovider.c for examples
 For the moment ComboBoxes are too high (by one pixel)
 
 Gtk3-Demo -> offscreen pixmap -> effects crashes. FIXED
+
+Inner shadows:
+Implement separate check if a particular GtkScrolledWindow has to be registered to ScrolledWindowEngine to allow for checking before registration (in innerShadowHook as well as in draw_shadow())
+Also use composited child hack to round combobox list (and remove old XShape hack for this)
+
+Apply XShape to GtkEntry and GtkComboboxEntry to make it look better on non-oxygen background (e.g. in GtkTextView)
+>>>>>>> master

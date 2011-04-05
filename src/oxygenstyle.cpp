@@ -2330,7 +2330,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight, bool gradient )
+    void Style::renderWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, const gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight, bool gradient )
     {
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
@@ -2377,7 +2377,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
+    void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, const gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
     {
         /*
            (any element of windowStrings[] may be NULL - will be understood as "")
@@ -2524,7 +2524,7 @@ namespace Oxygen
             if( windowStrings && windowStrings[0] )
             {
                 // draw caption
-                gchar* &caption(windowStrings[0]);
+                const gchar* &caption(windowStrings[0]);
                 const FontInfo& font( settings().WMFont() );
                 gint layoutWidth=w-(titleIndentLeft+titleIndentRight);
                 if( font.isValid() && layoutWidth>0 )

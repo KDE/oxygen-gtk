@@ -121,6 +121,10 @@ namespace Oxygen
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( _target ), &updateRect );
             Gtk::gtk_widget_queue_draw( _target, &updateRect );
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::TabWidgetData::setDirty - update: " << updateRect << std::endl;
+            #endif
+
         }
 
     }

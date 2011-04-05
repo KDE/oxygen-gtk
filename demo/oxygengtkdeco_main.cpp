@@ -67,7 +67,7 @@ enum ButtonType
 
 //___________________________________________________________________
 // external pointers to functions
-void (*drawWindowDecoration)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, gchar**, gint, gint) = 0L;
+void (*drawWindowDecoration)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, const gchar**, gint, gint) = 0L;
 void (*drawWindecoButton)(cairo_t*, ButtonType, ButtonStatus, WinDecoOptions, gint, gint, gint, gint) = 0L;
 void (*drawWindecoShapeMask)(cairo_t*, WinDecoOptions, gint, gint, gint, gint) = 0L;
 void (*drawWindowShadow)(cairo_t*, WinDecoOptions, gint, gint, gint, gint) = 0L;
@@ -125,7 +125,7 @@ gboolean initLib()
                 }
 
                 // store drawWindowDecoration symbol
-                drawWindowDecoration = (void(*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
+                drawWindowDecoration = (void(*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, const gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
                 if((error=dlerror())!=0L)
                     break;
 
@@ -167,7 +167,7 @@ gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
 
     drawWindowShadow(cr, (WinDecoOptions) opt, 0, 0, mw0->allocation.width, mw0->allocation.height);
 
-    gchar* windowStrings[] = {
+    const gchar* windowStrings[] = {
         "This is a caption",
         "WindowClass10110111",
         0 };
@@ -236,6 +236,9 @@ gboolean on_configure0(GtkWidget* mw0, GdkEventConfigure* event, gpointer user_d
         on_expose(mw0, 0L, 0L );
         gdk_window_end_paint( gtk_widget_get_window( mw0 ) );
     }
+
+    return FALSE;
+
 }
 
 //___________________________________________________________________

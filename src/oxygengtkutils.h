@@ -52,6 +52,18 @@ namespace Oxygen
     //! streamer for GtkWidgetPath
     std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path );
 
+    //! GtkContainer streamer
+    inline std::ostream& operator << (std::ostream& out, GtkContainer* container)
+    {
+        GList* children=gtk_container_get_children(container);
+        for(GList* child=g_list_first(children); child; child=g_list_next(child))
+        {
+            out << G_OBJECT_TYPE_NAME(child->data) << " ";
+        }
+        g_list_free(children);
+        return out;
+    }
+
     namespace Gtk
     {
 
