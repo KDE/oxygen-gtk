@@ -91,6 +91,17 @@ namespace Oxygen
 
         }
 
+        //! constructor from widget with GtkStateType state
+        StyleOptions( GtkWidget* widget, GtkStateType state )
+        {
+            if( state == GTK_STATE_INSENSITIVE ) (*this) |= Disabled;
+            else if( state == GTK_STATE_PRELIGHT ) (*this) |= Hover;
+            else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
+
+            if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
+        }
+
+
         //! destructor
         virtual ~StyleOptions( void )
         {}

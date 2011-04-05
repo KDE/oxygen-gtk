@@ -65,7 +65,7 @@ namespace Oxygen
 
         // get window geometry
         GtkAllocation allocation( Gtk::gdk_rectangle() );
-        gdk_window_get_geometry( window, &allocation.x, &allocation.y, &allocation.width, &allocation.height, 0L );
+        gdk_window_get_geometry( window, &allocation.x, &allocation.y, &allocation.width, &allocation.height );
 
 
         // create context with clipping
@@ -173,14 +173,13 @@ namespace Oxygen
         GdkRectangle clipRect( allocation );
 
         // hole background
-        Style::instance().renderHoleBackground(
-            gtk_widget_get_window(widget), widget, &clipRect,
+        Style::instance().renderHoleBackground( context,
+            gtk_widget_get_window(widget), widget,
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2 );
 
         // adjust offset and render hole
         offsetX -= Entry_SideMargin;
-        Style::instance().renderHole(
-            gtk_widget_get_window(widget), &clipRect,
+        Style::instance().renderHole( context,
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
             options, data );
 
@@ -203,7 +202,7 @@ namespace Oxygen
         if(gdk_display_supports_composite(gdk_display_get_default()))
         {
             _compositeEnabled = true;
-            _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
+            _exposeId.connect( G_OBJECT(_target), "draw", G_CALLBACK( targetExposeEvent ), this, true );
         }
 
         // check child
