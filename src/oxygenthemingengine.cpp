@@ -1197,7 +1197,10 @@ namespace Oxygen
 
                 // animation
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-                if(!Style::instance().animations().innerShadowEngine().contains(widget))
+
+                // FIXME: having anything other than shadow_in here looks like a bug, but we still do for GtkIconView case
+                if(!Style::instance().animations().innerShadowEngine().contains(widget) ||
+                       (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
                 {
                     Style::instance().renderHole( context, x, y, w, h, options, data );
                 }
