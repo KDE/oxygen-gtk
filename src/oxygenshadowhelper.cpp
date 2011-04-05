@@ -182,39 +182,42 @@ namespace Oxygen
         // make sure size is valid
         if( _size <= 0 ) return;
 
+        // opacity
+        const int shadowOpacity = 150;
+
         // make sure pixmaps are not already initialized
         if( _roundPixmaps.empty() )
         {
 
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 7 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 6 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 3 ) ) );
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 0 ) ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 7 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 6 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 3 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 0 ), shadowOpacity ) );
 
         }
 
         if( _squarePixmaps.empty() )
         {
 
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 1 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 2 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 5 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 8 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 7 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 6 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 3 ) ) );
-            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 0 ) ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 1 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 2 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 5 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 8 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 7 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 6 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 3 ), shadowOpacity ) );
+            _squarePixmaps.push_back( createPixmap( _squareTiles.surface( 0 ), shadowOpacity ) );
 
         }
 
     }
 
     //______________________________________________
-    Pixmap ShadowHelper::createPixmap( const Cairo::Surface& surface ) const
+    Pixmap ShadowHelper::createPixmap( const Cairo::Surface& surface, int opacity ) const
     {
         assert( surface.isValid() );
         const int width( cairo_surface_get_width( surface ) );
@@ -234,6 +237,17 @@ namespace Oxygen
             cairo_rectangle( context, 0, 0, width, height );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_fill( context );
+
+            if( opacity < 255 )
+            {
+
+                cairo_set_operator( context, CAIRO_OPERATOR_DEST_IN );
+                cairo_set_source( context, ColorUtils::Rgba( 0, 0, 0, double(opacity)/255 ) );
+                cairo_rectangle( context, 0, 0, width, height );
+                cairo_fill( context );
+
+            }
+
         }
 
         return pixmap;

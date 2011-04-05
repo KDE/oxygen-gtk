@@ -74,7 +74,7 @@ namespace Oxygen
         void createPixmapHandles( void );
 
         //! create Pixmap for given surface
-        Pixmap createPixmap( const Cairo::Surface& ) const;
+        Pixmap createPixmap( const Cairo::Surface&, int opacity = 255 ) const;
 
         //! install shadow X11 property on given widget
         /*!
