@@ -90,6 +90,7 @@ namespace Oxygen
             << "Oxygen::WidgetStateData::updateState - "
             << data._target << " (" << G_OBJECT_TYPE_NAME( data._target ) << ")"
             << " state: " << data._state
+            << " rect: " << data._dirtyRect
             << " opacity: " << data._timeLine.value()
             << std::endl;
         #endif
