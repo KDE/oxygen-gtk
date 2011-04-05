@@ -51,8 +51,13 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    bool WidgetStateData::updateState( bool state )
+    bool WidgetStateData::updateState( bool state, const GdkRectangle& rect )
     {
+
+        // always update dirty rect
+        _dirtyRect = rect;
+
+        // check state and update
         if( state == _state ) return false;
 
         #if OXYGEN_DEBUG
@@ -90,7 +95,7 @@ namespace Oxygen
         #endif
 
         if( data._target )
-        { gtk_widget_queue_draw( data._target ); }
+        { Gtk::gtk_widget_queue_draw( data._target, &data._dirtyRect ); }
 
         return FALSE;
 
