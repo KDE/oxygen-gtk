@@ -125,6 +125,14 @@ namespace Oxygen
 
             _toggleEnableStateId.connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
 
+            // widget direction checkbox
+            GtkWidget* button( gtk_check_button_new_with_label( "Right to left layout" ) );
+            gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), false );
+            gtk_box_pack_start( GTK_BOX( statusBar ), button, false, false, 0 );
+            gtk_widget_show( button );
+
+            _toggleWidgetDirectionId.connect( G_OBJECT(button), "toggled", G_CALLBACK( toggleWidgetDirection ), 0L );
+
             // button box
             #if GTK_CHECK_VERSION( 3, 0, 0 )
             GtkWidget* buttonBox( gtk_button_box_new( GTK_ORIENTATION_HORIZONTAL) );
@@ -137,7 +145,7 @@ namespace Oxygen
             gtk_widget_show( buttonBox );
 
             // close button
-            GtkWidget* button = gtk_button_new_from_stock( GTK_STOCK_OK );
+            button = gtk_button_new_from_stock( GTK_STOCK_OK );
             gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
 
@@ -230,4 +238,8 @@ namespace Oxygen
         widget->setEnabled( enabled );
 
     }
+
+    //_____________________________________________
+    void DemoDialog::toggleWidgetDirection( GtkToggleButton* button, gpointer data )
+    { gtk_widget_set_default_direction( gtk_toggle_button_get_active( button ) ? GTK_TEXT_DIR_RTL:GTK_TEXT_DIR_LTR ); }
 }
