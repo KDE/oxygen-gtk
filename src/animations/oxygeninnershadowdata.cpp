@@ -71,6 +71,7 @@ namespace Oxygen
         // create context with clipping
         Cairo::Context context(gtk_widget_get_window(widget), &allocation );
 /*
+        // FIXME: why doesn't this work?
         // add event region
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
