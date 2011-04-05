@@ -2184,6 +2184,11 @@ namespace Oxygen
 
             StyleOptions options( widget, state );
             if( Gtk::gtk_widget_is_vertical( widget ) )  options |= Vertical;
+
+            /*
+            need to add allocation position as an offset for the animation 'dirty rect'
+            because of how gtkpaned are rendered internally
+            */
             const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
             const AnimationData data( Style::instance().animations().widgetStateEngine().get(
                 widget,
