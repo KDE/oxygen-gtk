@@ -161,6 +161,7 @@ namespace Oxygen
         gtk_text_buffer_set_text( buffer, content.c_str(), content.size() );
         GtkWidget* textView( gtk_text_view_new_with_buffer( buffer ) );
         gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( textView ), GTK_WRAP_WORD );
+        gtk_container_set_border_width( GTK_CONTAINER( textView ), 2 );
         gtk_widget_show( textView );
 
         GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );

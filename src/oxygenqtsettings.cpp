@@ -634,7 +634,6 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@error_bg_color" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@error_fg_color" ) );
 
-
     }
 
     //_________________________________________________________
