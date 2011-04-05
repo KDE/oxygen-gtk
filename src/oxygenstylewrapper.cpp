@@ -1383,7 +1383,7 @@ namespace Oxygen
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
+                { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
                 x += Oxygen::Entry_SideMargin;
