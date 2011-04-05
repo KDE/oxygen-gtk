@@ -1197,7 +1197,14 @@ namespace Oxygen
 
                 // animation
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
-                Style::instance().renderHole( context, x, y, w, h, options, data );
+                if(!Style::instance().animations().innerShadowEngine().contains(widget))
+                {
+                    Style::instance().renderHole( context, x, y, w, h, options, data );
+                }
+                else
+                {
+                    Style::instance().renderHole( context, x+1, y+1, w-2, h-2, options, data );
+                }
 
             }
 

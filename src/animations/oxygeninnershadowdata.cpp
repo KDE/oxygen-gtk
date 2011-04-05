@@ -70,11 +70,11 @@ namespace Oxygen
 
         // create context with clipping
         Cairo::Context context(gtk_widget_get_window(widget), &allocation );
-
+/*
         // add event region
         gdk_cairo_region(context,event->region);
         cairo_clip(context);
-
+*/
         // draw child
         gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
@@ -168,9 +168,6 @@ namespace Oxygen
 
         int offsetX=basicOffset+Entry_SideMargin;
         int offsetY=basicOffset;
-
-        // clipRect
-        GdkRectangle clipRect( allocation );
 
         // hole background
         Style::instance().renderHoleBackground( context,
