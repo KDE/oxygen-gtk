@@ -152,6 +152,14 @@ namespace Oxygen
     }
 
     //______________________________________________
+    bool ShadowHelper::isToolTip( GtkWidget* widget ) const
+    {
+        if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
+        const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
+        return hint == GDK_WINDOW_TYPE_HINT_TOOLTIP;
+    }
+
+    //______________________________________________
     bool ShadowHelper::acceptWidget( GtkWidget* widget ) const
     {
 
@@ -270,7 +278,8 @@ namespace Oxygen
 
         std::vector<unsigned long> data;
         const bool isMenu( this->isMenu( widget ) );
-        if( _applicationName.isOpenOffice() || ( isMenu && _applicationName.isMozilla( widget ) ) )
+        const bool isToolTip( this->isToolTip( widget ) );
+        if( _applicationName.isOpenOffice() || ( (isMenu||isToolTip) && _applicationName.isMozilla( widget ) ) )
         {
 
             data = _squarePixmaps;
