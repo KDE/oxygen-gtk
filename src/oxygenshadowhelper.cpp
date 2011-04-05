@@ -112,7 +112,7 @@ namespace Oxygen
         if( _widgets.find( widget ) != _widgets.end() ) return false;
 
         // check if window is accepted
-        if( !acceptWindow( GTK_WINDOW( widget )  ) ) return false;
+        if( !acceptWidget( widget ) ) return false;
 
         // try install shadows
         installX11Shadows( widget );
@@ -138,6 +138,33 @@ namespace Oxygen
 
         // remove from map
         _widgets.erase( iter );
+    }
+
+    //______________________________________________
+    bool ShadowHelper::isMenu( GtkWidget* widget ) const
+    {
+        if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
+        const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
+        return
+            hint == GDK_WINDOW_TYPE_HINT_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU;
+    }
+
+    //______________________________________________
+    bool ShadowHelper::acceptWidget( GtkWidget* widget ) const
+    {
+
+        // check widget and type
+        if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
+
+        // otherwise check window hint
+        const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
+        return
+            hint == GDK_WINDOW_TYPE_HINT_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+            hint == GDK_WINDOW_TYPE_HINT_COMBO;
     }
 
     //______________________________________________
