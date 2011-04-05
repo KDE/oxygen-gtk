@@ -48,7 +48,6 @@ namespace Oxygen
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
             << " child: " << child << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
             << " path: " << Gtk::gtk_widget_path( child )
-            << " area: " << event->area
             << std::endl;
         #endif
 
@@ -70,12 +69,7 @@ namespace Oxygen
 
         // create context with clipping
         Cairo::Context context(gtk_widget_get_window(widget), &allocation );
-/*
-        // FIXME: why doesn't this work?
-        // add event region
-        gdk_cairo_region(context,event->region);
-        cairo_clip(context);
-*/
+
         // draw child
         gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
