@@ -3081,7 +3081,7 @@ namespace Oxygen
 
             }
 
-            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), options, AnimationHover ) );
             Style::instance().renderSplitter( window, 0L, x, y, w, h, options, data );
 
         } else if( d.isHandleBox() ) {
