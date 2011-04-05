@@ -74,6 +74,7 @@ namespace Oxygen
             gtk_icon_view_set_margin( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_column_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_row_spacing( GTK_ICON_VIEW( iconView ), 0 );
+            gtk_icon_view_set_selection_mode( GTK_ICON_VIEW( iconView ), GTK_SELECTION_BROWSE );
 
             // get list of renderers, find text renderer and make font format bold
             GList* cells( gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( iconView ) ) );
