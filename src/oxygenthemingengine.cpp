@@ -1818,7 +1818,7 @@ namespace Oxygen
             data = Style::instance().animations().arrowStateEngine().get( widget, arrow, options );
             useWidgetStateEngine = false;
 
-            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=1;
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=3;
             else x-=1;
 
             // disable contrast
@@ -1860,7 +1860,7 @@ namespace Oxygen
 
             }
 
-            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=2;
+            if( Gtk::gtk_theming_engine_layout_is_reversed( engine ) ) x+=4;
             else x -= 2;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
