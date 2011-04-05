@@ -272,7 +272,7 @@ namespace Oxygen
         //@}
 
         //! draw window decorations
-        void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint);
+        void drawWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, const gchar**, gint, gint);
 
         //! draw window shadow
         void drawWindowShadow( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h );
@@ -383,7 +383,7 @@ namespace Oxygen
         void renderWindowDots(cairo_t*, gint x, gint y, gint w, gint h, const ColorUtils::Rgba&, WinDeco::Options);
 
         //! internal windeco renderer
-        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, gchar**, gint, gint, bool = true);
+        void renderWindowDecoration( cairo_t*, WinDeco::Options, gint, gint, gint, gint, const gchar**, gint, gint, bool = true);
 
         //@}
 
