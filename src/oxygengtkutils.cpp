@@ -188,11 +188,15 @@ namespace Oxygen
     std::string Gtk::gtk_widget_path( GtkWidget* widget )
     {
 
-        gchar* widgetPath;
-        gtk_widget_path( widget, 0L, &widgetPath, 0L);
-        const std::string  out( widgetPath );
-        g_free( widgetPath );
-        return out;
+        if(GTK_IS_WIDGET(widget))
+        {
+            gchar* widgetPath;
+            gtk_widget_path( widget, 0L, &widgetPath, 0L);
+            const std::string  out( widgetPath );
+            g_free( widgetPath );
+            return out;
+        }
+        return std::string("not-widget");
 
     }
 
