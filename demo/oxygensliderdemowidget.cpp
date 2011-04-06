@@ -68,14 +68,19 @@ namespace Oxygen
 
             // progress bar
             _horizontalSliders._progressBar = gtk_progress_bar_new();
+            #if GTK_CHECK_VERSION(3, 0, 0)
+            gtk_orientable_set_orientation( GTK_ORIENTABLE( _horizontalSliders._progressBar ), GTK_ORIENTATION_HORIZONTAL );
+            #else
             gtk_progress_bar_set_orientation( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), GTK_PROGRESS_LEFT_TO_RIGHT );
+            #endif
+
             gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._progressBar );
 
             // scrollbar
-            GtkObject* adjustment( gtk_adjustment_new( 25, 0, 100, 1, 1, 10 ) );
-            _horizontalSliders._scrollBar = gtk_hscrollbar_new( GTK_ADJUSTMENT( adjustment ) );
+            GtkAdjustment* adjustment( GTK_ADJUSTMENT( gtk_adjustment_new( 25, 0, 100, 1, 1, 10 ) ) );
+            _horizontalSliders._scrollBar = gtk_hscrollbar_new( adjustment );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._scrollBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._scrollBar );
 
@@ -105,14 +110,18 @@ namespace Oxygen
 
             // progress bar
             _verticalSliders._progressBar = gtk_progress_bar_new();
+            #if GTK_CHECK_VERSION(3, 0, 0)
+            gtk_orientable_set_orientation( GTK_ORIENTABLE( _verticalSliders._progressBar ), GTK_ORIENTATION_VERTICAL );
+            #else
             gtk_progress_bar_set_orientation( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), GTK_PROGRESS_BOTTOM_TO_TOP );
+            #endif
             gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _verticalSliders._progressBar );
 
             // scrollbar
-            GtkObject* adjustment( gtk_adjustment_new( 25, 0, 100, 1, 1, 10 ) );
-            _verticalSliders._scrollBar = gtk_vscrollbar_new( GTK_ADJUSTMENT( adjustment ) );
+            GtkAdjustment* adjustment( GTK_ADJUSTMENT( gtk_adjustment_new( 25, 0, 100, 1, 1, 10 ) ) );
+            _verticalSliders._scrollBar = gtk_vscrollbar_new( adjustment );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._scrollBar, false, true, 0 );
             gtk_widget_show( _verticalSliders._scrollBar );
 
