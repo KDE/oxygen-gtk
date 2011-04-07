@@ -28,6 +28,7 @@
 #include "oxygensignal.h"
 
 #include <gtk/gtk.h>
+#include <map>
 
 namespace Oxygen
 {
@@ -48,13 +49,23 @@ namespace Oxygen
         //! orientation changed
         static void orientationChanged( GtkComboBox*, gpointer );
 
+        //! shadow style changed
+        static void shadowChanged( GtkToggleButton*, gpointer );
+
         private:
 
         //! frames box
-        GtkWidget *_box;
+        GtkWidget* _box;
+
+        //! frame
+        GtkWidget* _frame;
 
         //! selection change
         Signal _changedId;
+
+        //! map widget to frame shadow style
+        typedef std::map<GtkWidget*, GtkShadowType> WidgetMap;
+        WidgetMap _widgets;
 
     };
 

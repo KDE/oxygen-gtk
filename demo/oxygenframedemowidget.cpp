@@ -107,13 +107,13 @@ namespace Oxygen
 
             // unnamed frame
             {
-                GtkWidget* frame( gtk_frame_new( 0L ) );
-                gtk_frame_set_shadow_type( GTK_FRAME( frame ), GTK_SHADOW_OUT );
-                gtk_box_pack_start( GTK_BOX( _box ), frame, true, true, 0 );
-                gtk_widget_show( frame );
+                _frame = gtk_frame_new( 0L );
+                gtk_frame_set_shadow_type( GTK_FRAME( _frame ), GTK_SHADOW_OUT );
+                gtk_box_pack_start( GTK_BOX( _box ), _frame, true, true, 0 );
+                gtk_widget_show( _frame );
 
                 GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
-                gtk_container_add( GTK_CONTAINER( frame ), vbox );
+                gtk_container_add( GTK_CONTAINER( _frame ), vbox );
                 gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
                 gtk_widget_show( vbox );
 
@@ -121,16 +121,25 @@ namespace Oxygen
                 gtk_box_pack_start( GTK_BOX( vbox ), label, false, true, 0 );
                 gtk_widget_show( label );
 
+                Signal signal;
+
                 // radio buttons
                 GtkWidget* radiobutton;
                 gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label( 0L, "Raised" ), false, true, 0 );
                 gtk_widget_show( radiobutton );
+                _widgets.insert( std::make_pair( radiobutton, GTK_SHADOW_OUT ) );
+                g_signal_connect( G_OBJECT( radiobutton ), "toggled", G_CALLBACK( shadowChanged ), this );
 
                 gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Etched" ), false, true, 0 );
                 gtk_widget_show( radiobutton );
+                _widgets.insert( std::make_pair( radiobutton, GTK_SHADOW_ETCHED_IN ) );
+                g_signal_connect( G_OBJECT( radiobutton ), "toggled", G_CALLBACK( shadowChanged ), this );
 
                 gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Sunken" ), false, true, 0 );
                 gtk_widget_show( radiobutton );
+                _widgets.insert( std::make_pair( radiobutton, GTK_SHADOW_IN ) );
+                g_signal_connect( G_OBJECT( radiobutton ), "toggled", G_CALLBACK( shadowChanged ), this );
+
             }
 
             // notebook
@@ -155,11 +164,23 @@ namespace Oxygen
     {}
 
     //____________________________________________________
-    void FrameDemoWidget::orientationChanged( GtkComboBox* comboBox, gpointer data )
+    void FrameDemoWidget::shadowChanged( GtkToggleButton* button, gpointer pointer )
+    {
+        FrameDemoWidget& data( *static_cast<FrameDemoWidget*>( pointer ) );
+        if( !gtk_toggle_button_get_active( button ) ) return;
+
+        WidgetMap::const_iterator iter( data._widgets.find( GTK_WIDGET( button ) ) );
+        if( iter == data._widgets.end() ) return;
+        gtk_frame_set_shadow_type( GTK_FRAME( data._frame ), iter->second );
+
+    }
+
+    //____________________________________________________
+    void FrameDemoWidget::orientationChanged( GtkComboBox* comboBox, gpointer pointer )
     {
         const gint id( gtk_combo_box_get_active( comboBox ) );
         gtk_orientable_set_orientation(
-            GTK_ORIENTABLE( static_cast<FrameDemoWidget*>( data )->_box ),
+            GTK_ORIENTABLE( static_cast<FrameDemoWidget*>( pointer )->_box ),
             id == 0 ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL );
     }
 
