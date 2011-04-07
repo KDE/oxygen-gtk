@@ -158,7 +158,7 @@ namespace Oxygen
         addPage( new TabDemoWidget() );
         addPage( new ButtonDemoWidget() );
         addPage( new FrameDemoWidget() );
-        addPage( new SliderDemoWidget() );
+        addPage( _sliderDemoWidget = new SliderDemoWidget() );
 
         // select first raw
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
@@ -218,7 +218,8 @@ namespace Oxygen
         // get matching page
         DemoWidget* widget( dialog._pages[page] );
         widget->setEnabled( enabled );
-
+        if( widget == dialog._sliderDemoWidget ) dialog._sliderDemoWidget->startPulse();
+        else dialog._sliderDemoWidget->stopPulse();
 
     }
 
@@ -237,7 +238,12 @@ namespace Oxygen
 
         // get matching page
         DemoWidget* widget( dialog._pages[page] );
+
+        // set state
         widget->setEnabled( enabled );
+
+        // trigger repaint
+        gtk_widget_queue_draw( widget->mainWidget() );
 
     }
 
