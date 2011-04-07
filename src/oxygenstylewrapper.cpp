@@ -962,7 +962,7 @@ namespace Oxygen
             StyleOptions options;
             if(!Style::instance().settings().applicationName().useFlatBackground(widget))
             { options |= Blend; }
-            
+
             options |= StyleOptions( widget, state, shadow );
 
             // default case
@@ -1415,6 +1415,10 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             if(GTK_IS_PROGRESS_BAR(widget))
             {
+
+                // active state must be set by hand cause it is not set by gtk
+                if( !gtk_widget_is_sensitive( widget ) )
+                { options |= Disabled; }
 
                 // get orientation
                 if( Gtk::gtk_widget_is_vertical( widget ) )
