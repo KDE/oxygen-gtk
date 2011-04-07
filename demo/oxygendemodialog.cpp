@@ -237,7 +237,12 @@ namespace Oxygen
 
         // get matching page
         DemoWidget* widget( dialog._pages[page] );
+
+        // set state
         widget->setEnabled( enabled );
+
+        // trigger repaint
+        gtk_widget_queue_draw( widget->mainWidget() );
 
     }
 
