@@ -121,6 +121,16 @@ namespace Oxygen
                 gtk_box_pack_start( GTK_BOX( vbox ), label, false, true, 0 );
                 gtk_widget_show( label );
 
+                // radio buttons
+                GtkWidget* radiobutton;
+                gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label( 0L, "Raised" ), false, true, 0 );
+                gtk_widget_show( radiobutton );
+
+                gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Etched" ), false, true, 0 );
+                gtk_widget_show( radiobutton );
+
+                gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Sunken" ), false, true, 0 );
+                gtk_widget_show( radiobutton );
             }
 
             // notebook
