@@ -26,6 +26,7 @@
 
 #include "oxygendemowidget.h"
 #include "oxygensignal.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 
@@ -43,7 +44,18 @@ namespace Oxygen
         //! destructor
         virtual ~SliderDemoWidget( void );
 
+        //! pulse progress bar
+        void startPulse( void )
+        { _timer.start( 50, (GSourceFunc)pulseProgressBar, this ); }
+
+        //! pulse progress bar
+        void stopPulse( void )
+        { if( _timer.isRunning() ) _timer.stop(); }
+
         protected:
+
+        //! pulse progress bar
+        static gboolean pulseProgressBar( gpointer );
 
         //! callback
         static void valueChanged( GtkRange*, gpointer );
@@ -87,6 +99,11 @@ namespace Oxygen
         //! vertical sliders
         Sliders _verticalSliders;
 
+        //! pulse progressbar timer
+        Timer _timer;
+
+        //! pulse progress bar
+        GtkWidget* _pulseProgressBar;
     };
 
 }

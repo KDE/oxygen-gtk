@@ -25,6 +25,7 @@
 */
 
 #include "oxygensignal.h"
+#include "oxygensliderdemowidget.h"
 
 #include <gtk/gtk.h>
 #include <map>
@@ -78,6 +79,7 @@ namespace Oxygen
 
         //! map page index and page widget
         std::map<int, DemoWidget*> _pages;
+        SliderDemoWidget* _sliderDemoWidget;
 
         //! enable state button
         GtkWidget* _stateButton;
