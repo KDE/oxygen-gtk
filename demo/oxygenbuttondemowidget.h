@@ -25,6 +25,7 @@
 */
 
 #include "oxygendemowidget.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
 
@@ -42,10 +43,24 @@ namespace Oxygen
         //! destructor
         virtual ~ButtonDemoWidget( void );
 
+        protected:
+
+        //! toolbar styla changed
+        static void toolBarStyleChanged( GtkComboBox*, gpointer );
+
+        //! icon size changed
+        static void iconSizeChanged( GtkComboBox*, gpointer );
+
         private:
 
         //! toolbar
         GtkWidget* _toolbar;
+
+        //! selection change
+        Signal _toolBarStyleChangedId;
+
+        //! selection change
+        Signal _iconSizeChangedId;
 
     };
 

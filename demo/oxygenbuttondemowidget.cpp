@@ -266,6 +266,9 @@ namespace Oxygen
                 gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
                 gtk_widget_show( comboBox );
 
+                // connection
+                _toolBarStyleChangedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( toolBarStyleChanged ), this );
+
             }
 
             {
@@ -302,10 +305,13 @@ namespace Oxygen
                 gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
                 gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell, "text", 0, NULL );
 
-                gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
+                gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 2 );
 
                 gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
                 gtk_widget_show( comboBox );
+
+                // connection
+                _iconSizeChangedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( iconSizeChanged ), this );
 
             }
 
@@ -372,5 +378,37 @@ namespace Oxygen
     //____________________________________________________
     ButtonDemoWidget::~ButtonDemoWidget( void )
     {}
+
+    //____________________________________________________
+    void ButtonDemoWidget::toolBarStyleChanged( GtkComboBox* comboBox, gpointer data )
+    {
+
+        GtkToolbar* toolbar( GTK_TOOLBAR( static_cast<ButtonDemoWidget*>( data )->_toolbar ) );
+        switch( gtk_combo_box_get_active( comboBox ) )
+        {
+            default:
+            case 0: gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_ICONS ); break;
+            case 1: gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_TEXT ); break;
+            case 2: gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_BOTH_HORIZ ); break;
+            case 3: gtk_toolbar_set_style( toolbar, GTK_TOOLBAR_BOTH ); break;
+        }
+
+    }
+
+    //____________________________________________________
+    void ButtonDemoWidget::iconSizeChanged( GtkComboBox* comboBox, gpointer data )
+    {
+
+        GtkToolbar* toolbar( GTK_TOOLBAR( static_cast<ButtonDemoWidget*>( data )->_toolbar ) );
+        switch( gtk_combo_box_get_active( comboBox ) )
+        {
+            default:
+            case 0: gtk_toolbar_set_icon_size( toolbar, GTK_ICON_SIZE_MENU ); break;
+            case 1: gtk_toolbar_set_icon_size( toolbar, GTK_ICON_SIZE_SMALL_TOOLBAR ); break;
+            case 2: gtk_toolbar_set_icon_size( toolbar, GTK_ICON_SIZE_LARGE_TOOLBAR ); break;
+            case 3: gtk_toolbar_set_icon_size( toolbar, GTK_ICON_SIZE_DND ); break;
+        }
+
+    }
 
 }
