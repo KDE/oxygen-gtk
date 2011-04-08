@@ -277,7 +277,21 @@ namespace Oxygen
 
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );
-            Style::instance().renderWindowBackground( context, window, x, y, w, h );
+
+            if( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) )
+            {
+
+                /*
+                FIXME: the w and h adjustment are empirical and fix some rendering issues when
+                viewports are embedded inside sunken frames
+                */
+                Style::instance().renderWindowBackground( context, window, x, y, w+2, h+2 );
+
+            } else {
+
+                Style::instance().renderWindowBackground( context, window, x, y, w, h );
+
+            }
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
