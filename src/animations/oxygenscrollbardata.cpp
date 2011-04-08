@@ -29,6 +29,10 @@ namespace Oxygen
     //________________________________________________________________________________
     void ScrollBarData::connect( GtkWidget* widget )
     {
+
+        _updatesDelayed = true;
+        _delay = 2;
+
         _target = widget;
         _locked = false;
         _valueChangedId.connect( G_OBJECT(widget), "value-changed", G_CALLBACK( valueChanged ), this );
