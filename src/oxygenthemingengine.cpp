@@ -247,6 +247,7 @@ namespace Oxygen
 
             }
 
+
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
@@ -270,6 +271,9 @@ namespace Oxygen
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
             }
+
+            if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
+            { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
 
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );
