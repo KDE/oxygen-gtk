@@ -1970,7 +1970,7 @@ namespace Oxygen
             {
 
                 const QtSettings::ArrowSize arrowSize = Style::instance().settings().viewTriangularExpanderSize();
-                Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
+                Style::instance().renderArrow( context, arrow, x+1, y, w, h, arrowSize, options, data, role );
 
             } else {
 
