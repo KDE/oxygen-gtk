@@ -21,6 +21,7 @@
 */
 
 #include "oxygensignal.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 
@@ -33,7 +34,11 @@ namespace Oxygen
         public:
 
         //! constructor
-        ScrollBarData( void )
+        ScrollBarData( void ):
+            _target( 0L ),
+            _updatesDelayed( false ),
+            _delay( 10 ),
+            _locked( false )
         {}
 
         //! destructor
@@ -46,12 +51,39 @@ namespace Oxygen
         //! disconnect
         void disconnect( GtkWidget* );
 
+        //! toggle delayed updates
+        void setUpdatesDelayed( bool value )
+        { _updatesDelayed = value; }
+
+        //! set delay
+        void setDelay( int value )
+        { _delay = value; }
+
         protected:
 
         static void valueChanged( GtkRange*, gpointer );
 
+        //! delayed update
+        static gboolean delayedUpdate( gpointer );
+
         private:
 
+        //! pointer to associated widget
+        GtkWidget* _target;
+
+        //! true if updates are delayed
+        bool _updatesDelayed;
+
+        //! update delay
+        int _delay;
+
+        //! timer
+        Timer _timer;
+
+        //! true if next update must be delayed
+        bool _locked;
+
+        //! signal
         Signal _valueChangedId;
 
     };
