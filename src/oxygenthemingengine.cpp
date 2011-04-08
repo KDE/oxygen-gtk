@@ -1983,7 +1983,7 @@ namespace Oxygen
 
         } else if( isTreeView ) {
 
-            Style::instance().renderTreeExpander( context, x, y, w, h, expander_style, options, data, role );
+            Style::instance().renderTreeExpander( context, x+2, y+1, w, h, expander_style, options, data, role );
 
         } else {
 
