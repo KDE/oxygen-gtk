@@ -42,6 +42,11 @@ namespace Oxygen
         //! destructor
         virtual ~ButtonDemoWidget( void );
 
+        private:
+
+        //! toolbar
+        GtkWidget* _toolbar;
+
     };
 
 }

@@ -182,6 +182,138 @@ namespace Oxygen
 
         }
 
+        {
+            // toolbar
+            GtkWidget* frame( gtk_frame_new( "Toolbuttons" ) );
+            gtk_box_pack_start( GTK_BOX( mainWidget ), frame, false, true, 0 );
+            gtk_widget_show( frame );
+
+            // inner box
+            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            gtk_box_set_spacing( GTK_BOX( vbox ), 4 );
+            gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
+            gtk_container_add( GTK_CONTAINER( frame ), vbox );
+            gtk_widget_show( vbox );
+
+            _toolbar = gtk_toolbar_new();
+            gtk_box_pack_start( GTK_BOX( vbox ), _toolbar, false, true, 0 );
+            gtk_widget_show( _toolbar );
+
+            // toolbuttons
+            GtkToolItem* toolButton;
+
+            gtk_toolbar_insert( GTK_TOOLBAR(_toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_NEW ), 0 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_OPEN ), 1 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_SAVE ), 2 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_CUT ), 2 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_COPY ), 2 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_PASTE ), 2 );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
+            // table for text position and icon size
+            GtkWidget* table = gtk_table_new( 2, 3, false );
+            gtk_container_set_border_width( GTK_CONTAINER( table ), 4 );
+            gtk_table_set_row_spacings( GTK_TABLE( table ), 4 );
+            gtk_box_pack_start( GTK_BOX( vbox ), table, false, true, 0 );
+            gtk_widget_show( table );
+
+            {
+
+                // text position combobox
+                GtkWidget* label( 0L );
+
+                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Text position: " ), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
+                gtk_widget_show( label );
+
+                GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
+                const char* columns[] =
+                {
+                    "Icons Only",
+                    "Text Only",
+                    "Text Alongside Icons",
+                    "Text Under Icons"
+                };
+
+                for( unsigned int i=0; i<4; i++ )
+                {
+                    GtkTreeIter iter;
+                    gtk_list_store_append( model, &iter );
+                    gtk_list_store_set( model, &iter, 0, columns[i], -1 );
+                }
+
+                GtkWidget* comboBox( gtk_combo_box_new() );
+                gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
+                g_object_unref( model );
+
+                // text renderer
+                GtkCellRenderer* cell( gtk_cell_renderer_text_new() );
+                gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
+                gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell, "text", 0, NULL );
+
+                gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
+
+                gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_widget_show( comboBox );
+
+            }
+
+            {
+
+                // icon size combobox
+                GtkWidget* label( 0L );
+
+                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Icon size: " ), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
+                gtk_widget_show( label );
+
+                GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
+                const char* columns[] =
+                {
+                    "Small",
+                    "Medium",
+                    "Large",
+                    "Huge"
+                };
+
+                for( unsigned int i=0; i<4; i++ )
+                {
+                    GtkTreeIter iter;
+                    gtk_list_store_append( model, &iter );
+                    gtk_list_store_set( model, &iter, 0, columns[i], -1 );
+                }
+
+                GtkWidget* comboBox( gtk_combo_box_new() );
+                gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
+                g_object_unref( model );
+
+                // text renderer
+                GtkCellRenderer* cell( gtk_cell_renderer_text_new() );
+                gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( comboBox ), cell, FALSE );
+                gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( comboBox ), cell, "text", 0, NULL );
+
+                gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
+
+                gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_widget_show( comboBox );
+
+            }
+
+
+        }
+
+
+        // checkboxes and radiobuttons
         GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
         gtk_box_set_spacing( GTK_BOX( hbox ), 4 );
         gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
