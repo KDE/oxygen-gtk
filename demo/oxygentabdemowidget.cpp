@@ -125,6 +125,7 @@ namespace Oxygen
         gtk_notebook_append_page( GTK_NOTEBOOK( _notebook ), widget, label );
         gtk_widget_show( label );
         gtk_widget_show( widget );
+        gtk_notebook_set_tab_reorderable( GTK_NOTEBOOK( _notebook ), widget, true );
     }
 
     //____________________________________________________
