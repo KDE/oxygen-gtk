@@ -3188,10 +3188,15 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
+        const char* filename( source ? gtk_icon_source_get_filename( source ) : 0L );
+        const char* iconname( source ? gtk_icon_source_get_icon_name( source ) : 0L );
         std::cerr
             << "Oxygen::render_icon -"
             << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
             << " state: " << Gtk::TypeNames::state( state )
+            << " file name: " << (filename ? filename:"0x0")
+            << " icon name: " << (iconname ? iconname:"0x0")
+            << " icon size: " << Gtk::TypeNames::iconSize( size )
             << " detail: " << (detail ? detail:"0x0" )
             << std::endl;
         #endif
