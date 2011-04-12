@@ -215,4 +215,26 @@ namespace Oxygen
     const char*  Gtk::TypeNames::response( GtkResponseType gtkResponseType )
     { return Gtk::TypeNames::Finder<GtkResponseType>( responseTypeMap, responseTypeMapSize ).findCss( gtkResponseType ); }
 
+    //__________________________________________________________________
+    typedef Gtk::TypeNames::Entry<GtkIconSize> IconSizeMap;
+    static const IconSizeMap iconSizeMap[] =
+    {
+        { GTK_ICON_SIZE_INVALID, "invalid" },
+        { GTK_ICON_SIZE_MENU, "menu" },
+        { GTK_ICON_SIZE_SMALL_TOOLBAR, "small toolbar" },
+        { GTK_ICON_SIZE_LARGE_TOOLBAR, "large toolbar" },
+        { GTK_ICON_SIZE_BUTTON, "button" },
+        { GTK_ICON_SIZE_DND, "drag and drop" },
+        { GTK_ICON_SIZE_DIALOG, "dialog" }
+     };
+    const int iconSizeMapSize=sizeof(iconSizeMap)/sizeof(iconSizeMap[0]);
+
+    //__________________________________________________________________
+    GtkIconSize Gtk::TypeNames::matchIconSize( const char*  cssIconSize )
+    { return Gtk::TypeNames::Finder<GtkIconSize>( iconSizeMap, iconSizeMapSize ).findGtk( cssIconSize, GTK_ICON_SIZE_INVALID ); }
+
+    //__________________________________________________________________
+    const char*  Gtk::TypeNames::iconSize( GtkIconSize gtkIconSize )
+    { return Gtk::TypeNames::Finder<GtkIconSize>( iconSizeMap, iconSizeMapSize ).findCss( gtkIconSize ); }
+
 }

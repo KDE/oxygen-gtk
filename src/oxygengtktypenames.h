@@ -67,6 +67,9 @@ namespace Oxygen
             //! Gtk dialogs response IDs
             static const char* response( GtkResponseType );
 
+            //! icon size
+            static const char* iconSize( GtkIconSize );
+
             //@}
 
             //__________________________________________
@@ -137,6 +140,7 @@ namespace Oxygen
             static GtkOrientation matchOrientation( const char* );
             static GtkExpanderStyle	matchExpanderStyle( const char* );
             static GtkResponseType matchResponse( const char* );
+            static GtkIconSize matchIconSize( const char* );
 
         };
     }
