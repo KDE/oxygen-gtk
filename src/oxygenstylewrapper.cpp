@@ -60,9 +60,10 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=animated_button",
-            G_OBJECT_TYPE_NAME( widget ) );
+        std::cerr
+            << "Oxygen::draw_animated_button -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << std::endl;
         #endif
 
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
@@ -116,14 +117,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=flat_box, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_flat_box -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
-
 
         #if GTK_CHECK_VERSION(2, 20, 0)
         // tool itemgroup buttons
@@ -602,7 +603,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cout << "Oxygen::processTabCloseButton" << std::endl;
+        std::cerr << "Oxygen::processTabCloseButton" << std::endl;
         #endif
 
         switch (state)
@@ -651,12 +652,13 @@ namespace Oxygen
         g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=box, state=%s, shadow=%s, detail=%s",
-            widget?G_OBJECT_TYPE_NAME( widget ):"0x0",
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail?detail:"0x0" );
+        std::cerr
+            << "Oxygen::draw_box -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Style::instance().sanitizeSize( window, w, h );
@@ -1476,12 +1478,13 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=shadow, state=%s, shadow=%s, detail=%s",
-            widget?G_OBJECT_TYPE_NAME( widget ):"0x0",
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail?detail:"0x0" );
+        std::cerr
+            << "Oxygen::draw_shadow -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         GtkWidget* parent( 0L );
@@ -1975,12 +1978,13 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=check, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_check -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         const Gtk::Detail d( detail );
@@ -2064,12 +2068,13 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=option, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_option -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -2159,11 +2164,12 @@ namespace Oxygen
         g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=hline, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_hline -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -2241,11 +2247,12 @@ namespace Oxygen
         g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=vline, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_vline -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         // disable vline in buttons (should correspond to comboboxes)
@@ -2289,14 +2296,15 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=arrow, state=%s, shadow=%s, detail=%s, arrow=%s, fill=%d",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail,
-            Gtk::TypeNames::arrow( arrow ),
-            fill );
+        std::cerr
+            << "Oxygen::draw_arrow -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " arrow: " << Gtk::TypeNames::arrow( arrow )
+            << " fill: " << (fill ? "true":"false")
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         {
@@ -2479,16 +2487,18 @@ namespace Oxygen
         const char* detail,
         gint x,
         gint y,
-        GtkExpanderStyle expander_style )
+        GtkExpanderStyle expanderStyle )
     {
         g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=expander, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_expander -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " expander: " << Gtk::TypeNames::expanderStyle( expanderStyle )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         StyleOptions options( widget, state );
@@ -2512,7 +2522,7 @@ namespace Oxygen
         {
 
             GtkArrowType arrow;
-            const bool isExpanded( expander_style !=GTK_EXPANDER_COLLAPSED && expander_style != GTK_EXPANDER_SEMI_COLLAPSED );
+            const bool isExpanded( expanderStyle !=GTK_EXPANDER_COLLAPSED && expanderStyle != GTK_EXPANDER_SEMI_COLLAPSED );
             if( isExpanded ) arrow = GTK_ARROW_DOWN;
             else if( Gtk::gtk_widget_layout_is_reversed( widget ) ) arrow = GTK_ARROW_LEFT;
             else arrow = GTK_ARROW_RIGHT;
@@ -2535,12 +2545,12 @@ namespace Oxygen
 
         } else if( d.isTreeView() ) {
 
-            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expander_style, options, data, role );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-4, 10, 10, expanderStyle, options, data, role );
 
         } else {
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
-            Style::instance().renderTreeExpander( window, clipRect, x-3, y-5, 10, 10, expander_style, options, data, role );
+            Style::instance().renderTreeExpander( window, clipRect, x-3, y-5, 10, 10, expanderStyle, options, data, role );
 
         }
 
@@ -2563,12 +2573,13 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=diamond, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_diamond -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         StyleWrapper::parentClass()->draw_diamond( style, window, state,
@@ -2594,12 +2605,13 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=tab, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_tab -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -2648,12 +2660,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=shadow_gap, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_shadow_gap -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " position: " << Gtk::TypeNames::position( position )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -2709,12 +2723,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=box_gap, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_box_gap -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " position: " << Gtk::TypeNames::position( position )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         const Gtk::Detail d( detail );
@@ -2815,12 +2831,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=slider, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_slider -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " orientation: " << Gtk::TypeNames::orientation( orientation )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -2884,13 +2902,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=extension, state=%s, shadow=%s, detail=%s, position=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail,
-            Gtk::TypeNames::position( position ) );
+        std::cerr
+            << "Oxygen::draw_extension -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " position: " << Gtk::TypeNames::position( position )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -3030,11 +3049,12 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=focus, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_focus -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -3070,12 +3090,14 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=handle, state=%s, shadow=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            Gtk::TypeNames::shadow( shadow ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_handle -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " shadow: " << Gtk::TypeNames::shadow( shadow )
+            << " orientation: " << Gtk::TypeNames::orientation( orientation )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         Gtk::Detail d( detail );
@@ -3141,11 +3163,13 @@ namespace Oxygen
         g_return_if_fail( style && window );
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=resize_grip, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_resize_grip -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " edge: " << Gtk::TypeNames::windowEdge( edge )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         // no resize grip in oxygen no matter what
@@ -3160,14 +3184,16 @@ namespace Oxygen
         GtkStateType state,
         GtkIconSize size,
         GtkWidget* widget,
-        const char* )
+        const char* detail )
     {
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=icon, state=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ));
+        std::cerr
+            << "Oxygen::render_icon -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
@@ -3265,11 +3291,12 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        g_log( OXYGEN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-            "widget=%s, primitive=layout, state=%s, detail=%s",
-            G_OBJECT_TYPE_NAME( widget ),
-            Gtk::TypeNames::state( state ),
-            detail );
+        std::cerr
+            << "Oxygen::draw_layout -"
+            << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " detail: " << (detail ? detail:"0x0" )
+            << std::endl;
         #endif
 
         const Gtk::Detail d(detail);
