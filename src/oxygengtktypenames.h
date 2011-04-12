@@ -128,7 +128,7 @@ namespace Oxygen
                         { return _values[i].css_value.c_str(); }
                     }
 
-                    return 0L;
+                    return "";
 
                 }
 
