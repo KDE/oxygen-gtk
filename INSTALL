@@ -35,3 +35,12 @@ KDE is not running. Doesn't change anything when KDE is running.
 
     * ENABLE_COMBOBOX_LIST_RESIZE:
 set this to 0 to disable combobox list resizing (see README for more detail)
+
+5/ to have oxygen-gtk style selected for your gtk3 applications, you need to edit the file
+ 
+  $HOME/.config/gtk-3.0/settings.ini
+
+so that it contains: 
+
+  [Settings]
+  gtk-theme-name = oxygen-gtk
