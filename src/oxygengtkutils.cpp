@@ -66,7 +66,9 @@ namespace Oxygen
     {
         if( !widget ) return false;
 
-        std::cerr << "is_applet(): " << Gtk::gtk_widget_path(widget) << std::endl;
+        #if OXYGEN_DEBUG
+        std::cerr << "Gtk::gtk_widget_is_applet(): " << Gtk::gtk_widget_path(widget) << std::endl;
+        #endif
 
         static const char* names[] =
         {
