@@ -275,7 +275,60 @@ namespace Oxygen
     };
 
     //! key for flat holes
-    typedef SlabKey HoleFlatKey;
+    class HoleFlatKey
+    {
+       public:
+
+        //! constructor
+        HoleFlatKey( const ColorUtils::Rgba& color, double shade, bool fill, int size ):
+            _color( color.toInt() ),
+            _shade( shade ),
+            _fill( fill ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const HoleFlatKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _shade == other._shade &&
+                _fill == other._fill &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const HoleFlatKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _shade != other._shade ) return _shade < other._shade;
+            else if( _fill != other._fill ) return _fill < other._fill;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        double _shade;
+        bool _fill;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const HoleFlatKey& key )
+        {
+            out
+                << "HoleFlatKey -"
+                << " color: " << key._color
+                << " shade: " << key._shade
+                << " fill: " << (key._fill ? "true":"false")
+                << " size: " << key._size;
+
+            return out;
+        }
+
+    };
+
+
 
     //! key for scroll holes
     class ScrollHoleKey
@@ -311,7 +364,7 @@ namespace Oxygen
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const ScrollHoleKey& key )
         {
-            out << "ScrollHoleKey - color: " << key._color << "vertical: " << (key._vertical ? "true":"false");
+            out << "ScrollHoleKey - color: " << key._color << " vertical: " << (key._vertical ? "true":"false");
             return out;
         }
 

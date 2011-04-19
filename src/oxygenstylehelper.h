@@ -136,7 +136,7 @@ namespace Oxygen
         const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, double shade, int size = 7 )
         { return holeFocused( base, ColorUtils::Rgba(), glow, shade, size ); }
 
-        const TileSet& holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
         const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
 
         //@}
@@ -193,9 +193,6 @@ namespace Oxygen
 
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
-
-        //! draw hole
-        void drawHole( Cairo::Context&, const ColorUtils::Rgba&, double shade, int r = 7 ) const;
 
         //! shadow rendering
         virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;

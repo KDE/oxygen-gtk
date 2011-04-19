@@ -693,37 +693,91 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    const TileSet& StyleHelper::holeFlat( const ColorUtils::Rgba& base, double shade, int size )
+    const TileSet& StyleHelper::holeFlat( const ColorUtils::Rgba& base, double shade, bool fill, int size )
     {
 
-        const HoleFlatKey key( base, shade, size );
+        const HoleFlatKey key( base, shade, fill, size );
         const TileSet& tileSet( m_holeFlatCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
-        const int rsize( ( int )ceil( double( size ) * 5.0/7.0 ) );
-        const int w( 2*rsize );
-        const int h( 2*rsize );
+        const int w( 2*size );
+        const int h( 2*size );
 
         Cairo::Surface surface( createSurface( w, h ) );
 
+        if( fill )
         {
 
             Cairo::Context context( surface );
-            cairo_translate( context, -2, -2 );
-            cairo_scale( context, 10.0/w, 10.0/h );
+            cairo_set_line_width( context, 1.0 );
 
-            // hole
-            drawHole( context, base, shade, 7 );
+            cairo_scale( context, 14.0/w, 14.0/h );
 
             // hole inside
             cairo_set_source( context, base );
-            //cairo_ellipse( context, 3.4, 3.4, 7.2, 7.2 );
-            cairo_ellipse( context, 3.7, 3.7, 6.6, 6.6 );
+            cairo_rounded_rectangle( context, 1, 0, 12, 13, 3.0 );
             cairo_fill( context );
+
+            {
+                // shadow (top)
+                const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( base ), shade ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 14 ) );
+                cairo_pattern_add_color_stop( pattern, 0, dark );
+                cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::Rgba::transparent( dark ) );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 1.5, 0.5, 11, 12, 2.5 );
+                cairo_stroke( context );
+            }
+
+            {
+                // contrast (bottom)
+                const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor( base ), shade ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 14 ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, light );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 0.5, 0.5, 13, 13, 3.5 );
+                cairo_stroke( context );
+            }
+
+        } else {
+
+            Cairo::Context context( surface );
+            cairo_set_line_width( context, 1.0 );
+
+            cairo_scale( context, 14.0/w, 14.0/h );
+
+            // hole inside
+            cairo_set_source( context, base );
+            cairo_rounded_rectangle( context, 1, 0, 12, 12, 3.0 );
+            cairo_fill( context );
+
+            {
+                // shadow (top)
+                const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( base ), shade ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 1, 0, 12 ) );
+                cairo_pattern_add_color_stop( pattern, 0, dark );
+                cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::Rgba::transparent( dark ) );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 1.5, 1.5, 11, 11, 2.5 );
+                cairo_stroke( context );
+            }
+
+            {
+                // contrast (bottom)
+                const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor( base ), shade ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 1, 0, 12 ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, light );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 1.5, 1.5, 11, 11, 2.5 );
+                cairo_stroke( context );
+            }
+
 
         }
 
-        return m_holeFlatCache.insert( key, TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 ) );
+        return m_holeFlatCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
 
     }
 
@@ -1198,37 +1252,6 @@ namespace Oxygen
             cairo_fill( context );
 
         }
-
-    }
-
-    //___________________________________________________________________________________________
-    void StyleHelper::drawHole( Cairo::Context& context, const ColorUtils::Rgba& color, double shade, int r ) const
-    {
-
-        const int r2( 2*r );
-        const ColorUtils::Rgba base( ColorUtils::shade( color, shade ) );
-        const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor( color ), shade ) );
-        const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( color ), shade ) );
-        const ColorUtils::Rgba mid( ColorUtils::shade( ColorUtils::midColor( color ), shade ) );
-
-        // bevel
-        const double y( ColorUtils::luma( base ) );
-        const double yl( ColorUtils::luma( light ) );
-        const double yd( ColorUtils::luma( dark ) );
-
-        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 2, 0, r2-2 ) );
-        cairo_pattern_add_color_stop( pattern, 0.2, dark );
-        cairo_pattern_add_color_stop( pattern, 0.5, mid );
-        cairo_pattern_add_color_stop( pattern, 0.95, light );
-        if( y < yl && y > yd )
-        {
-            // no middle when color is very light/dark
-            cairo_pattern_add_color_stop( pattern, 0.6, base );
-        }
-
-        cairo_set_source( context, pattern );
-        cairo_ellipse( context, 3, 3, r2-6, r2-6 );
-        cairo_fill( context );
 
     }
 

@@ -1488,7 +1488,7 @@ namespace Oxygen
         if( options & Flat )
         {
 
-            helper().holeFlat( base, 0 ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
+            helper().holeFlat( base, 0, false ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
             cairo_translate( context, 0, -2 );
 
         } else {
