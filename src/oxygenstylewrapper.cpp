@@ -477,13 +477,13 @@ namespace Oxygen
 
                     // hide left part and increase width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x-9, y, w+9, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and increase width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+9, h, options, data, tiles );
 
                 }
 
@@ -526,13 +526,13 @@ namespace Oxygen
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
 
                 }
 
@@ -568,15 +568,15 @@ namespace Oxygen
                     if( localWindowX > 5 )
                     {
                         tiles &= ~TileSet::Left;
-                        x -= 7;
-                        w += 7;
+                        x -= 9;
+                        w += 9;
                     }
 
                     // remove right border if needed
                     if( localWindowX + localWindowWidth < widgetWindowWidth - 5 )
                     {
                         tiles &= ~TileSet::Right;
-                        w += 7;
+                        w += 9;
                     }
 
                 }
@@ -806,7 +806,7 @@ namespace Oxygen
 
                     x += Oxygen::Entry_SideMargin;
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-1, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+8, h, options, data, tiles  );
 
                 } else {
 
@@ -815,7 +815,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles );
 
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+8, h, options, data, tiles  );
 
                 }
 
@@ -898,7 +898,7 @@ namespace Oxygen
                     options &= ~(Hover|Focus);
                     TileSet::Tiles tiles( TileSet::Full );
                     tiles &= ( ~TileSet::Left );
-                    Style::instance().renderHole( window, clipRect, x-8, y-1, w+9, h+2, options, tiles );
+                    Style::instance().renderHole( window, clipRect, x-10, y-1, w+11, h+2, options, tiles );
                     return;
 
                 } else {
@@ -1392,7 +1392,7 @@ namespace Oxygen
                 // shrink spinbox entry hole by 3px on right side
                 x += Oxygen::Entry_SideMargin;
                 w -= Oxygen::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-1, y-1, w+6, h+2, options, data, tiles );
+                Style::instance().renderHole( window, clipRect, x-1, y-1, w+8, h+2, options, data, tiles );
 
             } else {
 
@@ -1404,7 +1404,7 @@ namespace Oxygen
 
                 // shrink spinbox entry hole by 3px on right side
                 w -= Oxygen::Entry_SideMargin;
-                Style::instance().renderHole( window, clipRect, x-5, y-1, w+6, h+2, options, data, tiles );
+                Style::instance().renderHole( window, clipRect, x-7, y-1, w+8, h+2, options, data, tiles );
 
             }
 
@@ -1655,7 +1655,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles );
 
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-6, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x-8, y, w+9, h, options, data, tiles );
 
                 } else {
 
@@ -1664,7 +1664,7 @@ namespace Oxygen
 
                     x += Oxygen::Entry_SideMargin;
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( window, clipRect, x-1, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x-1, y, w+9, h, options, data, tiles );
 
                 }
 
@@ -1720,7 +1720,7 @@ namespace Oxygen
                         w-= Oxygen::Entry_SideMargin;
                     }
 
-                    Style::instance().renderHole( window, clipRect, x-5, y, w+5, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
 
                 } else {
 
@@ -1732,7 +1732,7 @@ namespace Oxygen
                         x += Oxygen::Entry_SideMargin; w-= Oxygen::Entry_SideMargin;
                     }
 
-                    Style::instance().renderHole( window, clipRect, x, y, w+5, h, options, data, tiles );
+                    Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
 
                 }
 

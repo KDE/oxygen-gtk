@@ -1304,8 +1304,8 @@ namespace Oxygen
 
                 Cairo::Context context( window, clipRect );
                 const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
-                if( glow.isValid() ) helper().holeFocused( base, glow, 0, 7 ).render( context, x, y, w, h );
-                else helper().hole( base, 0, 7 ).render( context, x, y, w, h );
+                if( glow.isValid() ) helper().holeFocused( base, glow ).render( context, x, y, w, h );
+                else helper().hole( base ).render( context, x, y, w, h );
 
             } else if( glow.isValid() ) {
 
@@ -1728,8 +1728,8 @@ namespace Oxygen
         if( fill.isValid() ) tiles |= TileSet::Center;
 
         const ColorUtils::Rgba glow( holeShadowColor( options, animationData ) );
-        if( glow.isValid() ) helper().holeFocused( base, fill, glow, 0, 7 ).render( context, x, y, w, h, tiles );
-        else helper().hole( base, fill, 0, 7 ).render( context, x, y, w, h, tiles );
+        if( glow.isValid() ) helper().holeFocused( base, fill, glow ).render( context, x, y, w, h, tiles );
+        else helper().hole( base, fill ).render( context, x, y, w, h, tiles );
 
     }
 

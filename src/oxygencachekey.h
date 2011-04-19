@@ -170,11 +170,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, const ColorUtils::Rgba& glow, double shade, int size ):
+        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, const ColorUtils::Rgba& glow, int size ):
             _color( color.toInt() ),
             _fill( fill.toInt() ),
             _glow( glow.toInt() ),
-            _shade( shade ),
             _size( size ),
             _filled( fill.isValid() )
         {}
@@ -185,7 +184,6 @@ namespace Oxygen
             return
                 _color == other._color &&
                 _glow == other._glow &&
-                _shade == other._shade &&
                 _size == other._size &&
                 _filled == other._filled &&
                 (_fill == other._fill || !_filled );
@@ -196,7 +194,6 @@ namespace Oxygen
         {
             if( _color != other._color ) return _color < other._color;
             if( _glow != other._glow ) return _glow < other._glow;
-            else if( _shade != other._shade ) return _shade < other._shade;
             else if( _size != other._size ) return _size < other._size;
             else if( _filled != other._filled ) return !_filled;
             else if( _filled && _fill != other._fill ) return _fill < other._fill;
@@ -208,14 +205,13 @@ namespace Oxygen
         guint32 _color;
         guint32 _fill;
         guint32 _glow;
-        double _shade;
         int _size;
         bool _filled;
 
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const HoleFocusedKey& key )
         {
-            out << "HoleFocusedKey - color: " << key._color << " glow: " << key._glow << " fill: " << key._fill << " shade: " << key._shade << " size: " << key._size << " filled: " << key._filled;
+            out << "HoleFocusedKey - color: " << key._color << " glow: " << key._glow << " fill: " << key._fill << " size: " << key._size << " filled: " << key._filled;
             return out;
         }
 

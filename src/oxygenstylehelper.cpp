@@ -624,41 +624,28 @@ namespace Oxygen
 
 
     //______________________________________________________________________________
-    const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow, double shade, int size )
+    const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow, int size )
     {
 
-        const HoleFocusedKey key( base, fill, glow, shade, size );
+        const HoleFocusedKey key( base, fill, glow, size );
         const TileSet& tileSet( m_holeFocusedCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
-        // create surface and initialize
-        const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
-        const int w( 2*rsize );
-        const int h( 2*rsize );
+        // first create shadow
+        const int shadowSize( (size*5)/7 );
+        Cairo::Surface shadowSurface( createSurface( 2*shadowSize, 2*shadowSize ) );
 
-        Cairo::Surface surface( createSurface( w, h ) );
         {
-
-            Cairo::Context context( surface );
-            cairo_translate( context, -2, -2 );
-            cairo_scale( context, 10.0/w, 10.0/h );
-
-            // inside
-            if( fill.isValid() )
-            {
-                cairo_ellipse( context, 4, 3, 6, 7 );
-                cairo_set_source( context, fill );
-                cairo_fill( context );
-            }
+            Cairo::Context context( shadowSurface );
+            cairo_scale( context, 5.0/shadowSize, 5.0/shadowSize );
 
             // get alpha channel
             double alpha( glow.isValid() ? glow.alpha() : 0 );
-
             if( alpha < 1 )
             {
 
                 // shadow
-                drawInverseShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor( base ), 1.0 - alpha ), 3, 8, 0.0);
+                drawInverseShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor( base ), 1.0 - alpha ), 1, 8, 0.0);
 
             }
 
@@ -666,13 +653,35 @@ namespace Oxygen
             {
 
                 // glow
-                drawInverseGlow( context, glow, 3, 8, size );
+                drawInverseGlow( context, glow, 1, 8, shadowSize );
 
             }
 
         }
 
-        return m_holeFocusedCache.insert( key, TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 ) );
+        Cairo::Surface surface( createSurface( 2*size, 2*size ) );
+        {
+
+            Cairo::Context context( surface );
+            cairo_scale( context, 7.0/size, 7.0/size );
+
+            // inside
+            if( fill.isValid() )
+            {
+                cairo_rounded_rectangle( context, 1, 1, 12, 12, 2.5 );
+                cairo_set_source( context, fill );
+                cairo_fill( context );
+            }
+
+            // draw shadow
+            TileSet(
+                shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
+                shadowSize-1, shadowSize, 2, 1 ).
+                render( context, 0, 0, size*2, size*2, TileSet::Full );
+
+        }
+
+        return m_holeFocusedCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
 
     }
 
