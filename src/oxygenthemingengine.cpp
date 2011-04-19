@@ -761,7 +761,7 @@ namespace Oxygen
 
                     x += Oxygen::Entry_SideMargin;
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( context, x-1, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( context, x-1, y, w+8, h, options, data, tiles  );
 
                 } else {
 
@@ -770,7 +770,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground( context, 0L, widget, x-5, y, w+6, h, tiles );
 
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( context, x-5, y, w+6, h, options, data, tiles  );
+                    Style::instance().renderHole( context, x-7, y, w+8, h, options, data, tiles  );
 
                 }
 
@@ -1162,7 +1162,7 @@ namespace Oxygen
                     Style::instance().renderHoleBackground( context, 0L, widget, x-6, y, w+7, h, tiles );
 
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( context, x-6, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( context, x-8, y, w+9, h, options, data, tiles );
 
                 } else {
 
@@ -1173,7 +1173,7 @@ namespace Oxygen
 
                     x += Oxygen::Entry_SideMargin;
                     w -= Oxygen::Entry_SideMargin;
-                    Style::instance().renderHole( context, x-1, y, w+7, h, options, data, tiles );
+                    Style::instance().renderHole( context, x-1, y, w+9, h, options, data, tiles );
 
                 }
 
@@ -1225,11 +1225,13 @@ namespace Oxygen
                 if(!Style::instance().animations().innerShadowEngine().contains(widget) ||
                        (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
                 {
+                    
                     Style::instance().renderHole( context, x, y, w, h, options, data );
-                }
-                else
-                {
+
+                } else {
+                
                     Style::instance().renderHole( context, x+1, y+1, w-2, h-2, options, data );
+                    
                 }
 
             }

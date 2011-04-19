@@ -64,7 +64,6 @@ namespace Oxygen
             m_slopeCache.clear();
             m_slabFocusedCache.clear();
             m_slabSunkenCache.clear();
-            m_holeCache.clear();
             m_holeFocusedCache.clear();
             m_holeFlatCache.clear();
             m_scrollHoleCache.clear();
@@ -129,15 +128,18 @@ namespace Oxygen
         //!@name holes
         //@{
 
-        const TileSet& hole( const ColorUtils::Rgba& base, const ColorUtils::Rgba& fill, double shade, int size = 7);
-        const TileSet& hole( const ColorUtils::Rgba& base, double shade, int size = 7)
-        { return hole( base, ColorUtils::Rgba(), shade, size ); }
+        const TileSet& hole( const ColorUtils::Rgba& base, const ColorUtils::Rgba& fill, int size = 7)
+        { return holeFocused( base, fill, ColorUtils::Rgba(), size ); }
 
-        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, double shade, int size = 7 );
-        const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, double shade, int size = 7 )
-        { return holeFocused( base, ColorUtils::Rgba(), glow, shade, size ); }
+        const TileSet& hole( const ColorUtils::Rgba& base, int size = 7)
+        { return holeFocused( base, ColorUtils::Rgba(), ColorUtils::Rgba(), size ); }
 
-        const TileSet& holeFlat( const  ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, int size = 7 )
+        { return holeFocused( base, ColorUtils::Rgba(), glow, size ); }
+
+        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7 );
+
+        const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
         const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
 
         //@}
@@ -195,9 +197,6 @@ namespace Oxygen
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
 
-        //! draw hole
-        void drawHole( Cairo::Context&, const ColorUtils::Rgba&, double shade, int r = 7 ) const;
-
         //! shadow rendering
         virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
 
@@ -245,9 +244,6 @@ namespace Oxygen
 
         //! slabs
         TileSetCache<SlabKey> m_slabSunkenCache;
-
-        //! holes
-        TileSetCache<HoleKey> m_holeCache;
 
         //! holes
         TileSetCache<HoleFocusedKey> m_holeFocusedCache;
