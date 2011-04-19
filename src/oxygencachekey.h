@@ -389,8 +389,7 @@ namespace Oxygen
     };
 
     //! key for groove
-    typedef SlabKey GrooveKey;
-
+    typedef DockFrameKey GrooveKey;
 
     //! key for selection rects
     class SelectionKey

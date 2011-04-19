@@ -2076,7 +2076,7 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
-        helper().groove( base, 0 ).render( context, child.x, child.y, child.width, child.height );
+        helper().groove( base ).render( context, child.x, child.y, child.width, child.height );
 
     }
 
