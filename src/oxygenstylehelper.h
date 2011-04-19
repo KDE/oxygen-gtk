@@ -154,7 +154,7 @@ namespace Oxygen
         const Cairo::Surface& progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );
 
         //! slider groove
-        const TileSet& groove( const ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& groove( const ColorUtils::Rgba&, int size = 7 );
 
         //! selection
         const TileSet& selection( const ColorUtils::Rgba&, int, bool custom );

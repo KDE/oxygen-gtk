@@ -1092,10 +1092,10 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________________
-    const TileSet& StyleHelper::groove( const ColorUtils::Rgba &base, double shade, int size )
+    const TileSet& StyleHelper::groove( const ColorUtils::Rgba &base, int size )
     {
 
-        const GrooveKey key( base, shade, size );
+        const GrooveKey key( base, size );
         const TileSet& tileSet( m_grooveCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
@@ -1107,13 +1107,12 @@ namespace Oxygen
         {
 
             Cairo::Context context( surface );
-            cairo_translate( context, -2, -2 );
             cairo_scale( context, 6/w, 6/h );
 
-            Cairo::Pattern pattern( inverseShadowGradient( ColorUtils::shadowColor( base ), 3, 4, 0.0 ) );
+            Cairo::Pattern pattern( inverseShadowGradient( ColorUtils::shadowColor( base ), 1, 4, 0.0 ) );
             cairo_set_source( context, pattern );
-            cairo_ellipse( context, 3, 3, 4, 4 );
-            cairo_ellipse_negative( context, 4, 4, 2, 2 );
+            cairo_ellipse( context, 1, 1, 4, 4 );
+            cairo_ellipse_negative( context, 2, 2, 2, 2 );
             cairo_fill( context );
 
         }
