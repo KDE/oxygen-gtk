@@ -20,6 +20,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "../oxygengtkutils.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -47,11 +49,19 @@ namespace Oxygen
         void disconnect( GtkWidget* )
         { _resized = false; }
 
-        bool resized( void ) const
-        { return _resized; }
+        //! adjust widget size
+        void adjustSize( GtkWidget* widget )
+        {
+            if( _resized ) return;
+            const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
+            if( allocation.height > 1 )
+            {
 
-        void setResized( bool value )
-        { _resized = value; }
+                gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
+                _resized = true;
+
+            }
+        }
 
         private:
 

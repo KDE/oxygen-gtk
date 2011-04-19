@@ -212,19 +212,15 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-        if(
-            static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) &&
-            !static_cast<Animations*>( data )->groupBoxLabelEngine().resized( widget )
-            )
+        // groupbox labels
+        if( static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) )
         {
-
-            const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-            gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
-            static_cast<Animations*>( data )->groupBoxLabelEngine().setResized( widget, true );
+            static_cast<Animations*>( data )->groupBoxLabelEngine().adjustSize( widget );
             return TRUE;
         }
 
         # if ENABLE_COMBOBOX_LIST_RESIZE
+        // comboboxes
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
         GtkWindow* window( GTK_WINDOW( widget ) );
@@ -310,6 +306,13 @@ namespace Oxygen
             GtkFrame *frame( GTK_FRAME( gtk_widget_get_parent( widget ) ) );
             if( widget == gtk_frame_get_label_widget( frame ) && !Gtk::gtk_widget_find_parent( widget, "GtkPizza" ) )
             {
+                #if OXYGEN_DEBUG
+                std::cout
+                    << "Oxygen::Animations::realizationHook -"
+                    << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                    << " parent: " << frame << " (" << G_OBJECT_TYPE_NAME( frame ) << ")"
+                    << std::endl;
+                #endif
 
                 // modify alignment
                 gtk_frame_set_label_align( frame, 0.5, 0.0 );
@@ -317,24 +320,8 @@ namespace Oxygen
 
                 // register to engine
                 static_cast<Animations*>( data )->groupBoxLabelEngine().registerWidget( widget );
+                static_cast<Animations*>( data )->groupBoxLabelEngine().adjustSize( widget );
 
-                const GdkRectangle allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                if( allocation.height > 1 && !static_cast<Animations*>( data )->groupBoxLabelEngine().resized( widget ) )
-                {
-
-                    gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
-                    static_cast<Animations*>( data )->groupBoxLabelEngine().setResized( widget, true );
-
-                }
-
-                #if OXYGEN_DEBUG
-                std::cout
-                    << "Oxygen::Animations::realizationHook -"
-                    << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-                    << " height: " << allocation.height+14
-                    << " parent: " << frame << " (" << G_OBJECT_TYPE_NAME( frame ) << ")"
-                    << std::endl;
-                #endif
             }
 
         }

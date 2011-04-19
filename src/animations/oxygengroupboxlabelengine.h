@@ -47,11 +47,9 @@ namespace Oxygen
         virtual ~GroupBoxLabelEngine( void )
         {}
 
-        bool resized( GtkWidget* widget )
-        { return data().value( widget ).resized(); }
-
-        void setResized( GtkWidget* widget, bool value )
-        { data().value( widget ).setResized( value ); }
+        // adjust widget size
+        void adjustSize( GtkWidget* widget )
+        { return data().value( widget ).adjustSize( widget ); }
 
     };
 
