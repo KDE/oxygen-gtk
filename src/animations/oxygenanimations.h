@@ -28,6 +28,7 @@
 #include "oxygencomboboxentryengine.h"
 #include "oxygendialogengine.h"
 #include "oxygengroupboxengine.h"
+#include "oxygengroupboxlabelengine.h"
 #include "oxygenhook.h"
 #include "oxygenhoverengine.h"
 #include "oxygenmainwindowengine.h"
@@ -102,6 +103,10 @@ namespace Oxygen
         //! groupbox engine
         GroupBoxEngine& groupBoxEngine( void ) const
         { return *_groupBoxEngine; }
+
+        //! groupbox engine
+        GroupBoxLabelEngine& groupBoxLabelEngine( void ) const
+        { return *_groupBoxLabelEngine; }
 
         //! background hint
         BackgroundHintEngine& backgroundHintEngine( void ) const
@@ -186,7 +191,7 @@ namespace Oxygen
         static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
         //! combobox list size adjustment hook
-        static gboolean comboBoxHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+        static gboolean sizeAllocationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! combobox entry size adjustment hook
         static gboolean comboBoxEntryHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
@@ -222,6 +227,9 @@ namespace Oxygen
 
         //! groupbox engine
         GroupBoxEngine* _groupBoxEngine;
+
+        //! groupbox engine
+        GroupBoxLabelEngine* _groupBoxLabelEngine;
 
         //! hover engine
         HoverEngine* _hoverEngine;
@@ -288,8 +296,8 @@ namespace Oxygen
         //! combobox hook
         Hook _comboBoxEntryHook;
 
-        //! combobox hook
-        Hook _comboBoxHook;
+        //! size allocation hook
+        Hook _sizeAllocationHook;
 
         //! background hint hook
         Hook _backgroundHintHook;
