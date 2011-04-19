@@ -877,16 +877,12 @@ namespace Oxygen
         {
             Cairo::Context context( surface );
 
-            cairo_pattern_t* pattern( cairo_pattern_create_radial( 4.5, 4.5, 4.5 ) );
-            ColorUtils::Rgba tmp( ColorUtils::alphaColor( glow, 180.0/255 ) );
-            cairo_pattern_add_color_stop( pattern, 0.75, tmp );
-
-            tmp.setAlpha( 0 );
-            cairo_pattern_add_color_stop( pattern,  0.90, tmp );
-            cairo_pattern_add_color_stop( pattern,  0.4, tmp );
+            cairo_pattern_t* pattern( cairo_pattern_create_radial( 4.5, 4.5, 3.5 ) );
+            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( glow, 180.0/255 ) );
+            cairo_pattern_add_color_stop( pattern,  0.5, ColorUtils::Rgba::transparent( glow ) );
 
             cairo_set_source( context, pattern );
-            cairo_ellipse( context, 0, 0, 9, 9 ) ;
+            cairo_ellipse( context, 1, 1, 7, 7 ) ;
             cairo_fill( context );
 
         }
