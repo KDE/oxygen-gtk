@@ -622,41 +622,6 @@ namespace Oxygen
 
     }
 
-    //________________________________________________________________________________________________________
-    const TileSet& StyleHelper::hole( const ColorUtils::Rgba &base, const ColorUtils::Rgba& fill, double shade, int size )
-    {
-
-        const HoleKey key( base, fill, shade, size );
-        const TileSet& tileSet( m_holeCache.value( key ) );
-        if( tileSet.isValid() ) return tileSet;
-
-        // create pixbuf and initialize
-        const int rsize( (int)ceil(double(size) * 5.0/7.0 ) );
-        const int w( 2*rsize );
-        const int h( 2*rsize );
-        Cairo::Surface surface( createSurface( w, h ) );
-
-        {
-
-            Cairo::Context context( surface );
-            cairo_translate( context, -2, -2 );
-            cairo_scale( context, 10.0/w, 10.0/h );
-
-            // inside
-            if( fill.isValid() )
-            {
-                cairo_ellipse( context, 4, 3, 6, 7 );
-                cairo_set_source( context, fill );
-                cairo_fill( context );
-            }
-
-            // shadow
-            drawInverseShadow( context, ColorUtils::shadowColor( base ), 3, 8, 0.0);
-
-        }
-
-        return m_holeCache.insert( key, TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 ) );
-    }
 
     //______________________________________________________________________________
     const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow, double shade, int size )
@@ -675,16 +640,35 @@ namespace Oxygen
         {
 
             Cairo::Context context( surface );
-            const TileSet& holeTileSet = hole( base, fill, shade, size );
-
-            // hole
-            holeTileSet.render( context, 0, 0, w, h );
-
-            // glow
             cairo_translate( context, -2, -2 );
             cairo_scale( context, 10.0/w, 10.0/h );
 
-            drawInverseGlow( context, glow, 3, 8, size );
+            // inside
+            if( fill.isValid() )
+            {
+                cairo_ellipse( context, 4, 3, 6, 7 );
+                cairo_set_source( context, fill );
+                cairo_fill( context );
+            }
+
+            // get alpha channel
+            double alpha( glow.isValid() ? glow.alpha() : 0 );
+
+            if( alpha < 1 )
+            {
+
+                // shadow
+                drawInverseShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor( base ), 1.0 - alpha ), 3, 8, 0.0);
+
+            }
+
+            if( alpha > 0 )
+            {
+
+                // glow
+                drawInverseGlow( context, glow, 3, 8, size );
+
+            }
 
         }
 

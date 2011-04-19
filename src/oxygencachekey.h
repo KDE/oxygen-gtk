@@ -165,59 +165,6 @@ namespace Oxygen
     };
 
     //! key for holes
-    class HoleKey
-    {
-        public:
-
-        //! constructor
-        HoleKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, double shade, int size ):
-            _color( color.toInt() ),
-            _fill( fill.toInt() ),
-            _shade( shade ),
-            _size( size ),
-            _filled( fill.isValid() )
-        {}
-
-        //! equal to operator
-        bool operator == (const HoleKey& other ) const
-        {
-            return
-                _color == other._color &&
-                _shade == other._shade &&
-                _size == other._size &&
-                _filled == other._filled &&
-                (_fill == other._fill || !_filled );
-        }
-
-        //! less than operator
-        bool operator < (const HoleKey& other ) const
-        {
-            if( _color != other._color ) return _color < other._color;
-            else if( _shade != other._shade ) return _shade < other._shade;
-            else if( _size != other._size ) return _size < other._size;
-            else if( _filled != other._filled ) return !_filled;
-            else if( _filled && _fill != other._fill ) return _fill < other._fill;
-            else return false;
-        }
-
-        private:
-
-        guint32 _color;
-        guint32 _fill;
-        double _shade;
-        int _size;
-        bool _filled;
-
-        //! streamer
-        friend std::ostream& operator << ( std::ostream& out, const HoleKey& key )
-        {
-            out << "HoleKey - color: " << key._color << " fill: " << key._fill << " shade: " << key._shade << " size: " << key._size << " filled: " << key._filled;
-            return out;
-        }
-
-    };
-
-    //! key for holes
     class HoleFocusedKey
     {
         public:
