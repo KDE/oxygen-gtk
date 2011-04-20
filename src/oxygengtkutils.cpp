@@ -266,6 +266,13 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_button_is_header( GtkWidget* widget )
+    {
+        if( !GTK_IS_BUTTON( widget ) ) return false;
+        return gtk_parent_tree_view( widget ) || gtk_widget_find_parent( widget, "GimpThumbBox" );
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_button_is_in_path_bar( GtkWidget* widget )
     {
         if( !( GTK_IS_BUTTON( widget ) && gtk_widget_get_parent( widget ) ) ) return false;
