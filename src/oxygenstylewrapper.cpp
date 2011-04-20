@@ -665,11 +665,11 @@ namespace Oxygen
 
                 }
 
-            } else if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) ) {
+            } else if( Gtk::gtk_button_is_header( widget ) ) {
 
                 // register to scrolled window engine if any
                 if(
-                    GTK_IS_SCROLLED_WINDOW( parent = gtk_widget_get_parent( parent ) ) &&
+                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
                     Style::instance().animations().scrolledWindowEngine().contains( parent )
                     )
                 { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }

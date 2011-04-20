@@ -123,6 +123,13 @@ namespace Oxygen
         //! return parent of given type if any
         GtkWidget* gtk_widget_find_parent( GtkWidget*, GType );
 
+        //! return parent of given type
+        inline GtkWidget* gtk_widget_find_parent( GtkWidget* widget, const std::string& typeName )
+        {
+            const GType tmp( g_type_from_name( typeName.c_str() ) );
+            return tmp ? gtk_widget_find_parent( widget, tmp ): 0L;
+        }
+
         //! return parent button if any.
         inline GtkWidget* gtk_parent_button( GtkWidget* widget )
         { return gtk_widget_find_parent( widget, GTK_TYPE_BUTTON ); }
@@ -208,7 +215,10 @@ namespace Oxygen
 
         //! true for 'flat' buttons (e.g. toolbuttons)
         bool gtk_button_is_flat( GtkWidget* );
-
+        
+        //! true for treeview headers and affiliated
+        bool gtk_button_is_header( GtkWidget* );
+        
         //! true for buttons in path bars
         bool gtk_button_is_in_path_bar( GtkWidget* widget );
 
