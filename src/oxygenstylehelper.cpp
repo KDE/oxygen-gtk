@@ -801,12 +801,12 @@ namespace Oxygen
         GdkRectangle r = { 0, 0, w, h };
         GdkRectangle rect = { 1, 0, w-2, h-1 };
 
-        const int shadowWidth( vertical ? 2:3 );
+        double radius = 3.0;
 
         // base
         {
             cairo_set_source( context, dark );
-            gdk_cairo_rounded_rectangle( context, &rect, 4.5 );
+            gdk_cairo_rounded_rectangle( context, &rect, radius );
             cairo_fill( context );
         }
 
@@ -819,45 +819,23 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( shadow ) );
 
             cairo_set_source( context, pattern );
-            gdk_cairo_rounded_rectangle( context, &rect, 4.5 );
+            gdk_cairo_rounded_rectangle( context, &rect, radius );
             cairo_fill( context );
         }
 
-        // strong shadow
+        // first create shadow
+        const int shadowSize( 5 );
+        Cairo::Surface shadowSurface( createSurface( 2*shadowSize, 2*shadowSize ) );
         {
-            // left
-            Cairo::Pattern pattern( cairo_pattern_create_linear( rect.x, 0, rect.x + shadowWidth, 0 ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, vertical ? 0.2 : 0.3 ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( shadow, 0.1 ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( shadow ) );
-
-            cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, rect.x, rect.y, shadowWidth, rect.height, shadowWidth, CornersLeft );
-            cairo_fill( context );
+            Cairo::Context context( shadowSurface );
+            drawInverseShadow( context, ColorUtils::shadowColor( base ), 1, 8, 0.0);
         }
 
-        {
-            // right
-            Cairo::Pattern pattern( cairo_pattern_create_linear( rect.x + rect.width - shadowWidth, 0, rect.x + rect.width, 0 ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( shadow ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( shadow, 0.2 ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( shadow, vertical ? 0.2 : 0.3 ) );
-
-            cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, rect.x + rect.width - shadowWidth, rect.y, shadowWidth, rect.height, shadowWidth, CornersRight );
-            cairo_fill( context );
-        }
-
-        {
-            // top
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, rect.y, 0, rect.y+3 ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.3 ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( shadow ) );
-
-            cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, rect.x, rect.y, rect.width, 3, 3, CornersTop );
-            cairo_fill( context );
-        }
+        // draw shadow
+        TileSet(
+            shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
+            shadowSize-1, shadowSize, 2, 1 ).
+            render( context, 0, -1, w, h+1, TileSet::Full );
 
         // light bottom border
         {
@@ -867,7 +845,7 @@ namespace Oxygen
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
-            cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, 5.0 );
+            cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, 4.5 );
             cairo_stroke( context );
         }
 
