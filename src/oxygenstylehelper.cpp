@@ -742,7 +742,7 @@ namespace Oxygen
 
             // hole inside
             cairo_set_source( context, base );
-            cairo_rounded_rectangle( context, 1, 0, 12, 12, 3.0 );
+            cairo_rounded_rectangle( context, 1, 1, 12, 12, 3.0 );
             cairo_fill( context );
 
             {
