@@ -275,7 +275,6 @@ namespace Oxygen
         {
             const GType tmp( g_type_from_name( typeName.c_str() ) );
             return tmp ? gtk_widget_find_parent( widget, tmp ): 0L;
-
         }
 
         //! return parent button if any.
@@ -348,6 +347,9 @@ namespace Oxygen
 
         //! true for 'flat' buttons (e.g. toolbuttons)
         bool gtk_button_is_flat( GtkWidget* );
+
+        //! true for treeview headers and affiliated
+        bool gtk_button_is_header( GtkWidget* );
 
         //! true for buttons in path bars
         bool gtk_button_is_in_path_bar( GtkWidget* widget );

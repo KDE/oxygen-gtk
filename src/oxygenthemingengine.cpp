@@ -689,12 +689,12 @@ namespace Oxygen
             }
 
             // treeview headers
-            if( ( parent = Gtk::gtk_parent_tree_view( widget ) ) )
+            if( Gtk::gtk_button_is_header( widget ) )
             {
 
                 // register to scrolled window engine if any
                 if(
-                    GTK_IS_SCROLLED_WINDOW( parent = gtk_widget_get_parent( parent ) ) &&
+                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
                     Style::instance().animations().scrolledWindowEngine().contains( parent )
                     )
                 { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
@@ -1225,13 +1225,13 @@ namespace Oxygen
                 if(!Style::instance().animations().innerShadowEngine().contains(widget) ||
                        (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
                 {
-                    
+
                     Style::instance().renderHole( context, x, y, w, h, options, data );
 
                 } else {
-                
+
                     Style::instance().renderHole( context, x+1, y+1, w-2, h-2, options, data );
-                    
+
                 }
 
             }
