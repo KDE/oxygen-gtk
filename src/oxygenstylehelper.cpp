@@ -677,7 +677,7 @@ namespace Oxygen
             TileSet(
                 shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
                 shadowSize-1, shadowSize, 2, 1 ).
-                render( context, 0, 0, size*2, size*2, TileSet::Full );
+                render( context, 0, 0, size*2, size*2 );
 
         }
 
