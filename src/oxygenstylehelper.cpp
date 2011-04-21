@@ -714,7 +714,7 @@ namespace Oxygen
             {
                 // shadow (top)
                 const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( base ), shade ) );
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 14 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, -2, 0, 14 ) );
                 cairo_pattern_add_color_stop( pattern, 0, dark );
                 cairo_pattern_add_color_stop( pattern, 0.4, ColorUtils::Rgba::transparent( dark ) );
                 cairo_set_source( context, pattern );
@@ -725,7 +725,7 @@ namespace Oxygen
             {
                 // contrast (bottom)
                 const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor( base ), shade ) );
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 14 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 18 ) );
                 cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
                 cairo_pattern_add_color_stop( pattern, 1.0, light );
                 cairo_set_source( context, pattern );
