@@ -63,6 +63,11 @@ namespace Oxygen
             Flags<StyleOption>( f )
         {}
 
+        //! constructor
+        StyleOptions( Flags<StyleOption> f):
+            Flags<StyleOption>( f )
+        {}
+
         //! constructor from state flags
         StyleOptions( GtkStateFlags flags )
         {
@@ -117,5 +122,7 @@ namespace Oxygen
     };
 
 }
+
+OX_DECLARE_OPERATORS_FOR_FLAGS( Oxygen::StyleOptions )
 
 #endif

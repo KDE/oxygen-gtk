@@ -193,11 +193,12 @@ namespace Oxygen
                 Reversed = 1<<3
             };
 
+            OX_DECLARE_FLAGS( CellFlags, CellFlag );
+
             //! constructor from CellInfo
             explicit CellInfoFlags( GtkTreeView* treeView, const CellInfo& cellInfo );
 
             //! flags
-            typedef Flags<CellFlag> CellFlags;
             CellFlags _flags;
 
             //! depth
@@ -210,5 +211,8 @@ namespace Oxygen
         };
 
     }
+
+    OX_DECLARE_OPERATORS_FOR_FLAGS( Gtk::CellInfoFlags::CellFlags );
+
 }
 #endif

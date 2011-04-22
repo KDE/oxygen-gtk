@@ -103,7 +103,8 @@ namespace Oxygen
         CornersAll = CornersTop|CornersBottom
     };
 
-    typedef Flags<Corner> Corners;
+    OX_DECLARE_FLAGS( Corners, Corner );
+    OX_DECLARE_OPERATORS_FOR_FLAGS( Corners );
 
     //! rounded rectangle
     void cairo_rounded_rectangle( cairo_t*, double x, double y, double width, double height, double radius, Corners corners = CornersAll );
