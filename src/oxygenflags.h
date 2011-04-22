@@ -162,9 +162,45 @@ namespace Oxygen
 
     };
 
+    //! bitwise or
     template<typename Enum>
     Flags<Enum> operator|(Enum f1, Enum f2)
     { return Flags<Enum>(f1) | f2; }
 
+    //! used for bitwise or between incompatible flags
+    class IncompatibleFlag
+    {
+        public:
+
+        //! constructor
+        inline explicit IncompatibleFlag(int ai):
+            i(ai)
+            {}
+
+        //! cast to int
+        inline operator int() const
+        { return i; }
+
+        private:
+        int i;
+
+    };
+
 }
+
+#define OX_DECLARE_FLAGS(F, Enum)\
+typedef Flags<Enum> F;
+
+#define OX_DECLARE_INCOMPATIBLE_FLAGS(F) \
+inline Oxygen::IncompatibleFlag operator|(F::enum_type f1, int f2) \
+{ return Oxygen::IncompatibleFlag(int(f1) | f2); }
+
+
+#define OX_DECLARE_OPERATORS_FOR_FLAGS(F) \
+inline Oxygen::Flags<F::enum_type> operator|(F::enum_type f1, F::enum_type f2) \
+{ return Oxygen::Flags<F::enum_type>(f1) | f2; } \
+inline Oxygen::Flags<F::enum_type> operator|(F::enum_type f1, Oxygen::Flags<F::enum_type> f2) \
+{ return f2 | f1; } \
+OX_DECLARE_INCOMPATIBLE_FLAGS(F)
+
 #endif
