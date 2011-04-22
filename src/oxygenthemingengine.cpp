@@ -101,10 +101,7 @@ namespace Oxygen
             rect.x -= allocation.x;
             rect.y -= allocation.y;
 
-            StyleOptions options( Flat );
-            options |= Hover;
-
-            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options );
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, Flat|Hover );
 
         } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
 
@@ -114,10 +111,7 @@ namespace Oxygen
             rect.x -= allocation.x;
             rect.y -= allocation.y;
 
-            StyleOptions options( Flat );
-            options |= Hover;
-
-            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options );
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, Flat|Hover );
 
         } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
 
@@ -128,11 +122,7 @@ namespace Oxygen
             rect.y -= allocation.y;
 
             const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
-
-            StyleOptions options( Flat );
-            options |= Hover;
-
-            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, options, data );
+            Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, Flat|Hover, data );
 
         }
 
@@ -178,23 +168,14 @@ namespace Oxygen
             }
 
             if( accepted )
-            {
-                StyleOptions options( Blend );
-                options |= Menu;
-                Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
-            }
+            { Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, Blend|Menu ); }
 
         } else {
 
-            StyleOptions options;
-            if( !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
-            {
-                options |= Blend;
-                if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) )
-                { options |= Menu; }
-            }
-
-            options |= Blend;
+            StyleOptions options( Blend );
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) &&
+                !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
+            { options |= Menu; }
 
             // get orientation
             // TODO: is there a better way ?
@@ -569,7 +550,8 @@ namespace Oxygen
 
                 StyleOptions options(widget, state);
                 if(GTK_IS_PROGRESS_BAR(widget) && Gtk::gtk_widget_is_vertical(widget))
-                    options|=Vertical;
+                { options|=Vertical; }
+
                 Style::instance().renderProgressBarHole( context, x, y, w, h, options );
                 return;
 
@@ -722,8 +704,7 @@ namespace Oxygen
                 */
 
                 StyleOptions options( widget, state );
-                options |= NoFill;
-                options |= Blend;
+                options |= NoFill|Blend;
 
                 // focus handling
                 Style::instance().animations().comboBoxEntryEngine().registerWidget( parent );
@@ -784,8 +765,6 @@ namespace Oxygen
 
                 // combobox buttons
                 const bool reversed( Gtk::gtk_theming_engine_layout_is_reversed( engine ) );
-
-                // StyleOptions options( widget, state, shadow );
                 StyleOptions options( widget, state );
                 options |= Blend;
 
@@ -870,8 +849,8 @@ namespace Oxygen
             if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
             #endif
 
-            StyleOptions options( Blend );
-            options |= StyleOptions( widget, state );
+            StyleOptions options( widget, state );
+            options |= Blend;
 
             // TODO: reimplement with Gtk3
             // if( style )
@@ -948,19 +927,13 @@ namespace Oxygen
             {
 
                 const GdkRectangle& rect( engine.animatedRectangle( widget ) );
-                StyleOptions options( Hover );
-                options |= Blend;
-
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover|Blend );
 
             } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                 const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                 const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
-                StyleOptions options( Hover );
-                options |= Blend;
-
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, Hover|Blend, data );
 
             }
             return;
@@ -978,9 +951,7 @@ namespace Oxygen
 
             } else {
 
-                StyleOptions options( Menu );
-
-                options |= Round;
+                StyleOptions options( Menu|Round );
 
                 // this is not working.
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
@@ -1029,23 +1000,18 @@ namespace Oxygen
                 {
 
                     const GdkRectangle& rect( engine.animatedRectangle( widget ) );
-                    StyleOptions options( Hover );
-
-                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover );
 
                 } else if( engine.isLocked( widget ) ) {
 
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
-                    StyleOptions options( Hover );
-                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, options );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover );
 
                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
-                    StyleOptions options( Hover );
-
-                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, options, data );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, Hover, data );
 
                  }
 
@@ -1352,9 +1318,7 @@ namespace Oxygen
         } else if( borderStyle == GTK_BORDER_STYLE_OUTSET ) {
 
             // default shadow_out frame
-            StyleOptions options( Blend );
-            options |= NoFill;
-            Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, options );
+            Style::instance().renderSlab( context, x-1, y-1, w+2, h+2, Blend|NoFill );
             return;
 
         }
@@ -1393,8 +1357,8 @@ namespace Oxygen
         {
 
             // this might move to drawShadowGap
-            StyleOptions options( NoFill );
-            options |= StyleOptions( widget, state );
+            StyleOptions options( widget, state );
+            options |= NoFill;
             options &= ~(Hover|Focus);
 
             if( GTK_IS_NOTEBOOK( widget ) && !Gtk::gdk_default_screen_is_composited() )
@@ -1799,8 +1763,8 @@ namespace Oxygen
         Palette::Role role( Palette::ButtonText );
 
         // define options
-        StyleOptions options( Contrast );
-        options |= StyleOptions( widget, state );
+        StyleOptions options( widget, state );
+        options |= Contrast;
 
         // Arrows which are active are painted as hovered
         if( state&GTK_STATE_FLAG_ACTIVE ) options |= Hover;
@@ -2179,8 +2143,8 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ) {
 
-            StyleOptions options( Blend );
-            options |= StyleOptions( widget, stateFlags );
+            StyleOptions options( widget, stateFlags );
+            options |= Blend;
             options &= ~Sunken;
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
