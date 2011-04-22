@@ -71,4 +71,6 @@ namespace Oxygen
 
 }
 
+OX_DECLARE_OPERATORS_FOR_FLAGS( Oxygen::TabOptions )
+
 #endif
