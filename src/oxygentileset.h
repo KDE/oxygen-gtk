@@ -103,7 +103,7 @@ namespace Oxygen
             Full = Ring|Center
         };
 
-        typedef Flags<Tile> Tiles;
+        OX_DECLARE_FLAGS( Tiles, Tile );
 
         //! return size associated to this tileset
         int width( void ) const
@@ -161,6 +161,8 @@ namespace Oxygen
         int _h3;
 
     };
+
+    OX_DECLARE_OPERATORS_FOR_FLAGS( TileSet::Tiles );
 
 }
 

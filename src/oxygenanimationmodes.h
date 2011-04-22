@@ -59,8 +59,8 @@ namespace Oxygen
         AnimationFocus = 1<<1,
     };
 
-    //! Just for code clarity
-    typedef unsigned int AnimationModes;
+    OX_DECLARE_FLAGS( AnimationModes, AnimationMode )
+    OX_DECLARE_OPERATORS_FOR_FLAGS( AnimationModes )
 
 }
 
