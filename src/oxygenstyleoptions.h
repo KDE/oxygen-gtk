@@ -63,6 +63,11 @@ namespace Oxygen
             Flags<StyleOption>( f )
         {}
 
+        //! constructor
+        StyleOptions( Flags<StyleOption> f):
+            Flags<StyleOption>( f )
+        {}
+
         //! constructor from widget
         StyleOptions( GtkWidget* widget, GtkStateType state, GtkShadowType shadow = GTK_SHADOW_NONE )
         {
