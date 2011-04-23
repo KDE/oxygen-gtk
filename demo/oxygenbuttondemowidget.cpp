@@ -220,6 +220,10 @@ namespace Oxygen
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_PASTE ), 2 );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_toggle_tool_button_new_from_stock( GTK_STOCK_DIALOG_AUTHENTICATION ), 2 );
+            gtk_toggle_tool_button_set_active( GTK_TOGGLE_TOOL_BUTTON( toolButton ), true );
+            gtk_widget_show( GTK_WIDGET( toolButton ) );
+
             // table for text position and icon size
             GtkWidget* table = gtk_table_new( 2, 3, false );
             gtk_container_set_border_width( GTK_CONTAINER( table ), 4 );
