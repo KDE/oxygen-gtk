@@ -667,6 +667,7 @@ namespace Oxygen
 
             Cairo::Context context( surface );
             cairo_scale( context, 7.0/size, 7.0/size );
+            cairo_set_line_width( context, 1 );
 
             // inside
             if( fill.isValid() )
