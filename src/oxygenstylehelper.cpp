@@ -451,10 +451,10 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    const TileSet& StyleHelper::slabSunken( const ColorUtils::Rgba& base, double shade, int size )
+    const TileSet& StyleHelper::slabSunken( const ColorUtils::Rgba& base, int size )
     {
 
-        const SlabKey key( base, shade, size );
+        const SlabKey key( base, 0.0, size );
         const TileSet& tileSet( m_slabSunkenCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
@@ -467,6 +467,7 @@ namespace Oxygen
 
             // create cairo context
             Cairo::Context context( surface );
+            cairo_set_line_width( context, 1.0 );
             cairo_scale( context, double(size)/7, double(size)/7 );
             cairo_rectangle( context, 0, 0, 14, 14 );
             cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
@@ -474,8 +475,19 @@ namespace Oxygen
 
             if( base.isValid() )
             {
-                drawSlab( context, base, shade );
                 drawInverseShadow( context, ColorUtils::shadowColor(base), 3, 8, 0.0);
+
+                // contrast
+                {
+                    const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+                    Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 2, 0, 16 ) );
+                    cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                    cairo_pattern_add_color_stop( pattern, 1.0, light );
+                    cairo_set_source( context, pattern );
+                    cairo_rounded_rectangle( context, 2.5, 2.5, 9, 9, 4.0 );
+                    cairo_stroke( context );
+                }
+
             }
 
         }
@@ -690,7 +702,6 @@ namespace Oxygen
             // contrast pixel
             if( contrast )
             {
-                // contrast (bottom)
                 const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
                 Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 18 ) );
                 cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );

@@ -1357,7 +1357,7 @@ namespace Oxygen
         if( options&Sunken )
         {
 
-            helper().slabSunken( base, 0 ).render( context, x, y, w, h, tiles );
+            helper().slabSunken( base ).render( context, x, y, w, h, tiles );
 
         } else if( glow.isValid() ) {
 
@@ -3619,7 +3619,7 @@ namespace Oxygen
 
         } else if( base.isValid() ) {
 
-            helper().slabSunken( base, 0 ).render( context, x, y, w, h );
+            helper().slabSunken( base ).render( context, x, y, w, h );
 
         }
 

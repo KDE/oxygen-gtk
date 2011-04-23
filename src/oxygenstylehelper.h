@@ -109,7 +109,7 @@ namespace Oxygen
 
         const TileSet& slab( const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
-        const TileSet& slabSunken( const ColorUtils::Rgba&, double shade, int size = 7 );
+        const TileSet& slabSunken( const ColorUtils::Rgba&, int size = 7 );
 
         const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
         const Cairo::Surface& roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
