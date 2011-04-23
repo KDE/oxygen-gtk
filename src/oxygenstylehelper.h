@@ -127,16 +127,16 @@ namespace Oxygen
         //!@name holes
         //@{
 
-        const TileSet& hole( const ColorUtils::Rgba& base, const ColorUtils::Rgba& fill, int size = 7)
-        { return holeFocused( base, fill, ColorUtils::Rgba(), size ); }
+        const TileSet& hole( const ColorUtils::Rgba& base, const ColorUtils::Rgba& fill, int size = 7, bool contrast = false )
+        { return holeFocused( base, fill, ColorUtils::Rgba(), size, contrast ); }
 
-        const TileSet& hole( const ColorUtils::Rgba& base, int size = 7)
-        { return holeFocused( base, ColorUtils::Rgba(), ColorUtils::Rgba(), size ); }
+        const TileSet& hole( const ColorUtils::Rgba& base, int size = 7, bool contrast = false)
+        { return holeFocused( base, ColorUtils::Rgba(), ColorUtils::Rgba(), size, contrast ); }
 
-        const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, int size = 7 )
-        { return holeFocused( base, ColorUtils::Rgba(), glow, size ); }
+        const TileSet& holeFocused( const ColorUtils::Rgba& base, const ColorUtils::Rgba &glow, int size = 7, bool contrast = false )
+        { return holeFocused( base, ColorUtils::Rgba(), glow, size, contrast ); }
 
-        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7 );
+        const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7, bool contrast = false );
 
         const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
         const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
