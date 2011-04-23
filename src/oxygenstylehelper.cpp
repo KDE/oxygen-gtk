@@ -628,10 +628,12 @@ namespace Oxygen
 
 
     //______________________________________________________________________________
-    const TileSet& StyleHelper::holeFocused( const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow, int size )
+    const TileSet& StyleHelper::holeFocused(
+        const ColorUtils::Rgba &base, const ColorUtils::Rgba &fill, const ColorUtils::Rgba &glow,
+        int size, bool contrast )
     {
 
-        const HoleFocusedKey key( base, fill, glow, size );
+        const HoleFocusedKey key( base, fill, glow, size, contrast );
         const TileSet& tileSet( m_holeFocusedCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
@@ -663,6 +665,7 @@ namespace Oxygen
 
         }
 
+        // create surface
         Cairo::Surface surface( createSurface( 2*size, 2*size ) );
         {
 
@@ -682,6 +685,20 @@ namespace Oxygen
                 shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
                 shadowSize-1, shadowSize, 2, 1 ).
                 render( context, 0, 0, size*2, size*2 );
+
+            // contrast pixel
+            if( contrast )
+            {
+                // contrast (bottom)
+                const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, 18 ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1.0, light );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 0.5, 0.5, 13, 13, 4.0 );
+                cairo_stroke( context );
+
+            }
 
         }
 

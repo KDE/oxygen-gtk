@@ -170,12 +170,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, const ColorUtils::Rgba& glow, int size ):
+        HoleFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& fill, const ColorUtils::Rgba& glow, int size, bool contrast ):
             _color( color.toInt() ),
             _fill( fill.toInt() ),
             _glow( glow.toInt() ),
             _size( size ),
-            _filled( fill.isValid() )
+            _filled( fill.isValid() ),
+            _contrast( contrast )
         {}
 
         //! equal to operator
@@ -186,7 +187,8 @@ namespace Oxygen
                 _glow == other._glow &&
                 _size == other._size &&
                 _filled == other._filled &&
-                (_fill == other._fill || !_filled );
+                (_fill == other._fill || !_filled ) &&
+                _contrast == other._contrast;
         }
 
         //! less than operator
@@ -197,6 +199,7 @@ namespace Oxygen
             else if( _size != other._size ) return _size < other._size;
             else if( _filled != other._filled ) return !_filled;
             else if( _filled && _fill != other._fill ) return _fill < other._fill;
+            else if( _contrast != other._contrast ) return _contrast < other._contrast;
             else return false;
         }
 
@@ -207,11 +210,15 @@ namespace Oxygen
         guint32 _glow;
         int _size;
         bool _filled;
+        bool _contrast;
 
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const HoleFocusedKey& key )
         {
-            out << "HoleFocusedKey - color: " << key._color << " glow: " << key._glow << " fill: " << key._fill << " size: " << key._size << " filled: " << key._filled;
+            out
+                << "HoleFocusedKey -"
+                << " color: " << key._color << " glow: " << key._glow << " fill: " << key._fill
+                << " size: " << key._size << " filled: " << key._filled << " contrast: " << key._contrast;
             return out;
         }
 

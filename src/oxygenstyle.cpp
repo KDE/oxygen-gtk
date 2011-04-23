@@ -1295,8 +1295,8 @@ namespace Oxygen
             {
 
                 const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
-                if( glow.isValid() ) helper().holeFocused( base, glow ).render( context, x, y, w, h );
-                else helper().hole( base ).render( context, x, y, w, h );
+                if( glow.isValid() ) helper().holeFocused( base, glow, 7, true ).render( context, x, y, w, h );
+                else helper().hole( base, 7, true ).render( context, x, y, w, h );
 
             } else if( glow.isValid() ) {
 
