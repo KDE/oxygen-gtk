@@ -970,13 +970,15 @@ namespace Oxygen
         // context
         Cairo::Context context( window, clipRect );
 
+        double radius( 2.5 );
+
         // glow, shadow
         {
-            cairo_rounded_rectangle( context, xf-0.8, yf-0.8, wf+1.6, hf+1.6, 3 );
+            cairo_rounded_rectangle( context, xf-0.8, yf-0.8, wf+1.6, hf+1.6, radius );
             cairo_set_source( context, ColorUtils::alphaColor( glow, 0.6 ) );
             cairo_fill( context );
 
-            cairo_rounded_rectangle( context, xf-1.2, yf-0.8, wf+2.4, hf+1.6, 3 );
+            cairo_rounded_rectangle( context, xf-1.2, yf-0.8, wf+2.4, hf+1.6, radius );
             cairo_set_source( context, ColorUtils::alphaColor( glow, 0.3 ) );
             cairo_set_line_width( context, 1.5 );
             cairo_stroke( context );
@@ -992,7 +994,7 @@ namespace Oxygen
             else fillColor = color;
 
             cairo_set_source( context, fillColor );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, 2 );
+            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
             cairo_fill( context );
         }
 
@@ -1018,7 +1020,7 @@ namespace Oxygen
             }
 
             cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, 2 );
+            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
             cairo_fill( context );
 
         }
@@ -1045,7 +1047,7 @@ namespace Oxygen
             }
 
             cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, 2 );
+            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
             cairo_fill( context );
 
         }
