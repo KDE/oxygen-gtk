@@ -72,8 +72,7 @@ namespace Oxygen
 
     };
 
-    //! key for slabs
-    /*! keys are used to store tilesets into cache */
+    //! key for focused slabs
     class SlabKey
     {
         public:
@@ -81,6 +80,15 @@ namespace Oxygen
         //! constructor
         SlabKey( const ColorUtils::Rgba& color, double shade, int size ):
             _color( color.toInt() ),
+            _glow( 0 ),
+            _shade( shade ),
+            _size( size )
+        {}
+
+        //! constructor
+        SlabKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size ):
+            _color( color.toInt() ),
+            _glow( glow.toInt() ),
             _shade( shade ),
             _size( size )
         {}
@@ -90,58 +98,13 @@ namespace Oxygen
         {
             return
                 _color == other._color &&
-                _shade == other._shade &&
-                _size == other._size;
-        }
-
-        //! less than operator
-        bool operator < (const SlabKey& other ) const
-        {
-            if( _color != other._color ) return _color < other._color;
-            else if( _shade != other._shade ) return _shade < other._shade;
-            else return _size < other._size;
-        }
-
-        private:
-
-        guint32 _color;
-        double _shade;
-        int _size;
-
-        //! streamer
-        friend std::ostream& operator << ( std::ostream& out, const SlabKey& key )
-        {
-            out << "SlabKey - color: " << key._color << " shade: " << key._shade << " size: " << key._size;
-            return out;
-        }
-
-    };
-
-    //! key for focused slabs
-    class SlabFocusedKey
-    {
-        public:
-
-        //! constructor
-        SlabFocusedKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, double shade, int size ):
-            _color( color.toInt() ),
-            _glow( glow.toInt() ),
-            _shade( shade ),
-            _size( size )
-        {}
-
-        //! equal to operator
-        bool operator == (const SlabFocusedKey& other ) const
-        {
-            return
-                _color == other._color &&
                 _glow == other._glow &&
                 _shade == other._shade &&
                 _size == other._size;
         }
 
         //! less than operator
-        bool operator < (const SlabFocusedKey& other ) const
+        bool operator < (const SlabKey& other ) const
         {
             if( _color != other._color ) return _color < other._color;
             else if( _glow != other._glow ) return _glow < other._glow;
@@ -157,9 +120,9 @@ namespace Oxygen
         int _size;
 
         //! streamer
-        friend std::ostream& operator << ( std::ostream& out, const SlabFocusedKey& key )
+        friend std::ostream& operator << ( std::ostream& out, const SlabKey& key )
         {
-            out << "SlabFocusedKey - color: " << key._color << " glow: " << key._glow << " shade: " << key._shade << " size: " << key._size;
+            out << "SlabKey - color: " << key._color << " glow: " << key._glow << " shade: " << key._shade << " size: " << key._size;
             return out;
         }
     };

@@ -384,46 +384,11 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, double shade, int size)
+    const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
-        const SlabKey key( base, shade, size );
+        const SlabKey key( base, glow, shade, size );
         const TileSet& tileSet( m_slabCache.value( key ) );
-        if( tileSet.isValid() ) return tileSet;
-
-        // create surface and initialize
-        const int w( 2*size );
-        const int h( 2*size );
-        Cairo::Surface surface( createSurface( w, h ) );
-
-        {
-
-            // create cairo context
-            Cairo::Context context( surface );
-            cairo_scale( context, double(size)/7, double(size)/7 );
-            cairo_rectangle( context, 0, 0, 14, 14 );
-            cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
-            cairo_fill( context );
-
-            if( base.isValid() )
-            {
-                drawShadow( context, ColorUtils::shadowColor( base ), 14 );
-                drawSlab( context, base, shade );
-            }
-
-        }
-
-        // create tileSet
-        return m_slabCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1 ) );
-
-    }
-
-    //_________________________________________________
-    const TileSet& StyleHelper::slabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
-    {
-
-        const SlabFocusedKey key( base, glow, shade, size );
-        const TileSet& tileSet( m_slabFocusedCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // create surface and initialize
@@ -446,7 +411,7 @@ namespace Oxygen
         }
 
         // create tileSet
-        return m_slabFocusedCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
+        return m_slabCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
 
     }
 
@@ -498,45 +463,13 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    const Cairo::Surface& StyleHelper::roundSlab( const ColorUtils::Rgba& base, double shade, int size )
+    const Cairo::Surface& StyleHelper::roundSlab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
-        const SlabKey key( base, shade, size );
+        SlabKey key( base, glow, shade, size );
 
         // try find in cache and return
         if( const Cairo::Surface& surface = m_roundSlabCache.value( key ) )
-        { return surface; }
-
-        // cached not found, create new
-        const int w( 3*size );
-        const int h( 3*size );
-        Cairo::Surface surface( createSurface( w, h ) );
-
-        // create cairo context
-        Cairo::Context context( surface );
-        cairo_scale( context, double(size)/7, double(size)/7 );
-
-        // shadow
-        if( base.isValid() )
-        {
-            drawShadow( context, ColorUtils::shadowColor(base), 21 );
-            drawRoundSlab( context, base, shade );
-        }
-
-        // note: we can't return the surface directly, because it is a temporary
-        // we have to return the inserted object instead
-        return m_roundSlabCache.insert( key, surface );
-
-    }
-
-    //__________________________________________________________________________________________________________
-    const Cairo::Surface& StyleHelper::roundSlabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
-    {
-
-        SlabFocusedKey key( base, glow, shade, size );
-
-        // try find in cache and return
-        if( const Cairo::Surface& surface = m_roundSlabFocusedCache.value( key ) )
         { return surface; }
 
         // cached not found, create new
@@ -555,7 +488,7 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_roundSlabFocusedCache.insert( key, surface );
+        return m_roundSlabCache.insert( key, surface );
 
     }
 
