@@ -994,17 +994,11 @@ namespace Oxygen
         // local rect
         int xl = 0;
         int yl = 0;
-        int wl = w+2;
-        int hl = h+3;
+        int wl = w;
+        int hl = h;
 
         Cairo::Surface surface( createSurface( wl, hl ) );
         Cairo::Context context( surface );
-
-        // adjust rect
-        xl += 1;
-        yl += 1;
-        wl -= 2;
-        hl -= 2;
 
         // colors
         const ColorUtils::Rgba lhighlight( ColorUtils::lightColor( highlight ) );
@@ -1014,22 +1008,26 @@ namespace Oxygen
 
         {
             // shadow
-            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)-0.5, wl, hl+2, 2.3 );
+            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)+0.5, wl-1, hl, 3.0 );
             cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
             cairo_set_line_width( context, 0.6 );
             cairo_stroke( context );
         }
 
+        xl += 1;
+        yl += 1;
+        wl -= 2;
+        hl -= 1;
+
         {
             // filling
             cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
-            cairo_rectangle( context, xl+1, yl, wl-2, hl );
+            cairo_rectangle( context, xl, yl, wl, hl );
+            cairo_rounded_rectangle( context, xl, yl, wl, hl, 2.5 );
             cairo_fill( context );
         }
 
         // create pattern pixbuf
-        wl--;
-        if( wl > 0 )
         {
 
             Cairo::Pattern mask( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
@@ -1061,7 +1059,6 @@ namespace Oxygen
 
         }
 
-        cairo_set_antialias( context, CAIRO_ANTIALIAS_NONE );
         {
             // bevel
             Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, 0, hl ) );
@@ -1070,7 +1067,7 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl, hl, 1.5 );
+            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)+0.5, wl-1, hl-1, 2.5 );
             cairo_stroke( context );
         }
 
@@ -1083,8 +1080,8 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
-            cairo_move_to( context, xl+0.5, yl+0.5 );
-            cairo_line_to( context, xl+wl-0.5, yl+0.5 );
+            cairo_move_to( context, double(xl)+0.5, double(yl)+0.5 );
+            cairo_line_to( context, double(xl+wl)-0.5, double(yl)+0.5 );
             cairo_stroke( context );
         }
 

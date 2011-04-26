@@ -859,8 +859,12 @@ namespace Oxygen
         /* need to adjust clipRect */
         if( clipRect )
         {
+
+            clipRect->x -= 1;
+            clipRect->width += 2;
+
             clipRect->y -= 2;
-            clipRect->height += 4;
+            clipRect->height += 3;
         }
 
         // context
@@ -874,7 +878,8 @@ namespace Oxygen
         if( indicatorSize >= 4 )
         {
             // get surface
-            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
+            //const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
+            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w+2, h+3 ) );
             cairo_translate( context, -1, -2 );
             cairo_translate( context, x, y );
             cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
