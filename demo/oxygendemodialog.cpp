@@ -224,7 +224,7 @@ namespace Oxygen
 
         // update window title
         std::ostringstream what;
-        what << widget->name() << " - Oxygen-gtk Demo";
+        what << widget->name() << " - Oxygen-gtk3 Demo";
         gtk_window_set_title( GTK_WINDOW( dialog._mainWidget ), what.str().c_str() );
     }
 
