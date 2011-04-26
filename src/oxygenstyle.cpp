@@ -1290,6 +1290,16 @@ namespace Oxygen
             {
 
                 const ColorUtils::Rgba base( color( group, Palette::Window, options ) );
+
+                {
+                    // fill hole
+                    cairo_save( context );
+                    cairo_set_source( context, ColorUtils::midColor( base ) );
+                    cairo_rounded_rectangle( context, x+1, y+1, w-2, h-2, 3.5 );
+                    cairo_fill( context );
+                    cairo_restore( context );
+                }
+
                 if( glow.isValid() ) helper().holeFocused( base, glow, 7, true ).render( context, x, y, w, h );
                 else helper().hole( base, 7, true ).render( context, x, y, w, h );
 
