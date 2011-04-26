@@ -2060,7 +2060,7 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         cairo_save( context );
-        helper().groove( base ).render( context, child.x, child.y, child.width, child.height );
+        helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, TileSet::Full );
         cairo_restore( context );
 
     }
@@ -2093,7 +2093,23 @@ namespace Oxygen
 
         // render slab
         cairo_save( context );
-        renderSlab( context, x, y, w, h, base, options, animationData );
+
+        GdkRectangle parent = { x, y, w, h };
+        GdkRectangle child = {0, 0, 21, 21 };
+        centerRect( &parent, &child );
+
+        // adjust rect positionning
+        if( !(options&Vertical) ) child.y -= 1;
+
+        x = child.x;
+        y = child.y;
+
+        const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
+        const Cairo::Surface& surface( helper().sliderSlab( base, glow, 0 ) );
+        cairo_translate( context, x, y );
+        cairo_rectangle( context, 0, 0, child.width, child.height );
+        cairo_set_source_surface( context, surface, 0, 0 );
+        cairo_fill( context );
         cairo_restore( context );
 
     }

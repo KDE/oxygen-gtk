@@ -88,7 +88,7 @@ GtkToggleButton { -GtkButton-inner-border: 1 0 0; }
 
 GtkScale {
     -GtkRange-slider-width: 23;
-    -GtkScale-slider-length: 15;
+    -GtkScale-slider-length: 21;
 }
 
 GtkScrollbar {

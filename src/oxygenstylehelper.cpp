@@ -117,12 +117,12 @@ namespace Oxygen
         const SeparatorKey key( base, vertical, size );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_separatorCache.value(key) )
+        if( const Cairo::Surface& surface = _separatorCache.value(key) )
         { return surface; }
 
         // for invalid sizes return a null surface
         if( size <= 0 )
-        { return m_separatorCache.insert( key, 0L ); }
+        { return _separatorCache.insert( key, 0L ); }
 
         // cached not found, create new
         Cairo::Surface surface( vertical ? createSurface( 3, size ):createSurface( size, 2 ) );
@@ -197,7 +197,7 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_separatorCache.insert( key, surface );
+        return _separatorCache.insert( key, surface );
 
     }
 
@@ -208,7 +208,7 @@ namespace Oxygen
         const WindecoButtonKey key( base, size, pressed );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_windecoButtonCache.value(key) )
+        if( const Cairo::Surface& surface = _windecoButtonCache.value(key) )
         { return surface; }
 
         // cached not found, create new
@@ -257,7 +257,7 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_windecoButtonCache.insert( key, surface );
+        return _windecoButtonCache.insert( key, surface );
 
     }
 
@@ -268,7 +268,7 @@ namespace Oxygen
         const WindecoButtonGlowKey key( base, size );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_windecoButtonGlowCache.value(key) )
+        if( const Cairo::Surface& surface = _windecoButtonGlowCache.value(key) )
         { return surface; }
 
         // cached not found, create new
@@ -317,7 +317,7 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_windecoButtonGlowCache.insert( key, surface );
+        return _windecoButtonGlowCache.insert( key, surface );
 
     }
 
@@ -328,7 +328,7 @@ namespace Oxygen
         const VerticalGradientKey key( base, height );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_verticalGradientCache.value(key) )
+        if( const Cairo::Surface& surface = _verticalGradientCache.value(key) )
         { return surface; }
 
         // cached not found, create new
@@ -348,7 +348,7 @@ namespace Oxygen
             cairo_fill( context );
         }
 
-        return m_verticalGradientCache.insert( key, surface );
+        return _verticalGradientCache.insert( key, surface );
     }
 
     //_________________________________________________
@@ -358,7 +358,7 @@ namespace Oxygen
         const RadialGradientKey key( base, radius );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_radialGradientCache.value(key) )
+        if( const Cairo::Surface& surface = _radialGradientCache.value(key) )
         { return surface; }
 
         // cached not found, create new
@@ -379,7 +379,7 @@ namespace Oxygen
             cairo_fill( context );
         }
 
-        return m_radialGradientCache.insert( key, surface );
+        return _radialGradientCache.insert( key, surface );
 
     }
 
@@ -388,7 +388,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, glow, shade, size );
-        const TileSet& tileSet( m_slabCache.value( key ) );
+        const TileSet& tileSet( _slabCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // create surface and initialize
@@ -411,7 +411,7 @@ namespace Oxygen
         }
 
         // create tileSet
-        return m_slabCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
+        return _slabCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
 
     }
 
@@ -420,7 +420,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, 0.0, size );
-        const TileSet& tileSet( m_slabSunkenCache.value( key ) );
+        const TileSet& tileSet( _slabSunkenCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // create surface and initialize
@@ -458,7 +458,7 @@ namespace Oxygen
         }
 
         // create tileSet
-        return m_slabSunkenCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
+        return _slabSunkenCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
 
     }
 
@@ -469,7 +469,7 @@ namespace Oxygen
         SlabKey key( base, glow, shade, size );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_roundSlabCache.value( key ) )
+        if( const Cairo::Surface& surface = _roundSlabCache.value( key ) )
         { return surface; }
 
         // cached not found, create new
@@ -488,7 +488,44 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_roundSlabCache.insert( key, surface );
+        return _roundSlabCache.insert( key, surface );
+
+    }
+
+
+    //__________________________________________________________________________________________________________
+    const Cairo::Surface&  StyleHelper::sliderSlab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    {
+
+        SlabKey key( base, glow, shade, size );
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = _sliderSlabCache.value( key ) )
+        { return surface; }
+
+        // cached not found, create new
+        const int w( 3*size );
+        const int h( 3*size );
+        Cairo::Surface surface( createSurface( w, h ) );
+
+        {
+            Cairo::Context context( surface );
+
+            cairo_save( context );
+            cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
+            cairo_translate( context, 1, 1 );
+
+            if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21, false );
+            if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
+            cairo_restore( context );
+
+            cairo_scale( context, double( 3*size )/25, double( 3*size )/25 );
+            cairo_translate( context, 2, 2 );
+            drawSliderSlab( context, base, shade );
+
+        }
+
+        return _sliderSlabCache.insert( key, surface );
 
     }
 
@@ -497,7 +534,7 @@ namespace Oxygen
     {
 
         const SlabKey key( base, shade, size );
-        const TileSet& tileSet( m_slopeCache.value( key ) );
+        const TileSet& tileSet( _slopeCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         const int w( 4*size );
@@ -511,7 +548,7 @@ namespace Oxygen
 
         }
 
-        return m_slopeCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
+        return _slopeCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1) );
 
     }
 
@@ -579,7 +616,7 @@ namespace Oxygen
     {
 
         const HoleFocusedKey key( base, fill, glow, size, contrast );
-        const TileSet& tileSet( m_holeFocusedCache.value( key ) );
+        const TileSet& tileSet( _holeFocusedCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // first create shadow
@@ -647,7 +684,7 @@ namespace Oxygen
 
         }
 
-        return m_holeFocusedCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
+        return _holeFocusedCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
 
     }
 
@@ -656,7 +693,7 @@ namespace Oxygen
     {
 
         const HoleFlatKey key( base, shade, fill, size );
-        const TileSet& tileSet( m_holeFlatCache.value( key ) );
+        const TileSet& tileSet( _holeFlatCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         const int w( 2*size );
@@ -736,16 +773,16 @@ namespace Oxygen
 
         }
 
-        return m_holeFlatCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
+        return _holeFlatCache.insert( key, TileSet( surface, size, size, size, size, size-1, size, 2, 1 ) );
 
     }
 
     //______________________________________________________________________________
-    const TileSet& StyleHelper::scrollHole( const ColorUtils::Rgba& base, bool vertical )
+    const TileSet& StyleHelper::scrollHole( const ColorUtils::Rgba& base, bool vertical, bool smallShadow )
     {
 
-        const ScrollHoleKey key( base, vertical );
-        const TileSet& tileSet( m_scrollHoleCache.value( key ) );
+        const ScrollHoleKey key( base, vertical, smallShadow );
+        const TileSet& tileSet( _scrollHoleCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // define colors
@@ -763,7 +800,8 @@ namespace Oxygen
         GdkRectangle r = { 0, 0, w, h };
         GdkRectangle rect = { 1, 0, w-2, h-1 };
 
-        double radius = 3.0;
+        // radius
+        const double radius( smallShadow ? 2.5:3.0 );
 
         // base
         {
@@ -807,12 +845,11 @@ namespace Oxygen
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
-            //cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, radius+0.5 );
             cairo_rounded_rectangle( context, r.x+0.5, r.y+0.5, r.width-1, r.height-1, radius+0.5 );
             cairo_stroke( context );
         }
 
-        return m_scrollHoleCache.insert( key, TileSet( surface, 7, 7, 1, 1 ) );
+        return _scrollHoleCache.insert( key, TileSet( surface, 7, 7, 1, 1 ) );
 
     }
 
@@ -821,7 +858,7 @@ namespace Oxygen
     {
 
         const SlitFocusedKey key( glow );
-        const TileSet& tileSet( m_slitFocusedCache.value( key ) );
+        const TileSet& tileSet( _slitFocusedCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // create pixmap
@@ -841,7 +878,7 @@ namespace Oxygen
 
         }
 
-        return m_slitFocusedCache.insert( key, TileSet( surface, 4, 4, 1, 1 ) );
+        return _slitFocusedCache.insert( key, TileSet( surface, 4, 4, 1, 1 ) );
 
     }
 
@@ -854,7 +891,7 @@ namespace Oxygen
 
         // key
         DockFrameKey key( base, w );
-        const TileSet& tileSet( m_dockFrameCache.value( key ) );
+        const TileSet& tileSet( _dockFrameCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // fixed height
@@ -914,7 +951,7 @@ namespace Oxygen
             drawSeparator( context, base, 0, h-3, w, 2, false );
         }
 
-        return m_dockFrameCache.insert( key, TileSet( surface, 4, 4, w-8, h-8 ) );
+        return _dockFrameCache.insert( key, TileSet( surface, 4, 4, w-8, h-8 ) );
     }
 
     //____________________________________________________________________
@@ -924,7 +961,7 @@ namespace Oxygen
         ProgressBarIndicatorKey key( base, highlight, w, h );
 
         // try find in cache and return
-        if( const Cairo::Surface& surface = m_progressBarIndicatorCache.value( key ) )
+        if( const Cairo::Surface& surface = _progressBarIndicatorCache.value( key ) )
         { return surface; }
 
         // cached not found, create new
@@ -1024,7 +1061,7 @@ namespace Oxygen
 
         // note: we can't return the surface directly, because it is a temporary
         // we have to return the inserted object instead
-        return m_progressBarIndicatorCache.insert( key, surface );
+        return _progressBarIndicatorCache.insert( key, surface );
 
     }
 
@@ -1033,7 +1070,7 @@ namespace Oxygen
     {
 
         const GrooveKey key( base, size );
-        const TileSet& tileSet( m_grooveCache.value( key ) );
+        const TileSet& tileSet( _grooveCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         const int rsize( ( int )ceil( double( size ) * 3.0/7.0 ) );
@@ -1054,7 +1091,7 @@ namespace Oxygen
 
         }
 
-        return m_grooveCache.insert( key, TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 ) );
+        return _grooveCache.insert( key, TileSet( surface, rsize, rsize, rsize, rsize, rsize-1, rsize, 2, 1 ) );
 
     }
 
@@ -1063,7 +1100,7 @@ namespace Oxygen
     {
 
         const SelectionKey key( base, h, custom );
-        const TileSet& tileSet( m_selectionCache.value( key ) );
+        const TileSet& tileSet( _selectionCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         const int w = 32+16;
@@ -1105,7 +1142,7 @@ namespace Oxygen
 
         }
 
-        return m_selectionCache.insert( key, TileSet( surface, 8, 0, 32, h ) );
+        return _selectionCache.insert( key, TileSet( surface, 8, 0, 32, h ) );
 
     }
 
@@ -1185,7 +1222,7 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________
-    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size) const
+    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size, bool mask ) const
     {
 
         const double m( double(size-2)*0.5 );
@@ -1194,10 +1231,6 @@ namespace Oxygen
 
         const double x(m+1);
         const double y(m+offset+1);
-
-        // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = double(size) - 2.0*ic;
 
         Cairo::Pattern pattern( cairo_pattern_create_radial(x, y, m ) );
         for (int i = 0; i < 8; i++)
@@ -1211,7 +1244,16 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
-        cairo_ellipse_negative( context, ic, ic, is, is );
+        if( mask )
+        {
+
+            // mask dimensions
+            const double ic = 3.6 + 0.5*_slabThickness - 1;
+            const double is = double(size) - 2.0*ic;
+            cairo_ellipse_negative( context, ic, ic, is, is );
+
+        }
+
         cairo_fill( context );
 
     }
@@ -1336,6 +1378,42 @@ namespace Oxygen
             cairo_ellipse( context, ic, ic, is, is );
             cairo_fill( context );
         }
+
+        return;
+
+    }
+
+    //__________________________________________________________________________________________________________
+    void StyleHelper::drawSliderSlab( Cairo::Context& context, const ColorUtils::Rgba& color, double shade ) const
+    {
+
+        const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor(color), shade) );
+        const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( color ), shade) );
+
+        {
+            //plain background
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 21 ) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_set_source( context, pattern );
+            cairo_ellipse( context, 3, 3, 15, 15 );
+            cairo_fill( context );
+
+        }
+
+        {
+            // outline circle
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 30 ) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_set_source( context, pattern );
+
+            cairo_ellipse( context, 3.5, 3.5, 14, 14 );
+            cairo_set_line_width( context, 1.0 );
+            cairo_stroke( context );
+        }
+
+        return;
 
     }
 

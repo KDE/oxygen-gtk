@@ -249,9 +249,10 @@ namespace Oxygen
        public:
 
         //! constructor
-        ScrollHoleKey( const ColorUtils::Rgba& color, bool vertical ):
+        ScrollHoleKey( const ColorUtils::Rgba& color, bool vertical, bool smallShadow ):
             _color( color.toInt() ),
-            _vertical( vertical )
+            _vertical( vertical ),
+            _smallShadow( smallShadow )
         {}
 
         //! equal to operator
@@ -259,25 +260,31 @@ namespace Oxygen
         {
             return
                 _color == other._color &&
-                _vertical == other._vertical;
+                _vertical == other._vertical &&
+                _smallShadow == other._smallShadow;
         }
 
         //! less than operator
         bool operator < (const ScrollHoleKey& other ) const
         {
             if( _color != other._color ) return _color < other._color;
-            else return _vertical < other._vertical;
+            else if( _vertical < other._vertical ) return _vertical < other._vertical;
+            else return _smallShadow < other._smallShadow;
         }
 
         private:
 
         guint32 _color;
         bool _vertical;
+        bool _smallShadow;
 
         //! streamer
         friend std::ostream& operator << ( std::ostream& out, const ScrollHoleKey& key )
         {
-            out << "ScrollHoleKey - color: " << key._color << " vertical: " << (key._vertical ? "true":"false");
+            out << "ScrollHoleKey -"
+                << " color: " << key._color
+                << " vertical: " << (key._vertical ? "true":"false")
+                << " smallShadow: " << (key._smallShadow ? "true":"false");
             return out;
         }
 

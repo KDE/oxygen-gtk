@@ -59,28 +59,29 @@ namespace Oxygen
         //! clear caches
         void clearCaches( void )
         {
-            m_separatorCache.clear();
-            m_slabCache.clear();
-            m_slopeCache.clear();
-            m_slabSunkenCache.clear();
-            m_holeFocusedCache.clear();
-            m_holeFlatCache.clear();
-            m_scrollHoleCache.clear();
-            m_slitFocusedCache.clear();
-            m_dockFrameCache.clear();
-            m_grooveCache.clear();
-            m_selectionCache.clear();
-            m_roundSlabCache.clear();
-            m_progressBarIndicatorCache.clear();
-            m_windecoButtonCache.clear();
-            m_windecoButtonGlowCache.clear();
-            m_windowShadowCache.clear();
-            m_verticalGradientCache.clear();
-            m_radialGradientCache.clear();
-            m_windecoLeftBorderCache.clear();
-            m_windecoRightBorderCache.clear();
-            m_windecoTopBorderCache.clear();
-            m_windecoBottomBorderCache.clear();
+            _separatorCache.clear();
+            _slabCache.clear();
+            _slopeCache.clear();
+            _slabSunkenCache.clear();
+            _holeFocusedCache.clear();
+            _holeFlatCache.clear();
+            _scrollHoleCache.clear();
+            _slitFocusedCache.clear();
+            _dockFrameCache.clear();
+            _grooveCache.clear();
+            _selectionCache.clear();
+            _roundSlabCache.clear();
+            _sliderSlabCache.clear();
+            _progressBarIndicatorCache.clear();
+            _windecoButtonCache.clear();
+            _windecoButtonGlowCache.clear();
+            _windowShadowCache.clear();
+            _verticalGradientCache.clear();
+            _radialGradientCache.clear();
+            _windecoLeftBorderCache.clear();
+            _windecoRightBorderCache.clear();
+            _windecoTopBorderCache.clear();
+            _windecoBottomBorderCache.clear();
         }
 
         //! create surface from reference for given width and height
@@ -117,6 +118,13 @@ namespace Oxygen
 
         const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
+        //! slider slab
+        const Cairo::Surface& sliderSlab( const ColorUtils::Rgba& color, double shade, int size = 7 )
+        { return sliderSlab( color, ColorUtils::Rgba(), shade, size ); }
+
+        // slider slab
+        const Cairo::Surface& sliderSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glowColor, double shade, int size = 7 );
+
         //! groupbox background
         const TileSet& slope( const ColorUtils::Rgba&, double shade, int size = 7 );
 
@@ -143,7 +151,7 @@ namespace Oxygen
         const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7, bool contrast = false );
 
         const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
-        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
+        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical, bool smallShadow = false );
 
         //@}
 
@@ -170,19 +178,19 @@ namespace Oxygen
 
         /*! needed to oxygenwindowshadow and drawWindowDecoration() */
         TileSetCache<WindowShadowKey>& windowShadowCache( void )
-        { return m_windowShadowCache; }
+        { return _windowShadowCache; }
 
         CairoSurfaceCache<WindecoLeftBorderKey>& windecoLeftBorderCache( void )
-        { return m_windecoLeftBorderCache; }
+        { return _windecoLeftBorderCache; }
 
         CairoSurfaceCache<WindecoRightBorderKey>& windecoRightBorderCache( void )
-        { return m_windecoRightBorderCache; }
+        { return _windecoRightBorderCache; }
 
         CairoSurfaceCache<WindecoTopBorderKey>& windecoTopBorderCache( void )
-        { return m_windecoTopBorderCache; }
+        { return _windecoTopBorderCache; }
 
         CairoSurfaceCache<WindecoBottomBorderKey>& windecoBottomBorderCache( void )
-        { return m_windecoBottomBorderCache; }
+        { return _windecoBottomBorderCache; }
 
         //@}
 
@@ -201,7 +209,7 @@ namespace Oxygen
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
 
         //! shadow rendering
-        virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
+        virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size, bool mask = true ) const;
 
         //! highlight glow
         virtual void drawOuterGlow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
@@ -214,6 +222,9 @@ namespace Oxygen
 
         //! round slab
         void drawRoundSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
+
+        //! slider slab
+        void drawSliderSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
 
         //! inverse shadow gradient
         cairo_pattern_t* inverseShadowGradient( const ColorUtils::Rgba&, int pad, int size, double fuzz ) const;
@@ -234,68 +245,71 @@ namespace Oxygen
         //@{
 
         //! round slabs
-        CairoSurfaceCache<SeparatorKey> m_separatorCache;
+        CairoSurfaceCache<SeparatorKey> _separatorCache;
 
         //! slabs
-        TileSetCache<SlabKey> m_slabCache;
+        TileSetCache<SlabKey> _slabCache;
 
         //! slabs
-        TileSetCache<SlabKey> m_slopeCache;
+        TileSetCache<SlabKey> _slopeCache;
 
         //! slabs
-        TileSetCache<SlabKey> m_slabSunkenCache;
+        TileSetCache<SlabKey> _slabSunkenCache;
 
         //! holes
-        TileSetCache<HoleFocusedKey> m_holeFocusedCache;
+        TileSetCache<HoleFocusedKey> _holeFocusedCache;
 
         //! holes
-        TileSetCache<HoleFlatKey> m_holeFlatCache;
+        TileSetCache<HoleFlatKey> _holeFlatCache;
 
         //! scroll hole
-        TileSetCache<ScrollHoleKey> m_scrollHoleCache;
+        TileSetCache<ScrollHoleKey> _scrollHoleCache;
 
         //! slit
-        TileSetCache<SlitFocusedKey> m_slitFocusedCache;
+        TileSetCache<SlitFocusedKey> _slitFocusedCache;
 
         //! docks
-        TileSetCache<DockFrameKey> m_dockFrameCache;
+        TileSetCache<DockFrameKey> _dockFrameCache;
 
         //! groove
-        TileSetCache<GrooveKey> m_grooveCache;
+        TileSetCache<GrooveKey> _grooveCache;
 
         //! selection
-        TileSetCache<SelectionKey> m_selectionCache;
+        TileSetCache<SelectionKey> _selectionCache;
 
         //! round slabs
-        CairoSurfaceCache<SlabKey> m_roundSlabCache;
+        CairoSurfaceCache<SlabKey> _roundSlabCache;
+
+        //! slider slabs
+        CairoSurfaceCache<SlabKey> _sliderSlabCache;
 
         //! progressbar indicators
-        CairoSurfaceCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;
+        CairoSurfaceCache<ProgressBarIndicatorKey> _progressBarIndicatorCache;
 
         //! decoration button
-        CairoSurfaceCache<WindecoButtonKey> m_windecoButtonCache;
+        CairoSurfaceCache<WindecoButtonKey> _windecoButtonCache;
 
         //! decoration glow
-        CairoSurfaceCache<WindecoButtonGlowKey> m_windecoButtonGlowCache;
+        CairoSurfaceCache<WindecoButtonGlowKey> _windecoButtonGlowCache;
 
         //! decoration shadow
-        TileSetCache<WindowShadowKey> m_windowShadowCache;
+        TileSetCache<WindowShadowKey> _windowShadowCache;
 
         //! window backgound vertical gradient
-        CairoSurfaceCache<VerticalGradientKey> m_verticalGradientCache;
+        CairoSurfaceCache<VerticalGradientKey> _verticalGradientCache;
 
         //! window backgound radial gradient
-        CairoSurfaceCache<RadialGradientKey> m_radialGradientCache;
+        CairoSurfaceCache<RadialGradientKey> _radialGradientCache;
 
         //@}
 
         //!@name windeco borders
         //@{
 
-        CairoSurfaceCache<WindecoLeftBorderKey> m_windecoLeftBorderCache;
-        CairoSurfaceCache<WindecoRightBorderKey> m_windecoRightBorderCache;
-        CairoSurfaceCache<WindecoTopBorderKey> m_windecoTopBorderCache;
-        CairoSurfaceCache<WindecoBottomBorderKey> m_windecoBottomBorderCache;
+        CairoSurfaceCache<WindecoLeftBorderKey> _windecoLeftBorderCache;
+        CairoSurfaceCache<WindecoRightBorderKey> _windecoRightBorderCache;
+        CairoSurfaceCache<WindecoTopBorderKey> _windecoTopBorderCache;
+        CairoSurfaceCache<WindecoBottomBorderKey> _windecoBottomBorderCache;
 
         //@}
 
