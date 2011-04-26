@@ -511,19 +511,21 @@ namespace Oxygen
         {
             Cairo::Context context( surface );
 
-            cairo_save( context );
+            if( true )
+            {
+                cairo_save( context );
+                cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
+                cairo_translate( context, 1, 1 );
 
-            //p.setWindow( -1, -1, 23, 23 );
-            cairo_translate( context, -1, -1 );
-            cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
+                if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21 );
+                if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
+                cairo_restore( context );
+            }
 
-            if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21 );
-            if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
-
-            cairo_restore( context );
-            cairo_translate( context, -2, -2 );
             cairo_scale( context, double( 3*size )/25, double( 3*size )/25 );
-            //drawSliderSlab( context, color, shade );
+            cairo_translate( context, 2, 2 );
+            drawSliderSlab( context, base, shade );
+
         }
 
         return _sliderSlabCache.insert( key, surface );
@@ -1373,6 +1375,42 @@ namespace Oxygen
             cairo_ellipse( context, ic, ic, is, is );
             cairo_fill( context );
         }
+
+        return;
+
+    }
+
+    //__________________________________________________________________________________________________________
+    void StyleHelper::drawSliderSlab( Cairo::Context& context, const ColorUtils::Rgba& color, double shade ) const
+    {
+
+        const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor(color), shade) );
+        const ColorUtils::Rgba dark( ColorUtils::shade( ColorUtils::darkColor( color ), shade) );
+
+        {
+            //plain background
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 21 ) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_set_source( context, pattern );
+            cairo_ellipse( context, 3, 3, 15, 15 );
+            cairo_fill( context );
+
+        }
+
+        {
+            // outline circle
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 30 ) );
+            cairo_pattern_add_color_stop( pattern, 0, light );
+            cairo_pattern_add_color_stop( pattern, 1, dark );
+            cairo_set_source( context, pattern );
+
+            cairo_ellipse( context, 3.5, 3.5, 14, 14 );
+            cairo_set_line_width( context, 1.0 );
+            cairo_stroke( context );
+        }
+
+        return;
 
     }
 

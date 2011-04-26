@@ -222,6 +222,9 @@ namespace Oxygen
         //! round slab
         void drawRoundSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
 
+        //! slider slab
+        void drawSliderSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
+
         //! inverse shadow gradient
         cairo_pattern_t* inverseShadowGradient( const ColorUtils::Rgba&, int pad, int size, double fuzz ) const;
 
