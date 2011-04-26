@@ -864,13 +864,14 @@ namespace Oxygen
 
         // light bottom border
         {
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y + r.height/2 - 1, 0, r.y + r.height ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( light ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y, 0, r.y + r.height ) );
+            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
             cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.8 ) );
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
-            cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, 4.5 );
+            //cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, radius+0.5 );
+            cairo_rounded_rectangle( context, r.x+0.5, r.y+0.5, r.width-1, r.height-1, radius+0.5 );
             cairo_stroke( context );
         }
 
