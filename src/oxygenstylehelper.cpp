@@ -737,10 +737,10 @@ namespace Oxygen
     }
 
     //______________________________________________________________________________
-    const TileSet& StyleHelper::scrollHole( const ColorUtils::Rgba& base, bool vertical )
+    const TileSet& StyleHelper::scrollHole( const ColorUtils::Rgba& base, bool vertical, bool smallShadow )
     {
 
-        const ScrollHoleKey key( base, vertical );
+        const ScrollHoleKey key( base, vertical, smallShadow );
         const TileSet& tileSet( m_scrollHoleCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
@@ -759,7 +759,8 @@ namespace Oxygen
         GdkRectangle r = { 0, 0, w, h };
         GdkRectangle rect = { 1, 0, w-2, h-1 };
 
-        double radius = 3.0;
+        // radius
+        const double radius( smallShadow ? 2.5:3.0 );
 
         // base
         {
@@ -803,7 +804,6 @@ namespace Oxygen
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
-            //cairo_rounded_rectangle( context, r.x+0.5, r.y, r.width-1, r.height, radius+0.5 );
             cairo_rounded_rectangle( context, r.x+0.5, r.y+0.5, r.width-1, r.height-1, radius+0.5 );
             cairo_stroke( context );
         }

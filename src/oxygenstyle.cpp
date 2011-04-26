@@ -2089,7 +2089,7 @@ namespace Oxygen
         centerRect( &parent, &child );
 
         Cairo::Context context( window, clipRect );
-        helper().groove( base ).render( context, child.x, child.y, child.width, child.height );
+        helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, TileSet::Full );
 
     }
 

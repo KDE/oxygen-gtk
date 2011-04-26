@@ -142,7 +142,7 @@ namespace Oxygen
         const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7, bool contrast = false );
 
         const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
-        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical );
+        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical, bool smallShadow = false );
 
         //@}
 
