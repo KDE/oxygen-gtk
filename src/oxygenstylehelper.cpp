@@ -511,16 +511,13 @@ namespace Oxygen
         {
             Cairo::Context context( surface );
 
-            if( true )
-            {
-                cairo_save( context );
-                cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
-                cairo_translate( context, 1, 1 );
+            cairo_save( context );
+            cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
+            cairo_translate( context, 1, 1 );
 
-                if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21 );
-                if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
-                cairo_restore( context );
-            }
+            if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21, false );
+            //if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
+            cairo_restore( context );
 
             cairo_scale( context, double( 3*size )/25, double( 3*size )/25 );
             cairo_translate( context, 2, 2 );
@@ -1221,7 +1218,7 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________
-    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size) const
+    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size, bool mask ) const
     {
 
         const double m( double(size-2)*0.5 );
@@ -1230,10 +1227,6 @@ namespace Oxygen
 
         const double x(m+1);
         const double y(m+offset+1);
-
-        // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = double(size) - 2.0*ic;
 
         Cairo::Pattern pattern( cairo_pattern_create_radial(x, y, m ) );
         for (int i = 0; i < 8; i++)
@@ -1247,7 +1240,16 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
-        cairo_ellipse_negative( context, ic, ic, is, is );
+        if( mask )
+        {
+
+            // mask dimensions
+            const double ic = 3.6 + 0.5*_slabThickness - 1;
+            const double is = double(size) - 2.0*ic;
+            cairo_ellipse_negative( context, ic, ic, is, is );
+
+        }
+
         cairo_fill( context );
 
     }

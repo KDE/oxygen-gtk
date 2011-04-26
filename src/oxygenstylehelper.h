@@ -208,7 +208,7 @@ namespace Oxygen
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
 
         //! shadow rendering
-        virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
+        virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size, bool mask = true ) const;
 
         //! highlight glow
         virtual void drawOuterGlow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
