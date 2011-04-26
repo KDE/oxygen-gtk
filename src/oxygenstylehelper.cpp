@@ -384,42 +384,7 @@ namespace Oxygen
     }
 
     //_________________________________________________
-    const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, double shade, int size)
-    {
-
-        const SlabKey key( base, shade, size );
-        const TileSet& tileSet( m_slabCache.value( key ) );
-        if( tileSet.isValid() ) return tileSet;
-
-        // create surface and initialize
-        const int w( 2*size );
-        const int h( 2*size );
-        Cairo::Surface surface( createSurface( w, h ) );
-
-        {
-
-            // create cairo context
-            Cairo::Context context( surface );
-            cairo_scale( context, double(size)/7, double(size)/7 );
-            cairo_rectangle( context, 0, 0, 14, 14 );
-            cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
-            cairo_fill( context );
-
-            if( base.isValid() )
-            {
-                drawShadow( context, ColorUtils::shadowColor( base ), 14 );
-                drawSlab( context, base, shade );
-            }
-
-        }
-
-        // create tileSet
-        return m_slabCache.insert( key, TileSet( surface,  size, size, size, size, size-1, size, 2, 1 ) );
-
-    }
-
-    //_________________________________________________
-    const TileSet& StyleHelper::slabFocused(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    const TileSet& StyleHelper::slab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
     {
 
         const SlabKey key( base, glow, shade, size );

@@ -1380,13 +1380,9 @@ namespace Oxygen
 
             helper().slabSunken( base ).render( context, x, y, w, h, tiles );
 
-        } else if( glow.isValid() ) {
-
-            helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h, tiles );
-
         } else {
 
-            helper().slab( base, 0 ).render( context, x, y, w, h, tiles );
+            helper().slab( base, glow, 0 ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -1452,7 +1448,7 @@ namespace Oxygen
         }
 
         // slab
-        helper().slabFocused( base, glow, 0 ).render( context, x, y, w, h );
+        helper().slab( base, glow, 0 ).render( context, x, y, w, h );
 
     }
 
@@ -2983,8 +2979,7 @@ namespace Oxygen
         if( data._mode == AnimationHover ) glow = ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
         else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
 
-        if( glow.isValid() ) helper().slabFocused( base, glow, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
-        else helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        helper().slab( base, glow ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         // adjust rect for filling
         SlabRect fillSlab( tabSlab );
@@ -3044,11 +3039,11 @@ namespace Oxygen
             if( (iter->_options&Hover) && glow.isValid() )
             {
 
-                helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+                helper().slab(base, glow).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
 
             } else {
 
-                helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+                helper().slab(base).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
 
             }
         }
@@ -3412,20 +3407,7 @@ namespace Oxygen
         else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
 
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        {
-            // render tab
-            if( glow.isValid() )
-            {
-
-                helper().slabFocused(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
-
-            } else {
-
-                helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
-
-            }
-
-        }
+        { helper().slab(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
     }
 
@@ -3611,8 +3593,7 @@ namespace Oxygen
             // calculate glow color
             const TileSet* tile;
             const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
-            if( glow.isValid() ) tile = &helper().slabFocused( base, glow , 0);
-            else if( base.isValid() ) tile = &helper().slab( base, 0 );
+            if( glow.isValid() || base.isValid() ) tile = &helper().slab( base, glow , 0);
             else return;
 
             if( tile ) tile->render( context, x, y, w, h );
