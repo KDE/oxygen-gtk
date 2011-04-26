@@ -29,6 +29,7 @@
 #include "oxygentabdemowidget.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace Oxygen
 {
@@ -221,6 +222,10 @@ namespace Oxygen
         if( widget == dialog._sliderDemoWidget ) dialog._sliderDemoWidget->startPulse();
         else dialog._sliderDemoWidget->stopPulse();
 
+        // update window title
+        std::ostringstream what;
+        what << widget->name() << " - Oxygen-gtk Demo";
+        gtk_window_set_title( GTK_WINDOW( dialog._mainWidget ), what.str().c_str() );
     }
 
     //_____________________________________________
