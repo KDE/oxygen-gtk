@@ -1026,7 +1026,6 @@ namespace Oxygen
         {
             // filling
             cairo_set_source( context, ColorUtils::mix( highlight, dark, 0.2 ) );
-            cairo_rectangle( context, xl, yl, wl, hl );
             cairo_rounded_rectangle( context, xl, yl, wl, hl, 2.5 );
             cairo_fill( context );
         }
