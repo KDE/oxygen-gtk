@@ -853,14 +853,6 @@ namespace Oxygen
         // context
         cairo_save( context );
 
-// TODO: check whether clipping has to be fixed for Gtk3
-//         /* need to adjust clipRect */
-//         if( clipRect )
-//         {
-//             clipRect->y -= 2;
-//             clipRect->height += 4;
-//         }
-
         // validate rect
         if(w<0 || h<0) return;
 
@@ -869,7 +861,8 @@ namespace Oxygen
         if( indicatorSize >= 4 )
         {
             // get surface
-            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
+            //const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
+            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w+2, h+3 ) );
             cairo_translate( context, -1, -2 );
             cairo_translate( context, x, y );
             cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
