@@ -1221,12 +1221,7 @@ namespace Oxygen
     {
 
         const double m( double(size)*0.5 );
-
-        // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness - 1;
-        const double is = double(size) - 2.0*ic;
-
-        const double w( 4 );
+        const double w( 3 );
 
         const double bias( _glowBias * double(14)/size );
 
@@ -1234,11 +1229,7 @@ namespace Oxygen
         const double gm( m + bias - 0.9 );
         const double k0( (m-w+bias) / gm );
 
-
-        const double x(m);
-        const double y(m);
-
-        Cairo::Pattern pattern( cairo_pattern_create_radial(x, y, m ) );
+        Cairo::Pattern pattern( cairo_pattern_create_radial( m, m, gm ) );
         for (int i = 0; i < 8; i++)
         {
             // parabolic pattern
@@ -1251,8 +1242,14 @@ namespace Oxygen
 
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
-        cairo_ellipse_negative( context, ic, ic, is, is );
         cairo_fill( context );
+
+        cairo_save( context );
+        cairo_set_operator( context, CAIRO_OPERATOR_DEST_OUT );
+        cairo_set_source( context, ColorUtils::Rgba::black() );
+        cairo_ellipse( context, w, w, size - 2*w, size - 2*w );
+        cairo_fill( context );
+        cairo_restore( context );
 
     }
 
