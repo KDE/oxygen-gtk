@@ -61,7 +61,6 @@ namespace Oxygen
             m_separatorCache.clear();
             m_slabCache.clear();
             m_slopeCache.clear();
-            m_slabFocusedCache.clear();
             m_slabSunkenCache.clear();
             m_holeFocusedCache.clear();
             m_holeFlatCache.clear();
@@ -71,7 +70,6 @@ namespace Oxygen
             m_grooveCache.clear();
             m_selectionCache.clear();
             m_roundSlabCache.clear();
-            m_roundSlabFocusedCache.clear();
             m_progressBarIndicatorCache.clear();
             m_windecoButtonCache.clear();
             m_windecoButtonGlowCache.clear();
@@ -110,8 +108,10 @@ namespace Oxygen
         const TileSet& slabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba&, double shade, int size = 7 );
         const TileSet& slabSunken( const ColorUtils::Rgba&, int size = 7 );
 
-        const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, double shade, int size = 7 );
-        const Cairo::Surface& roundSlabFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
+        const Cairo::Surface& roundSlab( const ColorUtils::Rgba& color, double shade, int size = 7 )
+        { return roundSlab( color, ColorUtils::Rgba(), shade, size ); }
+
+        const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
         //! groupbox background
         const TileSet& slope( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -239,9 +239,6 @@ namespace Oxygen
         TileSetCache<SlabKey> m_slopeCache;
 
         //! slabs
-        TileSetCache<SlabFocusedKey> m_slabFocusedCache;
-
-        //! slabs
         TileSetCache<SlabKey> m_slabSunkenCache;
 
         //! holes
@@ -267,9 +264,6 @@ namespace Oxygen
 
         //! round slabs
         CairoSurfaceCache<SlabKey> m_roundSlabCache;
-
-        //! round slabs
-        CairoSurfaceCache<SlabFocusedKey> m_roundSlabFocusedCache;
 
         //! progressbar indicators
         CairoSurfaceCache<ProgressBarIndicatorKey> m_progressBarIndicatorCache;

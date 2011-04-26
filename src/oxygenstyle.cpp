@@ -1650,7 +1650,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
 
         // get the pixmap
-        const Cairo::Surface& surface( glow.isValid() ? helper().roundSlabFocused( base, glow, 0, tileSize ):helper().roundSlab( base, 0, tileSize ) );
+        const Cairo::Surface& surface( helper().roundSlab( base, glow, 0, tileSize ) );
 
         // create context
         Cairo::Context context( window, clipRect );
