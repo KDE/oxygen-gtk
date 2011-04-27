@@ -268,7 +268,7 @@ namespace Oxygen
         bool operator < (const ScrollHoleKey& other ) const
         {
             if( _color != other._color ) return _color < other._color;
-            else if( _vertical < other._vertical ) return _vertical < other._vertical;
+            else if( _vertical != other._vertical ) return _vertical < other._vertical;
             else return _smallShadow < other._smallShadow;
         }
 

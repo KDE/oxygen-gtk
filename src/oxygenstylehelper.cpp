@@ -515,7 +515,7 @@ namespace Oxygen
             cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
             cairo_translate( context, 1, 1 );
 
-            if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21, false );
+            if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21 );
             if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
             cairo_restore( context );
 
@@ -1171,10 +1171,6 @@ namespace Oxygen
         const ColorUtils::Rgba base( ColorUtils::alphaColor( light, 0.85 ) );
         const ColorUtils::Rgba dark( ColorUtils::shade( darkColor(color), shade ) );
 
-        // mask dimensions
-        const double ic = 3.6 + 0.5*_slabThickness;
-        const double is = 14.0 - 2.0*ic;
-
         // bevel, part 1
         {
 
@@ -1194,7 +1190,6 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.9, base );
             cairo_set_source( context, pattern );
             cairo_rounded_rectangle( context, 3.0, 3.0, 8, 8, 3.5 );
-            cairo_ellipse_negative( context, ic, ic, is, is );
             cairo_fill( context );
 
         }
@@ -1213,16 +1208,25 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 0.9, base );
             cairo_set_source( context, pattern );
             cairo_ellipse( context, 3.6, 3.6, 6.8, 6.8 );
-
-            cairo_ellipse_negative( context, ic, ic, is, is );
             cairo_fill( context );
 
         }
 
+        // inside mask
+        cairo_save( context );
+        cairo_set_operator( context, CAIRO_OPERATOR_DEST_OUT );
+        cairo_set_source( context, ColorUtils::Rgba::black() );
+
+        const double ic( 3.6 + 0.5*_slabThickness );
+        const double is( 14.0 - 2.0*ic );
+        cairo_ellipse( context, ic, ic, is, is );
+        cairo_fill( context );
+        cairo_restore( context );
+
     }
 
     //___________________________________________________________________________________________
-    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size, bool mask ) const
+    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size ) const
     {
 
         const double m( double(size-2)*0.5 );
@@ -1244,16 +1248,6 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
         cairo_set_source( context, pattern );
         cairo_ellipse( context, 0, 0, size, size );
-        if( mask )
-        {
-
-            // mask dimensions
-            const double ic = 3.6 + 0.5*_slabThickness - 1;
-            const double is = double(size) - 2.0*ic;
-            cairo_ellipse_negative( context, ic, ic, is, is );
-
-        }
-
         cairo_fill( context );
 
     }
