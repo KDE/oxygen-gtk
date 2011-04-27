@@ -1279,7 +1279,7 @@ namespace Oxygen
         cairo_save( context );
         cairo_set_operator( context, CAIRO_OPERATOR_DEST_OUT );
         cairo_set_source( context, ColorUtils::Rgba::black() );
-        cairo_ellipse( context, w, w, size - 2*w, size - 2*w );
+        cairo_ellipse( context, w+0.5, w+0.5, size - 2*w-1, size - 2*w-1 );
         cairo_fill( context );
         cairo_restore( context );
 
