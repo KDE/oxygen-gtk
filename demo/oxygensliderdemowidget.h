@@ -46,7 +46,7 @@ namespace Oxygen
 
         //! pulse progress bar
         void startPulse( void )
-        { _timer.start( 50, (GSourceFunc)pulseProgressBar, this ); }
+        { if( !_timer.isRunning() ) _timer.start( 50, (GSourceFunc)pulseProgressBar, this ); }
 
         //! pulse progress bar
         void stopPulse( void )
