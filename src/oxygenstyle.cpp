@@ -3555,7 +3555,7 @@ namespace Oxygen
         helper().fillSlab( context, x, y, w, h );
 
         if( !(options&NoFill) )
-        { helper().slope( base, 1.0 ).render( context, x, y, w, h ); }
+        { helper().slope( base, 0.0 ).render( context, x, y, w, h ); }
 
         cairo_pop_group_to_source( context );
 
