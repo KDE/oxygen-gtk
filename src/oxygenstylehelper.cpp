@@ -1257,7 +1257,7 @@ namespace Oxygen
             // parabolic pattern
             const double k1( k0 + double(i)*(1.0-k0)/8.0 );
             const double a( 1.0 - sqrt(double(i)/8) );
-            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
+            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a ) );
         }
 
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
