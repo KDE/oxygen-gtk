@@ -836,8 +836,19 @@ namespace Oxygen
         // light bottom border
         {
             Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y, 0, r.y + r.height ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.8 ) );
+
+            if( smallShadow && vertical )
+            {
+
+                cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.5 ) );
+
+            } else {
+
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.6 ) );
+
+            }
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
