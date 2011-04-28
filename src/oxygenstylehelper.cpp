@@ -840,8 +840,19 @@ namespace Oxygen
         // light bottom border
         {
             Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y, 0, r.y + r.height ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
-            cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.8 ) );
+
+            if( smallShadow && vertical )
+            {
+
+                cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.5 ) );
+
+            } else {
+
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.6 ) );
+
+            }
 
             cairo_set_source( context, pattern );
             cairo_set_line_width( context, 1.0 );
@@ -1271,7 +1282,7 @@ namespace Oxygen
             // parabolic pattern
             const double k1( k0 + double(i)*(1.0-k0)/8.0 );
             const double a( 1.0 - sqrt(double(i)/8) );
-            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
+            cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a ) );
         }
 
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( base ) );
