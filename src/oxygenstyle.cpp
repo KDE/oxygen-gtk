@@ -2060,8 +2060,17 @@ namespace Oxygen
         const bool vertical( options & Vertical );
         GdkRectangle parent = { x, y, w, h };
 
-        GdkRectangle child = { 0, 0, vertical ? Slider_GrooveWidth:w, vertical ? h:Slider_GrooveWidth };
+        GdkRectangle child;
+        if( vertical ) child = Gtk::gdk_rectangle( 0, 0, Slider_GrooveWidth, h );
+        else child = Gtk::gdk_rectangle( 0, 0, w, Slider_GrooveWidth );
         centerRect( &parent, &child );
+
+        if( !vertical )
+        {
+            // more adjustment needed due to contrast pixel
+            child.y += 1;
+            child.height -= 1;
+        }
 
         cairo_save( context );
         helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, TileSet::Full );
@@ -2109,7 +2118,7 @@ namespace Oxygen
         y = child.y;
 
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
-        const Cairo::Surface& surface( helper().sliderSlab( base, glow, 0 ) );
+        const Cairo::Surface& surface( helper().sliderSlab( base, glow, false, 0 ) );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, child.width, child.height );
         cairo_set_source_surface( context, surface, 0, 0 );

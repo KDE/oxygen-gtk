@@ -494,10 +494,10 @@ namespace Oxygen
 
 
     //__________________________________________________________________________________________________________
-    const Cairo::Surface&  StyleHelper::sliderSlab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, double shade, int size)
+    const Cairo::Surface&  StyleHelper::sliderSlab(const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, bool sunken, double shade, int size)
     {
 
-        SlabKey key( base, glow, shade, size );
+        SliderSlabKey key( base, glow, sunken, shade, size );
 
         // try find in cache and return
         if( const Cairo::Surface& surface = _sliderSlabCache.value( key ) )
@@ -521,7 +521,7 @@ namespace Oxygen
 
             cairo_scale( context, double( 3*size )/25, double( 3*size )/25 );
             cairo_translate( context, 2, 2 );
-            drawSliderSlab( context, base, shade );
+            drawSliderSlab( context, base, sunken, shade );
 
         }
 
@@ -1389,7 +1389,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________________________________________
-    void StyleHelper::drawSliderSlab( Cairo::Context& context, const ColorUtils::Rgba& color, double shade ) const
+    void StyleHelper::drawSliderSlab( Cairo::Context& context, const ColorUtils::Rgba& color, bool sunken, double shade ) const
     {
 
         const ColorUtils::Rgba light( ColorUtils::shade( ColorUtils::lightColor(color), shade) );
@@ -1403,6 +1403,20 @@ namespace Oxygen
             cairo_set_source( context, pattern );
             cairo_ellipse( context, 3, 3, 15, 15 );
             cairo_fill( context );
+
+        }
+
+        if( sunken )
+        {
+
+            //plain background
+            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 21 ) );
+            cairo_pattern_add_color_stop( pattern, 0, dark );
+            cairo_pattern_add_color_stop( pattern, 1, light );
+            cairo_set_source( context, pattern );
+            cairo_ellipse( context, 5, 5, 11, 11 );
+            cairo_fill( context );
+
 
         }
 
