@@ -117,12 +117,8 @@ namespace Oxygen
 
         const Cairo::Surface& roundSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, double shade, int size = 7 );
 
-        //! slider slab
-        const Cairo::Surface& sliderSlab( const ColorUtils::Rgba& color, double shade, int size = 7 )
-        { return sliderSlab( color, ColorUtils::Rgba(), shade, size ); }
-
         // slider slab
-        const Cairo::Surface& sliderSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glowColor, double shade, int size = 7 );
+        const Cairo::Surface& sliderSlab( const ColorUtils::Rgba&, const ColorUtils::Rgba& glowColor, bool sunken, double shade, int size = 7 );
 
         //! groupbox background
         const TileSet& slope( const ColorUtils::Rgba&, double shade, int size = 7 );
@@ -223,7 +219,7 @@ namespace Oxygen
         void drawRoundSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
 
         //! slider slab
-        void drawSliderSlab( Cairo::Context&, const ColorUtils::Rgba&, double ) const;
+        void drawSliderSlab( Cairo::Context&, const ColorUtils::Rgba&, bool sunken, double ) const;
 
         //! inverse shadow gradient
         cairo_pattern_t* inverseShadowGradient( const ColorUtils::Rgba&, int pad, int size, double fuzz ) const;
@@ -280,7 +276,7 @@ namespace Oxygen
         CairoSurfaceCache<SlabKey> _roundSlabCache;
 
         //! slider slabs
-        CairoSurfaceCache<SlabKey> _sliderSlabCache;
+        CairoSurfaceCache<SliderSlabKey> _sliderSlabCache;
 
         //! progressbar indicators
         CairoSurfaceCache<ProgressBarIndicatorKey> _progressBarIndicatorCache;

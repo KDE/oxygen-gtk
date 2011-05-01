@@ -127,6 +127,61 @@ namespace Oxygen
         }
     };
 
+    class SliderSlabKey
+    {
+        public:
+
+        //! constructor
+        SliderSlabKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, bool sunken, double shade, int size ):
+            _color( color.toInt() ),
+            _glow( glow.toInt() ),
+            _sunken( sunken ),
+            _shade( shade ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const SliderSlabKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _glow == other._glow &&
+                _sunken == other._sunken &&
+                _shade == other._shade &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const SliderSlabKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _glow != other._glow ) return _glow < other._glow;
+            else if( _sunken != other._sunken ) return _sunken < other._sunken;
+            else if( _shade != other._shade ) return _shade < other._shade;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        guint32 _glow;
+        bool _sunken;
+        double _shade;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const SliderSlabKey& key )
+        {
+            out << "SliderSlabKey -"
+                << " color: " << key._color
+                << " glow: " << key._glow
+                << " sunken: " << key._sunken
+                << " shade: " << key._shade
+                << " size: " << key._size;
+            return out;
+        }
+    };
+
     //! key for holes
     class HoleFocusedKey
     {

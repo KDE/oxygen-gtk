@@ -2145,7 +2145,7 @@ namespace Oxygen
         y = child.y;
 
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
-        const Cairo::Surface& surface( helper().sliderSlab( base, glow, 0 ) );
+        const Cairo::Surface& surface( helper().sliderSlab( base, glow, false, 0 ) );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, child.width, child.height );
         cairo_set_source_surface( context, surface, 0, 0 );
