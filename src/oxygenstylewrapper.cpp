@@ -2831,7 +2831,6 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
-            options &= ~Sunken;
 
             if(!Style::instance().settings().applicationName().useFlatBackground( widget ))
             { options |= Blend; }

@@ -55,6 +55,8 @@ style "oxygen-default"
     GtkScale::slider-width = 23
     GtkScale::slider-length = 21
 
+    GtkRange::activate-slider = 1
+
     GtkScrollbar::trough-border=1
     GtkScrollbar::stepper-size=12
     GtkScrolledWindow::scrollbar-spacing=1
