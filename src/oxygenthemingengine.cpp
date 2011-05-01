@@ -2145,7 +2145,6 @@ namespace Oxygen
 
             StyleOptions options( widget, stateFlags );
             options |= Blend;
-            options &= ~Sunken;
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
             // retrieve animation state and render accordingly
