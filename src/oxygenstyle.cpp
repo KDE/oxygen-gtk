@@ -2089,8 +2089,17 @@ namespace Oxygen
         const bool vertical( options & Vertical );
         GdkRectangle parent = { x, y, w, h };
 
-        GdkRectangle child = { 0, 0, vertical ? Slider_GrooveWidth:w, vertical ? h:Slider_GrooveWidth };
+        GdkRectangle child;
+        if( vertical ) child = Gtk::gdk_rectangle( 0, 0, Slider_GrooveWidth, h );
+        else child = Gtk::gdk_rectangle( 0, 0, w, Slider_GrooveWidth );
         centerRect( &parent, &child );
+
+        if( !vertical )
+        {
+            // more adjustment needed due to contrast pixel
+            child.y += 1;
+            child.height -= 1;
+        }
 
         Cairo::Context context( window, clipRect );
         helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, TileSet::Full );
