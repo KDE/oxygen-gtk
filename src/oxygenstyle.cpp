@@ -2111,9 +2111,6 @@ namespace Oxygen
         GdkRectangle child = {0, 0, 21, 21 };
         centerRect( &parent, &child );
 
-        // adjust rect positionning
-        if( !(options&Vertical) ) child.y -= 1;
-
         x = child.x;
         y = child.y;
 
