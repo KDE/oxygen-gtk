@@ -791,72 +791,132 @@ namespace Oxygen
         const int h( 15 );
         Cairo::Surface surface( createSurface( w, h ) );
 
-        Cairo::Context context( surface );
-
-        GdkRectangle r = { 0, 0, w, h };
-        GdkRectangle rect = { 1, 0, w-2, h-1 };
-
-        // radius
-        const double radius( smallShadow ? 2.5:3.0 );
-
-        // base
         {
-            cairo_set_source( context, dark );
-            gdk_cairo_rounded_rectangle( context, &rect, radius );
-            cairo_fill( context );
-        }
+            Cairo::Context context( surface );
 
-        // light shadow across the whole hole
-        {
-            Cairo::Pattern pattern;
-            if( vertical ) pattern.set( cairo_pattern_create_linear( rect.x, 0, rect.x + rect.width, 0 ) );
-            else pattern.set( cairo_pattern_create_linear( 0, rect.y, 0, rect.y + rect.height ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.1 ) );
-            cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( shadow ) );
+            GdkRectangle r = { 0, 0, w, h };
+            GdkRectangle rect = { 1, 0, w-2, h-1 };
 
-            cairo_set_source( context, pattern );
-            gdk_cairo_rounded_rectangle( context, &rect, radius );
-            cairo_fill( context );
-        }
+            // radius
+            const double radius( smallShadow ? 2.5:3.0 );
 
-        // first create shadow
-        const int shadowSize( 5 );
-        Cairo::Surface shadowSurface( createSurface( 2*shadowSize, 2*shadowSize ) );
-        {
-            Cairo::Context context( shadowSurface );
-            drawInverseShadow( context, ColorUtils::shadowColor( base ), 1, 8, 0.0);
-        }
-
-        // draw shadow
-        TileSet(
-            shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
-            shadowSize-1, shadowSize, 2, 1 ).
-            render( context, 0, -1, w, h+1, TileSet::Full );
-
-        // light bottom border
-        {
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y, 0, r.y + r.height ) );
-
-            if( smallShadow && vertical )
+            // base
             {
-
-                cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.5 ) );
-
-            } else {
-
-                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.6 ) );
-
+                cairo_set_source( context, dark );
+                gdk_cairo_rounded_rectangle( context, &rect, radius );
+                cairo_fill( context );
             }
 
-            cairo_set_source( context, pattern );
-            cairo_set_line_width( context, 1.0 );
-            cairo_rounded_rectangle( context, r.x+0.5, r.y+0.5, r.width-1, r.height-1, radius+0.5 );
-            cairo_stroke( context );
+            // light shadow across the whole hole
+            {
+                Cairo::Pattern pattern;
+                if( vertical ) pattern.set( cairo_pattern_create_linear( rect.x, 0, rect.x + rect.width, 0 ) );
+                else pattern.set( cairo_pattern_create_linear( 0, rect.y, 0, rect.y + rect.height ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.1 ) );
+                cairo_pattern_add_color_stop( pattern, 0.6, ColorUtils::Rgba::transparent( shadow ) );
+
+                cairo_set_source( context, pattern );
+                gdk_cairo_rounded_rectangle( context, &rect, radius );
+                cairo_fill( context );
+            }
+
+            // first create shadow
+            const int shadowSize( 5 );
+            Cairo::Surface shadowSurface( createSurface( 2*shadowSize, 2*shadowSize ) );
+            {
+                Cairo::Context context( shadowSurface );
+                drawInverseShadow( context, ColorUtils::shadowColor( base ), 1, 8, 0.0);
+            }
+
+            // draw shadow
+            TileSet(
+                shadowSurface, shadowSize, shadowSize, shadowSize, shadowSize,
+                shadowSize-1, shadowSize, 2, 1 ).
+                render( context, 0, -1, w, h+1, TileSet::Full );
+
+            // light bottom border
+            {
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, r.y, 0, r.y + r.height ) );
+
+                if( smallShadow && vertical )
+                {
+
+                    cairo_pattern_add_color_stop( pattern, 0.8, ColorUtils::Rgba::transparent( light ) );
+                    cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.5 ) );
+
+                } else {
+
+                    cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::Rgba::transparent( light ) );
+                    cairo_pattern_add_color_stop( pattern, 1, ColorUtils::alphaColor( light, 0.6 ) );
+
+                }
+
+                cairo_set_source( context, pattern );
+                cairo_set_line_width( context, 1.0 );
+                cairo_rounded_rectangle( context, 0.5+r.x, 0.5+r.y, r.width-1, r.height-1, radius+0.5 );
+                cairo_stroke( context );
+            }
+
         }
 
         return _scrollHoleCache.insert( key, TileSet( surface, 7, 7, 1, 1 ) );
+
+    }
+
+    //______________________________________________________________________________
+    const TileSet& StyleHelper::scrollHandle( const ColorUtils::Rgba& base, const ColorUtils::Rgba& glow, int size )
+    {
+
+        const ScrollHandleKey key( base, glow, size );
+        const TileSet& tileSet( _scrollHandleCache.value( key ) );
+        if( tileSet.isValid() ) return tileSet;
+
+        // create pixmap
+        const int w( 2*size );
+        const int h( 2*size );
+        Cairo::Surface surface( createSurface( w, h ) );
+
+        {
+            Cairo::Context context( surface );
+            cairo_scale( context, (2.0*size)/14, (2.0*size)/14 );
+
+            // first create shadow
+            Cairo::Surface shadowSurface( createSurface( 10, 10 ) );
+            {
+                Cairo::Context context( shadowSurface );
+
+                // shadow/glow
+                drawOuterGlow( context, glow, 10 );
+
+            }
+
+            // draw shadow
+            TileSet( shadowSurface, 4, 4, 1, 1 ).
+                render( context, 0, 0, 14, 14, TileSet::Full );
+
+            // outline
+            {
+                const ColorUtils::Rgba mid( ColorUtils::midColor( base ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 11 ) );
+                cairo_pattern_add_color_stop( pattern, 0, base );
+                cairo_pattern_add_color_stop( pattern, 1, mid );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 3, 3, 8, 8, 2.5 );
+            }
+
+            // contrast
+            {
+                const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 3, 0, 11 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.9 ) );
+                cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.44 ) );
+                cairo_set_source( context, pattern );
+                cairo_rounded_rectangle( context, 3, 3, 8, 8, 2.5 );
+            }
+
+        }
+
+        return _scrollHandleCache.insert( key, TileSet( surface, 7, 7, 1, 1 ) );
 
     }
 

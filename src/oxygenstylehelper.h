@@ -65,6 +65,7 @@ namespace Oxygen
             _holeFocusedCache.clear();
             _holeFlatCache.clear();
             _scrollHoleCache.clear();
+            _scrollHandleCache.clear();
             _slitFocusedCache.clear();
             _dockFrameCache.clear();
             _grooveCache.clear();
@@ -146,9 +147,13 @@ namespace Oxygen
         const TileSet& holeFocused( const ColorUtils::Rgba&, const ColorUtils::Rgba& fill, const ColorUtils::Rgba &glow, int size = 7, bool contrast = false );
 
         const TileSet& holeFlat( const  ColorUtils::Rgba&, double, bool = true, int size = 7 );
-        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical, bool smallShadow = false );
 
         //@}
+
+        //!@name scrollbar elements
+        //@{
+        const TileSet& scrollHole( const ColorUtils::Rgba&, bool vertical, bool smallShadow = false );
+        const TileSet& scrollHandle( const ColorUtils::Rgba&, const ColorUtils::Rgba&, int size = 7 );
 
         //! 'slit' (for hovered/focused flat buttons )
         const TileSet& slitFocused( const ColorUtils::Rgba& );
@@ -259,6 +264,9 @@ namespace Oxygen
 
         //! scroll hole
         TileSetCache<ScrollHoleKey> _scrollHoleCache;
+
+        //! scrollbar handle
+        TileSetCache<ScrollHandleKey> _scrollHandleCache;
 
         //! slit
         TileSetCache<SlitFocusedKey> _slitFocusedCache;
