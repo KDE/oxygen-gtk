@@ -2846,6 +2846,7 @@ namespace Oxygen
         } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
+            if( options&Sunken ) options |= Hover;
             options |= Vertical;
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
@@ -2854,6 +2855,8 @@ namespace Oxygen
         } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
+            if( options&Sunken ) options |= Hover;
+
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( window, clipRect, x, y, w, h-1, options, data );
 
