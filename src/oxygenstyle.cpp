@@ -976,7 +976,6 @@ namespace Oxygen
         helper().scrollHandle( color, glow ).
             render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
 
-
         // contents
         const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
         Cairo::Pattern pattern( cairo_pattern_create_linear( 0, yf, 0, yf+hf ) );
@@ -986,6 +985,26 @@ namespace Oxygen
         cairo_rounded_rectangle( context, xf+1, yf+1, wf-2, hf-2, radius - 2 );
         cairo_fill( context );
 
+        // pattern
+        if( settings().scrollBarBevel() )
+        {
+
+            const ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
+
+            Cairo::Pattern pattern;
+            if( vertical ) pattern.set( cairo_pattern_create_linear( 0, 0, 0, 30 ) );
+            else pattern.set( cairo_pattern_create_linear( 0, 0, 30, 0 ) );
+            cairo_pattern_set_extend( pattern, CAIRO_EXTEND_REFLECT );
+
+            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent() );
+            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.1 ) );
+
+            cairo_set_source( context, pattern );
+            if( vertical ) cairo_rectangle( context, xf+3, yf, wf-6, hf );
+            else cairo_rectangle( context, xf, yf+3, wf, hf-6 );
+            cairo_fill( context );
+
+        }
     }
 
     //____________________________________________________________________________________
