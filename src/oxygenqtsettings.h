@@ -115,10 +115,6 @@ namespace Oxygen
         { return _tabStyle; }
 
         //! true if hovered scrollbars must be colored
-        bool scrollBarColored( void ) const
-        { return _scrollBarColored; }
-
-        //! true if hovered scrollbars must be colored
         bool scrollBarBevel( void ) const
         { return _scrollBarBevel; }
 
@@ -409,9 +405,6 @@ namespace Oxygen
 
         //! checkbox style
         TabStyle _tabStyle;
-
-        //! colored scrollbar (on hover)
-        bool _scrollBarColored;
 
         //! scrollbar bevel
         bool _scrollBarBevel;
