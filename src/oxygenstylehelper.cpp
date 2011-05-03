@@ -902,6 +902,7 @@ namespace Oxygen
                 cairo_pattern_add_color_stop( pattern, 1, mid );
                 cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, 3, 3, 8, 8, 2.5 );
+                cairo_fill( context );
             }
 
             // contrast
@@ -912,6 +913,7 @@ namespace Oxygen
                 cairo_pattern_add_color_stop( pattern, 0.5, ColorUtils::alphaColor( light, 0.44 ) );
                 cairo_set_source( context, pattern );
                 cairo_rounded_rectangle( context, 3, 3, 8, 8, 2.5 );
+                cairo_fill( context );
             }
 
         }

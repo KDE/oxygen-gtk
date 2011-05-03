@@ -943,24 +943,8 @@ namespace Oxygen
         GdkRectangle* clipRect,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
-        const AnimationData& data ) const
+        const AnimationData& data )
     {
-
-        // store colors
-        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
-        const ColorUtils::Rgba color( settings().palette().color( group, Palette::Button ) );
-        const ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
-        const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
-        const ColorUtils::Rgba dark( ColorUtils::darkColor( color ) );
-        const ColorUtils::Rgba shadow( ColorUtils::shadowColor( color ) );
-        const ColorUtils::Rgba base( ColorUtils::mix( dark, shadow, 0.5 ) );
-
-        // glow color
-        ColorUtils::Rgba glow;
-        if( settings().scrollBarColored() ) glow = ColorUtils::mix( dark, shadow, 0.5 );
-        else if( data._mode == AnimationHover ) glow = ColorUtils::mix( base, settings().palette().color( Palette::Hover ), data._opacity );
-        else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
-        else glow = base;
 
         // vertical
         const bool vertical( options&Vertical );
@@ -975,124 +959,32 @@ namespace Oxygen
         // context
         Cairo::Context context( window, clipRect );
 
-        double radius( 2.5 );
+        // store colors
+        const Palette::Group group( options&Disabled ? Palette::Disabled : Palette::Active );
+        const ColorUtils::Rgba color( settings().palette().color( group, Palette::Button ) );
 
-        // glow, shadow
-        {
-            cairo_rounded_rectangle( context, xf-0.8, yf-0.8, wf+1.6, hf+1.6, radius );
-            cairo_set_source( context, ColorUtils::alphaColor( glow, 0.6 ) );
-            cairo_fill( context );
+        const double radius( 3.5 );
 
-            cairo_rounded_rectangle( context, xf-1.2, yf-0.8, wf+2.4, hf+1.6, radius );
-            cairo_set_source( context, ColorUtils::alphaColor( glow, 0.3 ) );
-            cairo_set_line_width( context, 1.5 );
-            cairo_stroke( context );
+        // glow color
+        ColorUtils::Rgba glow;
+        const ColorUtils::Rgba shadow( ColorUtils::alphaColor( ColorUtils::shadowColor( color ), 0.4 ) );
+        const ColorUtils::Rgba hovered( settings().palette().color( Palette::Hover ) );
+        if( data._mode == AnimationHover ) glow = ColorUtils::mix( shadow, hovered, data._opacity );
+        else if( options&Hover ) glow = hovered;
+        else glow = shadow;
 
-        }
+        helper().scrollHandle( color, glow ).
+            render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
 
-        // colored background
-        if( settings().scrollBarColored() )
-        {
-            ColorUtils::Rgba fillColor;
-            if( data._mode == AnimationHover ) fillColor = ColorUtils::mix( color, settings().palette().color( Palette::Hover ), data._opacity );
-            else if( options&Hover ) fillColor = settings().palette().color( Palette::Hover );
-            else fillColor = color;
 
-            cairo_set_source( context, fillColor );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
-            cairo_fill( context );
-        }
-
-        // slider pattern
-        {
-
-            Cairo::Pattern pattern;
-            if( vertical ) pattern.set( cairo_pattern_create_linear( xf, 0, xf+wf, 0 ) );
-            else pattern.set( cairo_pattern_create_linear( 0, yf, 0, yf+hf ) );
-
-            if( settings().scrollBarColored() )
-            {
-
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0.6 ) );
-                cairo_pattern_add_color_stop( pattern, 0.3, ColorUtils::alphaColor( dark, 0.3 ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.8 ) );
-
-            } else {
-
-                cairo_pattern_add_color_stop( pattern, 0, color );
-                cairo_pattern_add_color_stop( pattern, 1, mid );
-
-            }
-
-            cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
-            cairo_fill( context );
-
-        }
-
-        // pattern
-        if( settings().scrollBarBevel() )
-        {
-
-            Cairo::Pattern pattern;
-            if( vertical ) pattern.set( cairo_pattern_create_linear( 0, 0, 0, 30 ) );
-            else pattern.set( cairo_pattern_create_linear( 0, 0, 30, 0 ) );
-            cairo_pattern_set_extend( pattern, CAIRO_EXTEND_REFLECT );
-            if( settings().scrollBarColored() )
-            {
-
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.15 ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.15 ) );
-
-            } else {
-
-                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( shadow, 0.1 ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0.1 ) );
-
-            }
-
-            cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, xf, yf, wf, hf, radius - 1 );
-            cairo_fill( context );
-
-        }
-
-        // bevel
-        if( !settings().scrollBarColored() )
-        {
-            Cairo::Pattern pattern;
-            if( vertical ) pattern.set( cairo_pattern_create_linear( 0, yf, 0, yf+hf ) );
-            else pattern.set( cairo_pattern_create_linear( xf, 0, xf+wf, 0 ) );
-
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::alphaColor( light, 0 ) );
-            cairo_pattern_add_color_stop( pattern, 0.5, light );
-            cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::alphaColor( light, 0 ) );
-            cairo_set_source( context, pattern );
-            cairo_set_line_width( context, 1 );
-
-            if( vertical )
-            {
-                cairo_move_to( context, xf + 0.5, yf + 0.5 );
-                cairo_line_to( context, xf + 0.5, yf + hf -1.5 );
-                cairo_stroke( context );
-
-                cairo_move_to( context, xf + wf - 0.5, yf + 0.5 );
-                cairo_line_to( context, xf + wf - 0.5, yf + hf - 0.5 );
-                cairo_stroke( context );
-
-            } else {
-
-                cairo_move_to( context, xf + 0.5, yf + 0.5 );
-                cairo_line_to( context, xf + wf - 0.5, yf + 0.5 );
-                cairo_stroke( context );
-
-                cairo_move_to( context, xf + 0.5, yf + hf - 0.5 );
-                cairo_line_to( context, xf + wf - 0.5, yf + hf - 0.5 );
-                cairo_stroke( context );
-
-            }
-
-        }
+        // contents
+        const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
+        Cairo::Pattern pattern( cairo_pattern_create_linear( 0, yf, 0, yf+hf ) );
+        cairo_pattern_add_color_stop( pattern, 0, color );
+        cairo_pattern_add_color_stop( pattern, 1, mid );
+        cairo_set_source( context, pattern );
+        cairo_rounded_rectangle( context, xf+1, yf+1, wf-2, hf-2, radius - 2 );
+        cairo_fill( context );
 
     }
 
