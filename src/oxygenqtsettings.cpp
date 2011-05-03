@@ -43,6 +43,11 @@ namespace Oxygen
     const std::string QtSettings::_defaultKdeIconPath = "/usr/share/icons/";
 
     //_________________________________________________________
+    /*
+    Note: the default values set in the constructor are actually ignored.
+    Real default values are set via Oxygen::QtSettings::loadKdeGlobalsOptions,
+    from the oxygenrc file provided with oxygen-gtk
+    */
     QtSettings::QtSettings( void ):
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
@@ -50,8 +55,7 @@ namespace Oxygen
         _useIconEffect( true ),
         _checkBoxStyle( CS_CHECK ),
         _tabStyle( TS_SINGLE ),
-        _scrollBarColored( false ),
-        _scrollBarBevel( false ),
+        _scrollBarBevel( true ),
         _scrollBarAddLineButtons( 2 ),
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
@@ -769,11 +773,8 @@ namespace Oxygen
         // checkbox style
         _tabStyle = (oxygen.getValue( "[Style]", "TabStyle", "TS_SINGLE" ) == "TS_SINGLE") ? TS_SINGLE:TS_PLAIN;
 
-        // colored scrollbars
-        _scrollBarColored = oxygen.getOption( "[Style]", "ScrollBarColored" ).toVariant<std::string>("false") == "true";
-
-        // colored scrollbars
-        _scrollBarBevel = oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("false") == "true";
+        // scrollbar bevel
+        _scrollBarBevel = oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("true") == "true";
 
         // scrollbar buttons
         _scrollBarAddLineButtons = oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );

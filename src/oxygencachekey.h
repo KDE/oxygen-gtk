@@ -296,8 +296,6 @@ namespace Oxygen
 
     };
 
-
-
     //! key for scroll holes
     class ScrollHoleKey
     {
@@ -340,6 +338,53 @@ namespace Oxygen
                 << " color: " << key._color
                 << " vertical: " << (key._vertical ? "true":"false")
                 << " smallShadow: " << (key._smallShadow ? "true":"false");
+            return out;
+        }
+
+    };
+
+    //! key for scrollbar handles
+    class ScrollHandleKey
+    {
+       public:
+
+        //! constructor
+        ScrollHandleKey( const ColorUtils::Rgba& color, const ColorUtils::Rgba& glow, int size ):
+            _color( color.toInt() ),
+            _glow( glow.toInt() ),
+            _size( size )
+        {}
+
+        //! equal to operator
+        bool operator == (const ScrollHandleKey& other ) const
+        {
+            return
+                _color == other._color &&
+                _glow == other._glow &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const ScrollHandleKey& other ) const
+        {
+            if( _color != other._color ) return _color < other._color;
+            else if( _glow != other._glow ) return _glow < other._glow;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32 _color;
+        guint32 _glow;
+        int _size;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const ScrollHandleKey& key )
+        {
+            out << "ScrollHandleKey -"
+                << " color: " << key._color
+                << " glow: " << key._glow
+                << " size: " << key._size;
             return out;
         }
 

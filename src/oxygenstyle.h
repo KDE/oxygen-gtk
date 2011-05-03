@@ -176,7 +176,7 @@ namespace Oxygen
         //!@name scrollbar
         //@{
         void renderScrollBarHole( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
-        void renderScrollBarHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
+        void renderScrollBarHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );
         //@}
 
         //! toolbar handle
