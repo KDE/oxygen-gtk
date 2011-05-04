@@ -210,8 +210,6 @@ namespace Oxygen
         const StyleOptions& options, TileSet::Tiles tiles )
     {
 
-        bool needToDestroyContext;
-
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
 
@@ -225,6 +223,7 @@ namespace Oxygen
         gint wx(0), wy(0);
 
         // if we aren't going to draw window decorations...
+        bool needToDestroyContext( false );
         if(!context)
         {
 
@@ -268,7 +267,6 @@ namespace Oxygen
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
-            needToDestroyContext=false;
             cairo_save(context);
             cairo_translate(context,x,y);
             x=0;
