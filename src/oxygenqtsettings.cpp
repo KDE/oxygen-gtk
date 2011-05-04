@@ -795,6 +795,9 @@ namespace Oxygen
         std::cerr << oxygen << std::endl;
         #endif
 
+        // background pixmap
+        _backgroundPixmap = oxygen.getValue( "[Common]", "BackgroundPixmap", "" );
+
         // checkbox style
         _checkBoxStyle = (oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;
 
