@@ -51,7 +51,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    bool BackgroundHintEngine::registerWidget( GtkWidget* widget )
+    bool BackgroundHintEngine::registerWidget( GtkWidget* widget, BackgroundHints hints )
     {
 
         // get associated top level widget
@@ -70,7 +70,7 @@ namespace Oxygen
 
         // set hint
         GdkDisplay *display( gdk_display_get_default () );
-        if( display && _backgroundGradientAtom )
+        if( display && _backgroundGradientAtom && (hints&BackgroundGradient) )
         {
             unsigned long uLongValue( true );
             XChangeProperty(
@@ -78,7 +78,7 @@ namespace Oxygen
                 reinterpret_cast<const unsigned char *>(&uLongValue), 1 );
         }
 
-        if( display && _backgroundPixmapAtom )
+        if( display && _backgroundPixmapAtom && (hints&BackgroundPixmap) )
         {
             unsigned long uLongValue( true );
             XChangeProperty(
