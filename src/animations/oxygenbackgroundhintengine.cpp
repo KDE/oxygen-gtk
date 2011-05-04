@@ -20,8 +20,6 @@
 
 #include "oxygenbackgroundhintengine.h"
 #include "config.h"
-#include "../oxygenstylehelper.h"
-#include "../oxygengtkutils.h"
 
 #include <iostream>
 
