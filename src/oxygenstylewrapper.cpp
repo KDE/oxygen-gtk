@@ -181,7 +181,11 @@ namespace Oxygen
             if( Gtk::gdk_window_is_base( window ) &&
                 !( GTK_IS_EVENT_BOX( widget ) &&
                 !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
-            { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
+            {
+                BackgroundHints hints( BackgroundGradient );
+                if( Style::instance().hasBackgroundSurface() ) hints |= BackgroundPixmap;
+                Style::instance().animations().backgroundHintEngine().registerWidget( widget, hints );
+            }
 
             // change gtk dialog button order
             GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
@@ -1096,7 +1100,11 @@ namespace Oxygen
                 if(
                     Gtk::gdk_window_is_base( window ) &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
+                {
+                    BackgroundHints hints( BackgroundGradient );
+                    if( Style::instance().hasBackgroundSurface() ) hints |= BackgroundPixmap;
+                    Style::instance().animations().backgroundHintEngine().registerWidget( widget, hints );
+                }
 
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 

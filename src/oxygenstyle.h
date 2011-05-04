@@ -98,6 +98,9 @@ namespace Oxygen
         //! return tabCloseButton for given set of options
         Cairo::Surface tabCloseButton( const StyleOptions& );
 
+        //! background surface
+        bool hasBackgroundSurface( void ) const;
+
         //!@name primitives
         //@{
 
@@ -322,9 +325,6 @@ namespace Oxygen
             Palette::ColorSet::const_iterator iter( option._customColors.find( role ) );
             return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
         }
-
-        //! background surface
-        bool hasBackgroundSurface( void ) const;
 
         //! set background surface
         void setBackgroundSurface( const std::string& );

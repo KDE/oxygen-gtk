@@ -162,6 +162,17 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________________________________
+    bool Style::hasBackgroundSurface( void ) const
+    {
+        if( !_backgroundSurface.isValid() ) return false;
+        const cairo_status_t status( cairo_surface_status( _backgroundSurface ) );
+        return
+            status != CAIRO_STATUS_NO_MEMORY &&
+            status != CAIRO_STATUS_FILE_NOT_FOUND &&
+            status != CAIRO_STATUS_READ_ERROR;
+    }
+
     //__________________________________________________________________
     void Style::fill( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
@@ -2660,17 +2671,6 @@ namespace Oxygen
 
         return;
 
-    }
-
-    //____________________________________________________________________________________
-    bool Style::hasBackgroundSurface( void ) const
-    {
-        if( !_backgroundSurface.isValid() ) return false;
-        const cairo_status_t status( cairo_surface_status( _backgroundSurface ) );
-        return
-            status != CAIRO_STATUS_NO_MEMORY &&
-            status != CAIRO_STATUS_FILE_NOT_FOUND &&
-            status != CAIRO_STATUS_READ_ERROR;
     }
 
     //____________________________________________________________________________________
