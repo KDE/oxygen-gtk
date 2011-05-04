@@ -86,6 +86,10 @@ namespace Oxygen
         bool useIconEffect( void ) const
         { return _useIconEffect; }
 
+        //! background pixmap
+        const std::string& backgroundPixmap( void ) const
+        { return _backgroundPixmap; }
+
         //! checkbox style
         enum CheckBoxStyle
         {
@@ -389,6 +393,9 @@ namespace Oxygen
 
         //! active icon effect
         bool _useIconEffect;
+
+        //! background pixmap
+        std::string _backgroundPixmap;
 
         //! checkbox style
         CheckBoxStyle _checkBoxStyle;

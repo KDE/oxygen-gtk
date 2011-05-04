@@ -86,6 +86,14 @@ namespace Oxygen
             windowManager().setDragDelay( settings().startDragTime() );
         }
 
+        // background surface
+        if( !settings().backgroundPixmap().empty() )
+        {
+            setBackgroundSurface( settings().backgroundPixmap() );
+            if( !hasBackgroundSurface() )
+            { std::cerr << "Oxygen::Style::initialize - unable to load background image: " << settings().backgroundPixmap() << std::endl; }
+        }
+
         // create window shadow
         WindowShadow shadow( settings(), helper() );
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
@@ -153,6 +161,17 @@ namespace Oxygen
 
     }
 
+    //____________________________________________________________________________________
+    bool Style::hasBackgroundSurface( void ) const
+    {
+        if( !_backgroundSurface.isValid() ) return false;
+        const cairo_status_t status( cairo_surface_status( _backgroundSurface ) );
+        return
+            status != CAIRO_STATUS_NO_MEMORY &&
+            status != CAIRO_STATUS_FILE_NOT_FOUND &&
+            status != CAIRO_STATUS_READ_ERROR;
+    }
+
     //__________________________________________________________________
     void Style::fill( cairo_t* context, gint x, gint y, gint w, gint h, const ColorUtils::Rgba& color ) const
     {
@@ -213,6 +232,7 @@ namespace Oxygen
         gint x, gint y, gint w, gint h,
         const StyleOptions& options, TileSet::Tiles tiles )
     {
+
 
         // always save context
         cairo_save(context);
@@ -333,6 +353,17 @@ namespace Oxygen
             cairo_pattern_set_matrix( cairo_get_source( context ), &transformation );
 
             gdk_cairo_rectangle( context, &radialRect );
+            cairo_fill( context );
+
+        }
+
+        if( hasBackgroundSurface() )
+        {
+
+            // no sense in context saving since it will be destroyed
+            cairo_translate( context, -40, -(48-20) );
+            cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
+            cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
             cairo_fill( context );
 
         }
@@ -2617,6 +2648,13 @@ namespace Oxygen
 
         return;
 
+    }
+
+    //____________________________________________________________________________________
+    void Style::setBackgroundSurface( const std::string& filename )
+    {
+        if( _backgroundSurface.isValid() ) _backgroundSurface.free();
+        _backgroundSurface.set( cairo_image_surface_create_from_png( filename.c_str() ) );
     }
 
     //____________________________________________________________________________________

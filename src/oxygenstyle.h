@@ -103,6 +103,9 @@ namespace Oxygen
         //! return tabCloseButton for given set of options
         Cairo::Surface tabCloseButton( const StyleOptions& );
 
+        //! background surface
+        bool hasBackgroundSurface( void ) const;
+
         //!@name primitives
         //@{
 
@@ -351,6 +354,9 @@ namespace Oxygen
             return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
         }
 
+        //! set background surface
+        void setBackgroundSurface( const std::string& );
+
         //@name internal rendering
         //@{
 
@@ -483,6 +489,9 @@ namespace Oxygen
 
         //! widget lookup
         WidgetLookup _widgetLookup;
+
+        //! background surface
+        Cairo::Surface _backgroundSurface;
 
         //! Tab close buttons
         class TabCloseButtons

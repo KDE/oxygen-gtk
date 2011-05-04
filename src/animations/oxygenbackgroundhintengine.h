@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "../oxygenflags.h"
 #include "oxygenbaseengine.h"
 
 #include <gdk/gdkx.h>
@@ -35,6 +36,16 @@ namespace Oxygen
     class Animations;
     class StyleHelper;
 
+    enum BackgroundHint
+    {
+
+        BackgroundGradient = 1<<0,
+        BackgroundPixmap = 1<<1
+    };
+
+    OX_DECLARE_FLAGS( BackgroundHints, BackgroundHint )
+    OX_DECLARE_OPERATORS_FOR_FLAGS( BackgroundHints )
+
     //! associates widgets with some type of data
     class BackgroundHintEngine: public BaseEngine
     {
@@ -49,7 +60,7 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* );
+        virtual bool registerWidget( GtkWidget*, BackgroundHints = BackgroundGradient|BackgroundPixmap );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
@@ -58,6 +69,9 @@ namespace Oxygen
 
         //! argb hint atom
         Atom _backgroundGradientAtom;
+
+        //! background gradient hint atom
+        Atom _backgroundPixmapAtom;
 
         //! map widget and window id
         class Data
