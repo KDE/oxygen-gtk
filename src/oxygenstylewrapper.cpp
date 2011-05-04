@@ -828,8 +828,8 @@ namespace Oxygen
 
                     // register to Hover engine and check state
                     Style::instance().animations().hoverEngine().registerWidget( widget );
-                    if( Style::instance().animations().hoverEngine().hovered( widget ) )
-                    { options |= Hover; }
+                    if( (options&Hover) )  Style::instance().animations().hoverEngine().setHovered( widget, true );
+                    else if( Style::instance().animations().hoverEngine().hovered( widget ) ) options |= Hover;
 
                 } else if( Gtk::gtk_parent_combo( widget ) ) {
 
