@@ -56,8 +56,6 @@ namespace Oxygen
         void setUpdateOnHover( bool value )
         { _updateOnHover = value; }
 
-        protected:
-
         //! set mouse over state
         virtual bool setHovered( GtkWidget* widget, bool value )
         {
@@ -70,6 +68,8 @@ namespace Oxygen
 
             return true;
         }
+
+        protected:
 
         //!@name static callbacks
         //@{
