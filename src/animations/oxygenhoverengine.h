@@ -51,10 +51,6 @@ namespace Oxygen
         virtual ~HoverEngine( void )
         {}
 
-        //! true if widget is hovered
-        bool hovered( GtkWidget* widget )
-        { return data().value( widget ).hovered(); }
-
         //! register widget
         virtual bool registerWidget( GtkWidget* widget, bool updateOnHover = false )
         {
@@ -65,6 +61,14 @@ namespace Oxygen
             } else return false;
 
         }
+
+        //! true if widget is hovered
+        bool hovered( GtkWidget* widget )
+        { return data().value( widget ).hovered(); }
+
+        //! set hover state
+        bool setHovered( GtkWidget* widget, bool value )
+        { return data().value( widget ).setHovered( widget, value ); }
 
     };
 
