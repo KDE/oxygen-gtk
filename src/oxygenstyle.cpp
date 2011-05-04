@@ -86,6 +86,14 @@ namespace Oxygen
             windowManager().setDragDelay( settings().startDragTime() );
         }
 
+        // background surface
+        if( !settings().backgroundPixmap().empty() )
+        {
+            setBackgroundSurface( settings().backgroundPixmap() );
+            if( !hasBackgroundSurface() )
+            { std::cerr << "Oxygen::Style::initialize - unable to load background image: " << settings().backgroundPixmap() << std::endl; }
+        }
+
         // create window shadow
         WindowShadow shadow( settings(), helper() );
         shadowHelper().setApplicationName( settings().applicationName() );
@@ -344,6 +352,61 @@ namespace Oxygen
 
         if(needToDestroyContext) cairo_destroy(context);
         else cairo_restore(context);
+
+
+        if( needToDestroyContext )
+        { renderBackgroundSurface( window, widget, clipRect, x, y, w, h, options, tiles ); }
+
+        return;
+
+    }
+
+    //__________________________________________________________________
+    void Style::renderBackgroundSurface(
+        GdkWindow* window, GtkWidget* widget,
+        GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
+        const StyleOptions& options, TileSet::Tiles tiles )
+    {
+
+        if( !hasBackgroundSurface() ) return;
+
+        // the hard-coded metrics are copied for
+        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
+        // vertical shift to account for window decoration
+        const int yShift = 23;
+
+        // toplevel window information and relative positioning
+        gint ww(0), wh(0);
+        gint wx(0), wy(0);
+
+        // create context and translate to toplevel coordinates
+        // make it the old good way since context is cairo_t* instead Cairo::Context
+        cairo_t* context = gdk_cairo_create(window);
+
+        if( clipRect )
+        {
+            cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+            cairo_clip(context);
+        }
+
+        // add hole if required (this can be done before translating the context
+        if( options&NoFill )
+        { renderHoleMask( context, x, y, w, h, tiles ); }
+
+        // get window dimension and position
+        if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+        { return; }
+
+        // translate to toplevel coordinates
+        wy += yShift;
+        x+=wx;
+        y+=wy;
+
+        // no sense in context saving since it will be destroyed
+        cairo_translate( context, -wx - 40, -wy - (48-20) );
+        cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
+        cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
+        cairo_fill( context );
 
         return;
 

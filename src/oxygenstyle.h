@@ -131,6 +131,9 @@ namespace Oxygen
         //! groupbox background
         void renderGroupBoxBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
+        //! render window background using a given color as a reference
+        void renderBackgroundSurface( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
+
         //! menu background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
 
