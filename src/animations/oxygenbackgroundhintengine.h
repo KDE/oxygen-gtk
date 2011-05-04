@@ -59,6 +59,9 @@ namespace Oxygen
         //! argb hint atom
         Atom _backgroundGradientAtom;
 
+        //! background gradient hint atom
+        Atom _backgroundPixmapAtom;
+
         //! map widget and window id
         class Data
         {

@@ -36,9 +36,18 @@ namespace Oxygen
 
         // create background gradient atom
         GdkDisplay *display( gdk_display_get_default () );
-        if( display ) _backgroundGradientAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
-        else _backgroundGradientAtom = None;
+        if( display )
+        {
 
+            _backgroundGradientAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
+            _backgroundPixmapAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_PIXMAP", False);
+
+        } else {
+
+            _backgroundGradientAtom = None;
+            _backgroundPixmapAtom = None;
+
+        }
     }
 
     //_________________________________________________________
@@ -66,6 +75,14 @@ namespace Oxygen
             unsigned long uLongValue( true );
             XChangeProperty(
                 GDK_DISPLAY_XDISPLAY( display ), id, _backgroundGradientAtom, XA_CARDINAL, 32, PropModeReplace,
+                reinterpret_cast<const unsigned char *>(&uLongValue), 1 );
+        }
+
+        if( display && _backgroundPixmapAtom )
+        {
+            unsigned long uLongValue( true );
+            XChangeProperty(
+                GDK_DISPLAY_XDISPLAY( display ), id, _backgroundPixmapAtom, XA_CARDINAL, 32, PropModeReplace,
                 reinterpret_cast<const unsigned char *>(&uLongValue), 1 );
         }
 
