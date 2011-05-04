@@ -323,6 +323,12 @@ namespace Oxygen
             return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
         }
 
+        //! background surface
+        bool hasBackgroundSurface( void ) const;
+
+        //! set background surface
+        void setBackgroundSurface( const std::string& );
+
         //@name internal rendering
         //@{
 
@@ -452,6 +458,9 @@ namespace Oxygen
 
         //! window manager
         WindowManager _windowManager;
+
+        //! background surface
+        Cairo::Surface _backgroundSurface;
 
         //! Tab close buttons
         class TabCloseButtons

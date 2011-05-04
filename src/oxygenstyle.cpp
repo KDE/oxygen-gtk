@@ -2646,6 +2646,24 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
+    bool Style::hasBackgroundSurface( void ) const
+    {
+        if( !_backgroundSurface.isValid() ) return false;
+        const cairo_status_t status( cairo_surface_status( _backgroundSurface ) );
+        return
+            status != CAIRO_STATUS_NO_MEMORY &&
+            status != CAIRO_STATUS_FILE_NOT_FOUND &&
+            status != CAIRO_STATUS_READ_ERROR;
+    }
+
+    //____________________________________________________________________________________
+    void Style::setBackgroundSurface( const std::string& filename )
+    {
+        if( _backgroundSurface.isValid() ) _backgroundSurface.free();
+        _backgroundSurface.set( cairo_image_surface_create_from_png( filename.c_str() ) );
+    }
+
+    //____________________________________________________________________________________
     void Style::renderActiveTab(
         GdkWindow* window,
         GdkRectangle* clipRect,
