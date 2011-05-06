@@ -884,17 +884,6 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
         const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Selected ) );
 
-        /* need to adjust clipRect */
-        if( clipRect )
-        {
-
-            clipRect->x -= 1;
-            clipRect->width += 2;
-
-            clipRect->y -= 2;
-            clipRect->height += 3;
-        }
-
         // context
         Cairo::Context context( window, clipRect );
 
@@ -906,9 +895,7 @@ namespace Oxygen
         if( indicatorSize >= 4 )
         {
             // get surface
-            //const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
-            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w+2, h+3 ) );
-            cairo_translate( context, -1, -2 );
+            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h-1 ) );
             cairo_translate( context, x, y );
             cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
             cairo_set_source_surface( context, surface, 0, 0 );

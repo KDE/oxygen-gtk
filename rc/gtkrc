@@ -219,7 +219,14 @@ style "oxygen-w2" = "oxygen-default"
 class "GtkScrolledWindow" style "oxygen-w2"
 class "GtkViewport" style "oxygen-w2"
 class "GtkFrame" style "oxygen-w2"
-class "GtkProgressBar" style "oxygen-w2"
+
+# 1pixels thickness.
+style "oxygen-progressbar" = "oxygen-default"
+{
+    xthickness = 1
+    ythickness = 0
+}
+class "GtkProgressBar" style "oxygen-progressbar"
 
 # tree headers
 style "oxygen-header" = "oxygen-default"
