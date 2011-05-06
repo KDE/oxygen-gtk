@@ -129,7 +129,7 @@ GtkSeparator { border-width: 3; }
 GtkFrame { padding: 1; }
 GtkScrolledWindow { padding: 1; }
 GtkViewport { padding: 1; }
-GtkProgressBar { padding: 1; }
+GtkProgressBar { padding: 0; }
 
 /* combo boxes */
 GtkComboBox { border-width: 1 0; }

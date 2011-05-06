@@ -892,10 +892,8 @@ namespace Oxygen
         if( indicatorSize >= 4 )
         {
             // get surface
-            //const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h ) );
-            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w+2, h+3 ) );
-            cairo_translate( context, -1, -2 );
-            cairo_translate( context, x, y );
+            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h+1 ) );
+            cairo_translate( context, x, y-1 );
             cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_fill( context );
