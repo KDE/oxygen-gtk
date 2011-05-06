@@ -1282,7 +1282,15 @@ namespace Oxygen
                     StyleWrapper::parentClass()->draw_box( style, window, state, shadow, clipRect, widget, detail, x, y, w, h );
 
                     if( !Gtk::gtk_widget_is_applet( widget ) )
-                    { Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h ); }
+                    {
+
+                        Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
+
+                        // possible groupbox background
+                        if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                        { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
+
+                    }
                 }
 
                 StyleOptions options;
