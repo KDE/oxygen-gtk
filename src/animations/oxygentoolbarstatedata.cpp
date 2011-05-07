@@ -65,7 +65,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::ToolBarStateData::disconnect - "
-            << " " << _target << " (" << G_OBJECT_TYPE_NAME( _target ) << ")"
+            << " " << _target << " (" << (_target ? G_OBJECT_TYPE_NAME( _target ) : "0x0") << ")"
             << std::endl;
         #endif
 
