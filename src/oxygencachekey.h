@@ -431,13 +431,53 @@ namespace Oxygen
        public:
 
         //! constructor
-        DockFrameKey( const ColorUtils::Rgba& color, int size ):
+        DockFrameKey( const ColorUtils::Rgba& top, const ColorUtils::Rgba& bottom ):
+            _top( top.toInt() ),
+            _bottom( bottom.toInt() )
+        {}
+
+        //! equal to operator
+        bool operator == (const DockFrameKey& other ) const
+        {
+            return
+                _top == other._top &&
+                _bottom == other._bottom;
+        }
+
+        //! less than operator
+        bool operator < (const DockFrameKey& other ) const
+        {
+            if( _top != other._top ) return _top < other._top;
+            else return _bottom < other._bottom;
+        }
+
+        private:
+
+        guint32 _top;
+        guint32 _bottom;
+
+        //! streamer
+        friend std::ostream& operator << ( std::ostream& out, const DockFrameKey& key )
+        {
+            out << "DockFrameKey - top color: " << key._top << " bottom color: " << key._bottom;
+            return out;
+        }
+
+    };
+
+    //! key for grooves
+    class GrooveKey
+    {
+       public:
+
+        //! constructor
+        GrooveKey( const ColorUtils::Rgba& color, int size ):
             _color( color.toInt() ),
             _size( size )
         {}
 
         //! equal to operator
-        bool operator == (const DockFrameKey& other ) const
+        bool operator == (const GrooveKey& other ) const
         {
             return
                 _color == other._color &&
@@ -445,7 +485,7 @@ namespace Oxygen
         }
 
         //! less than operator
-        bool operator < (const DockFrameKey& other ) const
+        bool operator < (const GrooveKey& other ) const
         {
             if( _color != other._color ) return _color < other._color;
             else return _size < other._size;
@@ -457,16 +497,13 @@ namespace Oxygen
         int _size;
 
         //! streamer
-        friend std::ostream& operator << ( std::ostream& out, const DockFrameKey& key )
+        friend std::ostream& operator << ( std::ostream& out, const GrooveKey& key )
         {
-            out << "DockFrameKey - color: " << key._color << " size: " << key._size;
+            out << "GrooveKey - color: " << key._color << " size: " << key._size;
             return out;
         }
 
     };
-
-    //! key for groove
-    typedef DockFrameKey GrooveKey;
 
     //! key for selection rects
     class SelectionKey

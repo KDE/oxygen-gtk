@@ -159,7 +159,7 @@ namespace Oxygen
         const TileSet& slitFocused( const ColorUtils::Rgba& );
 
         //! dock frame
-        const TileSet& dockFrame( const ColorUtils::Rgba&, int size );
+        const TileSet& dockFrame( const ColorUtils::Rgba&, const ColorUtils::Rgba& );
 
         //! progressbar indicator
         const Cairo::Surface& progressBarIndicator( const ColorUtils::Rgba&, const ColorUtils::Rgba& glow, int w, int h );

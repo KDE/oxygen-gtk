@@ -952,75 +952,65 @@ namespace Oxygen
     }
 
     //____________________________________________________________________
-    const TileSet& StyleHelper::dockFrame( const ColorUtils::Rgba &base, int w )
+    const TileSet& StyleHelper::dockFrame( const ColorUtils::Rgba &top, const ColorUtils::Rgba& bottom )
     {
 
-        // width should be odd
-        if( !w&1 ) --w;
-
         // key
-        DockFrameKey key( base, w );
+        DockFrameKey key( top, bottom );
         const TileSet& tileSet( _dockFrameCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
         // fixed height
-        const int h( 9 );
+        const int size( 13 );
 
-        Cairo::Surface surface( createSurface( w, h ) );
+        Cairo::Surface surface( createSurface( size, size ) );
         {
 
             Cairo::Context context( surface );
-            cairo_save( context );
-            cairo_translate( context, 0.5, 0.5 );
-            cairo_scale( context, 1.0, 4.0/5.0 );
+            cairo_set_line_width( context, 1.0 );
 
             // local rectangle
-            const double xl(0);
-            const double yl(0);
-            const double wl( w-1 );
-            const double hl( (5.0*h)/4.0 );
+            const double w( size );
+            const double h( size );
 
+            const ColorUtils::Rgba lightTop( ColorUtils::alphaColor( ColorUtils::lightColor( top ), 0.5 ) );
+            const ColorUtils::Rgba lightBottom( ColorUtils::alphaColor( ColorUtils::lightColor( bottom ), 0.5 ) );
+            const ColorUtils::Rgba darkTop( ColorUtils::alphaColor( ColorUtils::darkColor( top ), 0.5 ) );
+            const ColorUtils::Rgba darkBottom( ColorUtils::alphaColor( ColorUtils::darkColor( bottom ), 0.5 ) );
 
-            const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-            const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
-
+            // dark frame
             {
-                // left and right border
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, w, 0 ) );
-                const ColorUtils::Rgba mixed( ColorUtils::alphaColor( light, 0.6 ) );
-                cairo_pattern_add_color_stop( pattern, 0, mixed );
-                cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, mixed );
-
-                cairo_set_line_width( context, 1 );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0.5, 0, h - 1.5 ) );
+                cairo_pattern_add_color_stop( pattern, 0, darkTop );
+                cairo_pattern_add_color_stop( pattern, 1, darkBottom );
                 cairo_set_source( context, pattern );
-                cairo_rounded_rectangle( context, xl, yl-1, wl, hl, 4.5 );
-                cairo_stroke( context );
-
-                cairo_rounded_rectangle( context, xl+2, yl+1, wl-4, hl-3, 4 );
+                cairo_rounded_rectangle( context, 1.5, 0.5, w-3, h-2, 4 );
                 cairo_stroke( context );
             }
 
+            // bottom contrast
             {
-                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, w, 0 ) );
-                cairo_pattern_add_color_stop( pattern, 0, dark );
-                cairo_pattern_add_color_stop( pattern, 0.1, ColorUtils::Rgba::transparent( dark ) );
-                cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( dark ) );
-                cairo_pattern_add_color_stop( pattern, 1.0, dark );
-
-                cairo_set_line_width( context, 1 );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0.5, 0, h - 0.5 ) );
+                cairo_pattern_add_color_stop( pattern, 0, ColorUtils::Rgba::transparent( lightBottom ) );
+                cairo_pattern_add_color_stop( pattern, 1, lightBottom );
                 cairo_set_source( context, pattern );
-                cairo_rounded_rectangle( context, xl+1, yl, wl-2, hl-2, 4 );
+                cairo_rounded_rectangle( context, 0.5, 0.5, w-1, h-1, 4.5 );
                 cairo_stroke( context );
             }
 
-            cairo_restore( context );
-            drawSeparator( context, base, 0, -1, w, 2, false );
-            drawSeparator( context, base, 0, h-3, w, 2, false );
+            // top contrast
+            {
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 1.5, 0, h - 2.5 ) );
+                cairo_pattern_add_color_stop( pattern, 0, lightTop );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( lightTop ) );
+                cairo_rounded_rectangle( context, 2.5, 1.5, w-5, h-4, 3.5 );
+                cairo_set_source( context, pattern );
+                cairo_stroke( context );
+            }
+
         }
 
-        return _dockFrameCache.insert( key, TileSet( surface, 4, 4, w-8, h-8 ) );
+        return _dockFrameCache.insert( key, TileSet( surface, (size-1)/2, (size-1)/2, 1, 1 ) );
     }
 
     //____________________________________________________________________
