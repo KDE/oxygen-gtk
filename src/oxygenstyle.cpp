@@ -1686,24 +1686,27 @@ namespace Oxygen
         if( w < 9 || h < 9 )  return;
 
         // define colors
-        ColorUtils::Rgba base;
+        ColorUtils::Rgba top;
+        ColorUtils::Rgba bottom;
         if( options&Blend )
         {
 
             gint wh, wy;
             Gtk::gdk_map_to_toplevel( 0L, widget, 0L, &wy, 0L, &wh );
-            base = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy+h/2 );
+            top = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+wy );
+            bottom = ColorUtils::backgroundColor( settings().palette().color( Palette::Window ), wh, y+h+wy );
 
         } else {
 
-            base = settings().palette().color( Palette::Window );
+            top = settings().palette().color( Palette::Window );
+            bottom = settings().palette().color( Palette::Window );
 
         }
 
         // create context, add mask, and render
         cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
-        helper().dockFrame( base, w ).render( context, x, y, w, h );
+        helper().dockFrame( top, bottom ).render( context, x, y, w, h );
         cairo_restore( context );
 
     }
