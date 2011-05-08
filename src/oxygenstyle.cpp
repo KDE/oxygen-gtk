@@ -1284,6 +1284,9 @@ namespace Oxygen
 
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
 
+        // create context
+        cairo_save( context );
+
         // fill with appropriate pattern
         Cairo::Pattern pattern;
         if( options&Sunken )
@@ -1303,6 +1306,7 @@ namespace Oxygen
 
         cairo_set_source( context, pattern );
         helper().fillSlab( context, x, y, w, h, tiles );
+        cairo_restore( context );
 
         if( options&Sunken )
         {
