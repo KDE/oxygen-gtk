@@ -1294,6 +1294,7 @@ namespace Oxygen
 
         // create context
         Cairo::Context context( window, clipRect );
+        cairo_save( context );
 
         // fill with appropriate pattern
         Cairo::Pattern pattern;
@@ -1314,6 +1315,7 @@ namespace Oxygen
 
         cairo_set_source( context, pattern );
         helper().fillSlab( context, x, y, w, h, tiles );
+        cairo_restore( context );
 
         if( options&Sunken )
         {
