@@ -1000,12 +1000,9 @@ namespace Oxygen
         cairo_rounded_rectangle( context, xf+1, yf+1, wf-2, hf-2, radius - 2 );
         cairo_fill( context );
 
-        // pattern
-        if( settings().scrollBarBevel() )
+        // bevel pattern
         {
-
             const ColorUtils::Rgba light( ColorUtils::lightColor( color ) );
-
             Cairo::Pattern pattern;
             if( vertical ) pattern.set( cairo_pattern_create_linear( 0, 0, 0, 30 ) );
             else pattern.set( cairo_pattern_create_linear( 0, 0, 30, 0 ) );
@@ -1018,8 +1015,8 @@ namespace Oxygen
             if( vertical ) cairo_rectangle( context, xf+3, yf, wf-6, hf );
             else cairo_rectangle( context, xf, yf+3, wf, hf-6 );
             cairo_fill( context );
-
         }
+
     }
 
     //____________________________________________________________________________________

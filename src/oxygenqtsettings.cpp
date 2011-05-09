@@ -57,7 +57,6 @@ namespace Oxygen
         _useIconEffect( true ),
         _checkBoxStyle( CS_CHECK ),
         _tabStyle( TS_SINGLE ),
-        _scrollBarBevel( true ),
         _scrollBarAddLineButtons( 2 ),
         _scrollBarSubLineButtons( 1 ),
         _toolBarDrawItemSeparator( true ),
@@ -803,9 +802,6 @@ namespace Oxygen
 
         // checkbox style
         _tabStyle = (oxygen.getValue( "[Style]", "TabStyle", "TS_SINGLE" ) == "TS_SINGLE") ? TS_SINGLE:TS_PLAIN;
-
-        // scrollbar bevel
-        _scrollBarBevel = oxygen.getOption( "[Style]", "ScrollBarBevel" ).toVariant<std::string>("true") == "true";
 
         // scrollbar buttons
         _scrollBarAddLineButtons = oxygen.getOption( "[Style]", "ScrollBarAddLineButtons" ).toVariant<int>( 2 );

@@ -118,10 +118,6 @@ namespace Oxygen
         TabStyle tabStyle( void ) const
         { return _tabStyle; }
 
-        //! true if hovered scrollbars must be colored
-        bool scrollBarBevel( void ) const
-        { return _scrollBarBevel; }
-
         //! 'add-line' buttons
         /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
         int scrollBarAddLineButtons( void ) const
@@ -412,9 +408,6 @@ namespace Oxygen
 
         //! checkbox style
         TabStyle _tabStyle;
-
-        //! scrollbar bevel
-        bool _scrollBarBevel;
 
         //! 'add-line' buttons
         /*! corresponds to buttons located at the bottom (right) of vertical (horizontal) toolbars */
