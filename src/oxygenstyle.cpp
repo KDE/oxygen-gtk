@@ -2410,63 +2410,69 @@ namespace Oxygen
             // draw left border with cache
             Cairo::Surface left( helper().windecoLeftBorderCache().value(key) );
             int sw=WinDeco::getMetric(WinDeco::BorderLeft);
-
-            if( !left )
+            if(sw)
             {
 
-                #if OXYGEN_DEBUG
-                std::cerr<<"drawWindowDecoration: drawing left border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-                #endif
-                left=helper().createSurface(sw,h);
+                if( !left )
+                {
 
-                Cairo::Context context(left);
-                renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient);
+                    #if OXYGEN_DEBUG
+                    std::cerr<<"drawWindowDecoration: drawing left border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+                    #endif
+                    left=helper().createSurface(sw,h);
 
-                helper().windecoLeftBorderCache().insert(key,left);
+                    Cairo::Context context(left);
+                    renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient);
 
-            } else {
+                    helper().windecoLeftBorderCache().insert(key,left);
 
-                #if OXYGEN_DEBUG
-                std::cerr << "drawWindowDecoration: using saved left border" << std::endl;
-                #endif
+                } else {
 
+                    #if OXYGEN_DEBUG
+                    std::cerr << "drawWindowDecoration: using saved left border" << std::endl;
+                    #endif
+
+                }
+
+                cairo_set_source_surface(context, left, x, y);
+                cairo_rectangle(context,x,y,sw,h);
+                cairo_fill(context);
             }
-
-            cairo_set_source_surface(context, left, x, y);
-            cairo_rectangle(context,x,y,sw,h);
-            cairo_fill(context);
         }
 
         {
             // draw right border with cache
             Cairo::Surface right( helper().windecoRightBorderCache().value(key) );
             int sw=WinDeco::getMetric(WinDeco::BorderRight);
-
-            if( !right )
+            if(sw)
             {
 
-                #if OXYGEN_DEBUG
-                std::cerr<<"drawWindowDecoration: drawing right border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-                #endif
+                if( !right )
+                {
 
-                right=helper().createSurface(sw,h);
+                    #if OXYGEN_DEBUG
+                    std::cerr<<"drawWindowDecoration: drawing right border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+                    #endif
 
-                Cairo::Context context(right);
-                renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
+                    right=helper().createSurface(sw,h);
 
-                helper().windecoRightBorderCache().insert(key,right);
+                    Cairo::Context context(right);
+                    renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-            } else {
+                    helper().windecoRightBorderCache().insert(key,right);
 
-                #if OXYGEN_DEBUG
-                std::cerr << "drawWindowDecoration: using saved right border" << std::endl;
-                #endif
+                } else {
 
+                    #if OXYGEN_DEBUG
+                    std::cerr << "drawWindowDecoration: using saved right border" << std::endl;
+                    #endif
+
+                }
+
+                cairo_set_source_surface(context, right, x+w-sw, y);
+                cairo_rectangle(context,x+w-sw,y,sw,h);
+                cairo_fill(context);
             }
-
-            cairo_set_source_surface(context, right, x+w-sw, y);
-            cairo_rectangle(context,x+w-sw,y,sw,h);
-            cairo_fill(context);
         }
 
         {
@@ -2476,70 +2482,72 @@ namespace Oxygen
             int right=WinDeco::getMetric(WinDeco::BorderRight);
             int sh=WinDeco::getMetric(WinDeco::BorderTop);
             int sw=w-left-right;
-
-            if( !top )
+            if(sh && sw)
             {
-
-                #if OXYGEN_DEBUG
-                std::cerr<<"drawWindowDecoration: drawing top border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-                #endif
-                top=helper().createSurface(sw,sh);
-
-                Cairo::Context context(top);
-                renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
-
-                helper().windecoTopBorderCache().insert(key,top);
-
-            } else {
-
-                #if OXYGEN_DEBUG
-                std::cerr << "drawWindowDecoration: using saved top border" << std::endl;
-                #endif
-
-            }
-
-            cairo_set_source_surface(context, top, x+left, y);
-            cairo_rectangle(context,x+left,y,sw,sh);
-            cairo_fill(context);
-
-            // caption shouldn't be saved in the cache
-            if( windowStrings && windowStrings[0] )
-            {
-                // draw caption
-                const gchar* &caption(windowStrings[0]);
-                const FontInfo& font( settings().WMFont() );
-                gint layoutWidth=w-(titleIndentLeft+titleIndentRight);
-                if( font.isValid() && layoutWidth>0 )
+                if( !top )
                 {
-                    PangoFontDescription* fdesc( pango_font_description_new() );
-                    const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
-                    const int H=WinDeco::getMetric(WinDeco::BorderTop);
-                    int textHeight;
 
-                    pango_font_description_set_family( fdesc, font.family().c_str() );
-                    pango_font_description_set_weight( fdesc, PangoWeight( (font.weight()+2)*10 ) );
-                    pango_font_description_set_style( fdesc, font.italic() ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL );
-                    pango_font_description_set_size( fdesc, int(font.size()*PANGO_SCALE) );
+                    #if OXYGEN_DEBUG
+                    std::cerr<<"drawWindowDecoration: drawing top border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+                    #endif
+                    top=helper().createSurface(sw,sh);
 
-                    PangoLayout* layout( pango_cairo_create_layout(context) );
-                    pango_layout_set_text( layout,caption, -1 );
-                    pango_layout_set_font_description( layout, fdesc );
-                    pango_layout_set_width( layout, layoutWidth*PANGO_SCALE );
-                    pango_layout_set_ellipsize( layout, PANGO_ELLIPSIZE_END );
-                    pango_layout_set_alignment( layout, settings().TitleAlignment() );
-                    pango_layout_get_pixel_size( layout, NULL, &textHeight );
+                    Cairo::Context context(top);
+                    renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-                    cairo_save( context );
+                    helper().windecoTopBorderCache().insert(key,top);
 
-                    cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
-                    cairo_translate( context, x+titleIndentLeft, y+(H-textHeight)/2. );
-                    pango_cairo_update_layout( context, layout );
-                    pango_cairo_show_layout( context, layout );
+                } else {
 
-                    cairo_restore( context );
+                    #if OXYGEN_DEBUG
+                    std::cerr << "drawWindowDecoration: using saved top border" << std::endl;
+                    #endif
 
-                    g_object_unref(layout);
-                    pango_font_description_free(fdesc);
+                }
+
+                cairo_set_source_surface(context, top, x+left, y);
+                cairo_rectangle(context,x+left,y,sw,sh);
+                cairo_fill(context);
+
+                // caption shouldn't be saved in the cache
+                if( windowStrings && windowStrings[0] )
+                {
+                    // draw caption
+                    const gchar* &caption(windowStrings[0]);
+                    const FontInfo& font( settings().WMFont() );
+                    gint layoutWidth=w-(titleIndentLeft+titleIndentRight);
+                    if( font.isValid() && layoutWidth>0 )
+                    {
+                        PangoFontDescription* fdesc( pango_font_description_new() );
+                        const Palette::Group group( wopt & WinDeco::Active ? Palette::Active : Palette::Disabled );
+                        const int H=WinDeco::getMetric(WinDeco::BorderTop);
+                        int textHeight;
+
+                        pango_font_description_set_family( fdesc, font.family().c_str() );
+                        pango_font_description_set_weight( fdesc, PangoWeight( (font.weight()+2)*10 ) );
+                        pango_font_description_set_style( fdesc, font.italic() ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL );
+                        pango_font_description_set_size( fdesc, int(font.size()*PANGO_SCALE) );
+
+                        PangoLayout* layout( pango_cairo_create_layout(context) );
+                        pango_layout_set_text( layout,caption, -1 );
+                        pango_layout_set_font_description( layout, fdesc );
+                        pango_layout_set_width( layout, layoutWidth*PANGO_SCALE );
+                        pango_layout_set_ellipsize( layout, PANGO_ELLIPSIZE_END );
+                        pango_layout_set_alignment( layout, settings().TitleAlignment() );
+                        pango_layout_get_pixel_size( layout, NULL, &textHeight );
+
+                        cairo_save( context );
+
+                        cairo_set_source( context, settings().palette().color( group, Palette::WindowText ) );
+                        cairo_translate( context, x+titleIndentLeft, y+(H-textHeight)/2. );
+                        pango_cairo_update_layout( context, layout );
+                        pango_cairo_show_layout( context, layout );
+
+                        cairo_restore( context );
+
+                        g_object_unref(layout);
+                        pango_font_description_free(fdesc);
+                    }
                 }
             }
         }
@@ -2552,31 +2560,33 @@ namespace Oxygen
             int sh=WinDeco::getMetric(WinDeco::BorderBottom);
             int sw=w-left-right;
             int Y=y+h-sh;
-
-            if( !bottom)
+            if(sh && sw)
             {
+                if( !bottom)
+                {
 
-                #if OXYGEN_DEBUG
-                std::cerr<<"drawWindowDecoration: drawing bottom border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
-                #endif
-                bottom=helper().createSurface(sw,sh);
+                    #if OXYGEN_DEBUG
+                    std::cerr<<"drawWindowDecoration: drawing bottom border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
+                    #endif
+                    bottom=helper().createSurface(sw,sh);
 
-                Cairo::Context context(bottom);
-                renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
+                    Cairo::Context context(bottom);
+                    renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-                helper().windecoBottomBorderCache().insert(key,bottom);
+                    helper().windecoBottomBorderCache().insert(key,bottom);
 
-            } else {
+                } else {
 
-                #if OXYGEN_DEBUG
-                std::cerr << "drawWindowDecoration: using saved bottom border" << std::endl;
-                #endif
+                    #if OXYGEN_DEBUG
+                    std::cerr << "drawWindowDecoration: using saved bottom border" << std::endl;
+                    #endif
 
+                }
+
+                cairo_set_source_surface(context, bottom, x+left, Y);
+                cairo_rectangle(context,x+left,Y,sw,sh);
+                cairo_fill(context);
             }
-
-            cairo_set_source_surface(context, bottom, x+left, Y);
-            cairo_rectangle(context,x+left,Y,sw,sh);
-            cairo_fill(context);
         }
     }
 
