@@ -289,9 +289,22 @@ namespace Oxygen
             else if( !(options&Focus) ) group = Palette::Inactive;
 
             // render background
+            // render "normal" background
             ColorUtils::Rgba background;
-            if( d.isCellEven() || Gtk::gtk_combobox_is_tree_view( widget ) ) background = Style::instance().settings().palette().color( group, Palette::Base );
-            else if( d.isCellOdd() ) background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
+            if( gtk_widget_get_modifier_style(widget)->color_flags[GTK_STATE_NORMAL]&GTK_RC_BASE )
+            {
+
+                background = Gtk::gdk_get_color( style->base[GTK_STATE_NORMAL] );
+
+            } else if( d.isCellEven() || Gtk::gtk_combobox_is_tree_view( widget ) ) {
+
+                background = Style::instance().settings().palette().color( group, Palette::Base );
+
+            } else if( d.isCellOdd() ) {
+
+                background = Style::instance().settings().palette().color( group, Palette::BaseAlternate );
+
+            }
 
             if( background.isValid() ) Style::instance().fill( window, clipRect, x, y, w, h, background );
             if( Gtk::gtk_combobox_is_tree_view( widget ) )
