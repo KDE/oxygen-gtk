@@ -64,7 +64,6 @@ namespace Oxygen
         Cairo::Context p(shadow);
 
         // some gradients rendering are different at bottom corners if client has no border
-        // TODO: true -> hasBorder
         const bool hasTopBorder( key.hasTopBorder );
         const bool hasBottomBorder( key.hasBottomBorder );
 
