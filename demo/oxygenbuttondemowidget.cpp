@@ -203,21 +203,27 @@ namespace Oxygen
             GtkToolItem* toolButton;
 
             gtk_toolbar_insert( GTK_TOOLBAR(_toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_NEW ), 0 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "New" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_OPEN ), 1 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Open" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_SAVE ), 2 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Save" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_CUT ), 2 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Cut selection" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_COPY ), 2 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Copy selection" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new_from_stock( GTK_STOCK_PASTE ), 2 );
+            gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Paste clipboard" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
             gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_toggle_tool_button_new_from_stock( GTK_STOCK_DIALOG_AUTHENTICATION ), 2 );
