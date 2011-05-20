@@ -124,7 +124,7 @@ namespace Oxygen
         //! groupbox background
         const TileSet& slope( const ColorUtils::Rgba&, double shade, int size = 7 );
 
-        void fillSlab( Cairo::Context& context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
+        void fillSlab( cairo_t* context, int x, int y, int w, int h, const TileSet::Tiles& = TileSet::Ring ) const;
 
         //@}
 

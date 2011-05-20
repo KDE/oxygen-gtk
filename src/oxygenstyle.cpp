@@ -243,22 +243,34 @@ namespace Oxygen
 
         // if we aren't going to draw window decorations...
         bool needToDestroyContext( false );
-        if(!context)
+        if( context && !window )
         {
 
-            // create context and translate to toplevel coordinates
-            // make it the old good way since context is cairo_t* instead Cairo::Context
-            context = gdk_cairo_create(window);
-            needToDestroyContext=true;
+            // drawing window decorations, so logic is simplified
+            ww=w;
+            wh=h;
+            cairo_save(context);
+            cairo_translate(context,x,y);
+            x=0;
+            y=0;
 
-            if( clipRect )
+        } else {
+
+
+            if( !context )
             {
-                cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
-                cairo_clip(context);
-            }
+              // create context and translate to toplevel coordinates
+              // make it the old good way since context is cairo_t* instead Cairo::Context
+              context = gdk_cairo_create(window);
+              needToDestroyContext=true;
 
-            // add hole if required (this can be done before translating the context
-            if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
+              if( clipRect )
+              {
+                  cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+                  cairo_clip(context);
+              }
+
+            } else cairo_save( context );
 
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
@@ -280,16 +292,6 @@ namespace Oxygen
 
             // no sense in context saving since it will be destroyed
             cairo_translate( context, -wx, -wy );
-
-        } else {
-
-            // drawing window decorations, so logic is simplified
-            ww=w;
-            wh=h;
-            cairo_save(context);
-            cairo_translate(context,x,y);
-            x=0;
-            y=0;
 
         }
 
@@ -381,6 +383,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderGroupBoxBackground(
+        cairo_t* context,
         GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
         const StyleOptions& options,
@@ -401,16 +404,27 @@ namespace Oxygen
         { return; }
 
         // create context and translate
-        Cairo::Context context( window, clipRect );
+        bool needToDestroyContext( false );
+        if( !context )
+        {
+            // create context and translate to toplevel coordinates
+            // make it the old good way since context is cairo_t* instead Cairo::Context
+            context = gdk_cairo_create(window);
+            needToDestroyContext=true;
+
+            if( clipRect )
+            {
+              cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+              cairo_clip(context);
+            }
+
+        } else cairo_save( context );
 
         wh += 2;
         ww += 2;
         x+=wx;
         y+=wy;
         cairo_translate( context, -wx, -wy );
-
-        // add hole if required (this can be done before translating the context
-        if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
 
         // define colors
         ColorUtils::Rgba base;
@@ -430,6 +444,9 @@ namespace Oxygen
         const int xGroupBox = x - wx - 1;
         const int yGroupBox = y - wy - 1;
         renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
+
+        if(needToDestroyContext) cairo_destroy(context);
+        else cairo_restore(context);
 
     }
 
@@ -749,19 +766,22 @@ namespace Oxygen
 
         } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) ) {
 
-            StyleOptions localOptions( NoFill );
-            renderWindowBackground( window, clipRect, x, y, w, h, localOptions, tiles);
-
-            localOptions |= Blend;
-            renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, localOptions, tiles );
+            // add hole if required (this can be done before translating the context
+            Cairo::Context context( window, clipRect );
+            renderHoleMask( context, x, y, w, h, tiles );
+            renderWindowBackground( context, window, 0L, clipRect, x, y, w, h, options, tiles);
+            renderGroupBoxBackground( context, window, widget, clipRect, x, y, w, h, options | Blend, tiles );
 
         } else {
+
+            Cairo::Context context( window, clipRect );
+            renderHoleMask( context, x, y, w, h, tiles );
 
             /*
             normal window background.
             pass the NoFill option, to ask for a mask
             */
-            renderWindowBackground( window, clipRect, x, y, w, h, NoFill, tiles);
+            renderWindowBackground( context, window,  0L, clipRect, x, y, w, h, options, tiles);
 
         }
 
@@ -3491,7 +3511,7 @@ namespace Oxygen
 
     //__________________________________________________________________
     void Style::renderGroupBox(
-        Cairo::Context& context,
+        cairo_t* context,
         const ColorUtils::Rgba& base,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options )

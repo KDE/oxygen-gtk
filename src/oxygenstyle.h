@@ -132,7 +132,10 @@ namespace Oxygen
         { renderWindowBackground( window, 0L, r, x, y, w, h, o, tiles ); }
 
         //! groupbox background
-        void renderGroupBoxBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
+        void renderGroupBoxBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o, TileSet::Tiles tiles = TileSet::Center )
+        { renderGroupBoxBackground( 0L, window, widget, r, x, y, w, h, o, tiles ); }
+
+        void renderGroupBoxBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
         //! menu background
         bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
@@ -365,7 +368,7 @@ namespace Oxygen
         ColorUtils::Rgba holeShadowColor( const StyleOptions&, const AnimationData& = AnimationData() ) const;
 
         //! groupbox
-        void renderGroupBox( Cairo::Context&, const ColorUtils::Rgba&, gint, gint, gint, gint, const StyleOptions& = StyleOptions() );
+        void renderGroupBox( cairo_t*, const ColorUtils::Rgba&, gint, gint, gint, gint, const StyleOptions& = StyleOptions() );
 
         //! slab
         void renderSlab( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, const StyleOptions&, const AnimationData& = AnimationData(), TileSet::Tiles tiles = TileSet::Ring );
