@@ -446,7 +446,8 @@ namespace Oxygen
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
-            const int xOffset( style->xthickness + 1 - Oxygen::Entry_SideMargin );
+            const int sideMargin( std::max( 0, style->xthickness - 2 ) );
+            const int xOffset( style->xthickness + 1 - sideMargin );
 
             // adjust horizontal positioning and width
             x -= xOffset;
@@ -781,9 +782,11 @@ namespace Oxygen
                 Style::instance().animations().comboBoxEntryEngine().setButton( parent, widget );
 
                 // background
+                int sideMargin( 0 );
                 {
                     GtkWidget* entry( gtk_bin_get_child( GTK_BIN( parent ) ) );
                     GtkStyle* style( gtk_widget_get_style( entry ) );
+                    sideMargin = std::max( 0, style->xthickness - 2 );
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
                     Style::instance().fill( window, clipRect, x, y, w, h, background );
                 }
@@ -813,8 +816,8 @@ namespace Oxygen
                     tiles &= ~TileSet::Right;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+6, h, tiles );
 
-                    x += Oxygen::Entry_SideMargin;
-                    w -= Oxygen::Entry_SideMargin;
+                    x += sideMargin;
+                    w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-1, y, w+8, h, options, data, tiles  );
 
                 } else {
@@ -823,7 +826,7 @@ namespace Oxygen
                     tiles &= ~TileSet::Left;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles );
 
-                    w -= Oxygen::Entry_SideMargin;
+                    w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-7, y, w+8, h, options, data, tiles  );
 
                 }
@@ -1394,6 +1397,7 @@ namespace Oxygen
             TileSet::Tiles tiles( TileSet::Ring);
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
+            const int sideMargin( std::max( 0, style->xthickness - 2 ) );
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             {
 
@@ -1404,8 +1408,8 @@ namespace Oxygen
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
-                x += Oxygen::Entry_SideMargin;
-                w -= Oxygen::Entry_SideMargin;
+                x += sideMargin;
+                w -= sideMargin;
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+8, h+2, options, data, tiles );
 
             } else {
@@ -1417,10 +1421,11 @@ namespace Oxygen
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
 
                 // shrink spinbox entry hole by 3px on right side
-                w -= Oxygen::Entry_SideMargin;
+                w -= sideMargin;
                 Style::instance().renderHole( window, clipRect, x-7, y-1, w+8, h+2, options, data, tiles );
 
             }
+
 
         } else if( d.isSpinButtonArrow() ) {
 
@@ -1662,13 +1667,14 @@ namespace Oxygen
                 // render
                 TileSet::Tiles tiles( TileSet::Ring );
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( parent, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+                const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
                     tiles &= ~TileSet::Left;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles );
 
-                    w -= Oxygen::Entry_SideMargin;
+                    w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-8, y, w+9, h, options, data, tiles );
 
                 } else {
@@ -1676,8 +1682,8 @@ namespace Oxygen
                     tiles &= ~TileSet::Right;
                     Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+7, h, tiles );
 
-                    x += Oxygen::Entry_SideMargin;
-                    w -= Oxygen::Entry_SideMargin;
+                    x += sideMargin;
+                    w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-1, y, w+9, h, options, data, tiles );
 
                 }
@@ -1723,6 +1729,7 @@ namespace Oxygen
 
                 TileSet::Tiles tiles( TileSet::Ring );
 
+                const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                 if( Gtk::gtk_widget_layout_is_reversed( widget ) )
                 {
 
@@ -1731,7 +1738,7 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
-                        w-= Oxygen::Entry_SideMargin;
+                        w-= sideMargin;
                     }
 
                     Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
@@ -1743,7 +1750,8 @@ namespace Oxygen
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
-                        x += Oxygen::Entry_SideMargin; w-= Oxygen::Entry_SideMargin;
+                        x += sideMargin;
+                        w -= sideMargin;
                     }
 
                     Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
@@ -1807,8 +1815,9 @@ namespace Oxygen
                     if( d.isEntry() )
                     {
 
-                        x += Oxygen::Entry_SideMargin;
-                        w -= 2*Oxygen::Entry_SideMargin;
+                        const int sideMargin( std::max( 0, style->xthickness - 2 ) );
+                        x += sideMargin;
+                        w -= 2*sideMargin;
 
                     }
 
@@ -1944,9 +1953,11 @@ namespace Oxygen
             // hole background is needed for some special cases
             if( GTK_IS_CALENDAR( widget ) )
             {
+
+                const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                 Style::instance().renderHoleBackground(
                     window, widget, clipRect,
-                    x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+2 );
+                    x-1-sideMargin, y-1, w+2+2*sideMargin, h+2 );
             }
 
             // hole
@@ -2689,9 +2700,11 @@ namespace Oxygen
         {
 
             const Gtk::Gap gap( gap_x, gap_w, position );
-            if( shadow == GTK_SHADOW_IN ) {
+            if( shadow == GTK_SHADOW_IN )
+            {
 
-                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+2 );
+                const int sideMargin( std::max( 0, style->xthickness - 2 ) );
+                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-sideMargin, y-1, w+2+2*sideMargin, h+2 );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
