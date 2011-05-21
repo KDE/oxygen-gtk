@@ -771,7 +771,7 @@ namespace Oxygen
             Cairo::Context context( window, clipRect );
             renderHoleMask( context, x, y, w, h, tiles );
             renderWindowBackground( context, window, 0L, clipRect, x, y, w, h, options, tiles);
-            renderGroupBoxBackground( context, window, widget, clipRect, x, y, w, h, options | Blend, tiles );
+            renderGroupBoxBackground( context, window, widget, clipRect, x, y, w, h, options | Blend | NoFill, tiles );
 
         } else {
 
