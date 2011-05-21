@@ -421,8 +421,6 @@ namespace Oxygen
         renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
         cairo_restore( context );
 
-        cairo_restore(context);
-
     }
 
     //__________________________________________________________________
