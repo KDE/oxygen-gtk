@@ -944,7 +944,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderHoleMask( cairo_t* context, int x, int y, int w, int h, TileSet::Tiles tiles )
+    void Style::renderHoleMask( cairo_t* context, gint x, gint y, gint w, gint h, TileSet::Tiles tiles, gint sideMargin )
     {
 
         GdkRectangle mask = {x+2, y+1, w-4, h-3 };
@@ -952,15 +952,15 @@ namespace Oxygen
         Corners corners( CornersNone );
         if( tiles & TileSet::Left )
         {
-            mask.x += Entry_SideMargin;
-            mask.width -= Entry_SideMargin;
+            mask.x += sideMargin;
+            mask.width -= sideMargin;
             if( tiles & TileSet::Top ) corners |= CornersTopLeft;
             if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
         }
 
         if( tiles & TileSet::Right )
         {
-            mask.width -= Entry_SideMargin;
+            mask.width -= sideMargin;
             if( tiles & TileSet::Top ) corners |= CornersTopRight;
             if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
         }

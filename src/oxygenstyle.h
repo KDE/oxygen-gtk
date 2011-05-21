@@ -29,6 +29,7 @@
 #include "oxygengeometry.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkgap.h"
+#include "oxygenmetrics.h"
 #include "oxygenqtsettings.h"
 #include "oxygenshadowhelper.h"
 #include "oxygenstylehelper.h"
@@ -378,7 +379,7 @@ namespace Oxygen
         void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles = TileSet::Full );
 
         //! add hole mask to context
-        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Full );
+        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Full, gint = Entry_SideMargin );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
