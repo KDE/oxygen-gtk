@@ -253,9 +253,6 @@ namespace Oxygen
         if( window || widget )
         {
 
-            // add hole if required (this can be done before translating the context
-            if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
-
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
@@ -396,15 +393,13 @@ namespace Oxygen
         if( !Gtk::gtk_widget_map_to_parent( widget, parent, &wx, &wy, &ww, &wh ) )
         { return; }
 
-        wh += 2;
-        ww += 4;
+        const int margin( 1 );
+        wh += 2*margin;
+        ww += 2*margin;
         x+=wx;
         y+=wy;
         cairo_save( context );
         cairo_translate( context, -wx, -wy );
-
-        // add hole if required (this can be done before translating the context
-        if( options&NoFill ) renderHoleMask( context, x, y, w, h, tiles );
 
         // define colors
         ColorUtils::Rgba base;
@@ -421,10 +416,12 @@ namespace Oxygen
 
         }
 
-        const int xGroupBox = x - wx - 1;
-        const int yGroupBox = y - wy - 1;
+        const int xGroupBox = x - wx - margin;
+        const int yGroupBox = y - wy - margin;
         renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
         cairo_restore( context );
+
+        cairo_restore(context);
 
     }
 
@@ -746,19 +743,23 @@ namespace Oxygen
 
         } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) ) {
 
-            StyleOptions localOptions( NoFill );
-            renderWindowBackground( context, window, widget, x, y, w, h, localOptions, tiles);
-
-            localOptions |= Blend;
-            renderGroupBoxBackground( context, widget, x, y, w, h, localOptions, tiles );
+            cairo_save( context );
+            renderHoleMask( context, x, y, w, h, tiles );
+            renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
+            renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles );
+            cairo_restore( context );
 
         } else {
+
+            cairo_save( context );
+            renderHoleMask( context, x, y, w, h, tiles );
 
             /*
             normal window background.
             pass the NoFill option, to ask for a mask
             */
-            renderWindowBackground( context, window, widget, x, y, w, h, NoFill, tiles);
+            renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
+            cairo_restore( context );
 
         }
 

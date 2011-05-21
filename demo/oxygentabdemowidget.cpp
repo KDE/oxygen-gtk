@@ -105,7 +105,37 @@ namespace Oxygen
             gtk_notebook_set_tab_pos( GTK_NOTEBOOK( _notebook ), GTK_POS_TOP );
             gtk_widget_show( _notebook );
 
-            addPage( "First Tab", gtk_vbox_new( false, 0 ) );
+            {
+
+                // first page
+                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                gtk_box_set_spacing( GTK_BOX( vbox ), 5 );
+
+                // line editor
+                GtkWidget* lineEditor( gtk_entry_new() );
+                gtk_box_pack_start( GTK_BOX( vbox ), lineEditor, false, true, 0 );
+                gtk_widget_show( lineEditor );
+
+                // text editor
+                GtkTextTagTable* tags( gtk_text_tag_table_new() );
+                GtkTextBuffer* buffer( gtk_text_buffer_new( tags ) );
+                GtkWidget* textView( gtk_text_view_new_with_buffer( buffer ) );
+                gtk_container_set_border_width( GTK_CONTAINER( textView ), 2 );
+                gtk_widget_show( textView );
+
+                GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );
+                gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
+                gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+                gtk_container_add( GTK_CONTAINER( scrolledWindow ), textView );
+                gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
+                gtk_widget_show( scrolledWindow );
+
+                gtk_box_pack_start( GTK_BOX( vbox ), scrolledWindow, true, true, 0 );
+
+                addPage( "First Tab", vbox );
+
+
+            }
             addPage( "Second Tab", gtk_vbox_new( false, 0 ) );
             addPage( "Third Tab", gtk_vbox_new( false, 0 ) );
             addPage( "Fourth Tab", gtk_vbox_new( false, 0 ) );
