@@ -420,8 +420,9 @@ namespace Oxygen
 
         } else cairo_save( context );
 
-        wh += 2;
-        ww += 2;
+        const int margin( 1 );
+        wh += 2*margin;
+        ww += 2*margin;
         x+=wx;
         y+=wy;
         cairo_translate( context, -wx, -wy );
@@ -441,8 +442,8 @@ namespace Oxygen
 
         }
 
-        const int xGroupBox = x - wx - 1;
-        const int yGroupBox = y - wy - 1;
+        const int xGroupBox = x - wx - margin;
+        const int yGroupBox = y - wy - margin;
         renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
 
         if(needToDestroyContext) cairo_destroy(context);
