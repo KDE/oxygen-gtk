@@ -814,7 +814,7 @@ namespace Oxygen
 
                     // hide right and adjust width
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+6, h, tiles, sideMargin );
 
                     x += sideMargin;
                     w -= sideMargin;
@@ -824,7 +824,7 @@ namespace Oxygen
 
                     // hide left and adjust width
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y, w+6, h, tiles, sideMargin );
 
                     w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-7, y, w+8, h, options, data, tiles  );
@@ -1405,7 +1405,7 @@ namespace Oxygen
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles ); }
+                { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles, sideMargin ); }
 
                 // shrink spinbox entry hole by 3px on right side
                 x += sideMargin;
@@ -1418,7 +1418,7 @@ namespace Oxygen
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
                     !Style::instance().settings().applicationName().isMozilla( widget ) )
-                { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles ); }
+                { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles, sideMargin ); }
 
                 // shrink spinbox entry hole by 3px on right side
                 w -= sideMargin;
@@ -1672,7 +1672,7 @@ namespace Oxygen
                 {
 
                     tiles &= ~TileSet::Left;
-                    Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-6, y, w+7, h, tiles, sideMargin );
 
                     w -= sideMargin;
                     Style::instance().renderHole( window, clipRect, x-8, y, w+9, h, options, data, tiles );
@@ -1680,7 +1680,7 @@ namespace Oxygen
                 } else {
 
                     tiles &= ~TileSet::Right;
-                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+7, h, tiles );
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y, w+7, h, tiles, sideMargin );
 
                     x += sideMargin;
                     w -= sideMargin;
@@ -1737,7 +1737,7 @@ namespace Oxygen
 
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
-                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
+                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles, sideMargin );
                         w-= sideMargin;
                     }
 
@@ -1749,7 +1749,7 @@ namespace Oxygen
 
                     if( !Style::instance().settings().applicationName().isOpenOffice() )
                     {
-                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles );
+                        Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles, sideMargin );
                         x += sideMargin;
                         w -= sideMargin;
                     }
@@ -1808,14 +1808,14 @@ namespace Oxygen
                     x-=1; y-=1;
                     w+=2; h+=2;
 
+                    const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                     if( !Style::instance().settings().applicationName().isMozilla( widget ) )
-                    { Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h ); }
+                    { Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, TileSet::Full, sideMargin ); }
 
                     // shrink entry by 3px at each side
                     if( d.isEntry() )
                     {
 
-                        const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                         x += sideMargin;
                         w -= 2*sideMargin;
 
@@ -1957,7 +1957,8 @@ namespace Oxygen
                 const int sideMargin( std::max( 0, style->xthickness - 2 ) );
                 Style::instance().renderHoleBackground(
                     window, widget, clipRect,
-                    x-1-sideMargin, y-1, w+2+2*sideMargin, h+2 );
+                    x-1-sideMargin, y-1, w+2+2*sideMargin, h+2,
+                    TileSet::Full, sideMargin );
             }
 
             // hole
@@ -2704,7 +2705,7 @@ namespace Oxygen
             {
 
                 const int sideMargin( std::max( 0, style->xthickness - 2 ) );
-                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-sideMargin, y-1, w+2+2*sideMargin, h+2 );
+                Style::instance().renderHoleBackground( window, widget, clipRect, x-1-sideMargin, y-1, w+2+2*sideMargin, h+2, TileSet::Full, sideMargin );
                 Style::instance().renderHole( window, clipRect, x-1, y-1, w+2, h+1, gap, NoFill );
 
             } else if( shadow == GTK_SHADOW_OUT ) {
