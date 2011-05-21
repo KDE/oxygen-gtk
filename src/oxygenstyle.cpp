@@ -745,7 +745,8 @@ namespace Oxygen
         GdkWindow* window,
         GtkWidget* widget,
         GdkRectangle* clipRect,
-        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles )
+        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles,
+        gint sideMargin )
     {
 
         // do nothing if not enough room
@@ -760,7 +761,7 @@ namespace Oxygen
 
             // create a rounded-rect antimask for renderHoleBackground
             Cairo::Context context( window, clipRect );
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
@@ -769,14 +770,14 @@ namespace Oxygen
 
             // add hole if required (this can be done before translating the context
             Cairo::Context context( window, clipRect );
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             renderWindowBackground( context, window, 0L, clipRect, x, y, w, h, options, tiles);
             renderGroupBoxBackground( context, window, widget, clipRect, x, y, w, h, options | Blend | NoFill, tiles );
 
         } else {
 
             Cairo::Context context( window, clipRect );
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
 
             /*
             normal window background.

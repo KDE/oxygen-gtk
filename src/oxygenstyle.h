@@ -155,9 +155,9 @@ namespace Oxygen
 
         //! editors hole
         /*! returns true if window gradient could be rendered */
-        void renderHoleBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
-        void renderHoleBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clip, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHoleBackground( window, widget, clip, x, y, w, h, StyleOptions(), tiles ); }
+        void renderHoleBackground( GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring, gint = Entry_SideMargin );
+        void renderHoleBackground( GdkWindow* window, GtkWidget* widget, GdkRectangle* clip, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring, gint margin = Entry_SideMargin )
+        { renderHoleBackground( window, widget, clip, x, y, w, h, StyleOptions(), tiles, margin ); }
 
         //! splitters
         void renderSplitter( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() ) const;
@@ -379,7 +379,7 @@ namespace Oxygen
         void renderScrollBarHole( Cairo::Context&, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles = TileSet::Full );
 
         //! add hole mask to context
-        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Full, gint = Entry_SideMargin );
+        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles, gint );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;
