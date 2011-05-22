@@ -84,6 +84,7 @@ namespace Oxygen
 
         static const char* names[] =
         {
+            "Panel",
             "PanelWidget",
             "PanelApplet",
             "XfcePanelWindow",
