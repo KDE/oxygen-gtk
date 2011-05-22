@@ -215,14 +215,14 @@ gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
     if( useAlpha ) opt |= WinHasAlpha;
     if( !gtk_window_is_active( GTK_WINDOW(mw1) ) ) opt|= WinIsActive;
 
-    drawWindowShadow(cr, (WinDecoOptions) opt, 0, 0, mw0->allocation.width, mw0->allocation.height);
+    drawWindowShadow(cr, opt, 0, 0, mw0->allocation.width, mw0->allocation.height);
 
     const gchar* windowStrings[] = {
         "This is a caption",
         "WindowClass10110111",
         0 };
 
-    drawWindowDecoration(cr, (WinDecoOptions) opt, 0+shadowLeft, 0+shadowTop, mw0->allocation.width-shadowLeft-shadowRight, mw0->allocation.height-shadowTop-shadowBottom, windowStrings, 0, 20*ButtonTypeCount);
+    drawWindowDecoration(cr, opt, 0+shadowLeft, 0+shadowTop, mw0->allocation.width-shadowLeft-shadowRight, mw0->allocation.height-shadowTop-shadowBottom, windowStrings, 0, 20*ButtonTypeCount);
 
     for( int status=0; status<ButtonStatusCount; status++)
     {
@@ -261,7 +261,7 @@ gboolean on_configure1(GtkWidget* mw1, GdkEventConfigure* event, gpointer user_d
         {
             GdkBitmap* mask=gdk_pixmap_new(0L, event->width+dw, event->height+dh, 1);
             cairo_t* cr=gdk_cairo_create(mask);
-            drawWindecoShapeMask(cr, (WinDecoOptions) opt, 0+shadowLeft, 0+shadowRight, event->width+dw-shadowLeft-shadowRight, event->height+dh-shadowTop-shadowBottom);
+            drawWindecoShapeMask(cr, opt, 0+shadowLeft, 0+shadowRight, event->width+dw-shadowLeft-shadowRight, event->height+dh-shadowTop-shadowBottom);
             gdk_window_shape_combine_mask( gtk_widget_get_window( mw0 ), 0L, 0, 0 ); // remove old mask
             gdk_window_shape_combine_mask( gtk_widget_get_window( mw0 ), mask, 0, 0 ); // apply new mask
             gdk_pixmap_unref(mask);
