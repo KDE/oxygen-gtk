@@ -195,6 +195,10 @@ namespace Oxygen
             // render background gradient
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
+            // possible groupbox background
+            if( d.isEventBox() && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+            { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
+
             // also draw possible animated tool button
             draw_animated_button( window, clipRect, widget );
 
