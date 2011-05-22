@@ -392,9 +392,8 @@ namespace Oxygen
     {
 
         // find groupbox parent
-        GtkWidget* parent( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) );
-        if( !( parent && Gtk::gtk_widget_is_groupbox( parent ) ) )
-        { return; }
+        GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
+        if( !parent ) return;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -767,7 +766,7 @@ namespace Oxygen
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
-        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) ) {
+        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_parent_groupbox( widget ) ) ) {
 
             // add hole if required (this can be done before translating the context
             Cairo::Context context( window, clipRect );
