@@ -196,7 +196,7 @@ namespace Oxygen
             Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
             // possible groupbox background
-            if( d.isEventBox() && Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+            if( d.isEventBox() && Gtk::gtk_parent_groupbox( widget ) )
             { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
 
             // also draw possible animated tool button
@@ -1052,7 +1052,7 @@ namespace Oxygen
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
                 // possible groupbox background
-                if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                if( Gtk::gtk_parent_groupbox( widget ) )
                 { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
 
             }
@@ -1103,7 +1103,7 @@ namespace Oxygen
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
                 // possible groupbox background
-                if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                if( Gtk::gtk_parent_groupbox( widget ) )
                 { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
 
             }
@@ -1307,7 +1307,7 @@ namespace Oxygen
                         Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
 
                         // possible groupbox background
-                        if( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) )
+                        if( Gtk::gtk_parent_groupbox( widget ) )
                         { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
 
                     }

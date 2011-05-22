@@ -238,6 +238,16 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    GtkWidget* Gtk::gtk_parent_groupbox( GtkWidget* widget )
+    {
+
+        for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
+        { if( gtk_widget_is_groupbox( parent ) ) return parent; }
+
+        return 0L;
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_widget_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
     {
 

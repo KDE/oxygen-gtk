@@ -250,6 +250,9 @@ namespace Oxygen
             return tmp ? gtk_widget_find_parent( widget, tmp ): 0L;
         }
 
+        //! return parent "group box" if any.
+        GtkWidget* gtk_parent_groupbox( GtkWidget* widget );
+
         //! return parent button if any.
         inline GtkWidget* gtk_parent_button( GtkWidget* widget )
         { return gtk_widget_find_parent( widget, GTK_TYPE_BUTTON ); }
