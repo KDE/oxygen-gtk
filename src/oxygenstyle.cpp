@@ -280,7 +280,8 @@ namespace Oxygen
                 cairo_set_source(context,base);
                 cairo_rectangle(context,x,y,w,h);
                 cairo_fill(context);
-                cairo_destroy(context);
+                if( needToDestroyContext ) cairo_destroy(context);
+                else cairo_restore(context);
                 return;
 
             }
