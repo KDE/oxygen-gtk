@@ -45,7 +45,9 @@ if( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
 endif( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
 
 # workaround a gtk bug on combobox entries when appears-as-list is selected
-set( ENABLE_COMBOBOX_ENTRY_HACK 1 )
+if( NOT DEFINED ENABLE_COMBOBOX_ENTRY_HACK )
+  set( ENABLE_COMBOBOX_ENTRY_HACK 1 )
+endif( NOT DEFINED ENABLE_COMBOBOX_ENTRY_HACK )
 
 # Set to 0 to disable inner shadows hack
 # Note this flag is automatically set to 0 if GTK version is too old (< 2.24.2)
