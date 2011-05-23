@@ -43,7 +43,6 @@
 #include "oxygenwindowmanager.h"
 
 #include <iostream>
-
 namespace Oxygen
 {
 
@@ -115,12 +114,6 @@ namespace Oxygen
             << " shadow: " << Gtk::TypeNames::shadow( shadow )
             << " detail: " << (detail ? detail:"0x0" )
             << std::endl;
-        #endif
-
-        #if GTK_CHECK_VERSION(2, 20, 0)
-        // tool itemgroup buttons
-        if( GTK_IS_TOOL_ITEM_GROUP( widget ) )
-        { std::cout << "toolitemgroup" << std::endl; }
         #endif
 
         const Gtk::Detail d( detail );
