@@ -262,9 +262,8 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-        // if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
-
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
+        if( Gtk::g_object_is_a( G_OBJECT( widget ), "SwtFixed" ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
