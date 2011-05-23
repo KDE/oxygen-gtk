@@ -52,9 +52,10 @@ namespace Oxygen
         #endif
 
         if( pidAppName == "opera" ) _name = Opera;
+        else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
         else if( pidAppName == "java" ) {
 
-            if( !gtkAppName.empty() ) _name = JavaSwt;
+            if( !( gtkAppName.empty() || gtkAppName == "<unknown>" ) ) _name = JavaSwt;
             else _name = Java;
 
         } else if( gtkAppName == "acroread" ) _name = Acrobat;
@@ -68,8 +69,16 @@ namespace Oxygen
             gtkAppName == "chromium" ||
             gtkAppName == "chromium-browser" ||
             gtkAppName == "google-chrome" ) _name = GoogleChrome;
-        else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
         else _name = Unknown;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "ApplicationName::initialize -"
+            << " from pid: " << pidAppName
+            << " from gtk: " << gtkAppName
+            << " internal: " << *this
+            << std::endl;
+        #endif
+
 
     }
 
@@ -163,4 +172,27 @@ namespace Oxygen
 
     }
 
+    //__________________________________________________________________________
+    std::ostream& operator << ( std::ostream& out, const ApplicationName& app )
+    {
+        switch( app._name )
+        {
+            default:
+            case Unknown: out << "Unknown"; break;
+            case Acrobat: out << "Acrobat"; break;
+            case Firefox: out << "Firefox"; break;
+            case Seamonkey: out << "Seamonkey"; break;
+            case Thunderbird: out << "Thunderbird"; break;
+            case Xul: out << "Xul"; break;
+            case Gimp: out << "Gimp"; break;
+            case OpenOffice: out << "OpenOffice"; break;
+            case GoogleChrome: out << "GoogleChrome"; break;
+            case Opera: out << "Opera"; break;
+            case Java: out << "Java"; break;
+            case JavaSwt: out << "JavaSwt"; break;
+            case Eclipse: out << "Eclipse"; break;
+        }
+
+        return out;
+    }
 }

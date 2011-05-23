@@ -26,6 +26,7 @@
 */
 
 #include <gtk/gtk.h>
+#include <iostream>
 #include <string>
 
 namespace Oxygen
@@ -118,6 +119,10 @@ namespace Oxygen
 
         //! name
         AppName _name;
+
+        //! streamer (for debugging)
+        friend std::ostream& operator << ( std::ostream&, const ApplicationName& );
+
 
     };
 
