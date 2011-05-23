@@ -23,25 +23,35 @@ include( CPack )
 ########################
 
 # Set to 1 to enable debugging information
-set( OXYGEN_DEBUG 0 )
+if( NOT DEFINED OXYGEN_DEBUG )
+    set( OXYGEN_DEBUG 0 )
+endif( NOT DEFINED OXYGEN_DEBUG )
 
 # Set to 1 to replace gtk stock icons
 # with oxygen-icons
-set( OXYGEN_ICON_HACK 1 )
+if( NOT DEFINED OXYGEN_ICON_HACK )
+    set( OXYGEN_ICON_HACK 1 )
+endif( NOT DEFINED OXYGEN_ICON_HACK )
 
 # Set to 1 to force KDE icons and fonts when running in non-KDE
+if( NOT DEFINED OXYGEN_FORCE_KDE_ICONS_AND_FONTS )
 set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
+endif( NOT DEFINED OXYGEN_FORCE_KDE_ICONS_AND_FONTS )
 
 # Set to 1 to resize combobox list to compensate for combobox button glow width
 # (may result in flicker on combo popup)
-set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
+if( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
+    set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
+endif( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
 
 # workaround a gtk bug on combobox entries when appears-as-list is selected
 set( ENABLE_COMBOBOX_ENTRY_HACK 1 )
 
 # Set to 0 to disable inner shadows hack
 # Note this flag is automatically set to 0 if GTK version is too old (< 2.24.2)
-set( ENABLE_INNER_SHADOWS_HACK 1 )
+if( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
+    set( ENABLE_INNER_SHADOWS_HACK 1 )
+endif( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
 
 ##############
 # Requirements
