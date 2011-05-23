@@ -33,6 +33,7 @@ namespace Oxygen
     //_________________________________________
     Animations::Animations( void ):
         _enabled( true ),
+        _innerShadowsEnabled( true ),
         _hooksInitialized( false )
     {
 
@@ -85,6 +86,9 @@ namespace Oxygen
     {
 
         const bool animationsEnabled( settings.animationsEnabled() );
+
+        // inner shadows enabled state
+        setInnerShadowsEnabled( true );
 
         // pass animations configuration to engines
         widgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
@@ -339,9 +343,12 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
-        // if( !GTK_IS_TREE_VIEW( widget ) && !GTK_IS_TEXT_VIEW(widget) && !GTK_IS_ICON_VIEW(widget) ) return TRUE;
+        // check enabled state
+        Animations& animations( *static_cast<Animations*>(data) );
+        if( !animations.innerShadowsEnabled() ) return TRUE;
 
         if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
+        if( Gtk::g_object_is_a( G_OBJECT( widget ), "SwtFixed" ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
@@ -360,8 +367,8 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        static_cast<Animations*>(data)->innerShadowEngine().registerWidget( parent );
-        static_cast<Animations*>(data)->innerShadowEngine().registerChild( parent, widget );
+        animations.innerShadowEngine().registerWidget( parent );
+        animations.innerShadowEngine().registerChild( parent, widget );
 
         #endif  // Gtk version
         return TRUE;

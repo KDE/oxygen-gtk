@@ -65,13 +65,32 @@ enum ButtonType
     ButtonTypeCount
 };
 
+enum Metric
+{
+    BorderLeft=0,
+    BorderRight,
+    BorderBottom,
+    // BorderTop includes title and resize handle heights
+    BorderTop,
+    ButtonSpacing,
+    ButtonMarginTop,
+    ButtonMarginBottom,
+    ShadowLeft,
+    ShadowTop,
+    ShadowRight,
+    ShadowBottom,
+    MetricsCount
+};
+
 //___________________________________________________________________
 // external pointers to functions
-void (*drawWindowDecoration)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, const gchar**, gint, gint) = 0L;
-void (*drawWindecoButton)(cairo_t*, ButtonType, ButtonStatus, WinDecoOptions, gint, gint, gint, gint) = 0L;
-void (*drawWindecoShapeMask)(cairo_t*, WinDecoOptions, gint, gint, gint, gint) = 0L;
-void (*drawWindowShadow)(cairo_t*, WinDecoOptions, gint, gint, gint, gint) = 0L;
+void (*drawWindowDecoration)(cairo_t*, unsigned long, gint, gint, gint, gint, const gchar**, gint, gint) = 0L;
+void (*drawWindecoButton)(cairo_t*, unsigned long, unsigned long, unsigned long, gint, gint, gint, gint) = 0L;
+void (*drawWindecoShapeMask)(cairo_t*, unsigned long, gint, gint, gint, gint) = 0L;
+void (*drawWindowShadow)(cairo_t*, unsigned long, gint, gint, gint, gint) = 0L;
 gint (*getWindecoABIVersion)(void) = 0L;
+gint (*getWindecoMetric)(unsigned long) = 0L;
+gint (*getWindecoButtonSize)(unsigned long) = 0L;
 
 // window dimensions
 int ww( 700 );
@@ -83,12 +102,17 @@ GtkWidget *mw1( 0L );
 
 const gboolean useAlpha( TRUE );
 
-#define realShadowSize 29
-#define shadowSize (realShadowSize-4)
-
-// for now these metrics are hard-coded
-const int dw = 4 + 4 + shadowSize*2; // left border + right one
-const int dh = 23 + 4 + shadowSize*2; // title + bottom
+// windeco metrics
+int shadowLeft=0;
+int shadowRight=0;
+int shadowTop=0;
+int shadowBottom=0;
+int borderLeft=0;
+int borderRight=0;
+int borderTop=0;
+int borderBottom=0;
+int dw=0;
+int dh=0;
 
 //___________________________________________________________________
 gboolean initLib()
@@ -125,25 +149,35 @@ gboolean initLib()
                 }
 
                 // store drawWindowDecoration symbol
-                drawWindowDecoration = (void(*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint, const gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
+                drawWindowDecoration = (void(*)(cairo_t*, unsigned long, gint, gint, gint, gint, const gchar**, gint, gint))dlsym(library, "drawWindowDecoration");
                 if((error=dlerror())!=0L)
                     break;
 
                 // store drawWindecoButton symbol
-                drawWindecoButton = (void (*)(cairo_t*, ButtonType, ButtonStatus, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoButton");
+                drawWindecoButton = (void (*)(cairo_t*, unsigned long, unsigned long, unsigned long, gint, gint, gint, gint))dlsym(library, "drawWindecoButton");
                 if((error=dlerror())!=0L)
                     break;
 
                 // store drawWindecoShapeMask symbol
-                drawWindecoShapeMask=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindecoShapeMask");
+                drawWindecoShapeMask=(void (*)(cairo_t*, unsigned long, gint, gint, gint, gint))dlsym(library, "drawWindecoShapeMask");
                 if((error=dlerror())!=0L)
                     break;
 
                 // store drawWindowShadow symbol
-                drawWindowShadow=(void (*)(cairo_t*, WinDecoOptions, gint, gint, gint, gint))dlsym(library, "drawWindowShadow");
+                drawWindowShadow=(void (*)(cairo_t*, unsigned long, gint, gint, gint, gint))dlsym(library, "drawWindowShadow");
                 if((error=dlerror())!=0L)
                     break;
-            }
+
+                // store drawWindecoMetric symbol
+                getWindecoMetric=(gint (*)(unsigned long))dlsym(library, "getWindecoMetric");
+                if((error=dlerror())!=0L)
+                    break;
+
+                // store drawWindecoButtonSize symbol
+                getWindecoButtonSize=(gint (*)(unsigned long))dlsym(library, "getWindecoButtonSize");
+                if((error=dlerror())!=0L)
+                    break;
+              }
         }
         while(0);
         if(error)
@@ -153,6 +187,22 @@ gboolean initLib()
         }
     }
     return TRUE;
+}
+
+void getMetrics()
+{
+    shadowLeft=getWindecoMetric(ShadowLeft);
+    shadowRight=getWindecoMetric(ShadowRight);
+    shadowTop=getWindecoMetric(ShadowTop);
+    shadowBottom=getWindecoMetric(ShadowBottom);
+
+    borderLeft=getWindecoMetric(BorderLeft);
+    borderRight=getWindecoMetric(BorderRight);
+    borderTop=getWindecoMetric(BorderTop);
+    borderBottom=getWindecoMetric(BorderBottom);
+
+    dw = borderLeft + borderRight + shadowLeft + shadowRight;
+    dh = borderTop + borderBottom + shadowTop + shadowBottom;
 }
 
 //___________________________________________________________________
@@ -165,19 +215,27 @@ gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
     if( useAlpha ) opt |= WinHasAlpha;
     if( !gtk_window_is_active( GTK_WINDOW(mw1) ) ) opt|= WinIsActive;
 
-    drawWindowShadow(cr, (WinDecoOptions) opt, 0, 0, mw0->allocation.width, mw0->allocation.height);
+    drawWindowShadow(cr, opt, 0, 0, mw0->allocation.width, mw0->allocation.height);
 
     const gchar* windowStrings[] = {
         "This is a caption",
         "WindowClass10110111",
         0 };
 
-    drawWindowDecoration(cr, (WinDecoOptions) opt, 0+shadowSize, 0+shadowSize, mw0->allocation.width-shadowSize*2, mw0->allocation.height-shadowSize*2, windowStrings, 0, 20*ButtonTypeCount);
+    drawWindowDecoration(cr, opt, 0+shadowLeft, 0+shadowTop, mw0->allocation.width-shadowLeft-shadowRight, mw0->allocation.height-shadowTop-shadowBottom, windowStrings, 0, 20*ButtonTypeCount);
 
     for( int status=0; status<ButtonStatusCount; status++)
     {
         for( int type=0; type<ButtonTypeCount; type++)
-        { drawWindecoButton(cr, (ButtonType) type, (ButtonStatus) status, (WinDecoOptions) opt, mw0->allocation.width-shadowSize-25-20*type, status*25+shadowSize, 25, 25); }
+        {
+            int buttonSize=getWindecoButtonSize(type);
+            int buttonSpacing=getWindecoMetric(ButtonSpacing);
+            int dbut=buttonSize+buttonSpacing;
+            drawWindecoButton(cr, type, status, opt, 
+                    mw0->allocation.width-shadowRight-borderRight-buttonSize-buttonSize*type,
+                    status*dbut+shadowTop+(borderTop-buttonSize)/2,
+                    buttonSize, buttonSize);
+        }
     }
 
     cairo_destroy(cr);
@@ -203,7 +261,7 @@ gboolean on_configure1(GtkWidget* mw1, GdkEventConfigure* event, gpointer user_d
         {
             GdkBitmap* mask=gdk_pixmap_new(0L, event->width+dw, event->height+dh, 1);
             cairo_t* cr=gdk_cairo_create(mask);
-            drawWindecoShapeMask(cr, (WinDecoOptions) opt, 0+shadowSize, 0+shadowSize, event->width+dw-shadowSize*2, event->height+dh-shadowSize*2);
+            drawWindecoShapeMask(cr, opt, 0+shadowLeft, 0+shadowRight, event->width+dw-shadowLeft-shadowRight, event->height+dh-shadowTop-shadowBottom);
             gdk_window_shape_combine_mask( gtk_widget_get_window( mw0 ), 0L, 0, 0 ); // remove old mask
             gdk_window_shape_combine_mask( gtk_widget_get_window( mw0 ), mask, 0, 0 ); // apply new mask
             gdk_pixmap_unref(mask);
@@ -265,7 +323,7 @@ int main(int argc, char** argv)
     gtk_window_set_default_size( GTK_WINDOW(mw0), ww+dw, wh+dh );
     gtk_window_set_decorated(GTK_WINDOW(mw0), FALSE);
 
-    gtk_window_set_title( GTK_WINDOW(mw1), "");
+    gtk_window_set_title( GTK_WINDOW(mw1), "This is a caption");
 
     g_signal_connect( G_OBJECT(mw0), "expose-event", G_CALLBACK(on_expose), 0L);
     g_signal_connect( G_OBJECT(mw1), "configure-event", G_CALLBACK(on_configure1), 0L);
@@ -276,6 +334,10 @@ int main(int argc, char** argv)
 
     gtk_window_move( GTK_WINDOW(mw0), 300, 320);
     gtk_window_move( GTK_WINDOW(mw1), 300, 320);
+
+    // FIXME: this call crashes in Oxygen::StyleHelper::initializeRefSurface()
+    // if done right after gtk_init() call, i.e. until any widget is created
+    getMetrics();
 
     gtk_main();
     return 0;

@@ -381,9 +381,8 @@ namespace Oxygen
     {
 
         // find groupbox parent
-        GtkWidget* parent( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) );
-        if( !( parent && Gtk::gtk_widget_is_groupbox( parent ) ) )
-        { return; }
+        GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
+        if( !parent ) return;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -720,7 +719,8 @@ namespace Oxygen
         cairo_t* context,
         GdkWindow* window,
         GtkWidget* widget,
-        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles )
+        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles,
+        gint sideMargin )
     {
 
         // do nothing if not enough room
@@ -734,15 +734,15 @@ namespace Oxygen
         {
 
             // create a rounded-rect antimask for renderHoleBackground
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
-        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_widget_find_parent( widget, GTK_TYPE_FRAME ) ) ) {
+        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_parent_groupbox( widget ) ) ) {
 
             cairo_save( context );
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
             renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles );
             cairo_restore( context );
@@ -750,7 +750,7 @@ namespace Oxygen
         } else {
 
             cairo_save( context );
-            renderHoleMask( context, x, y, w, h, tiles );
+            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
 
             /*
             normal window background.
@@ -921,7 +921,7 @@ namespace Oxygen
     }
 
     //____________________________________________________________________________________
-    void Style::renderHoleMask( cairo_t* context, int x, int y, int w, int h, TileSet::Tiles tiles )
+    void Style::renderHoleMask( cairo_t* context, gint x, gint y, gint w, gint h, TileSet::Tiles tiles, gint sideMargin )
     {
 
         GdkRectangle mask = {x+2, y+1, w-4, h-3 };
@@ -929,15 +929,15 @@ namespace Oxygen
         Corners corners( CornersNone );
         if( tiles & TileSet::Left )
         {
-            mask.x += Entry_SideMargin;
-            mask.width -= Entry_SideMargin;
+            mask.x += sideMargin;
+            mask.width -= sideMargin;
             if( tiles & TileSet::Top ) corners |= CornersTopLeft;
             if( tiles & TileSet::Bottom ) corners |= CornersBottomLeft;
         }
 
         if( tiles & TileSet::Right )
         {
-            mask.width -= Entry_SideMargin;
+            mask.width -= sideMargin;
             if( tiles & TileSet::Top ) corners |= CornersTopRight;
             if( tiles & TileSet::Bottom ) corners |= CornersBottomRight;
         }

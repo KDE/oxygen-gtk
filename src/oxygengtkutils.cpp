@@ -113,6 +113,7 @@ namespace Oxygen
 
         static const char* names[] =
         {
+            "Panel",
             "PanelWidget",
             "PanelApplet",
             "XfcePanelWindow",
@@ -275,6 +276,16 @@ namespace Oxygen
 
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
         { if( G_TYPE_CHECK_INSTANCE_TYPE( parent, type ) ) return parent; }
+
+        return 0L;
+    }
+
+    //________________________________________________________
+    GtkWidget* Gtk::gtk_parent_groupbox( GtkWidget* widget )
+    {
+
+        for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
+        { if( gtk_widget_is_groupbox( parent ) ) return parent; }
 
         return 0L;
     }

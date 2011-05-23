@@ -29,6 +29,7 @@
 #include "oxygengeometry.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkgap.h"
+#include "oxygenmetrics.h"
 #include "oxygenqtsettings.h"
 #include "oxygenshadowhelper.h"
 #include "oxygenstylehelper.h"
@@ -157,13 +158,13 @@ namespace Oxygen
 
         //!@name editors hole
         //@{
-        void renderHoleBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring );
+        void renderHoleBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Ring, gint = Entry_SideMargin );
 
-        void renderHoleBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHoleBackground( context, window, widget, x, y, w, h, StyleOptions(), tiles ); }
+        void renderHoleBackground( cairo_t* context, GdkWindow* window, GtkWidget* widget, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring, gint margin = Entry_SideMargin )
+        { renderHoleBackground( context, window, widget, x, y, w, h, StyleOptions(), tiles, margin ); }
 
-        void renderHoleBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring )
-        { renderHoleBackground( context, window, 0L, x, y, w, h, StyleOptions(), tiles ); }
+        void renderHoleBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, TileSet::Tiles tiles = TileSet::Ring, gint margin = Entry_SideMargin )
+        { renderHoleBackground( context, window, 0L, x, y, w, h, StyleOptions(), tiles, margin ); }
 
         //@}
 
@@ -403,7 +404,7 @@ namespace Oxygen
         void renderScrollBarHole( cairo_t*, gint, gint, gint, gint, const ColorUtils::Rgba&, bool vertical, TileSet::Tiles tiles = TileSet::Full );
 
         //! add hole mask to context
-        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles = TileSet::Full );
+        void renderHoleMask( cairo_t*, gint, gint, gint, gint, TileSet::Tiles, gint );
 
         //! returns point position for generic arrows
         Polygon genericArrow( GtkArrowType, QtSettings::ArrowSize = QtSettings::ArrowNormal ) const;

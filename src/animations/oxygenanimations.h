@@ -88,6 +88,14 @@ namespace Oxygen
         bool enabled( void ) const
         { return _enabled; }
 
+        //! inner shadow enabled state
+        void setInnerShadowsEnabled( bool value )
+        { _innerShadowsEnabled = value; }
+
+        //! inner shadow enabled state
+        bool innerShadowsEnabled( void ) const
+        { return _innerShadowsEnabled; }
+
         //! combobox engine
         ComboBoxEngine& comboBoxEngine( void ) const
         { return *_comboBoxEngine; }
@@ -209,6 +217,9 @@ namespace Oxygen
 
         //! enabled state
         bool _enabled;
+
+        //! inner shadow enabled state
+        bool _innerShadowsEnabled;
 
         //! list of engines
         BaseEngine::List _engines;
