@@ -107,11 +107,44 @@ namespace Oxygen
                 "Third Description"
             };
 
+            const char* subTitleColumns[] =
+            {
+                "First Subitem",
+                "Second Subitem",
+                "Third Subitem"
+            };
+
+            const char* subDescriptionColumns[] =
+            {
+                "First Subitem Description",
+                "Second Subitem Description",
+                "Third Subitem Description"
+            };
+
             for( unsigned int i=0; i<3; i++ )
             {
                 GtkTreeIter iter;
                 gtk_tree_store_append( model, &iter, 0L );
                 gtk_tree_store_set( model, &iter, 0, titleColumns[i], 1, descriptionColumns[i], -1 );
+
+                // append children
+                if( i == 1 )
+                {
+                    for( unsigned int i=0; i<2; i++ )
+                    {
+                        GtkTreeIter subiter;
+                        gtk_tree_store_append( model, &subiter, &iter );
+                        gtk_tree_store_set( model, &subiter, 0, subTitleColumns[i], 1, subDescriptionColumns[i], -1 );
+                    }
+
+                } else if( i == 2 ) {
+
+                    GtkTreeIter subiter;
+                    gtk_tree_store_append( model, &subiter, &iter );
+                    gtk_tree_store_set( model, &subiter, 0, subTitleColumns[2], 1, subDescriptionColumns[2], -1 );
+
+                }
+
             }
 
             GtkWidget* treeView( gtk_tree_view_new_with_model( GTK_TREE_MODEL( model ) ) );
