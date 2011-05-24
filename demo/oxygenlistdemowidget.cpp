@@ -52,7 +52,6 @@ namespace Oxygen
         // simple list
         {
 
-            // combobox
             GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
             const char* columns[] =
             {
@@ -89,6 +88,61 @@ namespace Oxygen
             gtk_paned_add1( GTK_PANED( vpaned ), scrolledWindow );
 
         }
+
+        // tree
+        {
+
+            GtkTreeStore* model( gtk_tree_store_new ( 2, G_TYPE_STRING, G_TYPE_STRING ) );
+            const char* titleColumns[] =
+            {
+                "First Item",
+                "Second Item",
+                "Third Item"
+            };
+
+            const char* descriptionColumns[] =
+            {
+                "First Description",
+                "Second Description",
+                "Third Description"
+            };
+
+            for( unsigned int i=0; i<3; i++ )
+            {
+                GtkTreeIter iter;
+                gtk_tree_store_append( model, &iter, 0L );
+                gtk_tree_store_set( model, &iter, 0, titleColumns[i], 1, descriptionColumns[i], -1 );
+            }
+
+            GtkWidget* treeView( gtk_tree_view_new_with_model( GTK_TREE_MODEL( model ) ) );
+            gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( treeView ), true );
+            gtk_widget_show( treeView );
+
+            // renderers
+            {
+                GtkCellRenderer *renderer( gtk_cell_renderer_text_new() );
+                GtkTreeViewColumn *column( gtk_tree_view_column_new_with_attributes( "Title", renderer, "text", 0, NULL ) );
+                gtk_tree_view_append_column( GTK_TREE_VIEW( treeView ), column );
+            }
+
+            {
+                GtkCellRenderer *renderer( gtk_cell_renderer_text_new() );
+                GtkTreeViewColumn *column( gtk_tree_view_column_new_with_attributes( "Description", renderer, "text", 1, NULL ) );
+                gtk_tree_view_append_column( GTK_TREE_VIEW( treeView ), column );
+            }
+
+            // scrolled window
+            GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );
+            gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
+            gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+            gtk_container_add( GTK_CONTAINER( scrolledWindow ), treeView );
+            gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
+            gtk_widget_show( scrolledWindow );
+
+            gtk_paned_add2( GTK_PANED( vpaned ), scrolledWindow );
+
+        }
+
 
     }
 
