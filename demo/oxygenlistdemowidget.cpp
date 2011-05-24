@@ -40,7 +40,7 @@ namespace Oxygen
 
         // setup
         setName( "Lists" );
-        setComments( "Shows the appearance of various listd widgets" );
+        setComments( "Shows the appearance of lists and trees" );
         setIconName( "view-list-tree" );
         realize();
 
@@ -85,7 +85,7 @@ namespace Oxygen
             gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
             gtk_widget_show( scrolledWindow );
 
-            gtk_paned_add1( GTK_PANED( vpaned ), scrolledWindow );
+            gtk_paned_pack1( GTK_PANED( vpaned ), scrolledWindow, true, true );
 
         }
 
@@ -172,7 +172,7 @@ namespace Oxygen
             gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
             gtk_widget_show( scrolledWindow );
 
-            gtk_paned_add2( GTK_PANED( vpaned ), scrolledWindow );
+            gtk_paned_pack2( GTK_PANED( vpaned ), scrolledWindow, true, true );
 
         }
 
