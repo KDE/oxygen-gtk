@@ -25,6 +25,7 @@
 #include "oxygeninputdemowidget.h"
 #include "oxygenbuttondemowidget.h"
 #include "oxygenframedemowidget.h"
+#include "oxygenlistdemowidget.h"
 #include "oxygensliderdemowidget.h"
 #include "oxygentabdemowidget.h"
 
@@ -158,6 +159,7 @@ namespace Oxygen
         addPage( new InputDemoWidget() );
         addPage( new TabDemoWidget() );
         addPage( new ButtonDemoWidget() );
+        addPage( new ListDemoWidget() );
         addPage( new FrameDemoWidget() );
         addPage( _sliderDemoWidget = new SliderDemoWidget() );
 
