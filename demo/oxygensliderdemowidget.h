@@ -71,7 +71,8 @@ namespace Oxygen
             Sliders( void ):
                 _scale( 0 ),
                 _progressBar( 0 ),
-                _scrollBar( 0 )
+                _scrollBar( 0 ),
+                _progressEntry( 0 )
             {}
 
             //! connection
@@ -87,6 +88,7 @@ namespace Oxygen
             GtkWidget* _scale;
             GtkWidget* _progressBar;
             GtkWidget* _scrollBar;
+            GtkWidget* _progressEntry;
 
             //! ids
             Signal _scaleValueChangedId;
