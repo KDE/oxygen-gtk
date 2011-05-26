@@ -2232,10 +2232,14 @@ namespace Oxygen
             { options |= Vertical; }
             if( GTK_IS_PROGRESS_BAR(widget) )
             {
-                y++;
-                h-=2;
-                x++;
-                w-=2;
+
+                y+=1; h-=2;
+                x+=1; w-=2;
+
+            } else if( GTK_IS_ENTRY( widget ) ) {
+
+                x-=2; w+=4;
+
             }
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
 

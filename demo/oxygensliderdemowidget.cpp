@@ -66,6 +66,14 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._scale, false, true, 0 );
             gtk_widget_show( _horizontalSliders._scale );
 
+
+            // progress entry
+            _horizontalSliders._progressEntry = gtk_entry_new();
+            gtk_entry_set_text( GTK_ENTRY( _horizontalSliders._progressEntry ), "Progress Bar Entry" );
+            gtk_entry_set_progress_fraction( GTK_ENTRY( _horizontalSliders._progressEntry ), 0.25 );
+            gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressEntry, false, true, 0 );
+            gtk_widget_show( _horizontalSliders._progressEntry );
+
             // progress bar
             _horizontalSliders._progressBar = gtk_progress_bar_new();
             #if GTK_CHECK_VERSION(3, 0, 0)
@@ -74,7 +82,6 @@ namespace Oxygen
             gtk_progress_bar_set_orientation( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), GTK_PROGRESS_LEFT_TO_RIGHT );
             #endif
 
-            // gtk_progress_set_show_text( GTK_PROGRESS( _horizontalSliders._progressBar ), true );
             gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._progressBar );
@@ -174,6 +181,7 @@ namespace Oxygen
         gtk_range_set_value( GTK_RANGE( _scale ), value );
         gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _progressBar ), value/100 );
         gtk_range_set_value( GTK_RANGE( _scrollBar ), value );
+        if( _progressEntry ) gtk_entry_set_progress_fraction( GTK_ENTRY( _progressEntry ), value/100 );
     }
 
 }
