@@ -1448,7 +1448,7 @@ namespace Oxygen
 
                 // most likely it's progressbar in the list
                 // FIXME: is it always the case ? Should we check on TREE_VIEW, CELL_VIEW, like done with scrollbar hole ?
-                Style::instance().renderProgressBarHandle( window, clipRect, x, y+2, w, h-4, options );
+                Style::instance().renderProgressBarHandle( window, clipRect, x-1, y, w+2, h, options );
 
             }
 
