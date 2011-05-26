@@ -545,7 +545,7 @@ namespace Oxygen
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) )
         {
 
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) || gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) )
+            if( gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) )
             {
 
                 StyleOptions options(widget, state);
@@ -554,6 +554,13 @@ namespace Oxygen
 
                 Style::instance().renderProgressBarHole( context, x, y, w, h, options );
                 return;
+
+            } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
+
+                StyleOptions options(widget, state);
+                Style::instance().renderProgressBarHole( context, x-1, y-1, w+2, h+2, options );
+                return;
+
 
             } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) && GTK_IS_SCALE( widget ) ) {
 
@@ -2240,7 +2247,18 @@ namespace Oxygen
 
                 x-=2; w+=4;
 
+            } else if( GTK_IS_TREE_VIEW( widget ) ) {
+
+                y-=2; h+=4;
+                x-=2; w+=4;
+
+            } else if( GTK_IS_CELL_VIEW( widget ) ) {
+
+                y-=1; h+=2;
+                x-=1; w+=2;
+
             }
+
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
 
         } else {
