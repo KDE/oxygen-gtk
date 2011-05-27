@@ -273,7 +273,8 @@ namespace Oxygen
             } else cairo_save( context );
 
             // get window dimension and position
-            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) ||
+             Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
 
                 // flat painting for all other apps
