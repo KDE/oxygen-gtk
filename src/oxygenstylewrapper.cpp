@@ -665,6 +665,7 @@ namespace Oxygen
             << " shadow: " << Gtk::TypeNames::shadow( shadow )
             << " detail: " << (detail ? detail:"0x0" )
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
+            << " thickness: " << style->xthickness << "," << style->ythickness
             << std::endl;
         #endif
 
@@ -1502,6 +1503,7 @@ namespace Oxygen
             << " shadow: " << Gtk::TypeNames::shadow( shadow )
             << " detail: " << (detail ? detail:"0x0" )
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
+            << " thickness: " << style->xthickness << "," << style->ythickness
             << std::endl;
         #endif
 
