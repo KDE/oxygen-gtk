@@ -124,12 +124,15 @@ namespace Oxygen
     bool ApplicationName::useFlatBackground( GtkWidget* widget ) const
     {
 
-        // first check parent
-        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
+        if(widget)
+        {
+            // first check parent
+            GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
-        // check parent
-        if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        else return
+            // check parent
+            if( parent && GTK_IS_DIALOG( parent ) ) return false;
+        }
+        return
             isMozilla() ||
             isAcrobat() ||
             isJavaSwt() ||
