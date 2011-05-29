@@ -1444,6 +1444,22 @@ namespace Oxygen
                 if( Gtk::gtk_widget_is_vertical( widget ) )
                 { options |= Vertical; }
 
+                /*
+                need to adjust rect and clip for altered x/y thickness
+                because gtk passes it to the handle and not to the hole
+                */
+                const int delta_x = 1 - style->xthickness;
+                const int delta_y = -style->ythickness;
+                x += delta_x; w -= 2*delta_x;
+                y += delta_y; h -= 2*delta_y;
+
+                if( clipRect )
+                {
+                    clipRect->x += delta_x; clipRect->width -= 2*delta_x;
+                    clipRect->y += delta_y; clipRect->height -= 2*delta_y;
+                }
+
+                // need to adjust rect and clip to handle unexpected x/y thickness values
                 Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
 
             } else {
@@ -2867,7 +2883,6 @@ namespace Oxygen
             << " shadow: " << Gtk::TypeNames::shadow( shadow )
             << " orientation: " << Gtk::TypeNames::orientation( orientation )
             << " detail: " << (detail ? detail:"0x0" )
-            << " thickness: " << style->xthickness << "," << style->ythickness
             << std::endl;
         #endif
 
