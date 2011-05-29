@@ -2867,6 +2867,7 @@ namespace Oxygen
             << " shadow: " << Gtk::TypeNames::shadow( shadow )
             << " orientation: " << Gtk::TypeNames::orientation( orientation )
             << " detail: " << (detail ? detail:"0x0" )
+            << " thickness: " << style->xthickness << "," << style->ythickness
             << std::endl;
         #endif
 
