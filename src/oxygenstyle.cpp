@@ -273,7 +273,8 @@ namespace Oxygen
             } else cairo_save( context );
 
             // get window dimension and position
-            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) ||
+             Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
 
                 // flat painting for all other apps
@@ -3526,7 +3527,8 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
         cairo_set_source( context, pattern );
 
-        helper().fillSlab( context, x, y, w, h );
+        if( !Style::instance().settings().applicationName().useFlatBackground( 0 ) )
+            helper().fillSlab( context, x, y, w, h );
 
         if( !(options&NoFill) )
         { helper().slope( base, 0.0 ).render( context, x, y, w, h ); }
