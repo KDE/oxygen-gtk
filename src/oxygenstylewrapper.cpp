@@ -287,10 +287,18 @@ namespace Oxygen
 
             // render background
             // render "normal" background
+            bool drawTreeLines( true );
             ColorUtils::Rgba background;
             if( gtk_widget_get_modifier_style(widget)->color_flags[GTK_STATE_NORMAL]&GTK_RC_BASE )
             {
 
+                /*
+                do not draw tree lines when a custom background color is set
+                since it usually does not work for non-selected items
+                */
+                drawTreeLines = false;
+
+                // assign background
                 background = Gtk::gdk_get_color( style->base[GTK_STATE_NORMAL] );
 
             } else if( d.isCellEven() || Gtk::gtk_combobox_is_tree_view( widget ) ) {
@@ -340,7 +348,7 @@ namespace Oxygen
                     {
 
                         // tree lines
-                        if( Style::instance().settings().viewDrawTreeBranchLines() && showExpanders )
+                        if( drawTreeLines && Style::instance().settings().viewDrawTreeBranchLines() && showExpanders )
                         {
 
                             // generate flags from cell info
