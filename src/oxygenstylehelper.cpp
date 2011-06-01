@@ -51,22 +51,21 @@ namespace Oxygen
         create dummy widget, check its associated screen;
         if found create surface for it and save as reference surface
         */
-        GtkWidget* widget( gtk_window_new(GTK_WINDOW_TOPLEVEL) );
-        if( gtk_widget_get_screen( widget ) )
+        GdkScreen* screen( gdk_screen_get_default() );
+        GdkWindow* window( screen ? gdk_screen_get_root_window( screen ):0x0 );
+        if( screen && window )
         {
 
             #if OXYGEN_DEBUG
             std::cerr
                 << "Oxygen::StyleHelper::initializeRefSurface - "
-                << " widget: " << widget
-                << " screen: " << gtk_widget_get_screen( widget )
+                << " screen: " << screen
+                << " window: " << window
                 << std::endl;
             #endif
 
-            gtk_widget_realize( widget );
-            Cairo::Context context( gtk_widget_get_window( widget ) );
+            Cairo::Context context( window );
             _refSurface = Cairo::Surface( cairo_surface_create_similar( cairo_get_target( context ), CAIRO_CONTENT_ALPHA, 1, 1 ) );
-            gtk_widget_destroy( widget );
 
         } else {
 
@@ -83,7 +82,6 @@ namespace Oxygen
                 << std::endl;
             #endif
 
-            gtk_widget_destroy( widget );
             _refSurface.set( cairo_image_surface_create( CAIRO_FORMAT_ARGB32, 1, 1 ) );
 
         }
