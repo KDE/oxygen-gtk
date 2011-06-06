@@ -117,10 +117,6 @@ namespace Oxygen
         GroupBoxEngine& groupBoxEngine( void ) const
         { return *_groupBoxEngine; }
 
-        //! groupbox engine
-        GroupBoxLabelEngine& groupBoxLabelEngine( void ) const
-        { return *_groupBoxLabelEngine; }
-
         //! background hint
         BackgroundHintEngine& backgroundHintEngine( void ) const
         { return *_backgroundHintEngine; }
@@ -199,6 +195,10 @@ namespace Oxygen
         //! register new engine
         void registerEngine( BaseEngine* engine )
         { _engines.push_back( engine ); }
+
+        //! groupbox engine
+        GroupBoxLabelEngine& groupBoxLabelEngine( void ) const
+        { return *_groupBoxLabelEngine; }
 
         //! destruction callback
         static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
