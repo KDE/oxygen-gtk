@@ -35,6 +35,7 @@
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenubarstateengine.h"
 #include "oxygenmenustateengine.h"
+#include "oxygenpanedengine.h"
 #include "oxygenscrollbarengine.h"
 #include "oxygenscrollbarstateengine.h"
 #include "oxygenscrolledwindowengine.h"
@@ -128,6 +129,10 @@ namespace Oxygen
         //! hover engine
         HoverEngine& hoverEngine( void ) const
         { return *_hoverEngine; }
+
+        //! paned (splitter) engine
+        PanedEngine& panedEngine( void ) const
+        { return *_panedEngine; }
 
         //! scrollbar engine
         ScrollBarEngine& scrollBarEngine( void ) const
@@ -249,6 +254,9 @@ namespace Oxygen
 
         //! main window engine
         MainWindowEngine* _mainWindowEngine;
+
+        //! paned engine
+        PanedEngine* _panedEngine;
 
         //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;

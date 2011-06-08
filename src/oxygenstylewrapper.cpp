@@ -3163,6 +3163,8 @@ namespace Oxygen
         if( d.isPaned() )
         {
 
+            Style::instance().animations().panedEngine().registerWidget( widget );
+
             StyleOptions options( widget, state, shadow );
             if( GTK_IS_VPANED( widget ) )
             {
