@@ -28,12 +28,9 @@ namespace Oxygen
     //____________________________________________________________________
     TreeViewEngine::TreeViewEngine( Animations* parent ):
         GenericEngine<TreeViewData>( parent ),
+        _cursorLoaded( false ),
         _cursor( 0L )
-    {
-        // load cursor
-        GdkDisplay *display( gdk_display_get_default () );
-        _cursor = gdk_cursor_new_from_name( display, "row-resize" );
-    }
+    {}
 
     //____________________________________________________________________
     TreeViewEngine::~TreeViewEngine( void )
@@ -59,7 +56,16 @@ namespace Oxygen
                 !Gtk::gtk_parent_is_shadow_in( parent ) )
             { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
 
-            //! pass cursor to data
+            // load cursor if needed
+            if( !_cursorLoaded )
+            {
+                assert( !_cursor );
+                GdkDisplay *display( gdk_display_get_default () );
+                _cursor = gdk_cursor_new_from_name( display, "row-resize" );
+                _cursorLoaded = true;
+            }
+
+            // pass cursor to data
             data().value( widget ).setCursor( _cursor );
 
         }
