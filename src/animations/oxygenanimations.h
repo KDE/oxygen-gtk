@@ -34,6 +34,7 @@
 #include "oxygenmainwindowengine.h"
 #include "oxygenmenubarstateengine.h"
 #include "oxygenmenustateengine.h"
+#include "oxygenpanedengine.h"
 #include "oxygenscrollbarengine.h"
 #include "oxygenscrollbarstateengine.h"
 #include "oxygenscrolledwindowengine.h"
@@ -112,10 +113,6 @@ namespace Oxygen
         GroupBoxEngine& groupBoxEngine( void ) const
         { return *_groupBoxEngine; }
 
-        //! groupbox engine
-        GroupBoxLabelEngine& groupBoxLabelEngine( void ) const
-        { return *_groupBoxLabelEngine; }
-
         //! background hint
         BackgroundHintEngine& backgroundHintEngine( void ) const
         { return *_backgroundHintEngine; }
@@ -127,6 +124,10 @@ namespace Oxygen
         //! hover engine
         HoverEngine& hoverEngine( void ) const
         { return *_hoverEngine; }
+
+        //! paned (splitter) engine
+        PanedEngine& panedEngine( void ) const
+        { return *_panedEngine; }
 
         //! scrollbar engine
         ScrollBarEngine& scrollBarEngine( void ) const
@@ -195,6 +196,10 @@ namespace Oxygen
         void registerEngine( BaseEngine* engine )
         { _engines.push_back( engine ); }
 
+        //! groupbox engine
+        GroupBoxLabelEngine& groupBoxLabelEngine( void ) const
+        { return *_groupBoxLabelEngine; }
+
         //! destruction callback
         static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
@@ -247,6 +252,9 @@ namespace Oxygen
 
         //! main window engine
         MainWindowEngine* _mainWindowEngine;
+
+        //! paned engine
+        PanedEngine* _panedEngine;
 
         //! scrollbar engine
         ScrollBarEngine* _scrollBarEngine;

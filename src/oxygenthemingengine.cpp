@@ -2187,6 +2187,8 @@ namespace Oxygen
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PANE_SEPARATOR) )
         {
 
+            Style::instance().animations().panedEngine().registerWidget( widget );
+
             StyleOptions options( widget, state );
             if( Gtk::gtk_widget_is_vertical( widget ) )  options |= Vertical;
 
