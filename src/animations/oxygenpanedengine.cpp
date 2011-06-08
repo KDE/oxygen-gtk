@@ -37,8 +37,8 @@ namespace Oxygen
     //_____________________________________________________________
     PanedEngine::~PanedEngine( void )
     {
-        if( _verticalCursor ) gdk_cursor_destroy( _verticalCursor );
-        if( _horizontalCursor ) gdk_cursor_destroy( _horizontalCursor );
+        if( _verticalCursor ) gdk_cursor_unref( _verticalCursor );
+        if( _horizontalCursor ) gdk_cursor_unref( _horizontalCursor );
     }
 
     //_____________________________________________________________
