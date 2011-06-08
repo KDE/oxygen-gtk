@@ -48,6 +48,7 @@ namespace Oxygen
         // make sure it is not already registered
         if( _data.find( widget ) != _data.end() ) return false;
 
+        GdkCursor* cursor(0L);
         if( GTK_IS_VPANED( widget ) )
         {
             if( !_verticalCursorLoaded )
@@ -62,14 +63,8 @@ namespace Oxygen
 
             }
 
-            if( _verticalCursor )
-            {
-                GdkWindow* window(  gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
-                gdk_window_set_cursor( window, _verticalCursor );
-            }
-
+            cursor = _verticalCursor;
             _data.insert( widget );
-            return true;
 
         } else if( GTK_IS_HPANED( widget ) ) {
 
@@ -85,18 +80,27 @@ namespace Oxygen
 
             }
 
-            if( _horizontalCursor )
-            {
-                GdkWindow* window(  gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
-                gdk_window_set_cursor( window, _horizontalCursor );
-            }
-
+            cursor = _horizontalCursor;
             _data.insert( widget );
-            return true;
 
         }
 
-        return false;
+        if( cursor )
+        {
+
+            // load handle window
+            #if GTK_CHECK_VERSION(2, 20, 0)
+            GdkWindow* window(  gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
+            #else
+            GdkWindow* window( GTK_PANED( widget )->handle );
+            #endif
+
+            // assign cursor
+            gdk_window_set_cursor( window, cursor );
+
+            return true;
+
+        } else return false;
 
     }
 }
