@@ -43,16 +43,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        TreeViewEngine( Animations* parent ):
-            GenericEngine<TreeViewData>( parent )
-            {}
+        TreeViewEngine( Animations* );
 
         //! destructor
-        virtual ~TreeViewEngine( void )
-        {}
+        virtual ~TreeViewEngine( void );
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* widget );
+        virtual bool registerWidget( GtkWidget* );
 
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )
@@ -73,6 +70,11 @@ namespace Oxygen
         bool isCellHovered( GtkWidget* widget, const Gtk::CellInfo& info, bool fullWidth )
         { return data().value( widget ).isCellHovered( info, fullWidth ); }
 
+        private:
+
+        //! cursor
+        bool _cursorLoaded;
+        GdkCursor* _cursor;
     };
 
 }

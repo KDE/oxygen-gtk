@@ -24,6 +24,18 @@
 namespace Oxygen
 {
 
+
+    //____________________________________________________________________
+    TreeViewEngine::TreeViewEngine( Animations* parent ):
+        GenericEngine<TreeViewData>( parent ),
+        _cursorLoaded( false ),
+        _cursor( 0L )
+    {}
+
+    //____________________________________________________________________
+    TreeViewEngine::~TreeViewEngine( void )
+    { if( _cursor ) gdk_cursor_unref( _cursor ); }
+
     //____________________________________________________________________
     bool TreeViewEngine::registerWidget( GtkWidget* widget )
     {
@@ -43,6 +55,36 @@ namespace Oxygen
                 gtk_scrolled_window_get_shadow_type( (scrolledWindow = GTK_SCROLLED_WINDOW( parent ) ) ) != GTK_SHADOW_IN &&
                 !Gtk::gtk_parent_is_shadow_in( parent ) )
             { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
+
+            // try load cursor
+            if( !_cursorLoaded )
+            {
+
+                assert( !_cursor );
+
+                // get display
+                GdkDisplay *display( gdk_display_get_default () );
+                _cursor = gdk_cursor_new_from_name( display, "row-resize" );
+                _cursorLoaded = true;
+
+            }
+
+            if( _cursor )
+            {
+                GList* children( gtk_tree_view_get_columns( treeView ) );
+                for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
+                {
+                    if( GTK_IS_TREE_VIEW_COLUMN( child->data ) )
+                    {
+                        GdkWindow* window( GTK_TREE_VIEW_COLUMN( child->data )->window );
+                        gdk_window_set_cursor( window, _cursor );
+                    }
+                }
+
+                if( children ) g_list_free( children );
+
+            }
+
 
         }
 
