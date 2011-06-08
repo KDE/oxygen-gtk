@@ -73,7 +73,6 @@ namespace Oxygen
         private:
 
         //! cursor
-        bool _cursorLoaded;
         GdkCursor* _cursor;
     };
 
