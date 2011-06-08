@@ -1,5 +1,5 @@
-#ifndef oxygenpanedengine_h
-#define oxygenpanedengine_h
+#ifndef oxygenpaneddata_h
+#define oxygenpaneddata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -20,32 +20,49 @@
 * MA 02110-1301, USA.
 */
 
-
-#include "oxygengenericengine.h"
-#include "oxygenpaneddata.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
-#include <set>
 
 namespace Oxygen
 {
-    //! forward declaration
-    class Animations;
-
-    //! stores data associated to vertical and horizontal paned
-    class PanedEngine: public GenericEngine<PanedData>
+    class PanedData
     {
 
         public:
 
         //! constructor
-        PanedEngine( Animations* widget ):
-            GenericEngine<PanedData>( widget )
-            {}
+        PanedData( void ):
+            _cursorLoaded( false ),
+            _cursor( 0L )
+        {}
 
         //! destructor
-        virtual ~PanedEngine( void )
-        {}
+        virtual ~PanedData( void )
+        { if( _cursor ) gdk_cursor_unref( _cursor ); }
+
+        //! setup connections
+        void connect( GtkWidget* );
+
+        //! disconnect
+        void disconnect( GtkWidget* );
+
+        protected:
+
+        //! update cursor
+        virtual void updateCursor( GtkWidget* );
+
+        //! realization hook
+        static void realizeEvent( GtkWidget*, gpointer );
+
+        private:
+
+        //! realization signal
+        Signal _realizeId;
+
+        //! cursor
+        bool _cursorLoaded;
+        GdkCursor* _cursor;
 
     };
 

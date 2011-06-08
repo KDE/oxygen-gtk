@@ -43,16 +43,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        TreeViewEngine( Animations* parent ):
-            GenericEngine<TreeViewData>( parent )
-            {}
+        TreeViewEngine( Animations* );
 
         //! destructor
-        virtual ~TreeViewEngine( void )
-        {}
+        virtual ~TreeViewEngine( void );
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* widget );
+        virtual bool registerWidget( GtkWidget* );
 
         //! true if widget is hovered
         bool hovered( GtkWidget* widget )

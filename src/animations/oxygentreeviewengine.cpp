@@ -24,6 +24,16 @@
 namespace Oxygen
 {
 
+
+    //____________________________________________________________________
+    TreeViewEngine::TreeViewEngine( Animations* parent ):
+        GenericEngine<TreeViewData>( parent )
+    {}
+
+    //____________________________________________________________________
+    TreeViewEngine::~TreeViewEngine( void )
+    {}
+
     //____________________________________________________________________
     bool TreeViewEngine::registerWidget( GtkWidget* widget )
     {

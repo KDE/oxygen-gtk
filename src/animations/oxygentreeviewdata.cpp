@@ -64,6 +64,7 @@ namespace Oxygen
 
         }
 
+        // motion notify signal connection
         _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
 
         // also register scrollbars from parent scrollWindow
@@ -82,7 +83,6 @@ namespace Oxygen
         // reset target
         _target = 0L;
 
-        // motion handler
         _motionId.disconnect();
 
         // also free path if valid
@@ -249,6 +249,18 @@ namespace Oxygen
     void TreeViewData::childValueChanged( GtkRange* widget, gpointer data )
     {
         static_cast<TreeViewData*>(data)->triggerRepaint();
+        return;
+    }
+
+    //________________________________________________________________________________
+    void TreeViewData::columnsChanged( GtkTreeView*, gpointer data )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::TreeViewData::columnsChanged" << std::endl;
+        #endif
+
+        static_cast<TreeViewData*>(data)->updateColumnsCursor();
         return;
     }
 
