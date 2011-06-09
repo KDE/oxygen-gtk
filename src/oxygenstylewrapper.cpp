@@ -2986,10 +2986,11 @@ namespace Oxygen
             const bool isMozilla( Style::instance().settings().applicationName().isMozilla( widget ) );
             const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
 
-            // had-oc test on Java Swing apps, for which tab hover should be disabled
-            const bool isSwing( Style::instance().settings().applicationName().isJava() && !Style::instance().settings().applicationName().isJavaSwt() && !GDK_IS_WINDOW( window ) );
+            // if passed window is invalid, do not hover
+            const bool disableHover( !GDK_IS_WINDOW( window ) );
+
             AnimationData data;
-            if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice || isSwing ) )
+            if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice || disableHover ) )
             {
 
                 // make sure widget is registered
