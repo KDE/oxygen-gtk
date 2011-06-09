@@ -52,6 +52,7 @@ namespace Oxygen
         #endif
 
         if( pidAppName == "opera" ) _name = Opera;
+        else if( pidAppName.find( "komodo" ) != std::string::npos ) _name = Komodo;
         else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
         else if( pidAppName == "java" ) {
 
@@ -132,7 +133,9 @@ namespace Oxygen
             // check parent
             if( parent && GTK_IS_DIALOG( parent ) ) return false;
         }
+
         return
+            isKomodo() ||
             isMozilla() ||
             isAcrobat() ||
             isJavaSwt() ||
@@ -182,6 +185,7 @@ namespace Oxygen
         {
             default:
             case Unknown: out << "Unknown"; break;
+            case Komodo: out << "Komodo"; break;
             case Acrobat: out << "Acrobat"; break;
             case Firefox: out << "Firefox"; break;
             case Seamonkey: out << "Seamonkey"; break;
