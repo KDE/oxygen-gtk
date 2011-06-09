@@ -86,8 +86,13 @@ namespace Oxygen
 
         const bool animationsEnabled( settings.animationsEnabled() );
 
-        // inner shadows enabled state
-        setInnerShadowsEnabled( true );
+        if(!settings.applicationName().isOpenOffice())
+        {
+            // inner shadows enabled state
+            setInnerShadowsEnabled( true );
+        }
+        else
+            setInnerShadowsEnabled( false );
 
         // pass animations configuration to engines
         widgetStateEngine().setApplicationName( settings.applicationName() );
