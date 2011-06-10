@@ -200,7 +200,8 @@ namespace Oxygen
         // store target
         _target = widget;
 
-        if(gdk_display_supports_composite(gdk_display_get_default()))
+        if(gdk_display_supports_composite(gdk_display_get_default()) 
+                && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
         {
             _compositeEnabled = true;
             _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
@@ -258,8 +259,11 @@ namespace Oxygen
             GdkWindow* window(gtk_widget_get_window(widget));
             if(window && gdk_display_supports_composite(gdk_display_get_default()))
             {
-                data.initiallyComposited=gdk_window_get_composited(window);
-                gdk_window_set_composited(window,TRUE);
+                if(G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza"))
+                {
+                    data.initiallyComposited=gdk_window_get_composited(window);
+                    gdk_window_set_composited(window,TRUE);
+                }
             }
 
             _childrenData.insert( std::make_pair( widget, data ) );
@@ -305,7 +309,7 @@ namespace Oxygen
 
         // remove compositing flag
         GdkWindow* window( gtk_widget_get_window( widget ) );
-        if( GTK_IS_WINDOW( window ) )
+        if( GTK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
         { gdk_window_set_composited(window,initiallyComposited); }
     }
 
