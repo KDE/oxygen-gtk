@@ -1882,10 +1882,6 @@ namespace Oxygen
 
                 Style::instance().renderSlab(window,clipRect,x-1,y-1,w+2,h+2,NoFill);
 
-            } else {
-
-                gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE );
-
             }
 
         } else if( GTK_IS_CALENDAR( widget ) && shadow == GTK_SHADOW_OUT ) {
