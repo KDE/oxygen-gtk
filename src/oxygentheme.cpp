@@ -68,7 +68,7 @@ void theme_init( GTypeModule* module )
 
 //_________________________________________________
 void theme_exit( void )
-{}
+{ delete &Oxygen::Style::instance(); }
 
 //_________________________________________________
 GtkRcStyle* theme_create_rc_style( void )
