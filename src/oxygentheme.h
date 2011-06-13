@@ -27,7 +27,8 @@
 
 #include <gtk/gtk.h>
 
-//_________________________________________________
+//!@name external 'c' methods, expected by gtk
+//@{
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
 extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
@@ -41,5 +42,6 @@ extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options
 extern "C" G_MODULE_EXPORT gint getWindecoMetric(unsigned long);
 extern "C" G_MODULE_EXPORT gint getWindecoButtonSize(unsigned long);
 extern "C" G_MODULE_EXPORT unsigned long getWindecoABIVersion(void);
+//@}
 
 #endif
