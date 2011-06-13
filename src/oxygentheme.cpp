@@ -81,9 +81,14 @@ GtkThemingEngine* create_engine( void )
 //_________________________________________________
 void theme_exit( void )
 {
+
     #if OXYGEN_DEBUG
     std::cerr << "Oxygen::theme_exit" << std::endl;
     #endif
+
+    // delete style instance
+    delete &Oxygen::Style::instance();
+
 }
 
 //_________________________________________________

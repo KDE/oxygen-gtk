@@ -56,7 +56,10 @@ namespace Oxygen
 
         //! destructor
         virtual ~Style( void )
-        {}
+        {
+            if( _instance == this )
+            { _instance = 0L; }
+        }
 
         //! initialize
         void initialize( unsigned int flags = QtSettings::All );

@@ -385,6 +385,10 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        if( GTK_IS_NOTEBOOK( widget ) )
+            gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE );
+
         if( GTK_IS_LABEL( widget ) &&  GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
         {
 

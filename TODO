@@ -17,7 +17,7 @@ try find a way to avoid flicker (not sure whether this actually is possible or n
 - add hooks at widget realization for registration to the relevant engines, rather than having it scattered in stylewrapper
 TRIED, but it actually does not unclutter the code much, and creates other issues. So post-poned.
 
-- try implement some "true" inner-shadow (and glow) for GtkListView
+- try implement some "true" inner-shadow (and glow) for GtkListView. DONE
 - better support for using oxygen-gtk in a non-kde environment.
 
 GTK3 branch:
