@@ -22,11 +22,12 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygentheme.h"
+
 #include "config.h"
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
-#include "oxygentheme.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindowshadow.h"
 
@@ -54,7 +55,16 @@ void theme_init( GTypeModule* module )
 
 //_________________________________________________
 void theme_exit( void )
-{ delete &Oxygen::Style::instance(); }
+{
+
+    #if OXYGEN_DEBUG
+    std::cerr << "Oxygen::theme_exit" << std::endl;
+    #endif
+
+    // delete style instance
+    delete &Oxygen::Style::instance();
+
+}
 
 //_________________________________________________
 GtkRcStyle* theme_create_rc_style( void )

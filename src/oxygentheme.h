@@ -25,6 +25,8 @@
 * MA 02110-1301, USA.
 */
 
+#include <gtk/gtk.h>
+
 //_________________________________________________
 extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
 extern "C" G_MODULE_EXPORT void theme_exit( void );
