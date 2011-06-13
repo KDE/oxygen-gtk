@@ -26,6 +26,7 @@
 #include "oxygenrcstyle.h"
 #include "oxygenstyle.h"
 #include "oxygenstylewrapper.h"
+#include "oxygentheme.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindowshadow.h"
 
@@ -37,21 +38,6 @@
 #include <string>
 #include <vector>
 #include <sys/stat.h>
-
-//_________________________________________________
-extern "C" G_MODULE_EXPORT void theme_init( GTypeModule* );
-extern "C" G_MODULE_EXPORT void theme_exit( void );
-extern "C" G_MODULE_EXPORT GtkRcStyle* theme_create_rc_style( void );
-extern "C" G_MODULE_EXPORT const gchar* g_module_check_init( GModule* );
-
-// exports for WM theming
-extern "C" G_MODULE_EXPORT void drawWindowDecoration(cairo_t*, unsigned long,gint,gint,gint,gint,const gchar**,gint,gint);
-extern "C" G_MODULE_EXPORT void drawWindecoButton(cairo_t*, unsigned long,unsigned long, unsigned long,gint,gint,gint,gint);
-extern "C" G_MODULE_EXPORT void drawWindecoShapeMask(cairo_t*, unsigned long,gint,gint,gint,gint);
-extern "C" G_MODULE_EXPORT void drawWindowShadow(cairo_t*, unsigned long options, gint x, gint y, gint w, gint h);
-extern "C" G_MODULE_EXPORT gint getWindecoMetric(unsigned long);
-extern "C" G_MODULE_EXPORT gint getWindecoButtonSize(unsigned long);
-extern "C" G_MODULE_EXPORT unsigned long getWindecoABIVersion(void);
 
 //_________________________________________________
 void theme_init( GTypeModule* module )
