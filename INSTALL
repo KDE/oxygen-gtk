@@ -35,3 +35,12 @@ KDE is not running. Doesn't change anything when KDE is running.
 
     * ENABLE_COMBOBOX_LIST_RESIZE:
 set this to 0 to disable combobox list resizing (see README for more detail)
+
+    * ENABLE_INNER_SHADOWS_HACK
+set this to 0 to disable rendering of inner shadows using off-screen pixmap of composite widgets
+Note: this flag is automatically set to zero if gtk version is too old because of upstream bugs.
+
+    * ENABLE_GROUPBOX_HACK
+set this to 0 to disable rendering of groupbox consistently with Qt. 
+This special rendering might triggers some unwanted size-changes events in some dialog the first time they are
+made visible.
