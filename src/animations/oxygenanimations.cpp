@@ -223,13 +223,15 @@ namespace Oxygen
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
         // groupbox labels
+        #if ENABLE_GROUPBOX_HACK
         if( static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) )
         {
             static_cast<Animations*>( data )->groupBoxLabelEngine().adjustSize( widget );
             return TRUE;
         }
+        #endif
 
-        # if ENABLE_COMBOBOX_LIST_RESIZE
+        #if ENABLE_COMBOBOX_LIST_RESIZE
         // comboboxes
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
@@ -315,8 +317,9 @@ namespace Oxygen
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
         if( GTK_IS_NOTEBOOK( widget ) )
-            gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE );
+        { gtk_notebook_set_show_border( GTK_NOTEBOOK(widget), FALSE ); }
 
+        #if ENABLE_GROUPBOX_HACK
         if( GTK_IS_LABEL( widget ) &&  GTK_IS_FRAME( gtk_widget_get_parent( widget ) ) )
         {
 
@@ -342,6 +345,7 @@ namespace Oxygen
             }
 
         }
+        #endif
 
         return TRUE;
 

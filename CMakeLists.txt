@@ -50,6 +50,11 @@ if( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
     set( ENABLE_INNER_SHADOWS_HACK 1 )
 endif( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
 
+# set to 0 to disable groupbox hack
+if( NOT DEFINED ENABLE_GROUPBOX_HACK )
+    set( ENABLE_GROUPBOX_HACK 1 )
+endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
+
 ##############
 # Requirements
 ##############
