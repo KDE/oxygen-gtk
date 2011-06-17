@@ -253,20 +253,32 @@ namespace Oxygen
 
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-            if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
+
+            static bool wasAlpha=false;
+            if( GDK_IS_WINDOW( window ) )
             {
-
-                // make tooltips appear rounded using XShape extension if screen isn't composited
-                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-                if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
+                if( !(options&Alpha) )
                 {
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_mask( window, mask, x, y );
-                    gdk_pixmap_unref( mask );
-                }
+                    // make tooltips appear rounded using XShape extension if screen isn't composited
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                    if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
+                    {
+                        GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                        gdk_window_shape_combine_mask( window, mask, x, y );
+                        gdk_pixmap_unref( mask );
+                    }
 
+                    wasAlpha=false;
+                }
+                else if( !wasAlpha )
+                {
+                    // reset mask if compositing has appeared
+                    gdk_window_shape_combine_mask( window, NULL, 0, 0 );
+
+                    wasAlpha=true;
+                }
             }
 
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
