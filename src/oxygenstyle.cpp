@@ -274,8 +274,12 @@ namespace Oxygen
 
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) ||
-             Style::instance().settings().applicationName().useFlatBackground( widget ) )
+                Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
+                #endif
 
                 // flat painting for all other apps
                 cairo_set_source(context,base);
