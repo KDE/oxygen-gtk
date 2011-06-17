@@ -170,8 +170,17 @@ namespace Oxygen
 
             }
 
+            // change gtk dialog button order
+            GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
+            if( GTK_IS_DIALOG( toplevel ) )
+            { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
+
+            // render background gradient
+            const bool success( Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ) );
+
             // register to window manager
-            if( Gtk::gdk_window_is_base( window ) &&
+            if( success &&
+                Gtk::gdk_window_is_base( window ) &&
                 !( GTK_IS_EVENT_BOX( widget ) &&
                 !gtk_event_box_get_above_child( GTK_EVENT_BOX( widget ) ) ) )
             {
@@ -179,14 +188,6 @@ namespace Oxygen
                 if( Style::instance().hasBackgroundSurface() ) hints |= BackgroundPixmap;
                 Style::instance().animations().backgroundHintEngine().registerWidget( widget, hints );
             }
-
-            // change gtk dialog button order
-            GtkWidget *toplevel = gtk_widget_get_toplevel( widget );
-            if( GTK_IS_DIALOG( toplevel ) )
-            { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
-
-            // render background gradient
-            Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
             // possible groupbox background
             if( d.isEventBox() && Gtk::gtk_parent_groupbox( widget ) )
@@ -202,18 +203,20 @@ namespace Oxygen
             // do nothing for gnome applets
             if( Gtk::gtk_widget_is_applet( widget ) ) return;
 
-            // for mozilla and openoffice
-            // fill with flat color
-            if( Style::instance().settings().applicationName().useFlatBackground( widget ) )
-            {
-                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
-                return;
-            }
-
             // for modified bg, fill with flat custom color
             if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
+
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
+
+            } else if(
+                Style::instance().settings().applicationName().useFlatBackground( widget ) ||
+                !Style::instance().animations().backgroundHintEngine().contains( gtk_widget_get_toplevel( widget ) ) )
+            {
+
+                // for mozilla and openoffice fill with flat color
+                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
+                return;
 
             } else {
 
