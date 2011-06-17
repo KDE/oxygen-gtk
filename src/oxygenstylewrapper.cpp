@@ -1170,24 +1170,28 @@ namespace Oxygen
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
                 {
+                    static bool wasAlpha=false;
                     if( !(options&Alpha) )
                     {
 
                         // make menus appear rounded using XShape extension if screen isn't composited
                         Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) || wasAlpha )
                         {
                             GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
                             gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Oxygen::Menu_VerticalOffset );
                             gdk_pixmap_unref(mask);
                         }
 
-                    } else {
+                        wasAlpha=false;
 
+                    } else if( !wasAlpha )
+                    {
                         // reset mask if compositing has appeared after we had set a mask
                         gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), NULL, 0, 0);
 
+                        wasAlpha=true;
                     }
                 }
 
