@@ -223,7 +223,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowBackground(
+    bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
         const StyleOptions& options, TileSet::Tiles tiles )
@@ -274,8 +274,12 @@ namespace Oxygen
 
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) ||
-             Style::instance().settings().applicationName().useFlatBackground( widget ) )
+                Style::instance().settings().applicationName().useFlatBackground( widget ) )
             {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
+                #endif
 
                 // flat painting for all other apps
                 cairo_set_source(context,base);
@@ -283,7 +287,7 @@ namespace Oxygen
                 cairo_fill(context);
                 if( needToDestroyContext ) cairo_destroy(context);
                 else cairo_restore(context);
-                return;
+                return false;
 
             }
 
@@ -379,12 +383,12 @@ namespace Oxygen
         if(needToDestroyContext) cairo_destroy(context);
         else cairo_restore(context);
 
-        return;
+        return true;
 
     }
 
     //__________________________________________________________________
-    void Style::renderGroupBoxBackground(
+    bool Style::renderGroupBoxBackground(
         cairo_t* context,
         GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
@@ -394,7 +398,7 @@ namespace Oxygen
 
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
-        if( !parent ) return;
+        if( !parent ) return false;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -402,7 +406,7 @@ namespace Oxygen
 
         // map to parent
         if( !Gtk::gtk_widget_map_to_parent( widget, parent, &wx, &wy, &ww, &wh ) )
-        { return; }
+        { return false; }
 
         // create context and translate
         bool needToDestroyContext( false );
@@ -449,6 +453,8 @@ namespace Oxygen
 
         if(needToDestroyContext) cairo_destroy(context);
         else cairo_restore(context);
+
+        return true;
 
     }
 
