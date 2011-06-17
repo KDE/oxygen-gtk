@@ -1591,6 +1591,8 @@ namespace Oxygen
         if( Gtk::gtk_combobox_is_scrolled_window( widget ) && GTK_IS_WINDOW( parent = gtk_widget_get_parent( widget ) ) )
         {
 
+            static bool wasAlpha=false;
+
             // setup options
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
@@ -1602,7 +1604,7 @@ namespace Oxygen
             Style::instance().animations().widgetSizeEngine().registerWidget( parent );
             const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) );
 
-            if( sizeChanged )
+            if( sizeChanged || (!(options&Alpha) && wasAlpha) || (!wasAlpha && (options&Alpha)) )
             {
 
                 // update window shape
@@ -1613,6 +1615,15 @@ namespace Oxygen
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
                     gdk_pixmap_unref( mask );
+
+                    wasAlpha=false;
+                }
+                else if( !wasAlpha )
+                {
+                    // reset XShape mask on transition from non-composited to composited
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), NULL, 0, 0 );
+
+                    wasAlpha=true;
                 }
 
                 // also sets inner list mask
