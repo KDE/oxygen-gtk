@@ -26,6 +26,7 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <set>
+#include <algorithm>
 
 #include <X11/Xdefs.h>
 
@@ -64,6 +65,9 @@ namespace Oxygen
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );
+
+        //! returns true if widget is registered
+        inline bool contains( GtkWidget* widget ) const;
 
         protected:
 
@@ -138,6 +142,10 @@ namespace Oxygen
         std::set<Data> _data;
 
     };
+
+    //____________________________________________________________________
+    bool BackgroundHintEngine::contains( GtkWidget* widget ) const
+    { return std::find_if( _data.begin(), _data.end(), SameWidgetFTor( widget ) ) != _data.end(); }
 
 }
 
