@@ -253,20 +253,32 @@ namespace Oxygen
 
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-            if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
+
+            static bool wasAlpha=false;
+            if( GDK_IS_WINDOW( window ) )
             {
-
-                // make tooltips appear rounded using XShape extension if screen isn't composited
-                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-                if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
+                if( !(options&Alpha) )
                 {
-                    GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_mask( window, mask, x, y );
-                    gdk_pixmap_unref( mask );
-                }
+                    // make tooltips appear rounded using XShape extension if screen isn't composited
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                    if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
+                    {
+                        GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                        gdk_window_shape_combine_mask( window, mask, x, y );
+                        gdk_pixmap_unref( mask );
+                    }
 
+                    wasAlpha=false;
+                }
+                else if( !wasAlpha )
+                {
+                    // reset mask if compositing has appeared
+                    gdk_window_shape_combine_mask( window, NULL, 0, 0 );
+
+                    wasAlpha=true;
+                }
             }
 
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
@@ -1158,24 +1170,28 @@ namespace Oxygen
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
                 {
+                    static bool wasAlpha=false;
                     if( !(options&Alpha) )
                     {
 
                         // make menus appear rounded using XShape extension if screen isn't composited
                         Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
+                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) || wasAlpha )
                         {
                             GdkPixmap* mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
                             gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), mask, 0, Oxygen::Menu_VerticalOffset );
                             gdk_pixmap_unref(mask);
                         }
 
-                    } else {
+                        wasAlpha=false;
 
+                    } else if( !wasAlpha )
+                    {
                         // reset mask if compositing has appeared after we had set a mask
                         gdk_window_shape_combine_mask( gtk_widget_get_parent_window(widget), NULL, 0, 0);
 
+                        wasAlpha=true;
                     }
                 }
 
@@ -1575,6 +1591,8 @@ namespace Oxygen
         if( Gtk::gtk_combobox_is_scrolled_window( widget ) && GTK_IS_WINDOW( parent = gtk_widget_get_parent( widget ) ) )
         {
 
+            static bool wasAlpha=false;
+
             // setup options
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
@@ -1586,7 +1604,7 @@ namespace Oxygen
             Style::instance().animations().widgetSizeEngine().registerWidget( parent );
             const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) );
 
-            if( sizeChanged )
+            if( sizeChanged || (!(options&Alpha) && wasAlpha) || (!wasAlpha && (options&Alpha)) )
             {
 
                 // update window shape
@@ -1597,6 +1615,15 @@ namespace Oxygen
                     GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), mask, 0, 0 );
                     gdk_pixmap_unref( mask );
+
+                    wasAlpha=false;
+                }
+                else if( !wasAlpha )
+                {
+                    // reset XShape mask on transition from non-composited to composited
+                    gdk_window_shape_combine_mask( gtk_widget_get_window( parent ), NULL, 0, 0 );
+
+                    wasAlpha=true;
                 }
 
                 // also sets inner list mask
