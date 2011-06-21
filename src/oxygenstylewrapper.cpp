@@ -263,7 +263,7 @@ namespace Oxygen
                     Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                     const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-                    if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
+                    if( ( sizeChanged || wasAlpha ) && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
                     {
                         GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                         gdk_window_shape_combine_mask( window, mask, x, y );
