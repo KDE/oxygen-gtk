@@ -140,6 +140,7 @@ namespace Oxygen
             isAcrobat() ||
             isJavaSwt() ||
             isOpenOffice() ||
+            isGoogleChrome() ||
             isEclipse();
 
     }
