@@ -305,6 +305,9 @@ namespace Oxygen
             Gtk::gdk_rectangle_union( &followMouseRect, &rect, &rect );
         }
 
+        // extend rect by some arbitrary number to prevent glitches
+        if( Gtk::gdk_rectangle_is_valid( &rect ) ) rect.height += 1;
+
         return rect;
 
     }
