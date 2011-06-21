@@ -667,6 +667,13 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
         _rc.addToRootSection( "widget \"gtk-tooltip*\" style \"oxygen-tooltips\"" );
 
+        // special case for google chrome
+        /* based on http://code.google.com/p/chromium/wiki/LinuxGtkThemeIntegration */
+        _rc.addSection( "oxygen-chrome-gtk-frame", Gtk::RC::defaultSection() );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( " ChromeGtkFrame::frame-color", _palette.color( Palette::Window ) ) );
+        _rc.addToCurrentSection( Gtk::RCOption<std::string>( " ChromeGtkFrame::inactive-frame-color", _palette.color( Palette::Window ) ) );
+        _rc.addToRootSection( "class \"ChromeGtkFrame\" style \"oxygen-chrome-gtk-frame\"" );
+
     }
 
     //_________________________________________________________
