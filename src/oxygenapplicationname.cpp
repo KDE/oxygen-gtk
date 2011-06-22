@@ -125,6 +125,17 @@ namespace Oxygen
     bool ApplicationName::useFlatBackground( GtkWidget* widget ) const
     {
 
+        // check application name
+        if( !(
+            isKomodo() ||
+            isMozilla() ||
+            isAcrobat() ||
+            isJavaSwt() ||
+            isOpenOffice() ||
+            isGoogleChrome() ||
+            isEclipse() ) ) return false;
+
+        // check for special cases
         if(widget)
         {
             // first check parent
@@ -134,14 +145,8 @@ namespace Oxygen
             if( parent && GTK_IS_DIALOG( parent ) ) return false;
         }
 
-        return
-            isKomodo() ||
-            isMozilla() ||
-            isAcrobat() ||
-            isJavaSwt() ||
-            isOpenOffice() ||
-            isGoogleChrome() ||
-            isEclipse();
+        // return true in all other cases
+        return true;
 
     }
 
