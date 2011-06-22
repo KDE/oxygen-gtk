@@ -1109,14 +1109,17 @@ namespace Oxygen
         } else if( d.isToolBar() ) {
 
             // eclipse works ok with animations, though should have flat background
-            const bool isEclipse(Style::instance().settings().applicationName().isEclipse());
-
-            if( ( Style::instance().settings().applicationName().useFlatBackground( widget ) ||
-                Gtk::gtk_widget_is_applet( widget ) ) && !isEclipse )
-                { return; }
-
-            if(!isEclipse)
+            if( Style::instance().settings().applicationName().isEclipse() )
             {
+
+                draw_animated_button( window, clipRect, widget );
+                return;
+
+            } else if( Style::instance().settings().applicationName().useFlatBackground( widget ) || Gtk::gtk_widget_is_applet( widget )  ) {
+
+                return;
+
+            } else {
 
                 Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
 
@@ -1124,11 +1127,11 @@ namespace Oxygen
                 if( Gtk::gtk_parent_groupbox( widget ) )
                 { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
 
-            }
+                // also draw possible animated tool button
+                draw_animated_button( window, clipRect, widget );
+                return;
 
-            // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
-            return;
+            }
 
         } else if( d.isMenu() ) {
 
