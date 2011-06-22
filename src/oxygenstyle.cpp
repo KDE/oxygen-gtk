@@ -273,8 +273,8 @@ namespace Oxygen
             } else cairo_save( context );
 
             // get window dimension and position
-            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) ||
-                Style::instance().settings().applicationName().useFlatBackground( widget ) )
+            // paint flat background when mapping failed
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
 
                 #if OXYGEN_DEBUG
@@ -759,11 +759,8 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return;
 
-        /*
-        pass "NoFill" option to renderWindowBackground,
-        to indicate one must make a "hole" in the center
-        */
-        if( options&Flat )
+        // test for flatness
+        if( (options&Flat) || Style::instance().settings().applicationName().useFlatBackground( widget ) )
         {
 
             // create a rounded-rect antimask for renderHoleBackground
@@ -775,21 +772,23 @@ namespace Oxygen
 
         } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_parent_groupbox( widget ) ) ) {
 
-            // add hole if required (this can be done before translating the context
+            // add hole if required (this can be done before translating the context)
             Cairo::Context context( window, clipRect );
             renderHoleMask( context, x, y, w, h, tiles, sideMargin );
+
+            // normal window background
             renderWindowBackground( context, window, 0L, clipRect, x, y, w, h, options, tiles);
+
+            // groupbox background. Pass NoFill option in order not to render the surrounding frame
             renderGroupBoxBackground( context, window, widget, clipRect, x, y, w, h, options | Blend | NoFill, tiles );
 
         } else {
 
+            // add hole if required (this can be done before translating the context)
             Cairo::Context context( window, clipRect );
             renderHoleMask( context, x, y, w, h, tiles, sideMargin );
 
-            /*
-            normal window background.
-            pass the NoFill option, to ask for a mask
-            */
+            // normal window background.
             renderWindowBackground( context, window,  0L, clipRect, x, y, w, h, options, tiles);
 
         }
