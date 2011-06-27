@@ -77,6 +77,16 @@ style "oxygen-default"
 
 class "*" style "oxygen-default"
 
+# force resize-handle size to zero
+style "oxygen-sizegrip" = "oxygen-default"
+{
+
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
+}
+
+class "GtkWidget" style "oxygen-sizegrip"
+
 # entries
 # do not change unless also changing Entry_SideMargin in OxygenStyle.h
 style "oxygen-entry-margins" = "oxygen-default"
