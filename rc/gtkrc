@@ -251,14 +251,15 @@ widget_class "*GimpThumbBox*.<GtkEventBox>.<GtkVBox>.<GtkButton>" style "oxygen-
 
 #############
 # Workarounds
-
-# gimp
-style "oxygen-gimp-scale"
-{
-    # this ensures that toolpanels fonts in gimp is identical
-    # to default font (which otherwise is ugly
-    GimpDock::font-scale = 1.01
-}
-
-class "*" style "oxygen-gimp-scale"
+#
+# # gimp
+# # this is commented, as it is apparently crashing for gimp-2.7
+# style "oxygen-gimp-scale"
+# {
+#     # this ensures that toolpanels fonts in gimp is identical
+#     # to default font (which otherwise is ugly
+#     GimpDock::font-scale = 1.01
+# }
+#
+# class "*" style "oxygen-gimp-scale"
 
