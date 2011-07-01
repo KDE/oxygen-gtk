@@ -254,13 +254,13 @@ namespace Oxygen
             StyleOptions options( Round );
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
-            static bool wasAlpha=false;
             if( GDK_IS_WINDOW( window ) )
             {
+                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                const bool wasAlpha( Style::instance().animations().widgetSizeEngine().wasAlpha( widget ) );
                 if( !(options&Alpha) )
                 {
                     // make tooltips appear rounded using XShape extension if screen isn't composited
-                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                     const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                     if( ( sizeChanged || wasAlpha ) && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
@@ -270,14 +270,14 @@ namespace Oxygen
                         gdk_pixmap_unref( mask );
                     }
 
-                    wasAlpha=false;
+                    Style::instance().animations().widgetSizeEngine().setAlpha(widget, false);
                 }
                 else if( !wasAlpha )
                 {
                     // reset mask if compositing has appeared
                     gdk_window_shape_combine_mask( window, NULL, 0, 0 );
 
-                    wasAlpha=true;
+                    Style::instance().animations().widgetSizeEngine().setAlpha(widget, true);
                 }
             }
 
