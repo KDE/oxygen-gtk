@@ -55,6 +55,12 @@ namespace Oxygen
         bool updateSize( GtkWidget* widget, int width, int height )
         { return data().value( widget ).updateSize( width, height ); }
 
+        bool wasAlpha( GtkWidget* widget )
+        { return data().value( widget ).wasAlpha(); }
+
+        void setAlpha( GtkWidget* widget, bool alpha )
+        { data().value( widget ).setAlpha( alpha ); }
+
     };
 
 }
