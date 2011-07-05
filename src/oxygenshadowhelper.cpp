@@ -50,6 +50,8 @@ namespace Oxygen
     {
 
         GdkScreen* screen = gdk_screen_get_default();
+        if( !screen ) return;
+
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
 
         // round pixmaps
