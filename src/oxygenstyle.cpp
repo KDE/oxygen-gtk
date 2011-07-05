@@ -700,7 +700,6 @@ namespace Oxygen
 
             } else if( !isLastCell ) {
 
-
                 // vertical line
                 cairo_move_to( context, xCenter + 0.5, y );
                 cairo_line_to( context, xCenter + 0.5, y + h );
