@@ -134,13 +134,13 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        void renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center );
 
-        void renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-        { renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
+        bool renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
+        { return renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
         //! groupbox background
-        void renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
+        bool renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
         //! window background
         bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;

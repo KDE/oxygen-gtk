@@ -227,7 +227,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::renderWindowBackground(
+    bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options, TileSet::Tiles tiles )
@@ -257,12 +257,16 @@ namespace Oxygen
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
 
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
+                #endif
+
                 // flat painting for all other apps
                 cairo_set_source(context,base);
                 cairo_rectangle(context,x,y,w,h);
                 cairo_fill(context);
                 cairo_restore( context );
-                return;
+                return false;
 
             }
 
@@ -368,12 +372,12 @@ namespace Oxygen
         // restore context
         cairo_restore(context);
 
-        return;
+        return true;
 
     }
 
     //__________________________________________________________________
-    void Style::renderGroupBoxBackground(
+    bool Style::renderGroupBoxBackground(
         cairo_t* context, GtkWidget* widget,
         gint x, gint y, gint w, gint h,
         const StyleOptions& options,
@@ -382,7 +386,7 @@ namespace Oxygen
 
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
-        if( !parent ) return;
+        if( !parent ) return false;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -390,7 +394,7 @@ namespace Oxygen
 
         // map to parent
         if( !Gtk::gtk_widget_map_to_parent( widget, parent, &wx, &wy, &ww, &wh ) )
-        { return; }
+        { return false; }
 
         const int margin( 1 );
         wh += 2*margin;
@@ -419,6 +423,8 @@ namespace Oxygen
         const int yGroupBox = y - wy - margin;
         renderGroupBox( context, base, xGroupBox, yGroupBox, ww, wh, options );
         cairo_restore( context );
+
+        return true;
 
     }
 
@@ -726,10 +732,7 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return;
 
-        /*
-        pass "NoFill" option to renderWindowBackground,
-        to indicate one must make a "hole" in the center
-        */
+        // test for flatness
         if( options&Flat )
         {
 
