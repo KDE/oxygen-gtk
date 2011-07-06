@@ -148,10 +148,16 @@ namespace Oxygen
     {
         if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
         const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
-        return
+        if(
             hint == GDK_WINDOW_TYPE_HINT_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
-            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU;
+            hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ) return true;
+
+        // also manually check for menu
+        if( GTK_IS_MENU( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
+        { return true; }
+
+        return false;
     }
 
     //______________________________________________
@@ -171,12 +177,19 @@ namespace Oxygen
 
         // otherwise check window hint
         const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
-        return
+        if(
             hint == GDK_WINDOW_TYPE_HINT_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_COMBO ||
-            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP;
+            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ) return true;
+
+        // also manually check for menu
+        if( GTK_IS_MENU( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
+        { return true; }
+
+        return false;
+
     }
 
     //______________________________________________
