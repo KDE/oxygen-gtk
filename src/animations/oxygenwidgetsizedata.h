@@ -34,7 +34,8 @@ namespace Oxygen
         //! constructor
         WidgetSizeData( void ):
             _width(-1),
-            _height(-1)
+            _height(-1),
+            _alpha(false)
         {}
 
         //! destructor
@@ -58,6 +59,14 @@ namespace Oxygen
             return true;
         }
 
+        //! update alpha channel presence
+        void setAlpha( bool isAlpha )
+        { _alpha=isAlpha; }
+
+        //! determine if the widget had alpha channel on latest update
+        bool wasAlpha()
+        { return _alpha; }
+
         private:
 
         //! old width
@@ -65,6 +74,9 @@ namespace Oxygen
 
         //! old height
         int _height;
+
+        //! whether the widget has alpha channel
+        bool _alpha;
 
     };
 

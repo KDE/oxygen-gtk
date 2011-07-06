@@ -1,5 +1,5 @@
-#ifndef oxygenargbhelper_h
-#define oxygenargbhelper_h
+#ifndef oxygenloghandler_h
+#define oxygenloghandler_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -21,52 +21,37 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenhook.h"
-
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
-
-    //! handles argb support on a per-application, per-widget basis
-    class ArgbHelper
+    class LogHandler
     {
 
         public:
 
         //! constructor
-        explicit ArgbHelper( void );
+        LogHandler( void );
 
         //! destructor
-        virtual ~ArgbHelper( void );
-
-        //! initialize hooks
-        void initializeHooks( void );
+        virtual ~LogHandler( void );
 
         protected:
 
-        //! attach style of widget to passed window [recursive]
-        void attachStyle( GtkWidget*, GdkWindow* ) const;
-
-        //! check if widget should have argb helper
-        static bool acceptWidget( GtkWidget* );
-
-        //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
-
-        //! depth adjustment hook
-        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+        //!@name error handlers
+        //@{
+        static void gtkLogHandler( const gchar*, GLogLevelFlags, const gchar*, gpointer );
+        static void glibLogHandler( const gchar*, GLogLevelFlags, const gchar*, gpointer );
+        //@}
 
         private:
 
-        //! true if hooks are initialized
-        bool _hooksInitialized;
+        //! gtk log id
+        guint _gtkLogId;
 
-        //! colormap hook
-        Hook _colormapHook;
 
-        //! style hook
-        Hook _styleHook;
+        //! glib log id
+        guint _glibLogId;
 
     };
 
