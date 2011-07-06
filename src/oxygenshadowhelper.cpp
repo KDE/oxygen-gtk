@@ -21,6 +21,7 @@
 #include "oxygencairocontext.h"
 #include "oxygencairoutils.h"
 #include "oxygengtkutils.h"
+#include "oxygengtktypenames.h"
 #include "oxygenmetrics.h"
 #include "oxygenrgba.h"
 #include "oxygenshadowhelper.h"
@@ -300,6 +301,16 @@ namespace Oxygen
             data.push_back( _size );
 
         }
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::ShadowHelper::installX11Shadows -"
+            << " " << widget
+            << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " type: " << Gtk::TypeNames::windowTypeHint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) )
+            << " wId: " << GDK_WINDOW_XID( window )
+            << std::endl;
+        #endif
 
         // change property
         XChangeProperty(
