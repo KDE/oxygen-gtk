@@ -131,13 +131,11 @@ GtkViewport { padding: 1; }
 GtkProgressBar { padding: 0; }
 
 /* combo boxes */
-GtkComboBox { border-width: 1 0; }
-GtkComboBox>GtkFrame { border-width: 4; }
+GtkComboBox { padding: 1 0; }
+GtkComboBox>GtkFrame { padding: 4; }
 GtkComboBox>GtkEntry {
-    padding: 4 5;
-    border-width: 2 5;
+    padding: 2 5;
 }
-
 /* headers */
 GtkTreeView>GtkButton { border-width: 0 2; }
 GtkList>GtkButton { border-width: 0 2; }
