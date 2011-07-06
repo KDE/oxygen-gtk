@@ -698,20 +698,20 @@ namespace Oxygen
             gtk_settings_set_string_property( settings, "gtk-font-name", fonts[FontInfo::Default].toString( false ).c_str(), "oxygen-gtk" );
 
             _css.setCurrentSection( Gtk::CSS::defaultSection() );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Default].toString( false ) ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font", fonts[FontInfo::Default].toString( false ) ) );
 
         }
 
         if( fonts[FontInfo::Menu].isValid() )
         {
             _css.addSection( "GtkMenuItem" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::Menu].toString( false ) ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font", fonts[FontInfo::Menu].toString( false ) ) );
         }
 
         if( fonts[FontInfo::ToolBar].isValid() )
         {
             _css.addSection( "GtkToolbar" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font-name", fonts[FontInfo::ToolBar].toString( false ) ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "font", fonts[FontInfo::ToolBar].toString( false ) ) );
         }
 
         // don't check for section and tag presence - use default font if not present
