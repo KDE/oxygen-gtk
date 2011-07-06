@@ -1,5 +1,5 @@
 
 install(
 	FILES gtk.css icons4 kdeglobals oxygenrc argb-apps.conf
-	DESTINATION "${INSTALL_PATH_GTK_THEMES}/oxygen-gtk/gtk-3.0"
+	DESTINATION "${GTK_THEME_DIR}/gtk-3.0"
  )
