@@ -47,6 +47,7 @@ set( oxygen_gtk_SOURCES
     oxygengtkrc.cpp
     oxygengtktypenames.cpp
     oxygengtkutils.cpp
+    oxygenloghandler.cpp
     oxygenoptionmap.cpp
     oxygenpalette.cpp
     oxygenpathlist.cpp

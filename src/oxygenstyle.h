@@ -29,6 +29,7 @@
 #include "oxygengeometry.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkgap.h"
+#include "oxygenloghandler.h"
 #include "oxygenmetrics.h"
 #include "oxygenqtsettings.h"
 #include "oxygenshadowhelper.h"
@@ -448,13 +449,16 @@ namespace Oxygen
 
         private:
 
-        // Qt settings
+        //! log handler
+        LogHandler _logHandler;
+
+        //! Qt settings
         QtSettings _settings;
 
-        // helper
+        //! helper
         StyleHelper _helper;
 
-        // animations
+        //! animations
         Animations _animations;
 
         //! argb helper
