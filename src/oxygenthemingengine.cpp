@@ -81,6 +81,9 @@ namespace Oxygen
         GtkWidget* widget )
     {
 
+        // check widget
+        if( !widget ) return;
+
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_animated_button -"
