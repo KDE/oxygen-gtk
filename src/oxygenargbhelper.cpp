@@ -30,6 +30,8 @@
 #include <cassert>
 #include <iostream>
 
+#define OXYGEN_DEBUG 1
+
 namespace Oxygen
 {
 
@@ -133,6 +135,10 @@ namespace Oxygen
             )
         { return true; }
 
+        // also manually check for menu
+        if( GTK_IS_MENU( gtk_bin_get_child( GTK_BIN( widget ) ) ) )
+        { return true; }
+
         return false;
     }
 
@@ -156,7 +162,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::ArgbHelper::colormapHook - "
             << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
+            << " hint: " << Gtk::TypeNames::windowTypeHint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) )
             << std::endl;
         #endif
 
