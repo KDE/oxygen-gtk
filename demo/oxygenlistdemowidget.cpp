@@ -82,7 +82,6 @@ namespace Oxygen
             gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
             gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), treeView );
-            gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
             gtk_widget_show( scrolledWindow );
 
             gtk_paned_pack1( GTK_PANED( vpaned ), scrolledWindow, true, true );
@@ -171,7 +170,6 @@ namespace Oxygen
             gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
             gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), treeView );
-            gtk_container_set_border_width( GTK_CONTAINER( scrolledWindow ), 2 );
             gtk_widget_show( scrolledWindow );
 
             gtk_paned_pack2( GTK_PANED( vpaned ), scrolledWindow, true, true );
