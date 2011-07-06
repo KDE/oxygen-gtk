@@ -237,7 +237,6 @@ namespace Oxygen
 
         } else if( widget && (
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
             ) )
         {
@@ -276,6 +275,10 @@ namespace Oxygen
                 Style::instance().renderWindowBackground( context, window, x, y, w, h );
 
             }
+
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
+
+            // no need to render anything for notebook gradient
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
