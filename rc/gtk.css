@@ -98,8 +98,7 @@ GtkScrollbar {
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
 GtkEntry {
-    padding: 1 5;
-    border-width: 2 5;
+    padding: 2 5;
 }
 
 /* menuitems padding */
