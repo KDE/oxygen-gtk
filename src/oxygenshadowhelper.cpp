@@ -280,6 +280,7 @@ namespace Oxygen
         const bool isMenu( this->isMenu( widget ) );
         const bool isToolTip( this->isToolTip( widget ) );
 
+        data = _roundPixmaps;
         if( ( (isMenu||isToolTip) ) )
         {
 
@@ -301,16 +302,6 @@ namespace Oxygen
             data.push_back( _size );
 
         }
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::ShadowHelper::installX11Shadows -"
-            << " " << widget
-            << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " type: " << Gtk::TypeNames::windowTypeHint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) )
-            << " wId: " << GDK_WINDOW_XID( window )
-            << std::endl;
-        #endif
 
         // change property
         XChangeProperty(
