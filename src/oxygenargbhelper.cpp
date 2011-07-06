@@ -77,24 +77,16 @@ namespace Oxygen
         if( !style ) return;
 
         // TODO: check whether there is an equivalent for Gtk3
-//         if( !( style && style->depth >= 0 ) ) return;
-//         // adjust depth
-//         if( style->depth == gdk_drawable_get_depth( window ) )
-//         { return; }
-
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::ArgbHelper::attachStyle -"
             << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
-            //<< " style depth: " << style->depth
-            //<< " window depth: " << gdk_drawable_get_depth( window )
             << std::endl;
         #endif
 
         // TODO: check whether this is needed for gtk+3, and if yes, if working
         // This is known *not* to work for gtk+2
         gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
-//        widget->style = gtk_style_attach( style, window );
 
         // if widget is a container, we need to do the same for its children
         if( !GTK_IS_CONTAINER( widget ) ) return;
@@ -126,15 +118,13 @@ namespace Oxygen
         GdkWindowTypeHint hint = gtk_window_get_type_hint( window );
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ArgbHelper::colormapHook - "
+        std::cerr << "Oxygen::ArgbHelper::acceptWidget - "
             << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
-            << " isMenu: " << isMenu
             << std::endl;
         #endif
 
         if(
-            //isMenu ||
             hint == GDK_WINDOW_TYPE_HINT_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
