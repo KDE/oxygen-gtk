@@ -67,7 +67,6 @@ INFO: css border and padding ordering is either:
     */
 
     engine: oxygen-gtk;
-    theme: oxygen-gtk;
 }
 
 GtkScrolledWindow { border-width: 1; }
