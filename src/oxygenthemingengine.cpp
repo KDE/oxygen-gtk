@@ -2253,6 +2253,7 @@ namespace Oxygen
 
             } else if( GTK_IS_ENTRY( widget ) ) {
 
+                y-=1; h+=2;
                 x-=2; w+=4;
 
             } else if( GTK_IS_TREE_VIEW( widget ) ) {
