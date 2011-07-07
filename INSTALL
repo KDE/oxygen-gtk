@@ -44,12 +44,3 @@ Note: this flag is automatically set to zero if gtk version is too old because o
 set this to 0 to disable rendering of groupbox consistently with Qt. 
 This special rendering might triggers some unwanted size-changes events in some dialog the first time they are
 made visible.
-
-5/ to have oxygen-gtk style selected for your gtk3 applications, you need to edit the file
- 
-  $HOME/.config/gtk-3.0/settings.ini
-
-so that it contains: 
-
-  [Settings]
-  gtk-theme-name = oxygen-gtk
