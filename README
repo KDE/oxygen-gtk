@@ -240,7 +240,7 @@ a convenience class to handle signal/callback connections and disconnections.
 
 V. example configuration (aka: how to select the oxygen-gtk style)
 ------------------------------------------------------------------
-Below is a 'sampe' .gtkrc-2.0 file used to select oxygen-gtk for a style. 
+Below is a 'sample' .gtkrc-2.0 file used to select oxygen-gtk for a style. 
 For kde users this should be copied to $HOME/.gtkrc-2.0-kde
 For others, in $HOME/.gtkrc-2.0 (or make a soft-link to the file above).
 It is provided here without any warranty, and users should backup their old config file before modifying.
