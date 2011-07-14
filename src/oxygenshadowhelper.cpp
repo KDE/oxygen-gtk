@@ -25,6 +25,8 @@
 #include "oxygenrgba.h"
 #include "oxygenshadowhelper.h"
 
+#include "config.h"
+
 #include <iostream>
 #include <cairo/cairo.h>
 #include <cairo/cairo-xlib.h>
@@ -39,11 +41,21 @@ namespace Oxygen
         _size(0),
         _atom(0),
         _hooksInitialized( false )
-    {}
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::ShadowHelper" << std::endl;
+        #endif
+    }
 
     //______________________________________________
     ShadowHelper::~ShadowHelper( void )
-    { reset(); }
+    { 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::~ShadowHelper" << std::endl;
+        #endif
+
+        reset(); 
+    }
 
     //______________________________________________
     void ShadowHelper::reset( void )
@@ -51,6 +63,10 @@ namespace Oxygen
 
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::~ShadowHelper - reset" << std::endl;
+        #endif
 
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
 
