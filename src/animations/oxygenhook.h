@@ -44,10 +44,10 @@ namespace Oxygen
 
 
         //! connect
-        void connect( const std::string&, GType, GSignalEmissionHook, gpointer );
+        bool connect( const std::string&, GType, GSignalEmissionHook, gpointer );
 
-        void connect( const std::string& signal, GSignalEmissionHook hook, gpointer data )
-        { connect( signal, GTK_TYPE_WIDGET, hook, data ); }
+        bool connect( const std::string& signal, GSignalEmissionHook hook, gpointer data )
+        { return connect( signal, GTK_TYPE_WIDGET, hook, data ); }
 
         //! disconnect
         void disconnect( void );
