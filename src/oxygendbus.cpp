@@ -92,11 +92,13 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
+        const char* path( dbus_message_get_path( message ) );
+        const char* interface( dbus_message_get_interface( message ) );
         std::cerr
             << "Oxygen::DBus::signalFilter - received signal"
             << " type: " << dbus_message_get_type( message )
-            << " path: " << dbus_message_get_path( message )
-            << " interface: " << dbus_message_get_interface( message )
+            << " path: " << (path ? path:"0x0")
+            << " interface: " << (interface ? interface:"0x0")
             << std::endl;
         #endif
 
