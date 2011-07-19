@@ -491,7 +491,7 @@ namespace Oxygen
 
             // make GtkCombo list look a bit better
             // retrieve proper parent and check
-            GtkWidget* parent=gtk_widget_get_parent(widget);
+            GtkWidget* parent = gtk_widget_get_parent(widget);
             if( !( parent && GTK_IS_WINDOW(parent) ) ) return;
 
             // setup options
@@ -1033,7 +1033,7 @@ namespace Oxygen
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
-            GtkWidget* parent( gtk_widget_get_parent( widget ) );
+            GtkWidget* parent( widget ? gtk_widget_get_parent( widget ):0L );
             AnimationData data;
             if( GTK_IS_MENU_BAR( parent ) )
             {
