@@ -87,12 +87,7 @@ namespace Oxygen
         }
 
         // background surface
-        if( !settings().backgroundPixmap().empty() )
-        {
-            setBackgroundSurface( settings().backgroundPixmap() );
-            if( !hasBackgroundSurface() )
-            { std::cerr << "Oxygen::Style::initialize - unable to load background image: " << settings().backgroundPixmap() << std::endl; }
-        }
+        if( !settings().backgroundPixmap().empty() ) setBackgroundSurface( settings().backgroundPixmap() );
 
         // create window shadow
         WindowShadow shadow( settings(), helper() );
