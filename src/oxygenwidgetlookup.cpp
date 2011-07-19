@@ -120,12 +120,10 @@ namespace Oxygen
 
         if( _hooksInitialized ) return;
 
-        // lookup relevant signal
-        const guint signalId( g_signal_lookup("draw", GTK_TYPE_WIDGET ) );
-        if( signalId <= 0 ) return;
+        // install hook and test
+        if( !_drawHook.connect( "draw", (GSignalEmissionHook)drawHook, this ) ) return;
 
-        // install hooks
-        _drawHook.connect( "draw", (GSignalEmissionHook)drawHook, this );
+        // set initialization flag
         _hooksInitialized = true;
 
         return;
