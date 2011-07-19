@@ -20,21 +20,44 @@
 */
 
 #include "oxygenhook.h"
+#include "../config.h"
 
 #include <cassert>
+#include <iostream>
 
 namespace Oxygen
 {
 
     //__________________________________________________________________
-    void Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
+    bool Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
     {
         // make sure that signal is not already connected
         assert( _signalId == 0 && _hookId == 0 );
 
+        // check type id
+        if( !g_type_class_peek( typeId ) )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::Hook::connect - typeId " << g_type_name(typeId) << " not yet installed" << std::endl;
+            #endif
+
+            return false;
+
+        }
+
         // store signal id
         _signalId = g_signal_lookup( signal.c_str(), typeId );
-        if( !_signalId ) return;
+        if( !_signalId )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::Hook::connect - signal " << signal << " not installed." << std::endl;
+            #endif
+
+            return false;
+
+        }
 
         // store attributes and create connection
         _hookId = g_signal_add_emission_hook(
@@ -42,6 +65,8 @@ namespace Oxygen
             (GQuark)0L,
             hookFunction,
             data, 0L);
+
+        return true;
 
     }
 
