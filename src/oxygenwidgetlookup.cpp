@@ -68,7 +68,9 @@ namespace Oxygen
         // check context
         if( context != _context )
         {
+            #if OXYGEN_DEBUG
             std::cerr << "Oxygen::WidgetLookup::find - invalid context: " << context << std::endl;
+            #endif
             return 0L;
         }
 
