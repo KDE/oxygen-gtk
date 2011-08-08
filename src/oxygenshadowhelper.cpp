@@ -20,6 +20,7 @@
 
 #include "oxygencairocontext.h"
 #include "oxygencairoutils.h"
+#include "config.h"
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
 #include "oxygenrgba.h"
@@ -49,6 +50,10 @@ namespace Oxygen
     void ShadowHelper::reset( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::reset" << std::endl;
+        #endif
+
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return;
 
@@ -74,6 +79,10 @@ namespace Oxygen
     {
        if( _hooksInitialized ) return;
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::initializeHooks" << std::endl;
+        #endif
+
         // install hooks
         _realizeHook.connect( "realize", (GSignalEmissionHook)realizeHook, this );
         _hooksInitialized = true;
@@ -83,6 +92,11 @@ namespace Oxygen
     //______________________________________________
     void ShadowHelper::initialize( const ColorUtils::Rgba& color, const WindowShadow& shadow )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::initialize" << std::endl;
+        #endif
+
         reset();
         _size = int(shadow.shadowSize()) - WindowShadow::Overlap;
 
@@ -185,6 +199,10 @@ namespace Oxygen
     void ShadowHelper::createPixmapHandles( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::createPixmapHandles" << std::endl;
+        #endif
+
         // create atom
         if( !_atom )
         {
@@ -271,6 +289,14 @@ namespace Oxygen
     //______________________________________________
     void ShadowHelper::installX11Shadows( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::ShadowHelper::installX11Shadows - "
+            << " widget: " << widget
+            << " wid: " << GDK_WINDOW_XID( gtk_widget_get_window( widget ) )
+            << std::endl;
+        #endif
 
         // make sure handles and atom are defined
         createPixmapHandles();
