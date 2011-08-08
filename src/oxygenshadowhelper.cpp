@@ -206,9 +206,32 @@ namespace Oxygen
         // create atom
         if( !_atom )
         {
+
+            // get screen and check
             GdkScreen* screen = gdk_screen_get_default();
+            if( !screen )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - screen is NULL" << std::endl;
+                #endif
+
+                return;
+            }
+
+            // get display and check
             Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-            _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
+            if( !display )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - display is NULL" << std::endl;
+                #endif
+
+                return;
+            }
+
+           _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
         }
 
         // make sure size is valid
@@ -217,11 +240,29 @@ namespace Oxygen
         // opacity
         const int shadowOpacity = 150;
 
+        if( _roundPixmaps.empty() || _squarePixmaps.empty() )
+        {
+            // get screen, display, visual and check
+            // no need to check screen and display, since was already done for ATOM
+            GdkScreen* screen = gdk_screen_get_default();
+            Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
+            if( !gdk_screen_get_rgba_visual( screen ) )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - no valid RGBA visual found." << std::endl;
+                #endif
+
+                return;
+
+            }
+        }
+
         // make sure pixmaps are not already initialized
         if( _roundPixmaps.empty() )
         {
 
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
+           _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ), shadowOpacity ) );
