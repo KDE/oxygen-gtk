@@ -20,6 +20,7 @@
 
 #include "oxygencairocontext.h"
 #include "oxygencairoutils.h"
+#include "config.h"
 #include "oxygengtkutils.h"
 #include "oxygengtktypenames.h"
 #include "oxygenmetrics.h"
@@ -50,6 +51,10 @@ namespace Oxygen
     void ShadowHelper::reset( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::reset" << std::endl;
+        #endif
+
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return;
 
@@ -75,6 +80,10 @@ namespace Oxygen
     {
        if( _hooksInitialized ) return;
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::initializeHooks" << std::endl;
+        #endif
+
         // install hooks
         _realizeHook.connect( "realize", (GSignalEmissionHook)realizeHook, this );
         _hooksInitialized = true;
@@ -84,6 +93,11 @@ namespace Oxygen
     //______________________________________________
     void ShadowHelper::initialize( const ColorUtils::Rgba& color, const WindowShadow& shadow )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::initialize" << std::endl;
+        #endif
+
         reset();
         _size = int(shadow.shadowSize()) - WindowShadow::Overlap;
 
@@ -196,12 +210,39 @@ namespace Oxygen
     void ShadowHelper::createPixmapHandles( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::ShadowHelper::createPixmapHandles" << std::endl;
+        #endif
+
         // create atom
         if( !_atom )
         {
+
+            // get screen and check
             GdkScreen* screen = gdk_screen_get_default();
+            if( !screen )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - screen is NULL" << std::endl;
+                #endif
+
+                return;
+            }
+
+            // get display and check
             Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-            _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
+            if( !display )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - display is NULL" << std::endl;
+                #endif
+
+                return;
+            }
+
+           _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
         }
 
         // make sure size is valid
@@ -210,11 +251,29 @@ namespace Oxygen
         // opacity
         const int shadowOpacity = 150;
 
+        if( _roundPixmaps.empty() || _squarePixmaps.empty() )
+        {
+            // get screen, display, visual and check
+            // no need to check screen and display, since was already done for ATOM
+            GdkScreen* screen = gdk_screen_get_default();
+            Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
+            if( !gdk_screen_get_rgba_visual( screen ) )
+            {
+
+                #if OXYGEN_DEBUG
+                std::cerr << "ShadowHelper::createPixmapHandles - no valid RGBA visual found." << std::endl;
+                #endif
+
+                return;
+
+            }
+        }
+
         // make sure pixmaps are not already initialized
         if( _roundPixmaps.empty() )
         {
 
-            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
+           _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ), shadowOpacity ) );
@@ -282,6 +341,14 @@ namespace Oxygen
     //______________________________________________
     void ShadowHelper::installX11Shadows( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::ShadowHelper::installX11Shadows - "
+            << " widget: " << widget
+            << " wid: " << GDK_WINDOW_XID( gtk_widget_get_window( widget ) )
+            << std::endl;
+        #endif
 
         // make sure handles and atom are defined
         createPixmapHandles();
