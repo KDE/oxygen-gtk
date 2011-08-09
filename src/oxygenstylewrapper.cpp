@@ -245,7 +245,7 @@ namespace Oxygen
             // mozilla and openoffice get square non Argb tooltips no matter what
             if(
                 Style::instance().settings().applicationName().isOpenOffice() ||
-                Style::instance().settings().applicationName().isMozilla() )
+                Style::instance().settings().applicationName().isXul() )
             {
                 Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, StyleOptions() );
                 return;
@@ -457,7 +457,7 @@ namespace Oxygen
             }
             return;
 
-        } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isMozilla( widget ) ) {
+        } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isXul( widget ) ) {
 
             StyleOptions options( widget, state, shadow );
             if(
@@ -860,7 +860,7 @@ namespace Oxygen
             // combobox buttons
             if(
                 ( parent = Gtk::gtk_parent_combobox( widget ) ) &&
-                !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                !Style::instance().settings().applicationName().isXul( widget ) &&
                 Gtk::gtk_combobox_appears_as_list( parent )
                 )
             {
@@ -1140,7 +1140,7 @@ namespace Oxygen
 
                 if(
                     Gtk::gdk_window_is_base( window ) &&
-                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    !Style::instance().settings().applicationName().isXul( widget ) )
                 {
                     BackgroundHints hints( BackgroundGradient );
                     if( Style::instance().hasBackgroundSurface() ) hints |= BackgroundPixmap;
@@ -1154,7 +1154,7 @@ namespace Oxygen
                 StyleOptions options( Menu );
 
                 // set alpha flag. Special handling is needed for mozilla and openoffice.
-                if( Style::instance().settings().applicationName().isMozilla( widget ) ||
+                if( Style::instance().settings().applicationName().isXul( widget ) ||
                     Style::instance().settings().applicationName().isOpenOffice() )
                 {
 
@@ -1317,7 +1317,7 @@ namespace Oxygen
             if( GTK_IS_PROGRESS_BAR( widget ) )
             {
 
-                if( !Style::instance().settings().applicationName().isMozilla( widget ) &&
+                if( !Style::instance().settings().applicationName().isXul( widget ) &&
                     !Style::instance().settings().applicationName().isOpenOffice() )
                 {
                     /*
@@ -1400,7 +1400,7 @@ namespace Oxygen
 
                 options |= NoFill;
                 ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state(widget)] ) );
-                if( Style::instance().settings().applicationName().isMozilla( widget ) )
+                if( Style::instance().settings().applicationName().isXul( widget ) )
                 {
 
                     /*
@@ -1434,7 +1434,7 @@ namespace Oxygen
                 tiles &= ~TileSet::Right;
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
-                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    !Style::instance().settings().applicationName().isXul( widget ) )
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles, sideMargin ); }
 
                 // shrink spinbox entry hole by 3px on right side
@@ -1447,7 +1447,7 @@ namespace Oxygen
                 tiles &= ~TileSet::Left;
 
                 if( !Style::instance().settings().applicationName().isOpenOffice() &&
-                    !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    !Style::instance().settings().applicationName().isXul( widget ) )
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles, sideMargin ); }
 
                 // shrink spinbox entry hole by 3px on right side
@@ -1659,7 +1659,7 @@ namespace Oxygen
 
         } else if( d.isBase() && GTK_IS_MENU( widget ) ) {
 
-                // this is to prevent crappy mozilla to
+                // this is to prevent mozilla to
                 // draw yet another frame around menus
                 return;
 
@@ -1753,7 +1753,7 @@ namespace Oxygen
                 if( Style::instance().animations().hoverEngine().hovered( widget ) )
                 { options |= Hover; }
 
-                if( !Style::instance().settings().applicationName().isMozilla( widget ) )
+                if( !Style::instance().settings().applicationName().isXul( widget ) )
                 {
 
                     // fill the inside of the spinbox manually
@@ -1867,7 +1867,7 @@ namespace Oxygen
                     w+=2; h+=2;
 
                     const int sideMargin( std::max( 0, style->xthickness - 2 ) );
-                    if( !Style::instance().settings().applicationName().isMozilla( widget ) )
+                    if( !Style::instance().settings().applicationName().isXul( widget ) )
                     { Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, TileSet::Full, sideMargin ); }
 
                     // shrink entry by 3px at each side
@@ -1935,7 +1935,7 @@ namespace Oxygen
         } else if(
             (parent = Gtk::gtk_parent_combobox( widget )) &&
             !GTK_IS_CELL_VIEW( widget ) &&
-            !Style::instance().settings().applicationName().isMozilla( widget ) ) {
+            !Style::instance().settings().applicationName().isXul( widget ) ) {
 
             Style::instance().animations().comboBoxEngine().registerWidget( parent );
             Style::instance().animations().comboBoxEngine().registerChild( parent, widget );
@@ -2400,7 +2400,7 @@ namespace Oxygen
 
         // by default all arrows are animated
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
-        if( d.isMenuItem() && Style::instance().settings().applicationName().isMozilla( widget ) )
+        if( d.isMenuItem() && Style::instance().settings().applicationName().isXul( widget ) )
         { arrowSize = QtSettings::ArrowTiny; }
 
         // define default color role
@@ -2824,7 +2824,7 @@ namespace Oxygen
             options |= NoFill;
             options &= ~(Hover|Focus);
 
-            if( Style::instance().settings().applicationName().isMozilla( widget ) )
+            if( Style::instance().settings().applicationName().isXul( widget ) )
             {
 
                 Gtk::Gap gap( gap_x, gap_w, position );
@@ -3012,14 +3012,14 @@ namespace Oxygen
             see if tab is hovered. This is only done if widget is notebook, and if not running a mozilla
             (or open office) app, because the latter do not pass the actual tab rect as argument
             */
-            const bool isMozilla( Style::instance().settings().applicationName().isMozilla( widget ) );
+            const bool isXul( Style::instance().settings().applicationName().isXul( widget ) );
             const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
 
             // if passed window is invalid, do not hover
             const bool disableHover( !GDK_IS_WINDOW( window ) );
 
             AnimationData data;
-            if( GTK_IS_NOTEBOOK( widget ) && !( isMozilla || isOpenOffice || disableHover ) )
+            if( GTK_IS_NOTEBOOK( widget ) && !( isXul || isOpenOffice || disableHover ) )
             {
 
                 // make sure widget is registered
@@ -3072,7 +3072,7 @@ namespace Oxygen
             }
 
             // render
-            if( isMozilla ) tabOptions |= Mozilla;
+            if( isXul ) tabOptions |= Xul;
 
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions, data );
 
@@ -3460,7 +3460,7 @@ namespace Oxygen
         // initialize argb hooks
         if(
             Style::instance().settings().argbEnabled() &&
-            !Style::instance().settings().applicationName().isMozilla() )
+            !Style::instance().settings().applicationName().isXul() )
         { Style::instance().argbHelper().initializeHooks(); }
 
     }

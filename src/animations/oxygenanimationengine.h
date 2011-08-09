@@ -63,7 +63,7 @@ namespace Oxygen
         {
 
             // for now, only Mozilla applications need blacklisting
-            return _applicationName.isMozilla( widget );
+            return _applicationName.isXul( widget );
 
         }
 
