@@ -60,9 +60,9 @@ namespace Oxygen
             else _name = Java;
 
         } else if( gtkAppName == "acroread" ) _name = Acrobat;
-        else if( gtkAppName.find("firefox") == 0 ) _name = Firefox;
+        else if( gtkAppName.find("firefox") == 0 || gtkAppName.find( "iceweasel" ) == 0 || gtkAppName.find( "icecat" ) == 0 ) _name = Firefox;
         else if( gtkAppName.find("xulrunner") == 0 ) _name = Xul;
-        else if( gtkAppName.find("thunderbird") == 0 ) _name = Thunderbird;
+        else if( gtkAppName.find("thunderbird") == 0 || gtkAppName.find("icedove" ) == 0 ) _name = Thunderbird;
         else if( gtkAppName.find("seamonkey" ) == 0 ) _name = Seamonkey;
         else if( gtkAppName == "soffice" ) _name = OpenOffice;
         else if( gtkAppName == "gimp" ) _name = Gimp;
