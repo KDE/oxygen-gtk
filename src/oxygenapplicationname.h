@@ -37,10 +37,7 @@ namespace Oxygen
     {
         Unknown,
         Acrobat,
-        Firefox,
-        Seamonkey,
-        Thunderbird,
-        Xul,
+        XUL,
         Gimp,
         OpenOffice,
         GoogleChrome,
@@ -81,12 +78,8 @@ namespace Oxygen
         //@{
 
         bool isAcrobat( void ) const { return _name == Acrobat; }
-        bool isFirefox( void ) const { return _name == Firefox; }
         bool isKomodo( void ) const { return _name == Komodo; }
-        bool isThunderbird( void ) const { return _name == Thunderbird; }
-        bool isSeamonkey( void ) const { return _name == Seamonkey; }
-        bool isXul( void ) const { return _name == Xul; }
-        bool isMozilla( void ) const { return isFirefox() || isThunderbird() || isSeamonkey() || isXul(); }
+        bool isXul( void ) const { return _name == XUL; }
         bool isGimp( void ) const { return _name == Gimp; }
         bool isOpenOffice( void ) const { return _name == OpenOffice; }
         bool isGoogleChrome( void ) const { return _name == GoogleChrome; }
@@ -100,7 +93,7 @@ namespace Oxygen
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
         bool isAcrobat( GtkWidget* ) const;
-        bool isMozilla( GtkWidget* ) const;
+        bool isXul( GtkWidget* ) const;
         bool isJavaSwt( GtkWidget* ) const;
 
         // true for all applications that requires a flat background to be used

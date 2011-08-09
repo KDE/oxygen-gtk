@@ -51,6 +51,9 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        // initialize to unknown
+        _name = Unknown;
+
         if( pidAppName == "opera" ) _name = Opera;
         else if( pidAppName.find( "komodo" ) != std::string::npos ) _name = Komodo;
         else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
@@ -60,17 +63,36 @@ namespace Oxygen
             else _name = Java;
 
         } else if( gtkAppName == "acroread" ) _name = Acrobat;
-        else if( gtkAppName.find("firefox") == 0 || gtkAppName.find( "iceweasel" ) == 0 || gtkAppName.find( "icecat" ) == 0 ) _name = Firefox;
-        else if( gtkAppName.find("xulrunner") == 0 ) _name = Xul;
-        else if( gtkAppName.find("thunderbird") == 0 || gtkAppName.find("icedove" ) == 0 ) _name = Thunderbird;
-        else if( gtkAppName.find("seamonkey" ) == 0 ) _name = Seamonkey;
         else if( gtkAppName == "soffice" ) _name = OpenOffice;
         else if( gtkAppName == "gimp" ) _name = Gimp;
         else if(
             gtkAppName == "chromium" ||
             gtkAppName == "chromium-browser" ||
             gtkAppName == "google-chrome" ) _name = GoogleChrome;
-        else _name = Unknown;
+        else {
+
+            // tag all mozilla-like applications (XUL)
+            static const std::string XulAppNames[] =
+            {
+                "firefox",
+                "thunderbird",
+                "seamonkey"
+                "iceweasel",
+                "icecat",
+                "icedove",
+                "xulrunner",
+                ""
+            };
+
+            for( unsigned int index = 0; !XulAppNames[index].empty(); ++index )
+            {
+                if( gtkAppName.find( XulAppNames[index] ) == 0 )
+                {
+                    _name = XUL;
+                    break;
+                }
+            }
+        }
 
         #if OXYGEN_DEBUG
         std::cerr << "ApplicationName::initialize -"
@@ -84,9 +106,9 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________
-    bool ApplicationName::isMozilla( GtkWidget* widget ) const
+    bool ApplicationName::isXul( GtkWidget* widget ) const
     {
-        if( !isMozilla() ) return false;
+        if( !isXul() ) return false;
 
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
@@ -128,7 +150,7 @@ namespace Oxygen
         // check application name
         if( !(
             isKomodo() ||
-            isMozilla() ||
+            isXul() ||
             isAcrobat() ||
             isJavaSwt() ||
             isOpenOffice() ||
@@ -193,10 +215,7 @@ namespace Oxygen
             case Unknown: out << "Unknown"; break;
             case Komodo: out << "Komodo"; break;
             case Acrobat: out << "Acrobat"; break;
-            case Firefox: out << "Firefox"; break;
-            case Seamonkey: out << "Seamonkey"; break;
-            case Thunderbird: out << "Thunderbird"; break;
-            case Xul: out << "Xul"; break;
+            case XUL: out << "XUL (Mozilla)"; break;
             case Gimp: out << "Gimp"; break;
             case OpenOffice: out << "OpenOffice"; break;
             case GoogleChrome: out << "GoogleChrome"; break;

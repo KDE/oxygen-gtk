@@ -46,8 +46,8 @@ namespace Oxygen
         //! true if tab is being dragged
         Dragged = 1<<7,
 
-        //! true if tabs are drawn for mozilla application
-        Mozilla = 1<<8
+        //! true if tabs are drawn for Xul application
+        Xul = 1<<8
 
     };
 
