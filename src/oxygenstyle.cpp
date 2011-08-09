@@ -2690,7 +2690,7 @@ namespace Oxygen
         // this is quite painfull and slipery code.
         // the same is true with oxygen-qt
         int offset = 2;
-        int adjust = ( tabOptions&Mozilla ) ? 0:2;
+        int adjust = ( tabOptions&Xul ) ? 0:2;
         const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
 
         SlabRect tabSlab;
@@ -2827,7 +2827,7 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 0.9, ColorUtils::Rgba::transparent( light ) );
 
         // in firefox a solid background must be filled
-        if( tabOptions&Mozilla )
+        if( tabOptions&Xul )
         {
             cairo_set_source( context, base );
             cairo_rectangle( context, fillSlab._x, fillSlab._y, fillSlab._w, fillSlab._h );
@@ -2875,7 +2875,7 @@ namespace Oxygen
         // this is quite painfull and slipery code.
         // the same is true with oxygen-qt
         int offset = 2;
-        int adjust = (tabOptions&Mozilla) ? 0:2;
+        int adjust = (tabOptions&Xul) ? 0:2;
         const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
 
         SlabRect tabSlab;
@@ -3058,7 +3058,7 @@ namespace Oxygen
         // this is quite painfull and slipery code.
         // the same is true with oxygen-qt
         int offset = 2;
-        int adjust = (tabOptions&Mozilla) ? 0:2;
+        int adjust = (tabOptions&Xul) ? 0:2;
         const TileSet::Tiles tabTiles( Style::tabTiles( side )  );
 
         SlabRect tabSlab;
