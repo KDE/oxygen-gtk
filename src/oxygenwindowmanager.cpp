@@ -472,6 +472,15 @@ namespace Oxygen
 
         } else {
 
+            if( GTK_IS_WINDOW( widget ) )
+            {
+
+                // check hint
+                const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
+                if( hint == GDK_WINDOW_TYPE_HINT_UTILITY ) return false;
+
+            }
+
             useEvent = childrenUseEvent( widget, event, false );
 
         }
