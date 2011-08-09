@@ -130,20 +130,20 @@ namespace Oxygen
     typedef Gtk::TypeNames::Entry<GdkWindowTypeHint> WindowTypeHintMap;
     static const WindowTypeHintMap windowTypeHintMap[] =
     {
-        { GDK_WINDOW_TYPE_HINT_NORMAL, "normal" },
-        { GDK_WINDOW_TYPE_HINT_DIALOG, "dialog" },
-        { GDK_WINDOW_TYPE_HINT_MENU, "menu" },
-        { GDK_WINDOW_TYPE_HINT_TOOLBAR, "toolbar" },
-        { GDK_WINDOW_TYPE_HINT_SPLASHSCREEN, "splashscreen" },
-        { GDK_WINDOW_TYPE_HINT_UTILITY, "utility" },
-        { GDK_WINDOW_TYPE_HINT_DOCK, "dock" },
-        { GDK_WINDOW_TYPE_HINT_DESKTOP, "desktop" },
-        { GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU, "dropdown menu" },
-        { GDK_WINDOW_TYPE_HINT_POPUP_MENU, "popup menu" },
-        { GDK_WINDOW_TYPE_HINT_TOOLTIP, "tooltip" },
-        { GDK_WINDOW_TYPE_HINT_NOTIFICATION, "notification" },
         { GDK_WINDOW_TYPE_HINT_COMBO, "combobox list" },
-        { GDK_WINDOW_TYPE_HINT_DND, "drag-and-drop" }
+        { GDK_WINDOW_TYPE_HINT_DESKTOP, "desktop" },
+        { GDK_WINDOW_TYPE_HINT_DIALOG, "dialog" },
+        { GDK_WINDOW_TYPE_HINT_DND, "drag-and-drop" },
+        { GDK_WINDOW_TYPE_HINT_DOCK, "dock" },
+        { GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU, "dropdown menu" },
+        { GDK_WINDOW_TYPE_HINT_MENU, "menu" },
+        { GDK_WINDOW_TYPE_HINT_NORMAL, "normal" },
+        { GDK_WINDOW_TYPE_HINT_NOTIFICATION, "notification" },
+        { GDK_WINDOW_TYPE_HINT_POPUP_MENU, "popup menu" },
+        { GDK_WINDOW_TYPE_HINT_SPLASHSCREEN, "splashscreen" },
+        { GDK_WINDOW_TYPE_HINT_TOOLBAR, "toolbar" },
+        { GDK_WINDOW_TYPE_HINT_TOOLTIP, "tooltip" },
+        { GDK_WINDOW_TYPE_HINT_UTILITY, "utility" }
     };
 
     //__________________________________________________________________
