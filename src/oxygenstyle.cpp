@@ -2822,30 +2822,25 @@ namespace Oxygen
 
         // fill
         Cairo::Pattern pattern;
-        int dimension = 0;
         switch( side )
         {
             case GTK_POS_BOTTOM:
-            dimension = fillSlab._h;
             fillSlab._h -= 2;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y, 0, fillSlab._y + fillSlab._h ) );
             break;
 
             case GTK_POS_TOP:
-            dimension = fillSlab._h;
             fillSlab._y += 2;
             fillSlab._h -= 2;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y + fillSlab._h, 0, fillSlab._y ) );
             break;
 
             case GTK_POS_RIGHT:
-            dimension = fillSlab._w;
             fillSlab._w -= 2;
             pattern.set( cairo_pattern_create_linear( fillSlab._x, 0, fillSlab._x + fillSlab._w, 0 ) );
             break;
 
             case GTK_POS_LEFT:
-            dimension = fillSlab._w;
             fillSlab._x += 2;
             fillSlab._w -= 2;
             pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
@@ -2995,30 +2990,25 @@ namespace Oxygen
 
         // fill
         Cairo::Pattern pattern;
-        int dimension = 0;
         switch( side )
         {
             case GTK_POS_BOTTOM:
-            dimension = fillSlab._h;
             fillSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y, 0, fillSlab._y + fillSlab._h ) );
             break;
 
             case GTK_POS_TOP:
-            dimension = fillSlab._h;
             fillSlab._y += 3;
             fillSlab._h -= 3;
             pattern.set( cairo_pattern_create_linear( 0, fillSlab._y + fillSlab._h, 0, fillSlab._y ) );
             break;
 
             case GTK_POS_RIGHT:
-            dimension = fillSlab._w;
             fillSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( fillSlab._x, 0, fillSlab._x + fillSlab._w, 0 ) );
             break;
 
             case GTK_POS_LEFT:
-            dimension = fillSlab._w;
             fillSlab._x += 3;
             fillSlab._w -= 3;
             pattern.set( cairo_pattern_create_linear( fillSlab._x + fillSlab._w, 0, fillSlab._x, 0 ) );
