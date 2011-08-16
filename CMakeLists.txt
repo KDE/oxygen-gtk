@@ -27,6 +27,11 @@ if( NOT DEFINED OXYGEN_DEBUG )
     set( OXYGEN_DEBUG 0 )
 endif( NOT DEFINED OXYGEN_DEBUG )
 
+# Set to 1 to enable debug logs regarding inner shadows
+if( NOT DEFINED OXYGEN_DEBUG_INNERSHADOWS )
+    set( OXYGEN_DEBUG_INNERSHADOWS 0 )
+endif( NOT DEFINED OXYGEN_DEBUG_INNERSHADOWS )
+
 # Set to 1 to replace gtk stock icons
 # with oxygen-icons
 if( NOT DEFINED OXYGEN_ICON_HACK )
@@ -118,6 +123,7 @@ message( "" )
 message( "Flags: " )
 message( "  HAVE_DBUS ${HAVE_DBUS}" )
 message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
+message( "  OXYGEN_DEBUG_INNERSHADOWS ${OXYGEN_DEBUG_INNERSHADOWS}" )
 message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
 message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
 message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )

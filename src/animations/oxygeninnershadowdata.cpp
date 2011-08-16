@@ -79,7 +79,7 @@ namespace Oxygen
         gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
         cairo_paint(context);
 
-        #if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG_INNERSHADOWS
         // Show updated parts in random color
         cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
         double red=((double)rand())/RAND_MAX;
