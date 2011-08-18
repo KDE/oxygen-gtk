@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 #include <dlfcn.h>
 #include <string>
+#include "oxygen_version.h"
 
 enum WinDecoOptions
 {
@@ -308,6 +309,8 @@ int main(int argc, char** argv)
 
     // initialize gtk
     gtk_init(&argc, &argv);
+
+    processCommandLine(argc,argv);
 
     // draw
     mw0=gtk_window_new(GTK_WINDOW_TOPLEVEL);

@@ -1,3 +1,6 @@
+# For config.h to be available
+include_directories( ${CMAKE_BINARY_DIR} )
+
 ########### next target ###############
 set( oxygen_gtk_demo_SOURCES
     oxygenbuttondemowidget.cpp
