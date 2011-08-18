@@ -144,7 +144,7 @@ message( "" )
 # Setup definitions and directories to be used for linking and include
 ######################################################################
 link_directories( ${GTK_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${DBUS_LIBRARY_DIRS} )
-include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRD} ${DBUS_INCLUDE_DIRS} ${X11_X11_INCLUDE_PATH} )
+include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${DBUS_INCLUDE_DIRS} ${X11_X11_INCLUDE_PATH} )
 
 #############################
 # generate configuration file
