@@ -29,7 +29,9 @@ IV.1 Directories
 IV.2 Some details on some files in src
 IV.3 Some details on some files in animations
 
-V. example configuration (aka: how to select the oxygen-gtk style)
+V. Example configuration (aka: how to select the oxygen-gtk style)
+
+VI. How to determine oxygen-gtk version
 
 I. introduction
 ---------------
@@ -238,7 +240,7 @@ a convenience class to handle delayed actions.
 oxygensignal: 
 a convenience class to handle signal/callback connections and disconnections.
 
-V. example configuration (aka: how to select the oxygen-gtk style)
+V. Example configuration (aka: how to select the oxygen-gtk style)
 ------------------------------------------------------------------
 Below is a 'sample' .gtkrc-2.0 file used to select oxygen-gtk for a style. 
 For kde users this should be copied to $HOME/.gtkrc-2.0-kde
@@ -258,3 +260,9 @@ widget_class "*" style "user-font"
 gtk-theme-name="oxygen-gtk"
 gtk-font-name="Sans Serif 8"
 ----- end of file -----
+
+VI. How to determine oxygen-gtk version
+---------------------------------------
+If you have installed oxygen-gtk from source, then deleted the sources, you can still determine oxygen-gtk version when needed using either of these commands:
+oxygen-gtk-demo --version
+oxygen-gtk-deco --version

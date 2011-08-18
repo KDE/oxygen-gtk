@@ -16,6 +16,17 @@ set( CPACK_PACKAGE_VERSION_MINOR "1" )
 set( CPACK_PACKAGE_VERSION_PATCH "50" )
 set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 
+##################################
+# Define oxygen-gtk version string
+##################################
+if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
+  execute_process(COMMAND git describe
+    OUTPUT_VARIABLE OXYGEN_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+else( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
+  set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
+endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
+
 set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )
 ########################
@@ -110,42 +121,41 @@ set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
-# adjust flags based on gtk version
+# First emit all warnings in one place
+# Warn user if dbus-glib not found
+if( NOT DBUS_FOUND )
+    message( WARNING "dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
+endif( NOT DBUS_FOUND )
+
+# Adjust flags based on gtk version and warn user if needed
 if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
-    message("  Disabling ENABLE_INNER_SHADOWS_HACK because Gtk version is too old (needed 2.24.2, found ${GTK_VERSION}) " )
+    message( WARNING "Disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
     set( ENABLE_INNER_SHADOWS_HACK 0 )
-endif()
+endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 
 #########
 # summary
 #########
-message( "" )
 message( "Flags: " )
-message( "  HAVE_DBUS ${HAVE_DBUS}" )
 message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
 message( "  OXYGEN_DEBUG_INNERSHADOWS ${OXYGEN_DEBUG_INNERSHADOWS}" )
+message( "  HAVE_DBUS ${HAVE_DBUS}" )
 message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
 message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
 message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
 message( "  ENABLE_INNER_SHADOWS_HACK ${ENABLE_INNER_SHADOWS_HACK}" )
 message( "  ENABLE_GROUPBOX_HACK ${ENABLE_GROUPBOX_HACK}" )
 message( "" )
-message( "Path: " )
+message( "Paths: " )
 message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )
 message( "  Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
 message( "" )
-
-if( NOT DBUS_FOUND )
-    message( "Warning: " )
-    message( "dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system. dbus is a simple inter process communication system. It is used for Gtk applications to be updated 'on fly' when KDE configuration is changed." )
-    message( "" )
-endif( NOT DBUS_FOUND )
 
 ######################################################################
 # Setup definitions and directories to be used for linking and include
 ######################################################################
 link_directories( ${GTK_LIBRARY_DIRS} ${CAIRO_LIBRARY_DIRS} ${DBUS_LIBRARY_DIRS} )
-include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRD} ${DBUS_INCLUDE_DIRS} ${X11_X11_INCLUDE_PATH} )
+include_directories( ${GTK_INCLUDE_DIRS} ${CAIRO_INCLUDE_DIRS} ${DBUS_INCLUDE_DIRS} ${X11_X11_INCLUDE_PATH} )
 
 #############################
 # generate configuration file

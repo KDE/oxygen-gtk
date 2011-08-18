@@ -1,6 +1,7 @@
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * based on the Null Theme Engine for Gtk+.
 * Copyright (c) 2008 Robert Staudinger <robert.staudinger@gmail.com>
@@ -21,25 +22,18 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygen_version.h"
-#include "oxygendemodialog.h"
+#include <iostream>
+#include <cstdlib>
+#include "config.h"
 
-//___________________________________________________________________
-int main(int argc, char** argv)
+inline void processCommandLine(int argc, char** argv)
 {
-
-    // initialize gtk
-    gtk_init(&argc, &argv);
-
-    processCommandLine(argc,argv);
-
-    // dialog
-    Oxygen::DemoDialog demoDialog;
-
-    g_signal_connect( G_OBJECT( demoDialog.mainWidget() ), "destroy", G_CALLBACK(gtk_main_quit), 0L);
-    gtk_widget_show( demoDialog.mainWidget() );
-
-    gtk_main();
-    return 0;
-
+    if(argc>1)
+    {
+        if(std::string(argv[1])=="--version")
+        {
+            std::cout << OXYGEN_VERSION << std::endl;
+            exit(0);
+        }
+    }
 }
