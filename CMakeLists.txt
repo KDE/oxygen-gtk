@@ -126,12 +126,12 @@ set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 # First emit all warnings in one place
 # Warn user if dbus-glib not found
 if( NOT DBUS_FOUND )
-    message( WARNING "dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
+    message( "Warning: dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
 endif( NOT DBUS_FOUND )
 
 # Adjust flags based on gtk version and warn user if needed
 if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
-    message( WARNING "Disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
+    message( "Warning: disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
     set( ENABLE_INNER_SHADOWS_HACK 0 )
 endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 
