@@ -566,6 +566,7 @@ namespace Oxygen
         _blackList.push_back( "GladeDesignLayout" );
         _blackList.push_back( "SPHRuler" );
         _blackList.push_back( "SPVRuler" );
+        _blackList.push_back( "GooCanvas" );
     }
 
     //________________________________________________________________________________
