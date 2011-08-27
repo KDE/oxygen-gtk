@@ -283,6 +283,15 @@ namespace Oxygen
         FrameBorder frameBorder( void ) const
         { return _frameBorder; }
 
+        enum WindecoBlendType {
+            SolidColor,
+            RadialGradient,
+            FollowStyleHint
+        };
+
+        WindecoBlendType windecoBlendType( void ) const
+        { return _windecoBlendType; }
+
         //! shadow configuration
         const ShadowConfiguration& shadowConfiguration( Palette::Group group ) const
         {
@@ -501,6 +510,9 @@ namespace Oxygen
 
         //! frame border
         FrameBorder _frameBorder;
+
+        //! Window decoration blend type
+        WindecoBlendType _windecoBlendType;
 
         //! active shadows
         ShadowConfiguration _activeShadowConfiguration;
