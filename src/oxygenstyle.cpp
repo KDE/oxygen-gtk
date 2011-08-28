@@ -2402,7 +2402,7 @@ namespace Oxygen
         // enable gradient if XID is not passed
         bool gradient=true;
 
-        Oxygen::QtSettings::WindecoBlendType blendType(settings().windecoBlendType());
+        QtSettings::WindecoBlendType blendType(settings().windecoBlendType());
         if( blendType==QtSettings::SolidColor )
         {
             gradient=false;
