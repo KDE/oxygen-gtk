@@ -357,10 +357,9 @@ namespace Oxygen
 
         std::vector<unsigned long> data;
         const bool isMenu( this->isMenu( widget ) );
-        const bool isToolTip( this->isToolTip( widget ) );
 
         data = _roundPixmaps;
-        if( ( (isMenu||isToolTip) ) )
+        if( isMenu )
         {
 
             /*
