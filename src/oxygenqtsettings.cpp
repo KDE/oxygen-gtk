@@ -82,6 +82,7 @@ namespace Oxygen
         _toolBarAnimationsDuration( 50 ),
         _buttonSize( ButtonDefault ),
         _frameBorder( BorderDefault ),
+        _windecoBlendType( FollowStyleHint ),
         _activeShadowConfiguration( Palette::Active ),
         _inactiveShadowConfiguration( Palette::Inactive ),
         _argbEnabled( true ),
@@ -870,6 +871,13 @@ namespace Oxygen
         else if( titleAlign == "Center" ) _titleAlignment = PANGO_ALIGN_CENTER;
         else if( titleAlign == "Right" ) _titleAlignment = PANGO_ALIGN_RIGHT;
         else _titleAlignment = PANGO_ALIGN_CENTER;
+
+        // Windeco radial gradient enable option
+        std::string wdBlendType( oxygen.getValue( "[Windeco]", "BlendColor", "Follow Style Hint" ) );
+        if( wdBlendType == "Follow Style Hint" ) _windecoBlendType=FollowStyleHint;
+        else if( wdBlendType == "Radial Gradient" ) _windecoBlendType=RadialGradient;
+        else if( wdBlendType == "Solid Color" ) _windecoBlendType=SolidColor;
+        else _windecoBlendType=FollowStyleHint;
 
         // shadow configurations
         _activeShadowConfiguration.initialize( oxygen );
