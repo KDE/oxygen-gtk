@@ -120,6 +120,10 @@ namespace Oxygen
     void WidgetLookup::initializeHooks( void )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WidgetLookup::initializeHooks" << endl;
+        #endif
+
         if( _hooksInitialized ) return;
 
         // install hook and test
