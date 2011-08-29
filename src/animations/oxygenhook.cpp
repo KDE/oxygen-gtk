@@ -42,7 +42,7 @@ namespace Oxygen
             std::cerr << "Oxygen::Hook::connect - typeId " << g_type_name(typeId) << " not yet installed" << std::endl;
             #endif
 
-            return false;
+            g_type_class_ref( typeId );
 
         }
 
