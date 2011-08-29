@@ -67,7 +67,6 @@ namespace Oxygen
         GtkAllocation allocation( Gtk::gdk_rectangle() );
         gdk_window_get_geometry( window, &allocation.x, &allocation.y, &allocation.width, &allocation.height, 0L );
 
-
         // create context with clipping
         Cairo::Context context(gtk_widget_get_window(widget), &allocation );
 
@@ -200,7 +199,7 @@ namespace Oxygen
         // store target
         _target = widget;
 
-        if(gdk_display_supports_composite(gdk_display_get_default()) 
+        if(gdk_display_supports_composite(gdk_display_get_default())
                 && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
         {
             _compositeEnabled = true;
@@ -214,6 +213,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::InnerShadowData::connect -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << " child: " << child << " (" << G_OBJECT_TYPE_NAME( child ) << ")"
             << std::endl;
         #endif
@@ -257,13 +257,18 @@ namespace Oxygen
             data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
 
             GdkWindow* window(gtk_widget_get_window(widget));
-            if(window && gdk_display_supports_composite(gdk_display_get_default()))
+            if(
+                // check window
+                ( window && gdk_display_supports_composite( gdk_display_get_default() ) ) &&
+
+                // check widget type (might move to blacklist method)
+                ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) &&
+
+                // make sure widget is scrollable
+                ( GTK_WIDGET_GET_CLASS( widget )->set_scroll_adjustments_signal ) )
             {
-                if(G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza"))
-                {
-                    data.initiallyComposited=gdk_window_get_composited(window);
-                    gdk_window_set_composited(window,TRUE);
-                }
+                data.initiallyComposited=gdk_window_get_composited(window);
+                gdk_window_set_composited(window,TRUE);
             }
 
             _childrenData.insert( std::make_pair( widget, data ) );
