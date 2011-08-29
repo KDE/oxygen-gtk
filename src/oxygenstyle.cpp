@@ -2402,7 +2402,12 @@ namespace Oxygen
         // enable gradient if XID is not passed
         bool gradient=true;
 
-        if( windowStrings && windowStrings[2] )
+        QtSettings::WindecoBlendType blendType(settings().windecoBlendType());
+        if( blendType==QtSettings::SolidColor )
+        {
+            gradient=false;
+        }
+        else if( blendType==QtSettings::FollowStyleHint && windowStrings && windowStrings[2] )
         {
             Window window((Window)windowStrings[2]);
             Display* display( GDK_DISPLAY_XDISPLAY(gdk_display_get_default()) );
