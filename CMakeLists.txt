@@ -20,7 +20,7 @@ set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 # Define oxygen-gtk version string
 ##################################
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-  execute_process(COMMAND /bin/sh -c "cd ${CMAKE_SOURCE_DIR} && git describe"
+  execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
     OUTPUT_VARIABLE OXYGEN_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
