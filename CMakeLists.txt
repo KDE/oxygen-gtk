@@ -20,7 +20,7 @@ set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 # Define oxygen-gtk version string
 ##################################
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-  execute_process(COMMAND git describe
+  execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
     OUTPUT_VARIABLE OXYGEN_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
@@ -28,6 +28,7 @@ STRING(COMPARE NOTEQUAL "${OXYGEN_VERSION}" "" OXYGEN_VERSION_DETECTED )
 if( NOT OXYGEN_VERSION_DETECTED )
   set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
 endif( NOT OXYGEN_VERSION_DETECTED )
+message( "Detected oxygen version string: ${OXYGEN_VERSION}" )
 
 set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )
