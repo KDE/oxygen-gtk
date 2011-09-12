@@ -17,11 +17,12 @@ The default is equivalent to:
 
 2/ when using the default installation prefix, the theme engine should also automatically get installed in
 the correct location. However, if a custom CMAKE_INSTALL_PREFIX location is set, an extra flag is needed at
-the CMake stage:
+the CMake stage, to compile oxygen-gtk on a 64 bits machine (for instance): 
 
-  cmake -DLIB_SUFFIX=64 ../
+  cmake -DCMAKE_INSTALL_PREFIX=your_path -DLIB_SUFFIX=64 ../
 
-this also applies to other type of architectures. 
+For other types of architectures (except, notably, i386) it might also be necessary to set the proper value for LIB_SUFFIX. 
+It is left to the user to figure which value must be used.
 
 3/ make -jX uses X parallel jobs so that compilation would speed up on SMP machines with X cores/CPUs/threads
 
