@@ -20,7 +20,7 @@ set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 # Define oxygen-gtk version string
 ##################################
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-  execute_process(COMMAND git describe
+  execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
     OUTPUT_VARIABLE OXYGEN_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
@@ -28,6 +28,7 @@ STRING(COMPARE NOTEQUAL "${OXYGEN_VERSION}" "" OXYGEN_VERSION_DETECTED )
 if( NOT OXYGEN_VERSION_DETECTED )
   set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
 endif( NOT OXYGEN_VERSION_DETECTED )
+message( "Detected oxygen version string: ${OXYGEN_VERSION}" )
 
 set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )
@@ -91,10 +92,10 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         ARGS --variable=prefix gtk+-3.0
         OUTPUT_VARIABLE GTK_PREFIX )
 
+  	message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
     set(CMAKE_INSTALL_PREFIX
         ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
         )
-
 endif()
 
 # X11
@@ -124,7 +125,23 @@ exec_program(
 	ARGS --variable=gtk_binary_version gtk+-3.0
 	OUTPUT_VARIABLE GTK_BIN_VERSION )
 
-set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_BIN_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/3.0.0/engines )" )
+if( DEFINED LIB_SUFFIX OR NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
+
+ 	message( "Info: using LIB_SUFFIX to set the theme engine installation path" )
+  set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-3.0/${GTK_BIN_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/3.0.0/engines )" )
+
+else()
+
+  exec_program(
+    ${PKGCONFIG_EXECUTABLE}
+    ARGS --variable=libdir gtk+-2.0
+    OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
+
+ 	message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
+  set( INSTALL_PATH_GTK_ENGINES "${GTK_LIBDIR_PREFIX}/gtk-3.0/${GTK_BIN_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/3.0.0/engines )" )
+
+endif()
+
 set( INSTALL_PATH_GTK_THEMES "${CMAKE_INSTALL_PREFIX}/share/themes" CACHE PATH "The directory in which to install the theme data( eg. /usr/share/themes )" )
 set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
