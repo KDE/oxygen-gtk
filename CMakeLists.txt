@@ -20,13 +20,13 @@ set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 # Define oxygen-gtk version string
 ##################################
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-	execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
-		OUTPUT_VARIABLE OXYGEN_VERSION
-		OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
+    OUTPUT_VARIABLE OXYGEN_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
 STRING(COMPARE NOTEQUAL "${OXYGEN_VERSION}" "" OXYGEN_VERSION_DETECTED )
 if( NOT OXYGEN_VERSION_DETECTED )
-	set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
+  set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
 endif( NOT OXYGEN_VERSION_DETECTED )
 message( "Detected oxygen version string: ${OXYGEN_VERSION}" )
 
@@ -38,40 +38,40 @@ include( CPack )
 
 # Set to 1 to enable debugging information
 if( NOT DEFINED OXYGEN_DEBUG )
-		set( OXYGEN_DEBUG 0 )
+    set( OXYGEN_DEBUG 0 )
 endif( NOT DEFINED OXYGEN_DEBUG )
 
 # Set to 1 to enable debug logs regarding inner shadows
 if( NOT DEFINED OXYGEN_DEBUG_INNERSHADOWS )
-		set( OXYGEN_DEBUG_INNERSHADOWS 0 )
+    set( OXYGEN_DEBUG_INNERSHADOWS 0 )
 endif( NOT DEFINED OXYGEN_DEBUG_INNERSHADOWS )
 
 # Set to 1 to replace gtk stock icons
 # with oxygen-icons
 if( NOT DEFINED OXYGEN_ICON_HACK )
-		set( OXYGEN_ICON_HACK 1 )
+    set( OXYGEN_ICON_HACK 1 )
 endif( NOT DEFINED OXYGEN_ICON_HACK )
 
 # Set to 1 to force KDE icons and fonts when running in non-KDE
 if( NOT DEFINED OXYGEN_FORCE_KDE_ICONS_AND_FONTS )
-		set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
+    set( OXYGEN_FORCE_KDE_ICONS_AND_FONTS 1 )
 endif( NOT DEFINED OXYGEN_FORCE_KDE_ICONS_AND_FONTS )
 
 # Set to 1 to resize combobox list to compensate for combobox button glow width
 # (may result in flicker on combo popup)
 if( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
-		set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
+    set( ENABLE_COMBOBOX_LIST_RESIZE 1 )
 endif( NOT DEFINED ENABLE_COMBOBOX_LIST_RESIZE )
 
 # Set to 0 to disable inner shadows hack
 # Note this flag is automatically set to 0 if GTK version is too old (< 2.24.2)
 if( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
-		set( ENABLE_INNER_SHADOWS_HACK 1 )
+    set( ENABLE_INNER_SHADOWS_HACK 1 )
 endif( NOT DEFINED ENABLE_INNER_SHADOWS_HACK )
 
 # set to 0 to disable groupbox hack
 if( NOT DEFINED ENABLE_GROUPBOX_HACK )
-		set( ENABLE_GROUPBOX_HACK 1 )
+    set( ENABLE_GROUPBOX_HACK 1 )
 endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
 
 ##############
@@ -82,15 +82,15 @@ endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
 include( UsePkgConfig )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-		exec_program(
-				${PKGCONFIG_EXECUTABLE}
-				ARGS --variable=prefix gtk+-2.0
-				OUTPUT_VARIABLE GTK_PREFIX )
+    exec_program(
+        ${PKGCONFIG_EXECUTABLE}
+        ARGS --variable=prefix gtk+-2.0
+        OUTPUT_VARIABLE GTK_PREFIX )
 
   	message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
-		set(CMAKE_INSTALL_PREFIX
-				${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
-				)
+    set(CMAKE_INSTALL_PREFIX
+        ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
+        )
 endif()
 
 # X11
@@ -109,31 +109,31 @@ pkg_check_modules( CAIRO REQUIRED cairo )
 set( HAVE_DBUS 0 )
 pkg_check_modules( DBUS dbus-glib-1 )
 if( DBUS_FOUND )
-		set( HAVE_DBUS 1 )
+    set( HAVE_DBUS 1 )
 endif()
 
 ##########################
 # installation directories
 ##########################
 exec_program(
-	${PKGCONFIG_EXECUTABLE}
-	ARGS --variable=gtk_binary_version gtk+-2.0
-	OUTPUT_VARIABLE GTK_BIN_VERSION )
+  ${PKGCONFIG_EXECUTABLE}
+  ARGS --variable=gtk_binary_version gtk+-2.0
+  OUTPUT_VARIABLE GTK_BIN_VERSION )
 
 if( DEFINED LIB_SUFFIX OR NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 
  	message( "Info: using LIB_SUFFIX to set the theme engine installation path" )
-	set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
+  set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 
 else()
 
-	exec_program(
-	  ${PKGCONFIG_EXECUTABLE}
-	  ARGS --variable=libdir gtk+-2.0
-	  OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
+  exec_program(
+    ${PKGCONFIG_EXECUTABLE}
+    ARGS --variable=libdir gtk+-2.0
+    OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
 
  	message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
-	set( INSTALL_PATH_GTK_ENGINES "${GTK_LIBDIR_PREFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
+  set( INSTALL_PATH_GTK_ENGINES "${GTK_LIBDIR_PREFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 
 endif()
 
@@ -143,13 +143,13 @@ set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 # First emit all warnings in one place
 # Warn user if dbus-glib not found
 if( NOT DBUS_FOUND )
-		message( "Warning: dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
+    message( "Warning: dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
 endif( NOT DBUS_FOUND )
 
 # Adjust flags based on gtk version and warn user if needed
 if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
-		message( "Warning: disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
-		set( ENABLE_INNER_SHADOWS_HACK 0 )
+    message( "Warning: disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
+    set( ENABLE_INNER_SHADOWS_HACK 0 )
 endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 
 #########
