@@ -253,10 +253,7 @@ namespace Oxygen
                 ( window && gdk_display_supports_composite( gdk_display_get_default() ) ) &&
 
                 // check widget type (might move to blacklist method)
-                ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) &&
-
-                // make sure widget is scrollable
-                ( GTK_WIDGET_GET_CLASS( widget )->set_scroll_adjustments_signal ) )
+                ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) )
             {
                 data.initiallyComposited=gdk_window_get_composited(window);
                 gdk_window_set_composited(window,TRUE);
