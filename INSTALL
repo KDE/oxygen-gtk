@@ -15,9 +15,13 @@ The default is equivalent to:
 
   cmake -DCMAKE_INSTALL_PREFIX=`pkg-config --variable=prefix gtk+-2.0` ../
 
-2/ on 64 bits machine an extra flag is needed at the CMake stage:
+2/ when using the default installation prefix, the theme engine should also automatically get installed in
+the correct location. However, if a custom CMAKE_INSTALL_PREFIX location is set, an extra flag is needed at
+the CMake stage:
 
   cmake -DLIB_SUFFIX=64 ../
+
+this also applies to other type of architectures. 
 
 3/ make -jX uses X parallel jobs so that compilation would speed up on SMP machines with X cores/CPUs/threads
 
