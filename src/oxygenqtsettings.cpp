@@ -459,10 +459,22 @@ namespace Oxygen
         // add kde's path. Loop is reversed because added path must be prepended.
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
         {
+
+            // remove trailing backslash, if any
+            std::string path( *iter );
+            if( path.empty() ) continue;
+            if( path[path.size()-1] == '/' ) path = path.substr( 0, path.size()-1 );
+
             // check if already present and prepend if not
-            if( searchPath.find( *iter ) == searchPath.end() )
-            { gtk_icon_theme_prepend_search_path(gtk_icon_theme_get_default(), iter->c_str() ); }
+            if( searchPath.find( path ) == searchPath.end() )
+            { gtk_icon_theme_prepend_search_path(gtk_icon_theme_get_default(), path.c_str() ); }
         }
+
+        #if OXYGEN_DEBUG
+        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
+        for( int i=0; i<nElements; i++ )
+        { std::cerr << "Oxygen::QtSettings::loadKdeIcons - icon theme search path: " <<  gtkSearchPath[i] << std::endl; }
+        #endif
 
         // load icon theme and path to gtk
         _iconThemes.clear();
