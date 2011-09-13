@@ -437,12 +437,30 @@ namespace Oxygen
     void QtSettings::loadKdeIcons( void )
     {
 
+        // update icon search path
+        // put existing default path in a set
+        PathSet searchPath;
+        gchar** gtkSearchPath;
+        int nElements;
+        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
+        for( int i=0; i<nElements; i++ ) { searchPath.insert( gtkSearchPath[i] ); }
+        g_free( gtkSearchPath );
+
+        // add kde's path. Loop is reversed because added path must be prepended.
+        for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
+        {
+            // check if already present and prepend if not
+            if( searchPath.find( *iter ) == searchPath.end() )
+            { gtk_icon_theme_prepend_search_path(gtk_icon_theme_get_default(), iter->c_str() ); }
+        }
+
         // load icon theme and path to gtk
         _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
 
         // store to settings
         GtkSettings* settings( gtk_settings_get_default() );
+
         gtk_settings_set_string_property( settings, "gtk-icon-theme-name", _kdeIconTheme.c_str(), "oxygen-gtk" );
         gtk_settings_set_string_property( settings, "gtk-fallback-icon-theme-name", _kdeFallbackIconTheme.c_str(), "oxygen-gtk" );
 
