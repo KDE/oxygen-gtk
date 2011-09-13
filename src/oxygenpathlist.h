@@ -26,11 +26,14 @@
 */
 
 #include <iostream>
+#include <set>
 #include <string>
 #include <vector>
 
 namespace Oxygen
 {
+
+    typedef std::set<std::string> PathSet;
 
     //! utility class to handle path list
     //! path list
