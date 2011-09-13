@@ -153,7 +153,7 @@ endif( NOT DBUS_FOUND )
 
 # Adjust flags based on gtk version and warn user if needed
 if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
-    message( "Warning: disabling inner shadows hack because GTK version is too old (needed 2.24.2, found ${GTK_VERSION})" )
+    message( "Warning: disabling inner shadows hack because GTK version is too old (needed 3.0.0, found ${GTK_VERSION})" )
     set( ENABLE_INNER_SHADOWS_HACK 0 )
 endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 
