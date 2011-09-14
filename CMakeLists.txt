@@ -134,7 +134,7 @@ else()
 
     exec_program(
         ${PKGCONFIG_EXECUTABLE}
-        ARGS --variable=libdir gtk+-2.0
+        ARGS --variable=libdir gtk+-3.0
         OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
 
  	message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
