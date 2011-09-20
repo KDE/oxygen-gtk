@@ -972,7 +972,7 @@ namespace Oxygen
         if( oxygen.hasOption( "[Style]", "MnemonicsMode" ) )
         {
 
-            std::string mnemonicsMode( oxygen.getOption( "[Style]", "MnemonicsMode" ).toVariant<std::string>("MN_ALWAYS") );
+            const std::string mnemonicsMode( oxygen.getOption( "[Style]", "MnemonicsMode" ).toVariant<std::string>("MN_ALWAYS") );
             if( mnemonicsMode == "MN_NEVER" )
             {
 
@@ -994,7 +994,7 @@ namespace Oxygen
         } else {
 
             // for backward compatibility
-            bool showMnemonics( oxygen.getOption( "[Style]", "showMnemonics" ).toVariant<std::string>( "true" ) == "true" );
+            const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
             if( showMnemonics )
             {
 
