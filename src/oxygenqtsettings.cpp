@@ -968,9 +968,25 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-secondary-forward-stepper", _scrollBarSubLineButtons > 1 ) );
 
         // mnemonics
-        const bool showMnemonics( oxygen.getOption( "[Style]", "ShowMnemonics" ).toVariant<std::string>("true") == "true" );
         GtkSettings* settings( gtk_settings_get_default() );
-        gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", showMnemonics, "oxygen-gtk" );
+        std::string mnemonicsMode( oxygen.getOption( "[Style]", "MnemonicsMode" ).toVariant<std::string>("MN_ALWAYS") );
+        if( mnemonicsMode == "MN_NEVER" )
+        {
+
+            gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", false, "oxygen-gtk" );
+            gtk_settings_set_long_property( settings, "gtk-auto-mnemonics", false, "oxygen-gtk" );
+
+        } else if( mnemonicsMode == "MN_AUTO" ) {
+
+            gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", true, "oxygen-gtk" );
+            gtk_settings_set_long_property( settings, "gtk-auto-mnemonics", true, "oxygen-gtk" );
+
+        } else {
+
+            gtk_settings_set_long_property( settings, "gtk-enable-mnemonics", true, "oxygen-gtk" );
+            gtk_settings_set_long_property( settings, "gtk-auto-mnemonics", false, "oxygen-gtk" );
+
+        }
 
     }
 
