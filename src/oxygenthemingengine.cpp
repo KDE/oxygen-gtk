@@ -1614,6 +1614,9 @@ namespace Oxygen
             // style options
             StyleOptions options( widget, state );
 
+            // this ensures that hover keeps precedence of focus for pressed down buttons
+            if( options & Active ) options |= Hover;
+
             // animation data
             AnimationData data;
 
@@ -1686,6 +1689,9 @@ namespace Oxygen
 
             // style options
             StyleOptions options( widget, state );
+
+            // this ensures that hover keeps precedence of focus for pressed down buttons
+            if( options & Active ) options |= Hover;
 
             // animation data
             AnimationData data;
