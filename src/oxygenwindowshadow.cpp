@@ -277,7 +277,7 @@ namespace Oxygen
 
             {
 
-                // bottom-left corner
+                // top-left corner
                 Cairo::Pattern pattern( cairo_pattern_create_radial( size+hoffset-4, size+voffset-4, radius ) );
                 for( unsigned int i = 0; i < stops.size(); ++i )
                 {
@@ -288,7 +288,8 @@ namespace Oxygen
                         if( i < stops.size()-1 )
                         {
                             const double x1( stops[i+1]._x - 4.0/radius );
-                            c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            if( x != x1 ) c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            else continue;
                         }
 
                         x = 0;
@@ -308,7 +309,7 @@ namespace Oxygen
 
             {
 
-                // bottom-right corner
+                // top-right corner
                 Cairo::Pattern pattern( cairo_pattern_create_radial( size+hoffset+4, size+voffset-4, radius ) );
                 for( unsigned int i = 0; i < stops.size(); ++i )
                 {
@@ -319,7 +320,8 @@ namespace Oxygen
                         if( i < stops.size()-1 )
                         {
                             const double x1( stops[i+1]._x - 4.0/radius );
-                            c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            if( x != x1 ) c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            else continue;
                         }
 
                         x = 0;
@@ -395,7 +397,8 @@ namespace Oxygen
                         if( i < stops.size()-1 )
                         {
                             const double x1( stops[i+1]._x - 4.0/radius );
-                            c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            if( x != x1 ) c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            else continue;
                         }
 
                         x = 0;
@@ -426,7 +429,8 @@ namespace Oxygen
                         if( i < stops.size()-1 )
                         {
                             const double x1( stops[i+1]._x - 4.0/radius );
-                            c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            if( x != x1 ) c = ColorUtils::mix( c, stops[i+1]._color, -x/(x1-x) );
+                            else continue;
                         }
 
                         x = 0;
