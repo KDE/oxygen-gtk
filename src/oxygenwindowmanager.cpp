@@ -561,12 +561,13 @@ namespace Oxygen
     {
         // clear list
         _blackList.clear();
+        _blackList.push_back( "GimpColorBar" );
+        _blackList.push_back( "GladeDesignLayout" );
+        _blackList.push_back( "GooCanvas" );
         _blackList.push_back( "GtkPizza" );
         _blackList.push_back( "MetaFrames" );
-        _blackList.push_back( "GladeDesignLayout" );
         _blackList.push_back( "SPHRuler" );
         _blackList.push_back( "SPVRuler" );
-        _blackList.push_back( "GooCanvas" );
     }
 
     //________________________________________________________________________________
