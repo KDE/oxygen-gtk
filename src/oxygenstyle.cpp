@@ -1469,7 +1469,7 @@ namespace Oxygen
         x = int( double(child.x + child.width/2) - 3.5 );
         y = int( double(child.y + child.height/2) - 2.5 );
 
-        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
+        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN || options&Active )
         {
 
             cairo_set_line_cap( context, CAIRO_LINE_CAP_ROUND );
@@ -1479,8 +1479,15 @@ namespace Oxygen
             Palette::Group group( (options&Disabled) ? Palette::Disabled : Palette::Active );
             const ColorUtils::Rgba& color( settings().palette().color( group, ( options&Flat ) ? Palette::WindowText : Palette::ButtonText ) );
             const ColorUtils::Rgba& background( settings().palette().color( ( options&Flat ) ? Palette::Window : Palette::Button ) );
-            const ColorUtils::Rgba& base( ColorUtils::decoColor( background, color ) );
-            const ColorUtils::Rgba& contrast( ColorUtils::lightColor( background ) );
+
+            ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
+            ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
+
+            if( options&Active )
+            {
+                base = ColorUtils::alphaColor( base, 0.3 );
+                contrast = ColorUtils::alphaColor( contrast, 0.3 );
+            }
 
             cairo_translate( context, 0.5, 0.5 );
 
@@ -1620,40 +1627,50 @@ namespace Oxygen
         cairo_fill( context );
         cairo_restore( context );
 
-        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN )
+        if( shadow == GTK_SHADOW_IN || shadow == GTK_SHADOW_ETCHED_IN || options&Active )
         {
-            double radius( shadow == GTK_SHADOW_IN ? 2.6:1.4 );
+            double radius( shadow == GTK_SHADOW_ETCHED_IN ? 1.4:2.6 );
             radius *= scale;
 
             const double dx( 0.5*child.width - radius );
             const double dy( 0.5*child.height - radius );
 
-            const ColorUtils::Rgba background( settings().palette().color( Palette::Button ) );
-            const ColorUtils::Rgba color( settings().palette().color( group, Palette::ButtonText ) );
+            const ColorUtils::Rgba& background( settings().palette().color( Palette::Button ) );
+            const ColorUtils::Rgba& color( settings().palette().color( group, Palette::ButtonText ) );
+
+            ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
+            ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
+
+            if( options&Active )
+            {
+                base = ColorUtils::alphaColor( base, 0.3 );
+                contrast = ColorUtils::alphaColor( contrast, 0.3 );
+            }
+
 
             cairo_save( context );
             cairo_translate( context, 0, radius/2 );
             cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
             cairo_restore( context );
-            if( shadow == GTK_SHADOW_IN )
+            if( shadow == GTK_SHADOW_ETCHED_IN )
             {
 
-                cairo_set_source( context, ColorUtils::lightColor( background ) );
-                cairo_fill( context );
+                cairo_set_line_width( context, 1.3 );
+                cairo_set_source( context, contrast );
+                cairo_stroke( context );
 
-                cairo_set_source( context, ColorUtils::decoColor( background, color ) );
+                cairo_set_source( context, base );
                 cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
-                cairo_fill( context );
+                cairo_stroke( context );
 
             } else {
 
-                cairo_set_line_width( context, 1.3 );
-                cairo_set_source( context, ColorUtils::lightColor( background ) );
-                cairo_stroke( context );
+                cairo_set_source( context, contrast );
+                cairo_fill( context );
 
-                cairo_set_source( context, ColorUtils::decoColor( background, color ) );
+                cairo_set_source( context, base );
                 cairo_ellipse( context, x+dx, y+dy, child.width - 2*dx, child.height -2*dy );
-                cairo_stroke( context );
+                cairo_fill( context );
 
             }
 

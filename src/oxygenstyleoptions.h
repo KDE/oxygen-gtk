@@ -36,17 +36,18 @@ namespace Oxygen
     {
         Blend = 1<<0,
         Sunken = 1<<1,
-        Flat = 1<<2,
-        Focus = 1<<3,
-        Hover = 1<<4,
-        NoFill = 1<<5,
-        Vertical = 1<<6,
-        Alpha = 1<<7,
-        Round = 1<<8,
-        Contrast = 1<<9,
-        Selected = 1<<10,
-        Disabled = 1<<11,
-        Menu = 1<<12
+        Active = 1<<2,
+        Flat = 1<<3,
+        Focus = 1<<4,
+        Hover = 1<<5,
+        NoFill = 1<<6,
+        Vertical = 1<<7,
+        Alpha = 1<<8,
+        Round = 1<<9,
+        Contrast = 1<<10,
+        Selected = 1<<11,
+        Disabled = 1<<12,
+        Menu = 1<<13
     };
 
     class StyleOptions: public Flags<StyleOption>
@@ -74,6 +75,7 @@ namespace Oxygen
             if( state == GTK_STATE_INSENSITIVE ) (*this) |= Disabled;
             else if( state == GTK_STATE_PRELIGHT ) (*this) |= Hover;
             else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
+            else if( state == GTK_STATE_ACTIVE ) (*this) |= Active;
 
             if( shadow == GTK_SHADOW_IN ) (*this) |= Sunken;
             if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
