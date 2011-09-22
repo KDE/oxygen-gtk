@@ -478,7 +478,7 @@ namespace Oxygen
 
         // load icon theme and path to gtk
         _iconThemes.clear();
-        _kdeIconTheme = _kdeGlobals.getOption( "[Icons]", "Theme" ).toVariant<std::string>("oxygen");
+        _kdeIconTheme = _kdeGlobals.getValue( "[Icons]", "Theme", "oxygen" );
 
         // store to settings
         GtkSettings* settings( gtk_settings_get_default() );
