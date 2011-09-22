@@ -2073,6 +2073,9 @@ namespace Oxygen
 
             StyleOptions options( widget, state, shadow );
 
+            // this ensures that hover keeps precedence of focus for pressed down buttons
+            if( state == GTK_STATE_ACTIVE ) options |= Hover;
+
             // test whether blending should be enabled
             if( !(
                 d.isCellCheck() ||
@@ -2162,6 +2165,10 @@ namespace Oxygen
         {
 
             StyleOptions options( widget, state, shadow );
+
+            // this ensures that hover keeps precedence of focus for pressed down buttons
+            if( state == GTK_STATE_ACTIVE ) options |= Hover;
+
             if( !(
                 Gtk::gtk_parent_tree_view( widget ) ||
                 Gtk::gtk_widget_has_custom_background( widget ) ||
