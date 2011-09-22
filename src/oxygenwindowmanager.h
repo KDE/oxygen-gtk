@@ -37,7 +37,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <algorithm>
-#include <map>
 #include <string>
 #include <vector>
 
