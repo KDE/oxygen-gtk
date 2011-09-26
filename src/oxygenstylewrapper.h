@@ -74,6 +74,10 @@ namespace Oxygen
         static GType _type;
 
         //! RC style quark
+        /*!
+        used to check whether an RCStyle was installed on a given widget or not.
+        See gtkwidet::gtk_widget_get_modifier_style()
+        */
         static GQuark _quarkRCStyle;
 
     };
