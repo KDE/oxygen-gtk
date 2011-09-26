@@ -50,6 +50,10 @@ namespace Oxygen
         inline static GtkStyleClass* parentClass( void )
         { return _parentClass; }
 
+        //! parent class
+        inline static GQuark quarkRCStyle( void )
+        { return _quarkRCStyle; }
+
         protected:
 
         //! instance initialization
@@ -68,6 +72,9 @@ namespace Oxygen
 
         //! registered type
         static GType _type;
+
+        //! RC style quark
+        static GQuark _quarkRCStyle;
 
     };
 }
