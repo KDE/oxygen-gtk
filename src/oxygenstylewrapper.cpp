@@ -50,6 +50,7 @@ namespace Oxygen
     GtkStyleClass* StyleWrapper::_parentClass = 0L;
     GTypeInfo StyleWrapper::_typeInfo;
     GType StyleWrapper::_type = 0L;
+    GQuark StyleWrapper::_quarkRCStyle = 0L;
 
     //___________________________________________________________________________________________________________
     static void draw_animated_button(
@@ -152,7 +153,8 @@ namespace Oxygen
             - register the widgets to the relevant engines as below
             - pass the modified color to renderWindowBackground
             */
-            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            const bool hasRcStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
+            if( hasRcStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
@@ -3533,6 +3535,7 @@ namespace Oxygen
 
         _typeInfo = info;
         _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
+        _quarkRCStyle = g_quark_from_static_string( "gtk-rc-style" );
 
     }
 
