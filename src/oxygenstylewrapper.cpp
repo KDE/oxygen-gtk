@@ -153,8 +153,8 @@ namespace Oxygen
             - register the widgets to the relevant engines as below
             - pass the modified color to renderWindowBackground
             */
-            const bool hasRcStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
-            if( hasRcStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
+            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
@@ -206,7 +206,8 @@ namespace Oxygen
             if( Gtk::gtk_widget_is_applet( widget ) ) return;
 
             // for modified bg, fill with flat custom color
-            if( gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
+            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
 
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
@@ -306,7 +307,9 @@ namespace Oxygen
             // render "normal" background
             bool drawTreeLines( true );
             ColorUtils::Rgba background;
-            if( gtk_widget_get_modifier_style(widget)->color_flags[GTK_STATE_NORMAL]&GTK_RC_BASE )
+
+            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
+            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[GTK_STATE_NORMAL]&GTK_RC_BASE )
             {
 
                 /*
