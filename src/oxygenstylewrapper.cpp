@@ -3538,6 +3538,12 @@ namespace Oxygen
 
         _typeInfo = info;
         _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
+
+        /*
+        copied for gtk/gtkwidget.C in gtk_widget_class_init()
+        it is used to check whether an RCStyle was installed on a given widget or not.
+        See gtkwidet::gtk_widget_get_modifier_style()
+        */
         _quarkRCStyle = g_quark_from_static_string( "gtk-rc-style" );
 
     }

@@ -35,7 +35,6 @@ namespace Oxygen
     GTypeInfo RCStyle::_typeInfo;
     GtkRcStyleClass* RCStyle::_parentClass = 0L;
 
-
     //______________________________________________________________________
     GtkStyle* RCStyle::createStyle( GtkRcStyle* rc_style )
     { return GTK_STYLE( g_object_new( StyleWrapper::type(), 0L ) ); }
@@ -79,13 +78,13 @@ namespace Oxygen
     void RCStyle::classInit( OxygenRcStyleClass *klass )
     {
 
-        GtkRcStyleClass *rc_style_class( GTK_RC_STYLE_CLASS( klass ) );
+        GtkRcStyleClass *rcStyleClass( GTK_RC_STYLE_CLASS( klass ) );
 
         _parentClass = static_cast<GtkRcStyleClass*>(g_type_class_peek_parent( klass ) );
 
-        rc_style_class->create_style = createStyle;
-        rc_style_class->parse = parse;
-        rc_style_class->merge = merge;
+        rcStyleClass->create_style = createStyle;
+        rcStyleClass->parse = parse;
+        rcStyleClass->merge = merge;
     }
 
     //______________________________________________________________________
