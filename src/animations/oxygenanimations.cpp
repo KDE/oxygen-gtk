@@ -86,13 +86,8 @@ namespace Oxygen
 
         const bool animationsEnabled( settings.animationsEnabled() );
 
-        if(!settings.applicationName().isOpenOffice())
-        {
-            // inner shadows enabled state
-            setInnerShadowsEnabled( true );
-        }
-        else
-            setInnerShadowsEnabled( false );
+        // disable inner shadow hack for open office and komodo
+        setInnerShadowsEnabled( !( settings.applicationName().isOpenOffice() || settings.applicationName().isKomodo() ) );
 
         // pass animations configuration to engines
         widgetStateEngine().setApplicationName( settings.applicationName() );
