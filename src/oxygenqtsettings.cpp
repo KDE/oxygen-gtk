@@ -958,7 +958,7 @@ namespace Oxygen
         _rc.setCurrentSection( Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<int>(
             "  GtkScrollbar::slider-width",
-            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) - 1 ) );
+            oxygen.getOption( "[Style]", "ScrollBarWidth" ).toVariant<int>(15) + 1 ) );
 
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-backward-stepper", _scrollBarSubLineButtons > 0 ) );
         _rc.addToCurrentSection( Gtk::RCOption<bool>("  GtkScrollbar::has-forward-stepper", _scrollBarAddLineButtons > 0 ) );
