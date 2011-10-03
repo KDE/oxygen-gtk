@@ -959,10 +959,15 @@ namespace Oxygen
         // vertical
         const bool vertical( options&Vertical );
 
-        const double xf( vertical ? x+2 : x+3 );
-        const double yf( vertical ? y+2 : y+1 );
-        const double wf( vertical ? w-4 : w-6 );
-        const double hf( vertical ? h-4 : h-3 );
+        const double xf( vertical ? x+3 : x+4 );
+        const double yf( vertical ? y+3 : y+2 );
+        const double wf( vertical ? w-6 : w-8 );
+        const double hf( vertical ? h-6 : h-5 );
+
+//         const double xf( vertical ? x+2 : x+3 );
+//         const double yf( vertical ? y+2 : y+1 );
+//         const double wf( vertical ? w-4 : w-6 );
+//         const double hf( vertical ? h-4 : h-3 );
 
         if( wf <= 0 || hf <= 0 ) return;
 

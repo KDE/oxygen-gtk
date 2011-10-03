@@ -92,7 +92,7 @@ GtkScale {
 
 GtkScrollbar {
     -GtkRange-stepper-size:12;
-    -GtkRange-trough-border:1;
+    -GtkRange-trough-border:0;
 }
 
 /* entries */
