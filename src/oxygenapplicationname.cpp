@@ -76,7 +76,7 @@ namespace Oxygen
             {
                 "firefox",
                 "thunderbird",
-                "seamonkey"
+                "seamonkey",
                 "iceweasel",
                 "icecat",
                 "icedove",
