@@ -3547,7 +3547,7 @@ namespace Oxygen
         it is used to check whether an RCStyle was installed on a given widget or not.
         See gtkwidet::gtk_widget_get_modifier_style()
         */
-        _quarkRCStyle = g_quark_from_static_string( "gtk-rc-style" );
+        _quarkRCStyle = g_quark_try_string( "gtk-rc-style" );
 
     }
 
