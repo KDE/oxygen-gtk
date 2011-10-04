@@ -176,6 +176,18 @@ message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGIN
 message( "  Installing the GTK theme engine data to: ${GTK_THEME_DIR}" )
 message( "" )
 
+##################
+# uninstall target
+##################
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+
+
 ######################################################################
 # Setup definitions and directories to be used for linking and include
 ######################################################################
