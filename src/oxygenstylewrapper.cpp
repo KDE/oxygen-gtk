@@ -3159,6 +3159,16 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
+
+        if(Style::instance().settings().applicationName().isXul())
+        {
+            if(d.isCheckButton() && GTK_IS_CHECK_BUTTON(widget))
+            {
+                Cairo::Context context( window, clipRect );
+                Style::instance().renderSlab(window,clipRect,x+1,y+1,w-1,h-1,Gtk::Gap(0,0,GTK_POS_TOP),Focus|NoFill,AnimationData());
+            }
+        }
+
         if( d.isNull() && GTK_IS_WINDOW( widget ) )
         {
 
