@@ -3167,6 +3167,10 @@ namespace Oxygen
                 Cairo::Context context( window, clipRect );
                 Style::instance().renderSlab(window,clipRect,x+1,y+1,w-1,h-1,Gtk::Gap(0,0,GTK_POS_TOP),Focus|NoFill,AnimationData());
             }
+            if(d.isRadioButton() && GTK_IS_RADIO_BUTTON(widget))
+            {
+                Style::instance().renderRadioButton(window,clipRect,x+1,y+1,w,h,GTK_SHADOW_NONE,Focus|NoFill,AnimationData());
+            }
         }
 
         if( d.isNull() && GTK_IS_WINDOW( widget ) )
