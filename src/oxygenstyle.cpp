@@ -1627,6 +1627,14 @@ namespace Oxygen
         Cairo::Context context( window, clipRect );
         cairo_save( context );
         cairo_translate( context, x, y );
+        if(options&NoFill)
+        {
+            // Only render the glow, leave the bullet clipped out
+            const int border(4);
+            cairo_ellipse_negative(context,border,border,child.width-border*2,child.height-border*2);
+            cairo_rectangle(context,0,0,child.width,child.height);
+            cairo_clip(context);
+        }
         cairo_rectangle( context, 0, 0, child.width, child.height );
         cairo_set_source_surface( context, surface, 0, 0 );
         cairo_fill( context );
