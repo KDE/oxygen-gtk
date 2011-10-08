@@ -3162,14 +3162,22 @@ namespace Oxygen
 
         if(Style::instance().settings().applicationName().isXul())
         {
-            if(d.isCheckButton() && GTK_IS_CHECK_BUTTON(widget))
+            // DIRTY HACK:
+            // Assume checkbox size will never exceed CheckBox_Size+sizeDifferenceMargin,
+            // use this assumption to avoid rendering focus in dialogs, where wrong rectangle is passed
+            const int sizeDifferenceMargin(2);
+            if( w < CheckBox_Size+sizeDifferenceMargin && h < CheckBox_Size+sizeDifferenceMargin )
             {
-                Cairo::Context context( window, clipRect );
-                Style::instance().renderSlab(window,clipRect,x+1,y+1,w-1,h-1,Gtk::Gap(0,0,GTK_POS_TOP),Focus|NoFill,AnimationData());
-            }
-            if(d.isRadioButton() && GTK_IS_RADIO_BUTTON(widget))
-            {
-                Style::instance().renderRadioButton(window,clipRect,x+1,y+1,w,h,GTK_SHADOW_NONE,Focus|NoFill,AnimationData());
+                // Render focus here, since XUL apps don't let us figure out focused state in draw_box() etc.
+                if(d.isCheckButton() && GTK_IS_CHECK_BUTTON(widget))
+                {
+                    Cairo::Context context( window, clipRect );
+                    Style::instance().renderSlab(window,clipRect,x+1,y+1,w-1,h-1,Gtk::Gap(0,0,GTK_POS_TOP),Focus|NoFill,AnimationData());
+                }
+                if(d.isRadioButton() && GTK_IS_RADIO_BUTTON(widget))
+                {
+                    Style::instance().renderRadioButton(window,clipRect,x+1,y+1,w,h,GTK_SHADOW_NONE,Focus|NoFill,AnimationData());
+                }
             }
         }
 
