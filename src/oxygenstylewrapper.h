@@ -24,6 +24,7 @@
 */
 
 #include <gtk/gtk.h>
+#include "oxygenxulinfo.h"
 
 // oxygen style struct
 struct OxygenStyle
@@ -54,6 +55,10 @@ namespace Oxygen
         inline static GQuark quarkRCStyle( void )
         { return _quarkRCStyle; }
 
+        //! xul info
+        inline static XulInfo& xulInfo( void )
+        { return _xulInfo; }
+
         protected:
 
         //! instance initialization
@@ -79,6 +84,9 @@ namespace Oxygen
         See gtkwidet::gtk_widget_get_modifier_style()
         */
         static GQuark _quarkRCStyle;
+
+        //! xul info, needed to properly render focus in checkboxes and radio buttons
+        static XulInfo _xulInfo;
 
     };
 }
