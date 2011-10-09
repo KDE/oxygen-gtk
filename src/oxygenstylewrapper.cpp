@@ -3182,25 +3182,17 @@ namespace Oxygen
         if( Style::instance().settings().applicationName().isXul() && (d.isCheckButton() || d.isRadioButton() ) && !gtk_widget_has_focus( widget ) )
         {
 
-            /*
-            HACK:
-            Assume checkbox size will never exceed CheckBox_Size+sizeDifferenceMargin,
-            use this assumption to correct set the right rectangle for dialog checkboxes,
-            for which the wrong rectangle is passed by firefox
-            */
-            bool forceRadioButton( false );
-            const int sizeDifferenceMargin(2);
-
             // try set correct rectangle based on last call to either draw_check or draw_option
+            bool forceRadioButton( false );
             if( StyleWrapper::xulInfo().isValid() )
             {
 
                 forceRadioButton = StyleWrapper::xulInfo().type() == XulInfo::RadioButton;
 
-                x = StyleWrapper::xulInfo().rect().x-sizeDifferenceMargin;
-                y = StyleWrapper::xulInfo().rect().y-sizeDifferenceMargin;
-                w = StyleWrapper::xulInfo().rect().width+2*sizeDifferenceMargin;
-                h = StyleWrapper::xulInfo().rect().height+2*sizeDifferenceMargin;
+                x = StyleWrapper::xulInfo().rect().x;
+                y = StyleWrapper::xulInfo().rect().y;
+                w = StyleWrapper::xulInfo().rect().width;
+                h = StyleWrapper::xulInfo().rect().height;
                 clipRect = 0L;
 
                 // clear Xul info
@@ -3216,13 +3208,12 @@ namespace Oxygen
             if( ( d.isRadioButton() && GTK_IS_RADIO_BUTTON(widget) ) || ( d.isCheckButton() && GTK_IS_CHECK_BUTTON(widget) && forceRadioButton ) )
             {
 
-                Style::instance().renderRadioButton(window,clipRect,x+1,y+1,w,h,GTK_SHADOW_NONE,Focus|NoFill,AnimationData());
+                Style::instance().renderRadioButton(window,clipRect, x, y, w, h, GTK_SHADOW_NONE,Focus|NoFill,AnimationData());
                 return;
 
             } else if( d.isCheckButton() && GTK_IS_CHECK_BUTTON(widget) ) {
 
-                Cairo::Context context( window, clipRect );
-                Style::instance().renderSlab(window,clipRect,x+1,y+1,w-1,h-1,Gtk::Gap(0,0,GTK_POS_TOP),Focus|NoFill,AnimationData());
+                Style::instance().renderSlab(window,clipRect, x-1, y-1 ,w+3, h+3, Focus|NoFill,AnimationData());
                 return;
 
             }
