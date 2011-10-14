@@ -1859,6 +1859,9 @@ namespace Oxygen
 
             } else {
 
+                x+=1;
+                w-=2;
+
                 y+=1;
                 h-=2;
 
