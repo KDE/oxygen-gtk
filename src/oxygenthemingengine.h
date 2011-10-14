@@ -21,7 +21,6 @@
 */
 
 #include <gtk/gtk.h>
-#include "oxygenxulinfo.h"
 
 // oxygen theming engine struct
 struct OxygenThemingEngine
@@ -52,10 +51,6 @@ namespace Oxygen
         inline static GQuark quarkRCStyle( void )
         { return _quarkRCStyle; }
 
-        //! xul info
-        inline static XulInfo& xulInfo( void )
-        { return _xulInfo; }
-
         protected:
 
         //! instance initialization
@@ -82,8 +77,6 @@ namespace Oxygen
         */
         static GQuark _quarkRCStyle;
 
-        //! xul info, needed to properly render focus in checkboxes and radio buttons
-        static XulInfo _xulInfo;
 
     };
 }
