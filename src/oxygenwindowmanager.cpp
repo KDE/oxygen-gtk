@@ -561,6 +561,7 @@ namespace Oxygen
     {
         // clear list
         _blackList.clear();
+        _blackList.push_back( "GtkScale" );
         _blackList.push_back( "GimpColorBar" );
         _blackList.push_back( "GladeDesignLayout" );
         _blackList.push_back( "GooCanvas" );
