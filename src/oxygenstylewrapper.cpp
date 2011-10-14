@@ -322,6 +322,10 @@ namespace Oxygen
                 // assign background
                 background = Gtk::gdk_get_color( style->base[GTK_STATE_NORMAL] );
 
+            } else if( widget && std::string( G_OBJECT_TYPE_NAME( widget ) ).find( "MiroTreeView" ) != std::string::npos ) {
+
+                drawTreeLines = false;
+
             } else if( d.isCellEven() || Gtk::gtk_combobox_is_tree_view( widget ) ) {
 
                 background = Style::instance().settings().palette().color( group, Palette::Base );
