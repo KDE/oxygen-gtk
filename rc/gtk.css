@@ -44,6 +44,7 @@ INFO: css border and padding ordering is either:
     -GtkMenu-horizontal-padding: 3;
     -GtkMenu-vertical-padding: 5;
     -GtkMenu-horizontal-offset: -7;
+    -GtkMenuBar-internal-padding: 0;
 
     -GtkScrolledWindow-scrollbar-spacing:1;
 
@@ -102,7 +103,11 @@ GtkEntry {
 }
 
 /* menuitems padding */
-GtkMenuBar { padding: 1; }
+GtkMenuBar {
+    padding: 1;
+    border-width: 0;
+}
+GtkMenuBar>GtkMenuItem { padding: 2 5; }
 GtkMenu>GtkMenuItem { padding: 5 1; }
 GtkMenu>GtkSeparatorMenuItem { padding: 1 1; }
 

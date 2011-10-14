@@ -1778,6 +1778,7 @@ namespace Oxygen
         gint wh, wy;
         Gtk::gdk_map_to_toplevel( window, widget, 0L, &wy, 0L, &wh );
         const bool isInMenu( Gtk::gtk_parent_menu( widget ) );
+        const bool isInMenuBar( Gtk::gtk_parent_menubar( widget ) );
 
         if( wh > 0 )
         {
@@ -1814,8 +1815,13 @@ namespace Oxygen
         }
 
 
-        if ( isInMenu )
+        if( isInMenuBar )
         {
+
+            x+=1;
+            w-=2;
+
+        } else if ( isInMenu ) {
 
             // we force ytickness to 5 in gtkrc to emulate Qt menuitems space separation
             // so adjust vertical extent of the rect in menus to 21 (size with standard ytickness)
