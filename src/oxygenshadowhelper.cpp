@@ -192,7 +192,8 @@ namespace Oxygen
             hint == GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
             hint == GDK_WINDOW_TYPE_HINT_COMBO ||
-            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP;
+            hint == GDK_WINDOW_TYPE_HINT_TOOLTIP ||
+            ( hint == GDK_WINDOW_TYPE_HINT_UTILITY && !widget->parent && _applicationName.isXul(widget) );
     }
 
     //______________________________________________
