@@ -53,7 +53,15 @@ namespace Oxygen
 
         //! parent class
         inline static GQuark quarkRCStyle( void )
-        { return _quarkRCStyle; }
+        {
+
+            // try initialize
+            if( !_quarkRCStyle )
+            { _quarkRCStyle = g_quark_try_string( "gtk-rc-style" ); }
+
+            return _quarkRCStyle;
+
+        }
 
         //! xul info
         inline static XulInfo& xulInfo( void )
