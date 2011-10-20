@@ -652,7 +652,7 @@ namespace Oxygen
             // inside
             if( fill.isValid() )
             {
-                cairo_rounded_rectangle( context, 1, 1, 12, 12, 2.5 );
+                cairo_rounded_rectangle( context, 1, 1, 12, 11, 2.5 );
                 cairo_set_source( context, fill );
                 cairo_fill( context );
             }
