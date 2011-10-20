@@ -616,23 +616,19 @@ namespace Oxygen
     //____________________________________________________________
     bool Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
-        // cast to notebook and check against number of pages
-        if( GTK_IS_NOTEBOOK( notebook ) )
+        int numPages=gtk_notebook_get_n_pages( notebook );
+        for( int i = 0; i < numPages; ++i )
         {
-            int numPages=gtk_notebook_get_n_pages( notebook );
-            for( int i = 0; i < numPages; ++i )
-            {
 
-                // retrieve page
-                GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
-                if( !page ) continue;
+            // retrieve page
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, i ) );
+            if( !page ) continue;
 
-                // retrieve tab label
-                GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
-                if( tabLabel && GTK_IS_CONTAINER( tabLabel ) )
-                { gtk_container_adjust_buttons_state( GTK_CONTAINER( tabLabel ) ); }
+            // retrieve tab label
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label( notebook, page ) );
+            if( tabLabel && GTK_IS_CONTAINER( tabLabel ) )
+            { gtk_container_adjust_buttons_state( GTK_CONTAINER( tabLabel ) ); }
 
-            }
         }
         return FALSE;
     }
