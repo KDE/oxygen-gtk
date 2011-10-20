@@ -469,6 +469,11 @@ namespace Oxygen
 
         } else if( d.isEntryBg() && !Style::instance().settings().applicationName().isXul( widget ) ) {
 
+            // FIXME: how to detect Chromium address bar more correctly?
+            const bool isChromeAddressBar( widget &&
+                    GTK_IS_HBOX(widget) &&
+                    Style::instance().settings().applicationName().isGoogleChrome() );
+
             StyleOptions options( widget, state, shadow );
             if(
                 !Style::instance().settings().applicationName().isGoogleChrome() &&
@@ -476,7 +481,7 @@ namespace Oxygen
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
-            const int sideMargin( std::max( 0, style->xthickness - 2 ) );
+            const int sideMargin( isChromeAddressBar ? 0 : std::max( 0, style->xthickness - 2 ) );
             const int xOffset( style->xthickness + 1 - sideMargin );
 
             // adjust horizontal positioning and width
@@ -1854,7 +1859,9 @@ namespace Oxygen
 
                 }
 
-                if( Style::instance().settings().applicationName().isOpenOffice() )
+                // OpenOffice or Chromium address bar
+                if( Style::instance().settings().applicationName().isOpenOffice()||
+                    (widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome()) )
                 {
 
                     if( d.isEntry() )
