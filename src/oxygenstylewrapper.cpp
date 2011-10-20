@@ -3145,7 +3145,9 @@ namespace Oxygen
 
             }
 
-            Gtk::gtk_notebook_update_close_buttons(GTK_NOTEBOOK(widget));
+            if( GTK_IS_NOTEBOOK( widget ) )
+            { Gtk::gtk_notebook_update_close_buttons(GTK_NOTEBOOK(widget)); }
+
         }
 
     }
