@@ -25,6 +25,7 @@
 */
 
 #include "oxygendemowidget.h"
+#include "oxygensignal.h"
 
 #include <gtk/gtk.h>
 
@@ -41,6 +42,19 @@ namespace Oxygen
 
         //! destructor
         virtual ~InputDemoWidget( void );
+
+        protected:
+
+        //! wrap mode changed
+        static void wrapModeChanged( GtkToggleButton*, gpointer );
+
+        private:
+
+        //! text editor
+        GtkWidget* _textView;
+
+        //! toggle wrap mode
+        Signal _wrapModeChangedId;
 
     };
 

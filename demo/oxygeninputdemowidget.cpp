@@ -23,6 +23,7 @@
 
 #include "oxygeninputdemowidget.h"
 
+#include <iostream>
 #include <string>
 
 namespace Oxygen
@@ -159,22 +160,38 @@ namespace Oxygen
         GtkTextTagTable* tags( gtk_text_tag_table_new() );
         GtkTextBuffer* buffer( gtk_text_buffer_new( tags ) );
         gtk_text_buffer_set_text( buffer, content.c_str(), content.size() );
-        GtkWidget* textView( gtk_text_view_new_with_buffer( buffer ) );
-        gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( textView ), GTK_WRAP_WORD );
-        gtk_container_set_border_width( GTK_CONTAINER( textView ), 2 );
-        gtk_widget_show( textView );
+        _textView = gtk_text_view_new_with_buffer( buffer );
+        gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( _textView ), GTK_WRAP_WORD );
+        gtk_container_set_border_width( GTK_CONTAINER( _textView ), 2 );
+        gtk_widget_show( _textView );
 
         GtkWidget* scrolledWindow( gtk_scrolled_window_new( 0L, 0L ) );
         gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_SHADOW_IN );
         gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolledWindow ), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-        gtk_container_add( GTK_CONTAINER( scrolledWindow ), textView );
+        gtk_container_add( GTK_CONTAINER( scrolledWindow ), _textView );
         gtk_box_pack_start( GTK_BOX( mainWidget ), scrolledWindow, true, true, 0 );
         gtk_widget_show( scrolledWindow );
+
+        GtkWidget* checkbutton;
+        gtk_box_pack_start( GTK_BOX( mainWidget ), checkbutton = gtk_check_button_new_with_label( "Wrap words" ), false, true, 0 );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), true );
+        gtk_widget_show( checkbutton );
+
+        _wrapModeChangedId.connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( wrapModeChanged ), this );
 
     }
 
     //____________________________________________________
     InputDemoWidget::~InputDemoWidget( void )
     {}
+
+    //____________________________________________________
+    void InputDemoWidget::wrapModeChanged( GtkToggleButton* button, gpointer data )
+    {
+
+        GtkTextView* textView( GTK_TEXT_VIEW( static_cast<InputDemoWidget*>( data )->_textView ) );
+        bool state( gtk_toggle_button_get_active( button ) );
+        gtk_text_view_set_wrap_mode( textView, (state ? GTK_WRAP_WORD:GTK_WRAP_NONE) );
+    }
 
 }
