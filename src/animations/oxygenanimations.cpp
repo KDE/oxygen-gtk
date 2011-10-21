@@ -31,7 +31,6 @@ namespace Oxygen
 
     //_________________________________________
     Animations::Animations( void ):
-        _enabled( true ),
         _innerShadowsEnabled( true ),
         _hooksInitialized( false )
     {
@@ -85,9 +84,6 @@ namespace Oxygen
     {
 
         const bool animationsEnabled( settings.animationsEnabled() );
-
-        // disable inner shadow hack for open office and komodo
-        setInnerShadowsEnabled( !( settings.applicationName().isOpenOffice() || settings.applicationName().isKomodo() ) );
 
         // pass animations configuration to engines
         widgetStateEngine().setApplicationName( settings.applicationName() );
@@ -192,9 +188,6 @@ namespace Oxygen
     void Animations::setEnabled( bool value )
     {
 
-        if( value == _enabled ) return;
-
-        _enabled = value;
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->setEnabled( value ); }
 
