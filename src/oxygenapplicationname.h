@@ -92,15 +92,21 @@ namespace Oxygen
 
         //! special case for mozilla and acrobat that also check the type of the top level widget
         /*! this allows to prevent false positive for open and print dialogs */
-        bool isAcrobat( GtkWidget* ) const;
-        bool isXul( GtkWidget* ) const;
-        bool isJavaSwt( GtkWidget* ) const;
+        bool isAcrobat( GtkWidget* widget ) const { return _name==Acrobat && !isGtkDialogWidget( widget ); }
+        bool isXul( GtkWidget* widget ) const { return _name==XUL && !isGtkDialogWidget( widget ); }
+        bool isJavaSwt( GtkWidget* widget ) const { return _name==JavaSwt && !isGtkDialogWidget( widget ); }
+        bool isOpenOffice( GtkWidget* widget ) const { return _name==OpenOffice && !isGtkDialogWidget( widget ); }
 
         // true for all applications that requires a flat background to be used
         bool useFlatBackground( GtkWidget* ) const;
 
         //@}
 
+        private:
+
+        //! determine if widget is on a GtkDialog
+        bool isGtkDialogWidget( GtkWidget* ) const;
+        
         protected:
 
         //! get application name from Gtk
