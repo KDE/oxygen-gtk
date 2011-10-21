@@ -133,7 +133,7 @@ namespace Oxygen
             }
 
             // for openoffice we fill the background with flat color unless it is a toolbar
-            if( Style::instance().settings().applicationName().isOpenOffice() )
+            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
                 if( !GTK_IS_TOOLBAR( widget ) )
                 { Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window ); }
@@ -477,7 +477,7 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             if(
                 !Style::instance().settings().applicationName().isGoogleChrome() &&
-                !Style::instance().settings().applicationName().isOpenOffice() )
+                !Style::instance().settings().applicationName().isOpenOffice( widget ) )
             { options |= NoFill; }
 
             // calculate proper offsets so that the glow/shadow match parent frame
@@ -544,7 +544,7 @@ namespace Oxygen
 
                 // for openoffice only draw solid window background
                 // the rest of the spinbutton is painted on top, in draw_box and draw_shadow
-                if( Style::instance().settings().applicationName().isOpenOffice() )
+                if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
 
                     Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
@@ -711,7 +711,7 @@ namespace Oxygen
         const Gtk::Detail d( detail );
 
         // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
-        if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice())
+        if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice( widget ))
         {
             Style::instance().fill( window, clipRect, x, y, w-2, h-1, Palette::Window );
             return;
@@ -807,7 +807,7 @@ namespace Oxygen
 
                 StyleOptions options( widget, state, shadow );
                 if(
-                    !Style::instance().settings().applicationName().isOpenOffice() &&
+                    !Style::instance().settings().applicationName().isOpenOffice( widget ) &&
                     !Style::instance().settings().applicationName().isGoogleChrome() )
                 { options |= NoFill; }
 
@@ -938,7 +938,7 @@ namespace Oxygen
                 if(!Style::instance().settings().applicationName().useFlatBackground(widget))
                 { options |= Blend; }
 
-                if( Style::instance().settings().applicationName().isOpenOffice() )
+                if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
 
                     // Hover doesn't work correctly in OpenOffice, so disable it
@@ -1170,7 +1170,7 @@ namespace Oxygen
 
                 // set alpha flag. Special handling is needed for mozilla and openoffice.
                 if( Style::instance().settings().applicationName().isXul( widget ) ||
-                    Style::instance().settings().applicationName().isOpenOffice() )
+                    Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
 
                     Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
@@ -1333,7 +1333,7 @@ namespace Oxygen
             {
 
                 if( !Style::instance().settings().applicationName().isXul( widget ) &&
-                    !Style::instance().settings().applicationName().isOpenOffice() )
+                    !Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
                     /*
                     need to call the parent style implementation here,
@@ -1360,7 +1360,7 @@ namespace Oxygen
 
             } else if( GTK_IS_VSCROLLBAR( widget ) ) {
 
-                if(Style::instance().settings().applicationName().isOpenOffice() )
+                if(Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
 
                     // OpenOffice doesn't call draw_box to draw background
@@ -1378,7 +1378,7 @@ namespace Oxygen
 
             } else if( GTK_IS_HSCROLLBAR( widget ) ) {
 
-                if(Style::instance().settings().applicationName().isOpenOffice() )
+                if(Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
                     // OpenOffice doesn't call draw_box to draw background
                     Cairo::Context context(window,clipRect);
@@ -1399,7 +1399,7 @@ namespace Oxygen
             StyleOptions options( widget, state, shadow );
             options |= Blend;
 
-            if( Style::instance().settings().applicationName().isOpenOffice() )
+            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
 
                 // adjust rect
@@ -1448,7 +1448,7 @@ namespace Oxygen
 
                 tiles &= ~TileSet::Right;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() &&
+                if( !Style::instance().settings().applicationName().isOpenOffice( widget ) &&
                     !Style::instance().settings().applicationName().isXul( widget ) )
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-1, y-1, w+6, h+2, tiles, sideMargin ); }
 
@@ -1461,7 +1461,7 @@ namespace Oxygen
 
                 tiles &= ~TileSet::Left;
 
-                if( !Style::instance().settings().applicationName().isOpenOffice() &&
+                if( !Style::instance().settings().applicationName().isOpenOffice( widget ) &&
                     !Style::instance().settings().applicationName().isXul( widget ) )
                 { Style::instance().renderHoleBackground( window, widget, clipRect, x-5, y-1, w+6, h+2, tiles, sideMargin ); }
 
@@ -1773,7 +1773,7 @@ namespace Oxygen
 
                     // fill the inside of the spinbox manually
                     ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[gtk_widget_get_state( widget )] ) );
-                    if( Style::instance().settings().applicationName().isOpenOffice() )
+                    if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
                     {
 
                         // for openoffice on has to properly round the corners
@@ -1791,7 +1791,7 @@ namespace Oxygen
                 }
 
                 // vertical alignment
-                if( !Style::instance().settings().applicationName().isOpenOffice() )
+                if( !Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 { y-=1; h+=2; }
 
                 // basic adjustments
@@ -1808,7 +1808,7 @@ namespace Oxygen
 
                     tiles &= ~TileSet::Left;
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    if( !Style::instance().settings().applicationName().isOpenOffice( widget ) )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles, sideMargin );
                         w-= sideMargin;
@@ -1820,7 +1820,7 @@ namespace Oxygen
 
                     tiles &= ~TileSet::Right;
 
-                    if( !Style::instance().settings().applicationName().isOpenOffice() )
+                    if( !Style::instance().settings().applicationName().isOpenOffice( widget ) )
                     {
                         Style::instance().renderHoleBackground( window, widget, clipRect, x, y, w, h, tiles, sideMargin );
                         x += sideMargin;
@@ -1837,7 +1837,7 @@ namespace Oxygen
                 { options &= ~NoFill; }
 
                 // register to hover engine
-                if( GTK_IS_ENTRY( widget ) && !Style::instance().settings().applicationName().isOpenOffice() )
+                if( GTK_IS_ENTRY( widget ) && !Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
 
                     Style::instance().animations().hoverEngine().registerWidget( widget, true );
@@ -1860,7 +1860,7 @@ namespace Oxygen
                 }
 
                 // OpenOffice or Chromium address bar
-                if( Style::instance().settings().applicationName().isOpenOffice()||
+                if( Style::instance().settings().applicationName().isOpenOffice( widget )||
                     (widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome()) )
                 {
 
@@ -1921,7 +1921,7 @@ namespace Oxygen
 
         } else if (GTK_IS_NOTEBOOK(widget)) {
 
-            if( !Style::instance().settings().applicationName().isOpenOffice() )
+            if( !Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
                 Style::instance().renderWindowBackground( window, clipRect, x-4, y-4, w+8, h+8 );
                 draw_animated_button( window, clipRect, widget );
@@ -2491,7 +2491,7 @@ namespace Oxygen
             if( Gtk::gtk_widget_layout_is_reversed( widget ) ) x+=1;
             else x-=1;
 
-            if( arrow == GTK_ARROW_UP && !Style::instance().settings().applicationName().isOpenOffice() )
+            if( arrow == GTK_ARROW_UP && !Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
 
                 y+= 1;
@@ -3054,7 +3054,7 @@ namespace Oxygen
             (or open office) app, because the latter do not pass the actual tab rect as argument
             */
             const bool isXul( Style::instance().settings().applicationName().isXul( widget ) );
-            const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice() );
+            const bool isOpenOffice( Style::instance().settings().applicationName().isOpenOffice( widget ) );
 
             // if passed window is invalid, do not hover
             const bool disableHover( !GDK_IS_WINDOW( window ) );
@@ -3300,7 +3300,7 @@ namespace Oxygen
 
         } else if( d.isHandleBox() ) {
 
-            if( Style::instance().settings().applicationName().isOpenOffice() )
+            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
 
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );

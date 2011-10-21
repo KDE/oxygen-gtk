@@ -106,41 +106,12 @@ namespace Oxygen
     }
 
     //__________________________________________________________________________
-    bool ApplicationName::isXul( GtkWidget* widget ) const
+    bool ApplicationName::isGtkDialogWidget( GtkWidget* widget ) const
     {
-        if( !isXul() ) return false;
-
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         // check parent
-        if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        else return true;
-
-    }
-
-    //__________________________________________________________________________
-    bool ApplicationName::isAcrobat( GtkWidget* widget ) const
-    {
-        if( !isAcrobat() ) return false;
-
-        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
-
-        // check parent
-        if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        else return true;
-
-    }
-    //__________________________________________________________________________
-    bool ApplicationName::isJavaSwt( GtkWidget* widget ) const
-    {
-        if( !isJavaSwt() ) return false;
-
-        GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
-
-        // check parent
-        if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        else return true;
-
+        return parent && GTK_IS_DIALOG( parent );
     }
 
     //__________________________________________________________________________
@@ -157,15 +128,8 @@ namespace Oxygen
             isGoogleChrome() ||
             isEclipse() ) ) return false;
 
-        // check for special cases
-        if(widget)
-        {
-            // first check parent
-            GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
-
-            // check parent
-            if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        }
+        // check for Gtk dialog type
+        if( widget && isGtkDialogWidget( widget ) ) return false;
 
         // return true in all other cases
         return true;
