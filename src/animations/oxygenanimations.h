@@ -85,10 +85,6 @@ namespace Oxygen
         //! enabled state
         void setEnabled( bool value );
 
-        //! enabled state
-        bool enabled( void ) const
-        { return _enabled; }
-
         //! inner shadow enabled state
         void setInnerShadowsEnabled( bool value )
         { _innerShadowsEnabled = value; }
@@ -219,9 +215,6 @@ namespace Oxygen
         static gboolean realizationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         private:
-
-        //! enabled state
-        bool _enabled;
 
         //! inner shadow enabled state
         bool _innerShadowsEnabled;

@@ -32,7 +32,6 @@ namespace Oxygen
 
     //_________________________________________
     Animations::Animations( void ):
-        _enabled( true ),
         _innerShadowsEnabled( true ),
         _hooksInitialized( false )
     {
@@ -87,9 +86,6 @@ namespace Oxygen
     {
 
         const bool animationsEnabled( settings.animationsEnabled() );
-
-        // inner shadows enabled state
-        setInnerShadowsEnabled( true );
 
         // pass animations configuration to engines
         widgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
@@ -191,9 +187,6 @@ namespace Oxygen
     void Animations::setEnabled( bool value )
     {
 
-        if( value == _enabled ) return;
-
-        _enabled = value;
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { (*iter)->setEnabled( value ); }
 
