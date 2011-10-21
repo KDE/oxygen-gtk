@@ -128,15 +128,8 @@ namespace Oxygen
             isGoogleChrome() ||
             isEclipse() ) ) return false;
 
-        // check for special cases
-        if(widget)
-        {
-            // first check parent
-            GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
-
-            // check parent
-            if( parent && GTK_IS_DIALOG( parent ) ) return false;
-        }
+        // check for Gtk dialog type
+        if( widget && isGtkDialogWidget( widget ) ) return false;
 
         // return true in all other cases
         return true;
