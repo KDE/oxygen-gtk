@@ -190,7 +190,7 @@ namespace Oxygen
         // store target
         _target = widget;
 
-        if(gdk_display_supports_composite(gdk_display_get_default())
+        if(gdk_display_supports_composite( gtk_widget_get_display( widget ) )
                 && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
         {
             _compositeEnabled = true;
@@ -250,7 +250,7 @@ namespace Oxygen
             GdkWindow* window(gtk_widget_get_window(widget));
             if(
                 // check window
-                ( window && gdk_display_supports_composite( gdk_display_get_default() ) ) &&
+                ( window && gdk_display_supports_composite( gdk_window_get_display( window ) ) ) &&
 
                 // check widget type (might move to blacklist method)
                 ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) )

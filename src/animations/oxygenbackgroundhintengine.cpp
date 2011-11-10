@@ -69,7 +69,7 @@ namespace Oxygen
         if( contains( data ) ) return false;
 
         // set hint
-        GdkDisplay *display( gdk_display_get_default () );
+        GdkDisplay *display( gdk_window_get_display( window ) );
         if( display && _backgroundGradientAtom && (hints&BackgroundGradient) )
         {
             unsigned long uLongValue( true );

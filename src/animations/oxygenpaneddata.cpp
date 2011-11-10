@@ -52,7 +52,7 @@ namespace Oxygen
         {
             assert( !_cursor );
 
-            GdkDisplay *display( gdk_display_get_default () );
+            GdkDisplay *display( gtk_widget_get_display( widget ) );
             _cursor = gdk_cursor_new_from_name( display, GTK_IS_VPANED( widget ) ? "col-resize":"row-resize" );
             _cursorLoaded = true;
 
