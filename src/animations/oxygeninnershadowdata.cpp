@@ -35,6 +35,141 @@
 namespace Oxygen
 {
 
+    //_____________________________________________
+    void InnerShadowData::connect( GtkWidget* widget )
+    {
+
+        assert( GTK_IS_SCROLLED_WINDOW( widget ) );
+        assert( !_target );
+
+        // store target
+        _target = widget;
+
+        if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
+        {
+            _compositeEnabled = true;
+            _exposeId.connect( G_OBJECT(_target), "draw", G_CALLBACK( targetExposeEvent ), this, true );
+        }
+
+        // check child
+        GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+        if( !child ) return;
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::connect -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " child: " << child << " (" << G_OBJECT_TYPE_NAME( child ) << ")"
+            << std::endl;
+        #endif
+
+        registerChild( child );
+
+    }
+
+    //_____________________________________________
+    void InnerShadowData::disconnect( GtkWidget* widget )
+    {
+        _target = 0;
+        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
+        { iter->second.disconnect( iter->first ); }
+
+        // disconnect signals
+        _exposeId.disconnect();
+
+        // clear child data
+        _childrenData.clear();
+    }
+
+    //_____________________________________________
+    void InnerShadowData::registerChild( GtkWidget* widget )
+    {
+
+        #if GTK_CHECK_VERSION(2,22,0)
+
+        // make sure widget is not already in map
+        if( _childrenData.find( widget ) == _childrenData.end() )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::InnerShadowData::registerChild -"
+                << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << std::endl;
+            #endif
+
+            ChildData data;
+            data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
+
+            GdkWindow* window(gtk_widget_get_window(widget));
+            if(
+                // check window
+                window && gdk_display_supports_composite( gdk_window_get_display( window ) ) )
+            {
+                data.initiallyComposited=gdk_window_get_composited(window);
+                gdk_window_set_composited(window,TRUE);
+            }
+
+            _childrenData.insert( std::make_pair( widget, data ) );
+
+        }
+
+        #endif
+
+    }
+
+    //________________________________________________________________________________
+    void InnerShadowData::unregisterChild( GtkWidget* widget )
+    {
+
+        ChildDataMap::iterator iter( _childrenData.find( widget ) );
+        if( iter == _childrenData.end() ) return;
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::unregisterChild -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
+        iter->second.disconnect( widget );
+        _childrenData.erase( iter );
+
+    }
+
+    //________________________________________________________________________________
+    void InnerShadowData::ChildData::disconnect( GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::ChildData::disconnect -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
+        // disconnect signals
+        _unrealizeId.disconnect();
+
+        // remove compositing flag
+        GdkWindow* window( gtk_widget_get_window( widget ) );
+        if( GTK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
+        { gdk_window_set_composited(window,initiallyComposited); }
+    }
+
+    //____________________________________________________________________________________________
+    gboolean InnerShadowData::childUnrealizeNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::childUnrealizeNotifyEvent -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+        static_cast<InnerShadowData*>(data)->unregisterChild( widget );
+        return FALSE;
+    }
+
     //_________________________________________________________________________________________
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
@@ -137,13 +272,14 @@ namespace Oxygen
                         allocation.height=frameAlloc.height;
                         basicOffset=0;
                     }
-                } else
-                // } // special_case
-                {
+
+                } else {
+
                     #if OXYGEN_DEBUG
                     std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
                     #endif
                     return FALSE;
+
                 }
 
             }
@@ -177,145 +313,6 @@ namespace Oxygen
         #endif // Gtk version
 
         // let the event propagate
-        return FALSE;
-    }
-
-    //_____________________________________________
-    void InnerShadowData::connect( GtkWidget* widget )
-    {
-
-        assert( GTK_IS_SCROLLED_WINDOW( widget ) );
-        assert( !_target );
-
-        // store target
-        _target = widget;
-
-        if(gdk_display_supports_composite( gtk_widget_get_display( widget ) )
-                && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
-        {
-            _compositeEnabled = true;
-            _exposeId.connect( G_OBJECT(_target), "draw", G_CALLBACK( targetExposeEvent ), this, true );
-        }
-
-        // check child
-        GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-        if( !child ) return;
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::InnerShadowData::connect -"
-            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << " child: " << child << " (" << G_OBJECT_TYPE_NAME( child ) << ")"
-            << std::endl;
-        #endif
-
-        registerChild( child );
-
-    }
-
-    //_____________________________________________
-    void InnerShadowData::disconnect( GtkWidget* widget )
-    {
-        _target = 0;
-        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
-        { iter->second.disconnect( iter->first ); }
-
-        // disconnect signals
-        _exposeId.disconnect();
-
-        // clear child data
-        _childrenData.clear();
-    }
-
-    //_____________________________________________
-    void InnerShadowData::registerChild( GtkWidget* widget )
-    {
-
-        #if GTK_CHECK_VERSION(2,22,0)
-
-        // make sure widget is not already in map
-        if( _childrenData.find( widget ) == _childrenData.end() )
-        {
-
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::InnerShadowData::registerChild -"
-                << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-                << std::endl;
-            #endif
-
-            ChildData data;
-            data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
-
-            GdkWindow* window(gtk_widget_get_window(widget));
-            if(
-                // check window
-                ( window && gdk_display_supports_composite( gdk_window_get_display( window ) ) ) &&
-
-                // check widget type (might move to blacklist method)
-                ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) )
-            {
-                data.initiallyComposited=gdk_window_get_composited(window);
-                gdk_window_set_composited(window,TRUE);
-            }
-
-            _childrenData.insert( std::make_pair( widget, data ) );
-
-        }
-
-        #endif
-
-    }
-
-    //________________________________________________________________________________
-    void InnerShadowData::unregisterChild( GtkWidget* widget )
-    {
-
-        ChildDataMap::iterator iter( _childrenData.find( widget ) );
-        if( iter == _childrenData.end() ) return;
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::InnerShadowData::unregisterChild -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
-
-        iter->second.disconnect( widget );
-        _childrenData.erase( iter );
-
-    }
-
-    //________________________________________________________________________________
-    void InnerShadowData::ChildData::disconnect( GtkWidget* widget )
-    {
-
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::InnerShadowData::ChildData::disconnect -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
-
-        // disconnect signals
-        _unrealizeId.disconnect();
-
-        // remove compositing flag
-        GdkWindow* window( gtk_widget_get_window( widget ) );
-        if( GTK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
-        { gdk_window_set_composited(window,initiallyComposited); }
-    }
-
-    //____________________________________________________________________________________________
-    gboolean InnerShadowData::childUnrealizeNotifyEvent( GtkWidget* widget, gpointer data )
-    {
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::InnerShadowData::childUnrealizeNotifyEvent -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
-        static_cast<InnerShadowData*>(data)->unregisterChild( widget );
         return FALSE;
     }
 
