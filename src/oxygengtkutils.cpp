@@ -822,9 +822,7 @@ namespace Oxygen
         if( !( parent && child ) ) return false;
         while( child && GDK_IS_WINDOW( child ) &&
             child != parent &&
-            gdk_window_get_window_type( child ) != GDK_WINDOW_TOPLEVEL &&
-            gdk_window_get_window_type( child ) != GDK_WINDOW_TEMP
-            )
+            gdk_window_get_window_type( child ) == GDK_WINDOW_CHILD )
         {
             gint xloc;
             gint yloc;
@@ -896,10 +894,7 @@ namespace Oxygen
         if( x ) *x = 0;
         if( y ) *y = 0;
         if( !window ) return;
-        while( window && GDK_IS_WINDOW( window ) &&
-            gdk_window_get_window_type( window ) != GDK_WINDOW_TOPLEVEL &&
-            gdk_window_get_window_type( window ) != GDK_WINDOW_TEMP
-            )
+        while( window && GDK_IS_WINDOW( window ) && gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD )
         {
             gint xloc;
             gint yloc;

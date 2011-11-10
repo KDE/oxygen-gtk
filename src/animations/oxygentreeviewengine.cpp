@@ -55,6 +55,7 @@ namespace Oxygen
                 !Gtk::gtk_parent_is_shadow_in( parent ) )
             { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
 
+
         }
 
         return true;

@@ -104,7 +104,9 @@ namespace Oxygen
             GdkWindow* window(gtk_widget_get_window(widget));
             if(
                 // check window
-                window && gdk_display_supports_composite( gdk_window_get_display( window ) ) )
+                window &&
+                gdk_display_supports_composite( gdk_window_get_display( window ) ) &&
+                gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD )
             {
                 data.initiallyComposited=gdk_window_get_composited(window);
                 gdk_window_set_composited(window,TRUE);
