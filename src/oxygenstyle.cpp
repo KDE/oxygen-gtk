@@ -2438,10 +2438,11 @@ namespace Oxygen
         QtSettings::WindecoBlendType blendType(settings().windecoBlendType());
         if( blendType==QtSettings::SolidColor )
         {
+
             gradient=false;
-        }
-        else if( blendType==QtSettings::FollowStyleHint && windowStrings && windowStrings[2] )
-        {
+
+        } else if( blendType==QtSettings::FollowStyleHint && windowStrings && windowStrings[2] ) {
+
             Window window((Window)windowStrings[2]);
             Display* display( GDK_DISPLAY_XDISPLAY(gdk_display_get_default()) );
             Atom _backgroundGradientAtom = XInternAtom( display, "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);

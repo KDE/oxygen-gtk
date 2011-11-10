@@ -60,7 +60,7 @@ namespace Oxygen
             if( !_cursorLoaded )
             {
                 assert( !_cursor );
-                GdkDisplay *display( gdk_display_get_default () );
+                GdkDisplay *display( gtk_widget_get_display( widget ) );
                 _cursor = gdk_cursor_new_from_name( display, "row-resize" );
                 _cursorLoaded = true;
             }
