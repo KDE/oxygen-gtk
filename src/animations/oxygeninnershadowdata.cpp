@@ -105,7 +105,7 @@ namespace Oxygen
             if(
                 // check window
                 window &&
-                gdk_display_supports_composite( gdk_drawable_get_display( GDK_DRAWABLE( window ) ) ) &&
+                gdk_display_supports_composite( gdk_window_get_display( window ) ) &&
                 gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
 
                 // check widget type (might move to blacklist method)
