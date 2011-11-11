@@ -63,7 +63,7 @@ namespace Oxygen
         static void selectionChanged( GtkIconView*, gpointer );
         static void toggleEnableState( GtkToggleButton*, gpointer );
         static void toggleWidgetDirection( GtkToggleButton*, gpointer );
-
+        static gboolean keyPress( GtkWidget*, GdkEventKey*, gpointer );
         //@}
 
         private:
@@ -95,6 +95,9 @@ namespace Oxygen
 
         //! toggle widget direction
         Signal _toggleWidgetDirectionId;
+
+        //! key press
+        Signal _keyPressId;
 
         //@}
 
