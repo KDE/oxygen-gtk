@@ -29,6 +29,7 @@
 #include "oxygensliderdemowidget.h"
 #include "oxygentabdemowidget.h"
 
+#include <gdk/gdkkeysyms.h>
 #include <iostream>
 #include <sstream>
 
@@ -167,6 +168,9 @@ namespace Oxygen
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
         gtk_icon_view_select_path( GTK_ICON_VIEW( iconView ), path );
 
+        // keypress signals
+        _keyPressId.connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
+
     }
 
     //_____________________________________________
@@ -257,4 +261,18 @@ namespace Oxygen
     //_____________________________________________
     void DemoDialog::toggleWidgetDirection( GtkToggleButton* button, gpointer data )
     { gtk_widget_set_default_direction( gtk_toggle_button_get_active( button ) ? GTK_TEXT_DIR_RTL:GTK_TEXT_DIR_LTR ); }
+
+    //_____________________________________________
+    gboolean DemoDialog::keyPress( GtkWidget* widget, GdkEventKey* event, gpointer )
+    {
+        guint modifiers( gtk_accelerator_get_default_mod_mask() );
+        if( gdk_keyval_to_upper( event->keyval ) == GDK_KEY_Q && (event->state&modifiers) == GDK_CONTROL_MASK )
+        {
+            gtk_main_quit();
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
 }
