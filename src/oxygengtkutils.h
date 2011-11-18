@@ -194,7 +194,8 @@ namespace Oxygen
             return
                 GTK_IS_FRAME( widget ) &&
                 gtk_frame_get_label_widget( GTK_FRAME( widget ) ) &&
-                gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT;
+                gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) == GTK_SHADOW_OUT &&
+                G_OBJECT_TYPE_NAME( widget )!=std::string("GimpFrame");
         }
 
         //! returns true if widget (or one of its parent) has a custom background
