@@ -381,7 +381,7 @@ namespace Oxygen
 
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
-        if( !parent ) return false;
+        if( !( parent && animations().groupBoxEngine().contains( parent ) ) ) return false;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -736,25 +736,17 @@ namespace Oxygen
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
-        } else if( widget && animations().groupBoxEngine().contains( Gtk::gtk_parent_groupbox( widget ) ) ) {
-
-            cairo_save( context );
-            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
-            renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
-            renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles );
-            cairo_restore( context );
-
         } else {
 
             cairo_save( context );
             renderHoleMask( context, x, y, w, h, tiles, sideMargin );
-
-            /*
-            normal window background.
-            pass the NoFill option, to ask for a mask
-            */
             renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
             cairo_restore( context );
+
+            // possible groupbox background
+            // Pass NoFill option in order not to render the surrounding frame
+            if( widget )
+            { renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles ); }
 
         }
 
