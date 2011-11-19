@@ -739,14 +739,19 @@ namespace Oxygen
         } else {
 
             cairo_save( context );
+
+            // add hole if required (this can be done before translating the context)
             renderHoleMask( context, x, y, w, h, tiles, sideMargin );
+
+            // normal window background
             renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
-            cairo_restore( context );
 
             // possible groupbox background
             // Pass NoFill option in order not to render the surrounding frame
             if( widget )
             { renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles ); }
+
+            cairo_restore( context );
 
         }
 
