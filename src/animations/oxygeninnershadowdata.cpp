@@ -103,10 +103,13 @@ namespace Oxygen
 
             GdkWindow* window(gtk_widget_get_window(widget));
             if(
+
                 // check window
                 window &&
-                gdk_display_supports_composite( gdk_window_get_display( window ) ) &&
                 gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
+
+                // check compositing
+                gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
 
                 // check widget type (might move to blacklist method)
                 ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) &&
