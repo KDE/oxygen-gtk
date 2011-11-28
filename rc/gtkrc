@@ -168,8 +168,6 @@ style "oxygen-combobox" = "oxygen-default"
 
 style "oxygen-combobox-frame" = "oxygen-default"
 {
-    # must set combobox frame x thickness to 0, otherwise there
-    # is a dead area between combobox text and button
     xthickness = 4
     ythickness = 4
 }
