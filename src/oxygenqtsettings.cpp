@@ -633,14 +633,31 @@ namespace Oxygen
         _css.addSection( "GtkEntry:selected, GtkTreeView:selected, GtkTextView:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
 
-        // buttons
+         // buttons and comboboxes
         _css.addSection( "GtkButton" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Button ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::ButtonText ) ) );
 
         _css.addSection( "GtkButton:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Button ) ) );
+
+        _css.addSection(
+            "GtkButton>GtkLabel, "
+            "GtkButton>GtkAlignment>GtkBox>GtkLabel, "
+            "GtkComboBox>GtkCellView" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::ButtonText ) ) );
+
+        _css.addSection(
+            "GtkButton>GtkLabel:insensitive, "
+            "GtkButton>GtkAlignment>GtkBox>GtkLabel:insensitive, "
+            "GtkComboBox>GtkCellView:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
+
+        // checkboxes and radio buttons
+        _css.addSection( "GtkCheckButton>GtkLabel" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
+
+        _css.addSection( "GtkCheckButton>GtkLabel:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
 
         // tooltips
         _css.addSection( "#gtk-tooltip" );
