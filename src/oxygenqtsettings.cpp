@@ -622,12 +622,12 @@ namespace Oxygen
         _rc.addToRootSection( "widget_class \"*<GtkButton>.<GtkAlignment>.<GtkBox>.<GtkLabel>\" style \"oxygen-buttons\"" );
 
         // combobox
-        _rc.addSection( "oxygen-combobox", "oxygen-buttons" );
+        _rc.addSection( "oxygen-combobox-labels", "oxygen-buttons" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
-        _rc.addToRootSection( "widget_class \"*<GtkComboBox>.*<GtkCellView>\" style \"oxygen-combobox\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkComboBox>.*<GtkCellView>\" style \"oxygen-combobox-labels\"" );
 
         // checkboxes and radio buttons
         _rc.addSection( "oxygen-checkbox-buttons", "oxygen-buttons" );
