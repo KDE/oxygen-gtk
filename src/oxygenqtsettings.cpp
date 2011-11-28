@@ -618,8 +618,10 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
         _rc.addToRootSection( "class \"*Button\" style \"oxygen-buttons\"" );
         _rc.addToRootSection( "class \"GtkOptionMenu\" style \"oxygen-buttons\"" );
-        _rc.addToRootSection( "widget_class \"*<GtkButton>.*<GtkLabel>\" style \"oxygen-buttons\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkButton>.<GtkLabel>\" style \"oxygen-buttons\"" );
+        _rc.addToRootSection( "widget_class \"*<GtkButton>.<GtkAlignment>.<GtkBox>.<GtkLabel>\" style \"oxygen-buttons\"" );
 
+        // combobox
         _rc.addSection( "oxygen-combobox", "oxygen-buttons" );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[NORMAL]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
