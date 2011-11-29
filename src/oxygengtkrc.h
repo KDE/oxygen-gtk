@@ -101,6 +101,11 @@ namespace Oxygen
             void addToRootSection( const std::string& content )
             { addToSection( _rootSectionName, content ); }
 
+            //! match given widget selection to given section
+            void matchClassToSection( const std::string& content, const std::string& name );
+            void matchWidgetToSection( const std::string& content, const std::string& name );
+            void matchWidgetClassToSection( const std::string& content, const std::string& name );
+
             //! default section name
             static const std::string& defaultSection( void )
             { return _defaultSectionName; }
