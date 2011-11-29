@@ -1716,6 +1716,9 @@ namespace Oxygen
                 x-=1;
                 y-=1;
 
+                // disable active flag, which is not set properly for listviews
+                options &= ~Active;
+
                 data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
 
             } else if( gtk_widget_path_is_type( path, GTK_TYPE_CHECK_MENU_ITEM ) ) {
