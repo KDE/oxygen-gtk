@@ -3535,15 +3535,20 @@ namespace Oxygen
     void StyleWrapper::instanceInit( OxygenStyle* self )
     {
 
-        // hooks
+        // animations hooks
         Style::instance().animations().initializeHooks();
-        Style::instance().windowManager().initializeHooks();
+
+        // shadow hooks
         Style::instance().shadowHelper().initializeHooks();
 
-        // also initialize dbus
+        // window manager hooks
+        if( !Style::instance().settings().applicationName().isEclipse() )
+        { Style::instance().windowManager().initializeHooks(); }
+
+        // dbus
         Oxygen::DBus::instance();
 
-        // initialize argb hooks
+        // argb hooks
         if(
             Style::instance().settings().argbEnabled() &&
             !Style::instance().settings().applicationName().isXul() )
