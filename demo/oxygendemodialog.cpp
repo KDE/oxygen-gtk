@@ -30,6 +30,12 @@
 #include "oxygentabdemowidget.h"
 
 #include <gdk/gdkkeysyms.h>
+
+// Older (such as 2.20.1) GTK versions had different name for this
+#ifndef GDK_KEY_Q
+#define GDK_KEY_Q GDK_Q
+#endif
+
 #include <iostream>
 #include <sstream>
 
