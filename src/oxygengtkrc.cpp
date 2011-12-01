@@ -92,6 +92,39 @@ namespace Oxygen
     }
 
     //_________________________________________________
+    void Gtk::RC::matchClassToSection( const std::string& content, const std::string& name )
+    {
+        if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
+        { std::cerr << "Gtk::RC::matchClassToSection - unable to find section named " << name << std::endl; }
+
+        std::ostringstream what;
+        what << "class \"" << content << "\" style \"" << name << "\"";
+        addToRootSection( what.str() );
+    }
+
+    //_________________________________________________
+    void Gtk::RC::matchWidgetToSection( const std::string& content, const std::string& name )
+    {
+        if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
+        { std::cerr << "Gtk::RC::matchWidgetToSection - unable to find section named " << name << std::endl; }
+
+        std::ostringstream what;
+        what << "widget \"" << content << "\" style \"" << name << "\"";
+        addToRootSection( what.str() );
+    }
+
+    //_________________________________________________
+    void Gtk::RC::matchWidgetClassToSection( const std::string& content, const std::string& name )
+    {
+        if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
+        { std::cerr << "Gtk::RC::matchWidgetClassToSection - unable to find section named " << name << std::endl; }
+
+        std::ostringstream what;
+        what << "widget_class \"" << content << "\" style \"" << name << "\"";
+        addToRootSection( what.str() );
+    }
+
+    //_________________________________________________
     void Gtk::RC::setCurrentSection( const std::string& name )
     {
         if( std::find( _sections.begin(), _sections.end(), name ) == _sections.end() )
