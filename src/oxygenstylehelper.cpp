@@ -1184,16 +1184,16 @@ namespace Oxygen
                 cairo_rounded_rectangle( context, x, y, w, h, rounding );
                 cairo_set_source( context, pattern );
                 cairo_fill( context );
-
-                cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, rounding );
-                cairo_set_source( context, base );
-                cairo_stroke( context );
             }
 
             {
                 // contrast
-                cairo_rounded_rectangle( context, double(x)+1.5, double(y)+1.5, w-3, h-3, rounding-1 );
-                cairo_set_source( context, ColorUtils::alphaColor( ColorUtils::Rgba::white(), 64.0/255 ) );
+                Cairo::Pattern pattern( cairo_pattern_create_linear( 0, y, 0, y+h ) );
+                cairo_pattern_add_color_stop( pattern, 0, base );
+                cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent() );
+
+                cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, rounding );
+                cairo_set_source( context, pattern );
                 cairo_stroke( context );
             }
 
