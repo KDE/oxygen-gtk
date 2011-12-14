@@ -55,7 +55,6 @@ namespace Oxygen
         _name = Unknown;
 
         if( pidAppName == "opera" ) _name = Opera;
-        else if( pidAppName.find( "komodo" ) != std::string::npos ) _name = Komodo;
         else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
         else if( pidAppName == "java" ) {
 
@@ -81,6 +80,7 @@ namespace Oxygen
                 "icecat",
                 "icedove",
                 "xulrunner",
+                "komodo",
                 ""
             };
 
@@ -120,7 +120,6 @@ namespace Oxygen
 
         // check application name
         if( !(
-            isKomodo() ||
             isXul() ||
             isAcrobat() ||
             isJavaSwt() ||
@@ -177,7 +176,6 @@ namespace Oxygen
         {
             default:
             case Unknown: out << "Unknown"; break;
-            case Komodo: out << "Komodo"; break;
             case Acrobat: out << "Acrobat"; break;
             case XUL: out << "XUL (Mozilla)"; break;
             case Gimp: out << "Gimp"; break;
