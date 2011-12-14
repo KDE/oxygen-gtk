@@ -45,7 +45,6 @@ namespace Oxygen
         Java,
         JavaSwt,
         Eclipse,
-        Komodo
     };
 
     //! stores application name and provides some utility functions
@@ -78,7 +77,6 @@ namespace Oxygen
         //@{
 
         bool isAcrobat( void ) const { return _name == Acrobat; }
-        bool isKomodo( void ) const { return _name == Komodo; }
         bool isXul( void ) const { return _name == XUL; }
         bool isGimp( void ) const { return _name == Gimp; }
         bool isOpenOffice( void ) const { return _name == OpenOffice; }
