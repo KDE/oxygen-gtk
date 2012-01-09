@@ -362,7 +362,15 @@ namespace Oxygen
         if( _drag )
         {
 
-            gdk_pointer_ungrab( CurrentTime );
+            // get device manager
+            GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
+
+            // get pointer
+            GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
+
+            // ungrab
+            if( pointer ) gdk_device_ungrab( pointer, GDK_CURRENT_TIME );
+
             _drag = false;
             return true;
 
