@@ -100,7 +100,7 @@ namespace Oxygen
 
             // scrollbar
             GtkAdjustment* adjustment( GTK_ADJUSTMENT( gtk_adjustment_new( 25, 0, 110, 1, 1, 10 ) ) );
-            _horizontalSliders._scrollBar = gtk_hscrollbar_new( adjustment );
+            _horizontalSliders._scrollBar = gtk_scrollbar_new( GTK_ORIENTATION_HORIZONTAL, adjustment );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._scrollBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._scrollBar );
 
@@ -143,7 +143,7 @@ namespace Oxygen
 
             // scrollbar
             GtkAdjustment* adjustment( GTK_ADJUSTMENT( gtk_adjustment_new( 25, 0, 110, 1, 1, 10 ) ) );
-            _verticalSliders._scrollBar = gtk_vscrollbar_new( adjustment );
+            _verticalSliders._scrollBar = gtk_scrollbar_new( GTK_ORIENTATION_VERTICAL, adjustment );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._scrollBar, false, true, 0 );
             gtk_widget_show( _verticalSliders._scrollBar );
 
