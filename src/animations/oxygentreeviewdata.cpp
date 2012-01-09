@@ -56,8 +56,11 @@ namespace Oxygen
                 // on connection, needs to check whether mouse pointer is in widget or not
                 // to have the proper initial value of the hover flag
                 GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                gint xPointer,yPointer;
-                gdk_window_get_pointer( gtk_widget_get_window( widget ), &xPointer, &yPointer, 0L );
+                gint xPointer(0), yPointer(0);
+                GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
+                GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
+                gdk_window_get_device_position( gtk_widget_get_window( widget ), pointer, &xPointer, &yPointer, 0L);
+
                 gtk_tree_view_convert_widget_to_bin_window_coords( treeView, xPointer, yPointer, &xPointer, &yPointer );
                 updatePosition( widget, xPointer, yPointer );
             }

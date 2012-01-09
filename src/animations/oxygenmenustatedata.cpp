@@ -91,11 +91,14 @@ namespace Oxygen
 
         if( !_target ) return;
 
-        gint xPointer, yPointer;
-        gdk_window_get_pointer( gtk_widget_get_window( _target ), &xPointer, &yPointer, 0L );
-
         GdkWindow* window( gtk_widget_get_window( _target ) );
         GdkWindow* childWindow( 0L );
+
+        // get mouse pointer position
+        gint xPointer(0), yPointer(0);
+        GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
+        GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
+        gdk_window_get_device_position( window, pointer, &xPointer, &yPointer, 0L);
 
         // reset offset
         int xOffset(0);
