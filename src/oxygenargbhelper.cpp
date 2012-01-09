@@ -85,7 +85,7 @@ namespace Oxygen
 
         // TODO: check whether this is needed for gtk+3, and if yes, if working
         // This is known *not* to work for gtk+2
-        gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
+        // gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
 
         // if widget is a container, we need to do the same for its children
         if( !GTK_IS_CONTAINER( widget ) ) return;
