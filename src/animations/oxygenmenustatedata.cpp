@@ -96,7 +96,7 @@ namespace Oxygen
 
         // get mouse pointer position
         gint xPointer(0), yPointer(0);
-        GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
+        GdkDeviceManager* manager( gdk_display_get_device_manager( gtk_widget_get_display( _target ) ) );
         GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
         gdk_window_get_device_position( window, pointer, &xPointer, &yPointer, 0L);
 

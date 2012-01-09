@@ -78,7 +78,7 @@ namespace Oxygen
         // get pointer position
         int xPointer(0), yPointer(0);
 
-        GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
+        GdkDeviceManager* manager( gdk_display_get_device_manager( gtk_widget_get_display( widget ) ) );
         GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
         if( !pointer ) return;
 

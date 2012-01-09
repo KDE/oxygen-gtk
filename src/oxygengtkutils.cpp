@@ -65,10 +65,15 @@ namespace Oxygen
     {
         if(GTK_IS_BUTTON(container))
         {
-            int x,y;
+
+            int x(0),y(0);
             GtkWidget* button=GTK_WIDGET(container);
             GtkAllocation allocation( gtk_widget_get_allocation( button ) );
-            gtk_widget_get_pointer(button,&x,&y);
+
+            GdkDeviceManager* manager( gdk_display_get_device_manager( gtk_widget_get_display( button ) ) );
+            GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
+            gdk_window_get_device_position( gtk_widget_get_window( button ), pointer, &x, &y, 0L);
+
             if( !(x>0 && y>0 &&
                 x < allocation.width &&
                 y < allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
