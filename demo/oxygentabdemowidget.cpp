@@ -34,7 +34,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 
@@ -46,7 +46,7 @@ namespace Oxygen
 
         // orientation
         {
-            GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
+            GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
             gtk_box_set_spacing( GTK_BOX( hbox ), 5 );
             gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
             gtk_widget_show( hbox );
@@ -108,7 +108,7 @@ namespace Oxygen
             {
 
                 // first page
-                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
                 gtk_box_set_spacing( GTK_BOX( vbox ), 5 );
 
                 // line editor
@@ -136,9 +136,9 @@ namespace Oxygen
 
 
             }
-            addPage( "Second Tab", gtk_vbox_new( false, 0 ) );
-            addPage( "Third Tab", gtk_vbox_new( false, 0 ) );
-            addPage( "Fourth Tab", gtk_vbox_new( false, 0 ) );
+            addPage( "Second Tab", gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
+            addPage( "Third Tab", gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
+            addPage( "Fourth Tab", gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
 
         }
     }

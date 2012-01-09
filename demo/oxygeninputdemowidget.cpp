@@ -34,7 +34,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 
@@ -45,41 +45,41 @@ namespace Oxygen
         realize();
 
         // main container
-        GtkWidget* table = gtk_table_new( 4, 3, false );
-        gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-        gtk_box_pack_start( GTK_BOX( mainWidget ), table, false, true, 0 );
-        gtk_widget_show( table );
+        GtkWidget* grid = gtk_grid_new();
+        gtk_grid_set_row_spacing( GTK_GRID( grid ), 5 );
+        gtk_box_pack_start( GTK_BOX( mainWidget ), grid, false, true, 0 );
+        gtk_widget_show( grid );
 
         // spacing
         GtkWidget* spacing( gtk_label_new( "" ) );
-        gtk_table_attach( GTK_TABLE( table ), spacing, 2, 3, 0, 1, GTK_EXPAND, GTK_FILL, 2, 0  );
+        gtk_grid_attach( GTK_GRID( grid ), spacing, 2, 0, 1, 1 );
         gtk_widget_show( spacing );
 
         // generic label
         GtkWidget* label( 0L );
 
         // simple line editor
-        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Single line text editor: " ), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
+        gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Single line text editor: " ), 0, 0, 1, 1 );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
         gtk_widget_show( label );
 
         GtkWidget* lineEditor( 0L );
-        gtk_table_attach( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), lineEditor = gtk_entry_new(), 1, 0, 1, 1 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_widget_show( lineEditor );
 
         // invisible line editor
-        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 1 );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
         gtk_widget_show( label );
 
-        gtk_table_attach( GTK_TABLE( table ), lineEditor = gtk_entry_new(), 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), lineEditor = gtk_entry_new(), 1, 1, 1, 1 );
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_entry_set_visibility( GTK_ENTRY( lineEditor ), false );
         gtk_widget_show( lineEditor );
 
         // combobox
-        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Editable combobox: " ), 0, 1, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Editable combobox: " ), 0, 2, 1, 1 );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
         gtk_widget_show( label );
 
@@ -100,12 +100,12 @@ namespace Oxygen
 
         GtkWidget* comboBox(0L);
         #if GTK_CHECK_VERSION(2, 24, 0)
-        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_new_with_entry(), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), comboBox = gtk_combo_box_new_with_entry(), 1, 2, 1, 1 );
         gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
         gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( comboBox ), 0 );
 
         #else
-        gtk_table_attach( GTK_TABLE( table ), comboBox = gtk_combo_box_entry_new(), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 2, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), comboBox = gtk_combo_box_entry_new(), 1, 2, 1, 1 );
         gtk_combo_box_set_model( GTK_COMBO_BOX( comboBox ), GTK_TREE_MODEL( model ) );
         gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( comboBox ), 0 );
         #endif
@@ -115,12 +115,12 @@ namespace Oxygen
         gtk_widget_show( comboBox );
 
         // spin button
-        gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Spinbox: " ), 0, 1, 3, 4, GTK_FILL, GTK_FILL, 2, 0  );
+        gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Spinbox: " ), 0, 3, 1, 1 );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
         gtk_widget_show( label );
 
         GtkWidget* spinButton( 0L );
-        gtk_table_attach( GTK_TABLE( table ), spinButton = gtk_spin_button_new_with_range( 0, 100, 1 ), 1, 2, 3, 4, GTK_FILL, GTK_FILL, 2, 0  );
+        gtk_grid_attach( GTK_GRID( grid ), spinButton = gtk_spin_button_new_with_range( 0, 100, 1 ), 1, 3, 1, 1 );
         gtk_widget_show( spinButton );
 
         // separator

@@ -34,7 +34,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 
@@ -46,7 +46,7 @@ namespace Oxygen
 
         // orientation
         {
-            GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
+            GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
             gtk_box_set_spacing( GTK_BOX( hbox ), 5 );
             gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
             gtk_widget_show( hbox );
@@ -92,7 +92,7 @@ namespace Oxygen
 
         {
             // box
-            _box = gtk_hbox_new( true, 0 );
+            _box = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
             gtk_box_set_spacing( GTK_BOX( _box ), 5 );
             gtk_box_pack_start( GTK_BOX( mainWidget ), _box, true, true, 0 );
             gtk_widget_show( _box );
@@ -112,7 +112,7 @@ namespace Oxygen
                 gtk_box_pack_start( GTK_BOX( _box ), _frame, true, true, 0 );
                 gtk_widget_show( _frame );
 
-                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
                 gtk_container_add( GTK_CONTAINER( _frame ), vbox );
                 gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
                 gtk_widget_show( vbox );
@@ -150,7 +150,7 @@ namespace Oxygen
 
                 // add empty page
                 GtkWidget* label( gtk_label_new( "Tab Widget" ) );
-                GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+                GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
                 gtk_notebook_append_page( GTK_NOTEBOOK( notebook ), vbox, label );
                 gtk_widget_show( label );
                 gtk_widget_show( vbox );

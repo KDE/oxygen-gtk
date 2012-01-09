@@ -34,7 +34,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 

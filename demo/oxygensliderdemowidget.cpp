@@ -34,7 +34,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_hbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 
@@ -53,14 +53,14 @@ namespace Oxygen
             gtk_widget_show( frame );
 
             // container
-            GtkWidget* box( gtk_vbox_new( false, 0 ) );
+            GtkWidget* box( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_container_set_border_width( GTK_CONTAINER( box ), 5 );
             gtk_box_set_spacing( GTK_BOX( box ), 2 );
             gtk_widget_show( box );
             gtk_container_add( GTK_CONTAINER( frame ), box );
 
             // scale
-            _horizontalSliders._scale = gtk_hscale_new_with_range( 0, 100, 1 );
+            _horizontalSliders._scale = gtk_scale_new_with_range( GTK_ORIENTATION_HORIZONTAL, 0, 100, 1 );
             gtk_scale_set_draw_value( GTK_SCALE( _horizontalSliders._scale ), false );
             gtk_range_set_value( GTK_RANGE( _horizontalSliders._scale ), 25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._scale, false, true, 0 );
@@ -115,14 +115,14 @@ namespace Oxygen
             gtk_widget_show( frame );
 
             // container
-            GtkWidget* box( gtk_hbox_new( false, 0 ) );
+            GtkWidget* box( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
             gtk_container_set_border_width( GTK_CONTAINER( box ), 5 );
             gtk_box_set_spacing( GTK_BOX( box ), 5 );
             gtk_widget_show( box );
             gtk_container_add( GTK_CONTAINER( frame ), box );
 
             // scale
-            _verticalSliders._scale = gtk_vscale_new_with_range( 0, 100, 1 );
+            _verticalSliders._scale = gtk_scale_new_with_range( GTK_ORIENTATION_VERTICAL, 0, 100, 1 );
             gtk_scale_set_draw_value( GTK_SCALE( _verticalSliders._scale ), false );
             gtk_range_set_value( GTK_RANGE( _verticalSliders._scale ), 25 );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._scale, false, true, 0 );

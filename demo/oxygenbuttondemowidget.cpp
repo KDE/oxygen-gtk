@@ -33,7 +33,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 4 );
         setWidget( mainWidget );
 
@@ -49,16 +49,16 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( mainWidget ), frame, false, true, 0 );
             gtk_widget_show( frame );
 
-            // inner table
-            GtkWidget* table = gtk_table_new( 2, 4, false );
-            gtk_container_set_border_width( GTK_CONTAINER( table ), 4 );
-            gtk_table_set_row_spacings( GTK_TABLE( table ), 4 );
-            gtk_container_add( GTK_CONTAINER( frame ), table );
-            gtk_widget_show( table );
+            // inner grid
+            GtkWidget* grid = gtk_grid_new();
+            gtk_container_set_border_width( GTK_CONTAINER( grid ), 4 );
+            gtk_grid_set_row_spacing( GTK_GRID( grid ), 4 );
+            gtk_container_add( GTK_CONTAINER( frame ), grid );
+            gtk_widget_show( grid );
 
             // spacing
             GtkWidget* spacing( gtk_label_new( "" ) );
-            gtk_table_attach( GTK_TABLE( table ), spacing, 3, 4, 0, 1, GTK_EXPAND, GTK_FILL, 2, 0  );
+            gtk_grid_attach( GTK_GRID( grid ), spacing, 3, 0, 1, 1 );
             gtk_widget_show( spacing );
 
             // generic label
@@ -66,13 +66,13 @@ namespace Oxygen
 
             {
                 // text only
-                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Text only: " ), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Text only: " ), 0, 0, 1, 1 );
                 gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
                 gtk_widget_show( label );
 
                 // button
                 GtkWidget* button( gtk_button_new_with_label( "Normal" ) );
-                gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), button, 1, 0, 1, 1 );
                 gtk_widget_show( button );
 
                 // combobox model
@@ -102,20 +102,20 @@ namespace Oxygen
 
                 gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
 
-                gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_grid_attach( GTK_GRID( grid ), comboBox, 2, 0, 1, 1 );
                 gtk_widget_show( comboBox );
 
             }
 
             {
                 // text and icons
-                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Text and icon: " ), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Text and icon: " ), 0, 1, 1, 1 );
                 gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
                 gtk_widget_show( label );
 
                 // button
                 GtkWidget* button( gtk_button_new_with_label( "Normal" ) );
-                gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), button, 1, 1, 1, 1 );
 
                 GtkIconTheme* theme( gtk_icon_theme_get_default() );
                 GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, "oxygen", 16, (GtkIconLookupFlags) 0, 0L );
@@ -174,7 +174,7 @@ namespace Oxygen
 
                 gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
 
-                gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_grid_attach( GTK_GRID( grid ), comboBox, 2, 1, 1, 1 );
                 gtk_widget_show( comboBox );
 
             }
@@ -189,7 +189,7 @@ namespace Oxygen
             gtk_widget_show( frame );
 
             // inner box
-            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_box_set_spacing( GTK_BOX( vbox ), 4 );
             gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
             gtk_container_add( GTK_CONTAINER( frame ), vbox );
@@ -230,19 +230,19 @@ namespace Oxygen
             gtk_toggle_tool_button_set_active( GTK_TOGGLE_TOOL_BUTTON( toolButton ), true );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
-            // table for text position and icon size
-            GtkWidget* table = gtk_table_new( 2, 3, false );
-            gtk_container_set_border_width( GTK_CONTAINER( table ), 4 );
-            gtk_table_set_row_spacings( GTK_TABLE( table ), 4 );
-            gtk_box_pack_start( GTK_BOX( vbox ), table, false, true, 0 );
-            gtk_widget_show( table );
+            // grid for text position and icon size
+            GtkWidget* grid = gtk_grid_new();
+            gtk_container_set_border_width( GTK_CONTAINER( grid ), 4 );
+            gtk_grid_set_row_spacing( GTK_GRID( grid ), 4 );
+            gtk_box_pack_start( GTK_BOX( vbox ), grid, false, true, 0 );
+            gtk_widget_show( grid );
 
             {
 
                 // text position combobox
                 GtkWidget* label( 0L );
 
-                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Text position: " ), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Text position: " ), 0, 0, 1, 1 );
                 gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
                 gtk_widget_show( label );
 
@@ -273,7 +273,7 @@ namespace Oxygen
 
                 gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 0 );
 
-                gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_grid_attach( GTK_GRID( grid ), comboBox, 1, 0, 1, 1 );
                 gtk_widget_show( comboBox );
 
                 // connection
@@ -286,7 +286,7 @@ namespace Oxygen
                 // icon size combobox
                 GtkWidget* label( 0L );
 
-                gtk_table_attach( GTK_TABLE( table ), label = gtk_label_new( "Icon size: " ), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 0  );
+                gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Icon size: " ), 0, 1, 1, 1 );
                 gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
                 gtk_widget_show( label );
 
@@ -317,7 +317,7 @@ namespace Oxygen
 
                 gtk_combo_box_set_active( GTK_COMBO_BOX( comboBox ), 2 );
 
-                gtk_table_attach( GTK_TABLE( table ), comboBox, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
+                gtk_grid_attach( GTK_GRID( grid ), comboBox, 1, 1, 1, 1 );
                 gtk_widget_show( comboBox );
 
                 // connection
@@ -330,7 +330,7 @@ namespace Oxygen
 
 
         // checkboxes and radiobuttons
-        GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
+        GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( hbox ), 4 );
         gtk_box_pack_start( GTK_BOX( mainWidget ), hbox, false, true, 0 );
         gtk_widget_show( hbox );
@@ -341,7 +341,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
-            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
             gtk_container_add( GTK_CONTAINER( frame ), vbox );
             gtk_widget_show( vbox );
@@ -367,7 +367,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( hbox ), frame, true, true, 0 );
             gtk_widget_show( frame );
 
-            GtkWidget* vbox( gtk_vbox_new( false, 0 ) );
+            GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_container_add( GTK_CONTAINER( frame ), vbox );
             gtk_container_set_border_width( GTK_CONTAINER( vbox ), 4 );
             gtk_widget_show( vbox );

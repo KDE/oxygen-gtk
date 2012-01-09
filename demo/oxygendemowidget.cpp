@@ -34,12 +34,12 @@ namespace Oxygen
         assert( _widget );
 
         // create main widget (vbox)
-        _mainWidget = gtk_vbox_new( false, 0 );
+        _mainWidget = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
         gtk_box_set_spacing( GTK_BOX( _mainWidget ), 10 );
         gtk_widget_show( _mainWidget );
 
         // horizontal box
-        GtkWidget* hbox( gtk_hbox_new( false, 0 ) );
+        GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
         gtk_box_pack_start( GTK_BOX( _mainWidget ), hbox, false, true, 0 );
         gtk_widget_show( hbox );
 

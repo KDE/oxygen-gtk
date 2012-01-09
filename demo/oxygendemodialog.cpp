@@ -53,14 +53,14 @@ namespace Oxygen
         gtk_container_set_border_width( GTK_CONTAINER( _mainWidget ), 10 );
 
         // vertical container
-        GtkWidget* vbox( gtk_vbox_new( false, 5 ) );
+        GtkWidget* vbox( gtk_box_new( GTK_ORIENTATION_VERTICAL, 5 ) );
         gtk_container_add( GTK_CONTAINER( _mainWidget ), vbox );
         gtk_widget_show( vbox );
 
         GtkWidget* iconView(0L);
         {
             // first horizontal container
-            GtkWidget* hbox( gtk_hbox_new( false, 8 ) );
+            GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 8 ) );
             gtk_box_pack_start( GTK_BOX( vbox ), hbox, true, true, 0 );
             gtk_widget_show( hbox );
 
@@ -123,7 +123,7 @@ namespace Oxygen
 
         {
             // statusbar
-            GtkWidget* statusBar( gtk_hbox_new( false, 2 ) );
+            GtkWidget* statusBar( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 2 ) );
             gtk_box_pack_start( GTK_BOX( vbox ), statusBar, false, true, 0 );
             gtk_widget_show( statusBar );
 
