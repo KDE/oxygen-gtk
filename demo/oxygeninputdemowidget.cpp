@@ -124,7 +124,7 @@ namespace Oxygen
         gtk_widget_show( spinButton );
 
         // separator
-        GtkWidget* separator( gtk_hseparator_new() );
+        GtkWidget* separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) );
         gtk_box_pack_start( GTK_BOX( mainWidget ), separator, false, true, 0 );
         gtk_widget_show( separator );
 
