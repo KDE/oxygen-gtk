@@ -106,13 +106,13 @@ namespace Oxygen
         {
 
             Style::instance().initialize( QtSettings::Oxygen|QtSettings::Forced );
-            gtk_rc_reset_styles( gtk_settings_get_default() );
+            gtk_style_context_reset_widgets( gdk_screen_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else if( dbus_message_is_signal( message, "org.kde.KGlobalSettings", "notifyChange" ) ) {
 
             Style::instance().initialize( QtSettings::All|QtSettings::Forced );
-            gtk_rc_reset_styles( gtk_settings_get_default() );
+            gtk_style_context_reset_widgets( gdk_screen_get_default() );
             return DBUS_HANDLER_RESULT_HANDLED;
 
         } else return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
