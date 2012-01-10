@@ -153,9 +153,9 @@ namespace Oxygen
         std::cerr << "Oxygen::Animations::registerWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
-        WidgetData data;
-        data._destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( destroyNotifyEvent ), this );
-        _allWidgets.insert( std::make_pair( widget, data ) );
+        Signal destroyId;
+        destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( destroyNotifyEvent ), this );
+        _allWidgets.insert( std::make_pair( widget, destroyId ) );
         return true;
 
     }
@@ -173,7 +173,7 @@ namespace Oxygen
         assert( iter != _allWidgets.end() );
 
         // disconnect signal
-        iter->second._destroyId.disconnect();
+        iter->second.disconnect();
 
         // erase from map
         _allWidgets.erase( widget );

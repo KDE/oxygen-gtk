@@ -316,25 +316,8 @@ namespace Oxygen
 
         //@}
 
-        //! keep track of destruction and style change signals
-        /*!
-        this is needed so that signals are disconnected when either
-        the style change or the widget is destroyed
-        */
-        class WidgetData
-        {
-
-            public:
-
-            //! constructor
-            WidgetData( void )
-            {}
-
-            Signal _destroyId;
-        };
-
         //! keep track of all registered widgets, and associated destroy callback
-        typedef std::map< GtkWidget*, WidgetData > WidgetMap;
+        typedef std::map< GtkWidget*, Signal > WidgetMap;
         WidgetMap _allWidgets;
 
     };
