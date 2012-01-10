@@ -137,6 +137,11 @@ namespace Oxygen
             initArgb();
         }
 
+
+        // dialog button ordering
+        GtkSettings* settings( gtk_settings_get_default() );
+        gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+
         // configuration path
         _kdeConfigPathList = kdeConfigPathList();
 
