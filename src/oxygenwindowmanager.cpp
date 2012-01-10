@@ -254,6 +254,9 @@ namespace Oxygen
                 << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << std::endl;
         }
+        #else
+        // silence the compiler
+        (void)registered;
         #endif
 
         return TRUE;
