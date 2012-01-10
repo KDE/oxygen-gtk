@@ -22,11 +22,13 @@
 */
 
 #include "oxygenhook.h"
+#include "oxygensignal.h"
 
 #include <cairo/cairo.h>
 #include <gtk/gtk.h>
 
-#include <vector>
+#include <list>
+#include <map>
 
 namespace Oxygen
 {
@@ -52,13 +54,20 @@ namespace Oxygen
 
         //! find widget matching given context and type
         GtkWidget* find( cairo_t*, GType ) const;
+
         protected:
 
         //! bind widget to context
         void bind( GtkWidget*, cairo_t* );
 
+        //! unregister widget
+        void unregisterWidget( GtkWidget* );
+
         //! hook connected to widget's "draw" signal
         static gboolean drawHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
+        //! destruction callback
+        static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
         private:
 
@@ -71,8 +80,13 @@ namespace Oxygen
         //! store current context
         cairo_t* _context;
 
-        //! store list of associated widgets
-        std::vector< GtkWidget* > _widgets;
+        //! store list of associated widgets, to keep track of destruction
+        typedef std::list<GtkWidget*> WidgetList;
+        WidgetList _widgets;
+
+        //! keep track of all registered widgets, and associated destroy callback
+        typedef std::map< GtkWidget*, Signal > WidgetMap;
+        WidgetMap _allWidgets;
 
     };
 

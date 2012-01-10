@@ -47,6 +47,26 @@ namespace Oxygen
     }
 
     //_____________________________________________________
+    void WidgetLookup::initializeHooks( void )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WidgetLookup::initializeHooks" << std::endl;
+        #endif
+
+        if( _hooksInitialized ) return;
+
+        // install hook and test
+        if( !_drawHook.connect( "draw", (GSignalEmissionHook)drawHook, this ) ) return;
+
+        // set initialization flag
+        _hooksInitialized = true;
+
+        return;
+
+    }
+
+    //_____________________________________________________
     GtkWidget* WidgetLookup::find( cairo_t* context, const GtkWidgetPath* path ) const
     {
 
@@ -84,7 +104,7 @@ namespace Oxygen
 
         // look for type in stored widgets
         /* we loop backward, since last added widgets are more likely to be looked up */
-        for( std::vector<GtkWidget*>::const_reverse_iterator iter = _widgets.rbegin(); iter != _widgets.rend(); ++iter )
+        for( WidgetList::const_reverse_iterator iter = _widgets.rbegin(); iter != _widgets.rend(); ++iter )
         {
             // compare types and return if matched
             if( G_OBJECT_TYPE( *iter ) == type )
@@ -132,25 +152,35 @@ namespace Oxygen
         }
 
         _widgets.push_back( widget );
+
+        // add to all widgets map
+        if( _allWidgets.find( widget ) == _allWidgets.end() )
+        {
+            Signal destroyId;
+            destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( destroyNotifyEvent ), this );
+            _allWidgets.insert( std::make_pair( widget, destroyId ) );
+        }
+
     }
 
-    //_____________________________________________________
-    void WidgetLookup::initializeHooks( void )
+    //____________________________________________________________________________________________
+    void WidgetLookup::unregisterWidget( GtkWidget* widget )
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::WidgetLookup::initializeHooks" << std::endl;
+        std::cerr << "Oxygen::WidgetLookup::unregisterWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
         #endif
 
-        if( _hooksInitialized ) return;
+        // find in map
+        WidgetMap::iterator iter( _allWidgets.find( widget ) );
+        assert( iter != _allWidgets.end() );
 
-        // install hook and test
-        if( !_drawHook.connect( "draw", (GSignalEmissionHook)drawHook, this ) ) return;
+        // disconnect signal
+        iter->second.disconnect();
 
-        // set initialization flag
-        _hooksInitialized = true;
-
-        return;
+        // erase from lists
+        _allWidgets.erase( widget );
+        _widgets.remove( widget );
 
     }
 
@@ -187,6 +217,14 @@ namespace Oxygen
 
         return TRUE;
 
+    }
+
+
+    //____________________________________________________________________________________________
+    gboolean WidgetLookup::destroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        static_cast<WidgetLookup*>(data)->unregisterWidget( widget );
+        return FALSE;
     }
 
 }
