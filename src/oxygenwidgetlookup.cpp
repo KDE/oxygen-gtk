@@ -74,13 +74,31 @@ namespace Oxygen
             return 0L;
         }
 
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::WidgetLookup::find -"
+            << " context: " << context
+            << " type: " << g_type_name( type )
+            << std::endl;
+        #endif
+
         // look for type in stored widgets
         /* we loop backward, since last added widgets are more likely to be looked up */
         for( std::vector<GtkWidget*>::const_reverse_iterator iter = _widgets.rbegin(); iter != _widgets.rend(); ++iter )
         {
             // compare types and return if matched
             if( G_OBJECT_TYPE( *iter ) == type )
-            { return *iter; }
+            {
+                #if OXYGEN_DEBUG
+                std::cerr
+                    << "Oxygen::WidgetLookup::find -"
+                    << " context: " << context
+                    << " type: " << g_type_name( type )
+                    << " found: " << *iter
+                    << std::endl;
+                #endif
+                return *iter;
+            }
         }
 
         std::cerr
@@ -121,7 +139,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::WidgetLookup::initializeHooks" << endl;
+        std::cerr << "Oxygen::WidgetLookup::initializeHooks" << std::endl;
         #endif
 
         if( _hooksInitialized ) return;
