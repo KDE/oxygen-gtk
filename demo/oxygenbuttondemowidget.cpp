@@ -74,6 +74,7 @@ namespace Oxygen
                 GtkWidget* button( gtk_button_new_with_label( "Normal" ) );
                 gtk_table_attach( GTK_TABLE( table ), button, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 0  );
                 gtk_widget_show( button );
+                gtk_widget_set_tooltip_text( button, "This is a normal, text only button" );
 
                 // combobox model
                 GtkListStore* model( gtk_list_store_new( 1, G_TYPE_STRING ) );
@@ -104,6 +105,7 @@ namespace Oxygen
 
                 gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 0, 1, GTK_FILL, GTK_FILL, 2, 0 );
                 gtk_widget_show( comboBox );
+                gtk_widget_set_tooltip_text( comboBox, "This is a normal, text only combo box" );
 
             }
 
@@ -124,6 +126,7 @@ namespace Oxygen
 
                 gtk_button_set_image( GTK_BUTTON( button ), image );
                 gtk_widget_show( button );
+                gtk_widget_set_tooltip_text( button, "This is a normal, text+icon button" );
 
                 // combobox model
                 GtkListStore* model( gtk_list_store_new( 2, GDK_TYPE_PIXBUF, G_TYPE_STRING ) );
@@ -176,6 +179,7 @@ namespace Oxygen
 
                 gtk_table_attach( GTK_TABLE( table ), comboBox, 2, 3, 1, 2, GTK_FILL, GTK_FILL, 2, 0 );
                 gtk_widget_show( comboBox );
+                gtk_widget_set_tooltip_text( comboBox, "This is a normal, text+icon combo box" );
 
             }
 
