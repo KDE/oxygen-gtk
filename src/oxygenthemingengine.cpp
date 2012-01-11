@@ -216,7 +216,7 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
-            if( GDK_IS_WINDOW( window ) && !(options&Alpha) )
+            if( GDK_IS_WINDOW( window ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) && !(options&Alpha) )
             {
 
                 // make tooltips appear rounded using XShape extension if screen isn't composited
