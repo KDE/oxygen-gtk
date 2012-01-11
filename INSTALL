@@ -49,8 +49,3 @@ Note: this flag is automatically set to zero if gtk version is too old because o
 set this to 0 to disable rendering of groupbox consistently with Qt. 
 This special rendering might triggers some unwanted size-changes events in some dialog the first time they are
 made visible.
-
-    * ENABLE_X_PROPERTIES
-set this to 0 to disable setting of XProperties on the X11 Windows corresponding to the applications managed by oxygen-gtk, 
-that can be interpreted by the window manager. This will prevent the background gradient hint to be passed to the window decoration, 
-and menus/tooltips shadows to be passed to the window manager.

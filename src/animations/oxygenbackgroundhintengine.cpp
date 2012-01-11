@@ -54,10 +54,6 @@ namespace Oxygen
     bool BackgroundHintEngine::registerWidget( GtkWidget* widget, BackgroundHints hints )
     {
 
-        #if !ENABLE_X_PROPERTIES
-        return false;
-        #endif
-
         // get associated top level widget
         GtkWidget* topLevel( gtk_widget_get_toplevel( widget ) );
         if( !topLevel ) return false;
