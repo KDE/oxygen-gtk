@@ -288,7 +288,7 @@ namespace Oxygen
         if( _roundPixmaps.empty() )
         {
 
-           _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
+            _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 1 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 2 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 5 ), shadowOpacity ) );
             _roundPixmaps.push_back( createPixmap( _roundTiles.surface( 8 ), shadowOpacity ) );

@@ -79,6 +79,11 @@ if( NOT DEFINED ENABLE_GROUPBOX_HACK )
     set( ENABLE_GROUPBOX_HACK 1 )
 endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
 
+# set to 0 to disable setting X properties on windows
+if( NOT DEFINED ENABLE_X_PROPERTIES )
+    set( ENABLE_X_PROPERTIES 1 )
+endif( NOT DEFINED ENABLE_X_PROPERTIES )
+
 ##############
 # Requirements
 ##############
@@ -170,6 +175,7 @@ message( "  ENABLE_COMBOBOX_LIST_RESIZE ${ENABLE_COMBOBOX_LIST_RESIZE}" )
 message( "  ENABLE_COMBOBOX_ENTRY_HACK ${ENABLE_COMBOBOX_ENTRY_HACK}" )
 message( "  ENABLE_INNER_SHADOWS_HACK ${ENABLE_INNER_SHADOWS_HACK}" )
 message( "  ENABLE_GROUPBOX_HACK ${ENABLE_GROUPBOX_HACK}" )
+message( "  ENABLE_X_PROPERTIES ${ENABLE_X_PROPERTIES}" )
 message( "" )
 message( "Paths: " )
 message( "  Installing the GTK theme engine library to: ${INSTALL_PATH_GTK_ENGINES}" )

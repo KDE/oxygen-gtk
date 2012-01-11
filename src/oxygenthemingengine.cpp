@@ -2390,7 +2390,10 @@ namespace Oxygen
         Style::instance().animations().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
+
+        #if ENABLE_X_PROPERTIES
         Style::instance().shadowHelper().initializeHooks();
+        #endif
 
         // also initialize dbus
         Oxygen::DBus::instance();
