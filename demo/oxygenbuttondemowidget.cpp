@@ -126,7 +126,7 @@ namespace Oxygen
 
                 gtk_button_set_image( GTK_BUTTON( button ), image );
                 gtk_widget_show( button );
-                gtk_widget_set_tooltip_text( button, "This is a normal, text+icon button" );
+                gtk_widget_set_tooltip_text( button, "This is a normal, text and icon button" );
 
                 // combobox model
                 GtkListStore* model( gtk_list_store_new( 2, GDK_TYPE_PIXBUF, G_TYPE_STRING ) );
@@ -179,7 +179,7 @@ namespace Oxygen
 
                 gtk_grid_attach( GTK_GRID( grid ), comboBox, 2, 1, 1, 1 );
                 gtk_widget_show( comboBox );
-                gtk_widget_set_tooltip_text( comboBox, "This is a normal, text+icon combo box" );
+                gtk_widget_set_tooltip_text( comboBox, "This is a normal, text and icon combo box" );
 
             }
 
