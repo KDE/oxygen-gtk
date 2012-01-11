@@ -3545,9 +3545,7 @@ namespace Oxygen
         Style::instance().animations().initializeHooks();
 
         // shadow hooks
-        #if ENABLE_X_PROPERTIES
         Style::instance().shadowHelper().initializeHooks();
-        #endif
 
         // window manager hooks
         if( !Style::instance().settings().applicationName().isEclipse() )
