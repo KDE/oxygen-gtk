@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.4)
 # Define package generation
 ###########################
 
-set( CPACK_PACKAGE_NAME "oxygen-gtk" )
+set( CPACK_PACKAGE_NAME "oxygen-gtk2" )
 set( CPACK_SOURCE_PACKAGE_NAME "oxygen-gtk2" )
 set( CPACK_SOURCE_GENERATOR TBZ2 )
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Oxygen Gtk2 theme" )
@@ -30,7 +30,7 @@ if( NOT OXYGEN_VERSION_DETECTED )
 endif( NOT OXYGEN_VERSION_DETECTED )
 message( "Detected oxygen version string: ${OXYGEN_VERSION}" )
 
-set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
+set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk2-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )
 ########################
 # Package specific flags
