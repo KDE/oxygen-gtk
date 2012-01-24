@@ -37,7 +37,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        CairoSurfaceCache( void )
+        CairoSurfaceCache( size_t size = 100 ):
+            Cache<T, Cairo::Surface>( size )
         {}
 
         //! destructor
