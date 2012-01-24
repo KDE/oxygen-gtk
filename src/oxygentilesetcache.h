@@ -36,7 +36,8 @@ namespace Oxygen
         public:
 
         //! constructor
-        TileSetCache( size_t size = 100 )
+        TileSetCache( size_t size = 100 ):
+            Cache<T, TileSet>( size )
         {}
 
         //! destructor

@@ -74,12 +74,6 @@ namespace Oxygen
         //! destructor
         virtual ~TileSet();
 
-        //! copy constructor
-        TileSet( const TileSet& );
-
-        //! assignment operator
-        TileSet& operator = ( const TileSet& );
-
         /*!
         Flags specifying what sides to draw in ::render. Corners are drawn when
         the sides forming that corner are drawn, e.g. Top|Left draws the
