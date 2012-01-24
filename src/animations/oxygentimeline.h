@@ -23,6 +23,7 @@
 
 #include <glib.h>
 #include <cassert>
+#include <cmath>
 
 namespace Oxygen
 {
@@ -114,11 +115,23 @@ namespace Oxygen
 
         //@}
 
+        //! steps
+        static void setSteps( int value )
+        { _steps = value; }
+
         protected:
 
         //! run callback
         void trigger( void ) const
         { if( _func )  (_func)(_data); }
+
+        //! digitize value, based on steps
+        double digitize( const double& value ) const
+        {
+            if( _steps > 0 ) return std::floor( value*_steps )/_steps;
+            else return value;
+        }
+
 
         private:
 
@@ -148,6 +161,9 @@ namespace Oxygen
 
         //! data
         gpointer _data;
+
+        //! steps
+        static int _steps;
 
     };
 

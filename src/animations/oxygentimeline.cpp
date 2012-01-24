@@ -27,6 +27,9 @@ namespace Oxygen
 {
 
     //_________________________________________________
+    int TimeLine::_steps = 0;
+
+    //_________________________________________________
     TimeLine::TimeLine( int duration ):
         _duration( duration ),
         _enabled( true ),
@@ -131,9 +134,13 @@ namespace Oxygen
             assert( _time < _duration );
             assert( _time <= elapsed );
 
-            _value = ( _value*double(_duration - elapsed) + end*double(elapsed - _time) )/double(_duration - _time);
+            double oldValue( _value );
+            _value = digitize( ( _value*double(_duration - elapsed) + end*double(elapsed - _time) )/double(_duration - _time) );
             _time = elapsed;
-            trigger();
+
+            // trigger callback if value is actually changed
+            if( _value != oldValue ) trigger();
+
             return true;
 
         }
