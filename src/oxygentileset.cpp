@@ -95,37 +95,6 @@ namespace Oxygen
     }
 
     //______________________________________________________________
-    TileSet::TileSet( const TileSet& other ):
-        _surfaces( other._surfaces ),
-        _w1( other._w1 ),
-        _h1( other._h1 ),
-        _w3( other._w3 ),
-        _h3( other._h3 )
-    {
-
-        // increase ref counter
-        for( SurfaceList::iterator iter = _surfaces.begin(); iter != _surfaces.end(); ++iter )
-        { cairo_surface_reference( *iter ); }
-
-    }
-
-    //______________________________________________________________
-    TileSet& TileSet::operator = ( const TileSet& other )
-    {
-
-        _w1 = other._w1;
-        _h1 = other._h1;
-        _w3 = other._w3;
-        _h3 = other._h3;
-
-        // copy pixmap list
-        _surfaces = other._surfaces;
-
-        return *this;
-
-    }
-
-    //______________________________________________________________
     TileSet::~TileSet( void )
     {}
 
