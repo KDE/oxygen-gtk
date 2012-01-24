@@ -184,7 +184,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::InnerShadowData::targetExposeEvent -"
             << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
-            << " child: " << child << " (" << G_OBJECT_TYPE_NAME(widget) << ")"
+            << " child: " << child << " (" << G_OBJECT_TYPE_NAME(child) << ")"
             << " path: " << Gtk::gtk_widget_path( child )
             << std::endl;
         #endif
