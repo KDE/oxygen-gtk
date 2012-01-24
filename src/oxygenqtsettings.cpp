@@ -23,6 +23,7 @@
 #include "oxygencoloreffect.h"
 #include "oxygencolorutils.h"
 #include "oxygenfontinfo.h"
+#include "oxygentimeline.h"
 #include "config.h"
 
 #include <gtk/gtk.h>
@@ -898,6 +899,9 @@ namespace Oxygen
         _menuAnimationsDuration = oxygen.getOption( "[Style]", "MenuAnimationsDuration" ).toVariant<int>(150);
         _menuFollowMouseAnimationsDuration = oxygen.getOption( "[Style]", "MenuFollowMouseAnimationsDuration" ).toVariant<int>(40);
         _toolBarAnimationsDuration = oxygen.getOption( "[Style]", "ToolBarAnimationsDuration" ).toVariant<int>(50);
+
+        // animation steps
+        TimeLine::setSteps( oxygen.getOption( "[Style]", "AnimationSteps" ).toVariant<int>( 10 ) );
 
         // window decoration button size
         std::string buttonSize( oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
