@@ -3527,6 +3527,15 @@ namespace Oxygen
 
             pango_cairo_show_layout( context, layout );
 
+        } else if( GtkWidget* parent = Gtk::gtk_parent_button( widget ) ) {
+
+            // for flat buttons, do not use PRELIGHT color, since there is no PRELIGHT background rendered.
+            if( Gtk::gtk_button_is_flat( parent ) && state == GTK_STATE_PRELIGHT ) state = GTK_STATE_NORMAL;
+            StyleWrapper::parentClass()->draw_layout(
+                style, window, state, use_text,
+                clipRect, widget, detail, x, y, layout );
+
+
         } else {
 
             // in all other cases, fallback on default rendering, for now
