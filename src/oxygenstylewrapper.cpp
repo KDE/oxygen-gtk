@@ -69,7 +69,7 @@ namespace Oxygen
 
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
         engine.registerWidget(widget);
-
+        engine.setDirty( widget, false );
         if( engine.animatedRectangleIsValid( widget ) )
         {
 
@@ -1041,7 +1041,7 @@ namespace Oxygen
                 toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
                 #endif
 
-                if( !toolPalette && (parent = engine.findParent( widget ) ) )
+                if( !toolPalette && (parent = engine.findParent( widget ) ) && !engine.isDirty( parent ) )
                 {
 
                     // register child
@@ -3478,14 +3478,14 @@ namespace Oxygen
         PangoLayout* layout)
     {
 
-        #if OXYGEN_DEBUG
+        //#if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::draw_layout -"
             << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
             << " state: " << Gtk::TypeNames::state( state )
             << " detail: " << (detail ? detail:"0x0" )
             << std::endl;
-        #endif
+        //#endif
 
         const Gtk::Detail d(detail);
 
@@ -3530,7 +3530,7 @@ namespace Oxygen
         } else if( GtkWidget* parent = Gtk::gtk_parent_button( widget ) ) {
 
             // for flat buttons, do not use PRELIGHT color, since there is no PRELIGHT background rendered.
-            if( Gtk::gtk_button_is_flat( parent ) && state == GTK_STATE_PRELIGHT ) state = GTK_STATE_NORMAL;
+            if( Gtk::gtk_button_is_flat( parent ) && ( state == GTK_STATE_PRELIGHT || state == GTK_STATE_ACTIVE )  ) state = GTK_STATE_NORMAL;
             StyleWrapper::parentClass()->draw_layout(
                 style, window, state, use_text,
                 clipRect, widget, detail, x, y, layout );
