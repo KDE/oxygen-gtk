@@ -3478,14 +3478,14 @@ namespace Oxygen
         PangoLayout* layout)
     {
 
-        //#if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::draw_layout -"
             << " widget: " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")"
             << " state: " << Gtk::TypeNames::state( state )
             << " detail: " << (detail ? detail:"0x0" )
             << std::endl;
-        //#endif
+        #endif
 
         const Gtk::Detail d(detail);
 
