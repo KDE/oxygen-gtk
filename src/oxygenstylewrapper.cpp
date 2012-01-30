@@ -69,7 +69,7 @@ namespace Oxygen
 
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
         engine.registerWidget(widget);
-
+        engine.setDirty( widget, false );
         if( engine.animatedRectangleIsValid( widget ) )
         {
 
@@ -1041,7 +1041,7 @@ namespace Oxygen
                 toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
                 #endif
 
-                if( !toolPalette && (parent = engine.findParent( widget ) ) )
+                if( !toolPalette && (parent = engine.findParent( widget ) ) && !engine.isDirty( parent ) )
                 {
 
                     // register child
