@@ -87,9 +87,6 @@ namespace Oxygen
         //! set mouse over state
         virtual bool setHovered( GtkWidget* widget, bool value );
 
-        //! update columns cursor
-        void updateColumnsCursor( void ) const;
-
         //! update hovered cell based on pointer position
         void updatePosition( GtkWidget*, int x, int y );
 
@@ -136,7 +133,6 @@ namespace Oxygen
         //@{
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childValueChanged( GtkRange*, gpointer );
-        static void columnsChanged( GtkTreeView*, gpointer );
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
         //@}
 
