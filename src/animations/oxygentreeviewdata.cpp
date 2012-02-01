@@ -256,18 +256,6 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void TreeViewData::columnsChanged( GtkTreeView*, gpointer data )
-    {
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::TreeViewData::columnsChanged" << std::endl;
-        #endif
-
-        static_cast<TreeViewData*>(data)->updateColumnsCursor();
-        return;
-    }
-
-    //________________________________________________________________________________
     gboolean TreeViewData::motionNotifyEvent(GtkWidget* widget, GdkEventMotion* event, gpointer data )
     {
 
