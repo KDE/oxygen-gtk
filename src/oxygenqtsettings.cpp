@@ -449,8 +449,14 @@ namespace Oxygen
         gchar** gtkSearchPath;
         int nElements;
         gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
-        for( int i=0; i<nElements; i++ ) { searchPath.insert( gtkSearchPath[i] ); }
-        g_free( gtkSearchPath );
+        for( int i=0; i<nElements; i++ )
+        {
+            if( gtkSearchPath[i] )
+            { searchPath.insert( gtkSearchPath[i] ); }
+        }
+
+        // free
+        g_strfreev( gtkSearchPath );
 
         // add kde's path. Loop is reversed because added path must be prepended.
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
