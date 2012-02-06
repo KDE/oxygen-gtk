@@ -624,6 +624,10 @@ namespace Oxygen
             gtk_theming_engine_get_background_color( engine, state, &background );
             Style::instance().renderInfoBar( widget, context, x, y, w, h, Gtk::gdk_get_color( background ) );
 
+        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_STATUSBAR ) && borderStyle == GTK_BORDER_STYLE_INSET ) {
+
+            return;
+
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) ) {
 
             // do nothing for tooltips
