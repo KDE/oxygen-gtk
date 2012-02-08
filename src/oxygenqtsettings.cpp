@@ -194,11 +194,11 @@ namespace Oxygen
         if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
         {
 
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 0 0 10;" );
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
 
         } else {
 
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1 10 0 0;" );
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
 
         }
 
