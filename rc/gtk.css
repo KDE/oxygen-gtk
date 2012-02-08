@@ -28,49 +28,49 @@ INFO: css border and padding ordering is either:
 */
 
 * {
-    -GtkPaned-handle-size: 3;
-    -GtkButton-child_displacement_x: 0;
-    -GtkButton-child_displacement_y: 0;
+    -GtkPaned-handle-size: 3px;
+    -GtkButton-child_displacement_x: 0px;
+    -GtkButton-child_displacement_y: 0px;
 
-    -GtkButton-default_border: 0;
-    -GtkButton-default_outside_border: 0;
-    -GtkButton-inner-border: 1 2 0;
+    -GtkButton-default_border: 0px;
+    -GtkButton-default_outside_border: 0px;
+    -GtkButton-inner-border: 1px 2px 0px;
 
-    -GtkCalendar-inner-border: 0;
-    -GtkCalendar-horizontal-separation: 0;
-    -GtkComboBox-appears-as-list: 1;
+    -GtkCalendar-inner-border: 0px;
+    -GtkCalendar-horizontal-separation: 0px;
+    -GtkComboBox-appears-as-list: 1px;
 
 
-    -GtkMenu-horizontal-padding: 3;
-    -GtkMenu-vertical-padding: 5;
-    -GtkMenu-horizontal-offset: -7;
-    -GtkMenuBar-internal-padding: 0;
+    -GtkMenu-horizontal-padding: 3px;
+    -GtkMenu-vertical-padding: 5px;
+    -GtkMenu-horizontal-offset: -7px;
+    -GtkMenuBar-internal-padding: 0px;
 
-    -GtkScrolledWindow-scrollbar-spacing:1;
+    -GtkScrolledWindow-scrollbar-spacing: 1px;
 
-    -GtkCheckButton-indicator-size: 18;
-    -GtkCheckMenuItem-indicator-size: 16;
-    -GtkExpander-expander-size: 15;
-    -GtkTreeView-expander-size: 15;
+    -GtkCheckButton-indicator-size: 18px;
+    -GtkCheckMenuItem-indicator-size: 16px;
+    -GtkExpander-expander-size: 15px;
+    -GtkTreeView-expander-size: 15px;
 
-    -GtkTreeView-allow-rules: 1;
+    -GtkTreeView-allow-rules: 1px;
 
     -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
 
-    -GtkWindow-resize-grip-height: 0;
-    -GtkWindow-resize-grip-width: 0;
+    -GtkWindow-resize-grip-height: 0px;
+    -GtkWindow-resize-grip-width: 0px;
 
     /*
     Apparently the following have become obsolete
-    -GtkTreeView-row-ending-details: 1;
+    -GtkTreeView-row-ending-details: 1px;
     -GtkStatusbar-has-resize-grip: false;
-    -GtkEntry-honors-transparent-bg-hint: 1;
+    -GtkEntry-honors-transparent-bg-hint: 1px;
     */
 
     engine: oxygen-gtk;
 }
 
-GtkScrolledWindow { border-width: 1; }
+GtkScrolledWindow { border-width: 1px; }
 
 /* customize border styles */
 .toolbar { border-style: none; }
@@ -84,61 +84,61 @@ GtkStatusBar { border-style: none; }
 */
 
 /* specialization of default widgets style properties */
-GtkToggleButton { -GtkButton-inner-border: 1 0 0; }
+GtkToggleButton { -GtkButton-inner-border: 1px 0px 0px; }
 
 GtkScale {
-    -GtkRange-slider-width: 23;
-    -GtkScale-slider-length: 21;
+    -GtkRange-slider-width: 23px;
+    -GtkScale-slider-length: 21px;
 }
 
 GtkScrollbar {
-    -GtkRange-stepper-size:12;
-    -GtkRange-trough-border:0;
+    -GtkRange-stepper-size: 12px;
+    -GtkRange-trough-border: 0px;
 }
 
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
 GtkEntry {
-    padding: 2 5;
+    padding: 2px 5px;
 }
 
 /* menuitems padding */
 GtkMenuBar {
-    padding: 1;
-    border-width: 0;
+    padding: 1px;
+    border-width: 0px;
 }
-GtkMenuBar>GtkMenuItem { padding: 2 5; }
-GtkMenu>GtkMenuItem { padding: 5 1; }
-GtkMenu>GtkSeparatorMenuItem { padding: 1 1; }
+GtkMenuBar>GtkMenuItem { padding: 2px 5px; }
+GtkMenu>GtkMenuItem { padding: 5px 1px; }
+GtkMenu>GtkSeparatorMenuItem { padding: 1px 1px; }
 
 /* menu toolbutton */
 GtkMenuToolButton, GtkMenuToolButton * {
-    border-width: 0;
-    -GtkButton-focus-padding: 0;
-    -GtkWidget-focus-line-width: 0;
+    border-width: 0px;
+    -GtkButton-focus-padding: 0px;
+    -GtkWidget-focus-line-width: 0px;
 }
 
 /* notebooks */
-GtkNotebook { padding: 4; }
+GtkNotebook { padding: 4px; }
 
 /* option menu */
-GtkOptionMenu { padding: 0 4; }
+GtkOptionMenu { padding: 0px 4px; }
 
 /* separators */
-GtkSeparator { border-width: 3; }
+GtkSeparator { border-width: 3px; }
 
 /* frames */
-GtkFrame { padding: 1; }
-GtkScrolledWindow { padding: 1; }
-GtkViewport { padding: 1; }
-GtkProgressBar { padding: 0; }
+GtkFrame { padding: 1px; }
+GtkScrolledWindow { padding: 1px; }
+GtkViewport { padding: 1px; }
+GtkProgressBar { padding: 0px; }
 
 /* combo boxes */
-GtkComboBox { padding: 1 0; }
-GtkComboBox>GtkFrame { padding: 4; }
+GtkComboBox { padding: 1px 0px; }
+GtkComboBox>GtkFrame { padding: 4px; }
 GtkComboBox>GtkEntry {
-    padding: 2 5;
+    padding: 2px 5px;
 }
 /* headers */
-GtkTreeView>GtkButton { border-width: 0 2; }
-GtkList>GtkButton { border-width: 0 2; }
+GtkTreeView>GtkButton { border-width: 0px 2px; }
+GtkList>GtkButton { border-width: 0px 2px; }
