@@ -415,6 +415,44 @@ namespace Oxygen
 
         //! returns a widget which has response_id as response id for dialog
         GtkWidget* gtk_dialog_find_button( GtkDialog*, gint );
+
+        //! store quarks
+        class Quarks
+        {
+            public:
+
+            //! parent class
+            inline static GQuark rcStyle( void )
+            {
+
+                // try initialize
+                if( !_rcStyle )
+                { _rcStyle = g_quark_try_string( "gtk-rc-style" ); }
+
+                return _rcStyle;
+
+            }
+
+
+            private:
+
+            //! RC style quark
+            /*!
+            used to check whether an RCStyle was installed on a given widget or not.
+            See gtkwidet::gtk_widget_get_modifier_style()
+            */
+            static GQuark _rcStyle;
+
+        };
+
+        //! returns true if widget style color is modified
+        inline bool gtk_widget_style_is_modified( GtkWidget* widget, GtkStateType state, GtkRcFlags flag )
+        {
+            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), Quarks::rcStyle() ) );
+            return ( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&flag );
+        }
+
+
     }
 
 }

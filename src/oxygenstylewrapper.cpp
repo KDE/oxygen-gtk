@@ -50,7 +50,6 @@ namespace Oxygen
     GtkStyleClass* StyleWrapper::_parentClass = 0L;
     GTypeInfo StyleWrapper::_typeInfo;
     GType StyleWrapper::_type = 0L;
-    GQuark StyleWrapper::_quarkRCStyle = 0L;
     XulInfo StyleWrapper::_xulInfo = XulInfo();
 
     //___________________________________________________________________________________________________________
@@ -154,8 +153,7 @@ namespace Oxygen
             - register the widgets to the relevant engines as below
             - pass the modified color to renderWindowBackground
             */
-            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
-            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            if( Gtk::gtk_widget_style_is_modified( widget, state, GTK_RC_BG ) )
             {
                 Style::instance().animations().flatWidgetEngine().registerWidget( widget );
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
@@ -208,8 +206,7 @@ namespace Oxygen
             if( Gtk::gtk_widget_is_applet( widget ) ) return;
 
             // for modified bg, fill with flat custom color
-            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
-            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
+            if( Gtk::gtk_widget_style_is_modified( widget, state, GTK_RC_BG ) )
             {
 
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
@@ -310,8 +307,7 @@ namespace Oxygen
             bool drawTreeLines( true );
             ColorUtils::Rgba background;
 
-            const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
-            if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[GTK_STATE_NORMAL]&GTK_RC_BASE )
+            if( Gtk::gtk_widget_style_is_modified( widget, GTK_STATE_NORMAL, GTK_RC_BASE ) )
             {
 
                 /*
