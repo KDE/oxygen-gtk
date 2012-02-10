@@ -28,6 +28,7 @@
 #include "oxygencomboboxengine.h"
 #include "oxygencomboboxentryengine.h"
 #include "oxygendialogengine.h"
+#include "oxygenflatwidgetengine.h"
 #include "oxygengroupboxengine.h"
 #include "oxygengroupboxlabelengine.h"
 #include "oxygenhook.h"
@@ -109,6 +110,10 @@ namespace Oxygen
         //! dialog engine
         DialogEngine& dialogEngine( void ) const
         { return *_dialogEngine; }
+
+        //! flat widget
+        FlatWidgetEngine& flatWidgetEngine( void ) const
+        { return *_flatWidgetEngine; }
 
         //! groupbox engine
         GroupBoxEngine& groupBoxEngine( void ) const
@@ -235,6 +240,9 @@ namespace Oxygen
 
         //! dialog engine
         DialogEngine* _dialogEngine;
+
+        //! flat widget
+        FlatWidgetEngine* _flatWidgetEngine;
 
         //! groupbox engine
         GroupBoxEngine* _groupBoxEngine;

@@ -157,6 +157,7 @@ namespace Oxygen
             const bool hasRCStyle( g_object_get_qdata (G_OBJECT (widget), StyleWrapper::quarkRCStyle() ) );
             if( hasRCStyle && gtk_widget_get_modifier_style(widget)->color_flags[state]&GTK_RC_BG )
             {
+                Style::instance().animations().flatWidgetEngine().registerWidget( widget );
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
             }
