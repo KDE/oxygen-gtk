@@ -341,6 +341,9 @@ namespace Oxygen
         //! load kde icons
         void loadKdeIcons( void );
 
+        //! default icon search path
+        PathSet defaultIconSearchPath( void ) const;
+
         //! load palette from kdeglobals
         void loadKdePalette( bool forced = false );
 

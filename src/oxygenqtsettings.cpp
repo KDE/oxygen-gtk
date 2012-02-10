@@ -445,18 +445,7 @@ namespace Oxygen
 
         // update icon search path
         // put existing default path in a set
-        PathSet searchPath;
-        gchar** gtkSearchPath;
-        int nElements;
-        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
-        for( int i=0; i<nElements; i++ )
-        {
-            if( gtkSearchPath[i] )
-            { searchPath.insert( gtkSearchPath[i] ); }
-        }
-
-        // free
-        g_strfreev( gtkSearchPath );
+        PathSet searchPath( defaultIconSearchPath() );
 
         // add kde's path. Loop is reversed because added path must be prepended.
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
@@ -517,6 +506,29 @@ namespace Oxygen
 
         _rc.merge( _icons.generate( iconThemeList ) );
 
+    }
+
+    //_________________________________________________________
+    PathSet QtSettings::defaultIconSearchPath( void ) const
+    {
+        PathSet searchPath;
+
+        // load icon theme
+        GtkIconTheme* theme( gtk_icon_theme_get_default() );
+        if( !GTK_IS_ICON_THEME( theme ) ) return searchPath;
+
+        // get default
+        gchar** gtkSearchPath;
+        int nElements;
+
+        gtk_icon_theme_get_search_path( theme, &gtkSearchPath, &nElements );
+        for( int i=0; i<nElements; i++ )
+        { searchPath.insert( gtkSearchPath[i] ); }
+
+        // free
+        g_strfreev( gtkSearchPath );
+
+        return searchPath;
     }
 
     //_________________________________________________________
