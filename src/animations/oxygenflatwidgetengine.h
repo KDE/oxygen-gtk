@@ -57,7 +57,7 @@ namespace Oxygen
         { return _data.find( widget ) != _data.end(); }
 
         //! true if one of widgets parent is included
-        virtual GtkWidget* hasFlatParent( GtkWidget* );
+        virtual GtkWidget* flatParent( GtkWidget* );
 
         private:
 

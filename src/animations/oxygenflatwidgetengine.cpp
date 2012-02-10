@@ -37,7 +37,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    GtkWidget* FlatWidgetEngine::hasFlatParent( GtkWidget* widget )
+    GtkWidget* FlatWidgetEngine::flatParent( GtkWidget* widget )
     {
 
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )

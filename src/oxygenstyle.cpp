@@ -754,22 +754,36 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return;
 
-        // test for flatness
+        // add hole mask
+        Cairo::Context context( window, clipRect );
+        renderHoleMask( context, x, y, w, h, tiles, sideMargin );
+
         if( (options&Flat) || Style::instance().settings().applicationName().useFlatBackground( widget ) )
         {
 
             // create a rounded-rect antimask for renderHoleBackground
-            Cairo::Context context( window, clipRect );
-            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
-        } else {
+        } else if( GtkWidget* parent = animations().flatWidgetEngine().flatParent( widget ) ) {
 
-            // add hole if required (this can be done before translating the context)
-            Cairo::Context context( window, clipRect );
-            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
+            // get background color and fill
+            if( Gtk::gtk_widget_style_is_modified( parent, GTK_STATE_NORMAL, GTK_RC_BG ) )
+            {
+
+                cairo_set_source( context, Gtk::gdk_get_color( gtk_widget_get_modifier_style( parent )->bg[GTK_STATE_NORMAL] ) );
+
+            } else {
+
+                cairo_set_source( context, settings().palette().color( Palette::Window ) );
+
+            }
+
+            cairo_rectangle( context, x, y, w, h );
+            cairo_fill( context );
+
+        } else {
 
             // normal window background
             renderWindowBackground( context, window, 0L, clipRect, x, y, w, h, options, tiles);
