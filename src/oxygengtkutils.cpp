@@ -34,6 +34,7 @@
 
 namespace Oxygen
 {
+    GQuark Gtk::Quarks::_rcStyle = 0L;
 
     //____________________________________________________________
     void Gtk::gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
