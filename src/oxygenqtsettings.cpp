@@ -461,12 +461,6 @@ namespace Oxygen
             { gtk_icon_theme_prepend_search_path(gtk_icon_theme_get_default(), path.c_str() ); }
         }
 
-        #if OXYGEN_DEBUG
-        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
-        for( int i=0; i<nElements; i++ )
-        { std::cerr << "Oxygen::QtSettings::loadKdeIcons - icon theme search path: " <<  gtkSearchPath[i] << std::endl; }
-        #endif
-
         // load icon theme and path to gtk
         _iconThemes.clear();
         _kdeIconTheme = _kdeGlobals.getValue( "[Icons]", "Theme", "oxygen" );
