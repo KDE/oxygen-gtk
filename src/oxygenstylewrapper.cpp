@@ -178,7 +178,9 @@ namespace Oxygen
             { Style::instance().animations().dialogEngine().registerWidget( toplevel ); }
 
             // render background gradient
-            const bool success( Style::instance().renderWindowBackground( window, clipRect, x, y, w, h ) );
+            StyleOptions options;
+            options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) );
+            const bool success( Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options ) );
 
             // register to window manager
             if( success &&
@@ -193,7 +195,10 @@ namespace Oxygen
 
             // possible groupbox background
             if( d.isEventBox() && Gtk::gtk_parent_groupbox( widget ) )
-            { Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, Blend ); }
+            {
+                options |= Blend;
+                Style::instance().renderGroupBoxBackground( window, widget, clipRect, x, y, w, h, options );
+            }
 
             // also draw possible animated tool button
             draw_animated_button( window, clipRect, widget );
