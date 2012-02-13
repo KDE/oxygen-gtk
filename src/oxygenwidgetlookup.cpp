@@ -121,12 +121,14 @@ namespace Oxygen
             }
         }
 
+        #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::WidgetLookup::find -"
             << " context: " << context
             << " type: " << g_type_name( type )
             << " - no match found"
             << std::endl;
+        #endif
 
         return 0L;
 
