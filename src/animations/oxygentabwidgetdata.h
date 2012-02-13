@@ -91,6 +91,9 @@ namespace Oxygen
         bool isDirty( void ) const
         { return _dirty; }
 
+        //! returns true if provided point is in one tab of the widget
+        bool isInTab( int x, int y ) const;
+
         //@]
 
         protected:
