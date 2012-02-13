@@ -107,7 +107,8 @@ namespace Oxygen
                 // check window
                 window &&
                 gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
-                gdk_display_supports_composite( gtk_widget_get_display( widget ) ) )
+                gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
+                G_OBJECT_TYPE_NAME(widget) != std::string("MessageList") ) // TODO: implement proper blacklist if there appear too many bad widgets/apps
             {
                 data.initiallyComposited=gdk_window_get_composited(window);
                 gdk_window_set_composited(window,TRUE);
