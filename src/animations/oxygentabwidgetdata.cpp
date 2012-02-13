@@ -130,6 +130,18 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
+    bool TabWidgetData::isInTab( int x, int y ) const
+    {
+
+        // loop over tab rectangles and check.
+        for( RectangleList::const_iterator iter = _tabRects.begin(); iter != _tabRects.end(); ++iter )
+        { if( Gtk::gdk_rectangle_contains( &(*iter), x, y ) ) return true; }
+
+        return false;
+
+    }
+
+    //________________________________________________________________________________
     void TabWidgetData::setHoveredTab( GtkWidget* widget, int index )
     {
 

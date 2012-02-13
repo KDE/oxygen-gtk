@@ -376,6 +376,7 @@ namespace Oxygen
     //_________________________________________________
     bool WindowManager::isWindowDragWidget( GtkWidget* widget, GdkEventButton* event )
     {
+
         if( _mode == Disabled ) return false;
         else if( (!_drag) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
@@ -434,8 +435,14 @@ namespace Oxygen
 
             const GtkAllocation local( Gtk::gtk_widget_get_allocation( widget ) );
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
-            allocation.x += wx - local.x;
-            allocation.y += wy - local.y;
+
+            const int xLocal  = int(event->x_root) - wx + local.x;
+            const int yLocal  = int(event->y_root) - wy + local.y;
+
+            // compare to event root position
+            if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
+            else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
+            else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
 
         } else {
 
@@ -443,10 +450,10 @@ namespace Oxygen
             allocation.x = wx;
             allocation.y = wy;
 
-        }
+            // compare to event root position
+            return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
 
-        // compare to event root position
-        return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
+        }
 
     }
 

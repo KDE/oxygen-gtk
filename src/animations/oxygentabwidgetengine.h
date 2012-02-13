@@ -90,6 +90,10 @@ namespace Oxygen
         int hoveredTab( GtkWidget* widget )
         { return data().value( widget ).hoveredTab(); }
 
+        //! returns true if provided point is in one tab of the widget
+        bool isInTab( GtkWidget* widget, int x, int y )
+        { return data().value( widget ).isInTab( x, y ); }
+
         //! true when drag is in progress
         bool dragInProgress( GtkWidget* widget )
         { return data().value( widget ).dragInProgress(); }
