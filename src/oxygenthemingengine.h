@@ -47,18 +47,6 @@ namespace Oxygen
         inline static GtkThemingEngineClass* parentClass( void )
         { return _parentClass; }
 
-        //! parent class
-        inline static GQuark quarkRCStyle( void )
-        {
-
-            // try initialize
-            if( !_quarkRCStyle )
-            { _quarkRCStyle = g_quark_try_string( "gtk-rc-style" ); }
-
-            return _quarkRCStyle;
-
-        }
-
         protected:
 
         //! instance initialization
@@ -77,13 +65,6 @@ namespace Oxygen
 
         //! registered type
         static GType _type;
-
-        //! RC style quark
-        /*!
-        used to check whether an RCStyle was installed on a given widget or not.
-        See gtkwidet::gtk_widget_get_modifier_style()
-        */
-        static GQuark _quarkRCStyle;
 
 
     };
