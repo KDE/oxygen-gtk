@@ -11,7 +11,6 @@ set( oxygen_gtk_SOURCES
     animations/oxygencomboboxdata.cpp
     animations/oxygencomboboxentrydata.cpp
     animations/oxygendialogengine.cpp
-    animations/oxygenflatwidgetengine.cpp
     animations/oxygenfollowmousedata.cpp
     animations/oxygenhook.cpp
     animations/oxygenhoverdata.cpp
