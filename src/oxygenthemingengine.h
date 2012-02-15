@@ -66,7 +66,6 @@ namespace Oxygen
         //! registered type
         static GType _type;
 
-
     };
 }
 
