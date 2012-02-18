@@ -121,10 +121,13 @@ namespace Oxygen
 
                 GtkIconTheme* theme( gtk_icon_theme_get_default() );
                 GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, "oxygen", 16, (GtkIconLookupFlags) 0, 0L );
-                GtkWidget* image( gtk_image_new_from_pixbuf( icon ) );
-                g_object_unref( icon );
+                if(icon)
+                {
+                    GtkWidget* image( gtk_image_new_from_pixbuf( icon ) );
+                    g_object_unref( icon );
 
-                gtk_button_set_image( GTK_BUTTON( button ), image );
+                    gtk_button_set_image( GTK_BUTTON( button ), image );
+                }
                 gtk_widget_show( button );
                 gtk_widget_set_tooltip_text( button, "This is a normal, text and icon button" );
 
