@@ -119,7 +119,7 @@ GtkMenuToolButton, GtkMenuToolButton * {
 }
 
 /* notebooks */
-GtkNotebook { padding: 4px; }
+GtkNotebook { padding: 4px 6px 0px 6px; }
 
 /* option menu */
 GtkOptionMenu { padding: 0px 4px; }
