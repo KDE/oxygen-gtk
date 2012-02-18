@@ -119,7 +119,7 @@ GtkMenuToolButton, GtkMenuToolButton * {
 }
 
 /* notebooks */
-GtkNotebook { padding: 4px; }
+GtkNotebook { padding: 4px 6px 0px 6px; }
 
 /* option menu */
 GtkOptionMenu { padding: 0px 4px; }
@@ -134,8 +134,8 @@ GtkViewport { padding: 1px; }
 GtkProgressBar { padding: 0px; }
 
 /* combo boxes */
-GtkComboBox { padding: 1px 0px; }
-GtkComboBox>GtkFrame { padding: 4px; }
+GtkComboBox { padding: 0px 0px; }
+GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
 GtkComboBox>GtkEntry {
     padding: 2px 5px;
 }
