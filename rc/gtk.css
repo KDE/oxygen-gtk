@@ -142,3 +142,5 @@ GtkComboBox>GtkEntry {
 /* headers */
 GtkTreeView>GtkButton { border-width: 0px 2px; }
 GtkList>GtkButton { border-width: 0px 2px; }
+
+NautilusPathBar>GtkToggleButton{ padding: 0px 10px 0px 0px; }
