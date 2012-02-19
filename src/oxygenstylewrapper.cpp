@@ -2507,7 +2507,7 @@ namespace Oxygen
 
                 y+= 1;
 
-            } else if( arrow == GTK_ARROW_DOWN ) y -= 1;
+            }
 
             // disable contrast
             options &= ~Contrast;
