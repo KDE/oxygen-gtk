@@ -523,12 +523,14 @@ namespace Oxygen
 
                     // hide left part and increase width
                     tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-sideMargin-2, y, w+2*sideMargin+2, h, TileSet::Full, sideMargin );
                     Style::instance().renderHole( window, clipRect, x-9, y, w+9, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and increase width
                     tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-sideMargin, y, w+2*sideMargin+2, h, TileSet::Full, sideMargin );
                     Style::instance().renderHole( window, clipRect, x, y, w+9, h, options, data, tiles );
 
                 }
@@ -572,12 +574,14 @@ namespace Oxygen
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Left;
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-2-sideMargin, y, w+2*sideMargin+2, h, tiles, sideMargin );
                     Style::instance().renderHole( window, clipRect, x-7, y, w+7, h, options, data, tiles );
 
                 } else {
 
                     // hide right part and adjust width
                     tiles &= ~TileSet::Right;
+                    Style::instance().renderHoleBackground( window, widget, clipRect, x-sideMargin, y, w+2*sideMargin, h, tiles, sideMargin );
                     Style::instance().renderHole( window, clipRect, x, y, w+7, h, options, data, tiles );
 
                 }
@@ -628,6 +632,7 @@ namespace Oxygen
                 }
 
                 // render hole
+                Style::instance().renderHoleBackground( window, widget, clipRect, x-sideMargin, y, w+2*sideMargin, h, TileSet::Full, sideMargin );
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
                 Style::instance().renderHole( window, clipRect, x, y, w, h, options, data, tiles );
 
