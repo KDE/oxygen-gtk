@@ -673,6 +673,16 @@ namespace Oxygen
         _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
 
+        // rubber band selection (at least for nautilus)
+        // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
+        _css.addSection( ".view.rubberband,.rubberband" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_COLOR, _palette.color( Palette::Selected ) ) );
+        {
+            std::ostringstream color;
+            color << "  " << GTK_STYLE_PROPERTY_BACKGROUND_COLOR << ": alpha ("<< (std::string)_palette.color( Palette::Selected ) << ", 0.35);";
+            _css.addToCurrentSection( color.str() );
+        }
+
         /*
         this is stupid. Setting the color to all widgets, like above, erases the .info, warning, etc. colors.
         Need to reset them here. This is copied from gtkcssprovider.c
