@@ -202,9 +202,6 @@ namespace Oxygen
         //! combobox list size adjustment hook
         static gboolean sizeAllocationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
-        //! combobox entry size adjustment hook
-        static gboolean comboBoxEntryHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
-
         //! background hint setting hook
         static gboolean backgroundHintHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
@@ -304,9 +301,6 @@ namespace Oxygen
 
         //! realization hook
         Hook _realizationHook;
-
-        //! combobox hook
-        Hook _comboBoxEntryHook;
 
         //! size allocation hook
         Hook _sizeAllocationHook;

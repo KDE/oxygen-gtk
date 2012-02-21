@@ -74,7 +74,6 @@ namespace Oxygen
         { delete *iter; }
 
         // clear hooks
-        _comboBoxEntryHook.disconnect();
         _backgroundHintHook.disconnect();
         _sizeAllocationHook.disconnect();
         _realizationHook.disconnect();
@@ -125,10 +124,6 @@ namespace Oxygen
     void Animations::initializeHooks( void )
     {
         if( _hooksInitialized ) return;
-
-        #if ENABLE_COMBOBOX_ENTRY_HACK
-        _comboBoxEntryHook.connect( "size-allocate", (GSignalEmissionHook)comboBoxEntryHook, this );
-        #endif
 
         _backgroundHintHook.connect( "realize", (GSignalEmissionHook)backgroundHintHook, this );
 
@@ -278,34 +273,6 @@ namespace Oxygen
         }
 
         #endif
-
-        return true;
-
-    }
-
-    //____________________________________________________________________________________________
-    gboolean Animations::comboBoxEntryHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
-    {
-
-        // get widget from params
-        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
-
-        // check type
-        if( !GTK_IS_WIDGET( widget ) ) return false;
-
-        GtkWidget* parent( 0L );
-        if( GTK_IS_ENTRY( widget ) && (parent = Gtk::gtk_parent_combobox_entry( widget ) ) )
-        {
-            // TODO: remove when bug is fixed upstream
-            GtkAllocation rect( Gtk::gtk_widget_get_allocation( widget ) );
-            GtkAllocation parentRect( Gtk::gtk_widget_get_allocation( parent ) );
-            if( rect.y != parentRect.y )
-            {
-                GtkAllocation newRect( Gtk::gdk_rectangle( rect.x, parentRect.y, rect.width, parentRect.height ) );
-                gtk_widget_size_allocate( widget, &newRect );
-            }
-
-        }
 
         return true;
 
