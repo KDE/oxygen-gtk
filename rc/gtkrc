@@ -62,7 +62,8 @@ style "oxygen-default"
 
     GtkTreeView::allow-rules = 1
     GtkTreeView::row-ending-details = 1
-    GtkTreeView::expander-size = 15
+    GtkTreeView::expander-size = 10
+    GtkTreeView::vertical-separator = 0
 
     # shadow types
     GtkMenuBar::shadow-type = GTK_SHADOW_NONE
