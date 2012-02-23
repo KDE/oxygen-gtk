@@ -77,7 +77,7 @@ namespace Oxygen
         // clear hooks
         _sizeAllocationHook.disconnect();
         _realizationHook.disconnect();
-
+        _treeViewRowHeightHook.disconnect();
     }
 
     //_________________________________________
@@ -140,6 +140,10 @@ namespace Oxygen
 
         _sizeAllocationHook.connect( "size-allocate", (GSignalEmissionHook)sizeAllocationHook, this );
         _realizationHook.connect( "realize", (GSignalEmissionHook)realizationHook, this );
+
+        #if ENABLE_TREEVIEW_HEIGHT_HACK
+        _treeViewRowHeightHook.connect( "expose-event", (GSignalEmissionHook)treeViewRowHeightHook, this );
+        #endif
 
         _hooksInitialized = true;
     }
@@ -338,6 +342,60 @@ namespace Oxygen
 
         return TRUE;
 
+    }
+
+    //____________________________________________________________________________________________
+    gboolean Animations::treeViewRowHeightHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    {
+        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
+        if(!GTK_IS_TREE_VIEW(widget))
+            return TRUE;
+
+        int resizedAnything=0;
+        GList* columns=gtk_tree_view_get_columns( GTK_TREE_VIEW( widget ) );
+        if(!columns)
+            return TRUE;
+        for( GList* curCol=g_list_first(columns); curCol; curCol=g_list_next(curCol) )
+        {
+            GtkTreeViewColumn* col( GTK_TREE_VIEW_COLUMN(curCol->data) );
+            if(!col)
+                continue;
+
+            GList* renderers=gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( col ) );
+            if(!renderers)
+                continue;
+
+            int resized=0;
+            for( GList* renderer=g_list_first(renderers); renderer; renderer=g_list_next(renderer) )
+            {
+                GtkCellRenderer* r( GTK_CELL_RENDERER(renderer->data) );
+                if(!GTK_IS_CELL_RENDERER_TEXT(r))
+                    continue;
+                int xpad,ypad;
+                gtk_cell_renderer_get_padding(r,&xpad,&ypad);
+                if(ypad!=0)
+                {
+                    ++resized;
+                    gtk_cell_renderer_set_padding(r,xpad,0);
+                }
+            }
+            g_list_free(renderers);
+
+            if(resized)
+                gtk_tree_view_column_queue_resize(col);
+            resizedAnything+=resized;
+        }
+        g_list_free(columns);
+
+        if( Gtk::gtk_combobox_is_tree_view(widget) && resizedAnything )
+        {
+            // TODO: resize combobox list
+            // NOTE: there are some corner cases, like the list 
+            // being above the button; the list being too high so 
+            // it's scrolled, etc. - these must be taken into account
+        }
+
+        return TRUE;
     }
 
 }

@@ -74,6 +74,11 @@ if( NOT DEFINED ENABLE_GROUPBOX_HACK )
     set( ENABLE_GROUPBOX_HACK 1 )
 endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
 
+# set to 1 to enable treeview row height hack
+if( NOT DEFINED ENABLE_TREEVIEW_HEIGHT_HACK )
+    set( ENABLE_TREEVIEW_HEIGHT_HACK 0 )
+endif( NOT DEFINED ENABLE_TREEVIEW_HEIGHT_HACK )
+
 ##############
 # Requirements
 ##############

@@ -218,6 +218,9 @@ namespace Oxygen
         //! widget realize hook
         static gboolean realizationHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
+        //! treeview row ypad tweaking hook
+        static gboolean treeViewRowHeightHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+
         private:
 
         //! inner shadow enabled state
@@ -321,7 +324,8 @@ namespace Oxygen
         //! inner shadows hook
         Hook _innerShadowHook;
 
-
+        //! treeview row ypad tweaking hook
+        Hook _treeViewRowHeightHook;
         //@}
 
         //! keep track of all registered widgets, and associated destroy callback
