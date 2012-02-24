@@ -387,12 +387,23 @@ namespace Oxygen
         }
         g_list_free(columns);
 
-        if( Gtk::gtk_combobox_is_tree_view(widget) && resizedAnything )
+        if( Gtk::gtk_combobox_is_tree_view(widget) )
         {
-            // TODO: resize combobox list
+            // Resize combobox list
             // NOTE: there are some corner cases, like the list 
             // being above the button; the list being too high so 
-            // it's scrolled, etc. - these must be taken into account
+            // it's scrolled, etc. - these must be taken into account; currently they are not
+            GtkRequisition req;
+            int w,h;
+            GtkWidget* window=gtk_widget_get_parent(gtk_widget_get_parent(widget));
+
+            // What height should be set
+            gtk_widget_size_request(gtk_widget_get_parent(widget),&req);
+            // What size is actually set
+            gtk_window_get_size(GTK_WINDOW(window),&w,&h);
+
+            if(h>req.height)
+                gtk_widget_set_size_request(window,w,req.height);
         }
 
         return TRUE;
