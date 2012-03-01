@@ -875,11 +875,11 @@ namespace Oxygen
         const ColorUtils::Rgba base( settings().palette().color( Palette::Active, Palette::Window ) );
         const ColorUtils::Rgba glow( settings().palette().color( group, Palette::Selected ) );
 
-        // context
-        cairo_save( context );
-
         // validate rect
         if(w<0 || h<0) return;
+
+        // context
+        cairo_save( context );
 
         // make sure that width is large enough
         const int indicatorSize( (options&Vertical ? h:w ) );
