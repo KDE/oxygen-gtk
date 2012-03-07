@@ -43,7 +43,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~ScrolledWindowData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );

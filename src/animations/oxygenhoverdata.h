@@ -40,7 +40,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~HoverData( void )
-        {}
+        { disconnect( 0L ); }
 
         //! setup connections
         virtual void connect( GtkWidget* );

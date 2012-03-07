@@ -77,7 +77,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::TreeViewData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::TreeViewData::disconnect - " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"null") << ")" << std::endl;
         #endif
 
         // reset target

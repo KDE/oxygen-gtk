@@ -35,7 +35,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::HoverData::connect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::HoverData::connect - " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"null") << ")" << std::endl;
         #endif
 
         const bool enabled( gtk_widget_get_state( widget ) != GTK_STATE_INSENSITIVE );
@@ -66,7 +66,7 @@ namespace Oxygen
     void HoverData::disconnect( GtkWidget* widget )
     {
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::HoverData::disconnect - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::HoverData::disconnect - " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"null") << ")" << std::endl;
         #endif
 
         _enterId.disconnect();

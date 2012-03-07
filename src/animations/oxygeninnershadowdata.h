@@ -43,7 +43,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~InnerShadowData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );
@@ -89,8 +89,11 @@ namespace Oxygen
             //! disconnect all signals
             void disconnect( GtkWidget* );
 
+            //! signal
             Signal _unrealizeId;
-            bool initiallyComposited;
+
+            //! keep track of composited state
+            bool _initiallyComposited;
         };
 
         //! map registered children and corresponding data

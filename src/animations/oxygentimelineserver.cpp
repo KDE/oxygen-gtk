@@ -20,6 +20,9 @@
 
 #include "oxygentimelineserver.h"
 #include "oxygentimeline.h"
+#include "../config.h"
+
+#include <iostream>
 
 namespace Oxygen
 {
@@ -31,6 +34,7 @@ namespace Oxygen
     TimeLineServer* TimeLineServer::_instance = 0L;
     TimeLineServer& TimeLineServer::instance( void )
     {
+
         if( !_instance )
         { _instance = new TimeLineServer(); }
 
@@ -40,11 +44,19 @@ namespace Oxygen
     //____________________________________________________________________
     TimeLineServer::TimeLineServer( void ):
         _timerId( 0 )
-        {}
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "TimeLineServer::TimeLineServer." << std::endl;
+        #endif
+    }
 
     //____________________________________________________________________
     TimeLineServer::~TimeLineServer( void )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "TimeLineServer::~TimeLineServer." << std::endl;
+        #endif
 
         // clear timer Id and singleton
         if( _timerId ) g_source_remove( _timerId );
