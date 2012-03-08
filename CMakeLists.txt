@@ -105,11 +105,21 @@ pkg_check_modules( GTK REQUIRED gtk+-2.0 )
 pkg_check_modules( CAIRO REQUIRED cairo )
 
 # DBus
-set( HAVE_DBUS 0 )
-pkg_check_modules( DBUS dbus-glib-1 )
-if( DBUS_FOUND )
-    set( HAVE_DBUS 1 )
+set( HAVE_DBUS_GLIB 0 )
+pkg_check_modules( GLIB_DBUS glib-2.0>=2.26 )
+if( GLIB_DBUS_FOUND )
+    set( HAVE_DBUS_GLIB 1 )
 endif()
+
+set( HAVE_DBUS 0 )
+if( NOT HAVE_DBUS_GLIB )
+
+    pkg_check_modules( DBUS dbus-glib-1 )
+    if( DBUS_FOUND )
+        set( HAVE_DBUS 1 )
+    endif( DBUS_FOUND)
+
+endif( NOT HAVE_DBUS_GLIB )
 
 ##########################
 # installation directories
@@ -121,7 +131,7 @@ exec_program(
 
 if( DEFINED LIB_SUFFIX OR NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 
- 	message( "Info: using LIB_SUFFIX to set the theme engine installation path" )
+    message( "Info: using LIB_SUFFIX to set the theme engine installation path" )
     set( INSTALL_PATH_GTK_ENGINES "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 
 else()
@@ -131,7 +141,7 @@ else()
         ARGS --variable=libdir gtk+-2.0
         OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
 
- 	message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
+    message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
     set( INSTALL_PATH_GTK_ENGINES "${GTK_LIBDIR_PREFIX}/gtk-2.0/${GTK_BIN_VERSION}/engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-2.0/2.4.0/engines )" )
 
 endif()
@@ -141,9 +151,10 @@ set( GTK_THEME_DIR ${INSTALL_PATH_GTK_THEMES}/oxygen-gtk )
 
 # First emit all warnings in one place
 # Warn user if dbus-glib not found
-if( NOT DBUS_FOUND )
-    message( "Warning: dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/> could not be found on your system.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
-endif( NOT DBUS_FOUND )
+if( NOT HAVE_DBUS_GLIB AND NOT HAVE_DBUS )
+    message( "Warning: a recent enough version of glib-2.0 <http://www.gtk.org/> could not be found on your system. \n oxygen-gtk will not have D-Bus support.\nD-Bus is a simple inter-process communication system. It is used for GTK applications to be updated on the fly when KDE configuration is changed." )
+    message( "Warning: alternatively you can install dbus-glib-1 <http://dbus.freedesktop.org/releases/dbus-glib/>." )
+endif()
 
 # Adjust flags based on gtk version and warn user if needed
 if( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
@@ -157,6 +168,7 @@ endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 message( "Flags: " )
 message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
 message( "  OXYGEN_DEBUG_INNERSHADOWS ${OXYGEN_DEBUG_INNERSHADOWS}" )
+message( "  HAVE_DBUS_GLIB ${HAVE_DBUS_GLIB}" )
 message( "  HAVE_DBUS ${HAVE_DBUS}" )
 message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
 message( "  OXYGEN_FORCE_KDE_ICONS_AND_FONTS ${OXYGEN_FORCE_KDE_ICONS_AND_FONTS}" )
