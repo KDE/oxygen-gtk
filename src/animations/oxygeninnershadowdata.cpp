@@ -68,7 +68,7 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    void InnerShadowData::disconnect( GtkWidget* widget )
+    void InnerShadowData::disconnect( GtkWidget* )
     {
         _target = 0;
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
@@ -117,7 +117,7 @@ namespace Oxygen
                 // make sure widget is scrollable
                 GTK_WIDGET_GET_CLASS( widget )->set_scroll_adjustments_signal )
             {
-                data.initiallyComposited=gdk_window_get_composited(window);
+                data._initiallyComposited = gdk_window_get_composited(window);
                 gdk_window_set_composited(window,TRUE);
             }
 

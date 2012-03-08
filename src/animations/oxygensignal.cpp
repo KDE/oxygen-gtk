@@ -27,6 +27,10 @@
 namespace Oxygen
 {
 
+    #if OXYGEN_DEBUG
+    static int counter( 0 );
+    #endif
+
     //____________________________________________________________________
     bool Signal::connect( GObject* object, const std::string& signal, GCallback callback, gpointer data, bool after )
     {
@@ -53,6 +57,11 @@ namespace Oxygen
         if(after) _id = g_signal_connect_after( object, signal.c_str(), callback, data );
         else _id = g_signal_connect( object, signal.c_str(), callback, data );
 
+        #if OXYGEN_DEBUG
+        ++counter;
+        std::cerr << "Oxygen::Signal::connect - _id: " << _id << " counter: " << counter << std::endl;
+        #endif
+
         return true;
 
     }
@@ -62,7 +71,17 @@ namespace Oxygen
     {
 
         // disconnect signal
-        if( _object && _id > 0 ) g_signal_handler_disconnect( _object, _id );
+        if( _object && _id > 0 )
+        {
+
+            #if OXYGEN_DEBUG
+            --counter;
+            std::cerr << "Oxygen::Signal::disconnect - _id: " << _id << " counter: " << counter << std::endl;
+            #endif
+
+            g_signal_handler_disconnect( _object, _id );
+
+        }
 
         // reset members
         _object = 0L;

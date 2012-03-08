@@ -38,7 +38,19 @@ namespace Oxygen
 
     //__________________________________________________________________
     StyleHelper::StyleHelper( void )
-    {}
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleHelper::StyleHelper" << std::endl;
+        #endif
+    }
+
+    //__________________________________________________________________
+    StyleHelper::~StyleHelper( void )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleHelper::~StyleHelper" << std::endl;
+        #endif
+    }
 
     //__________________________________________________________________
     void StyleHelper::initializeRefSurface( void )

@@ -42,8 +42,7 @@ namespace Oxygen
         static DBus& instance( void );
 
         //! destructor
-        virtual ~DBus( void )
-        { _instance = 0L; }
+        virtual ~DBus( void );
 
         protected:
 
@@ -76,8 +75,7 @@ namespace Oxygen
         private:
 
         //! constructor
-        DBus( void )
-        {}
+        DBus( void );
 
         //! singleton
         static DBus* _instance;

@@ -41,7 +41,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~ComboBoxEntryData( void )
-        {}
+        { disconnect( _list ); }
 
         //! disconnect
         virtual void disconnect( GtkWidget* );

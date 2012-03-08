@@ -47,7 +47,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~ToolBarStateData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );
