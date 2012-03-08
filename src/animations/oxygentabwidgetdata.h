@@ -45,7 +45,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~TabWidgetData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );

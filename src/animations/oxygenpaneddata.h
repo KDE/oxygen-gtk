@@ -39,7 +39,10 @@ namespace Oxygen
 
         //! destructor
         virtual ~PanedData( void )
-        { if( _cursor ) g_object_unref( G_OBJECT( _cursor ) ); }
+        {
+            disconnect( 0L );
+            if( _cursor ) gdk_cursor_unref( _cursor );
+        }
 
         //! setup connections
         void connect( GtkWidget* );

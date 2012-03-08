@@ -28,6 +28,10 @@
 namespace Oxygen
 {
 
+    #if OXYGEN_DEBUG
+    static int counter( 0 );
+    #endif
+
     //__________________________________________________________________
     bool Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
     {
@@ -66,6 +70,11 @@ namespace Oxygen
             hookFunction,
             data, 0L);
 
+        #if OXYGEN_DEBUG
+        ++counter;
+        std::cerr << "Oxygen::Hook::connect - hook: " << _hookId << " counter: " << counter << std::endl;
+        #endif
+
         return true;
 
     }
@@ -75,7 +84,18 @@ namespace Oxygen
     {
 
         // disconnect signal
-        if( _signalId > 0 && _hookId > 0 ) g_signal_remove_emission_hook( _signalId, _hookId );
+        if( _signalId > 0 && _hookId > 0 )
+        {
+
+            #if OXYGEN_DEBUG
+            --counter;
+            std::cerr << "Oxygen::Hook::disconnect - hook: " << _hookId << " counter: " << counter << std::endl;
+            #endif
+
+            g_signal_remove_emission_hook( _signalId, _hookId );
+
+        }
+
         _signalId = 0;
         _hookId = 0;
 

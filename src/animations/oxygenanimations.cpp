@@ -35,6 +35,9 @@ namespace Oxygen
         _innerShadowsEnabled( true ),
         _hooksInitialized( false )
     {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::Animations::Animations" << std::endl;
+        #endif
 
         // create engines
         registerEngine( _backgroundHintEngine = new BackgroundHintEngine( this ) );
@@ -68,15 +71,23 @@ namespace Oxygen
     //____________________________________________________________________________________________
     Animations::~Animations( void )
     {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::Animations::~Animations" << std::endl;
+        #endif
 
         // delete all engines
         for( BaseEngine::List::iterator iter = _engines.begin(); iter != _engines.end(); ++iter )
         { delete *iter; }
 
+        // disconnect all signals from map
+        for( WidgetMap::iterator iter = _allWidgets.begin(); iter != _allWidgets.end(); iter++ )
+        { iter->second.disconnect(); }
+
         // clear hooks
         _backgroundHintHook.disconnect();
         _sizeAllocationHook.disconnect();
         _realizationHook.disconnect();
+        _innerShadowHook.disconnect();
 
     }
 

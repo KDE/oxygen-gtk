@@ -59,10 +59,11 @@ namespace Oxygen
             const bool registered( GenericEngine<ToolBarStateData>::registerWidget( widget ) );
             if( registered )
             {
-                data().value( widget ).setDuration( duration() );
-                data().value( widget ).setEnabled( enabled() );
-                data().value( widget ).setFollowMouse( _followMouse );
-                data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
+                ToolBarStateData& data( this->data().value( widget ) );
+                data.setDuration( duration() );
+                data.setEnabled( enabled() );
+                data.setFollowMouse( _followMouse );
+                data.setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
             return registered;
         }

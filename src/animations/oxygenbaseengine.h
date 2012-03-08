@@ -41,7 +41,8 @@ namespace Oxygen
             _enabled( true )
         {}
 
-        virtual ~BaseEngine(){}
+        virtual ~BaseEngine()
+        {}
 
         //! register widget
         virtual bool registerWidget( GtkWidget* widget );

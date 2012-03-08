@@ -57,7 +57,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void MenuBarStateData::disconnect( GtkWidget* widget )
+    void MenuBarStateData::disconnect( GtkWidget* )
     {
 
         _target = 0L;

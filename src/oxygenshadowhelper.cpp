@@ -57,6 +57,8 @@ namespace Oxygen
         #endif
 
         reset();
+        _realizeHook.disconnect();
+
     }
 
     //______________________________________________
@@ -69,10 +71,6 @@ namespace Oxygen
 
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return;
-
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ShadowHelper::~ShadowHelper - reset" << std::endl;
-        #endif
 
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
 

@@ -60,10 +60,11 @@ namespace Oxygen
             const bool registered( GenericEngine<MenuBarStateData>::registerWidget( widget ) );
             if( registered )
             {
-                data().value( widget ).setDuration( duration() );
-                data().value( widget ).setAnimationsEnabled( _animationsEnabled );
-                data().value( widget ).setFollowMouse( _followMouse );
-                data().value( widget ).setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
+                MenuBarStateData& data( this->data().value( widget ) );
+                data.setDuration( duration() );
+                data.setAnimationsEnabled( _animationsEnabled );
+                data.setFollowMouse( _followMouse );
+                data.setFollowMouseAnimationsDuration( _followMouseAnimationsDuration );
             }
             return registered;
         }

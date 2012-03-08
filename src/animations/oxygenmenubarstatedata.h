@@ -52,7 +52,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~MenuBarStateData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );

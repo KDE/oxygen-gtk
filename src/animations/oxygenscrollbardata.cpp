@@ -39,7 +39,7 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void ScrollBarData::disconnect( GtkWidget* widget )
+    void ScrollBarData::disconnect( GtkWidget* )
     {
         _target = 0L;
 

@@ -44,6 +44,23 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    DBus::DBus( void )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::DBus::DBus" << std::endl;
+        #endif
+    }
+
+    //_________________________________________________________
+    DBus::~DBus( void )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::DBus::~DBus" << std::endl;
+        #endif
+        _instance = 0L;
+    }
+
+    //_________________________________________________________
     void DBus::setupConnection( void )
     {
 

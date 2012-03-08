@@ -68,7 +68,7 @@ namespace Oxygen
     }
 
     //_____________________________________________
-    void InnerShadowData::disconnect( GtkWidget* widget )
+    void InnerShadowData::disconnect( GtkWidget* )
     {
         _target = 0;
         for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
@@ -110,7 +110,7 @@ namespace Oxygen
                 gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
                 G_OBJECT_TYPE_NAME(widget) != std::string("MessageList") ) // TODO: implement proper blacklist if there appear too many bad widgets/apps
             {
-                data.initiallyComposited=gdk_window_get_composited(window);
+                data._initiallyComposited = gdk_window_get_composited(window);
                 gdk_window_set_composited(window,TRUE);
             }
 
@@ -157,8 +157,8 @@ namespace Oxygen
 
         // remove compositing flag
         GdkWindow* window( gtk_widget_get_window( widget ) );
-        if( GTK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
-        { gdk_window_set_composited(window,initiallyComposited); }
+        if( GDK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
+        { gdk_window_set_composited( window, _initiallyComposited ); }
     }
 
     //____________________________________________________________________________________________
