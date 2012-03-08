@@ -34,77 +34,152 @@ namespace Oxygen
     DBus* DBus::_instance = 0;
     DBus& DBus::instance( void )
     {
-        if( !_instance )
-        {
-            _instance = new DBus();
-            _instance->setupConnection();
-        }
-
+        if( !_instance ) _instance = new DBus();
         return *_instance;
     }
 
     //_________________________________________________________
-    DBus::DBus( void )
-    {
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::DBus::DBus" << std::endl;
+    DBus::DBus( void ):
+        #if HAVE_DBUS_GLIB
+        _connection( 0L ),
+        #elif HAVE_DBUS
+        _connection( 0L ),
         #endif
-    }
+        _oxygenId( 0 ),
+        _globalSettingsId( 0 )
+    { }
 
     //_________________________________________________________
     DBus::~DBus( void )
     {
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::DBus::~DBus" << std::endl;
-        #endif
+        disconnect();
         _instance = 0L;
     }
 
     //_________________________________________________________
-    void DBus::setupConnection( void )
+    void DBus::connect( void )
     {
 
-        // make sure the method is called only once
-        static bool first( true );
-        if( !first ) return;
-        first = false;
+        #if HAVE_DBUS_GLIB
 
-        #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::DBus::setupConnection" << std::endl;
-        #endif
+        // check connection
+        if( isConnected() ) return;
 
-        #if HAVE_DBUS
-        // dbus error
-        DBusError error;
-        dbus_error_init( &error );
+        // get dbus connection
+        _connection = g_bus_get_sync(G_BUS_TYPE_SESSION, 0L, 0L );
+        if( !_connection ) return;
+
+        // setup subscriptions
+        if( _oxygenId <= 0 )
+        {
+            _oxygenId = g_dbus_connection_signal_subscribe(
+                _connection,
+                0L, "org.kde.Oxygen.Style", 0L, "/OxygenStyle", 0L,
+                G_DBUS_SIGNAL_FLAGS_NONE,
+                filter, 0L, 0L );
+        }
+
+        if( _globalSettingsId <= 0 )
+        {
+            _globalSettingsId = g_dbus_connection_signal_subscribe(
+                _connection,
+                0L, "org.kde.KGlobalSettings", 0L, "/KGlobalSettings", 0L,
+                G_DBUS_SIGNAL_FLAGS_NONE,
+                filter, 0L, 0L );
+        }
+
+        #elif HAVE_DBUS
+
+        // check connection
+        if( isConnected() ) return;
 
         // connect to session bus and check
-        DBusConnection *bus( dbus_bus_get( DBUS_BUS_SESSION, &error ) );
-        if( !bus )
-        {
-
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::DBus::setupConnection -"
-                << " connection failed."
-                << " Error: " << error.message
-                << std::endl;
-            #endif
-
-            dbus_error_free( &error );
-            return;
-        }
-        dbus_connection_setup_with_g_main( bus, 0L );
+        _connection = dbus_g_bus_get( DBUS_BUS_SESSION, 0L );
+        if( !_connection ) return;
 
         // install signal filter
-        dbus_bus_add_match( bus, "type='signal',interface='org.kde.Oxygen.Style',path='/OxygenStyle'", &error );
-        dbus_bus_add_match( bus, "type='signal',interface='org.kde.KGlobalSettings',path='/KGlobalSettings'", &error );
-        dbus_connection_add_filter( bus, signalFilter, 0L, 0L );
+        dbus_bus_add_match( dbus_g_connection_get_connection( _connection ), "type='signal',interface='org.kde.Oxygen.Style',path='/OxygenStyle'", 0L );
+        dbus_bus_add_match( dbus_g_connection_get_connection( _connection ), "type='signal',interface='org.kde.KGlobalSettings',path='/KGlobalSettings'", 0L );
+        dbus_connection_add_filter( dbus_g_connection_get_connection( _connection ), signalFilter, 0L, 0L );
+
         #endif
     }
 
+
     //_________________________________________________________
-    #if HAVE_DBUS
+    void DBus::disconnect( void )
+    {
+        #if HAVE_DBUS_GLIB
+
+        // check connection
+        if( !isConnected() ) return;
+
+        // release subscriptions
+        if( _oxygenId > 0 )
+        {
+          g_dbus_connection_signal_unsubscribe( _connection, _oxygenId );
+          _oxygenId = 0;
+        }
+
+        if( _globalSettingsId > 0 )
+        {
+          g_dbus_connection_signal_unsubscribe( _connection, _globalSettingsId );
+          _globalSettingsId = 0;
+        }
+
+        // unref connection
+        g_object_unref( _connection );
+        _connection = 0L;
+
+        #elif HAVE_DBUS
+
+        // check connection
+        if( !isConnected() ) return;
+
+        dbus_connection_remove_filter( dbus_g_connection_get_connection( _connection ), signalFilter, 0L );
+        dbus_g_connection_unref( _connection );
+        _connection = 0L;
+
+        #endif
+    }
+
+    #if HAVE_DBUS_GLIB
+
+    //_________________________________________________________
+    void DBus::filter( GDBusConnection*, const gchar* sender, const gchar* path, const gchar* interface, const gchar* signal, GVariant*, gpointer )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::DBus::signalFilter - received signal"
+            << " sender: " << ( sender ? sender:"0x0" )
+            << " path: " << (path ? path:"0x0")
+            << " interface: " << (interface ? interface:"0x0")
+            << " signal: " << (signal ? signal:"0x0")
+            << std::endl;
+        #endif
+
+        if( !signal ) return;
+        const std::string signalString( signal );
+        if( signalString ==  "reparseConfiguration" )
+        {
+
+            Style::instance().initialize( QtSettings::Oxygen|QtSettings::Forced );
+
+        } else if( signalString == "notifyChange" ) {
+
+            Style::instance().initialize( QtSettings::All|QtSettings::Forced );
+
+        } else return;
+
+        // reset RC styles
+        gtk_rc_reset_styles( gtk_settings_get_default() );
+
+    }
+
+    #elif HAVE_DBUS
+
+    //_________________________________________________________
     DBusHandlerResult DBus::signalFilter( DBusConnection*, DBusMessage* message, gpointer data )
     {
 

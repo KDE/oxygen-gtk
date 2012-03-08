@@ -3568,7 +3568,7 @@ namespace Oxygen
         { Style::instance().windowManager().initializeHooks(); }
 
         // dbus
-        Oxygen::DBus::instance();
+        Oxygen::DBus::instance().connect();
 
         // argb hooks
         if(
