@@ -44,7 +44,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~ComboBoxData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         /*! does nothing. Only kept here for consistency with other data */

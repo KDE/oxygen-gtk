@@ -34,6 +34,7 @@
 
 namespace Oxygen
 {
+    GQuark Gtk::Quarks::_rcStyle = 0L;
 
     //_____________________________________________________________________________
     std::ostream& operator << ( std::ostream& out, const GtkWidgetPath* path )

@@ -47,6 +47,9 @@ namespace Oxygen
         _x(-1),
         _y(-1)
     {
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WindowManager::WindowManager" << std::endl;
+        #endif
 
         // black list
         initializeBlackList();
@@ -56,6 +59,11 @@ namespace Oxygen
     //_________________________________________________
     WindowManager::~WindowManager( void )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WindowManager::~WindowManager" << std::endl;
+        #endif
+
         _styleSetHook.disconnect();
         _buttonReleaseHook.disconnect();
         _map.disconnectAll();

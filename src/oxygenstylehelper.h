@@ -47,8 +47,7 @@ namespace Oxygen
         StyleHelper( void );
 
         //! destructor
-        virtual ~StyleHelper( void )
-        {}
+        virtual ~StyleHelper( void );
 
         //! initialize ref surface
         void initializeRefSurface( void );

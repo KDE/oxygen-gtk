@@ -119,7 +119,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ComboBoxEntryData::Data::disconnect - " << _widget << " (" << G_OBJECT_TYPE_NAME( _widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::ComboBoxEntryData::Data::disconnect - " << _widget << " (" << (_widget ? G_OBJECT_TYPE_NAME( _widget ):"null") << ")" << std::endl;
         #endif
 
         if( !_widget ) return;

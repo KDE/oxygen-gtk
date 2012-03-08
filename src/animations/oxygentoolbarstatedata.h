@@ -41,12 +41,13 @@ namespace Oxygen
         //! constructor
         ToolBarStateData( void ):
             _target( 0L ),
-            _dirtyRect( Gtk::gdk_rectangle() )
+            _dirtyRect( Gtk::gdk_rectangle() ),
+            _dirty( false )
         {}
 
         //! destructor
         virtual ~ToolBarStateData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );
@@ -83,6 +84,10 @@ namespace Oxygen
             _previous._timeLine.setDuration( value );
         }
 
+        //! dirty state
+        void setDirty( bool value )
+        { _dirty = value; }
+
         //@}
 
         //!@name accessors
@@ -116,6 +121,10 @@ namespace Oxygen
         //! true when fade out animation is locked (delayed)
         bool isLocked( void ) const
         { return _timer.isRunning(); }
+
+        //! dirty state
+        bool isDirty( void ) const
+        { return _dirty; }
 
         //@}
 
@@ -241,7 +250,13 @@ namespace Oxygen
         //! additional dirty rect
         GdkRectangle _dirtyRect;
 
+        //! dirty state
+        bool _dirty;
+
+        //! previous button animation data
         Data _previous;
+
+        //! current button animation data
         Data _current;
 
         //@}

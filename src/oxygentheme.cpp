@@ -25,10 +25,12 @@
 #include "oxygentheme.h"
 
 #include "config.h"
+#include "oxygendbus.h"
 #include "oxygenstyle.h"
 #include "oxygenthemingengine.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindowshadow.h"
+#include "oxygentimelineserver.h"
 
 #include <gmodule.h>
 #include <gtk/gtk.h>
@@ -72,6 +74,7 @@ void theme_exit( void )
 
     // delete style instance
     delete &Oxygen::Style::instance();
+    delete &Oxygen::TimeLineServer::instance();
 
 }
 

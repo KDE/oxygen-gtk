@@ -48,7 +48,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~MenuStateData( void )
-        {}
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );

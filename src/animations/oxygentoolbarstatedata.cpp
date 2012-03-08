@@ -324,6 +324,7 @@ namespace Oxygen
 
         if( data._target )
         {
+            data.setDirty( true );
             const GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
         }
@@ -343,6 +344,7 @@ namespace Oxygen
 
             data.updateAnimatedRect();
 
+            data.setDirty( true );
             GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 

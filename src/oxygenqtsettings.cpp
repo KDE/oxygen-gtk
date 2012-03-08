@@ -455,12 +455,7 @@ namespace Oxygen
 
         // update icon search path
         // put existing default path in a set
-        PathSet searchPath;
-        gchar** gtkSearchPath;
-        int nElements;
-        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
-        for( int i=0; i<nElements; i++ ) { searchPath.insert( gtkSearchPath[i] ); }
-        g_free( gtkSearchPath );
+        PathSet searchPath( defaultIconSearchPath() );
 
         // add kde's path. Loop is reversed because added path must be prepended.
         for( PathList::const_reverse_iterator iter = _kdeIconPathList.rbegin(); iter != _kdeIconPathList.rend(); ++iter )
@@ -475,12 +470,6 @@ namespace Oxygen
             if( searchPath.find( path ) == searchPath.end() )
             { gtk_icon_theme_prepend_search_path(gtk_icon_theme_get_default(), path.c_str() ); }
         }
-
-        #if OXYGEN_DEBUG
-        gtk_icon_theme_get_search_path( gtk_icon_theme_get_default(), &gtkSearchPath, &nElements );
-        for( int i=0; i<nElements; i++ )
-        { std::cerr << "Oxygen::QtSettings::loadKdeIcons - icon theme search path: " <<  gtkSearchPath[i] << std::endl; }
-        #endif
 
         // load icon theme and path to gtk
         _iconThemes.clear();
@@ -525,6 +514,29 @@ namespace Oxygen
         // generate internal icons factory
         _icons.generate( iconThemeList );
 
+    }
+
+    //_________________________________________________________
+    PathSet QtSettings::defaultIconSearchPath( void ) const
+    {
+        PathSet searchPath;
+
+        // load icon theme
+        GtkIconTheme* theme( gtk_icon_theme_get_default() );
+        if( !GTK_IS_ICON_THEME( theme ) ) return searchPath;
+
+        // get default
+        gchar** gtkSearchPath;
+        int nElements;
+
+        gtk_icon_theme_get_search_path( theme, &gtkSearchPath, &nElements );
+        for( int i=0; i<nElements; i++ )
+        { searchPath.insert( gtkSearchPath[i] ); }
+
+        // free
+        g_strfreev( gtkSearchPath );
+
+        return searchPath;
     }
 
     //_________________________________________________________
