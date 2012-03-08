@@ -86,8 +86,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         ${PKGCONFIG_EXECUTABLE}
         ARGS --variable=prefix gtk+-2.0
         OUTPUT_VARIABLE GTK_PREFIX )
-
-  	message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
+    message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
     set(CMAKE_INSTALL_PREFIX
         ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
         )
