@@ -726,22 +726,22 @@ namespace Oxygen
         // do nothing if not enough room
         if( w < 14 || h < 14 )  return;
 
+        // save context
+        cairo_save( context );
+
+        // add hole
+        renderHoleMask( context, x, y, w, h, tiles, sideMargin );
+
         // test for flatness
         if( options&Flat )
         {
 
             // create a rounded-rect antimask for renderHoleBackground
-            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
             cairo_set_source( context, settings().palette().color( Palette::Window ) );
             cairo_rectangle( context, x, y, w, h );
             cairo_fill( context );
 
         } else {
-
-            cairo_save( context );
-
-            // add hole if required (this can be done before translating the context)
-            renderHoleMask( context, x, y, w, h, tiles, sideMargin );
 
             // normal window background
             renderWindowBackground( context, window, widget, x, y, w, h, options, tiles);
@@ -751,9 +751,10 @@ namespace Oxygen
             if( widget )
             { renderGroupBoxBackground( context, widget, x, y, w, h, options | Blend | NoFill, tiles ); }
 
-            cairo_restore( context );
-
         }
+
+        // restore
+        cairo_restore( context );
 
     }
 
