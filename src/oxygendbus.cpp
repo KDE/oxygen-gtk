@@ -51,10 +51,7 @@ namespace Oxygen
 
     //_________________________________________________________
     DBus::~DBus( void )
-    {
-        disconnect();
-        _instance = 0L;
-    }
+    { _instance = 0L; }
 
     //_________________________________________________________
     void DBus::connect( void )
