@@ -76,6 +76,10 @@ void theme_exit( void )
     delete &Oxygen::Style::instance();
     delete &Oxygen::TimeLineServer::instance();
 
+    // disconnect
+    // Oxygen::DBus::instance().disconnect();
+    delete &Oxygen::DBus::instance();
+
 }
 
 //_________________________________________________

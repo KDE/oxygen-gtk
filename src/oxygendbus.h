@@ -25,7 +25,9 @@
 */
 #include "config.h"
 
-#if HAVE_DBUS
+#if HAVE_DBUS_GLIB
+#include <gio/gio.h>
+#elif HAVE_DBUS
 #include <dbus/dbus-glib-lowlevel.h>
 #endif
 
@@ -44,38 +46,52 @@ namespace Oxygen
         //! destructor
         virtual ~DBus( void );
 
+        //! connect
+        void connect( void );
+
+        //! diconnect
+        void disconnect( void );
+
         protected:
 
-        //! setup connections
-        void setupConnection( void );
+        #if HAVE_DBUS_GLIB
 
-        /*!
-        copied from kdelibs/kdeui/kernel/kglobalsettings
-        used to only update relevant parts on kglobalconfig changes
-        */
-        enum ChangeType
-        {
-            PaletteChanged = 0,
-            FontChanged,
-            StyleChanged,
-            SettingsChanged,
-            IconChanged,
-            CursorChanged,
-            ToolbarStyleChanged,
-            ClipboardConfigChanged,
-            BlockShortcuts,
-            NaturalSortingChanged
-        };
+        //! dbus messages filter (callback)
+        static void filter( GDBusConnection*, const gchar*, const gchar*, const gchar*, const gchar*, GVariant*, gpointer );
 
-        #if HAVE_DBUS
+        #elif HAVE_DBUS
+
         //! dbus messages filter (callback)
         static DBusHandlerResult signalFilter( DBusConnection*, DBusMessage*, gpointer );
+
         #endif
+
+        // true if connected
+        bool isConnected( void ) const
+        {
+            #if HAVE_DBUS_GLIB
+            return _connection;
+            #elif HAVE_DBUS
+            return _connection;
+            #else
+            return false;
+            #endif
+        }
 
         private:
 
         //! constructor
         DBus( void );
+
+        #if HAVE_DBUS_GLIB
+        GDBusConnection* _connection;
+        #elif HAVE_DBUS
+        DBusGConnection* _connection;
+        #endif
+
+        //! ids
+        int _oxygenId;
+        int _globalSettingsId;
 
         //! singleton
         static DBus* _instance;
