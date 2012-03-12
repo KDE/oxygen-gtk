@@ -1528,7 +1528,7 @@ namespace Oxygen
         } else if( d.isEntryProgress() ) {
 
             StyleOptions options( widget, state, shadow );
-            Style::instance().renderProgressBarHandle( window, clipRect, x-2, y-2, w+4, h+4, options );
+            Style::instance().renderProgressBarHandle( window, clipRect, x-2, y-1, w+4, h+2, options );
 
         } else if( d.isTroughFillLevel () ) {
 
