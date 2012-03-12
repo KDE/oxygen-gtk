@@ -13,7 +13,7 @@ set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Oxygen Gtk2 theme" )
 set( CPACK_PACKAGE_VENDOR "hugo@oxygen-icons.org" )
 set( CPACK_PACKAGE_VERSION_MAJOR "1" )
 set( CPACK_PACKAGE_VERSION_MINOR "2" )
-set( CPACK_PACKAGE_VERSION_PATCH "1" )
+set( CPACK_PACKAGE_VERSION_PATCH "2" )
 set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 
 ##################################
@@ -87,7 +87,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         ARGS --variable=prefix gtk+-2.0
         OUTPUT_VARIABLE GTK_PREFIX )
 
-  	message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
+    message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
     set(CMAKE_INSTALL_PREFIX
         ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
         )
