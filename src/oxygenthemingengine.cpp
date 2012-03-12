@@ -2391,7 +2391,7 @@ namespace Oxygen
         Style::instance().shadowHelper().initializeHooks();
 
         // also initialize dbus
-        Oxygen::DBus::instance();
+        Oxygen::DBus::instance().connect();
 
         // initialize argb hooks
         if( Style::instance().settings().argbEnabled() )
