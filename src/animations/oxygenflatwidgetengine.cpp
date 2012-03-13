@@ -28,10 +28,19 @@
 namespace Oxygen
 {
     //_________________________________________________________
-    bool FlatWidgetEngine::registerWidget( GtkWidget* widget )
+    bool FlatWidgetEngine::registerFlatWidget( GtkWidget* widget )
     {
-        if( contains( widget ) ) return false;
-        _data.insert( widget );
+        if( containsFlat( widget ) ) return false;
+        _flatData.insert( widget );
+        BaseEngine::registerWidget( widget );
+        return true;
+    }
+
+    //_________________________________________________________
+    bool FlatWidgetEngine::registerPaintWidget( GtkWidget* widget )
+    {
+        if( containsPaint( widget ) ) return false;
+        _paintData.insert( widget );
         BaseEngine::registerWidget( widget );
         return true;
     }
@@ -41,7 +50,10 @@ namespace Oxygen
     {
 
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
-        { if( contains( parent ) ) return parent; }
+        {
+            if( containsPaint( parent ) ) return 0x0;
+            else if( containsFlat( parent ) ) return parent;
+        }
 
         return 0L;
     }
