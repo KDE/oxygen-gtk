@@ -23,6 +23,7 @@
 #include "oxygenbaseengine.h"
 
 #include <gtk/gtk.h>
+#include <cassert>
 #include <set>
 
 namespace Oxygen
@@ -46,23 +47,38 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* );
+        virtual bool registerWidget( GtkWidget* widget )
+        { registerFlatWidget( widget ); }
+
+        //! register widget
+        virtual bool registerFlatWidget( GtkWidget* );
+
+        //! register widget
+        virtual bool registerPaintWidget( GtkWidget* );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* widget )
-        { _data.erase( widget ); }
-
-        //! true if widget is included
-        virtual bool contains( GtkWidget* widget )
-        { return _data.find( widget ) != _data.end(); }
+        {
+            _flatData.erase( widget );
+            _paintData.erase( widget );
+        }
 
         //! true if one of widgets parent is included
         virtual GtkWidget* flatParent( GtkWidget* );
 
+        protected:
+
+        bool containsFlat( GtkWidget* widget ) const
+        { return _flatData.find( widget ) != _flatData.end(); }
+
+        bool containsPaint( GtkWidget* widget ) const
+        { return _paintData.find( widget ) != _paintData.end(); }
+
         private:
 
         //! store registered widgets
-        std::set<GtkWidget*> _data;
+        std::set<GtkWidget*> _flatData;
+        std::set<GtkWidget*> _paintData;
 
     };
 

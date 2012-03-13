@@ -155,7 +155,7 @@ namespace Oxygen
             */
             if( Gtk::gtk_widget_style_is_modified( widget, state, GTK_RC_BG ) )
             {
-                Style::instance().animations().flatWidgetEngine().registerWidget( widget );
+                Style::instance().animations().flatWidgetEngine().registerFlatWidget( widget );
                 Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
                 return;
             }
@@ -181,6 +181,10 @@ namespace Oxygen
             StyleOptions options;
             options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) );
             const bool success( Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options ) );
+
+            // if widget has flat parent, store in flatWidget engine so that children gets the right background nonetheless
+            if( success && Style::instance().animations().flatWidgetEngine().flatParent( widget ) )
+            { Style::instance().animations().flatWidgetEngine().registerPaintWidget( widget ); }
 
             // register to window manager
             if( success &&
