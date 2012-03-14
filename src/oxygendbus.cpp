@@ -169,8 +169,9 @@ namespace Oxygen
 
         } else return;
 
-        // reset RC styles
-        gtk_rc_reset_styles( gtk_settings_get_default() );
+        // re-init widgets
+        gtk_style_context_reset_widgets( gdk_screen_get_default() );
+        return;
 
     }
 
