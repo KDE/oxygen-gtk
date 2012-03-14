@@ -164,7 +164,7 @@ namespace Oxygen
 
         // remove compositing flag
         GdkWindow* window( gtk_widget_get_window( widget ) );
-        if( GDK_IS_WINDOW( window ) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
+        if( GDK_IS_WINDOW( window ) && !gdk_window_is_destroyed(window) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
         { gdk_window_set_composited( window, _initiallyComposited ); }
     }
 
