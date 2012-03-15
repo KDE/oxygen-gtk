@@ -48,7 +48,7 @@ namespace Oxygen
 
         //! register widget
         virtual bool registerWidget( GtkWidget* widget )
-        { registerFlatWidget( widget ); }
+        { return registerFlatWidget( widget ); }
 
         //! register widget
         virtual bool registerFlatWidget( GtkWidget* );
