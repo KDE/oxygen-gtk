@@ -182,14 +182,6 @@ style "oxygen-combobox-entry" = "oxygen-default"
 
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
 
-style "oxygen-combobox-entry-button" = "oxygen-combobox-entry"
-{
-    ythickness = 0
-    xthickness = 2
-}
-
-widget_class "*<GtkComboBox>.<GtkButton>" style "oxygen-combobox-entry-button"
-
 style "oxygen-combo-button" = "oxygen-combobox-entry"
 {
     xthickness = 0
