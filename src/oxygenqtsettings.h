@@ -28,9 +28,12 @@
 #include "oxygenoptionmap.h"
 #include "oxygenpalette.h"
 #include "oxygenshadowconfiguration.h"
+#include "oxygensignal.h"
 #include "oxygenpathlist.h"
 #include "oxygenfontinfo.h"
 #include "pango/pango.h"
+
+#include <gio/gio.h>
 
 #include <iostream>
 #include <sstream>
@@ -52,7 +55,7 @@ namespace Oxygen
 
         //! destructor
         virtual ~QtSettings( void )
-        {}
+        { clearMonitoredFiles(); }
 
         //! load kdeglobals settings into optionMap
         void loadKdeGlobals( void );
@@ -317,6 +320,30 @@ namespace Oxygen
         bool argbEnabled( void ) const
         { return _argbEnabled; }
 
+        //! file monitor structure
+        class FileMonitor
+        {
+            public:
+
+            //! constructor
+            FileMonitor( void ):
+                file( 0L ),
+                monitor( 0L )
+            {}
+
+            //! gfile pointer
+            GFile* file;
+            GFileMonitor* monitor;
+            Signal signal;
+        };
+
+        //! set of monitored files
+        typedef std::map<std::string, FileMonitor> FileMap;
+
+        //! file monitors
+        FileMap& monitoredFiles( void )
+        { return _monitoredFiles; }
+
         protected:
 
         //! icon path
@@ -363,8 +390,14 @@ namespace Oxygen
         //! extra metrics options
         void loadExtraOptions( void );
 
-        // sanitize path
+        //! sanitize path
         std::string sanitizePath( const std::string& ) const;
+
+        //! monitor file
+        void monitorFile( const std::string& );
+
+        //! clear monitored files
+        void clearMonitoredFiles( void );
 
         private:
 
@@ -550,6 +583,9 @@ namespace Oxygen
 
         //! gtkrc
         Gtk::RC _rc;
+
+        //! file monitors
+        FileMap _monitoredFiles;
 
     };
 

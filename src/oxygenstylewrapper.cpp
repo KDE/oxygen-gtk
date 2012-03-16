@@ -33,7 +33,6 @@
 #include "oxygenanimations.h"
 #include "oxygenargbhelper.h"
 #include "oxygencairoutils.h"
-#include "oxygendbus.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtktypenames.h"
@@ -3570,9 +3569,6 @@ namespace Oxygen
         // window manager hooks
         if( !Style::instance().settings().applicationName().isEclipse() )
         { Style::instance().windowManager().initializeHooks(); }
-
-        // dbus
-        Oxygen::DBus::instance().connect();
 
         // argb hooks
         if(
