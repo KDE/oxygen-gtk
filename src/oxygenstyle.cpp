@@ -29,6 +29,8 @@
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowshadow.h"
 
+#include "oxygengtktypenames.h"
+
 #include <algorithm>
 #include <cmath>
 
@@ -3809,12 +3811,22 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void Style::fileChanged( GFileMonitor*, GFile*, GFile*, GFileMonitorEvent, gpointer data )
+    void Style::fileChanged( GFileMonitor*, GFile* file, GFile*, GFileMonitorEvent event, gpointer data )
     {
 
-        Style& style( *static_cast<Style*>( data ) );
-        style.initialize( QtSettings::All|QtSettings::Forced );
-        gtk_rc_reset_styles( gtk_settings_get_default() );
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::Style::fileChanged -"
+            << " file: " << g_file_get_path( file )
+            << " event: " << Gtk::TypeNames::fileMonitorEvent( event )
+            << std::endl;
+        #endif
+
+        if( event == G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT )
+        {
+            Style& style( *static_cast<Style*>( data ) );
+            style.initialize( QtSettings::All|QtSettings::Forced );
+            gtk_rc_reset_styles( gtk_settings_get_default() );
+        }
     }
 
 }
