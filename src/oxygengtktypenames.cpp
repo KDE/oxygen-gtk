@@ -237,4 +237,28 @@ namespace Oxygen
     const char*  Gtk::TypeNames::iconSize( GtkIconSize gtkIconSize )
     { return Gtk::TypeNames::Finder<GtkIconSize>( iconSizeMap, iconSizeMapSize ).findCss( gtkIconSize ); }
 
+    //__________________________________________________________________
+    typedef Gtk::TypeNames::Entry<GFileMonitorEvent> FileMonitorEventMap;
+    static const FileMonitorEventMap fileMonitorEventMap[] =
+    {
+        { G_FILE_MONITOR_EVENT_CHANGED, "changed" },
+        { G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, "changes done" },
+        { G_FILE_MONITOR_EVENT_DELETED, "deleted" },
+        { G_FILE_MONITOR_EVENT_CREATED, "created" },
+        { G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED, "attribute changed" },
+        { G_FILE_MONITOR_EVENT_PRE_UNMOUNT, "pre_mount" },
+        { G_FILE_MONITOR_EVENT_UNMOUNTED, "unmount" },
+        { G_FILE_MONITOR_EVENT_MOVED, "move" }
+    };
+
+    const int fileMonitorEventMapSize=sizeof(fileMonitorEventMap)/sizeof(fileMonitorEventMap[0]);
+
+    //__________________________________________________________________
+    GFileMonitorEvent Gtk::TypeNames::matchFileMonitorEvent( const char*  monitorEvent )
+    { return Gtk::TypeNames::Finder<GFileMonitorEvent>( fileMonitorEventMap, fileMonitorEventMapSize ).findGtk( monitorEvent, G_FILE_MONITOR_EVENT_CHANGED ); }
+
+    //__________________________________________________________________
+    const char*  Gtk::TypeNames::fileMonitorEvent( GFileMonitorEvent movitorEvent )
+    { return Gtk::TypeNames::Finder<GFileMonitorEvent>( fileMonitorEventMap, fileMonitorEventMapSize ).findCss( movitorEvent ); }
+
 }

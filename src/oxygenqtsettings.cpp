@@ -101,7 +101,11 @@ namespace Oxygen
 
         _kdeGlobals.clear();
         for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
-        { _kdeGlobals.merge( OptionMap( sanitizePath( *iter + "/kdeglobals" ) ) ); }
+        {
+            const std::string filename( sanitizePath( *iter + "/kdeglobals" ) );
+            _kdeGlobals.merge( OptionMap( filename ) );
+            monitorFile( filename );
+        }
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadKdeGlobals - kdeglobals: " << std::endl;
@@ -831,7 +835,11 @@ namespace Oxygen
 
         OptionMap oxygen;
         for( PathList::const_reverse_iterator iter = _kdeConfigPathList.rbegin(); iter != _kdeConfigPathList.rend(); ++iter )
-        { oxygen.merge( OptionMap( sanitizePath( *iter + "/oxygenrc" ) ) ); }
+        {
+            const std::string filename( sanitizePath( *iter + "/oxygenrc" ) );
+            oxygen.merge( filename );
+            monitorFile( filename );
+        }
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::QtSettings::loadOxygenOptions - Oxygenrc: " << std::endl;
@@ -1067,6 +1075,50 @@ namespace Oxygen
         { out.replace( position, 2, "/" ); }
 
         return out;
+    }
+
+    //_________________________________________________________
+    void QtSettings::monitorFile( const std::string& filename )
+    {
+
+        // check if file was already added
+        if( _monitoredFiles.find( filename ) != _monitoredFiles.end() )
+        { return; }
+
+        // check file existence
+        if( !std::ifstream( filename.c_str() ) )
+        { return; }
+
+        // create FileMonitor
+        FileMonitor monitor;
+        monitor.file = g_file_new_for_path( filename.c_str() );
+        if( ( monitor.monitor = g_file_monitor( monitor.file, G_FILE_MONITOR_NONE, 0L, 0L ) ) )
+        {
+
+            // insert in map
+            _monitoredFiles.insert( std::make_pair( filename, monitor ) );
+
+        } else {
+
+            // clear file and return
+            g_object_unref( monitor.file );
+            return;
+
+        }
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::clearMonitoredFiles( void )
+    {
+        for( FileMap::iterator iter = _monitoredFiles.begin(); iter != _monitoredFiles.end(); iter++ )
+        {
+            iter->second.signal.disconnect();
+            g_object_unref( iter->second.file );
+            g_object_unref( iter->second.monitor );
+        }
+
+        _monitoredFiles.clear();
     }
 
 }

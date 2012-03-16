@@ -25,6 +25,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gio/gio.h>
 #include <string>
 #include <iostream>
 
@@ -69,6 +70,9 @@ namespace Oxygen
 
             //! icon size
             static const char* iconSize( GtkIconSize );
+
+            //! file monitor event
+            static const char* fileMonitorEvent( GFileMonitorEvent );
 
             //@}
 
@@ -141,6 +145,7 @@ namespace Oxygen
             static GtkExpanderStyle	matchExpanderStyle( const char* );
             static GtkResponseType matchResponse( const char* );
             static GtkIconSize matchIconSize( const char* );
+            static GFileMonitorEvent matchFileMonitorEvent( const char* );
 
         };
     }
