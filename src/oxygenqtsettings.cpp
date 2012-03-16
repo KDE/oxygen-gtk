@@ -1055,7 +1055,7 @@ namespace Oxygen
         _rc.addSection( "oxygen-entry-margins-internal", Gtk::RC::defaultSection() );
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 5 ) );
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", applicationName().isXul() ? 2:1 ) );
-        _rc.matchWidgetToSection( "GtkEntry", "oxygen-entry-margins-internal" );
+        _rc.matchClassToSection( "GtkEntry", "oxygen-entry-margins-internal" );
 
         // combobox buttons
         _rc.addSection( "oxygen-combobox-button-internal", Gtk::RC::defaultSection() );
