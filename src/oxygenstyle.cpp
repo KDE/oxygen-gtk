@@ -3821,12 +3821,10 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if( event == G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT )
-        {
-            Style& style( *static_cast<Style*>( data ) );
-            style.initialize( QtSettings::All|QtSettings::Forced );
-            gtk_rc_reset_styles( gtk_settings_get_default() );
-        }
+        Style& style( *static_cast<Style*>( data ) );
+        style.initialize( QtSettings::All|QtSettings::Forced );
+        gtk_rc_reset_styles( gtk_settings_get_default() );
+
     }
 
 }
