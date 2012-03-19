@@ -59,10 +59,7 @@ namespace Oxygen
     GtkIcons::~GtkIcons( void )
     {
         if( _factory )
-        {
-            std::cerr << "GtkIcons::~GtkIcons" << std::endl;
-            gtk_icon_factory_remove_default( _factory );
-        }
+        { gtk_icon_factory_remove_default( _factory ); }
     }
 
     //_________________________________________
