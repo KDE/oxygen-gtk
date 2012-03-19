@@ -113,14 +113,11 @@ namespace Oxygen
             // make sure widget is scrollable
             GTK_WIDGET_GET_CLASS( widget )->set_scroll_adjustments_signal )
         {
-
             ChildData data;
             data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
-
             data._initiallyComposited = gdk_window_get_composited(window);
             gdk_window_set_composited(window,TRUE);
             _childrenData.insert( std::make_pair( widget, data ) );
-
         }
 
         #endif
