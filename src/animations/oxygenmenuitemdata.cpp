@@ -21,6 +21,7 @@
 
 #include "oxygenmenuitemdata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 
@@ -29,11 +30,17 @@ namespace Oxygen
 
     //________________________________________________________________________________
     void MenuItemData::connect( GtkWidget* widget )
-    { _parentSetId.connect( G_OBJECT(widget), "parent-set", G_CALLBACK( parentSet ), this); }
+    {
+        _target = widget;
+        _parentSetId.connect( G_OBJECT(widget), "parent-set", G_CALLBACK( parentSet ), this);
+    }
 
     //________________________________________________________________________________
     void MenuItemData::disconnect( GtkWidget* widget )
-    { _parentSetId.disconnect(); }
+    {
+        _target = 0L;
+        _parentSetId.disconnect();
+    }
 
     //_____________________________________________________
     void MenuItemData::parentSet( GtkWidget* widget, GtkWidget*, gpointer data )

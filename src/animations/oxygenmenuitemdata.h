@@ -35,12 +35,13 @@ namespace Oxygen
         public:
 
         //! constructor
-        MenuItemData( void )
+        MenuItemData( void ):
+            _target(0)
         {}
 
         //! destructor
         virtual ~MenuItemData( void )
-        { disconnect( 0L ); }
+        { disconnect( _target ); }
 
         //! setup connections
         void connect( GtkWidget* );
@@ -57,6 +58,9 @@ namespace Oxygen
         static void parentSet( GtkWidget*, GtkWidget*, gpointer );
 
         private:
+
+        //! target
+        GtkWidget* _target;
 
         //! reparent signal id
         Signal _parentSetId;
