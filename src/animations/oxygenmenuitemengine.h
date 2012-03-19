@@ -1,14 +1,13 @@
-#ifndef oxygenargbhelper_h
-#define oxygenargbhelper_h
+#ifndef oxygenmenuitemengine_h
+#define oxygenmenuitemengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
-* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
-* version 2 of the License, or( at your option ) any later version.
+* version 2 of the License, or(at your option ) any later version.
 *
 * This library is distributed  in the hope that it will be useful,
 * but  WITHOUT ANY WARRANTY; without even  the implied warranty of
@@ -21,40 +20,36 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenhook.h"
+
+#include "oxygengenericengine.h"
+#include "oxygendatamap.h"
+#include "oxygenmenuitemdata.h"
 
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
+    //! forward declaration
+    class Animations;
 
-    //! handles argb support on a per-application, per-widget basis
-    class ArgbHelper
+    //! stores data associated to editable menuitemes
+    /*!
+    ensures that the text entry and the button of editable menuitemes
+    gets hovered and focus flags at the same time
+    */
+    class MenuItemEngine: public GenericEngine<MenuItemData>
     {
 
         public:
 
         //! constructor
-        explicit ArgbHelper( void );
+        MenuItemEngine( Animations* widget ):
+            GenericEngine<MenuItemData>( widget )
+            {}
 
         //! destructor
-        virtual ~ArgbHelper( void );
-
-        //! initialize hooks
-        void initializeHooks( void );
-
-        protected:
-
-        //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
-
-        private:
-
-        //! true if hooks are initialized
-        bool _hooksInitialized;
-
-        //! colormap hook
-        Hook _colormapHook;
+        virtual ~MenuItemEngine( void )
+        {}
 
     };
 
