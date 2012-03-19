@@ -71,7 +71,7 @@ namespace Oxygen
     void InnerShadowData::disconnect( GtkWidget* )
     {
         _target = 0;
-        for( ChildDataMap::iterator iter = _childrenData.begin(); iter != _childrenData.end(); ++iter )
+        for( ChildDataMap::reverse_iterator iter = _childrenData.rbegin(); iter != _childrenData.rend(); ++iter )
         { iter->second.disconnect( iter->first ); }
 
         // disconnect signals
@@ -88,34 +88,31 @@ namespace Oxygen
         #if GTK_CHECK_VERSION(2,22,0)
 
         // make sure widget is not already in map
-        if( _childrenData.find( widget ) == _childrenData.end() )
+        if( _childrenData.find( widget ) != _childrenData.end() ) return;
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::registerChild -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
+        GdkWindow* window(gtk_widget_get_window(widget));
+        if(
+
+            // check window
+            window &&
+            gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
+            gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
+
+            // TODO: implement proper blacklist if there appear too many bad widgets/apps
+            G_OBJECT_TYPE_NAME(widget) != std::string("MessageList") )
         {
-
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::InnerShadowData::registerChild -"
-                << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-                << std::endl;
-            #endif
-
             ChildData data;
             data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
-
-            GdkWindow* window(gtk_widget_get_window(widget));
-            if(
-
-                // check window
-                window &&
-                gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
-                gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
-                G_OBJECT_TYPE_NAME(widget) != std::string("MessageList") ) // TODO: implement proper blacklist if there appear too many bad widgets/apps
-            {
-                data._initiallyComposited = gdk_window_get_composited(window);
-                gdk_window_set_composited(window,TRUE);
-            }
-
+            data._initiallyComposited = gdk_window_get_composited(window);
+            gdk_window_set_composited(window,TRUE);
             _childrenData.insert( std::make_pair( widget, data ) );
-
         }
 
         #endif
@@ -145,19 +142,22 @@ namespace Oxygen
     void InnerShadowData::ChildData::disconnect( GtkWidget* widget )
     {
 
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::InnerShadowData::ChildData::disconnect -"
-            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
-
         // disconnect signals
         _unrealizeId.disconnect();
 
         // remove compositing flag
         GdkWindow* window( gtk_widget_get_window( widget ) );
-        if( GDK_IS_WINDOW( window ) && !gdk_window_is_destroyed(window) && G_OBJECT_TYPE_NAME( widget ) != std::string("GtkPizza") )
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::InnerShadowData::ChildData::disconnect -"
+            << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << " window: " << window
+            << std::endl;
+        #endif
+
+        // restore compositing if different from initial state
+        if( GDK_IS_WINDOW( window ) && !gdk_window_is_destroyed(window) && gdk_window_get_composited( window ) != _initiallyComposited )
         { gdk_window_set_composited( window, _initiallyComposited ); }
     }
 

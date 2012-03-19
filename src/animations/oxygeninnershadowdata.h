@@ -79,7 +79,8 @@ namespace Oxygen
             public:
 
             //! constructor
-            ChildData( void )
+            ChildData( void ):
+                _initiallyComposited( false )
             {}
 
             //! destructor
