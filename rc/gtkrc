@@ -86,16 +86,6 @@ style "oxygen-sizegrip" = "oxygen-default"
 
 class "GtkWidget" style "oxygen-sizegrip"
 
-# entries
-# do not change unless also changing Entry_SideMargin in OxygenStyle.h
-style "oxygen-entry-margins" = "oxygen-default"
-{
-    xthickness = 5
-    ythickness = 1
-}
-
-class "GtkEntry" style "oxygen-entry-margins"
-
 # menuitems padding
 style "oxygen-menubar" = "oxygen-default"
 {
@@ -182,14 +172,7 @@ style "oxygen-combobox-entry" = "oxygen-default"
 
 class "GtkComboBoxEntry" style "oxygen-combobox-entry"
 
-style "oxygen-combobox-entry-button" = "oxygen-combobox-entry"
-{
-    ythickness = 0
-    xthickness = 2
-}
-
-widget_class "*<GtkComboBox>.<GtkButton>" style "oxygen-combobox-entry-button"
-
+# GtkCombo
 style "oxygen-combo-button" = "oxygen-combobox-entry"
 {
     xthickness = 0
