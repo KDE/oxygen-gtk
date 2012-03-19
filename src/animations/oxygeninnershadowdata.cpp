@@ -103,6 +103,8 @@ namespace Oxygen
             // check window
             window &&
             gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
+
+            // check compositing
             gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
 
             // TODO: implement proper blacklist if there appear too many bad widgets/apps
