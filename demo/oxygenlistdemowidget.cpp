@@ -45,7 +45,7 @@ namespace Oxygen
         realize();
 
         // vertical pane
-        GtkWidget* vpaned( gtk_vpaned_new() );
+        GtkWidget* vpaned( gtk_paned_new( GTK_ORIENTATION_VERTICAL ) );
         gtk_widget_show( vpaned );
         gtk_box_pack_start( GTK_BOX( mainWidget ), vpaned, true, true, 0 );
 
