@@ -41,7 +41,7 @@ namespace Oxygen
         virtual ~PanedData( void )
         {
             disconnect( 0L );
-            if( _cursor ) gdk_cursor_unref( _cursor );
+            if( _cursor ) g_object_unref( _cursor );
         }
 
         //! setup connections
