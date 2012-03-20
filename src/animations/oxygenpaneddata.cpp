@@ -53,7 +53,8 @@ namespace Oxygen
             assert( !_cursor );
 
             GdkDisplay *display( gtk_widget_get_display( widget ) );
-            _cursor = gdk_cursor_new_from_name( display, GTK_IS_VPANED( widget ) ? "col-resize":"row-resize" );
+            const bool vertical( gtk_orientable_get_orientation( GTK_ORIENTABLE( widget ) ) == GTK_ORIENTATION_VERTICAL );
+            _cursor = gdk_cursor_new_from_name( display, vertical ? "col-resize":"row-resize" );
             _cursorLoaded = true;
 
         }
