@@ -181,8 +181,9 @@ namespace Oxygen
     {
 
         #if GTK_CHECK_VERSION(2,24,0)
-        GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
-        GdkWindow* window=gtk_widget_get_window(child);
+        GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+        GdkWindow* window( gtk_widget_get_window( widget ) );
+        GdkWindow* childWindow( gtk_widget_get_window( child ) );
 
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::InnerShadowData::targetExposeEvent -"
@@ -192,7 +193,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if(!gdk_window_get_composited(window))
+        if( !gdk_window_get_composited( childWindow ) )
         {
             #if OXYGEN_DEBUG
             std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Window isn't composite. Doing nohing\n";
@@ -201,23 +202,26 @@ namespace Oxygen
         }
 
         // make sure the child window doesn't contain garbage
-        gdk_window_process_updates(window,TRUE);
+        gdk_window_process_updates( childWindow, TRUE );
 
         // get window geometry
         GtkAllocation allocation( Gtk::gdk_rectangle() );
-        gdk_window_get_geometry( window, &allocation.x, &allocation.y, &allocation.width, &allocation.height );
+        gdk_window_get_geometry( childWindow, &allocation.x, &allocation.y, &allocation.width, &allocation.height );
+
+        // properly map to parent window
+        Gtk::gdk_window_translate_origin( window, childWindow, &allocation.x, &allocation.y );
 
         // create context with clipping
         Cairo::Context context(gtk_widget_get_window(widget), &allocation );
 
         // draw child
-        gdk_cairo_set_source_window( context, window, allocation.x, allocation.y );
+        gdk_cairo_set_source_window( context, childWindow, allocation.x, allocation.y );
         cairo_paint(context);
 
         #if OXYGEN_DEBUG_INNERSHADOWS
         // Show updated parts in random color
-        cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
-        double red=((double)rand())/RAND_MAX;
+        cairo_rectangle( context, allocation.x, allocation.y, allocation.width, allocation.height );
+        double red= ((double)rand())/RAND_MAX;
         double green=((double)rand())/RAND_MAX;
         double blue=((double)rand())/RAND_MAX;
         cairo_set_source_rgba(context,red,green,blue,0.5);
@@ -228,8 +232,9 @@ namespace Oxygen
         /*
         TODO: here child widget's allocation is used instead of window geometry.
         I think this is the correct thing to do (unlike above), but this is to be double check
-        */
+        HUGO: commenting unless proven that necessary
         allocation = Gtk::gtk_widget_get_allocation( child );
+        */
         int basicOffset=2;
 
         // we only draw SHADOW_IN here
