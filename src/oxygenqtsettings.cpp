@@ -1036,6 +1036,13 @@ namespace Oxygen
         _css.setCurrentSection( "GtkButton" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px" ) );
 
+        // pathbar button margins
+        _css.addSection( "GtkPathBar>GtkToggleButton" );
+        _css.addToCurrentSection(
+            ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px 12px;" ):
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 12px 2px 2px;" ) );
+
         // entries
         _css.addSection( "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "4px 7px" ) );
@@ -1044,8 +1051,9 @@ namespace Oxygen
 
         // pathbar button margins
         _css.addSection( "GtkPathBar>GtkToggleButton" );
-        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
-        else _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+        _css.addToCurrentSection( (gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            "  -GtkButton-inner-border: 1px 0px 0px 10px;":
+            "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
 
         // button padding
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
