@@ -862,10 +862,8 @@ namespace Oxygen
 
             }
 
-            #if GTK_CHECK_VERSION(2, 20, 0)
             // tool itemgroup buttons
             if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
-            #endif
 
             StyleOptions options( widget, state );
             options |= Blend;
