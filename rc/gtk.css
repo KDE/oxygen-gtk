@@ -83,6 +83,8 @@ GtkStatusBar { border-style: none; }
     (class based, rather than widget based)
 */
 
+GtkButton { padding: 3px; }
+
 /* specialization of default widgets style properties */
 GtkToggleButton { -GtkButton-inner-border: 1px 0px 0px; }
 
@@ -99,7 +101,7 @@ GtkScrollbar {
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
 GtkEntry {
-    padding: 2px 5px;
+    padding: 2px 7px;
 }
 
 /* menuitems padding */
@@ -136,9 +138,8 @@ GtkProgressBar { padding: 0px; }
 /* combo boxes */
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
-GtkComboBox>GtkEntry {
-    padding: 2px 5px;
-}
+GtkComboBox>GtkEntry { padding: 2px 7px; }
+
 /* headers */
 GtkTreeView>GtkButton { border-width: 0px 2px; }
 GtkList>GtkButton { border-width: 0px 2px; }
