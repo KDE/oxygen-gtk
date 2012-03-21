@@ -81,8 +81,6 @@ GtkStatusBar { border-style: none; }
     (class based, rather than widget based)
 */
 
-GtkButton { padding: 3px; }
-
 /* specialization of default widgets style properties */
 GtkToggleButton { -GtkButton-inner-border: 1px 0px 0px; }
 
@@ -95,10 +93,6 @@ GtkScrollbar {
     -GtkRange-stepper-size: 12px;
     -GtkRange-trough-border: 0px;
 }
-
-/* entries */
-/* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
-GtkEntry { padding: 2px 7px; }
 
 /* menuitems padding */
 GtkMenuBar {

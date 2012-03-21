@@ -1040,10 +1040,24 @@ namespace Oxygen
         }
 
         #if GTK_CHECK_VERSION( 3, 3, 0 )
+        // scrolled windows border
         _css.addSection( "GtkScrolledWindow" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "solid" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "1px" ) );
+
+        // button padding
+        _css.addSection( "GtkButton" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px" ) );
         #endif
+
+        // Entry padding
+        _css.addSection( "GtkEntry" );
+        #if GTK_CHECK_VERSION( 3, 3, 0 )
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 7px" ) );
+        #else
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 5px" ) );
+        #endif
+
     }
 
     //_________________________________________________________
