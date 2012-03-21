@@ -65,6 +65,7 @@ namespace Oxygen
         #endif
 
         _styleSetHook.disconnect();
+        _styleUpdatedHook.disconnect();
         _buttonReleaseHook.disconnect();
         _map.disconnectAll();
         _map.clear();
@@ -75,7 +76,8 @@ namespace Oxygen
     {
 
         if( _hooksInitialized ) return;
-        _styleSetHook.connect( "style-updated", (GSignalEmissionHook)styleSetHook, this );
+        _styleSetHook.connect( "style-set", (GSignalEmissionHook)styleSetHook, this );
+        _styleUpdatedHook.connect( "style-updated", (GSignalEmissionHook)styleSetHook, this );
         _buttonReleaseHook.connect( "button-release-event", (GSignalEmissionHook)buttonReleaseHook, this );
         _hooksInitialized = true;
 

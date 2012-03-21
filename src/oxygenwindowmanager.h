@@ -96,7 +96,7 @@ namespace Oxygen
         //! delayed drag
         static gboolean startDelayedDrag( gpointer );
 
-        //! style-updated hook
+        //! style-set, style-updated hook
         static gboolean styleSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! mouse button release event hook
@@ -210,6 +210,9 @@ namespace Oxygen
 
         //! style set hook. Used to register widgets
         Hook _styleSetHook;
+
+        //! style updated hook. Used to register widgets
+        Hook _styleUpdatedHook;
 
         //! mouse button release event hook
         Hook _buttonReleaseHook;
