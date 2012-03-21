@@ -70,7 +70,10 @@ INFO: css border and padding ordering is either:
     engine: oxygen-gtk;
 }
 
-GtkScrolledWindow { border-width: 1px; }
+GtkScrolledWindow {
+    border-style: solid;
+    border-width: 1px;
+}
 
 /* customize border styles */
 .toolbar { border-style: none; }
@@ -125,7 +128,10 @@ GtkNotebook { padding: 4px 6px 0px 6px; }
 GtkOptionMenu { padding: 0px 4px; }
 
 /* separators */
-GtkSeparator { border-width: 3px; }
+GtkSeparator {
+    border-style: solid;
+    border-width: 3px;
+}
 
 /* frames */
 GtkFrame { padding: 1px; }
@@ -140,7 +146,14 @@ GtkComboBox>GtkEntry {
     padding: 2px 5px;
 }
 /* headers */
-GtkTreeView>GtkButton { border-width: 0px 2px; }
-GtkList>GtkButton { border-width: 0px 2px; }
+GtkTreeView>GtkButton {
+    border-width: 0px 2px;
+    border-style: solid;
+}
+
+GtkList>GtkButton {
+    border-width: 0px 2px;
+    border-style: solid;
+}
 
 NautilusPathBar>GtkToggleButton{ padding: 0px 10px 0px 0px; }
