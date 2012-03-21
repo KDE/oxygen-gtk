@@ -188,19 +188,8 @@ namespace Oxygen
             generateGtkColors();
         }
 
-        // deal with pathbar button margins
-        // this needs to be done programatically in order to properly account for RTL locales
-        _css.addSection( "GtkPathBar>GtkToggleButton" );
-        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
-        {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
-
-        } else {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
-
-        }
+        // apply extra programatically set metrics metrics
+        loadExtraOptions();
 
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG
@@ -1026,6 +1015,31 @@ namespace Oxygen
 
         }
 
+    }
+
+    //_________________________________________________________
+    void QtSettings::loadExtraOptions( void )
+    {
+
+        // deal with pathbar button margins
+        // this needs to be done programatically in order to properly account for RTL locales
+        _css.addSection( "GtkPathBar>GtkToggleButton" );
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
+        {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
+
+        } else {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+
+        }
+
+        #if GTK_CHECK_VERSION( 3, 3, 0 )
+        _css.addSection( "GtkScrolledWindow" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "solid" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "1px" ) );
+        #endif
     }
 
     //_________________________________________________________
