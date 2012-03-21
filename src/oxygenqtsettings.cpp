@@ -1047,8 +1047,8 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "1px" ) );
 
         // button padding
-        _css.addSection( "GtkButton" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px" ) );
+        _css.setCurrentSection( "GtkButton" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px" ) );
 
         // entries
         _css.addSection( "GtkEntry" );
