@@ -70,8 +70,6 @@ INFO: css border and padding ordering is either:
     engine: oxygen-gtk;
 }
 
-GtkScrolledWindow { border-width: 1px; }
-
 /* customize border styles */
 .toolbar { border-style: none; }
 .menubar { border-style: none; }
@@ -100,9 +98,7 @@ GtkScrollbar {
 
 /* entries */
 /* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
-GtkEntry {
-    padding: 2px 7px;
-}
+GtkEntry { padding: 2px 7px; }
 
 /* menuitems padding */
 GtkMenuBar {
@@ -127,7 +123,10 @@ GtkNotebook { padding: 4px 6px 0px 6px; }
 GtkOptionMenu { padding: 0px 4px; }
 
 /* separators */
-GtkSeparator { border-width: 3px; }
+GtkSeparator {
+    border-style: solid;
+    border-width: 3px;
+}
 
 /* frames */
 GtkFrame { padding: 1px; }
@@ -138,10 +137,16 @@ GtkProgressBar { padding: 0px; }
 /* combo boxes */
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
-GtkComboBox>GtkEntry { padding: 2px 7px; }
 
 /* headers */
-GtkTreeView>GtkButton { border-width: 0px 2px; }
-GtkList>GtkButton { border-width: 0px 2px; }
+GtkTreeView>GtkButton {
+    border-width: 0px 2px;
+    border-style: solid;
+}
+
+GtkList>GtkButton {
+    border-width: 0px 2px;
+    border-style: solid;
+}
 
 NautilusPathBar>GtkToggleButton{ padding: 0px 10px 0px 0px; }
