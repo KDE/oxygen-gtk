@@ -94,6 +94,7 @@ GtkMenuBar {
     padding: 1px;
     border-width: 0px;
 }
+
 GtkMenuBar>GtkMenuItem { padding: 2px 5px; }
 GtkMenu>GtkMenuItem { padding: 5px 1px; }
 GtkMenu>GtkSeparatorMenuItem { padding: 1px 1px; }
