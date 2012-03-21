@@ -354,6 +354,9 @@ namespace Oxygen
         //! oxygen options (from oxygenrc)
         void loadOxygenOptions( void );
 
+        //! extra metrics options
+        void loadExtraOptions( void );
+
         // sanitize path
         std::string sanitizePath( const std::string& ) const;
 

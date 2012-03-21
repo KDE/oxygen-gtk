@@ -188,19 +188,8 @@ namespace Oxygen
             generateGtkColors();
         }
 
-        // deal with pathbar button margins
-        // this needs to be done programatically in order to properly account for RTL locales
-        _css.addSection( "GtkPathBar>GtkToggleButton" );
-        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
-        {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
-
-        } else {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
-
-        }
+        // apply extra programatically set metrics metrics
+        loadExtraOptions();
 
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG
@@ -1029,6 +1018,59 @@ namespace Oxygen
             }
 
         }
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::loadExtraOptions( void )
+    {
+
+        // deal with pathbar button margins
+        // this needs to be done programatically in order to properly account for RTL locales
+        _css.addSection( "GtkPathBar>GtkToggleButton" );
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
+        {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
+
+        } else {
+
+            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+
+        }
+
+        #if GTK_CHECK_VERSION( 3, 3, 0 )
+
+        // scrolled windows border
+        _css.addSection( "GtkScrolledWindow" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "solid" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "1px" ) );
+
+        // button padding
+        _css.setCurrentSection( "GtkButton" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px" ) );
+
+        // entries
+        _css.addSection( "GtkEntry" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "4px 7px" ) );
+
+        #else
+
+        // button padding
+        _css.setCurrentSection( Gtk::CSS::defaultSection() );
+        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 2px 0px;" );
+        _css.addToCurrentSection( "-GtkCalendar-inner-border: 0px;" );
+
+        // toggle button
+        _css.addSection( "GtkToggleButton" );
+        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 0px 0px;" );
+
+        // entries
+        _css.addSection( "GtkEntry" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 5px" ) );
+
+
+        #endif
 
     }
 

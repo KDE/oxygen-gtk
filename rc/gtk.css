@@ -34,9 +34,7 @@ INFO: css border and padding ordering is either:
 
     -GtkButton-default_border: 0px;
     -GtkButton-default_outside_border: 0px;
-    -GtkButton-inner-border: 1px 2px 0px;
 
-    -GtkCalendar-inner-border: 0px;
     -GtkCalendar-horizontal-separation: 0px;
     -GtkComboBox-appears-as-list: 1px;
 
@@ -70,11 +68,6 @@ INFO: css border and padding ordering is either:
     engine: oxygen-gtk;
 }
 
-GtkScrolledWindow {
-    border-style: solid;
-    border-width: 1px;
-}
-
 /* customize border styles */
 .toolbar { border-style: none; }
 .menubar { border-style: none; }
@@ -86,9 +79,6 @@ GtkStatusBar { border-style: none; }
     (class based, rather than widget based)
 */
 
-/* specialization of default widgets style properties */
-GtkToggleButton { -GtkButton-inner-border: 1px 0px 0px; }
-
 GtkScale {
     -GtkRange-slider-width: 23px;
     -GtkScale-slider-length: 21px;
@@ -97,12 +87,6 @@ GtkScale {
 GtkScrollbar {
     -GtkRange-stepper-size: 12px;
     -GtkRange-trough-border: 0px;
-}
-
-/* entries */
-/* do not change unless also changing Entry_SideMargin in OxygenStyle.h */
-GtkEntry {
-    padding: 2px 5px;
 }
 
 /* menuitems padding */
@@ -142,9 +126,7 @@ GtkProgressBar { padding: 0px; }
 /* combo boxes */
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
-GtkComboBox>GtkEntry {
-    padding: 2px 5px;
-}
+
 /* headers */
 GtkTreeView>GtkButton {
     border-width: 0px 2px;
