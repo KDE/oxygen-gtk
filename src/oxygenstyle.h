@@ -272,7 +272,7 @@ namespace Oxygen
         { renderArrow( context, type, x, y, w, h, size, options, AnimationData(), role ); }
 
         //! slider groove
-        void renderSliderGroove( cairo_t*, gint, gint, gint, gint, const StyleOptions& );
+        void renderSliderGroove( cairo_t*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Full );
 
         //! slider handle
         void renderSliderHandle( cairo_t*, gint, gint, gint, gint, const StyleOptions&, const AnimationData& = AnimationData() );

@@ -572,15 +572,24 @@ namespace Oxygen
             } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) && GTK_IS_SCALE( widget ) ) {
 
                 const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
+
                 const int offset( 6 );
-                if( vertical ) {
+                TileSet::Tiles tiles( TileSet::Full );
 
-                    Style::instance().renderSliderGroove( context, x, y + offset, w, h - 2*offset, Vertical );
+                #if GTK_CHECK_VERSION( 3, 3, 0 )
+                if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_LEFT ) ) { tiles &= ~TileSet::Right; x += offset; }
+                else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_RIGHT ) ) { tiles &= ~TileSet::Left; w -= offset; }
+                else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOP ) ) { tiles &= ~TileSet::Bottom; y += offset; }
+                else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BOTTOM ) ) { tiles &= ~TileSet::Top; h -= offset; }
+                else if( vertical ) { y += offset; h -= 2*offset; }
+                else { x+= offset; w -= 2*offset; }
+                #else
+                if( vertical ) { y += offset; h -= 2*offset; }
+                else { x+= offset; w -= 2*offset; }
+                #endif
 
-                } else {
-
-                    Style::instance().renderSliderGroove( context, x + offset, y, w - 2*offset, h, StyleOptions() );
-                }
+                // render
+                Style::instance().renderSliderGroove( context, x, y, w, h, vertical ? Vertical:StyleOptions(), tiles );
 
                 return;
 
@@ -2263,8 +2272,13 @@ namespace Oxygen
 
             } else if( GTK_IS_ENTRY( widget ) ) {
 
+                #if GTK_CHECK_VERSION( 3, 3, 0 )
+                y+=1; h-=2;
+                x+=3; w-=6;
+                #else
                 y-=1; h+=2;
                 x-=2; w+=4;
+                #endif
 
             } else if( GTK_IS_TREE_VIEW( widget ) ) {
 

@@ -2027,7 +2027,7 @@ namespace Oxygen
     //____________________________________________________________________________________
     void Style::renderSliderGroove(
         cairo_t* context,
-        gint x, gint y, gint w, gint h, const StyleOptions& options )
+        gint x, gint y, gint w, gint h, const StyleOptions& options, TileSet::Tiles tiles )
     {
 
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
@@ -2048,7 +2048,7 @@ namespace Oxygen
         }
 
         cairo_save( context );
-        helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, TileSet::Full );
+        helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, tiles );
         cairo_restore( context );
 
     }
