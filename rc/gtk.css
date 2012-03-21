@@ -140,6 +140,7 @@ GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
 GtkComboBox>GtkEntry {
     padding: 2px 5px;
 }
+
 /* headers */
 GtkTreeView>GtkButton {
     border-width: 0px 2px;
