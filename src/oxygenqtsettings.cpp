@@ -1040,6 +1040,7 @@ namespace Oxygen
         }
 
         #if GTK_CHECK_VERSION( 3, 3, 0 )
+
         // scrolled windows border
         _css.addSection( "GtkScrolledWindow" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "solid" ) );
@@ -1048,14 +1049,27 @@ namespace Oxygen
         // button padding
         _css.addSection( "GtkButton" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px" ) );
-        #endif
 
-        // Entry padding
+        // entries
         _css.addSection( "GtkEntry" );
-        #if GTK_CHECK_VERSION( 3, 3, 0 )
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 7px" ) );
+
         #else
+
+        // button padding
+        _css.setCurrentSection( Gtk::CSS::defaultSection() );
+        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 2px 0px;" );
+        _css.addToCurrentSection( "-GtkCalendar-inner-border: 0px;" );
+
+        // toggle button
+        _css.addSection( "GtkToggleButton" );
+        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 0px 0px;" );
+
+        // entries
+        _css.addSection( "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 5px" ) );
+
+
         #endif
 
     }

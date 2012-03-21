@@ -34,7 +34,6 @@ INFO: css border and padding ordering is either:
 
     -GtkButton-default_border: 0px;
     -GtkButton-default_outside_border: 0px;
-    -GtkButton-inner-border: 1px 2px 0px;
 
     -GtkCalendar-inner-border: 0px;
     -GtkCalendar-horizontal-separation: 0px;
@@ -80,9 +79,6 @@ GtkStatusBar { border-style: none; }
     look at default values from GtkCssProvider for better style definitions
     (class based, rather than widget based)
 */
-
-/* specialization of default widgets style properties */
-GtkToggleButton { -GtkButton-inner-border: 1px 0px 0px; }
 
 GtkScale {
     -GtkRange-slider-width: 23px;
