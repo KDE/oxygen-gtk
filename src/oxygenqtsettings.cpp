@@ -1052,7 +1052,7 @@ namespace Oxygen
 
         // entries
         _css.addSection( "GtkEntry" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 7px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "4px 7px" ) );
 
         #else
 
