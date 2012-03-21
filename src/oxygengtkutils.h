@@ -201,15 +201,9 @@ namespace Oxygen
         //! returns widget allocation
         inline GtkAllocation gtk_widget_get_allocation( GtkWidget* widget )
         {
-            #if GTK_CHECK_VERSION(2, 18, 0)
             GtkAllocation allocation = { 0, 0, -1, -1 };
             ::gtk_widget_get_allocation( widget, &allocation );
             return allocation;
-            #else
-            assert( widget );
-            return widget->allocation;
-            #endif
-
         }
 
         //! returns true if given path as given type

@@ -309,8 +309,6 @@ namespace Oxygen
     gboolean Animations::innerShadowHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
     {
 
-        #if GTK_CHECK_VERSION(2,24,2)
-
         // get widget from params
         GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
 
@@ -344,7 +342,6 @@ namespace Oxygen
         animations.innerShadowEngine().registerWidget( parent );
         animations.innerShadowEngine().registerChild( parent, widget );
 
-        #endif  // Gtk version
         return TRUE;
 
     }

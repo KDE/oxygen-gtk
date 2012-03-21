@@ -85,8 +85,6 @@ namespace Oxygen
     void InnerShadowData::registerChild( GtkWidget* widget )
     {
 
-        #if GTK_CHECK_VERSION(2,22,0)
-
         // make sure widget is not already in map
         if( _childrenData.find( widget ) != _childrenData.end() ) return;
 
@@ -116,8 +114,6 @@ namespace Oxygen
             gdk_window_set_composited(window,TRUE);
             _childrenData.insert( std::make_pair( widget, data ) );
         }
-
-        #endif
 
     }
 
@@ -180,7 +176,6 @@ namespace Oxygen
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
 
-        #if GTK_CHECK_VERSION(2,24,0)
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
         GdkWindow* window( gtk_widget_get_window( widget ) );
         GdkWindow* childWindow( gtk_widget_get_window( child ) );
@@ -320,8 +315,6 @@ namespace Oxygen
         Style::instance().renderHole( context,
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
             options, data );
-
-        #endif // Gtk version
 
         // let the event propagate
         return FALSE;

@@ -64,11 +64,7 @@ namespace Oxygen
         {
 
             // load handle window
-            #if GTK_CHECK_VERSION(2, 20, 0)
             GdkWindow* window(  gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
-            #else
-            GdkWindow* window( GTK_PANED( widget )->handle );
-            #endif
 
             // assign cursor
             gdk_window_set_cursor( window, _cursor );
