@@ -1025,20 +1025,6 @@ namespace Oxygen
     void QtSettings::loadExtraOptions( void )
     {
 
-        // deal with pathbar button margins
-        // this needs to be done programatically in order to properly account for RTL locales
-        _css.addSection( "GtkPathBar>GtkToggleButton" );
-        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL )
-        {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
-
-        } else {
-
-            _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
-
-        }
-
         #if GTK_CHECK_VERSION( 3, 3, 0 )
 
         // scrolled windows border
@@ -1056,14 +1042,19 @@ namespace Oxygen
 
         #else
 
+        // pathbar button margins
+        _css.addSection( "GtkPathBar>GtkToggleButton" );
+        if( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px 10px;" );
+        else _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+
         // button padding
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
-        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 2px 0px;" );
-        _css.addToCurrentSection( "-GtkCalendar-inner-border: 0px;" );
+        _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 2px 0px;" );
+        _css.addToCurrentSection( "  -GtkCalendar-inner-border: 0px;" );
 
         // toggle button
         _css.addSection( "GtkToggleButton" );
-        _css.addToCurrentSection( "-GtkButton-inner-border: 1px 0px 0px;" );
+        _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 0px 0px;" );
 
         // entries
         _css.addSection( "GtkEntry" );
