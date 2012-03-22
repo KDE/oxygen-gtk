@@ -1068,7 +1068,6 @@ namespace Oxygen
         _css.addSection( "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 5px" ) );
 
-
         #endif
 
     }
