@@ -52,7 +52,7 @@ namespace Oxygen
         #endif
 
         // disconnect hooks
-        _colormapHook.disconnect();
+        _styleSetHook.disconnect();
 
     }
 
@@ -63,7 +63,7 @@ namespace Oxygen
         if( _hooksInitialized ) return;
 
         // colormap hooks
-        if( _colormapHook.connect( "style-set", (GSignalEmissionHook)colormapHook, 0L ) )
+        if( _styleSetHook.connect( "style-set", (GSignalEmissionHook)styleSetHook, 0L ) )
         { _hooksInitialized = true; }
 
         return;
@@ -71,7 +71,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
+    gboolean ArgbHelper::styleSetHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
     {
 
         // get widget from params
@@ -109,7 +109,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::ArgbHelper::colormapHook - "
+            std::cerr << "Oxygen::ArgbHelper::styleSetHook - "
                 << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
                 << " hint: " << Gtk::TypeNames::windowTypeHint( hint )
                 << std::endl;
