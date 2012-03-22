@@ -68,11 +68,6 @@ INFO: css border and padding ordering is either:
     engine: oxygen-gtk;
 }
 
-GtkScrolledWindow {
-    border-style: inset;
-    border-width: 1px;
-}
-
 /* customize border styles */
 .toolbar { border-style: none; }
 .menubar { border-style: none; }
@@ -124,8 +119,13 @@ GtkSeparator {
 }
 
 /* frames */
+GtkScrolledWindow {
+    border-style: inset;
+    border-width: 1px;
+    padding: 1px;
+}
+
 GtkFrame { padding: 1px; }
-GtkScrolledWindow { padding: 1px; }
 GtkViewport { padding: 1px; }
 GtkProgressBar { padding: 0px; }
 
