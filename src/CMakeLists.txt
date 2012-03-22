@@ -18,6 +18,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenubarstatedata.cpp
     animations/oxygenmenustatedata.cpp
+    animations/oxygenmenuitemdata.cpp
     animations/oxygenpaneddata.cpp
     animations/oxygensignal.cpp
     animations/oxygenscrollbardata.cpp

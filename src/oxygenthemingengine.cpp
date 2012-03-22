@@ -1045,6 +1045,12 @@ namespace Oxygen
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
+            if( GTK_IS_MENU_ITEM( widget ) )
+            {
+                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                Style::instance().animations().menuItemEngine().registerWidget( child );
+            }
+
             GtkWidget* parent( widget ? gtk_widget_get_parent( widget ):0L );
             AnimationData data;
             if( GTK_IS_MENU_BAR( parent ) )
