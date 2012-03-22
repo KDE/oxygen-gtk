@@ -700,10 +700,6 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@error_bg_color" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@error_fg_color" ) );
 
-
-        _css.addSection( "GtkSpinButton.button" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "alpha( #900185, 0 )" ) );
-
     }
 
     //_________________________________________________________
@@ -1036,6 +1032,13 @@ namespace Oxygen
             ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px 12px;" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 12px 2px 2px;" ) );
+
+        // spinbox buttons
+        _css.addSection( "GtkSpinButton.button" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "alpha( #900185, 0 )" ) );
+        _css.addToCurrentSection( ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
 
         // entries
         _css.addSection( "GtkEntry" );
