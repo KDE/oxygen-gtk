@@ -18,6 +18,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygenmainwindowdata.cpp
     animations/oxygenmenubarstatedata.cpp
     animations/oxygenmenustatedata.cpp
+    animations/oxygenmenuitemdata.cpp
     animations/oxygenpaneddata.cpp
     animations/oxygensignal.cpp
     animations/oxygenscrollbardata.cpp
@@ -39,7 +40,6 @@ set( oxygen_gtk_SOURCES
     oxygencairoutils.cpp
     oxygencoloreffect.cpp
     oxygencolorutils.cpp
-    oxygendbus.cpp
     oxygenfontinfo.cpp
     oxygengtkcss.cpp
     oxygengtkcellinfo.cpp
@@ -76,6 +76,6 @@ add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
 set( CMAKE_CXX_FLAGS " -Wall -g ${CMAKE_CXX_FLAGS}" )
 set( CMAKE_C_FLAGS " -Wall -g ${CMAKE_C_FLAGS}" )
 
-target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${DBUS_LIBRARIES} ${X11_X11_LIB} )
+target_link_libraries( oxygen-gtk ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} )
 
 install( TARGETS oxygen-gtk DESTINATION ${INSTALL_PATH_GTK_ENGINES} )

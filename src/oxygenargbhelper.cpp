@@ -54,7 +54,6 @@ namespace Oxygen
         // disconnect hooks
         _styleSetHook.disconnect();
         _styleUpdatedHook.disconnect();
-        _parentSetHook.disconnect();
 
     }
 
@@ -71,46 +70,8 @@ namespace Oxygen
         if( !_styleUpdatedHook.connect( "style-updated", (GSignalEmissionHook)styleSetHook, 0L ) )
         { return; }
 
-        // parent-set hook
-        _parentSetHook.connect( "parent-set", (GSignalEmissionHook)parentSetHook, this );
-
         _hooksInitialized = true;
         return;
-
-    }
-
-    //_____________________________________________________
-    void ArgbHelper::attachStyle( GtkWidget* widget, GdkWindow* window ) const
-    {
-
-        // retrieve widget style and check
-        GtkStyle* style( gtk_widget_get_style( widget ) );
-        if( !style ) return;
-
-        // TODO: check whether there is an equivalent for Gtk3
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::ArgbHelper::attachStyle -"
-            << " widget: " << widget << " (" <<G_OBJECT_TYPE_NAME( widget ) << ")"
-            << std::endl;
-        #endif
-
-        // TODO: check whether this is needed for gtk+3, and if yes, if working
-        // This is known *not* to work for gtk+2
-        // gtk_widget_set_style( widget, gtk_style_attach( style, window ) );
-
-        // if widget is a container, we need to do the same for its children
-        if( !GTK_IS_CONTAINER( widget ) ) return;
-
-        // get children
-        GList* children( gtk_container_get_children( GTK_CONTAINER( widget ) ) );
-        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
-        {
-            if( !GTK_IS_WIDGET( child->data ) ) continue;
-            attachStyle( GTK_WIDGET( child->data ), window );
-        }
-
-        if( children ) g_list_free( children );
 
     }
 
@@ -178,25 +139,6 @@ namespace Oxygen
         // assign argb colormap to widget
         gtk_widget_set_visual( widget, gdk_screen_get_rgba_visual( screen ) );
 
-        return TRUE;
-
-    }
-
-    //_____________________________________________________
-    gboolean ArgbHelper::parentSetHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
-    {
-
-        // get widget from params
-        GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
-
-        // check type
-        if( !GTK_IS_WIDGET( widget ) ) return FALSE;
-
-        // retrieve parent window and check
-        GdkWindow* window( gtk_widget_get_parent_window( widget ) );
-        if( !window ) return TRUE;
-
-        static_cast<const ArgbHelper*>(data)->attachStyle( widget, window );
         return TRUE;
 
     }

@@ -42,6 +42,10 @@ namespace Oxygen
         virtual ~Signal( void )
         {}
 
+        //! true if connected
+        bool isConnected( void ) const
+        { return _id > 0 && _object; }
+
         //! connect
         bool connect( GObject*, const std::string&, GCallback, gpointer, bool after=false );
 

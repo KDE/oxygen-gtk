@@ -22,7 +22,6 @@
 #include "oxygenthemingengine.h"
 
 #include "oxygencairoutils.h"
-#include "oxygendbus.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
@@ -1044,6 +1043,12 @@ namespace Oxygen
             return;
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+
+            if( GTK_IS_MENU_ITEM( widget ) )
+            {
+                GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                Style::instance().animations().menuItemEngine().registerWidget( child );
+            }
 
             GtkWidget* parent( widget ? gtk_widget_get_parent( widget ):0L );
             AnimationData data;
@@ -2401,9 +2406,6 @@ namespace Oxygen
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
         Style::instance().shadowHelper().initializeHooks();
-
-        // also initialize dbus
-        Oxygen::DBus::instance().connect();
 
         // initialize argb hooks
         if( Style::instance().settings().argbEnabled() )
