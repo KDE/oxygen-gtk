@@ -22,7 +22,6 @@
 #include "oxygenthemingengine.h"
 
 #include "oxygencairoutils.h"
-#include "oxygendbus.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
@@ -2407,9 +2406,6 @@ namespace Oxygen
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
         Style::instance().shadowHelper().initializeHooks();
-
-        // also initialize dbus
-        Oxygen::DBus::instance().connect();
 
         // initialize argb hooks
         if( Style::instance().settings().argbEnabled() )

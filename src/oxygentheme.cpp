@@ -25,7 +25,6 @@
 #include "oxygentheme.h"
 
 #include "config.h"
-#include "oxygendbus.h"
 #include "oxygenstyle.h"
 #include "oxygenthemingengine.h"
 #include "oxygenwindecooptions.h"
@@ -75,10 +74,6 @@ void theme_exit( void )
     // delete style instance
     delete &Oxygen::Style::instance();
     delete &Oxygen::TimeLineServer::instance();
-
-    // disconnect
-    // Oxygen::DBus::instance().disconnect();
-    delete &Oxygen::DBus::instance();
 
 }
 
