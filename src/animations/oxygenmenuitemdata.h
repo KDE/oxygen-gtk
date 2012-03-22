@@ -1,5 +1,5 @@
-#ifndef oxygenargbhelper_h
-#define oxygenargbhelper_h
+#ifndef oxygenmenuitemdata_h
+#define oxygenmenuitemdata_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -8,7 +8,7 @@
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
-* version 2 of the License, or( at your option ) any later version.
+* version 2 of the License, or(at your option ) any later version.
 *
 * This library is distributed  in the hope that it will be useful,
 * but  WITHOUT ANY WARRANTY; without even  the implied warranty of
@@ -21,40 +21,49 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygenhook.h"
+#include "oxygensignal.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 
 namespace Oxygen
 {
-
-    //! handles argb support on a per-application, per-widget basis
-    class ArgbHelper
+    // track main window resize events
+    class MenuItemData
     {
 
         public:
 
         //! constructor
-        explicit ArgbHelper( void );
+        MenuItemData( void ):
+            _target(0)
+        {}
 
         //! destructor
-        virtual ~ArgbHelper( void );
+        virtual ~MenuItemData( void )
+        { disconnect( _target ); }
 
-        //! initialize hooks
-        void initializeHooks( void );
+        //! setup connections
+        void connect( GtkWidget* );
+
+        //! disconnect
+        void disconnect( GtkWidget* );
 
         protected:
 
-        //! argb hook
-        static gboolean styleSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+        //! attach style of widget to passed window [recursive]
+        void attachStyle( GtkWidget*, GdkWindow* ) const;
+
+        //! parent set callback
+        static void parentSet( GtkWidget*, GtkWidget*, gpointer );
 
         private:
 
-        //! true if hooks are initialized
-        bool _hooksInitialized;
+        //! target
+        GtkWidget* _target;
 
-        //! colormap hook
-        Hook _styleSetHook;
+        //! reparent signal id
+        Signal _parentSetId;
 
     };
 

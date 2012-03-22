@@ -49,6 +49,7 @@ namespace Oxygen
         registerEngine( _groupBoxLabelEngine = new GroupBoxLabelEngine( this ) );
         registerEngine( _hoverEngine = new HoverEngine( this ) );
         registerEngine( _mainWindowEngine = new MainWindowEngine( this ) );
+        registerEngine( _menuItemEngine = new MenuItemEngine( this ) );
         registerEngine( _panedEngine = new PanedEngine( this ) );
         registerEngine( _scrollBarEngine = new ScrollBarEngine( this ) );
         registerEngine( _scrolledWindowEngine = new ScrolledWindowEngine( this ) );
