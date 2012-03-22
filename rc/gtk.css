@@ -119,8 +119,13 @@ GtkSeparator {
 }
 
 /* frames */
+GtkScrolledWindow {
+    border-style: inset;
+    border-width: 1px;
+    padding: 1px;
+}
+
 GtkFrame { padding: 1px; }
-GtkScrolledWindow { padding: 1px; }
 GtkViewport { padding: 1px; }
 GtkProgressBar { padding: 0px; }
 
