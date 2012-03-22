@@ -52,8 +52,9 @@ namespace Oxygen
         #endif
 
         // disconnect hooks
-        _colormapHook.disconnect();
-        _styleHook.disconnect();
+        _styleSetHook.disconnect();
+        _styleUpdatedHook.disconnect();
+        _parentSetHook.disconnect();
 
     }
 
@@ -63,12 +64,15 @@ namespace Oxygen
 
         if( _hooksInitialized ) return;
 
-        // colormap hooks
-        if( !_colormapHook.connect( "style-updated", (GSignalEmissionHook)colormapHook, 0L ) )
+        // style hooks
+        if( !_styleSetHook.connect( "style-set", (GSignalEmissionHook)styleSetHook, 0L ) )
+        { return; }
+
+        if( !_styleUpdatedHook.connect( "style-updated", (GSignalEmissionHook)styleSetHook, 0L ) )
         { return; }
 
         // parent-set hook
-        _styleHook.connect( "parent-set", (GSignalEmissionHook)styleHook, this );
+        _parentSetHook.connect( "parent-set", (GSignalEmissionHook)parentSetHook, this );
 
         _hooksInitialized = true;
         return;
@@ -148,7 +152,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::colormapHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
+    gboolean ArgbHelper::styleSetHook( GSignalInvocationHint*, guint, const GValue* params, gpointer )
     {
 
         // get widget from params
@@ -165,7 +169,7 @@ namespace Oxygen
         if( !screen ) return TRUE;
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::ArgbHelper::colormapHook - "
+        std::cerr << "Oxygen::ArgbHelper::styleSetHook - "
             << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
             << " hint: " << Gtk::TypeNames::windowTypeHint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) )
             << std::endl;
@@ -179,7 +183,7 @@ namespace Oxygen
     }
 
     //_____________________________________________________
-    gboolean ArgbHelper::styleHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
+    gboolean ArgbHelper::parentSetHook( GSignalInvocationHint*, guint, const GValue* params, gpointer data )
     {
 
         // get widget from params

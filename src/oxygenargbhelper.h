@@ -52,10 +52,10 @@ namespace Oxygen
         static bool acceptWidget( GtkWidget* );
 
         //! argb hook
-        static gboolean colormapHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+        static gboolean styleSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         //! depth adjustment hook
-        static gboolean styleHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
+        static gboolean parentSetHook( GSignalInvocationHint*, guint, const GValue*, gpointer );
 
         private:
 
@@ -63,10 +63,11 @@ namespace Oxygen
         bool _hooksInitialized;
 
         //! colormap hook
-        Hook _colormapHook;
+        Hook _styleSetHook;
+        Hook _styleUpdatedHook;
 
         //! style hook
-        Hook _styleHook;
+        Hook _parentSetHook;
 
     };
 
