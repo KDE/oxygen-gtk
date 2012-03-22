@@ -412,6 +412,9 @@ namespace Oxygen
 
         //@}
 
+        //! monitored files is changed
+        static void fileChanged( GFileMonitor*, GFile*, GFile*, GFileMonitorEvent, gpointer );
+
         //! used to store slab characteristics
         class SlabRect
         {
