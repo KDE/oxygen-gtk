@@ -203,7 +203,8 @@ namespace Oxygen
             }
 
             // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
+            if( !d.isNull() )
+            { draw_animated_button( window, clipRect, widget ); }
 
             return;
 
