@@ -324,9 +324,10 @@ namespace Oxygen
 
         if( data._target )
         {
-            data.setDirty( true );
             const GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
+            if( data._previous._widget ) Gtk::gtk_widget_queue_draw( data._previous._widget );
+            if( data._current._widget ) Gtk::gtk_widget_queue_draw( data._current._widget );
         }
 
         return FALSE;
@@ -344,9 +345,10 @@ namespace Oxygen
 
             data.updateAnimatedRect();
 
-            data.setDirty( true );
             GdkRectangle rect( data.dirtyRect() );
             Gtk::gtk_widget_queue_draw( data._target, &rect );
+            if( data._previous._widget ) Gtk::gtk_widget_queue_draw( data._previous._widget );
+            if( data._current._widget ) Gtk::gtk_widget_queue_draw( data._current._widget );
 
         }
 
