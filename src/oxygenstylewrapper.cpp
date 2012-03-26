@@ -116,7 +116,7 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
-        if( d.isBase() || d.isEventBox() )
+        if( d.isBase() || d.isEventBox() || (d.isNull() && Gtk::g_object_is_a( G_OBJECT( widget ), "ShellWindow" ) ) )
         {
 
             // if background pixmap is provided, fallback to default painting
