@@ -116,7 +116,7 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
-        if( d.isBase() || d.isEventBox() )
+        if( d.isBase() || d.isEventBox() || (d.isNull() && Gtk::g_object_is_a( G_OBJECT( widget ), "ShellWindow" ) ) )
         {
 
             // if background pixmap is provided, fallback to default painting
@@ -203,7 +203,8 @@ namespace Oxygen
             }
 
             // also draw possible animated tool button
-            draw_animated_button( window, clipRect, widget );
+            if( !d.isNull() )
+            { draw_animated_button( window, clipRect, widget ); }
 
             return;
 
