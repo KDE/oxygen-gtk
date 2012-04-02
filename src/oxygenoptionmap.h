@@ -49,6 +49,9 @@ namespace Oxygen
         virtual ~OptionMap( void )
         {}
 
+        //! equal to operator
+        bool operator == ( const OptionMap& ) const;
+
         //! merge with other map
         /*! when options are duplicated between two maps, the second overwrite the first */
         OptionMap& merge( const OptionMap& );
