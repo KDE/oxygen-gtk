@@ -2166,13 +2166,23 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) )
-        {
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ) {
+
+            StyleOptions options( widget, stateFlags );
+            options |= Blend;
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+
+            // retrieve animation state and render accordingly
+            // TODO: re-introduce blending
+            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
+            Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) ) {
 
             StyleOptions options( widget, stateFlags );
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
-            if( GTK_SWITCH( widget ) )
+            if( GTK_IS_SWITCH( widget ) )
             {
                 // for GtkSwitch, need to manually register to hover engine
                 Style::instance().animations().hoverEngine().registerWidget( widget, true );
@@ -2184,17 +2194,6 @@ namespace Oxygen
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
 
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
-
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ) {
-
-            StyleOptions options( widget, stateFlags );
-            options |= Blend;
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
-
-            // retrieve animation state and render accordingly
-            // TODO: re-introduce blending
-            const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
-            Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
 
         } else {
 
