@@ -52,6 +52,10 @@ namespace Oxygen
         //! equal to operator
         bool operator == ( const OptionMap& ) const;
 
+        //! differ from operator
+        bool operator != (const OptionMap& other ) const
+        { return !(*this == other ); }
+
         //! merge with other map
         /*! when options are duplicated between two maps, the second overwrite the first */
         OptionMap& merge( const OptionMap& );

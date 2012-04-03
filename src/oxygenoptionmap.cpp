@@ -82,7 +82,7 @@ namespace Oxygen
     {
         const_iterator firstIter( begin() );
         const_iterator secondIter( other.begin() );
-        for(;firstIter != end() && secondIter != other.end(); firstIter++, secondIter++ )
+        for(;firstIter != end() && secondIter != other.end(); ++firstIter, ++secondIter )
         {
             if( !( firstIter->first == secondIter->first && firstIter->second == secondIter->second ) )
             { return false; }
