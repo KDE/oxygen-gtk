@@ -1068,6 +1068,12 @@ namespace Oxygen
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px 12px;" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 12px 2px 2px;" ) );
 
+        _css.addSection( "NautilusPathBar>GtkToggleButton" );
+        _css.addToCurrentSection(
+            ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px 12px;" ):
+            Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 12px 2px 2px;" ) );
+
         // spinbox buttons
         _css.addSection( "GtkSpinButton.button" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "alpha( #900185, 0 )" ) );
@@ -1083,6 +1089,12 @@ namespace Oxygen
 
         // pathbar button margins
         _css.addSection( "GtkPathBar>GtkToggleButton" );
+        _css.addToCurrentSection( (gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            "  -GtkButton-inner-border: 1px 0px 0px 10px;":
+            "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+
+        // pathbar button margins
+        _css.addSection( "NautilusPathBar>GtkToggleButton" );
         _css.addToCurrentSection( (gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             "  -GtkButton-inner-border: 1px 0px 0px 10px;":
             "  -GtkButton-inner-border: 1px 10px 0px 0px;" );

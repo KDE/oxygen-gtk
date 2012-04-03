@@ -149,5 +149,3 @@ GtkList>GtkButton {
     border-width: 0px 2px;
     border-style: solid;
 }
-
-NautilusPathBar>GtkToggleButton{ padding: 0px 10px 0px 0px; }
