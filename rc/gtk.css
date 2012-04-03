@@ -53,7 +53,9 @@ INFO: css border and padding ordering is either:
 
     -GtkTreeView-allow-rules: 1px;
 
-    -GtkStatusbar-shadow-type: GTK_SHADOW_NONE;
+    -GtkStatusbar-shadow-type: none;
+    -GtkMenubar-shadow-type: none;
+    -GtkToolbar-shadow-type: none;
 
     -GtkWindow-resize-grip-height: 0px;
     -GtkWindow-resize-grip-width: 0px;
