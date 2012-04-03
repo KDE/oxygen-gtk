@@ -129,8 +129,8 @@ GtkScrolledWindow {
     padding: 1px;
 }
 
-GtkFrame { padding: 1px; }
-GtkViewport { padding: 1px; }
+GtkFrame { padding: 4px; }
+GtkViewport { padding: 0px; }
 GtkProgressBar { padding: 0px; }
 
 /* combo boxes */
