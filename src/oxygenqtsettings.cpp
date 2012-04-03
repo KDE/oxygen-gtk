@@ -1093,6 +1093,12 @@ namespace Oxygen
             "  -GtkButton-inner-border: 1px 0px 0px 10px;":
             "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
 
+        // pathbar button margins
+        _css.addSection( "NautilusPathBar>GtkToggleButton" );
+        _css.addToCurrentSection( (gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
+            "  -GtkButton-inner-border: 1px 0px 0px 10px;":
+            "  -GtkButton-inner-border: 1px 10px 0px 0px;" );
+
         // button padding
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( "  -GtkButton-inner-border: 1px 2px 0px;" );
