@@ -53,11 +53,14 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    void Style::initialize( unsigned int flags )
+    bool Style::initialize( unsigned int flags )
     {
 
         // initialize ref surface
         helper().initializeRefSurface();
+
+        // reinitialize settings
+        if( !_settings.initialize( flags ) ) return false;
 
         // reset caches if colors have changed
         if( flags&QtSettings::Colors )
@@ -65,9 +68,6 @@ namespace Oxygen
             helper().clearCaches();
             ColorUtils::clearCaches();
         }
-
-        // reinitialize settings
-        _settings.initialize( flags );
 
         // connect files
         QtSettings::FileMap& monitoredFiles( _settings.monitoredFiles() );
@@ -102,6 +102,8 @@ namespace Oxygen
         // create window shadow
         WindowShadow shadow( settings(), helper() );
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
+
+        return true;
 
     }
 
@@ -3799,8 +3801,8 @@ namespace Oxygen
         #endif
 
         Style& style( *static_cast<Style*>( data ) );
-        style.initialize( QtSettings::All|QtSettings::Forced );
-        gtk_style_context_reset_widgets( gdk_screen_get_default() );
+        if( style.initialize( QtSettings::All|QtSettings::Forced ) )
+        { gtk_style_context_reset_widgets( gdk_screen_get_default() ); }
 
     }
 
