@@ -57,9 +57,6 @@ namespace Oxygen
         virtual ~QtSettings( void )
         { clearMonitoredFiles(); }
 
-        //! load kdeglobals settings into optionMap
-        void loadKdeGlobals( void );
-
         //! initialization flags
         enum Flags
         {
@@ -78,7 +75,7 @@ namespace Oxygen
         { return _userConfigDir; }
 
         //! initialize
-        void initialize( unsigned int flags = All );
+        bool initialize( unsigned int flags = All );
 
         //! palette
         const Palette& palette( void ) const
@@ -346,10 +343,18 @@ namespace Oxygen
 
         protected:
 
-        //! icon path
+        //! kdeglobals settings
+        /*! returns true if changed */
+        bool loadKdeGlobals( void );
+
+        //! oxygen settings
+        /*! returns true if changed */
+        bool loadOxygen( void );
+
+        //! kde configuration path
         PathList kdeConfigPathList( void ) const;
 
-        //! icon path
+        //! kde icon path
         PathList kdeIconPathList( void ) const;
 
         //! add icon theme to path list, accounting for theme inheritance (recursively)
@@ -407,6 +412,9 @@ namespace Oxygen
 
         //! kde global options
         OptionMap _kdeGlobals;
+
+        //! oxygen options
+        OptionMap _oxygen;
 
         //! user config directory
         std::string _userConfigDir;

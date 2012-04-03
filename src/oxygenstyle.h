@@ -62,7 +62,7 @@ namespace Oxygen
         }
 
         //! initialize
-        void initialize( unsigned int flags = QtSettings::All );
+        bool initialize( unsigned int flags = QtSettings::All );
 
         //! settings
         const QtSettings& settings( void ) const
