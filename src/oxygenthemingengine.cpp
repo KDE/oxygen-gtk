@@ -2166,14 +2166,21 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        // lookup widget
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) )
         {
 
             StyleOptions options( widget, stateFlags );
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
+            if( GTK_SWITCH( widget ) )
+            {
+                // for GtkSwitch, need to manually register to hover engine
+                Style::instance().animations().hoverEngine().registerWidget( widget, true );
+                if( Style::instance().animations().hoverEngine().hovered( widget ) )
+                { options |= Hover; }
+            }
+
+            // retrieve animation state
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
 
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
