@@ -442,6 +442,7 @@ namespace Oxygen
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ||
@@ -1090,16 +1091,14 @@ namespace Oxygen
             Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
             return;
 
-        } else if(
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) &&
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) )
-        {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ) {
 
 
             StyleOptions options;
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
-            Style::instance().adjustScrollBarHole( x, y, w, h, options );
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) )
+            { Style::instance().adjustScrollBarHole( x, y, w, h, options ); }
 
             if( w>0 && h>0 )
             {
@@ -2169,13 +2168,14 @@ namespace Oxygen
 
         // lookup widget
 
-        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) )
         {
 
-            StyleOptions options(widget,stateFlags);
+            StyleOptions options( widget, stateFlags );
             if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
+
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ) {
