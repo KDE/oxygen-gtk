@@ -53,7 +53,7 @@ namespace Oxygen
         std::cout << "Oxygen::processTabCloseButton" << std::endl;
         #endif
 
-        if( state & GTK_STATE_FLAG_PRELIGHT ) return Style::instance().tabCloseButton( Focus );
+        if( state & GTK_STATE_FLAG_PRELIGHT ) return Style::instance().tabCloseButton( Hover );
         if( state & GTK_STATE_FLAG_ACTIVE ) return Style::instance().tabCloseButton( Focus );
         else {
 
@@ -236,7 +236,8 @@ namespace Oxygen
 
         } else if( widget && (
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
             ) )
         {
 
