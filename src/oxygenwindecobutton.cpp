@@ -48,21 +48,22 @@ namespace Oxygen
         const double scale( (21.0*settings().buttonSize())/22.0 );
 
         // draw shadow
-        if(_state==Hovered)
+        if(_state==Hovered||_state==Pressed)
         {
             shadow=(_type==ButtonClose)?
                 ColorUtils::Rgba( settings().palette().color( Palette::NegativeText ) ):
                 ColorUtils::Rgba( settings().palette().color( Palette::Hover ) );
-            shadow=darkColor(shadow);
             icon=shadow;
         } else {
             shadow=ColorUtils::Rgba(0,0,0);
         }
 
-        const Cairo::Surface& windecoButtonGlow( helper().windecoButtonGlow( shadow, int(scale) ) );
-        cairo_set_source_surface( context, windecoButtonGlow, 0, 0 );
-        cairo_rectangle( context, 0, 0, w, h );
-        cairo_fill( context );
+        cairo_save(context);
+        cairo_translate(context,0,-1.4);
+        _helper.drawShadow(context,shadow,int(scale));
+        if(_state==Hovered||_state==Pressed)
+            _helper.drawOuterGlow(context,shadow,int(scale));
+        cairo_restore(context);
 
         // draw button slab
         const bool pressed( _state == Pressed || _type==ButtonUnstick || _type==ButtonUndoAbove || _type==ButtonUndoBelow );

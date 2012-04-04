@@ -191,6 +191,12 @@ namespace Oxygen
         CairoSurfaceCache<WindecoBottomBorderKey>& windecoBottomBorderCache( void )
         { return _windecoBottomBorderCache; }
 
+        //! shadow rendering
+        virtual void drawShadow( cairo_t*, const ColorUtils::Rgba&, int size ) const;
+
+        //! highlight glow
+        virtual void drawOuterGlow( cairo_t*, const ColorUtils::Rgba&, int size) const;
+
         //@}
 
         //@}
@@ -206,12 +212,6 @@ namespace Oxygen
 
         //! slab rendering
         virtual void drawSlab( Cairo::Context&, const ColorUtils::Rgba&, double shade) const;
-
-        //! shadow rendering
-        virtual void drawShadow( Cairo::Context&, const ColorUtils::Rgba&, int size ) const;
-
-        //! highlight glow
-        virtual void drawOuterGlow( Cairo::Context&, const ColorUtils::Rgba&, int size) const;
 
         //! inverse shadow (for sunken slabs)
         void drawInverseShadow( Cairo::Context&, const ColorUtils::Rgba&, int pad, int size, double fuzz ) const;
