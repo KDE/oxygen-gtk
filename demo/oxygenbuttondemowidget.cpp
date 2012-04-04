@@ -51,7 +51,7 @@ namespace Oxygen
 
             // inner grid
             GtkWidget* grid = gtk_grid_new();
-            gtk_container_set_border_width( GTK_CONTAINER( grid ), 4 );
+            gtk_container_set_border_width( GTK_CONTAINER( grid ), 8 );
             gtk_grid_set_row_spacing( GTK_GRID( grid ), 4 );
             gtk_container_add( GTK_CONTAINER( frame ), grid );
             gtk_widget_show( grid );
@@ -335,7 +335,6 @@ namespace Oxygen
 
         }
 
-
         // checkboxes and radiobuttons
         GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( hbox ), 4 );
@@ -388,6 +387,30 @@ namespace Oxygen
 
             gtk_box_pack_start( GTK_BOX( vbox ), radiobutton = gtk_radio_button_new_with_label_from_widget( GTK_RADIO_BUTTON( radiobutton ), "Third Choice" ), false, true, 0 );
             gtk_widget_show( radiobutton );
+        }
+
+
+        {
+            // other buttons
+            GtkWidget* frame( gtk_frame_new( "Other buttons" ) );
+            gtk_box_pack_start( GTK_BOX( mainWidget ), frame, false, true, 0 );
+            gtk_widget_show( frame );
+
+            // switch
+            GtkWidget* hbox( gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 ) );
+            gtk_box_set_spacing( GTK_BOX( hbox ), 4 );
+            gtk_container_set_border_width( GTK_CONTAINER( hbox ), 8 );
+            gtk_container_add( GTK_CONTAINER( frame ), hbox );
+            gtk_widget_show( hbox );
+
+            GtkWidget* label;
+            gtk_box_pack_start( GTK_BOX( hbox ), label = gtk_label_new( "On/Off switch: " ), false, false, 0 );
+            gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
+            gtk_widget_show( label );
+
+            GtkWidget* switchbutton;
+            gtk_box_pack_start( GTK_BOX( hbox ), switchbutton = gtk_switch_new(), false, false, 0 );
+            gtk_widget_show( switchbutton );
         }
 
     }
