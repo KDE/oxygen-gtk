@@ -555,7 +555,7 @@ namespace Oxygen
             {
 
                 StyleOptions options(widget, state);
-                if(GTK_IS_PROGRESS_BAR(widget) && Gtk::gtk_widget_is_vertical(widget))
+                if(GTK_IS_PROGRESS_BAR(widget) && gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
                 { options|=Vertical; }
 
                 Style::instance().renderProgressBarHole( context, x, y, w, h, options );
@@ -570,7 +570,7 @@ namespace Oxygen
 
             } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) && GTK_IS_SCALE( widget ) ) {
 
-                const bool vertical( Gtk::gtk_widget_is_vertical( widget ) );
+                const bool vertical( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) );
 
                 const int offset( 6 );
                 TileSet::Tiles tiles( TileSet::Full );
@@ -1097,7 +1097,7 @@ namespace Oxygen
 
 
             StyleOptions options;
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
 
             Style::instance().adjustScrollBarHole( x, y, w, h, options );
 
@@ -2173,7 +2173,7 @@ namespace Oxygen
         {
 
             StyleOptions options(widget,stateFlags);
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
 
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover ) );
             Style::instance().renderScrollBarHandle( context, x, y, w, h, options, data );
@@ -2182,7 +2182,7 @@ namespace Oxygen
 
             StyleOptions options( widget, stateFlags );
             options |= Blend;
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
 
             // retrieve animation state and render accordingly
             // TODO: re-introduce blending
@@ -2220,7 +2220,7 @@ namespace Oxygen
             Style::instance().animations().panedEngine().registerWidget( widget );
 
             StyleOptions options( widget, state );
-            if( Gtk::gtk_widget_is_vertical( widget ) )  options |= Vertical;
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )  options |= Vertical;
 
             /*
             need to add allocation position as an offset for the animation 'dirty rect'
@@ -2236,7 +2236,7 @@ namespace Oxygen
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR) ) {
 
             StyleOptions options( widget, state );
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
             Style::instance().renderToolBarHandle( context, x, y, w, h, options );
 
         } else {
@@ -2267,7 +2267,7 @@ namespace Oxygen
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
             StyleOptions options( widget, state);
-            if( Gtk::gtk_widget_is_vertical( widget ) )
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
             { options |= Vertical; }
             if( GTK_IS_PROGRESS_BAR(widget) )
             {
