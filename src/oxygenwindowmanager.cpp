@@ -442,7 +442,6 @@ namespace Oxygen
         const int xLocal  = int(event->x_root) - wx + allocation.x;
         const int yLocal  = int(event->y_root) - wy + allocation.y;
 
-
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
