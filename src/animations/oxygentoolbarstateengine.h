@@ -123,10 +123,6 @@ namespace Oxygen
             return true;
         }
 
-        //! dirty state
-        void setDirty( GtkWidget* widget, bool value )
-        { data().value( widget ).setDirty( value ); }
-
         //@}
 
         //!@name accessors
@@ -172,10 +168,6 @@ namespace Oxygen
         //! true when fade out animation is locked (delayed)
         bool isLocked( GtkWidget* widget )
         { return data().value( widget ).isLocked(); }
-
-        //! dirty state
-        bool isDirty( GtkWidget* widget )
-        { return data().value( widget ).isDirty(); }
 
         //@}
 

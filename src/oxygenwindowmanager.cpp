@@ -446,16 +446,17 @@ namespace Oxygen
         wy += ny;
 
         // get widget size.
-        // for notebooks, only consider the tabbar rect
-        GtkAllocation allocation;
+        GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+
+        // translate event position in 'local' coordinates with respect to widget's window
+        const int xLocal  = int(event->x_root) - wx + allocation.x;
+        const int yLocal  = int(event->y_root) - wy + allocation.y;
+
+
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
-            const GtkAllocation local( Gtk::gtk_widget_get_allocation( widget ) );
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
-
-            const int xLocal  = int(event->x_root) - wx + local.x;
-            const int yLocal  = int(event->y_root) - wy + local.y;
 
             // compare to event root position
             if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
@@ -464,12 +465,8 @@ namespace Oxygen
 
         } else {
 
-            allocation = Gtk::gtk_widget_get_allocation( widget );
-            allocation.x = wx;
-            allocation.y = wy;
-
-            // compare to event root position
-            return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
+            // compare to event position
+            return Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal );
 
         }
 
