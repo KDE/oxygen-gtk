@@ -59,10 +59,11 @@ namespace Oxygen
         }
 
         cairo_save(context);
+        cairo_scale(context,int(scale)/21.,int(scale)/21.);
         cairo_translate(context,0,-1.4);
-        _helper.drawShadow(context,ColorUtils::shadowColor(color),int(scale));
+        _helper.drawShadow(context,ColorUtils::shadowColor(color),21);
         if(_state==Hovered||_state==Pressed)
-            _helper.drawOuterGlow(context,color,int(scale));
+            _helper.drawOuterGlow(context,color,21);
         cairo_restore(context);
 
         // draw button slab
