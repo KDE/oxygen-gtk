@@ -30,6 +30,8 @@
 
 #include <cmath>
 
+// #define OXYGEN_DEBUG 1
+
 namespace Oxygen
 {
 
@@ -279,6 +281,13 @@ namespace Oxygen
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
 
             // no need to render anything for notebook gradient
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
+            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
+
+            // no background for assistant sidebar frame
+            return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
