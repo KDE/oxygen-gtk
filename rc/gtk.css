@@ -135,6 +135,9 @@ GtkFrame { padding: 4px; }
 GtkViewport { padding: 0px; }
 GtkProgressBar { padding: 0px; }
 
+/* switchs */
+GtkSwitch { padding: 0px; }
+
 /* combo boxes */
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
