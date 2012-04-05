@@ -2096,7 +2096,6 @@ namespace Oxygen
 //
 //         }
 
-        // identify gtk notebook labels, and translate context vertically if found
         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
         {
@@ -2105,6 +2104,7 @@ namespace Oxygen
             if( widget && GTK_IS_NOTEBOOK( gtk_widget_get_parent( widget ) ) )
             {
 
+                // identify gtk notebook labels, and translate context vertically if found
                 cairo_save( context );
 
                 switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( gtk_widget_get_parent( widget ) ) ) )
@@ -2117,11 +2117,27 @@ namespace Oxygen
                     default: break;
                 }
 
+                /*
+                TODO: should also réimplement the "insensitive hack" here
+                rather than resorting to parent engine rendering
+                */
                 ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
                 cairo_restore( context );
                 return;
 
+            } else if(
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HIGHLIGHT ) &&
+                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) )
+            {
+
+                // identify highlighted assistant labels and change font to bold
+                PangoAttrList* attributes( pango_layout_get_attributes( layout ) );
+                if( !attributes ) attributes = pango_attr_list_new();
+                pango_attr_list_insert( attributes, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
+                pango_layout_set_attributes( layout, attributes );
+
             }
+
         }
 
         if( state&GTK_STATE_FLAG_INSENSITIVE )
