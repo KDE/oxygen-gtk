@@ -128,6 +128,8 @@ namespace Oxygen
 
         }
 
+        return;
+
     }
 
     //________________________________________________________________________________________________
@@ -186,8 +188,9 @@ namespace Oxygen
 
             Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
-
         }
+
+        return;
 
     }
 
@@ -279,6 +282,15 @@ namespace Oxygen
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
 
             // no need to render anything for notebook gradient
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
+            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) &&
+            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
+
+            // no background for assistant sidebar frame
+            Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
+            return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
@@ -463,6 +475,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
         }
+
+        return;
 
     }
 
@@ -1288,6 +1302,7 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
 
+            // check groupbox
             if( Gtk::gtk_widget_is_groupbox( widget ) )
             {
 
@@ -1296,6 +1311,19 @@ namespace Oxygen
 
             }
 
+            // force sunken for sidebar frames
+            if(
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
+                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) )
+            {
+
+                Style::instance().renderHoleBackground( context, 0L, widget, x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+1 );
+                Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
+                return;
+
+            }
+
+            // standard case
             switch( gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) )
             {
                 case GTK_SHADOW_IN:
@@ -1345,6 +1373,8 @@ namespace Oxygen
             return;
 
         }
+
+        return;
 
     }
 
@@ -1469,6 +1499,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, position, xy0_gap, xy1_gap );
 
         }
+
+        return;
 
     }
 
@@ -1600,6 +1632,8 @@ namespace Oxygen
 
         }
 
+        return;
+
     }
 
     //________________________________________________________________________________________________
@@ -1678,6 +1712,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
 
         }
+
+        return;
 
     }
 
@@ -1760,6 +1796,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
 
         }
+
+        return;
 
     }
 
@@ -1938,6 +1976,7 @@ namespace Oxygen
         // render arrow
         if( useWidgetStateEngine ) data = Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover );
         Style::instance().renderArrow( context, arrow, x, y, w, h, arrowSize, options, data, role );
+        return;
 
     }
 
@@ -2013,6 +2052,8 @@ namespace Oxygen
 
         }
 
+        return;
+
     }
 
     //________________________________________________________________________________________________
@@ -2034,73 +2075,12 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________________________
-    void render_layout(
+    void render_layout_internal(
         GtkThemingEngine* engine, cairo_t* context,
         gdouble x, gdouble y, PangoLayout *layout )
     {
 
-        #if OXYGEN_DEBUG
-        std::cerr
-            << "Oxygen::render_layout -"
-            << " context: " << context
-            << " position: (" << x << "," << y << ")"
-            << " layout: " << layout
-            << " path: " << gtk_theming_engine_get_path(engine)
-            << std::endl;
-        #endif
-
         const GtkStateFlags state( gtk_theming_engine_get_state(engine) );
-
-// TODO: re-implement for GTK3. Code below is not working anymore
-//         // lookup
-//         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
-//
-//         // draw progressbar text white if above indicator, black if not
-//         if(
-//             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) &&
-//             ( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) || gtk_widget_path_is_type( path, GTK_TYPE_PROGRESS_BAR ) ) )
-//         {
-//
-//             cairo_save( context );
-//             if( state&GTK_STATE_FLAG_SELECTED ) cairo_set_source( context, Style::instance().settings().palette().color( Palette::SelectedText ) );
-//             else cairo_set_source( context, Style::instance().settings().palette().color( Palette::Text ) );
-//
-//             cairo_translate(context,x,y);
-//             pango_cairo_show_layout(context,layout);
-//             cairo_restore( context );
-//
-//             return;
-//
-//         }
-
-        // identify gtk notebook labels, and translate context vertically if found
-        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
-        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
-        {
-
-            GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
-            if( widget && GTK_IS_NOTEBOOK( gtk_widget_get_parent( widget ) ) )
-            {
-
-                cairo_save( context );
-
-                switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( gtk_widget_get_parent( widget ) ) ) )
-                {
-                    case GTK_POS_TOP:
-                    case GTK_POS_BOTTOM:
-                    cairo_translate( context, 0, 1 );
-                    break;
-
-                    default: break;
-                }
-
-                ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
-                cairo_restore( context );
-                return;
-
-            }
-        }
-
         if( state&GTK_STATE_FLAG_INSENSITIVE )
         {
 
@@ -2142,6 +2122,76 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
         }
+
+        return;
+
+    }
+
+    //________________________________________________________________________________________________
+    void render_layout(
+        GtkThemingEngine* engine, cairo_t* context,
+        gdouble x, gdouble y, PangoLayout *layout )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::render_layout -"
+            << " context: " << context
+            << " position: (" << x << "," << y << ")"
+            << " layout: " << layout
+            << " path: " << gtk_theming_engine_get_path(engine)
+            << std::endl;
+        #endif
+
+        const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
+        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
+        {
+
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
+            if( widget && GTK_IS_NOTEBOOK( gtk_widget_get_parent( widget ) ) )
+            {
+
+                // identify gtk notebook labels, and translate context vertically if found
+                cairo_save( context );
+
+                switch( gtk_notebook_get_tab_pos( GTK_NOTEBOOK( gtk_widget_get_parent( widget ) ) ) )
+                {
+                    case GTK_POS_TOP:
+                    case GTK_POS_BOTTOM:
+                    cairo_translate( context, 0, 1 );
+                    break;
+
+                    default: break;
+                }
+
+                /*
+                TODO: should also réimplement the "insensitive hack" here
+                rather than resorting to parent engine rendering
+                */
+                render_layout_internal( engine, context, x, y, layout );
+                cairo_restore( context );
+                return;
+
+            } else if(
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HIGHLIGHT ) &&
+                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) )
+            {
+
+                // identify highlighted assistant labels and change font to bold
+                PangoAttrList* attributes( pango_layout_get_attributes( layout ) );
+                if( !attributes ) attributes = pango_attr_list_new();
+                pango_attr_list_insert( attributes, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
+                pango_layout_set_attributes( layout, attributes );
+                render_layout_internal( engine, context, x, y, layout );
+                return;
+
+            }
+
+        }
+
+        // default rendering
+        render_layout_internal( engine, context, x, y, layout );
+        return;
 
     }
 
@@ -2202,6 +2252,8 @@ namespace Oxygen
 
         }
 
+        return;
+
     }
 
     //________________________________________________________________________________________________
@@ -2251,6 +2303,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
         }
+
+        return;
 
     }
 
@@ -2311,6 +2365,8 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
 
         }
+
+        return;
 
     }
 
@@ -2446,6 +2502,7 @@ namespace Oxygen
         theming_engine_class->render_handle = render_handle;
         theming_engine_class->render_activity = render_activity;
         theming_engine_class->render_icon_pixbuf = render_icon_pixbuf;
+        return;
 
     }
 
@@ -2473,6 +2530,7 @@ namespace Oxygen
 
         _typeInfo = info;
         _type = g_type_module_register_type( module, GTK_TYPE_THEMING_ENGINE, "OxygenThemingEngine", &_typeInfo, GTypeFlags(0 ) );
+        return;
 
     }
 
