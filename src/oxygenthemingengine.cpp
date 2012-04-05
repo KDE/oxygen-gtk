@@ -30,8 +30,6 @@
 
 #include <cmath>
 
-// #define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
@@ -287,6 +285,7 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
 
             // no background for assistant sidebar frame
+            Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
             return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
@@ -1297,6 +1296,7 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
 
+            // check groupbox
             if( Gtk::gtk_widget_is_groupbox( widget ) )
             {
 
@@ -1305,6 +1305,17 @@ namespace Oxygen
 
             }
 
+            // force sunken for sidebar frames
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) )
+            {
+
+                Style::instance().renderHoleBackground( context, 0L, widget, x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+1 );
+                Style::instance().renderHole( context, x-1, y-1, w+2, h+1, NoFill );
+                return;
+
+            }
+
+            // standard case
             switch( gtk_frame_get_shadow_type( GTK_FRAME( widget ) ) )
             {
                 case GTK_SHADOW_IN:
