@@ -439,16 +439,17 @@ namespace Oxygen
         GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
 
         // translate event position in 'local' coordinates with respect to widget's window
-        const int xLocal  = int(event->x_root) - wx + allocation.x;
-        const int yLocal  = int(event->y_root) - wy + allocation.y;
+        const int xLocal  = int(event->x_root) - wx;
+        const int yLocal  = int(event->y_root) - wy;
 
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
-            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
+            GtkAllocation tabbarRect;
+            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &tabbarRect );
 
             // compare to event root position
-            if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
+            if( !Gtk::gdk_rectangle_contains( &tabbarRect, xLocal+allocation.x, yLocal+allocation.y ) ) return false;
             else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
             else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
 
