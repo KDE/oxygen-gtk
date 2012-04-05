@@ -448,7 +448,8 @@ namespace Oxygen
             GtkAllocation tabbarRect;
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &tabbarRect );
 
-            // compare to event root position
+            // compare to event local position
+            /* FIXME: not sure I understand why one has to add allocation's origin to the local coordinates before comparing */
             if( !Gtk::gdk_rectangle_contains( &tabbarRect, xLocal+allocation.x, yLocal+allocation.y ) ) return false;
             else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
             else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
