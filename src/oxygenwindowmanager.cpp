@@ -240,7 +240,9 @@ namespace Oxygen
             GTK_IS_VIEWPORT( widget ) ||
             GTK_IS_TOOLBAR( widget ) ||
             GTK_IS_MENU_BAR( widget ) ||
-            GTK_IS_NOTEBOOK( widget ) )
+            GTK_IS_NOTEBOOK( widget ) ||
+            GTK_IS_PANED( widget )
+            )
         {
 
             // top-level windows
@@ -446,30 +448,39 @@ namespace Oxygen
         wy += ny;
 
         // get widget size.
-        // for notebooks, only consider the tabbar rect
-        GtkAllocation allocation;
+        GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+
+        // translate event position in 'local' coordinates with respect to widget's window
+        const int xLocal  = int(event->x_root) - wx;
+        const int yLocal  = int(event->y_root) - wy;
+
         if( GTK_IS_NOTEBOOK( widget ) )
         {
 
-            const GtkAllocation local( Gtk::gtk_widget_get_allocation( widget ) );
-            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &allocation );
+            GtkAllocation tabbarRect;
+            Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &tabbarRect );
 
-            const int xLocal  = int(event->x_root) - wx + local.x;
-            const int yLocal  = int(event->y_root) - wy + local.y;
-
-            // compare to event root position
-            if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
+            // compare to event local position
+            /* FIXME: not sure I understand why one has to add allocation's origin to the local coordinates before comparing */
+            if( !Gtk::gdk_rectangle_contains( &tabbarRect, xLocal+allocation.x, yLocal+allocation.y ) ) return false;
             else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
             else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
 
         } else {
 
-            allocation = Gtk::gtk_widget_get_allocation( widget );
-            allocation.x = wx;
-            allocation.y = wy;
+            // compare to event position
+            if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
+            else if( GTK_IS_PANED( widget ) ) {
 
-            // compare to event root position
-            return Gtk::gdk_rectangle_contains( &allocation, int(event->x_root), int(event->y_root) );
+                // get handle window allocation
+                GtkAllocation handleRect;
+                GdkWindow* handle( gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
+                gdk_window_get_geometry( handle, &handleRect.x, &handleRect.y, &handleRect.width, &handleRect.height );
+
+                // check position against handle rect
+                return !Gtk::gdk_rectangle_contains( &handleRect, xLocal, yLocal );
+
+            } else return true;
 
         }
 
