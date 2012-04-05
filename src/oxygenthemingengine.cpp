@@ -282,6 +282,7 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
+            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) &&
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
 
             // no background for assistant sidebar frame
@@ -1306,7 +1307,9 @@ namespace Oxygen
             }
 
             // force sunken for sidebar frames
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) )
+            if(
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
+                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) )
             {
 
                 Style::instance().renderHoleBackground( context, 0L, widget, x-1-Oxygen::Entry_SideMargin, y-1, w+2+2*Oxygen::Entry_SideMargin, h+1 );
