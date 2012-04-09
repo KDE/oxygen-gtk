@@ -306,6 +306,7 @@ gboolean on_press0(GtkWindow* window, GdkEventButton* event, GdkWindowEdge edge)
     if(event->type == GDK_BUTTON_PRESS)
         if(event->button == 1)
             gtk_window_begin_move_drag(window,event->button,event->x_root,event->y_root,event->time);
+    return FALSE;
 }
 
 //___________________________________________________________________
