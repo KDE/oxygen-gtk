@@ -451,8 +451,8 @@ namespace Oxygen
         GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
 
         // translate event position in 'local' coordinates with respect to widget's window
-        const int xLocal  = int(event->x_root) - wx;
-        const int yLocal  = int(event->y_root) - wy;
+        const int xLocal  = int(event->x_root) - wx + allocation.x;
+        const int yLocal  = int(event->y_root) - wy + allocation.y;
 
         if( GTK_IS_NOTEBOOK( widget ) )
         {
@@ -461,8 +461,7 @@ namespace Oxygen
             Gtk::gtk_notebook_get_tabbar_rect( GTK_NOTEBOOK( widget ), &tabbarRect );
 
             // compare to event local position
-            /* FIXME: not sure I understand why one has to add allocation's origin to the local coordinates before comparing */
-            if( !Gtk::gdk_rectangle_contains( &tabbarRect, xLocal+allocation.x, yLocal+allocation.y ) ) return false;
+            if( !Gtk::gdk_rectangle_contains( &tabbarRect, xLocal, yLocal ) ) return false;
             else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
             else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
 
