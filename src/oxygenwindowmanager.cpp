@@ -465,21 +465,23 @@ namespace Oxygen
             else if( !Style::instance().animations().tabWidgetEngine().contains( widget ) ) return false;
             else return !Style::instance().animations().tabWidgetEngine().isInTab( widget, xLocal, yLocal );
 
-        } else {
+        } else if( GTK_IS_PANED( widget ) ) {
 
             // compare to event position
             if( !Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal ) ) return false;
-            else if( GTK_IS_PANED( widget ) ) {
 
-                // get handle window allocation
-                GtkAllocation handleRect;
-                GdkWindow* handle( gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
-                gdk_window_get_geometry( handle, &handleRect.x, &handleRect.y, &handleRect.width, &handleRect.height );
+            // get handle window allocation
+            GtkAllocation handleRect;
+            GdkWindow* handle( gtk_paned_get_handle_window( GTK_PANED( widget ) ) );
+            gdk_window_get_geometry( handle, &handleRect.x, &handleRect.y, &handleRect.width, &handleRect.height );
 
-                // check position against handle rect
-                return !Gtk::gdk_rectangle_contains( &handleRect, xLocal, yLocal );
+            // check position against handle rect
+            return !Gtk::gdk_rectangle_contains( &handleRect, xLocal, yLocal );
 
-            } else return true;
+        } else {
+
+            // compare to event position
+            return Gtk::gdk_rectangle_contains( &allocation, xLocal, yLocal );
 
         }
 
