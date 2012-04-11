@@ -43,27 +43,27 @@ namespace Oxygen
         cairo_translate( context, x, y );
 
         const ColorUtils::Rgba base( settings().palette().color( _state == Disabled ? Palette::Disabled : Palette::Active, Palette::Window ) );
-        ColorUtils::Rgba color( settings().palette().color( Palette::WindowText ) );
-        ColorUtils::Rgba icon(color);
+        ColorUtils::Rgba glow( settings().palette().color( Palette::WindowText ) );
+        ColorUtils::Rgba icon(glow);
         const double scale( (21.0*settings().buttonSize())/22.0 );
 
         // draw shadow
         if(_state==Hovered||_state==Pressed)
         {
-            color=(_type==ButtonClose)?
+            glow=(_type==ButtonClose)?
                 ColorUtils::Rgba( settings().palette().color( Palette::NegativeText ) ):
                 ColorUtils::Rgba( settings().palette().color( Palette::Hover ) );
-            icon=color;
+            icon=glow;
         } else {
-            color=ColorUtils::Rgba(0,0,0);
+            glow=ColorUtils::Rgba(0,0,0);
         }
 
         cairo_save(context);
         cairo_scale(context,int(scale)/21.,int(scale)/21.);
         cairo_translate(context,0,-1.4);
-        _helper.drawShadow(context,ColorUtils::shadowColor(color),21);
+        _helper.drawShadow(context,ColorUtils::shadowColor(base),21);
         if(_state==Hovered||_state==Pressed)
-            _helper.drawOuterGlow(context,color,21);
+            _helper.drawOuterGlow(context,glow,21);
         cairo_restore(context);
 
         // draw button slab
