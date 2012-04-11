@@ -261,13 +261,31 @@ namespace Oxygen
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );
 
-            if( gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ) {
+            if( gtk_widget_path_is_type( path, GTK_TYPE_PANED ) && GTK_IS_PANED( widget ) )
+            {
+
+                // this is a hack, due to the fact that context is translated in latest gtk3 versions
+                // and that there is no way that I could find to retrieve the amount of translation
+                GtkWidget* local(0);
+                GtkWidget* widget1( gtk_paned_get_child1( GTK_PANED( widget ) ) );
+                GtkWidget* widget2( gtk_paned_get_child2( GTK_PANED( widget ) ) );
+
+                if( widget1 && gtk_widget_get_allocated_width( widget1 ) == w && gtk_widget_get_allocated_height( widget1 ) == h )
+                {
+
+                    local = widget1;
+
+                } else if( widget2 && gtk_widget_get_allocated_width( widget2 ) == w && gtk_widget_get_allocated_height( widget2 ) == h ) {
+
+                    local = widget2;
+
+                } else local = widget;
 
                 /*
                 do not pass the window when rendering background on paned,
                 because it breaks positioning
                 */
-                Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+                Style::instance().renderWindowBackground( context, 0L, local, x, y, w, h );
 
             } else if( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ) {
 
