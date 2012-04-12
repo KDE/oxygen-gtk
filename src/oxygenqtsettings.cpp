@@ -667,20 +667,29 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
 
         // entries
-        _css.addSection( ".view, GtkEntry" );
+        _css.addSection(
+            ".view, "
+            ".entry, "
+            "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
 
-        _css.addSection( "GtkEntry:insensitive, GtkTreeView:insensitive, GtkTextView:insensitive, GtkIconView:insensitive" );
+        _css.addSection(
+            ".view:insensitive, "
+            ".entry:insensitive, "
+            "GtkEntry:insensitive, "
+            "GtkTreeView:insensitive, "
+            "GtkTextView:insensitive, "
+            "GtkIconView:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::Text ) ) );
 
-// FIXME: following does not work
-//         _css.addSection( "GtkEntry:active, GtkTreeView:active, GtkTextView:active" );
-//         if( _inactiveChangeSelectionColor ) _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
-//         else _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
-
-        _css.addSection( "GtkEntry:selected, GtkTreeView:selected, GtkTextView:selected" );
+        _css.addSection(
+            ".view:selected, "
+            ".entry:selected, "
+            "GtkEntry:selected, "
+            "GtkTreeView:selected, "
+            "GtkTextView:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
 
