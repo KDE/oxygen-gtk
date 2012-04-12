@@ -60,13 +60,6 @@ INFO: css border and padding ordering is either:
     -GtkWindow-resize-grip-height: 0px;
     -GtkWindow-resize-grip-width: 0px;
 
-    /*
-    Apparently the following have become obsolete
-    -GtkTreeView-row-ending-details: 1px;
-    -GtkStatusbar-has-resize-grip: false;
-    -GtkEntry-honors-transparent-bg-hint: 1px;
-    */
-
     engine: oxygen-gtk;
 }
 
