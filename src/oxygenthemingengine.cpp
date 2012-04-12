@@ -745,7 +745,9 @@ namespace Oxygen
             }
 
             // treeview headers
-            if( Gtk::gtk_button_is_header( widget ) )
+            if( Gtk::gtk_button_is_header( widget )
+                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
+                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) )
             {
 
                 // register to scrolled window engine if any
