@@ -238,9 +238,9 @@ namespace Oxygen
             return;
 
         } else if( widget && (
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
             ) )
         {
 
@@ -264,8 +264,15 @@ namespace Oxygen
             // render background gradient
             GdkWindow* window( gtk_widget_get_window( widget ) );
 
-            if( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) )
-            {
+            if( gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ) {
+
+                /*
+                do not pass the window when rendering background on paned,
+                because it breaks positioning
+                */
+                Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+
+            } else if( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ) {
 
                 /*
                 FIXME: the w and h adjustment are empirical and fix some rendering issues when
@@ -448,11 +455,18 @@ namespace Oxygen
             render_animated_button( context, widget );
             return;
 
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
+
+            // need to render background if there is a parent GtkPaned
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_PANED ) )
+            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
+
+            // do nothing otherwise
+            return;
+
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CHECK ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ||
