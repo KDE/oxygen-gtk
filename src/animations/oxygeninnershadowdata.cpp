@@ -96,8 +96,13 @@ namespace Oxygen
         #endif
 
         GdkWindow* window(gtk_widget_get_window(widget));
-        if( window && gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
-            gdk_display_supports_composite( gtk_widget_get_display( widget ) ) )
+        if(
+            window && gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD &&
+            gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
+
+            // TODO: implement proper blacklist if there appear too many bad widgets/apps
+            // also remove when evolution-3.2.2 is not availabe anymore (it got fixed since then)
+            G_OBJECT_TYPE_NAME(widget) != std::string("MessageList") )
         {
             ChildData data;
             data._unrealizeId.connect( G_OBJECT(widget), "unrealize", G_CALLBACK( childUnrealizeNotifyEvent ), this );
