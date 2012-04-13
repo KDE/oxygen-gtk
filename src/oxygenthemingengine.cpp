@@ -2404,6 +2404,44 @@ namespace Oxygen
 
     }
 
+    //___________________________________________________________
+    static GdkPixbuf* render_stated_pixbuf( GdkPixbuf* source, GtkStateFlags state, bool useEffect )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::render_stated_pixbuf -"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " useEffect: " << useEffect
+            << std::endl;
+        #endif
+
+        // first make a copy
+        GdkPixbuf* stated( source );
+        if( state & GTK_STATE_FLAG_INSENSITIVE )
+        {
+
+            stated = Gtk::gdk_pixbuf_set_alpha( source, 0.3 );
+            gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
+
+        } else if( useEffect && (state&GTK_STATE_FLAG_PRELIGHT) ) {
+
+            stated = gdk_pixbuf_copy( source );
+            if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
+            {
+                // FIXME: correct the value to match KDE
+                /*
+                in fact KDE allows one to set many different effects on icon
+                not sure we want to copy this code all over the place, especially since nobody changes the default settings,
+                as far as I know */
+                gdk_pixbuf_saturate_and_pixelate( source, stated, 1.2, false );
+            }
+
+        }
+
+        return stated;
+    }
+
     //________________________________________________________________________________________________
     GdkPixbuf* render_icon_pixbuf( GtkThemingEngine *engine, const GtkIconSource *source, GtkIconSize size)
     {
@@ -2451,42 +2489,30 @@ namespace Oxygen
         GtkStateFlags state(gtk_theming_engine_get_state( engine ) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
 
-        // non-flat pushbuttons don't have any icon effect
-        /* since we can't access the button directly, we enable effect only for toolbutton widgets */
-        const bool useEffect(
-            Style::instance().settings().useIconEffect() &&
-            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOL_BUTTON ) );
-
         /* If the state was wildcarded, then generate a state. */
-        GdkPixbuf *stated( scaled );
-        if( gtk_icon_source_get_state_wildcarded( source ) )
-        {
+        if( !gtk_icon_source_get_state_wildcarded( source ) ) return scaled;
+        else {
 
-            if( state&GTK_STATE_FLAG_INSENSITIVE )
-            {
+            // non-flat pushbuttons don't have any icon effect
+            /* since we can't access the button directly, we enable effect only for toolbutton widgets */
+            const bool useEffect(
+                Style::instance().settings().useIconEffect() &&
+                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOL_BUTTON ) );
 
-                stated = Gtk::gdk_pixbuf_set_alpha( scaled, 0.3 );
-                gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
-                g_object_unref (scaled);
+            /* If the state was wildcarded, then generate a state. */
+            GdkPixbuf *stated( render_stated_pixbuf( scaled, state, useEffect ) );
 
-            } else if( useEffect && (state&GTK_STATE_FLAG_PRELIGHT) ) {
+            // clean-up
+            if( stated != scaled )
+            { g_object_unref( scaled ); }
 
-                stated = gdk_pixbuf_copy( scaled );
-                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
-                {
-                    // FIXME: correct the value to match KDE
-                    /*
-                    in fact KDE allows one to set many different effects on icon
-                    not sure we want to copy this code all over the place, especially since nobody changes the default settings,
-                    as far as I know */
-                    gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
-                }
-                g_object_unref( scaled );
+            // clean-up
+            if( stated != scaled )
+            { g_object_unref( scaled ); }
 
-            }
+            // return
+            return stated;
         }
-
-        return stated;
 
     }
 
