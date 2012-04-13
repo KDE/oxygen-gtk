@@ -69,7 +69,12 @@ namespace Oxygen
         } else {
 
             // list widget types for which scrolled window needs register
-            static const char* widgetTypes[] = { "ExoIconView", "FMIconContainer", 0L };
+            static const char* widgetTypes[] = {
+                "ExoIconView",
+                "FMIconContainer",
+                "MessageList",
+                "EMailDisplay",
+                0L };
             for( unsigned int i = 0; widgetTypes[i]; i++ )
             {
                 if( Gtk::g_object_is_a( G_OBJECT( child ), widgetTypes[i] ) )
