@@ -2491,6 +2491,26 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________________________________________________
+    void render_icon( GtkThemingEngine* engine, cairo_t *context, GdkPixbuf* pixbuf, gdouble x, gdouble y )
+    {
+
+        #if OXYGEN_DEBUG
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+        std::cerr
+            << "Oxygen::render_icon-"
+            << " context: " << context
+            << " position: (" << x << "," << y << ")"
+            << " path: " << gtk_theming_engine_get_path(engine)
+            << " state: " << state
+            << std::endl;
+        #endif
+
+        // call parent method
+        ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y );
+
+    }
+
+    //_______________________________________________________________________________________________________________
     void ThemingEngine::instanceInit( OxygenThemingEngine* self )
     {
 
@@ -2536,6 +2556,7 @@ namespace Oxygen
         theming_engine_class->render_handle = render_handle;
         theming_engine_class->render_activity = render_activity;
         theming_engine_class->render_icon_pixbuf = render_icon_pixbuf;
+        theming_engine_class->render_icon = render_icon;
         return;
 
     }
