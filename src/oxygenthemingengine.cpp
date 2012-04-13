@@ -2447,7 +2447,7 @@ namespace Oxygen
     {
         #if OXYGEN_DEBUG
         std::cerr
-            << "Oxygen::render_icon_pixbuf-"
+            << "Oxygen::render_icon_pixbuf -"
             << " source: " << source
             << " size: " << size
             << " path: " << gtk_theming_engine_get_path(engine)
@@ -2521,18 +2521,44 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
         std::cerr
-            << "Oxygen::render_icon-"
+            << "Oxygen::render_icon -"
             << " context: " << context
+            << " pixbuf: " << pixbuf
             << " position: (" << x << "," << y << ")"
             << " path: " << gtk_theming_engine_get_path(engine)
             << " state: " << state
             << std::endl;
         #endif
 
-        // call parent method
-        ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y );
+        // get state and path
+        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) )
+        {
+
+            // need to apply state effect on pixbuf because it is not done by Gtk
+            // nor is render_icon_pixbuf called
+            // TODO: see if one can implement some sort of cache.
+
+            /* since we can't access the button directly, we enable effect only for toolbutton widgets */
+            const bool useEffect( Style::instance().settings().useIconEffect() );
+            GdkPixbuf* stated( render_stated_pixbuf( pixbuf, state, useEffect ) );
+
+            // call parent method with stated pixbuf
+            ThemingEngine::parentClass()->render_icon( engine, context, stated, x, y );
+
+            // and cleanup
+            if( stated != pixbuf ) g_object_unref( stated );
+            return;
+
+        } else {
+
+            // call parent method
+            ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y );
+            return;
+
+        }
 
     }
 
