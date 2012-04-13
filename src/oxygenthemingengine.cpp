@@ -2411,7 +2411,7 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_stated_pixbuf -"
-            << " state: " << Gtk::TypeNames::state( state )
+            << " state: " << state
             << " useEffect: " << useEffect
             << std::endl;
         #endif
@@ -2445,6 +2445,7 @@ namespace Oxygen
     //________________________________________________________________________________________________
     GdkPixbuf* render_icon_pixbuf( GtkThemingEngine *engine, const GtkIconSource *source, GtkIconSize size)
     {
+
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_icon_pixbuf -"
@@ -2506,10 +2507,6 @@ namespace Oxygen
             if( stated != scaled )
             { g_object_unref( scaled ); }
 
-            // clean-up
-            if( stated != scaled )
-            { g_object_unref( scaled ); }
-
             // return
             return stated;
         }
@@ -2527,7 +2524,6 @@ namespace Oxygen
             << " pixbuf: " << pixbuf
             << " position: (" << x << "," << y << ")"
             << " path: " << gtk_theming_engine_get_path(engine)
-            << " state: " << state
             << std::endl;
         #endif
 
