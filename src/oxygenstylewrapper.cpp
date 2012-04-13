@@ -3376,6 +3376,44 @@ namespace Oxygen
     }
 
     //___________________________________________________________
+    static GdkPixbuf* render_stated_pixbuf( GdkPixbuf* source, GtkStateType state, bool useEffect )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::render_stated_pixbuf -"
+            << " state: " << Gtk::TypeNames::state( state )
+            << " useEffect: " << useEffect
+            << std::endl;
+        #endif
+
+        // first make a copy
+        GdkPixbuf* stated( source );
+        if( state == GTK_STATE_INSENSITIVE )
+        {
+
+            stated = Gtk::gdk_pixbuf_set_alpha( source, 0.3 );
+            gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
+
+        } else if( useEffect && state == GTK_STATE_PRELIGHT ) {
+
+            stated = gdk_pixbuf_copy( source );
+            if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
+            {
+                // FIXME: correct the value to match KDE
+                /*
+                in fact KDE allows one to set many different effects on icon
+                not sure we want to copy this code all over the place, especially since nobody changes the default settings,
+                as far as I know */
+                gdk_pixbuf_saturate_and_pixelate( source, stated, 1.2, false );
+            }
+
+        }
+
+        return stated;
+    }
+
+    //___________________________________________________________
     static GdkPixbuf* render_icon(
         GtkStyle* style,
         const GtkIconSource* source,
@@ -3445,40 +3483,24 @@ namespace Oxygen
 
         }
 
-        /* If the state was wildcarded, then generate a state. */
-        GdkPixbuf *stated( scaled );
+        if( !gtk_icon_source_get_state_wildcarded( source ) ) return scaled;
+        else {
 
-        // non-flat pushbuttons don't have any icon effect
-        const bool useEffect( Style::instance().settings().useIconEffect() && Gtk::gtk_button_is_flat( Gtk::gtk_parent_button( widget ) ) );
+            // non-flat pushbuttons don't have any icon effect
+            const bool useEffect( Style::instance().settings().useIconEffect() && Gtk::gtk_button_is_flat( Gtk::gtk_parent_button( widget ) ) );
 
-        if( gtk_icon_source_get_state_wildcarded( source ) )
-        {
+            /* If the state was wildcarded, then generate a state. */
+            GdkPixbuf *stated( render_stated_pixbuf( scaled, state, useEffect ) );
 
-            if( state == GTK_STATE_INSENSITIVE )
-            {
+            // clean-up
+            if( stated != scaled )
+            { g_object_unref( scaled ); }
 
-                stated = Gtk::gdk_pixbuf_set_alpha( scaled, 0.3 );
-                gdk_pixbuf_saturate_and_pixelate( stated, stated, 0.1, false );
-                g_object_unref (scaled);
+            // return
+            return stated;
 
-            } else if( useEffect && state == GTK_STATE_PRELIGHT ) {
-
-                stated = gdk_pixbuf_copy( scaled );
-                if(!Gtk::gdk_pixbuf_to_gamma( stated, 0.7 ) )
-                {
-                    // FIXME: correct the value to match KDE
-                    /*
-                    in fact KDE allows one to set many different effects on icon
-                    not sure we want to copy this code all over the place, especially since nobody changes the default settings,
-                    as far as I know */
-                    gdk_pixbuf_saturate_and_pixelate( scaled, stated, 1.2, false );
-                }
-                g_object_unref( scaled );
-
-            }
         }
 
-        return stated;
     }
 
     //___________________________________________________________________________________________________________
