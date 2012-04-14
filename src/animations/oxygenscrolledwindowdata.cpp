@@ -72,7 +72,6 @@ namespace Oxygen
             static const char* widgetTypes[] = {
                 "ExoIconView",
                 "FMIconContainer",
-                "MessageList",
                 "EMailDisplay",
                 0L };
             for( unsigned int i = 0; widgetTypes[i]; i++ )
