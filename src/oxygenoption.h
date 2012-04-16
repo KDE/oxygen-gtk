@@ -82,12 +82,6 @@ namespace Oxygen
 
         template< typename T>  T toVariant( T = T() ) const;
 
-        #if OXYGEN_DEBUG
-        protected:
-        const std::string& file( void ) const
-        { return _file; }
-        #endif
-
         class Set: public std::set<Option>
         {
             public:
@@ -100,6 +94,12 @@ namespace Oxygen
             inline bool operator == (const Set&  ) const;
 
         };
+
+        #if OXYGEN_DEBUG
+        protected:
+        const std::string& file( void ) const
+        { return _file; }
+        #endif
 
         private:
 
