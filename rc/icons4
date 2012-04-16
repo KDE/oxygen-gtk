@@ -101,19 +101,22 @@ gtk-zoom-in actions/zoom-in.png
 gtk-zoom-out actions/zoom-out.png
 stock_edit-bookmark actions/bookmarks-organize.png
 
+gimp-info status/dialog-information.png
+gimp-warning status/dialog-warning.png
+gimp-reset actions/view-refresh.png
+gimp-images mimetypes/image-x-generic.png
+gimp-tool-options actions/configure.png
+
+gimp-edit NONE
 gimp-anchor NONE
 gimp-duplicate NONE
-gimp-edit actions/edit.png
-gimp-info actions/dialog-information.png
 gimp-linked NONE
 gimp-paste-as-new NONE
 gimp-paste-into NONE
-gimp-reset actions/reload.png
 gimp-selection-stroke NONE
 gimp-to-path NONE
 gimp-to-selection NONE
 gimp-visible NONE
-gimp-warning actions/dialog-warning.png
 gimp-selection-replace NONE
 gimp-selection-add NONE
 gimp-selection-subtract NONE
@@ -134,10 +137,8 @@ gimp-rotate-270 NONE
 gimp-resize NONE
 gimp-scale NONE
 gimp-selection-to-channel NONE
-gimp-tool-options actions/tool.png
 gimp-device-status NONE
 gimp-layer-to-imagesize NONE
-gimp-images mimetypes/image.png
 gimp-layers NONE
 gimp-channes NONE
 gimp-paths NONE
