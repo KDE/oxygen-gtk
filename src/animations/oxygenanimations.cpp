@@ -216,6 +216,21 @@ namespace Oxygen
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
+        // comboboxes
+        /*
+        need to force the wrap-width property to 0,
+        otherwise the "appears-as-list" flag is not respected, which additionally breaks the widget rendering.
+        This has to be done soon enoug to avoid crash with latest gtk3 versions
+        */
+        if(
+            GTK_IS_COMBO_BOX( widget ) &&
+            Gtk::gtk_combobox_appears_as_list( widget ) &&
+            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ) ) )
+        {
+            gtk_combo_box_set_wrap_width( GTK_COMBO_BOX( widget ), 0 );
+            return TRUE;
+        }
+
         // groupbox labels
         #if ENABLE_GROUPBOX_HACK
         if( static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) )
