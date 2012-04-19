@@ -511,7 +511,7 @@ namespace Oxygen
         GtkSettings* settings( gtk_settings_get_default() );
 
         gtk_settings_set_string_property( settings, "gtk-icon-theme-name", _kdeIconTheme.c_str(), "oxygen-gtk" );
-        gtk_settings_set_string_property( settings, "gtk-fallback-icon-theme-name", _kdeFallbackIconTheme.c_str(), "oxygen-gtk" );
+        gtk_settings_set_string_property( settings, "gtk-fallback-icon-theme", _kdeFallbackIconTheme.c_str(), "oxygen-gtk" );
 
         // load icon sizes from kde
         // const int desktopIconSize( _kdeGlobals.getOption( "[DesktopIcons]", "Size" ).toInt( 48 ) );
