@@ -466,6 +466,10 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
     {
+
+        //
+        if( gtk_combo_box_get_wrap_width( GTK_COMBO_BOX( widget ) ) > 0 ) return false;
+
         gboolean appearsAsList;
         gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
         return (bool) appearsAsList;

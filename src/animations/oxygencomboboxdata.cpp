@@ -47,12 +47,6 @@ namespace Oxygen
         // initialize cell view
         initializeCellView( widget );
 
-        /*
-        need to force the wrap-width property to 0,
-        otherwise the "appears-as-list" flag is not respected, which additionally breaks the widget rendering.
-        */
-        gtk_combo_box_set_wrap_width( GTK_COMBO_BOX( widget ), 0 );
-
     }
 
     //________________________________________________________________________________
