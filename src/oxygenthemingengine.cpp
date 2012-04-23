@@ -744,25 +744,6 @@ namespace Oxygen
 
             }
 
-            // treeview headers
-            if( Gtk::gtk_button_is_header( widget )
-                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
-                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) )
-            {
-
-                // register to scrolled window engine if any
-                if(
-                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
-                    Style::instance().animations().scrolledWindowEngine().contains( parent )
-                    )
-                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
-
-                // treevew header
-                Style::instance().renderHeaderBackground( context, 0L, widget, x, y, w, h );
-                return;
-
-            }
-
             // combobox entry buttons
             if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
@@ -884,6 +865,25 @@ namespace Oxygen
                     return;
 
                 }
+
+            }
+
+            // treeview headers
+            if( Gtk::gtk_button_is_header( widget )
+                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
+                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) )
+            {
+
+                // register to scrolled window engine if any
+                if(
+                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
+                    Style::instance().animations().scrolledWindowEngine().contains( parent )
+                    )
+                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
+
+                // treevew header
+                Style::instance().renderHeaderBackground( context, 0L, widget, x, y, w, h );
+                return;
 
             }
 
