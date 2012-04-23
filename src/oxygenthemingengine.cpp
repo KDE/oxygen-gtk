@@ -2380,16 +2380,6 @@ namespace Oxygen
                 x-=2; w+=4;
                 #endif
 
-            } else if( GTK_IS_TREE_VIEW( widget ) ) {
-
-                y-=2; h+=4;
-                x-=2; w+=4;
-
-            } else if( GTK_IS_CELL_VIEW( widget ) ) {
-
-                y-=1; h+=2;
-                x-=1; w+=2;
-
             }
 
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
