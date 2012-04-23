@@ -1068,7 +1068,7 @@ namespace Oxygen
 
         // button padding
         _css.setCurrentSection( "GtkButton" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 2px 2px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 4px 2px" ) );
 
         // pathbar button margins
         _css.addSection( "GtkPathBar>GtkToggleButton" );

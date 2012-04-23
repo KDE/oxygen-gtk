@@ -742,29 +742,7 @@ namespace Oxygen
 
                 return;
 
-            }
-
-            // treeview headers
-            if( Gtk::gtk_button_is_header( widget )
-                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
-                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) )
-            {
-
-                // register to scrolled window engine if any
-                if(
-                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
-                    Style::instance().animations().scrolledWindowEngine().contains( parent )
-                    )
-                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
-
-                // treevew header
-                Style::instance().renderHeaderBackground( context, 0L, widget, x, y, w, h );
-                return;
-
-            }
-
-            // combobox entry buttons
-            if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
+            } else if( ( parent = Gtk::gtk_parent_combobox_entry( widget ) ) ) {
 
                 // combobox entry buttons
                 // keep track of whether button is active (pressed-down) or pre-lighted
@@ -833,11 +811,7 @@ namespace Oxygen
 
                 return;
 
-            }
-
-            // combobox buttons
-            if( ( parent = Gtk::gtk_parent_combobox( widget ) ) && Gtk::gtk_combobox_appears_as_list( parent ) )
-            {
+            } else if( ( parent = Gtk::gtk_parent_combobox( widget ) ) && Gtk::gtk_combobox_appears_as_list( parent ) ) {
 
                 // combobox buttons
                 const bool reversed( Gtk::gtk_theming_engine_layout_is_reversed( engine ) );
@@ -885,12 +859,25 @@ namespace Oxygen
 
                 }
 
-            }
+            } else if( Gtk::gtk_button_is_header( widget )
+                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
+                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) ) {
 
-            // notebook close buttons
-            if( Gtk::gtk_notebook_is_close_button(widget))
-            {
+                // treeview headers
+                // register to scrolled window engine if any
+                if(
+                    ( parent = Gtk::gtk_parent_scrolled_window( widget ) ) &&
+                    Style::instance().animations().scrolledWindowEngine().contains( parent )
+                    )
+                { Style::instance().animations().scrolledWindowEngine().registerChild( parent, widget ); }
 
+                // treevew header
+                Style::instance().renderHeaderBackground( context, 0L, widget, x, y, w, h );
+                return;
+
+            } else if( Gtk::gtk_notebook_is_close_button(widget)) {
+
+                // notebook close buttons
                 if( gtk_button_get_relief(GTK_BUTTON(widget))==GTK_RELIEF_NONE )
                 { gtk_button_set_relief(GTK_BUTTON(widget),GTK_RELIEF_NORMAL); }
 
@@ -918,10 +905,12 @@ namespace Oxygen
 
                 return;
 
-            }
+            } else if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) {
 
-            // tool itemgroup buttons
-            if( GTK_IS_TOOL_ITEM_GROUP( widget ) ) return;
+                // tool itemgroup buttons
+                return;
+
+            }
 
             StyleOptions options( widget, state );
             options |= Blend;
@@ -2379,16 +2368,6 @@ namespace Oxygen
                 y-=1; h+=2;
                 x-=2; w+=4;
                 #endif
-
-            } else if( GTK_IS_TREE_VIEW( widget ) ) {
-
-                y-=2; h+=4;
-                x-=2; w+=4;
-
-            } else if( GTK_IS_CELL_VIEW( widget ) ) {
-
-                y-=1; h+=2;
-                x-=1; w+=2;
 
             }
 
