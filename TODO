@@ -73,4 +73,3 @@ Implement separate check if a particular GtkScrolledWindow has to be registered 
 Also use composited child hack to round combobox list (and remove old XShape hack for this)
 
 Apply XShape to GtkEntry and GtkComboboxEntry to make it look better on non-oxygen background (e.g. in GtkTextView)
->>>>>>> master
