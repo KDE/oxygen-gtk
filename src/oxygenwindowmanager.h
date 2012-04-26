@@ -93,6 +93,9 @@ namespace Oxygen
         //! on window destroy
         static gboolean wmDestroy( GtkWidget*, gpointer );
 
+        //! on window destroy
+        static gboolean wmBlackListDestroy(  GtkWidget*, gpointer );
+
         //! delayed drag
         static gboolean startDelayedDrag( gpointer );
 
@@ -106,10 +109,16 @@ namespace Oxygen
 
         //! register widget
         /*! returns true if widget is effictively registered */
-        virtual bool registerWidget( GtkWidget* );
+        bool registerWidget( GtkWidget* );
 
         //! unregister widget
-        virtual void unregisterWidget( GtkWidget* );
+        void unregisterWidget( GtkWidget* );
+
+        //! register blacklist widget
+        bool registerBlackListWidget( GtkWidget* );
+
+        //! unregister blacklist widget
+        void unregisterBlackListWidget( GtkWidget* );
 
         //! start dragging widget
         bool startDrag( GtkWidget*, GdkEventMotion* );
@@ -165,6 +174,9 @@ namespace Oxygen
         //! return true if widget is black listed for grabbing
         bool widgetIsBlackListed( GtkWidget* widget ) const
         { return std::find_if( _blackList.begin(), _blackList.end(), BlackListFTor( G_OBJECT( widget ) ) ) != _blackList.end(); }
+
+        //! return true if widget has a black listed parent
+        bool widgetHasBlackListedParent( GtkWidget* widget ) const;
 
         //! stores connections
         class Data
@@ -237,8 +249,13 @@ namespace Oxygen
         int _x;
         int _y;
 
-        //! widget black list
+        //! widget typenames black-list
         std::vector<std::string> _blackList;
+
+        //! widget black-list
+        typedef std::map< GtkWidget*, Signal > WidgetMap;
+        WidgetMap _blackListWidgets;
+
 
         //! map widgets to data structure
         DataMap<Data> _map;

@@ -26,6 +26,7 @@
 */
 
 #include "oxygenwindowmanager.h"
+#include "oxygenpropertynames.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -85,10 +86,28 @@ namespace Oxygen
     bool WindowManager::registerWidget( GtkWidget* widget )
     {
 
-        if( _map.contains( widget ) || widgetIsBlackListed( widget ) ) return false;
+        if( _map.contains( widget ) ) return false;
+
+        // check against black listed typenames
+        if( widgetIsBlackListed( widget ) )
+        {
+            registerBlackListWidget( widget );
+            return false;
+        }
+
+        // check blocking property
+        if( g_object_get_data( G_OBJECT( widget ), PropertyNames::noWindowGrab ) )
+        {
+            registerBlackListWidget( widget );
+            return false;
+        }
 
         // Window with no decorations (set by app), let window manage it self
-        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) ) return false;
+        if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) )
+        {
+            registerBlackListWidget( widget );
+            return false;
+        }
 
         // widgets used in tabs also must be ignored (happens, unfortunately)
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
@@ -105,6 +124,13 @@ namespace Oxygen
             std::string( G_OBJECT_TYPE_NAME( widget ) ) == "GtkWindow" &&
             (gtk_widget_get_events ( widget ) &
             (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) )
+        {
+            registerBlackListWidget( widget );
+            return false;
+        }
+
+        // check for blacklisted parent
+        if( widgetHasBlackListedParent( widget ) )
         { return false; }
 
         #if OXYGEN_DEBUG
@@ -154,6 +180,41 @@ namespace Oxygen
     }
 
     //_________________________________________________
+    bool WindowManager::registerBlackListWidget( GtkWidget* widget )
+    {
+
+        // make sure that widget is not already connected
+        if( _blackListWidgets.find( widget ) != _blackListWidgets.end() ) return false;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WindowManager::registerBlackListWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+      // connect destroy signal and insert in map
+        Signal destroyId;
+        destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( wmBlackListDestroy ), this );
+        _blackListWidgets.insert( std::make_pair( widget, destroyId ) );
+        return true;
+
+    }
+
+    //_________________________________________________
+    void WindowManager::unregisterBlackListWidget( GtkWidget* widget )
+    {
+
+        WidgetMap::iterator iter( _blackListWidgets.find( widget ) );
+        if( iter == _blackListWidgets.end() ) return;
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WindowManager::unregisterBlackListWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+        iter->second.disconnect();
+        _blackListWidgets.erase( widget );
+
+    }
+
+    //_________________________________________________
     void WindowManager::setMode( WindowManager::Mode mode )
     {
         if( mode == _mode ) return;
@@ -176,6 +237,13 @@ namespace Oxygen
     gboolean WindowManager::wmDestroy( GtkWidget* widget, gpointer data )
     {
         static_cast<WindowManager*>(data)->unregisterWidget( widget );
+        return false;
+    }
+
+    //_________________________________________________
+    gboolean WindowManager::wmBlackListDestroy( GtkWidget* widget, gpointer data )
+    {
+        static_cast<WindowManager*>(data)->unregisterBlackListWidget( widget );
         return false;
     }
 
@@ -569,6 +637,21 @@ namespace Oxygen
         if( children ) g_list_free( children );
 
         return usable;
+    }
+
+    //_________________________________________________
+    bool WindowManager::widgetHasBlackListedParent( GtkWidget* widget ) const
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::WindowManager::widgetHasBlackListedParent - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        #endif
+
+        // loop over widget parent
+        for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
+        { if( _blackListWidgets.find( parent ) != _blackListWidgets.end() ) return true; }
+
+        return false;
     }
 
     //_________________________________________________
