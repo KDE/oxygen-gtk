@@ -26,6 +26,7 @@
 */
 
 #include "oxygenwindowmanager.h"
+#include "oxygenpropertynames.h"
 #include "oxygenstyle.h"
 #include "config.h"
 
@@ -89,6 +90,13 @@ namespace Oxygen
 
         // check against black listed typenames
         if( widgetIsBlackListed( widget ) )
+        {
+            registerBlackListWidget( widget );
+            return false;
+        }
+
+        // check blocking property
+        if( g_object_get_data( G_OBJECT( widget ), PropertyNames::noWindowGrab ) )
         {
             registerBlackListWidget( widget );
             return false;
