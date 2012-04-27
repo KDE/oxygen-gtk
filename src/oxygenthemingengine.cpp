@@ -211,6 +211,10 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
+        GtkWidget* toplevel=gtk_widget_get_toplevel(widget);
+        if(GTK_IS_DIALOG(toplevel))
+        { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
+
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
 
