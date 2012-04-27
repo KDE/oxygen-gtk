@@ -52,6 +52,7 @@ set( oxygen_gtk_SOURCES
     oxygenoptionmap.cpp
     oxygenpalette.cpp
     oxygenpathlist.cpp
+    oxygenpropertynames.cpp
     oxygenqtsettings.cpp
     oxygenrgba.cpp
     oxygenshadowconfiguration.cpp

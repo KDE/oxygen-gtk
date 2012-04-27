@@ -114,6 +114,7 @@ namespace Oxygen
             cairo_stroke(context);
 
             cairo_arc_qt( context, 9,8,4, 135*M_PI/180, M_PI/4 );
+            cairo_stroke( context );
             cairo_move_to( context, 9,12 );
             cairo_close_path( context );
             cairo_stroke( context );
