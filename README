@@ -81,6 +81,7 @@ There are some environment variables to help debug ARGB hack:
 
   OXYGEN_DISABLE_ARGB_HACK - set it to 1 to check if app will crash without the hack. Oxygen-GTK will print app name to report.
   OXYGEN_ARGB_DEBUG - set it to 1 to print all debug information concerning ARGB hack (mainly to debug blacklist logic).
+  OXYGEN_DISABLE_INNER_SHADOWS_HACK - set it to 1 to disable inner shadows hack, which might make some widgets render in a wrong way or not render at all
 
 III.2 DBus support
 ------------------
