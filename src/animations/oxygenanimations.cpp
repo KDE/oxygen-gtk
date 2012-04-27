@@ -140,7 +140,8 @@ namespace Oxygen
         _backgroundHintHook.connect( "realize", (GSignalEmissionHook)backgroundHintHook, this );
 
         #if ENABLE_INNER_SHADOWS_HACK
-        _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
+        if(!getenv("OXYGEN_DISABLE_INNER_SHADOWS_HACK"))
+            _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
         #endif
 
         _sizeAllocationHook.connect( "size-allocate", (GSignalEmissionHook)sizeAllocationHook, this );

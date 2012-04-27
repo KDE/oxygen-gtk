@@ -1299,7 +1299,7 @@ namespace Oxygen
     }
 
     //___________________________________________________________________________________________
-    void StyleHelper::drawShadow( Cairo::Context& context, const ColorUtils::Rgba& base, int size ) const
+    void StyleHelper::drawShadow( cairo_t* context, const ColorUtils::Rgba& base, int size ) const
     {
 
         const double m( double(size-2)*0.5 );
@@ -1326,7 +1326,7 @@ namespace Oxygen
     }
 
     //_______________________________________________________________________
-    void StyleHelper::drawOuterGlow( Cairo::Context& context, const ColorUtils::Rgba& base, int size ) const
+    void StyleHelper::drawOuterGlow( cairo_t* context, const ColorUtils::Rgba& base, int size ) const
     {
 
         const double m( double(size)*0.5 );

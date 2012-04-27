@@ -301,6 +301,15 @@ gboolean on_configure0(GtkWidget* mw0, GdkEventConfigure* event, gpointer user_d
 }
 
 //___________________________________________________________________
+gboolean on_press0(GtkWindow* window, GdkEventButton* event, GdkWindowEdge edge)
+{
+    if(event->type == GDK_BUTTON_PRESS)
+        if(event->button == 1)
+            gtk_window_begin_move_drag(window,event->button,event->x_root,event->y_root,event->time);
+    return FALSE;
+}
+
+//___________________________________________________________________
 int main(int argc, char** argv)
 {
 
@@ -325,12 +334,14 @@ int main(int argc, char** argv)
     gtk_window_set_default_size( GTK_WINDOW(mw1), ww, wh );
     gtk_window_set_default_size( GTK_WINDOW(mw0), ww+dw, wh+dh );
     gtk_window_set_decorated(GTK_WINDOW(mw0), FALSE);
+    gtk_widget_add_events(mw0,GDK_BUTTON_PRESS_MASK);
 
     gtk_window_set_title( GTK_WINDOW(mw1), "This is a caption");
 
     g_signal_connect( G_OBJECT(mw0), "expose-event", G_CALLBACK(on_expose), 0L);
     g_signal_connect( G_OBJECT(mw1), "configure-event", G_CALLBACK(on_configure1), 0L);
     g_signal_connect( G_OBJECT(mw0), "configure-event", G_CALLBACK(on_configure0), 0L);
+    g_signal_connect( G_OBJECT(mw0), "button-press-event", G_CALLBACK(on_press0), NULL);
 
     gtk_widget_show( mw1 );
     gtk_widget_show( mw0 );
