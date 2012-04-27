@@ -1,6 +1,6 @@
 /*
 * oxygenpropertynames.cpp
-* pass some window mouse press/release/move event actions to window manager
+* hard-coded property names to disable some of oxygen features
 * -------------------
 *
 * Copyright (c) 2012 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
