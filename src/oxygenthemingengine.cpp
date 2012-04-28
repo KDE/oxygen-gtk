@@ -258,6 +258,9 @@ namespace Oxygen
             if( pattern.isValid() )
             {
                 // if valid background image is found, fallback to parent style
+                #if OXYGEN_DEBUG
+                std::cerr << "Calling parentClass()->render_background()\n";
+                #endif
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
             }
@@ -508,6 +511,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_background()\n";
+            #endif
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
         }
@@ -1523,6 +1529,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_frame_gap()\n";
+            #endif
             ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, position, xy0_gap, xy1_gap );
 
         }
@@ -1736,6 +1745,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_check()\n";
+            #endif
             ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
 
         }
@@ -1820,6 +1832,9 @@ namespace Oxygen
         } else {
 
             // parent
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_option()\n";
+            #endif
             ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
 
         }
@@ -2146,6 +2161,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_layout()\n";
+            #endif
             ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
         }
@@ -2275,6 +2293,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_slider()\n";
+            #endif
             ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
 
         }
@@ -2327,6 +2348,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_handle()\n";
+            #endif
             ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
         }
@@ -2379,6 +2403,9 @@ namespace Oxygen
 
         } else {
 
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_activity()\n";
+            #endif
             ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
 
         }
@@ -2525,6 +2552,9 @@ namespace Oxygen
             GdkPixbuf* stated( render_stated_pixbuf( pixbuf, state, useEffect ) );
 
             // call parent method with stated pixbuf
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_icon()\n";
+            #endif
             ThemingEngine::parentClass()->render_icon( engine, context, stated, x, y );
 
             // and cleanup
@@ -2534,6 +2564,9 @@ namespace Oxygen
         } else {
 
             // call parent method
+            #if OXYGEN_DEBUG
+            std::cerr << "Calling parentClass()->render_icon()\n";
+            #endif
             ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y );
             return;
 
