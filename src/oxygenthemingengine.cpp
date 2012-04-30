@@ -1852,7 +1852,7 @@ namespace Oxygen
 
         // get arrow type
         /* TODO: is it robust */
-        const GtkArrowType arrow( Gtk::gtk_arrow_get_type( angle ) );
+        GtkArrowType arrow( Gtk::gtk_arrow_get_type( angle ) );
 
         // get arrow size (disregard the value passed as argument)
         QtSettings::ArrowSize arrowSize( QtSettings::ArrowNormal );
@@ -1959,23 +1959,29 @@ namespace Oxygen
             data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
             role = Palette::WindowText;
 
-        } else if(
-            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) &&
-            !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
-        {
+        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
 
-            /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
-            useWidgetStateEngine = false;
-            options &= ~( Focus|Hover );
 
-            if( gtk_widget_path_is_type( path, GTK_TYPE_ARROW ) )
+            if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
             {
+                /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
+                useWidgetStateEngine = false;
+                options &= ~( Focus|Hover );
 
-                /* TODO: fixed margins for arrow buttons */
-                x += 1;
-                role = Palette::WindowText;
+                if( gtk_widget_path_is_type( path, GTK_TYPE_ARROW ) )
+                {
 
-            }
+                    /* TODO: fixed margins for arrow buttons */
+                    x += 1;
+                    role = Palette::WindowText;
+
+                }
+
+            } else if( ( ( (parent = Gtk::gtk_parent_button( widget )) && Gtk::gtk_button_is_header( parent ) )
+                || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER )
+                || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) ) &&
+                Style::instance().settings().viewInvertSortIndicator() )
+            { arrow = (arrow == GTK_ARROW_UP ) ? GTK_ARROW_DOWN:GTK_ARROW_UP; }
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CALENDAR ) ) {
 

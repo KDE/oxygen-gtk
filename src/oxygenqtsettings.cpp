@@ -65,6 +65,7 @@ namespace Oxygen
         _viewDrawTreeBranchLines( true ),
         _viewDrawTriangularExpander( true ),
         _viewTriangularExpanderSize( ArrowSmall ),
+        _viewInvertSortIndicator( false ),
         _menuHighlightMode( MM_DARK ),
         _windowDragEnabled( true ),
         _windowDragMode( WD_FULL ),
@@ -911,6 +912,9 @@ namespace Oxygen
         if( expanderSize == "TE_NORMAL" ) _viewTriangularExpanderSize = ArrowNormal;
         else if( expanderSize == "TE_TINY" ) _viewTriangularExpanderSize = ArrowTiny;
         else _viewTriangularExpanderSize = ArrowSmall;
+
+        // invert view sort indicators
+        _viewInvertSortIndicator = _oxygen.getOption( "[Style]", "ViewInvertSortIndicator" ).toVariant<std::string>("false") == "true";
 
         // menu highlight mode
         std::string highlightMode( _oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
