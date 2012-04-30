@@ -167,6 +167,10 @@ namespace Oxygen
         ArrowSize viewTriangularExpanderSize( void ) const
         { return _viewTriangularExpanderSize; }
 
+        //! true if views sort order indicator arrow direction must be inverted
+        bool viewInvertSortIndicator( void ) const
+        { return _viewInvertSortIndicator; }
+
         //! menu highlight mode
         enum MenuHighlightMode
         {
@@ -485,6 +489,9 @@ namespace Oxygen
 
         //! triangular expander size
         ArrowSize _viewTriangularExpanderSize;
+
+        //! true if views sort order indicator arrow direction must be inverted
+        bool _viewInvertSortIndicator;
 
         //! menu highlight mode
         MenuHighlightMode _menuHighlightMode;

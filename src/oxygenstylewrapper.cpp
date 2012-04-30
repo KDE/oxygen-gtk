@@ -2569,21 +2569,27 @@ namespace Oxygen
             if( Gtk::gtk_widget_layout_is_reversed( widget ) )
             { x+=2; }
 
-        } else if(
-            Gtk::gtk_parent_button( widget ) &&
-            !Gtk::gtk_parent_tree_view( widget ) &&
-            !Gtk::gtk_parent_combo( widget ) )
-        {
+        } else if( ( parent = Gtk::gtk_parent_button( widget ) ) ) {
 
-            useWidgetStateEngine = false;
-            options &= ~( Focus|Hover );
-            if( d.isArrow() && GTK_IS_ARROW( widget ) )
+
+            if(!Gtk::gtk_parent_tree_view( widget ) &&
+                !Gtk::gtk_parent_combo( widget ) )
             {
 
-                //if( arrow == GTK_ARROW_DOWN || arrow == GTK_ARROW_UP )
-                { x += 1; }
+                useWidgetStateEngine = false;
+                options &= ~( Focus|Hover );
 
-                role = Palette::WindowText;
+                if( d.isArrow() && GTK_IS_ARROW( widget ) )
+                {
+
+                    x += 1;
+                    role = Palette::WindowText;
+                }
+
+            } else if( Gtk::gtk_button_is_header( parent ) && Style::instance().settings().viewInvertSortIndicator() ) {
+
+                arrow = (arrow == GTK_ARROW_UP) ? GTK_ARROW_DOWN:GTK_ARROW_UP;
+
             }
 
         } else if( GTK_IS_CALENDAR( widget ) ) {
