@@ -918,7 +918,7 @@ namespace Oxygen
         else _viewTriangularExpanderSize = ArrowSmall;
 
         // invert view sort indicators
-        _viewInvertSortIndicator = oxygen.getOption( "[Style]", "ViewInvertSortIndicator" ).toVariant<std::string>("false") == "true";
+        _viewInvertSortIndicator = _oxygen.getOption( "[Style]", "ViewInvertSortIndicator" ).toVariant<std::string>("false") == "true";
 
         // menu highlight mode
         std::string highlightMode( _oxygen.getOption( "[Style]", "MenuHighlightMode" ).toVariant<std::string>("MM_DARK") );
