@@ -2605,7 +2605,7 @@ namespace Oxygen
                         pango_font_description_set_family( fdesc, font.family().c_str() );
                         pango_font_description_set_weight( fdesc, PangoWeight( (font.weight()+2)*10 ) );
                         pango_font_description_set_style( fdesc, font.italic() ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL );
-                        pango_font_description_set_size( fdesc, int(font.size()*PANGO_SCALE) );
+                        pango_font_description_set_absolute_size( fdesc, int(font.size()*PANGO_SCALE) );
 
                         PangoLayout* layout( pango_cairo_create_layout(context) );
                         pango_layout_set_text( layout,caption, -1 );
