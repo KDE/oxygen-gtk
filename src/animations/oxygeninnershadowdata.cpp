@@ -85,7 +85,7 @@ namespace Oxygen
     void InnerShadowData::registerChild( GtkWidget* widget )
     {
 
-        #if GTK_CHECK_VERSION(2,22,0)
+        #if ENABLE_INNER_SHADOWS_HACK
 
         // make sure widget is not already in map
         if( _childrenData.find( widget ) != _childrenData.end() ) return;
@@ -183,7 +183,7 @@ namespace Oxygen
     gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
     {
 
-        #if GTK_CHECK_VERSION(2,24,0)
+        #if ENABLE_INNER_SHADOWS_HACK
         GtkWidget* child=gtk_bin_get_child(GTK_BIN(widget));
         GdkWindow* window=gtk_widget_get_window(child);
 
@@ -328,7 +328,7 @@ namespace Oxygen
             allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
             options, data );
 
-        #endif // Gtk version
+        #endif // enable inner shadows hack
 
         // let the event propagate
         return FALSE;
