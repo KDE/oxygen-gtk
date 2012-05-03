@@ -1043,6 +1043,9 @@ namespace Oxygen
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
                 {
+
+                    Style::instance().animations().menuItemEngine().registerMenu( widget );
+
                     GdkWindow* window( gtk_widget_get_parent_window(widget) );
                     if( !(options&Alpha) )
                     {
