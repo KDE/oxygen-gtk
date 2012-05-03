@@ -1,5 +1,3 @@
-#ifndef oxygenmenuitemengine_h
-#define oxygenmenuitemengine_h
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
@@ -20,42 +18,36 @@
 * MA 02110-1301, USA.
 */
 
-
-#include "oxygengenericengine.h"
-#include "oxygendatamap.h"
-#include "oxygenmenuitemdata.h"
-
-#include <gtk/gtk.h>
+#include "oxygenmenuitemengine.h"
+#include <iostream>
 
 namespace Oxygen
 {
-    //! forward declaration
-    class Animations;
 
-    //! stores data associated to editable menuitemes
-    /*!
-    ensures that the text entry and the button of editable menuitemes
-    gets hovered and focus flags at the same time
-    */
-    class MenuItemEngine: public GenericEngine<MenuItemData>
+    //_______________________________________________________________
+    bool MenuItemEngine::registerMenu( GtkWidget* parent )
     {
 
-        public:
+        // check widget
+        if( !GTK_IS_MENU( parent ) ) return false;
 
-        //! constructor
-        MenuItemEngine( Animations* widget ):
-            GenericEngine<MenuItemData>( widget )
-            {}
+        // keep track of added children
+        bool found( false );
 
-        //! destructor
-        virtual ~MenuItemEngine( void )
-        {}
+        // get children
+        GList* children( gtk_container_get_children( GTK_CONTAINER( parent ) ) );
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
+        {
+            if( !GTK_IS_MENU_ITEM( child->data ) ) continue;
+            GtkWidget* widget( gtk_bin_get_child( GTK_BIN( child->data ) ) );
+            if( registerWidget( widget ) ) found = true;
+        }
 
-        //! register all menuItems children of a menu
-        virtual bool registerMenu( GtkWidget* );
+        // free list of children
+        if( children ) g_list_free( children );
 
-    };
+        return found;
+
+    }
 
 }
-
-#endif

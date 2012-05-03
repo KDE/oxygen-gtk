@@ -1198,6 +1198,9 @@ namespace Oxygen
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
                 {
+
+                    Style::instance().animations().menuItemEngine().registerMenu( widget );
+
                     Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
                     if( !(options&Alpha) )
