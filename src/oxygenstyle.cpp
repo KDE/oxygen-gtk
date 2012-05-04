@@ -1313,7 +1313,7 @@ namespace Oxygen
         }
 
         cairo_set_source( context, pattern );
-        helper().fillSlab( context, x, y, w, h, tiles );
+        helper().fillSlab( context, x, y, w, h+1, tiles );
         cairo_restore( context );
 
         if( options&Sunken )
