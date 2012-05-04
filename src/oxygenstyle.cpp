@@ -1414,28 +1414,19 @@ namespace Oxygen
         const ColorUtils::Rgba& glow )
     {
 
-        // define colors
-        gint wh, wy;
-        Gtk::gdk_map_to_toplevel( window, 0L, &wy, 0L, &wh );
-        const ColorUtils::Rgba base( ColorUtils::backgroundColor( settings().palette().color( Palette::Button ), wh, y+wy+h/2 ) );
-
         // create context
         Cairo::Context context( window, clipRect );
 
-        // fill
-        {
-            Cairo::Pattern pattern;
-            const ColorUtils::Rgba shadow( ColorUtils::shadowColor( base ) );
-            pattern.set( cairo_pattern_create_linear( 0, y-h, 0, y+h ) );
-            cairo_pattern_add_color_stop( pattern, 0, ColorUtils::lightColor( base ) );
-            cairo_pattern_add_color_stop( pattern, 1.0, base );
+        // content
+        cairo_rounded_rectangle( context, x+1, y+1, w-2, h-2, 5 );
+        cairo_set_source( context, glow );
+        cairo_fill( context );
 
-            cairo_set_source( context, pattern );
-            helper().fillSlab( context, x, y, w, h );
-        }
-
-        // slab
-        helper().slab( base, glow, 0 ).render( context, x, y, w, h );
+        // border
+        cairo_set_line_width( context, 1.0 );
+        cairo_rounded_rectangle( context, 1.5+x, 1.5+y, w-3, h-3, 4.5 );
+        cairo_set_source( context, ColorUtils::darken( glow ) );
+        cairo_stroke( context );
 
     }
 
