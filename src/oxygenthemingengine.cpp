@@ -2342,9 +2342,13 @@ namespace Oxygen
 
         } else if( gtk_widget_path_is_type(path,GTK_TYPE_HANDLE_BOX) ) {
 
+            // render background
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
+
+            // handles
             StyleOptions options( widget, state );
-            if(h>w)
-                options|=Vertical;
+            if(h>w) options|=Vertical;
             Style::instance().renderToolBarHandle( context, x, y, w, h, options );
 
         } else {
