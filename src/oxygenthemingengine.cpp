@@ -315,15 +315,6 @@ namespace Oxygen
 
             // no need to render anything for notebook gradient
 
-        } else if(
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SIDEBAR ) &&
-            Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) &&
-            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) ) {
-
-            // no background for assistant sidebar frame
-            Style::instance().fill( context, x, y, w, h, Style::instance().settings().palette().color( Palette::Base ) );
-            return;
-
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
@@ -2230,19 +2221,6 @@ namespace Oxygen
                 */
                 render_layout_internal( engine, context, x, y, layout );
                 cairo_restore( context );
-                return;
-
-            } else if(
-                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HIGHLIGHT ) &&
-                Gtk::gtk_widget_path_has_type( path, GTK_TYPE_ASSISTANT ) )
-            {
-
-                // identify highlighted assistant labels and change font to bold
-                PangoAttrList* attributes( pango_layout_get_attributes( layout ) );
-                if( !attributes ) attributes = pango_attr_list_new();
-                pango_attr_list_insert( attributes, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
-                pango_layout_set_attributes( layout, attributes );
-                render_layout_internal( engine, context, x, y, layout );
                 return;
 
             }
