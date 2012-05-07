@@ -244,7 +244,8 @@ namespace Oxygen
         } else if( widget && (
             gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT )
+            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX )
             ) )
         {
 
@@ -466,7 +467,12 @@ namespace Oxygen
         {
 
             return;
+
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
+
+            // render background
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
 
             render_animated_button( context, widget );
             return;
