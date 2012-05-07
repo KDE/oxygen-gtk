@@ -702,10 +702,11 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
 
-            // no frame for scrollbar buttons and spin buttons
+            // no frame for scrollbar buttons, spin buttons, and menu buttons
             if(
                 gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
-                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) )
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) ||
+                gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) )
             { return; }
 
             // pathbar buttons
