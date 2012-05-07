@@ -2301,12 +2301,13 @@ namespace Oxygen
     void render_handle( GtkThemingEngine* engine, cairo_t* context, gdouble x, gdouble y, gdouble w, gdouble h )
     {
 
+        const GtkWidgetPath* path(gtk_theming_engine_get_path(engine));
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_handle -"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
-            << " path: " << gtk_theming_engine_get_path(engine)
+            << " path: " << path
             << std::endl;
         #endif
 
@@ -2333,10 +2334,11 @@ namespace Oxygen
                 options, AnimationHover ) );
             Style::instance().renderSplitter( context, x, y, w, h, options, data );
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR) ) {
+        } else if( gtk_widget_path_is_type(path,GTK_TYPE_HANDLE_BOX) ) {
 
             StyleOptions options( widget, state );
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
+            if(h>w)
+                options|=Vertical;
             Style::instance().renderToolBarHandle( context, x, y, w, h, options );
 
         } else {
