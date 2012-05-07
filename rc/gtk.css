@@ -131,6 +131,11 @@ GtkProgressBar { padding: 0px; }
 /* switchs */
 GtkSwitch { padding: 0px; }
 
+/* spinners */
+.spinner:active {
+    transition: 750ms linear loop;
+}
+
 /* combo boxes */
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
