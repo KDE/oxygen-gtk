@@ -94,6 +94,11 @@ namespace Oxygen
 
         }
 
+        // NOTE: doing just like in oxygen-qt.
+        // Might need to implement calcOuterColor() if its logic becomes more complicated in oxygen-qt.
+        if(!_useOuterColor)
+            _outerColor=_innerColor;
+
     }
 
     //_________________________________________________________
