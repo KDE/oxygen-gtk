@@ -73,24 +73,42 @@ namespace Oxygen
         // split strings using "," as a separator
         size_t position = 0;
         std::vector<std::string> values;
-        while( ( position = value.find( ',' ) ) != std::string::npos )
+        if( ( position = value.find( '#' ) ) != std::string::npos )
         {
-            values.push_back( value.substr( 0, position ) );
-            value = value.substr( position+1 );
+            value.replace(position,1,"");
+            int colorValue=-3;
+            std::istringstream in(value);
+            if( in >> std::hex >> colorValue )
+            {
+                out.setBlue( double(colorValue&0xff)/255 );
+                out.setGreen( double( (colorValue>>=8)&0xff)/255 );
+                out.setRed( double( (colorValue>>=8)&0xff)/255 );
+                // Interpret possible omitted alpha as fully opaque
+                colorValue=(colorValue>>8)&0xff;
+                out.setAlpha( colorValue ? colorValue/255. : 1. );
+            }
         }
-
-        if( !value.empty() ) values.push_back( value );
-        for( unsigned int index = 0; index < 4 && index < values.size(); index++ )
+        else
         {
+            while( ( position = value.find( ',' ) ) != std::string::npos )
+            {
+                values.push_back( value.substr( 0, position ) );
+                value = value.substr( position+1 );
+            }
 
-            int colorIndex;
-            std::istringstream in( values[index] );
-            if( !(in >> colorIndex) ) break;
+            if( !value.empty() ) values.push_back( value );
+            for( unsigned int index = 0; index < 4 && index < values.size(); index++ )
+            {
 
-            if( index == 0 ) out.setRed( double(colorIndex)/255 );
-            else if( index == 1 ) out.setGreen( double(colorIndex)/255 );
-            else if( index == 2 ) out.setBlue( double(colorIndex)/255 );
-            else if( index == 3 ) out.setAlpha( double(colorIndex)/255 );
+                int colorIndex;
+                std::istringstream in( values[index] );
+                if( !(in >> colorIndex) ) break;
+
+                if( index == 0 ) out.setRed( double(colorIndex)/255 );
+                else if( index == 1 ) out.setGreen( double(colorIndex)/255 );
+                else if( index == 2 ) out.setBlue( double(colorIndex)/255 );
+                else if( index == 3 ) out.setAlpha( double(colorIndex)/255 );
+            }
         }
 
         return out;
