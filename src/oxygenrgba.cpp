@@ -70,29 +70,49 @@ namespace Oxygen
 
         Rgba out;
 
-        // split strings using "," as a separator
-        size_t position = 0;
-        std::vector<std::string> values;
-        while( ( position = value.find( ',' ) ) != std::string::npos )
+        // parse using regular expression
+        // two formats are supported: html style (#rrggbb), and KDE style (r,g,b).
+        GRegex* regex = g_regex_new(
+            "(?:#((?:\\d|[a-f])+))|"
+            "(?:(\\d+),(\\d+),(\\d+)(?:,(\\d+))?)",
+            G_REGEX_CASELESS, (GRegexMatchFlags)0, 0L );
+
+        GMatchInfo* matchInfo;
+        g_regex_match( regex, value.c_str(), (GRegexMatchFlags)0, &matchInfo);
+        const int matchCount( g_match_info_get_match_count( matchInfo ) );
+        if( matchCount == 2 )
         {
-            values.push_back( value.substr( 0, position ) );
-            value = value.substr( position+1 );
+
+            // convert to hex number
+            std::istringstream in( g_match_info_fetch( matchInfo, 1 ) );
+            int colorValue = 0;
+            in >> std::hex >> colorValue;
+
+            out.setBlue( double(colorValue&0xff)/255 );
+            out.setGreen( double( (colorValue>>=8)&0xff)/255 );
+            out.setRed( double( (colorValue>>=8)&0xff)/255 );
+
+        } else if( matchCount >= 5 ) {
+
+            for( int index = 0; index < matchCount-2; ++index )
+            {
+
+                std::istringstream in( g_match_info_fetch( matchInfo, index+2 ) );
+                int colorValue;
+                if( !(in >> colorValue) ) break;
+
+                if( index == 0 ) out.setRed( double(colorValue)/255 );
+                else if( index == 1 ) out.setGreen( double(colorValue)/255 );
+                else if( index == 2 ) out.setBlue( double(colorValue)/255 );
+                else if( index == 3 ) out.setAlpha( double(colorValue)/255 );
+
+            }
+
         }
 
-        if( !value.empty() ) values.push_back( value );
-        for( unsigned int index = 0; index < 4 && index < values.size(); index++ )
-        {
-
-            int colorIndex;
-            std::istringstream in( values[index] );
-            if( !(in >> colorIndex) ) break;
-
-            if( index == 0 ) out.setRed( double(colorIndex)/255 );
-            else if( index == 1 ) out.setGreen( double(colorIndex)/255 );
-            else if( index == 2 ) out.setBlue( double(colorIndex)/255 );
-            else if( index == 3 ) out.setAlpha( double(colorIndex)/255 );
-        }
-
+        // cleanup
+        g_match_info_free (matchInfo);
+        g_regex_unref( regex );
         return out;
 
     }

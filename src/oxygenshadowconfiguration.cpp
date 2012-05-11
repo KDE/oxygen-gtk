@@ -94,6 +94,9 @@ namespace Oxygen
 
         }
 
+        if(!_useOuterColor)
+            _outerColor=_innerColor;
+
     }
 
     //_________________________________________________________
