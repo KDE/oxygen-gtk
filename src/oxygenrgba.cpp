@@ -92,10 +92,6 @@ namespace Oxygen
             out.setGreen( double( (colorValue>>=8)&0xff)/255 );
             out.setRed( double( (colorValue>>=8)&0xff)/255 );
 
-            // Interpret possible omitted alpha as fully opaque
-            colorValue=(colorValue>>8)&0xff;
-            out.setAlpha( colorValue ? colorValue/255. : 1. );
-
         } else if( matchCount >= 5 ) {
 
             for( int index = 0; index < matchCount-2; ++index )
