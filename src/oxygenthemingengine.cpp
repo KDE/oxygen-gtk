@@ -474,6 +474,10 @@ namespace Oxygen
             if( !Gtk::gtk_widget_is_applet( widget ) )
             { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
 
+            // possible groupbox background
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
+            { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
+
             render_animated_button( context, widget );
             return;
 
