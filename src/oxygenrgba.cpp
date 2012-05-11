@@ -71,7 +71,7 @@ namespace Oxygen
         Rgba out;
 
         // parse using regular expression
-        // two formats are supported: html style (#aa0000), and KDE style (r,g,b).
+        // two formats are supported: html style (#rrggbb), and KDE style (r,g,b).
         GRegex* regex = g_regex_new(
             "(?:#((?:\\d|[a-f])+))|"
             "(?:(\\d+),(\\d+),(\\d+)(?:,(\\d+))?)",
