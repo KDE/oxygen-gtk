@@ -102,10 +102,10 @@ endif()
 find_package( X11 REQUIRED )
 
 # PKG_CONFIG
-find_package(PkgConfig REQUIRED )
+find_package( PkgConfig REQUIRED )
 
 # GTK
-pkg_check_modules( GTK REQUIRED gtk+-3.0 )
+pkg_check_modules( GTK REQUIRED gtk+-3.0>=3.2.0 )
 
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
