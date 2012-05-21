@@ -2557,7 +2557,7 @@ namespace Oxygen
 
             // call parent method with stated pixbuf
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_icon()\n";
+            std::cerr << "Oxygen::render_icon - calling parentClass()->render_icon()\n";
             #endif
             ThemingEngine::parentClass()->render_icon( engine, context, stated, x, y );
 
@@ -2565,11 +2565,17 @@ namespace Oxygen
             if( stated != pixbuf ) g_object_unref( stated );
             return;
 
+        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) ) {
+
+            // call parent method with extra vertical offset due to gtk3 bug
+            ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y-2 );
+            return;
+
         } else {
 
             // call parent method
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_icon()\n";
+            std::cerr << "Oxygen::render_icon - calling parentClass()->render_icon()\n";
             #endif
             ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y );
             return;
