@@ -122,7 +122,10 @@ namespace Oxygen
     {
         // change background color
         if( _cell._widget )
-        { gtk_cell_view_set_background_color( GTK_CELL_VIEW( _cell._widget ), 0L ); }
+        {
+            const GdkRGBA color = { 0, 0, 0, 0 };
+            gtk_cell_view_set_background_rgba( GTK_CELL_VIEW( _cell._widget ), &color );
+        }
     }
 
     //________________________________________________________________________________

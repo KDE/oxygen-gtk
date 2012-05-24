@@ -232,6 +232,22 @@ namespace Oxygen
             return TRUE;
         }
 
+        #if GTK_CHECK_VERSION( 3, 5, 0 )
+        /*
+        HACK: Somehow, style_updated method for GtkRange widgets is not called anymore
+        as soon as we (oxygen-gtk) install our hooks. This prevents some settings to be
+        properly initialized, such as the slider length, or the arrows for scrollbars.
+        Therefore we explicitly call the styleUpdated function ourselves.
+        */
+        if( GTK_IS_RANGE( widget ) )
+        {
+            // get class
+            GtkWidgetClass* widgetClass = GTK_WIDGET_GET_CLASS( widget );
+            if( widgetClass && widgetClass->style_updated )
+            { (*widgetClass->style_updated)(widget); }
+        }
+        #endif
+
         // groupbox labels
         #if ENABLE_GROUPBOX_HACK
         if( static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) )
