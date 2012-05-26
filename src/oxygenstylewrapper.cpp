@@ -248,7 +248,15 @@ namespace Oxygen
         } else if( d.isTrough() ) {
 
             if( GTK_IS_PROGRESS_BAR( widget ) )
-            { return; }
+            {
+                if( Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    StyleOptions options;
+                    if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+                    Style::instance().renderProgressBarHole( window, clipRect, x,y,w,h, options );
+                }
+                return;
+            }
 
         } else if( d.isTooltip() && Style::instance().settings().tooltipDrawStyledFrames() ) {
 
@@ -2167,7 +2175,7 @@ namespace Oxygen
 
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
 
-        } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
+        } else if( d.isCheck() && ( GTK_IS_CHECK_MENU_ITEM( widget ) || /* for OpenOffice */GTK_IS_MENU_ITEM( widget ) ) ) {
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill);
