@@ -40,6 +40,7 @@
 #include "oxygenmetrics.h"
 #include "oxygenstyle.h"
 #include "oxygenwindowmanager.h"
+#include "oxygencolorutils.h"
 
 #include <iostream>
 namespace Oxygen
@@ -1026,7 +1027,11 @@ namespace Oxygen
             // flat buttons
             bool useWidgetState( true );
             AnimationData data;
-            if( widget && Gtk::gtk_button_is_flat( widget ) )
+            // Such small buttons should rather be flat for OpenOffice (the only ones present there seem
+            // to be the navigation buttons under vertical scrollbar in main window)
+            bool ooFlat(Style::instance().settings().applicationName().isOpenOffice() && w<20 && h<20 && w==h);
+
+            if( widget && Gtk::gtk_button_is_flat( widget ) || ooFlat )
             {
 
                 // set button as flat and disable focus
@@ -1073,6 +1078,14 @@ namespace Oxygen
                         }
 
                     }
+                }
+                else if(ooFlat)
+                {
+                    // Fill with bottom color because the buttons are most likely at the bottom
+                    Cairo::Context context(window);
+                    cairo_set_source(context,ColorUtils::backgroundBottomColor( Style::instance().settings().palette().color( Palette::Window )));
+                    cairo_rectangle(context,x,y,w,h);
+                    cairo_fill(context);
                 }
 
             }
