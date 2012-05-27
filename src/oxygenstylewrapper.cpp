@@ -3356,15 +3356,9 @@ namespace Oxygen
 
         } else if( d.isHandleBox() ) {
 
-            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
+            if( !Gtk::gtk_widget_is_applet( widget ) )
             {
-
-                Style::instance().fill( window, clipRect, x, y, w, h, Gtk::gdk_get_color( style->bg[state] ) );
-
-            } else if( !Gtk::gtk_widget_is_applet( widget ) ) {
-
                 Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h );
-
             }
 
             StyleOptions options( widget, state, shadow );
