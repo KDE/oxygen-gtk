@@ -2961,7 +2961,10 @@ namespace Oxygen
 
                 }
 
-                gap.setHeight( 8 );
+                if(Style::instance().settings().applicationName().isOpenOffice())
+                    gap.setHeight( 0 );
+                else
+                    gap.setHeight( 8 );
                 Style::instance().renderTabBarFrame( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 
             }
@@ -3192,6 +3195,13 @@ namespace Oxygen
                 gap.setHeight( 8 );
 
                 Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
+
+            }
+            else if(Style::instance().settings().applicationName().isOpenOffice())
+            {
+                Gtk::Gap gap;
+                gap.setHeight( 0 );
+                Style::instance().renderTabBarFrame( window, clipRect, x-5, y+h-4, w+11, h+2, gap, options );
 
             }
 
