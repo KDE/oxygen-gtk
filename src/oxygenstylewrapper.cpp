@@ -3078,10 +3078,15 @@ namespace Oxygen
         #endif
 
         Gtk::Detail d( detail );
+
+        // Will be used for LibreOffice
+        bool prelight(g_object_get_data(G_OBJECT(window),"libreoffice-tab-is-prelit"));
+
         if( d.isTab() )
         {
-
             StyleOptions options( widget, state, shadow );
+            if(prelight)
+                options|=Hover;
             TabOptions tabOptions( widget, state, position, x, y, w, h );
 
             const bool isCurrentTab( tabOptions & CurrentTab );
@@ -3149,6 +3154,7 @@ namespace Oxygen
                 Style::instance().fill(
                     window, clipRect, x-1, y, w+2, h+1,
                     Style::instance().settings().palette().color( Palette::Window ) );
+                x+=1;
             }
 
             // render
@@ -3197,6 +3203,7 @@ namespace Oxygen
             {
                 Gtk::Gap gap;
                 gap.setHeight( 0 );
+                options&=~Hover;
                 Style::instance().renderTabBarFrame( window, clipRect, x-5, y+h-4, w+11, h+2, gap, options );
 
             }
