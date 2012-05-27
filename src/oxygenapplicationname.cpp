@@ -123,7 +123,6 @@ namespace Oxygen
             isXul() ||
             isAcrobat() ||
             isJavaSwt() ||
-            isOpenOffice() ||
             isGoogleChrome() ||
             isEclipse() ) ) return false;
 
