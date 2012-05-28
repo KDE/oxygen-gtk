@@ -117,6 +117,14 @@ namespace Oxygen
         #endif
 
         const Gtk::Detail d( detail );
+
+        // Render tab background
+        if(Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_NOTEBOOK(widget))
+        {
+            Style::instance().renderWindowBackground(window,widget,NULL,x,y,w,h);
+            return;
+        }
+
         if( d.isBase() || d.isEventBox() || (d.isNull() && Gtk::g_object_is_a( G_OBJECT( widget ), "ShellWindow" ) ) )
         {
 
@@ -3148,14 +3156,7 @@ namespace Oxygen
             }
 
             if( isOpenOffice )
-            {
-                // draw background since OOo won't draw it as it should
-                // in addition, it passes wrong rectangle to the theme
-                Style::instance().fill(
-                    window, clipRect, x-1, y, w+2, h+1,
-                    Style::instance().settings().palette().color( Palette::Window ) );
-                x+=1;
-            }
+            { x+=1; }
 
             // render
             if( isXul ) tabOptions |= Xul;
