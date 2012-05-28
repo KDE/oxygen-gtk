@@ -1105,6 +1105,8 @@ namespace Oxygen
             if( useWidgetState )
             { data = Style::instance().animations().widgetStateEngine().get( widget, options ); }
 
+            if(Style::instance().settings().applicationName().isOpenOffice())
+                Style::instance().renderWindowBackground(window,clipRect,x,y,w,h);
             // render
             Style::instance().renderButtonSlab( window, clipRect, x, y, w, h, options, data );
 
