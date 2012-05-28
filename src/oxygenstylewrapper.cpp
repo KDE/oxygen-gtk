@@ -731,6 +731,9 @@ namespace Oxygen
         // Don't draw anything for OpenOffice or steppers will look like slabs.
         if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice( widget ))
         { return; }
+        // Don't render window bg here because it's redundant and leads to problems with bg gradient behind buttons
+        if( GTK_IS_WINDOW(widget) && Style::instance().settings().applicationName().isOpenOffice( widget ))
+        { return; }
 
         GtkWidget* parent(0L);
         if( d.isInfoBar() )
