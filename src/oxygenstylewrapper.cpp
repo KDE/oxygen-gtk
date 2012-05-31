@@ -1538,6 +1538,11 @@ namespace Oxygen
                     clipRect->y += delta_y; clipRect->height -= 2*delta_y;
                 }
 
+                if(Style::instance().settings().applicationName().isOpenOffice())
+                {
+                    ++x;
+                    w-=2;
+                }
                 // need to adjust rect and clip to handle unexpected x/y thickness values
                 Style::instance().renderProgressBarHandle( window, clipRect, x, y, w, h, options );
 
