@@ -248,7 +248,15 @@ namespace Oxygen
         } else if( d.isTrough() ) {
 
             if( GTK_IS_PROGRESS_BAR( widget ) )
-            { return; }
+            {
+                if( Style::instance().settings().applicationName().isOpenOffice() )
+                {
+                    StyleOptions options;
+                    if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+                    Style::instance().renderProgressBarHole( window, clipRect, x,y,w,h, options );
+                }
+                return;
+            }
 
         } else if( d.isTooltip() && Style::instance().settings().tooltipDrawStyledFrames() ) {
 
@@ -1037,43 +1045,46 @@ namespace Oxygen
                 options |= Flat;
                 options &= ~Focus;
 
-                // register to Hover engine and check state
-                Style::instance().animations().hoverEngine().registerWidget( widget );
-                if( (options&Hover) )  Style::instance().animations().hoverEngine().setHovered( widget, true );
-                else if( Style::instance().animations().hoverEngine().hovered( widget ) ) options |= Hover;
-
-                // register to ToolBarState engine
-                ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
-                GtkWidget* parent( 0L );
-
-                bool toolPalette(false);
-                #if GTK_CHECK_VERSION(2,20,0)
-                toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
-                #endif
-
-                if( !toolPalette && (parent = engine.findParent( widget ) ) )
+                if(!Style::instance().settings().applicationName().isOpenOffice())
                 {
+                    // register to Hover engine and check state
+                    Style::instance().animations().hoverEngine().registerWidget( widget );
+                    if( (options&Hover) )  Style::instance().animations().hoverEngine().setHovered( widget, true );
+                    else if( Style::instance().animations().hoverEngine().hovered( widget ) ) options |= Hover;
 
-                    // register child
-                    engine.registerChild( parent, widget, options&Hover );
-                    useWidgetState = false;
+                    // register to ToolBarState engine
+                    ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
+                    GtkWidget* parent( 0L );
 
-                    if( engine.animatedRectangleIsValid( parent ) && !(options&Sunken) ) {
+                    bool toolPalette(false);
+                    #if GTK_CHECK_VERSION(2,20,0)
+                    toolPalette=Gtk::gtk_widget_find_parent( widget, GTK_TYPE_TOOL_PALETTE );
+                    #endif
 
-                        return;
+                    if( !toolPalette && (parent = engine.findParent( widget ) ) )
+                    {
 
-                    } if( engine.widget( parent, AnimationCurrent ) == widget ) {
+                        // register child
+                        engine.registerChild( parent, widget, options&Hover );
+                        useWidgetState = false;
 
-                        data = engine.animationData( parent, AnimationCurrent );
+                        if( engine.animatedRectangleIsValid( parent ) && !(options&Sunken) ) {
 
-                        if( engine.isLocked( parent ) ) options |= Hover;
+                            return;
 
-                    } else if( (options & Sunken ) && engine.widget( parent, AnimationPrevious ) == widget ) {
+                        } if( engine.widget( parent, AnimationCurrent ) == widget ) {
 
-                        data = engine.animationData( parent, AnimationPrevious );
+                            data = engine.animationData( parent, AnimationCurrent );
+
+                            if( engine.isLocked( parent ) ) options |= Hover;
+
+                        } else if( (options & Sunken ) && engine.widget( parent, AnimationPrevious ) == widget ) {
+
+                            data = engine.animationData( parent, AnimationPrevious );
+
+                        }
 
                     }
-
                 }
 
             }
@@ -2164,7 +2175,7 @@ namespace Oxygen
 
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
 
-        } else if( d.isCheck() && GTK_IS_CHECK_MENU_ITEM( widget ) ) {
+        } else if( d.isCheck() && ( GTK_IS_CHECK_MENU_ITEM( widget ) || /* for OpenOffice */GTK_IS_MENU_ITEM( widget ) ) ) {
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill);
