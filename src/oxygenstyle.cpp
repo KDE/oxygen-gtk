@@ -286,6 +286,7 @@ namespace Oxygen
 
                 #if OXYGEN_DEBUG
                 std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
+                std::cerr << "original xywh: ("<<x<<","<<y<<","<<w<<","<<h<<")\n";
                 #endif
 
                 if(Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_WINDOW(widget))
@@ -296,6 +297,9 @@ namespace Oxygen
                     cairo_translate(context,x,y);
                     if(clipRect)
                     {
+                        #if OXYGEN_DEBUG
+                        std::cerr << "original clipRect: " << *clipRect << std::endl;
+                        #endif
                         clipRect->x-=x;
                         clipRect->y-=y;
                         clipRect->width-=x;
@@ -303,7 +307,7 @@ namespace Oxygen
                     }
                     x=y=0;
                     #if OXYGEN_DEBUG
-                    std::cerr <<"Oxygen::Style::renderWindowBackground - setting openoffice-specific coords:"<<wx<<","<<wy<<","<<ww<<","<<wh<<std::endl;;
+                    std::cerr <<"Oxygen::Style::renderWindowBackground - setting openoffice-specific coords:"<<wx<<","<<wy<<","<<ww<<","<<wh<<"\n\n";
                     #endif
                 }
                 else
