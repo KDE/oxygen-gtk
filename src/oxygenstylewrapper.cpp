@@ -2023,6 +2023,12 @@ namespace Oxygen
             // FIXME: is it enough to check for TreeView? is shadow_in the only possible case?
             Style::instance().renderProgressBarHole( window, clipRect, x-2, y, w+4, h, StyleOptions() );
 
+        } else if(Style::instance().settings().applicationName().isOpenOffice() && x==0 && y==0)
+        {
+            StyleOptions options(Blend);
+            if( Gtk::gdk_default_screen_is_composited() ) options |= Alpha;
+            Style::instance().drawFloatFrame( window, clipRect, x,y,w,h,options);
+            return;
         } else if( shadow == GTK_SHADOW_IN && !Gtk::gtk_parent_statusbar( widget ) ) {
 
             if( GTK_IS_FRAME( widget ) )
