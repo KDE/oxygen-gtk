@@ -1031,7 +1031,7 @@ namespace Oxygen
             // to be the navigation buttons under vertical scrollbar in main window)
             bool ooFlat(Style::instance().settings().applicationName().isOpenOffice() && w<20 && h<20 && w==h);
 
-            if( widget && Gtk::gtk_button_is_flat( widget ) || ooFlat )
+            if( (widget && Gtk::gtk_button_is_flat( widget )) || ooFlat )
             {
 
                 // set button as flat and disable focus
