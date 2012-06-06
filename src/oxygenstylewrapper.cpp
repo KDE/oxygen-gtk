@@ -557,14 +557,9 @@ namespace Oxygen
                 y -= yOffset;
                 h += 2*yOffset;
 
-                // for openoffice only draw solid window background
-                // the rest of the spinbutton is painted on top, in draw_box and draw_shadow
+                // for libreoffice do nothing
                 if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
-                {
-
-                    Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
-                    return;
-                }
+                { return; }
 
                 if(
                     Style::instance().animations().hoverEngine().contains( widget ) &&
@@ -1440,9 +1435,6 @@ namespace Oxygen
                 h-=2;
                 x-=1;
                 w+=1;
-
-                // also first draw solid window background
-                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
 
             } else {
 
