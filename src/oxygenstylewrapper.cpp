@@ -2175,7 +2175,13 @@ namespace Oxygen
 
             Style::instance().renderCheckBox( window, clipRect, x, y, w, h, shadow, options, data );
 
-        } else if( d.isCheck() && ( GTK_IS_CHECK_MENU_ITEM( widget ) || /* for OpenOffice */GTK_IS_MENU_ITEM( widget ) ) ) {
+        } else if( d.isCheck() && ( GTK_IS_CHECK_MENU_ITEM( widget ) || /* for LibreOffice */GTK_IS_MENU_ITEM( widget ) ) ) {
+
+            // Fix cliprect for LibreOffice
+            if(GTK_IS_MENU_ITEM(widget))
+            {
+                ++clipRect->width;
+            }
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill);
@@ -2961,7 +2967,10 @@ namespace Oxygen
 
                 }
 
-                gap.setHeight( 8 );
+                if(Style::instance().settings().applicationName().isOpenOffice())
+                    gap.setHeight( 0 );
+                else
+                    gap.setHeight( 8 );
                 Style::instance().renderTabBarFrame( window, clipRect, x-1, y-1, w+2, h+2, gap, options );
 
             }
@@ -3192,6 +3201,13 @@ namespace Oxygen
                 gap.setHeight( 8 );
 
                 Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
+
+            }
+            else if(Style::instance().settings().applicationName().isOpenOffice())
+            {
+                Gtk::Gap gap;
+                gap.setHeight( 0 );
+                Style::instance().renderTabBarFrame( window, clipRect, x-5, y+h-4, w+11, h+2, gap, options );
 
             }
 
