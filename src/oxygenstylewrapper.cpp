@@ -1381,7 +1381,7 @@ namespace Oxygen
                 if(Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
                     // adjust scrollbar hole since it has wrong geometry in OOo
-                    y-=1; h+=1;
+                    y-=1;
                 }
 
 
