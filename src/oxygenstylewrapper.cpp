@@ -129,15 +129,6 @@ namespace Oxygen
                 return;
             }
 
-            // for openoffice we fill the background with flat color unless it is a toolbar
-            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
-            {
-                if( !GTK_IS_TOOLBAR( widget ) )
-                { Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window ); }
-
-                return;
-            }
-
             // do nothing for mozilla, acrobat, gnome applets, and other hint-specific windows
             if(
                 Style::instance().settings().applicationName().useFlatBackground( widget ) ||
@@ -728,12 +719,9 @@ namespace Oxygen
         Style::instance().sanitizeSize( window, w, h );
         const Gtk::Detail d( detail );
 
-        // OpenOffice doesn't call draw_box, so we have to draw it here to make steppers look not like slabs.
+        // Don't draw anything for OpenOffice or steppers will look like slabs.
         if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice( widget ))
-        {
-            Style::instance().fill( window, clipRect, x, y, w-2, h-1, Palette::Window );
-            return;
-        }
+        { return; }
 
         GtkWidget* parent(0L);
         if( d.isInfoBar() )
@@ -1392,12 +1380,6 @@ namespace Oxygen
 
                 if(Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
-
-                    // OpenOffice doesn't call draw_box to draw background
-                    Cairo::Context context(window,clipRect);
-                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
-                    cairo_paint(context);
-
                     // adjust scrollbar hole since it has wrong geometry in OOo
                     y-=1; h+=1;
                 }
@@ -1410,11 +1392,6 @@ namespace Oxygen
 
                 if(Style::instance().settings().applicationName().isOpenOffice( widget ) )
                 {
-                    // OpenOffice doesn't call draw_box to draw background
-                    Cairo::Context context(window,clipRect);
-                    cairo_set_source(context,Gtk::gdk_get_color(style->bg[GTK_STATE_NORMAL]));
-                    cairo_paint(context);
-
                     // adjust scrollbar hole since it has wrong geometry in OOo
                     x-=2; w+=1;
                 }
