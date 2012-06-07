@@ -178,7 +178,7 @@ namespace Oxygen
             // render background gradient
             StyleOptions options;
             options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) );
-            const bool success( Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options ) );
+            const bool success( Style::instance().renderWindowBackground( window, widget, clipRect, x, y, w, h, options ) );
 
             // if widget has flat parent, store in flatWidget engine so that children gets the right background nonetheless
             if( success && Style::instance().animations().flatWidgetEngine().flatParent( widget ) )

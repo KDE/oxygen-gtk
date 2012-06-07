@@ -288,16 +288,36 @@ namespace Oxygen
                 std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
                 #endif
 
-                // flat painting for all other apps
-                cairo_set_source(context,base);
-                cairo_rectangle(context,x,y,w,h);
-                cairo_fill(context);
-                if( needToDestroyContext ) cairo_destroy(context);
-                else cairo_restore(context);
-                return false;
+                if(Style::instance().settings().applicationName().isOpenOffice() && GTK_IS_WINDOW(widget))
+                {
+                    gtk_window_get_size(GTK_WINDOW(widget),&ww,&wh);
+                    wx=0;
+                    wy=0;
+                    cairo_translate(context,x,y);
+                    if(clipRect)
+                    {
+                        clipRect->x-=x;
+                        clipRect->y-=y;
+                        clipRect->width-=x;
+                        clipRect->height-=y;
+                    }
+                    x=y=0;
+                    #if OXYGEN_DEBUG
+                    std::cerr <<"Oxygen::Style::renderWindowBackground - setting openoffice-specific coords:"<<wx<<","<<wy<<","<<ww<<","<<wh<<std::endl;;
+                    #endif
+                }
+                else
+                {
+                    // flat painting for all other apps
+                    cairo_set_source(context,base);
+                    cairo_rectangle(context,x,y,w,h);
+                    cairo_fill(context);
+                    if( needToDestroyContext ) cairo_destroy(context);
+                    else cairo_restore(context);
+                    return false;
+                }
 
             }
-
             // translate to toplevel coordinates
             wy += yShift;
             x+=wx;
