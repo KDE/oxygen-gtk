@@ -1505,7 +1505,9 @@ namespace Oxygen
             ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
             ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
 
-            if( options&Active )
+            // We don't want to change color on active state for menu checkboxes (it's never passed by GTK)
+            // Also, if we ignore active state, we get correct render for LibreOffice
+            if( options&Active && !(options&Flat) )
             {
                 base = ColorUtils::alphaColor( base, 0.3 );
                 contrast = ColorUtils::alphaColor( contrast, 0.3 );
@@ -1671,7 +1673,9 @@ namespace Oxygen
             ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
             ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
 
-            if( options&Active )
+            // We don't want to change color on active state for menu radiobuttons (it's never passed by GTK)
+            // Also, if we ignore active state, we get correct render for LibreOffice
+            if( options&Active && !(options&Menu ) )
             {
                 base = ColorUtils::alphaColor( base, 0.3 );
                 contrast = ColorUtils::alphaColor( contrast, 0.3 );
