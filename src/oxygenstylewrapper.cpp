@@ -2273,6 +2273,17 @@ namespace Oxygen
                     options &= ~(Hover|Focus);
                     x-=1;
                     y-=1;
+                    if(Style::instance().settings().applicationName().isOpenOffice())
+                    {
+                        // Override the sizes passed by LibreOffice and draw how we want it to look
+                        // Mostly works OK, but in scrollable menus results in glitches. But scrollable menus have
+                        // their own glitches, so this seems to be not much of a problem.
+                        clipRect=0;
+                        x-=(CheckBox_Size-w)/2;
+                        y-=(CheckBox_Size-h)/2-1;
+                        w=CheckBox_Size;
+                        h=CheckBox_Size;
+                    }
                 }
 
             }
