@@ -2434,7 +2434,7 @@ namespace Oxygen
         if(wopt & WinDeco::Active) options|=Focus;
 
         if( !isMaximized )
-        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options, Palette::InactiveWindowBackground ); }
+        { drawFloatFrame( context, 0L, 0L, x, y, w, h, options ); }
 
         if( drawResizeHandle )
         {
