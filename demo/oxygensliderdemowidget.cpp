@@ -75,6 +75,7 @@ namespace Oxygen
 
             // progress bar
             _horizontalSliders._progressBar = gtk_progress_bar_new();
+            gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), true );
             gtk_orientable_set_orientation( GTK_ORIENTABLE( _horizontalSliders._progressBar ), GTK_ORIENTATION_HORIZONTAL );
 
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressBar, false, true, 0 );
@@ -119,6 +120,7 @@ namespace Oxygen
 
             // progress bar
             _verticalSliders._progressBar = gtk_progress_bar_new();
+            gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), true );
             gtk_orientable_set_orientation( GTK_ORIENTABLE( _verticalSliders._progressBar ), GTK_ORIENTATION_VERTICAL );
 
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._progressBar, false, true, 0 );
@@ -163,10 +165,11 @@ namespace Oxygen
     //____________________________________________________
     void SliderDemoWidget::Sliders::setValue( const double& value ) const
     {
+
         gtk_range_set_value( GTK_RANGE( _scale ), value );
-        std::ostringstream str;
-        str << int(value+0.5) << "%";
-        gtk_progress_bar_set_text( GTK_PROGRESS_BAR( _progressBar ), str.str().c_str() );
+        // std::ostringstream str;
+        // str << int(value+0.5) << "%";
+        // gtk_progress_bar_set_text( GTK_PROGRESS_BAR( _progressBar ), str.str().c_str() );
         gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _progressBar ), value/100 );
         gtk_range_set_value( GTK_RANGE( _scrollBar ), value );
         if( _progressEntry ) gtk_entry_set_progress_fraction( GTK_ENTRY( _progressEntry ), value/100 );
