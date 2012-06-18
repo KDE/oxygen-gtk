@@ -82,6 +82,7 @@ namespace Oxygen
             gtk_progress_bar_set_orientation( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), GTK_PROGRESS_LEFT_TO_RIGHT );
             #endif
 
+            gtk_progress_set_show_text( GTK_PROGRESS( _horizontalSliders._progressBar ), true );
             gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._progressBar );
@@ -136,7 +137,7 @@ namespace Oxygen
             gtk_progress_bar_set_orientation( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), GTK_PROGRESS_BOTTOM_TO_TOP );
             #endif
 
-            // gtk_progress_set_show_text( GTK_PROGRESS( _verticalSliders._progressBar ), true );
+            gtk_progress_set_show_text( GTK_PROGRESS( _verticalSliders._progressBar ), true );
             gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _verticalSliders._progressBar );
