@@ -18,6 +18,26 @@
 * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 */
+/*
+hard coded colors for infobars
+these used to have valid default values set by Gtk,
+but is not the case anymore.
+TODO: use the same colors as KDE's message boxes
+*/
+
+@define-color info_fg_color black;
+@define-color info_bg_color rgb (252, 252, 189);
+
+@define-color warning_fg_color black;
+@define-color warning_bg_color rgb (250, 173, 61);
+
+@define-color question_fg_color white;
+@define-color question_bg_color rgb (138, 173, 212);
+
+@define-color error_fg_color white;
+@define-color error_bg_color rgb (237, 54, 54);
+
+
 
 /*
 INFO: css border and padding ordering is either:
