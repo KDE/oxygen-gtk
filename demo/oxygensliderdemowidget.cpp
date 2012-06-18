@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 namespace Oxygen
 {
@@ -62,7 +63,6 @@ namespace Oxygen
             // scale
             _horizontalSliders._scale = gtk_scale_new_with_range( GTK_ORIENTATION_HORIZONTAL, 0, 100, 1 );
             gtk_scale_set_draw_value( GTK_SCALE( _horizontalSliders._scale ), false );
-            gtk_range_set_value( GTK_RANGE( _horizontalSliders._scale ), 25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._scale, false, true, 0 );
             gtk_widget_show( _horizontalSliders._scale );
 
@@ -70,7 +70,6 @@ namespace Oxygen
             // progress entry
             _horizontalSliders._progressEntry = gtk_entry_new();
             gtk_entry_set_text( GTK_ENTRY( _horizontalSliders._progressEntry ), "Progress Bar Entry" );
-            gtk_entry_set_progress_fraction( GTK_ENTRY( _horizontalSliders._progressEntry ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressEntry, false, true, 0 );
             gtk_widget_show( _horizontalSliders._progressEntry );
 
@@ -78,7 +77,6 @@ namespace Oxygen
             _horizontalSliders._progressBar = gtk_progress_bar_new();
             gtk_orientable_set_orientation( GTK_ORIENTABLE( _horizontalSliders._progressBar ), GTK_ORIENTATION_HORIZONTAL );
 
-            gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _horizontalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _horizontalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _horizontalSliders._progressBar );
 
@@ -116,7 +114,6 @@ namespace Oxygen
             // scale
             _verticalSliders._scale = gtk_scale_new_with_range( GTK_ORIENTATION_VERTICAL, 0, 100, 1 );
             gtk_scale_set_draw_value( GTK_SCALE( _verticalSliders._scale ), false );
-            gtk_range_set_value( GTK_RANGE( _verticalSliders._scale ), 25 );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._scale, false, true, 0 );
             gtk_widget_show( _verticalSliders._scale );
 
@@ -124,8 +121,6 @@ namespace Oxygen
             _verticalSliders._progressBar = gtk_progress_bar_new();
             gtk_orientable_set_orientation( GTK_ORIENTABLE( _verticalSliders._progressBar ), GTK_ORIENTATION_VERTICAL );
 
-            // gtk_progress_set_show_text( GTK_PROGRESS( _verticalSliders._progressBar ), true );
-            gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _verticalSliders._progressBar ), 0.25 );
             gtk_box_pack_start( GTK_BOX( box ), _verticalSliders._progressBar, false, true, 0 );
             gtk_widget_show( _verticalSliders._progressBar );
 
@@ -140,6 +135,8 @@ namespace Oxygen
         _horizontalSliders.connect( GCallback( valueChanged ), this );
         _verticalSliders.connect( GCallback( valueChanged ), this );
 
+        // Initialize all
+        gtk_range_set_value( GTK_RANGE( _verticalSliders._scale ), 25 );
     }
 
     //____________________________________________________
@@ -167,6 +164,9 @@ namespace Oxygen
     void SliderDemoWidget::Sliders::setValue( const double& value ) const
     {
         gtk_range_set_value( GTK_RANGE( _scale ), value );
+        std::ostringstream str;
+        str << int(value+0.5) << "%";
+        gtk_progress_bar_set_text( GTK_PROGRESS_BAR( _progressBar ), str.str().c_str() );
         gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _progressBar ), value/100 );
         gtk_range_set_value( GTK_RANGE( _scrollBar ), value );
         if( _progressEntry ) gtk_entry_set_progress_fraction( GTK_ENTRY( _progressEntry ), value/100 );
