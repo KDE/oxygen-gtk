@@ -129,6 +129,11 @@ GtkViewport { padding: 0px; }
 GtkProgressBar { padding: 0px; }
 GtkAssistant .sidebar { padding: 4px; }
 
+GtkInfoBar {
+    border-style: solid;
+    border-width: 8px;
+}
+
 /* switchs */
 GtkSwitch { padding: 0px; }
 
