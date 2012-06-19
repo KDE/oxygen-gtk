@@ -25,7 +25,6 @@
 
 #include <iostream>
 #include <string>
-#include <sstream>
 
 namespace Oxygen
 {
@@ -167,9 +166,6 @@ namespace Oxygen
     {
 
         gtk_range_set_value( GTK_RANGE( _scale ), value );
-        // std::ostringstream str;
-        // str << int(value+0.5) << "%";
-        // gtk_progress_bar_set_text( GTK_PROGRESS_BAR( _progressBar ), str.str().c_str() );
         gtk_progress_bar_set_fraction( GTK_PROGRESS_BAR( _progressBar ), value/100 );
         gtk_range_set_value( GTK_RANGE( _scrollBar ), value );
         if( _progressEntry ) gtk_entry_set_progress_fraction( GTK_ENTRY( _progressEntry ), value/100 );
