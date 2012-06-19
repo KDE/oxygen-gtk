@@ -1429,12 +1429,9 @@ namespace Oxygen
 
             if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
-
                 // adjust rect
                 y+=1;
                 h-=2;
-                x-=1;
-                w+=1;
 
             } else {
 
