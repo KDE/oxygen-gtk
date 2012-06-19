@@ -335,7 +335,7 @@ namespace Oxygen
                 // draw flat selection in combobox list
                 if( state & GTK_STATE_FLAG_SELECTED)
                 {
-                    ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
+                    const ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::Selected ) );
                     Style::instance().fill( context, x, y, w, h, selection );
                 }
 
@@ -2199,6 +2199,20 @@ namespace Oxygen
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
         #endif
+
+        // draw progressbar text white if above indicator, black if not
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
+        {
+
+            cairo_save( context );
+            const ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::SelectedText ) );
+            cairo_set_source( context, selection );
+            cairo_translate(context,x,y);
+            pango_cairo_show_layout(context,layout);
+            cairo_restore( context );
+            return;
+
+        }
 
         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
