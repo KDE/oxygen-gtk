@@ -1436,10 +1436,8 @@ namespace Oxygen
 
             if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
             {
-                // adjust rect
-                y+=1;
-                h-=2;
-
+                // Do nothing for openoffice
+                return;
             } else {
 
                 options |= NoFill;
@@ -1498,6 +1496,46 @@ namespace Oxygen
                 w -= sideMargin;
                 Style::instance().renderHole( window, clipRect, x-7, y-1, w+8, h+2, options, data, tiles );
 
+            }
+
+
+        } else if( d.isSpinButtonUp() || d.isSpinButtonDown() )
+        {
+
+            if( Style::instance().settings().applicationName().isOpenOffice( widget ) )
+            {
+                if(state==GTK_STATE_ACTIVE)
+                    state=GTK_STATE_NORMAL;
+                ColorUtils::Rgba background( Gtk::gdk_get_color( style->base[state] ) );
+                Cairo::Context context( window, clipRect );
+                StyleOptions options( NoFill );
+                options|=Blend;
+                TileSet::Tiles tiles( TileSet::Ring );
+                tiles &= ~TileSet::Left;
+                {
+                    int W(w-4), Y(y),H(h);
+                    if(d.isSpinButtonUp())
+                    {
+                        tiles &= ~TileSet::Bottom;
+                        Y+=1;
+                    }
+                    else
+                    {
+                        tiles &= ~TileSet::Top;
+                        H-=2;
+                    }
+
+                    cairo_rounded_rectangle( context, x, Y, W, H, 2, CornersRight );
+                    cairo_set_source( context, background );
+                    cairo_fill( context );
+                }
+
+                const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
+                if(d.isSpinButtonUp())
+                    Style::instance().renderHole( window, clipRect, x-7, y, w+5, h+6, options, data, tiles );
+                else
+                    Style::instance().renderHole( window, clipRect, x-6, y-7, w+4, h+7, options, data, tiles );
+                return;
             }
 
 
