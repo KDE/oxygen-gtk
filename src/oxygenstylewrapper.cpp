@@ -486,6 +486,13 @@ namespace Oxygen
             const bool isChromeAddressBar( widget &&
                     GTK_IS_HBOX(widget) &&
                     Style::instance().settings().applicationName().isGoogleChrome() );
+            if(Style::instance().settings().applicationName().isOpenOffice())
+            {
+                x+=2;
+                w-=4;
+                y+=1;
+                h-=2;
+            }
 
             StyleOptions options( widget, state, shadow );
             if(
@@ -1886,9 +1893,11 @@ namespace Oxygen
 
                 }
 
+                // Do nothing for OpenOffice
+                if(Style::instance().settings().applicationName().isOpenOffice())
+                    return;
                 // OpenOffice or Chromium address bar
-                if( Style::instance().settings().applicationName().isOpenOffice( widget )||
-                    (widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome()) )
+                if( widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome() )
                 {
 
                     if( d.isEntry() )
