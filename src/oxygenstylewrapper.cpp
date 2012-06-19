@@ -2599,6 +2599,13 @@ namespace Oxygen
 
             }
 
+            if( arrow == GTK_ARROW_DOWN && Style::instance().settings().applicationName().isOpenOffice( widget ) )
+            {
+
+                y-= 1;
+
+            }
+
             // disable contrast
             options &= ~Contrast;
 
