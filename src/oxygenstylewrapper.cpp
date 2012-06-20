@@ -670,6 +670,9 @@ namespace Oxygen
         std::cerr << "Oxygen::processTabCloseButton("<<widget<<","<<state <<")"<< std::endl;
         #endif
 
+        if(!widget)
+            return 0L;
+
         switch (state)
         {
             case GTK_STATE_NORMAL:
