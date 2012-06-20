@@ -667,7 +667,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::processTabCloseButton" << std::endl;
+        std::cerr << "Oxygen::processTabCloseButton("<<widget<<","<<state <<")"<< std::endl;
         #endif
 
         switch (state)
