@@ -1935,10 +1935,11 @@ namespace Oxygen
                 }
 
                 // Do nothing for OpenOffice
-                if(Style::instance().settings().applicationName().isOpenOffice())
+                if(d.isEntry() && Style::instance().settings().applicationName().isOpenOffice())
                     return;
                 // OpenOffice or Chromium address bar
-                if( widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome() )
+                if( (widget && GTK_IS_HBOX(widget) && Style::instance().settings().applicationName().isGoogleChrome()) ||
+                        Style::instance().settings().applicationName().isOpenOffice() )
                 {
 
                     if( d.isEntry() )
