@@ -878,10 +878,21 @@ namespace Oxygen
         GdkWindow* topLevel = gdk_window_get_toplevel( window );
         if( topLevel && GDK_IS_WINDOW( topLevel ) )
         {
-            GdkRectangle rect = {0, 0, -1, -1};
-            gdk_window_get_frame_extents( topLevel, &rect );
-            if( w ) *w = rect.width;
-            if( h ) *h = rect.height;
+            if( gdk_window_get_window_type( topLevel ) == GDK_WINDOW_OFFSCREEN )
+            {
+
+                if( w ) *w = gdk_window_get_width(topLevel);
+                if( h ) *h = gdk_window_get_height(topLevel);
+
+            } else {
+
+                GdkRectangle rect = {0, 0, -1, -1};
+                gdk_window_get_frame_extents( topLevel, &rect );
+
+                if( w ) *w = rect.width;
+                if( h ) *h = rect.height;
+
+            }
         }
 
         return;
