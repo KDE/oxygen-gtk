@@ -2232,10 +2232,8 @@ namespace Oxygen
         } else if( d.isCheck() && ( GTK_IS_CHECK_MENU_ITEM( widget ) || /* for LibreOffice */GTK_IS_MENU_ITEM( widget ) ) ) {
 
             // Fix cliprect for LibreOffice
-            if(GTK_IS_MENU_ITEM(widget))
-            {
-                ++clipRect->width;
-            }
+            if( clipRect && GTK_IS_MENU_ITEM(widget))
+            { ++clipRect->width; }
 
             StyleOptions options( widget, state, shadow );
             options |= (Blend|Flat|NoFill);
