@@ -1116,7 +1116,7 @@ namespace Oxygen
 
         {
             // bright top edge
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( xl, 0, xl+wl, 0 ) );
             const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
             cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
             cairo_pattern_add_color_stop( pattern, 0.5, mix );
