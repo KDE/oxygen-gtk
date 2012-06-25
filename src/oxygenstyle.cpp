@@ -959,7 +959,7 @@ namespace Oxygen
         // make sure that width is large enough
         const int indicatorSize( (options&Vertical ? h:w ) );
 
-        if( indicatorSize >= 4 && w > 0 && h > 1 )
+        if( indicatorSize >= 3 && w > 0 && h > 1 )
         {
             // get surface
             const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h-1 ) );
