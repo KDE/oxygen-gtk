@@ -308,7 +308,14 @@ namespace Oxygen
 
             } else {
 
-                Style::instance().renderWindowBackground( context, window, x, y, w, h );
+                // get background color
+                GdkRGBA background_gtk;
+                gtk_theming_engine_get_background_color( engine, state, &background_gtk );
+                StyleOptions options;
+                options._customColors.insert( Palette::Window, Gtk::gdk_get_color( background_gtk ) );
+
+                // render background
+                Style::instance().renderWindowBackground( context, window, x, y, w, h, options );
 
             }
 
