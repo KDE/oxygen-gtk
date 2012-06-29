@@ -542,7 +542,7 @@ namespace Oxygen
 
         }
 
-        GdkRectangle lowerRect = { 0, splitY, w, wh-splitY - verticalOffset };
+        GdkRectangle lowerRect = { 0, splitY, ww, wh-splitY - verticalOffset };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
