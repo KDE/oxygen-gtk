@@ -244,9 +244,19 @@ namespace Oxygen
         if(Gtk::gtk_combobox_is_tree_view( child ))
         {
             StyleOptions options(widget,gtk_widget_get_state(widget));
+            Corners corners(CornersAll);
+            if(gtk_widget_get_visible(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(widget))))
+            {
+                if(Gtk::gtk_widget_layout_is_reversed( widget ))
+                    corners &= ~CornersLeft;
+                else
+                    corners &= ~CornersRight;
+            }
+            if(gtk_widget_get_visible(gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(widget))))
+                corners &= ~CornersBottom;
 
             cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
-            cairo_rounded_rectangle_negative(context,allocation.x,allocation.y,allocation.width,allocation.height,2);
+            cairo_rounded_rectangle_negative(context,allocation.x,allocation.y,allocation.width,allocation.height,2,corners);
             cairo_clip(context);
 
             Style::instance().renderMenuBackground( gtk_widget_get_window(widget), context, allocation.x,allocation.y,allocation.width,allocation.height, options );
