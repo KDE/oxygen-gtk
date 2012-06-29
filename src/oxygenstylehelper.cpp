@@ -230,7 +230,7 @@ namespace Oxygen
 
         // create cairo context
         Cairo::Context context( surface );
-        const double u = double(size)/18.0;
+        const double u = size/18.0;
         cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
         {
@@ -289,7 +289,7 @@ namespace Oxygen
         const ColorUtils::Rgba& dark( base );
 
         Cairo::Context context( surface );
-        const double u = double(size)/18.0;
+        const double u = size/18.0;
         cairo_translate( context, 0.5*u, (0.5-0.668)*u );
 
         {
@@ -409,7 +409,7 @@ namespace Oxygen
         {
             // create cairo context
             Cairo::Context context( surface );
-            cairo_scale( context, double(size)/7, double(size)/7 );
+            cairo_scale( context, size/7.0, size/7.0 );
             cairo_rectangle( context, 0, 0, 14, 14 );
             cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
             cairo_fill( context );
@@ -443,7 +443,7 @@ namespace Oxygen
             // create cairo context
             Cairo::Context context( surface );
             cairo_set_line_width( context, 1.0 );
-            cairo_scale( context, double(size)/7, double(size)/7 );
+            cairo_scale( context, size/7.0, size/7.0 );
             cairo_rectangle( context, 0, 0, 14, 14 );
             cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
             cairo_fill( context );
@@ -489,7 +489,7 @@ namespace Oxygen
 
         // create cairo context
         Cairo::Context context( surface );
-        cairo_scale( context, double(size)/7, double(size)/7 );
+        cairo_scale( context, size/7.0, size/7.0 );
 
         // shadow
         if( base.isValid() ) drawShadow( context, ColorUtils::shadowColor(base), 21 );
@@ -522,14 +522,14 @@ namespace Oxygen
             Cairo::Context context( surface );
 
             cairo_save( context );
-            cairo_scale( context, double( 3*size )/23, double( 3*size )/23 );
+            cairo_scale( context, 3.0*size/23, 3.0*size/23 );
             cairo_translate( context, 1, 1 );
 
             if( base.isValid() ) drawShadow( context, ColorUtils::alphaColor( ColorUtils::shadowColor(base), 0.8 ), 21 );
             if( glow.isValid() ) drawOuterGlow( context, glow, 21 );
             cairo_restore( context );
 
-            cairo_scale( context, double( 3*size )/25, double( 3*size )/25 );
+            cairo_scale( context, 3.0*size/25, 3.0*size/25 );
             cairo_translate( context, 2, 2 );
             drawSliderSlab( context, base, sunken, shade );
 
@@ -583,7 +583,7 @@ namespace Oxygen
         }
 
 
-        cairo_rounded_rectangle( context, double(x)+s, double(y)+s, double(w)-2*s, double(h)-2*s, r, corners );
+        cairo_rounded_rectangle( context, x+s, y+s, w-2*s, h-2*s, r, corners );
         cairo_fill( context );
     }
 
@@ -1056,7 +1056,7 @@ namespace Oxygen
 
         {
             // shadow
-            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)+0.5, wl-1, hl, 3.0 );
+            cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl-1, hl, 3.0 );
             cairo_set_source( context, ColorUtils::alphaColor( shadow, 0.6 ) );
             cairo_set_line_width( context, 0.6 );
             cairo_stroke( context );
@@ -1114,21 +1114,21 @@ namespace Oxygen
             cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::darkColor(highlight) );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
-            cairo_rounded_rectangle( context, double(xl)+0.5, double(yl)+0.5, wl-1, hl-1, 2.5 );
+            cairo_rounded_rectangle( context, xl+0.5, yl+0.5, wl-1, hl-1, 2.5 );
             cairo_stroke( context );
         }
 
         {
             // bright top edge
-            Cairo::Pattern pattern( cairo_pattern_create_linear( 0, 0, wl, 0 ) );
+            Cairo::Pattern pattern( cairo_pattern_create_linear( xl, 0, xl+wl, 0 ) );
             const ColorUtils::Rgba mix( ColorUtils::mix( lhighlight, light, 0.8 ) );
             cairo_pattern_add_color_stop( pattern, 0.0, ColorUtils::Rgba::transparent( mix ) );
             cairo_pattern_add_color_stop( pattern, 0.5, mix );
             cairo_pattern_add_color_stop( pattern, 1.0, ColorUtils::Rgba::transparent( mix ) );
             cairo_set_line_width( context, 1.0 );
             cairo_set_source( context, pattern );
-            cairo_move_to( context, double(xl)+0.5, double(yl)+0.5 );
-            cairo_line_to( context, double(xl+wl)-0.5, double(yl)+0.5 );
+            cairo_move_to( context, xl+0.5, yl+0.5 );
+            cairo_line_to( context, xl+wl-0.5, yl+0.5 );
             cairo_stroke( context );
         }
 
@@ -1146,7 +1146,7 @@ namespace Oxygen
         const TileSet& tileSet( _grooveCache.value( key ) );
         if( tileSet.isValid() ) return tileSet;
 
-        const int rsize( ( int )ceil( double( size ) * 3.0/7.0 ) );
+        const int rsize( int( ceil( size * 3.0/7.0 ) ) );
         const int w( rsize*2 );
         const int h( rsize*2 );
         Cairo::Surface surface( createSurface( w, h ) );
@@ -1208,7 +1208,7 @@ namespace Oxygen
                 cairo_pattern_add_color_stop( pattern, 0, base );
                 cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent() );
 
-                cairo_rounded_rectangle( context, double(x)+0.5, double(y)+0.5, w-1, h-1, rounding );
+                cairo_rounded_rectangle( context, x+0.5, y+0.5, w-1, h-1, rounding );
                 cairo_set_source( context, pattern );
                 cairo_stroke( context );
             }
@@ -1227,11 +1227,11 @@ namespace Oxygen
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
         const ColorUtils::Rgba dark( ColorUtils::darkColor( base ).dark(130) );
 
-        cairo_ellipse( context, double(x) + 1.0 - diameter/2, double(y) + 1.0 - diameter/2.0, diameter, diameter );
+        cairo_ellipse( context, x + 1.0 - diameter/2, y + 1.0 - diameter/2.0, diameter, diameter );
         cairo_set_source( context, light );
         cairo_fill( context );
 
-        cairo_ellipse( context, double(x) + 0.5 - diameter/2, double(y) + 0.5 - diameter/2.0, diameter, diameter );
+        cairo_ellipse( context, x + 0.5 - diameter/2, y + 0.5 - diameter/2.0, diameter, diameter );
         cairo_set_source( context, dark );
         cairo_fill( context );
     }
@@ -1302,7 +1302,7 @@ namespace Oxygen
     void StyleHelper::drawShadow( cairo_t* context, const ColorUtils::Rgba& base, int size ) const
     {
 
-        const double m( double(size-2)*0.5 );
+        const double m( 0.5*size-1 );
         const double offset( 0.8 );
         const double k0( (m-4.0) / m );
 
@@ -1313,7 +1313,7 @@ namespace Oxygen
         for (int i = 0; i < 8; i++)
         {
             // sinusoidal pattern
-            const double k1( (k0 * double(8 - i) + double(i)) * 0.125 );
+            const double k1( (k0 * (8 - i) + i) * 0.125 );
             const double a( (cos( M_PI * i * 0.125) + 1.0) * 0.30 );
             cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
         }
@@ -1329,10 +1329,10 @@ namespace Oxygen
     void StyleHelper::drawOuterGlow( cairo_t* context, const ColorUtils::Rgba& base, int size ) const
     {
 
-        const double m( double(size)*0.5 );
+        const double m( size*0.5 );
         const double w( 3 );
 
-        const double bias( _glowBias * double(14)/size );
+        const double bias( _glowBias * 14.0/size );
 
         // k0 is located at w - bias from the outer edge
         const double gm( m + bias - 0.9 );
@@ -1342,8 +1342,8 @@ namespace Oxygen
         for (int i = 0; i < 8; i++)
         {
             // parabolic pattern
-            const double k1( k0 + double(i)*(1.0-k0)/8.0 );
-            const double a( 1.0 - sqrt(double(i)/8) );
+            const double k1( k0 + i*(1.0-k0)/8.0 );
+            const double a( 1.0 - sqrt(i/8.0) );
             cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a ) );
         }
 
@@ -1382,7 +1382,7 @@ namespace Oxygen
         int pad, int size, int rsize ) const
     {
 
-        const double m( double( size )*0.5 );
+        const double m( size*0.5 );
 
         const double width( 3.5 );
         const double bias( _glowBias*7.0/rsize );
@@ -1391,7 +1391,7 @@ namespace Oxygen
         for ( int i = 0; i < 8; i++ )
         {
             // inverse parabolic gradient
-            double k1 = ( k0 * double( i ) + double( 8 - i ) ) * 0.125;
+            double k1 = ( k0 * i + 8 - i ) * 0.125;
             double a = 1.0 - sqrt( i * 0.125 );
             cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a ) );
 
@@ -1504,9 +1504,9 @@ namespace Oxygen
         int pad, int size, double fuzz ) const
     {
 
-        const double m( double(size)*0.5 );
+        const double m( size*0.5 );
         const double offset( 0.8 );
-        const double k0( (m-2) / double(m+2.0) );
+        const double k0( (m-2) / (m+2.0) );
 
         const double x(pad+m);
         const double y(pad+m+offset);
@@ -1515,7 +1515,7 @@ namespace Oxygen
         for (int i = 0; i < 8; i++)
         {
             // sinusoidal pattern
-            const double k1( (double(8 - i) + k0 * double(i)) * 0.125 );
+            const double k1( (8 - i + k0 * i) * 0.125 );
             const double a( (cos(3.14159 * i * 0.125) + 1.0) * 0.25 );
             cairo_pattern_add_color_stop( pattern, k1, ColorUtils::alphaColor( base, a*_shadowGain ) );
         }

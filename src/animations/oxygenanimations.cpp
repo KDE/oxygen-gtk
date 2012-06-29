@@ -352,7 +352,6 @@ namespace Oxygen
         Animations& animations( *static_cast<Animations*>(data) );
         if( !animations.innerShadowsEnabled() ) return TRUE;
 
-        if( Gtk::gtk_combobox_is_tree_view( widget ) ) return TRUE;
         if( Gtk::g_object_is_a( G_OBJECT( widget ), "SwtFixed" ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));

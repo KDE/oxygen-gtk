@@ -266,6 +266,7 @@ namespace Oxygen
 
                 #if OXYGEN_DEBUG
                 std::cerr << "Oxygen::Style::renderWindowBackground - map_to_toplevel failed" << std::endl;
+                std::cerr << "original xywh: ("<<x<<","<<y<<","<<w<<","<<h<<")\n";
                 #endif
 
                 // flat painting for all other apps
@@ -274,9 +275,7 @@ namespace Oxygen
                 cairo_fill(context);
                 cairo_restore( context );
                 return false;
-
             }
-
             // translate to toplevel coordinates
             wy += yShift;
             x+=wx;
@@ -896,7 +895,7 @@ namespace Oxygen
         // make sure that width is large enough
         const int indicatorSize( (options&Vertical ? h:w ) );
 
-        if( indicatorSize >= 4 && w > 0 && h > -1 )
+        if( indicatorSize >= 3 && w > 0 && h > 1 )
         {
             // get surface
             const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h+1 ) );
@@ -1459,7 +1458,9 @@ namespace Oxygen
             ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
             ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
 
-            if( options&Active )
+            // We don't want to change color on active state for menu checkboxes (it's never passed by GTK)
+            // Also, if we ignore active state, we get correct render for LibreOffice
+            if( options&Active && !(options&Flat) )
             {
                 base = ColorUtils::alphaColor( base, 0.3 );
                 contrast = ColorUtils::alphaColor( contrast, 0.3 );
@@ -1620,7 +1621,9 @@ namespace Oxygen
             ColorUtils::Rgba base( ColorUtils::decoColor( background, color ) );
             ColorUtils::Rgba contrast( ColorUtils::lightColor( background ) );
 
-            if( options&Active )
+            // We don't want to change color on active state for menu radiobuttons (it's never passed by GTK)
+            // Also, if we ignore active state, we get correct render for LibreOffice
+            if( options&Active && !(options&Menu ) )
             {
                 base = ColorUtils::alphaColor( base, 0.3 );
                 contrast = ColorUtils::alphaColor( contrast, 0.3 );
@@ -2363,7 +2366,7 @@ namespace Oxygen
         if(wopt & WinDeco::Active) options|=Focus;
 
         if( !isMaximized )
-        { drawFloatFrame( context, x, y, w, h, options, Palette::InactiveWindowBackground ); }
+        { drawFloatFrame( context, x, y, w, h, options ); }
 
         if( drawResizeHandle )
         {

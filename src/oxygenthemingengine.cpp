@@ -580,7 +580,7 @@ namespace Oxygen
                     Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_region( gtk_widget_get_window( parent ), mask, 0, 0 );
                 }
-
+#if !ENABLE_INNER_SHADOWS_HACK
                 // also sets inner list mask
                 if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
                 {
@@ -597,7 +597,7 @@ namespace Oxygen
                     gdk_window_shape_combine_region( gtk_widget_get_window( child ), mask, offset, offset );
 
                 }
-
+#endif
             }
 
             // menu background and float frame
