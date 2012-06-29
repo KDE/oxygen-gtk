@@ -490,7 +490,7 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
-    bool Style::renderMenuBackground( GdkWindow* window, GdkRectangle* clipRect, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
+    bool Style::renderMenuBackground( GdkWindow* window, Cairo::Context& context, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
         // define colors
         ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
@@ -507,8 +507,6 @@ namespace Oxygen
         x+=wx;
         y+=wy;
 
-        // create context and translate
-        Cairo::Context context( window, clipRect );
         cairo_translate( context, -wx, -wy );
         const bool hasAlpha( options&Alpha );
         const bool isMenu( options&Menu );

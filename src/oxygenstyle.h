@@ -143,7 +143,9 @@ namespace Oxygen
         bool renderGroupBoxBackground( cairo_t*, GdkWindow*, GtkWidget*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
         //! menu background
-        bool renderMenuBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
+        bool renderMenuBackground( GdkWindow*, Cairo::Context&, gint, gint, gint, gint, const StyleOptions& ) const;
+        bool renderMenuBackground( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, const StyleOptions& o) const
+        { Cairo::Context c(window,r); return renderMenuBackground(window, c, x, y, w, h, o); }
 
         //! tooltip background
         void renderTooltipBackground( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const StyleOptions& ) const;
