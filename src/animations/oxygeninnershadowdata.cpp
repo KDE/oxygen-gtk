@@ -238,8 +238,6 @@ namespace Oxygen
         cairo_fill(context);
         #endif
 
-        // draw the shadow
-
         // Render rounded combobox list child
         if(Gtk::gtk_combobox_is_tree_view( child ))
         {
@@ -265,6 +263,7 @@ namespace Oxygen
             return FALSE;
         }
 
+        // draw the shadow
         /*
         TODO: here child widget's allocation is used instead of window geometry.
         I think this is the correct thing to do (unlike above), but this is to be double check
