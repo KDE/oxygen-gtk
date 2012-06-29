@@ -1718,7 +1718,7 @@ namespace Oxygen
 
                     Style::instance().animations().widgetSizeEngine().setAlpha(parent, true);
                 }
-
+#if !ENABLE_INNER_SHADOWS_HACK
                 // also sets inner list mask
                 if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
                 {
@@ -1737,7 +1737,7 @@ namespace Oxygen
                     gdk_pixmap_unref( mask );
 
                 }
-
+#endif
             }
 
             // menu background and float frame

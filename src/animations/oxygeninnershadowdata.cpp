@@ -24,6 +24,7 @@
 #include "../oxygengtkutils.h"
 #include "../config.h"
 #include "../oxygencairocontext.h"
+#include "../oxygencairoutils.h"
 #include "oxygenanimations.h"
 #include "../oxygenstyle.h"
 #include "../oxygenmetrics.h"
@@ -238,6 +239,22 @@ namespace Oxygen
         #endif
 
         // draw the shadow
+
+        // Render rounded combobox list child
+        if(Gtk::gtk_combobox_is_tree_view( child ))
+        {
+            StyleOptions options(widget,gtk_widget_get_state(widget));
+
+            cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
+            cairo_rounded_rectangle_negative(context,allocation.x,allocation.y,allocation.width,allocation.height,2);
+            cairo_clip(context);
+
+            Style::instance().renderMenuBackground( gtk_widget_get_window(widget), context, allocation.x,allocation.y,allocation.width,allocation.height, options );
+
+            // Event handling finished, now let the event propagate
+            return FALSE;
+        }
+
         /*
         TODO: here child widget's allocation is used instead of window geometry.
         I think this is the correct thing to do (unlike above), but this is to be double check
