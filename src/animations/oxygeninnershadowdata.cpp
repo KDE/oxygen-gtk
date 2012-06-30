@@ -253,8 +253,17 @@ namespace Oxygen
             if(gtk_widget_get_visible(gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(widget))))
                 corners &= ~CornersBottom;
 
-            cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
-            cairo_rounded_rectangle_negative(context,allocation.x,allocation.y,allocation.width,allocation.height,2,corners);
+            int x(allocation.x),y(allocation.y),w(allocation.width),h(allocation.height);
+            cairo_rectangle(context,x,y,w,h);
+            if(!Gtk::gdk_default_screen_is_composited())
+            {
+                // Take ugly shadow into account
+                x+=1;
+                y+=1;
+                w-=2;
+                h-=2;
+            }
+            cairo_rounded_rectangle_negative(context,x,y,w,h,2,corners);
             cairo_clip(context);
 
             Style::instance().renderMenuBackground( gtk_widget_get_window(widget), context, allocation.x,allocation.y,allocation.width,allocation.height, options );
