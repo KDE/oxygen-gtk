@@ -570,8 +570,9 @@ namespace Oxygen
             // always register to widget size engine
             Style::instance().animations().widgetSizeEngine().registerWidget( parent );
             const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( parent, allocation.width, allocation.height ) );
+            const bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(parent));
 
-            if( sizeChanged )
+            if( sizeChanged || (!(options&Alpha) && wasAlpha) || (!wasAlpha && (options&Alpha)) )
             {
                 if( !(options&Alpha) )
                 {
@@ -579,6 +580,15 @@ namespace Oxygen
                     // make background window rounded
                     Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                     gdk_window_shape_combine_region( gtk_widget_get_window( parent ), mask, 0, 0 );
+
+                    Style::instance().animations().widgetSizeEngine().setAlpha(parent, false);
+                }
+                else if( !wasAlpha )
+                {
+                    // reset XShape mask on transition from non-composited to composited
+                    gdk_window_shape_combine_region( gtk_widget_get_window( parent ), NULL, 0, 0 );
+
+                    Style::instance().animations().widgetSizeEngine().setAlpha(parent, true);
                 }
 #if !ENABLE_INNER_SHADOWS_HACK
                 // also sets inner list mask
