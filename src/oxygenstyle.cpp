@@ -2416,8 +2416,13 @@ namespace Oxygen
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
         }
+
+        // Take border sizes into account
+        int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
+        const int yShift=23; // compensate for hard coded constant in renderWindowBackground()
+        int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
         if( gradient )
-            renderWindowBackground( context, 0L, 0L, 0L, x, y, w, h );
+            renderWindowBackground( context, 0L, 0L, 0L, x+bgShiftX, y+bgShiftY, w, h );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
