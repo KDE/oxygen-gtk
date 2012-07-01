@@ -233,11 +233,14 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles )
+        const StyleOptions& options, TileSet::Tiles tiles,
+        bool isMaximized )
     {
 
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
+
+        bool renderingWindeco(context && !window);
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
@@ -250,9 +253,8 @@ namespace Oxygen
 
         // if we aren't going to draw window decorations...
         bool needToDestroyContext( false );
-        if( context && !window )
+        if( renderingWindeco )
         {
-
             // drawing window decorations, so logic is simplified
             ww=w;
             wh=h;
@@ -405,6 +407,14 @@ namespace Oxygen
             // Additional clip constraint so that no extra space is filled (important for LibreOffice)
             cairo_rectangle(context,x,y,w,h);
             cairo_clip(context);
+
+            if(renderingWindeco)
+            {
+                // Take border sizes into account
+                int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
+                int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
+                cairo_translate(context,bgShiftX,bgShiftY);
+            }
 
             // no sense in context saving since it will be destroyed
             cairo_translate( context, -40, -(48-20) );
@@ -2420,12 +2430,8 @@ namespace Oxygen
             cairo_clip(context);
         }
 
-        // Take border sizes into account
-        int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
-        const int yShift=23; // compensate for hard coded constant in renderWindowBackground()
-        int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
         if( gradient )
-            renderWindowBackground( context, 0L, 0L, 0L, x+bgShiftX, y+bgShiftY, w, h );
+            renderWindowBackground( context, x, y, w, h, isMaximized );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
