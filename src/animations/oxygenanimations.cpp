@@ -293,26 +293,28 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        int uglyShadowWidth=!Gtk::gdk_default_screen_is_composited();
+
         // perform move-resize
         if( widthChanged && positionChanged )
         {
 
             gdk_window_move_resize(
                 gtk_widget_get_window( widget ),
-                targetX + comboAllocation.x + 3, sourceY,
-                comboAllocation.width - 6, widgetAllocation.height );
+                targetX + comboAllocation.x + 3 - uglyShadowWidth, sourceY,
+                comboAllocation.width - 6 + 2*uglyShadowWidth, widgetAllocation.height );
 
         } else if( widthChanged ) {
 
             gdk_window_resize(
                 gtk_widget_get_window( widget ),
-                comboAllocation.width - 6, widgetAllocation.height );
+                comboAllocation.width - 6 + 2*uglyShadowWidth, widgetAllocation.height );
 
         } else if( positionChanged ) {
 
             gdk_window_move(
                 gtk_widget_get_window( widget ),
-                targetX + comboAllocation.x + 3, sourceY );
+                targetX + comboAllocation.x + 3 - uglyShadowWidth, sourceY );
 
         }
 

@@ -81,19 +81,22 @@ namespace Oxygen
     //__________________________________________________________________
     void cairo_rounded_rectangle( cairo_t* context, double x, double y, double w, double h, double r, Corners corners )
     {
-        if(w<2*r)
+        if(corners==CornersAll)
         {
-            double r0=r;
-            r=0.5*w;
-            y+=r0-r;
-            h-=2*(r0-r);
-        }
-        if(h<2*r)
-        {
-            double r0=r;
-            r=0.5*h;
-            x+=r0-r;
-            w-=2*(r0-r);
+            if(w<2*r)
+            {
+                double r0=r;
+                r=0.5*w;
+                y+=r0-r;
+                h-=2*(r0-r);
+            }
+            if(h<2*r)
+            {
+                double r0=r;
+                r=0.5*h;
+                x+=r0-r;
+                w-=2*(r0-r);
+            }
         }
 
         if( corners == CornersNone )

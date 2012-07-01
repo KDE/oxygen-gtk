@@ -230,15 +230,32 @@ namespace Oxygen
         cairo_fill(context);
         #endif
 
-        // draw the shadow
-
         // Render rounded combobox list child
         if(Gtk::gtk_combobox_is_tree_view( child ))
         {
             StyleOptions options(widget,gtk_widget_get_state(widget));
+            Corners corners(CornersAll);
+            if(gtk_widget_get_visible(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(widget))))
+            {
+                if(Gtk::gtk_widget_layout_is_reversed( widget ))
+                    corners &= ~CornersLeft;
+                else
+                    corners &= ~CornersRight;
+            }
+            if(gtk_widget_get_visible(gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(widget))))
+                corners &= ~CornersBottom;
 
-            cairo_rectangle(context,allocation.x,allocation.y,allocation.width,allocation.height);
-            cairo_rounded_rectangle_negative(context,allocation.x,allocation.y,allocation.width,allocation.height,2);
+            int x(allocation.x),y(allocation.y),w(allocation.width),h(allocation.height);
+            cairo_rectangle(context,x,y,w,h);
+            if(!Gtk::gdk_default_screen_is_composited())
+            {
+                // Take ugly shadow into account
+                x+=1;
+                y+=1;
+                w-=2;
+                h-=2;
+            }
+            cairo_rounded_rectangle_negative(context,x,y,w,h,2,corners);
             cairo_clip(context);
 
             Style::instance().renderMenuBackground( context, allocation.x,allocation.y,allocation.width,allocation.height, options );
@@ -247,6 +264,7 @@ namespace Oxygen
             return FALSE;
         }
 
+        // draw the shadow
         /*
         TODO: here child widget's allocation is used instead of window geometry.
         I think this is the correct thing to do (unlike above), but this is to be double check
