@@ -402,6 +402,9 @@ namespace Oxygen
 
         if( hasBackgroundSurface() )
         {
+            // Additional clip constraint so that no extra space is filled (important for LibreOffice)
+            cairo_rectangle(context,x,y,w,h);
+            cairo_clip(context);
 
             // no sense in context saving since it will be destroyed
             cairo_translate( context, -40, -(48-20) );
