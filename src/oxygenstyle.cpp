@@ -416,12 +416,11 @@ namespace Oxygen
                 cairo_translate(context,bgShiftX,bgShiftY);
             }
 
-            // no sense in context saving since it will be destroyed
+            // no sense in context saving since it will be either destroyed or restored to earlier state
             cairo_translate( context, -40, -(48-20) );
             cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
             cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
             cairo_fill( context );
-
         }
 
         if(needToDestroyContext) cairo_destroy(context);
