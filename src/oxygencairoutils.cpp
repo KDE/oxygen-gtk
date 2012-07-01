@@ -89,7 +89,6 @@ namespace Oxygen
                 r=0.5*w;
                 y+=r0-r;
                 h-=2*(r0-r);
-                std::cerr << "w<2*r; => new w,h: " << w<<","<<h<<"; r="<<r<<std::endl;
             }
             if(h<2*r)
             {
@@ -97,7 +96,6 @@ namespace Oxygen
                 r=0.5*h;
                 x+=r0-r;
                 w-=2*(r0-r);
-                std::cerr << "h<2*r; => new w,h: " << w<<","<<h<<"; r="<<r<<std::endl;
             }
         }
 
