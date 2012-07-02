@@ -903,6 +903,14 @@ namespace Oxygen
                 )
             {
 
+                {
+                    // Set minimum combobox button height if it's smaller
+                    GtkAllocation alloc;
+                    gtk_widget_get_allocation(widget,&alloc);
+                    gtk_widget_get_size_request(widget,&alloc.width,NULL);
+                    if(alloc.height<22)
+                        gtk_widget_set_size_request(widget,alloc.width,22);
+                }
                 // combobox buttons
                 const bool reversed( Gtk::gtk_widget_layout_is_reversed( widget ) );
 

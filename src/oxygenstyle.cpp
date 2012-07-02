@@ -721,26 +721,26 @@ namespace Oxygen
                 {
                     // first vertical line
                     cairo_move_to( context, xCenter + 0.5 , y );
-                    cairo_line_to( context, xCenter + 0.5, yCenter - int(cellFlags._expanderSize/3 ) );
+                    cairo_line_to( context, xCenter + 0.5, yCenter - int(cellFlags._expanderSize/3 )-1 );
 
                     // second vertical line
                     if( !isLastCell )
                     {
 
                         cairo_move_to( context, xCenter + 0.5, y+h );
-                        cairo_line_to( context, xCenter + 0.5, yCenter + int( cellFlags._expanderSize/3 ) );
+                        cairo_line_to( context, xCenter + 0.5, yCenter + int( cellFlags._expanderSize/3 )+2 );
                     }
 
                     // horizontal line
                     if( reversed )
                     {
 
-                        cairo_move_to( context, xCenter + 1 - int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_move_to( context, xCenter - 1 - int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
                         cairo_line_to( context, xCenter + 1  - cellFlags._expanderSize*2/3, yCenter + 0.5 );
 
                     } else {
 
-                        cairo_move_to( context, xCenter + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_move_to( context, xCenter + 2 + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
                         cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
 
                     }
