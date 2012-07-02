@@ -30,6 +30,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 
 namespace Oxygen
 {
@@ -39,10 +40,10 @@ namespace Oxygen
     {
 
         // get application name from gtk
-        const std::string gtkAppName( fromGtk() );
+        std::string gtkAppName( fromGtk() );
 
         // get application name from pid
-        const std::string pidAppName( fromPid( getpid() ) );
+        std::string pidAppName( fromPid( getpid() ) );
 
         #if OXYGEN_DEBUG
         std::cerr << "ApplicationName::initialize -"
@@ -53,6 +54,14 @@ namespace Oxygen
 
         // initialize to unknown
         _name = Unknown;
+
+        // Way to override appname detection
+        const char* envAppName(getenv("OXYGEN_APPLICATION_NAME_OVERRIDE"));
+        if(envAppName)
+        {
+            gtkAppName=envAppName;
+            pidAppName=envAppName;
+        }
 
         if( pidAppName == "opera" ) _name = Opera;
         else if( gtkAppName == "eclipse" || gtkAppName == "Eclipse" ) _name = Eclipse;
