@@ -1054,8 +1054,10 @@ namespace Oxygen
             // Such small buttons should rather be flat for OpenOffice (the only ones present there seem
             // to be the navigation buttons under vertical scrollbar in main window)
             bool ooFlat(Style::instance().settings().applicationName().isOpenOffice() && w<20 && h<20 && w==h);
+            // LibO formula entry expand expand button is very small, would look better if rendered flat
+            bool ooFormulaExpand(Style::instance().settings().applicationName().isOpenOffice() && w==16);
 
-            if( (widget && Gtk::gtk_button_is_flat( widget )) || ooFlat )
+            if( (widget && Gtk::gtk_button_is_flat( widget )) || ooFlat || ooFormulaExpand )
             {
 
                 // set button as flat and disable focus
