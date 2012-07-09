@@ -3282,7 +3282,7 @@ namespace Oxygen
                 Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
 
             }
-            else if(isOpenOffice && !clipRect)
+            else if(isOpenOffice && !clipRect && position==GTK_POS_BOTTOM)
             {
                 Gtk::Gap gap;
                 gap.setHeight( 0 );
