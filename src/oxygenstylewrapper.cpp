@@ -3246,7 +3246,7 @@ namespace Oxygen
             Style::instance().renderTab( window, clipRect, x, y, w, h, position, options, tabOptions, data );
 
             // render tabbar base if current tab
-            if( drawTabBarBase )
+            if( !isOpenOffice && drawTabBarBase )
             {
 
                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
@@ -3282,13 +3282,34 @@ namespace Oxygen
                 Style::instance().renderTabBarBase( window, clipRect, xBase-1, yBase-1, wBase+2, hBase+2, position, gap, options, tabOptions );
 
             }
-            else if(isOpenOffice && !clipRect && position==GTK_POS_BOTTOM)
+            else if(isOpenOffice && !clipRect )
             {
-                Gtk::Gap gap;
-                gap.setHeight( 0 );
                 options&=~Hover;
-                Style::instance().renderTabBarFrame( window, clipRect, x-5, y+h-4, w+11, h+2, gap, options );
+                Cairo::Context context(window);
+                const ColorUtils::Rgba base( Style::instance().settings().palette().color( Palette::Window ) );
 
+                if(position==GTK_POS_BOTTOM)
+                {
+                    if(isCurrentTab)
+                    {
+                        cairo_rectangle(context,x,y,w,h);
+                        cairo_rectangle_negative(context, x+4, y, w-8, h);
+                        cairo_clip(context);
+                        ++y;
+                    }
+                    Style::instance().helper().slab( base, 0 ).render( context, x-8, y+h-4, w+17, 15, TileSet::Top );
+                }
+                else if(position==GTK_POS_TOP)
+                {
+                    if(isCurrentTab)
+                    {
+                        cairo_rectangle(context,x-1,y,w+2,h);
+                        cairo_rectangle_negative(context, x+3, y, w-6, h);
+                        cairo_clip(context);
+                        y+=4;
+                    }
+                    Style::instance().helper().slab( base, 0 ).render( context, x-8, y-15, w+17, 16, TileSet::Bottom );
+                }
             }
 
             if( GTK_IS_NOTEBOOK( widget ) )
