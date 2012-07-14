@@ -237,7 +237,8 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles )
+        const StyleOptions& options, TileSet::Tiles tiles,
+        bool isMaximized )
     {
 
 
@@ -246,6 +247,8 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
+
+        bool renderingWindeco(context && !window);
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
@@ -259,7 +262,6 @@ namespace Oxygen
         // TODO: make sure this new test (on window) does not break Ruslan's decorations
         if( window || widget )
         {
-
             // get window dimension and position
             if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
             {
@@ -366,13 +368,23 @@ namespace Oxygen
 
         if( hasBackgroundSurface() )
         {
+            // Additional clip constraint so that no extra space is filled (important for LibreOffice)
+            cairo_rectangle(context,x,y,w,h);
+            cairo_clip(context);
 
-            // no sense in context saving since it will be destroyed
+            if(renderingWindeco)
+            {
+                // Take border sizes into account
+                int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
+                int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
+                cairo_translate(context,bgShiftX,bgShiftY);
+            }
+
+            // no sense in context saving since it will be either destroyed or restored to earlier state
             cairo_translate( context, -40, -(48-20) );
             cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
             cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
             cairo_fill( context );
-
         }
 
         // restore context
@@ -657,26 +669,26 @@ namespace Oxygen
                 {
                     // first vertical line
                     cairo_move_to( context, xCenter + 0.5 , y );
-                    cairo_line_to( context, xCenter + 0.5, yCenter - int(cellFlags._expanderSize/3 ) );
+                    cairo_line_to( context, xCenter + 0.5, yCenter - int(cellFlags._expanderSize/3 )-1 );
 
                     // second vertical line
                     if( !isLastCell )
                     {
 
                         cairo_move_to( context, xCenter + 0.5, y+h );
-                        cairo_line_to( context, xCenter + 0.5, yCenter + int( cellFlags._expanderSize/3 ) );
+                        cairo_line_to( context, xCenter + 0.5, yCenter + int( cellFlags._expanderSize/3 )+2 );
                     }
 
                     // horizontal line
                     if( reversed )
                     {
 
-                        cairo_move_to( context, xCenter + 1 - int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_move_to( context, xCenter - 1 - int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
                         cairo_line_to( context, xCenter + 1  - cellFlags._expanderSize*2/3, yCenter + 0.5 );
 
                     } else {
 
-                        cairo_move_to( context, xCenter + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
+                        cairo_move_to( context, xCenter + 2 + int( cellFlags._expanderSize/3 ), yCenter + 0.5 );
                         cairo_line_to( context, xCenter + cellFlags._expanderSize*2/3, yCenter + 0.5 );
 
                     }
@@ -2350,8 +2362,9 @@ namespace Oxygen
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
         }
+
         if( gradient )
-            renderWindowBackground( context, 0L, 0L, x, y, w, h );
+            renderWindowBackground( context, x, y, w, h, isMaximized );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );

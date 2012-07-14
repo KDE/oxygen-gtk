@@ -95,7 +95,7 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        if( data._target )
+        if( data._target && gtk_widget_get_realized(data._target) )
         { Gtk::gtk_widget_queue_draw( data._target, &data._dirtyRect ); }
 
         return FALSE;
