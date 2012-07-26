@@ -505,7 +505,7 @@ namespace Oxygen
     bool Style::renderMenuBackground( GdkWindow* window, Cairo::Context& context, gint x, gint y, gint w, gint h, const StyleOptions& options ) const
     {
         // define colors
-        ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        ColorUtils::Rgba base( color( Palette::Window, options ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
 
