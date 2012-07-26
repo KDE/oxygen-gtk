@@ -736,6 +736,7 @@ namespace Oxygen
         // Don't draw anything for OpenOffice or steppers will look like slabs.
         if( d.isStepper() && Style::instance().settings().applicationName().isOpenOffice( widget ))
         { return; }
+
         // Don't render window bg here because it's redundant and leads to problems with bg gradient behind buttons
         if( GTK_IS_WINDOW(widget) && Style::instance().settings().applicationName().isOpenOffice( widget ))
         { return; }
@@ -1131,8 +1132,13 @@ namespace Oxygen
                 !Gtk::gtk_widget_is_applet( widget ) )
             {
 
+                StyleOptions options;
+
+                if( style )
+                { options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) ); }
+
                 // window background
-                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h );
+                Style::instance().renderWindowBackground( window, clipRect, x, y, w, h, options );
 
                 // possible groupbox background
                 if( Gtk::gtk_parent_groupbox( widget ) )
@@ -1234,6 +1240,9 @@ namespace Oxygen
 
                 options |= Round;
                 if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+                if( style )
+                { options._customColors.insert( Palette::Window, Gtk::gdk_get_color( style->bg[state] ) ); }
 
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
