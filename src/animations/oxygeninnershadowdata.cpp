@@ -46,7 +46,7 @@ namespace Oxygen
         // store target
         _target = widget;
 
-        if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
+        if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) )
         {
             _compositeEnabled = true;
             _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
@@ -107,9 +107,6 @@ namespace Oxygen
 
             // check compositing
             gdk_display_supports_composite( gtk_widget_get_display( widget ) ) &&
-
-            // check widget type (might move to blacklist method)
-            ( G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") ) &&
 
             // make sure widget is scrollable
             GTK_WIDGET_GET_CLASS( widget )->set_scroll_adjustments_signal )
