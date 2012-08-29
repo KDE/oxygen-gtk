@@ -28,6 +28,7 @@
 #include "oxygensignal.h"
 
 #include <gtk/gtk.h>
+#include <vector>
 
 namespace Oxygen
 {
@@ -46,12 +47,22 @@ namespace Oxygen
         protected:
 
         //! wrap mode changed
+        static void flatModeChanged( GtkToggleButton*, gpointer );
+
+        //! wrap mode changed
         static void wrapModeChanged( GtkToggleButton*, gpointer );
 
         private:
 
+        //! list of gtk entries
+        typedef std::vector<GtkWidget*> WidgetList;
+        WidgetList _entries;
+
         //! text editor
         GtkWidget* _textView;
+
+        //! flat mode changed
+        Signal _flatModeChangedId;
 
         //! toggle wrap mode
         Signal _wrapModeChangedId;
