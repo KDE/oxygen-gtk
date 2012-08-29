@@ -148,7 +148,7 @@ namespace Oxygen
         // https://bugzilla.gnome.org/show_bug.cgi?id=643416
         #if ENABLE_INNER_SHADOWS_HACK
         if(!getenv("OXYGEN_DISABLE_INNER_SHADOWS_HACK"))
-            _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this );
+        { _innerShadowHook.connect( "realize", (GSignalEmissionHook)innerShadowHook, this ); }
         #endif
 
         _sizeAllocationHook.connect( "size-allocate", (GSignalEmissionHook)sizeAllocationHook, this );
@@ -281,7 +281,9 @@ namespace Oxygen
         Animations& animations( *static_cast<Animations*>(data) );
         if( !animations.innerShadowsEnabled() ) return TRUE;
 
+        // blacklist
         if( Gtk::g_object_is_a( G_OBJECT( widget ), "SwtFixed" ) ) return TRUE;
+        if( Gtk::g_object_is_a( G_OBJECT( widget ), "GtkPizza" ) ) return TRUE;
 
         GtkWidget* parent(gtk_widget_get_parent(widget));
         if( !GTK_IS_SCROLLED_WINDOW( parent ) ) return TRUE;
