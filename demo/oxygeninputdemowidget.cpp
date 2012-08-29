@@ -68,6 +68,8 @@ namespace Oxygen
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_widget_show( lineEditor );
 
+        _entries.push_back( lineEditor );
+
         // invisible line editor
         gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Password editor: " ), 0, 1, 1, 1 );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
@@ -77,6 +79,8 @@ namespace Oxygen
         gtk_entry_set_text( GTK_ENTRY( lineEditor ), "Example text" );
         gtk_entry_set_visibility( GTK_ENTRY( lineEditor ), false );
         gtk_widget_show( lineEditor );
+
+        _entries.push_back( lineEditor );
 
         // combobox
         gtk_grid_attach( GTK_GRID( grid ), label = gtk_label_new( "Editable combobox: " ), 0, 2, 1, 1 );
@@ -115,6 +119,17 @@ namespace Oxygen
         GtkWidget* spinButton( 0L );
         gtk_grid_attach( GTK_GRID( grid ), spinButton = gtk_spin_button_new_with_range( 0, 100, 1 ), 1, 3, 1, 1 );
         gtk_widget_show( spinButton );
+
+        _entries.push_back( spinButton );
+
+        // flat widget button
+        GtkWidget* checkbutton;
+        gtk_grid_attach( GTK_GRID( grid ), checkbutton = gtk_check_button_new_with_label( "Use flat widgets" ), 0, 4, 2, 1 );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), false );
+        gtk_widget_show( checkbutton );
+
+        _flatModeChangedId.connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( flatModeChanged ), this );
+
 
         // separator
         GtkWidget* separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) );
@@ -165,7 +180,6 @@ namespace Oxygen
         gtk_box_pack_start( GTK_BOX( mainWidget ), scrolledWindow, true, true, 0 );
         gtk_widget_show( scrolledWindow );
 
-        GtkWidget* checkbutton;
         gtk_box_pack_start( GTK_BOX( mainWidget ), checkbutton = gtk_check_button_new_with_label( "Wrap words" ), false, true, 0 );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), true );
         gtk_widget_show( checkbutton );
@@ -179,9 +193,17 @@ namespace Oxygen
     {}
 
     //____________________________________________________
+    void InputDemoWidget::flatModeChanged( GtkToggleButton* button, gpointer data )
+    {
+        WidgetList entries( static_cast<InputDemoWidget*>( data )->_entries );
+        bool state( gtk_toggle_button_get_active( button ) );
+        for( WidgetList::const_iterator iter = entries.begin(); iter != entries.end(); iter++ )
+        { gtk_entry_set_has_frame( GTK_ENTRY( *iter ), !state ); }
+    }
+
+    //____________________________________________________
     void InputDemoWidget::wrapModeChanged( GtkToggleButton* button, gpointer data )
     {
-
         GtkTextView* textView( GTK_TEXT_VIEW( static_cast<InputDemoWidget*>( data )->_textView ) );
         bool state( gtk_toggle_button_get_active( button ) );
         gtk_text_view_set_wrap_mode( textView, (state ? GTK_WRAP_WORD:GTK_WRAP_NONE) );
