@@ -555,6 +555,10 @@ namespace Oxygen
 
             } else if( GTK_IS_SPIN_BUTTON( widget ) ) {
 
+                // do nothing for frameless entries
+                if( !gtk_entry_get_has_frame( GTK_ENTRY( widget ) ) )
+                { return; }
+
                 const int yOffset( style->ythickness + 1 );
 
                 // there is no need to render anything if both offsets are larger than 4
@@ -600,6 +604,10 @@ namespace Oxygen
                 }
 
             } else {
+
+                // do nothing for frameless entries
+                if( GTK_IS_ENTRY( widget ) && !gtk_entry_get_has_frame( GTK_ENTRY( widget ) ) )
+                { return; }
 
                 const int yOffset( style->ythickness + 1 );
 
