@@ -22,6 +22,7 @@
 #include "oxygentimeline.h"
 #include "../config.h"
 
+#include <gdk/gdk.h>
 #include <iostream>
 
 namespace Oxygen
@@ -69,7 +70,7 @@ namespace Oxygen
     {
 
         if( !_timerId )
-        { _timerId =  g_timeout_add( updateInterval, (GSourceFunc)update, this ); }
+        { _timerId =  gdk_threads_add_timeout( updateInterval, (GSourceFunc)update, this ); }
 
         return;
 
