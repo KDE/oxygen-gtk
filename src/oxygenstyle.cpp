@@ -451,7 +451,7 @@ namespace Oxygen
     {
 
         // define colors
-        ColorUtils::Rgba base(settings().palette().color( Palette::Window ) );
+        ColorUtils::Rgba base( color( Palette::Window, options ) );
         ColorUtils::Rgba top( ColorUtils::backgroundTopColor( base ) );
         ColorUtils::Rgba bottom( ColorUtils::backgroundBottomColor( base ) );
 
