@@ -21,6 +21,7 @@
 #include "oxygentimer.h"
 #include "../config.h"
 
+#include <gdk/gdk.h>
 #include <iostream>
 
 namespace Oxygen
@@ -35,7 +36,7 @@ namespace Oxygen
 
         _func = func;
         _data = data;
-        _timerId = g_timeout_add( delay, (GSourceFunc)timeOut, this );
+        _timerId = gdk_threads_add_timeout( delay, (GSourceFunc)timeOut, this );
 
     }
 
