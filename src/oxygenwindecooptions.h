@@ -38,6 +38,7 @@ namespace Oxygen
             Resizable=1<<3,
             Active=1<<4,
             Alpha=1<<5,
+            DrawAlphaChannel=1<<6,
         };
 
         //! window decoration options

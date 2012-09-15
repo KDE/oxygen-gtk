@@ -239,6 +239,11 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
+        if(options&DrawAlphaChannel)
+        {
+            cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
+            base.setAlpha(settings().backgroundOpacity()/255.);
+        }
 
         bool renderingWindeco(context && !window);
 
@@ -378,6 +383,8 @@ namespace Oxygen
             cairo_fill( context );
 
         }
+
+        cairo_set_operator(context,CAIRO_OPERATOR_OVER);
 
         // radial pattern
         const int patternHeight = 64;
@@ -2421,23 +2428,28 @@ namespace Oxygen
         bool hasAlpha( wopt & WinDeco::Alpha );
         bool drawResizeHandle( !(wopt & WinDeco::Shaded) && (wopt & WinDeco::Resizable) );
         bool isMaximized( wopt & WinDeco::Maximized );
+        bool drawAlphaChannel( wopt & WinDeco::DrawAlphaChannel );
+        StyleOptions options( hasAlpha ? Alpha : Blend );
 
         if( hasAlpha )
         {
             // cut round corners using alpha
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
+            cairo_set_source_rgb(context,1,0,0);
+            cairo_paint(context);
         }
 
+        if(drawAlphaChannel)
+            options|=DrawAlphaChannel;
+
         if( gradient )
-            renderWindowBackground( context, x, y, w, h, isMaximized );
+            renderWindowBackground( context, x, y, w, h, isMaximized, options );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
             cairo_paint( context );
         }
-
-        StyleOptions options( hasAlpha ? Alpha : Blend );
 
         options|=Round;
 

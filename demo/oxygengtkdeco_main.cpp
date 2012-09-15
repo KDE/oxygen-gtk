@@ -34,6 +34,7 @@ enum WinDecoOptions
     WinIsResizable=1<<3,
     WinIsActive=1<<4,
     WinHasAlpha=1<<5,
+    DrawAlphaChannel=1<<6,
 };
 
 //! button status
@@ -212,7 +213,7 @@ gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
     cairo_t* cr=gdk_cairo_create( gtk_widget_get_window( mw0 ) );
 
     // define options
-    int opt( WinIsResizable );
+    int opt( WinIsResizable|DrawAlphaChannel );
     if( useAlpha ) opt |= WinHasAlpha;
     if( !gtk_window_is_active( GTK_WINDOW(mw1) ) ) opt|= WinIsActive;
 

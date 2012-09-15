@@ -47,7 +47,8 @@ namespace Oxygen
         Contrast = 1<<10,
         Selected = 1<<11,
         Disabled = 1<<12,
-        Menu = 1<<13
+        Menu = 1<<13,
+        DrawAlphaChannel = 1<<14
     };
 
     class StyleOptions: public Flags<StyleOption>
