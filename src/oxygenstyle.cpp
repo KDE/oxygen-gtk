@@ -239,12 +239,6 @@ namespace Oxygen
 
         // define colors
         ColorUtils::Rgba base( color( Palette::Window, options ) );
-        if(options&DrawAlphaChannel)
-        {
-            cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
-            base.setAlpha(settings().backgroundOpacity()/255.);
-        }
-
         bool renderingWindeco(context && !window);
 
         // the hard-coded metrics are copied for
@@ -339,6 +333,12 @@ namespace Oxygen
 
         }
 
+        if(options&DrawAlphaChannel)
+        {
+            base.setAlpha(settings().backgroundOpacity()/255.);
+            cairo_set_operator(context,CAIRO_OPERATOR_SOURCE);
+        }
+
         // split
         const int splitY( std::min(300, 3*wh/4 ) );
 
@@ -384,6 +384,8 @@ namespace Oxygen
 
         }
 
+        // gradient should be rendered with full opacity
+        base.setAlpha(1);
         cairo_set_operator(context,CAIRO_OPERATOR_OVER);
 
         // radial pattern
