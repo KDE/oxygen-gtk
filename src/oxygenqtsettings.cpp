@@ -89,6 +89,7 @@ namespace Oxygen
         _windecoBlendType( FollowStyleHint ),
         _activeShadowConfiguration( Palette::Active ),
         _inactiveShadowConfiguration( Palette::Inactive ),
+        _backgroundOpacity( 255 ),
         _argbEnabled( true ),
         _initialized( false ),
         _kdeColorsInitialized( false ),
@@ -1003,6 +1004,8 @@ namespace Oxygen
         // shadow configurations
         _activeShadowConfiguration.initialize( _oxygen );
         _inactiveShadowConfiguration.initialize( _oxygen );
+
+        _backgroundOpacity = _oxygen.getOption( "[Common]", "BackgroundOpacity" ).toVariant<int>(255);
 
         #if OXYGEN_DEBUG
         std::cerr << _activeShadowConfiguration << std::endl;

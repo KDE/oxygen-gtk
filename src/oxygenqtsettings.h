@@ -307,6 +307,11 @@ namespace Oxygen
             }
         }
 
+        int backgroundOpacity() const
+        {
+            return _backgroundOpacity;
+        }
+
         //! windeco font
         const FontInfo& WMFont( void ) const
         { return _WMFont; }
@@ -573,6 +578,9 @@ namespace Oxygen
 
         //! inactive shadows
         ShadowConfiguration _inactiveShadowConfiguration;
+
+        //! oxygen-transparent background opacity
+        int _backgroundOpacity;
 
         //! windeco font
         FontInfo _WMFont;
