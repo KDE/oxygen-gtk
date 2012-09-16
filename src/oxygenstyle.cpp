@@ -2438,8 +2438,6 @@ namespace Oxygen
             // cut round corners using alpha
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
             cairo_clip(context);
-            cairo_set_source_rgb(context,1,0,0);
-            cairo_paint(context);
         }
 
         if(drawAlphaChannel)
