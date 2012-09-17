@@ -2433,7 +2433,7 @@ namespace Oxygen
         bool drawAlphaChannel( wopt & WinDeco::DrawAlphaChannel );
         StyleOptions options( hasAlpha ? Alpha : Blend );
 
-        if( hasAlpha )
+        if( hasAlpha && !isMaximized )
         {
             // cut round corners using alpha
             cairo_rounded_rectangle(context,x,y,w,h,3.5);
