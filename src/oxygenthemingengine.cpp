@@ -222,19 +222,29 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
-            if( GDK_IS_WINDOW( window ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) && !(options&Alpha) )
+            if( GDK_IS_WINDOW( window ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) )
             {
-
-                // make tooltips appear rounded using XShape extension if screen isn't composited
-                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-                if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
+                static bool wasAlpha=false;
+                if( !(options&Alpha) )
                 {
-                    Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                    gdk_window_shape_combine_region( window, mask, x, y );
-                }
+                    // make tooltips appear rounded using XShape extension if screen isn't composited
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                    if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
+                    {
+                        Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                        gdk_window_shape_combine_region( window, mask, x, y );
+                    }
+                    wasAlpha=false;
 
+                }
+                else if( !wasAlpha )
+                {
+                    gdk_window_shape_combine_region( window, NULL, 0, 0 );
+
+                    wasAlpha=true;
+                }
             }
 
 
