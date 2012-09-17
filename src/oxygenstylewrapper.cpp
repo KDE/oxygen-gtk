@@ -276,11 +276,11 @@ namespace Oxygen
             {
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 const bool wasAlpha( Style::instance().animations().widgetSizeEngine().wasAlpha( widget ) );
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                 if( !(options&Alpha) )
                 {
                     // make tooltips appear rounded using XShape extension if screen isn't composited
-                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                     if( ( sizeChanged || wasAlpha ) && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) )
                     {
                         GdkPixmap* mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
@@ -290,12 +290,19 @@ namespace Oxygen
 
                     Style::instance().animations().widgetSizeEngine().setAlpha(widget, false);
                 }
-                else if( !wasAlpha )
+                else
                 {
-                    // reset mask if compositing has appeared
-                    gdk_window_shape_combine_mask( window, NULL, 0, 0 );
+                    if( !wasAlpha )
+                    {
+                        // reset mask if compositing has appeared
+                        gdk_window_shape_combine_mask( window, NULL, 0, 0 );
 
-                    Style::instance().animations().widgetSizeEngine().setAlpha(widget, true);
+                        Style::instance().animations().widgetSizeEngine().setAlpha(widget, true);
+                    }
+                    if(sizeChanged||!wasAlpha)
+                    {
+                        Style::instance().setWindowBlur(window,true);
+                    }
                 }
             }
 
