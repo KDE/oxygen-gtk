@@ -662,6 +662,7 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[PRELIGHT]", _palette.color( Palette::Text ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[SELECTED]", _palette.color( Palette::SelectedText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  text[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Text ) ) );
+        addLinkColors( "[Colors:Window]" );
 
         // buttons
         _rc.addSection( "oxygen-buttons-internal", Gtk::RC::defaultSection() );
@@ -673,6 +674,8 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[ACTIVE]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[PRELIGHT]", _palette.color( Palette::ButtonText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::ButtonText ) ) );
+        addLinkColors( "[Colors:Button]" );
+
         _rc.matchClassToSection( "*Button", "oxygen-buttons-internal" );
         _rc.matchClassToSection( "GtkOptionMenu", "oxygen-buttons-internal" );
         _rc.matchWidgetClassToSection( "*<GtkButton>.<GtkLabel>", "oxygen-buttons-internal" );
@@ -744,6 +747,7 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[NORMAL]", _palette.color( Palette::Base ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  bg[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  base[INSENSITIVE]", _palette.color( Palette::Disabled, Palette::Base ) ) );
+        addLinkColors( "[Colors:View]" );
         _rc.matchClassToSection( "GtkSpinButton", "oxygen-entry-internal" );
         _rc.matchClassToSection( "GtkEntry", "oxygen-entry-internal" );
         _rc.matchClassToSection( "GtkTextView", "oxygen-entry-internal" );
@@ -756,6 +760,8 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  fg[NORMAL]", _palette.color( Palette::TooltipText ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  xthickness", 3 ) );
         _rc.addToCurrentSection( Gtk::RCOption<int>( "  ythickness", 3 ) );
+        addLinkColors( "[Colors:Tooltip]" );
+
         _rc.matchWidgetToSection( "gtk-tooltip*", "oxygen-tooltips-internal" );
 
         // special case for google chrome
@@ -764,6 +770,33 @@ namespace Oxygen
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( " ChromeGtkFrame::frame-color", _palette.color( Palette::Window ) ) );
         _rc.addToCurrentSection( Gtk::RCOption<std::string>( " ChromeGtkFrame::inactive-frame-color", _palette.color( Palette::Window ) ) );
         _rc.matchClassToSection( "ChromeGtkFrame", "oxygen-chrome-gtk-frame-internal" );
+
+    }
+
+
+    //_________________________________________________________
+    void QtSettings::addLinkColors( const std::string& section )
+    {
+
+        {
+            // link colors
+            // from http://ubuntuforums.org/showthread.php?p=7009302
+            const ColorUtils::Rgba linkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundLink" ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkWidget::link-color", linkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkHTML::alink_color", linkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkHTML::link_color", linkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GnomeHref::link-color", linkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkIMHtml::hyperlink-color", linkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkIMHtml::hyperlink-prelight-color", linkColor ) );
+        }
+
+        {
+            // visited link colors
+            // from http://ubuntuforums.org/showthread.php?p=7009302
+            const ColorUtils::Rgba visitedLinkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundVisited" ) ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkWidget::visited-link-color", visitedLinkColor ) );
+            _rc.addToCurrentSection( Gtk::RCOption<std::string>( "  GtkHTML::vlink_color", visitedLinkColor ) );
+        }
 
     }
 
