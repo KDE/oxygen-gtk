@@ -226,10 +226,10 @@ namespace Oxygen
             {
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 static bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
+                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                 if( !(options&Alpha) )
                 {
-                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
                     // make tooltips appear rounded using XShape extension if screen isn't composited
                     if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
                     {
@@ -239,11 +239,19 @@ namespace Oxygen
                     wasAlpha=false;
 
                 }
-                else if( !wasAlpha )
+                else
                 {
-                    gdk_window_shape_combine_region( window, NULL, 0, 0 );
+                    if( !wasAlpha )
+                    {
+                        gdk_window_shape_combine_region( window, NULL, 0, 0 );
 
-                    wasAlpha=true;
+                        wasAlpha=true;
+                    }
+
+                    if(sizeChanged||!wasAlpha)
+                    {
+                        Style::instance().setWindowBlur(window,true);
+                    }
                 }
             }
 

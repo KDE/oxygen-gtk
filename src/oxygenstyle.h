@@ -111,6 +111,9 @@ namespace Oxygen
         //! background surface
         bool hasBackgroundSurface( void ) const;
 
+        //! update kwin blur region
+        void setWindowBlur(GdkWindow* window,bool enable);
+
         //!@name primitives
         //@{
 
@@ -534,6 +537,9 @@ namespace Oxygen
 
         //! Tab close buttons
         TabCloseButtons _tabCloseButtons;
+
+        //! Atom to show kwin what regions of translucent windows should be blurred
+        Atom blurAtom;
 
         //! singleton
         static Style* _instance;

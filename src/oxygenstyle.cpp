@@ -103,6 +103,12 @@ namespace Oxygen
         WindowShadow shadow( settings(), helper() );
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
+        GdkDisplay *display( gdk_display_get_default () );
+        if(display)
+            blurAtom=XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
+        else
+            blurAtom=None;
+
         return true;
 
     }
@@ -3812,5 +3818,23 @@ namespace Oxygen
         { gtk_style_context_reset_widgets( gdk_screen_get_default() ); }
 
     }
+
+    //_________________________________________________________
+    void Style::setWindowBlur(GdkWindow* window,bool enable)
+    {
+        // Make whole window blurred
+        // FIXME: should roundedness be taken into account?
+        int w=gdk_window_get_width(window);
+        int h=gdk_window_get_height(window);
+        const guint32 rects[4]={0,0,w,h};
+        const XID id( GDK_WINDOW_XID( window ) );
+        Display* dpy(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)));
+
+        if(enable)
+            XChangeProperty(dpy,id,blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
+        else
+            XDeleteProperty(dpy,id,blurAtom);
+    }
+
 
 }
