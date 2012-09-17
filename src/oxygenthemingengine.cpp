@@ -222,15 +222,15 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
-            if( GDK_IS_WINDOW( window ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) )
+            if( GDK_IS_WINDOW( window ) )
             {
-                static bool wasAlpha=false;
+                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                static bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
                 if( !(options&Alpha) )
                 {
-                    // make tooltips appear rounded using XShape extension if screen isn't composited
-                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                     const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
                     const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                    // make tooltips appear rounded using XShape extension if screen isn't composited
                     if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
                     {
                         Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
