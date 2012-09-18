@@ -1038,7 +1038,10 @@ namespace Oxygen
         _activeShadowConfiguration.initialize( _oxygen );
         _inactiveShadowConfiguration.initialize( _oxygen );
 
-        _backgroundOpacity = _oxygen.getOption( "[Common]", "BackgroundOpacity" ).toVariant<int>(255);
+        if(_kdeGlobals.getOption( "[General]", "widgetStyle" ).toVariant<std::string>("oxygen") == "oxygen transparent")
+            _backgroundOpacity = _oxygen.getOption( "[Common]", "BackgroundOpacity" ).toVariant<int>(255);
+        else
+            _backgroundOpacity = 255;
 
         #if OXYGEN_DEBUG
         std::cerr << _activeShadowConfiguration << std::endl;
