@@ -57,15 +57,6 @@ namespace Oxygen
         bool updateXShape();
 
         private:
-
-        //! update alpha channel presence
-        void setAlpha( bool isAlpha )
-        { _alpha=isAlpha; }
-
-        //! determine if the widget had alpha channel on latest update
-        bool wasAlpha()
-        { return _alpha; }
-
         //! target widget
         GtkWidget* _widget;
 
