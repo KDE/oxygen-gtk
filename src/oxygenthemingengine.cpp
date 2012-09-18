@@ -231,7 +231,7 @@ namespace Oxygen
                 if( !(options&Alpha) )
                 {
                     // make tooltips appear rounded using XShape extension if screen isn't composited
-                    if( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) || wasAlpha )
+                    if( ( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) ) || wasAlpha )
                     {
                         Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
                         gdk_window_shape_combine_region( window, mask, x, y );
