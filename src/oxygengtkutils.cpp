@@ -447,8 +447,8 @@ namespace Oxygen
     bool Gtk::gtk_is_tooltip( GtkWidget* widget )
     {
         if( GTK_IS_TOOLTIP(widget) ) return true;
-        static const std::string match( "gtk-tooltip" );
-        return Gtk::gtk_widget_path( widget ) == match;
+        const std::string path(Gtk::gtk_widget_path( widget ));
+        return  path == "gtk-tooltip" || path == "gtk-tooltips";
     }
 
     //________________________________________________________
