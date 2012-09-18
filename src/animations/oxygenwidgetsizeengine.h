@@ -51,16 +51,9 @@ namespace Oxygen
         virtual ~WidgetSizeEngine( void )
         {}
 
-        //! update window size for given widget
-        bool updateSize( GtkWidget* widget, int width, int height )
-        { return data().value( widget ).updateSize( width, height ); }
-
-        bool wasAlpha( GtkWidget* widget )
-        { return data().value( widget ).wasAlpha(); }
-
-        void setAlpha( GtkWidget* widget, bool alpha )
-        { data().value( widget ).setAlpha( alpha ); }
-
+        //! update window XShape for given widget
+        bool updateXShape( GtkWidget* widget )
+        { return data().value( widget ).updateXShape(); }
     };
 
 }

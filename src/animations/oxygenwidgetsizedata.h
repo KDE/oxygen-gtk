@@ -33,6 +33,7 @@ namespace Oxygen
 
         //! constructor
         WidgetSizeData( void ):
+            _widget(NULL),
             _width(-1),
             _height(-1),
             _alpha(false)
@@ -43,21 +44,19 @@ namespace Oxygen
         {}
 
         //! setup connections
-        void connect( GtkWidget* ) const
-        {}
+        void connect( GtkWidget* widget )
+        {
+            _widget=widget;
+        }
 
         //! disconnect
         void disconnect( GtkWidget* ) const
         {}
 
-        //! update size, returns true if changed
-        virtual bool updateSize( int width, int height )
-        {
-            if( width == _width && height == _height ) return false;
-            _width = width;
-            _height = height;
-            return true;
-        }
+        //! update XShape, return true if size has changed
+        bool updateXShape();
+
+        private:
 
         //! update alpha channel presence
         void setAlpha( bool isAlpha )
@@ -67,7 +66,8 @@ namespace Oxygen
         bool wasAlpha()
         { return _alpha; }
 
-        private:
+        //! target widget
+        GtkWidget* _widget;
 
         //! old width
         int _width;
