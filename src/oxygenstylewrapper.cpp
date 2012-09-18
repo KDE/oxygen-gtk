@@ -1711,11 +1711,11 @@ namespace Oxygen
                 // draw yet another frame around menus
                 return;
 
-        } else if( Gtk::gtk_combobox_is_viewport( widget ) ) {
+        } else if( Gtk::gtk_combo_is_viewport( widget ) ) {
 
             return;
 
-        } else if( Gtk::gtk_combobox_is_frame( widget ) ) {
+        } else if( Gtk::gtk_combo_is_frame( widget ) ) {
 
             // make GtkCombo list look a bit better
             // retrieve proper parent and check

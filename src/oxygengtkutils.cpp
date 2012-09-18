@@ -412,7 +412,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_combobox_is_viewport( GtkWidget* widget )
+    bool Gtk::gtk_combo_is_viewport( GtkWidget* widget )
     {
         if( !GTK_IS_VIEWPORT(widget) ) return false;
         static const std::string match( "gtk-combo-popup-window" );
@@ -420,7 +420,7 @@ namespace Oxygen
     }
 
     //________________________________________________________
-    bool Gtk::gtk_combobox_is_frame( GtkWidget* widget )
+    bool Gtk::gtk_combo_is_frame( GtkWidget* widget )
     {
         if( !GTK_IS_FRAME(widget) ) return false;
         static const std::string match( "gtk-combo-popup-window" );
