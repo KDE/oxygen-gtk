@@ -145,6 +145,9 @@ namespace Oxygen
         return ( stream >> out ) ? out:defaultValue;
     }
 
+    // specialization of template to correctly handle std::string with spaces
+    template<> std::string Option::toVariant( std::string defaultValue ) const;
+
     //_______________________________________________________________________
     bool Option::Set::operator == (const Option::Set& other ) const
     {
