@@ -551,6 +551,13 @@ namespace Oxygen
             cairo_set_operator( context, CAIRO_OPERATOR_SOURCE );
             cairo_set_source( context, ColorUtils::alphaColor( base, 0 ) );
             cairo_fill( context );
+
+            if(settings().backgroundOpacity()<255)
+            {
+                double opacity(settings().backgroundOpacity()/255.);
+                top.setAlpha(opacity);
+                bottom.setAlpha(opacity);
+            }
         }
 
         const int splitY( std::min(200, 3*wh/4 ) );

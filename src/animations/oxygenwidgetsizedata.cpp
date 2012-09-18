@@ -83,6 +83,12 @@ namespace Oxygen
             {
                 Style::instance().setWindowBlur(window,true);
             }
+
+            if(Style::instance().settings().backgroundOpacity()<255)
+            {
+                if(GTK_IS_MENU(widget))
+                    Style::instance().setWindowBlur(window,true);
+            }
         }
 
         // Update widget properties
