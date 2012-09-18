@@ -372,10 +372,10 @@ namespace Oxygen
         bool gtk_combobox_is_scrolled_window( GtkWidget* );
 
         //! true if widget is the viewport of a combo
-        bool gtk_combobox_is_viewport( GtkWidget* );
+        bool gtk_combo_is_viewport( GtkWidget* );
 
         //! true if widget is the frame of a combo
-        bool gtk_combobox_is_frame( GtkWidget* );
+        bool gtk_combo_is_frame( GtkWidget* );
 
         //! true if widget is the popup window of a combobox
         bool gtk_combobox_is_popup( GtkWidget* );
