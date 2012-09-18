@@ -36,7 +36,7 @@ namespace Oxygen
             window=gtk_widget_get_parent_window(widget);
             verticalMaskOffset=Oxygen::Menu_VerticalOffset;
         }
-        else if(GTK_IS_TOOLTIP(widget) || Gtk::gtk_is_tooltip(widget))
+        else if(Gtk::gtk_is_tooltip(widget))
         {
             window=gtk_widget_get_window(widget);
         }
@@ -79,7 +79,7 @@ namespace Oxygen
             gdk_window_shape_combine_mask( window, NULL, 0, 0);
 
             // TODO: move to size allocation hook
-            if( GTK_IS_TOOLTIP(widget) && (sizeChanged||!wasAlpha) )
+            if( Gtk::gtk_is_tooltip(widget) && (sizeChanged||!wasAlpha) )
             {
                 Style::instance().setWindowBlur(window,true);
             }
