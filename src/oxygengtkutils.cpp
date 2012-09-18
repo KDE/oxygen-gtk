@@ -404,6 +404,14 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_combobox_is_popup( GtkWidget* widget )
+    {
+        // check types and path
+        if( !GTK_IS_WINDOW(widget) ) return false;
+        return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window";
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_combobox_is_viewport( GtkWidget* widget )
     {
         if( !GTK_IS_VIEWPORT(widget) ) return false;
@@ -420,11 +428,27 @@ namespace Oxygen
     }
 
     //________________________________________________________
+    bool Gtk::gtk_combo_is_popup( GtkWidget* widget )
+    {
+        if( !GTK_IS_WINDOW(widget) ) return false;
+        static const std::string match( "gtk-combo-popup-window" );
+        return Gtk::gtk_widget_path( widget ) == match;
+    }
+
+    //________________________________________________________
     bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
     {
         gboolean appearsAsList;
         gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
         return (bool) appearsAsList;
+    }
+
+    //________________________________________________________
+    bool Gtk::gtk_is_tooltip( GtkWidget* widget )
+    {
+        if( GTK_IS_TOOLTIP(widget) ) return true;
+        static const std::string match( "gtk-tooltip" );
+        return Gtk::gtk_widget_path( widget ) == match;
     }
 
     //________________________________________________________
