@@ -650,6 +650,7 @@ namespace Oxygen
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
+        addLinkColors( "[Colors:Window]" );
 
         _css.addSection( "*:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
@@ -674,6 +675,7 @@ namespace Oxygen
             "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
+        addLinkColors( "[Colors:View]" );
 
         _css.addSection(
             ".view:insensitive, "
@@ -702,6 +704,7 @@ namespace Oxygen
          // buttons and comboboxes
         _css.addSection( "GtkButton" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Button ) ) );
+        addLinkColors( "[Colors:Button]" );
 
         _css.addSection( "GtkButton:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Button ) ) );
@@ -732,6 +735,7 @@ namespace Oxygen
 
         _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
+        addLinkColors( "[Colors:Tooltip]" );
 
         // rubber band selection (at least for nautilus)
         // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
@@ -762,6 +766,20 @@ namespace Oxygen
         _css.addSection( ".error" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "@error_bg_color" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "@error_fg_color" ) );
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::addLinkColors( const std::string& section )
+    {
+
+        // link colors
+        const ColorUtils::Rgba linkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundLink" ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "-GtkWidget-link-color", linkColor ) );
+
+        // visited link colors
+        const ColorUtils::Rgba visitedLinkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundVisited" ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "-GtkWidget-visited-link-color", visitedLinkColor ) );
 
     }
 
