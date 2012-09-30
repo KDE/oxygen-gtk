@@ -57,8 +57,9 @@ namespace Oxygen
             if( allocation.height > 1 )
             {
 
-                gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
+                // Save resized state before actually resizing to prevent infinite recursion (bug 305833)
                 _resized = true;
+                gtk_widget_set_size_request( widget, allocation.width, allocation.height+14 );
 
             }
         }
