@@ -63,7 +63,7 @@ namespace Oxygen
         //!@ callbacks
         //@{
         static gboolean childUnrealizeNotifyEvent( GtkWidget*, gpointer );
-        static gboolean targetExposeEvent( GtkWidget*, GdkEventExpose*, gpointer );
+        static gboolean targetExposeEvent( GtkWidget*, cairo_t*, gpointer );
         //@}
 
         private:

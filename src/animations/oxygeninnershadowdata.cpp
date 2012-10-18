@@ -179,7 +179,7 @@ namespace Oxygen
     }
 
     //_________________________________________________________________________________________
-    gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, GdkEventExpose* event, gpointer )
+    gboolean InnerShadowData::targetExposeEvent( GtkWidget* widget, cairo_t *context, gpointer )
     {
 
         #if ENABLE_INNER_SHADOWS_HACK
@@ -206,17 +206,14 @@ namespace Oxygen
         // make sure the child window doesn't contain garbage
         gdk_window_process_updates( childWindow, TRUE );
 
-        // get window geometry
-        GtkAllocation allocation( Gtk::gdk_rectangle() );
-        gdk_window_get_geometry( childWindow, &allocation.x, &allocation.y, &allocation.width, &allocation.height );
-
-        // properly map to parent window
-        Gtk::gdk_window_translate_origin( window, childWindow, &allocation.x, &allocation.y );
-
-        // create context with clipping
-        Cairo::Context context(gtk_widget_get_window(widget), &allocation );
+        GtkAllocation allocation;
+        gtk_widget_translate_coordinates (child, widget, 0, 0, &allocation.x, &allocation.y);
+        allocation.width = gdk_window_get_width (childWindow);
+        allocation.height = gdk_window_get_height (childWindow);
 
         // draw child
+        gdk_cairo_rectangle( context, &allocation );
+        cairo_clip(context);
         gdk_cairo_set_source_window( context, childWindow, allocation.x, allocation.y );
         cairo_paint(context);
 
