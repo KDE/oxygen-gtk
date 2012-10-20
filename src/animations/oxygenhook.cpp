@@ -35,6 +35,9 @@ namespace Oxygen
     //__________________________________________________________________
     bool Hook::connect( const std::string& signal, GType typeId, GSignalEmissionHook hookFunction, gpointer data )
     {
+#if DISABLE_SIGNAL_HOOKS
+        return false;
+#endif
         // make sure that signal is not already connected
         assert( _signalId == 0 && _hookId == 0 );
 
@@ -82,6 +85,9 @@ namespace Oxygen
     //____________________________________________________________________
     void Hook::disconnect( void )
     {
+#if DISABLE_SIGNAL_HOOKS
+        return;
+#endif
 
         // disconnect signal
         if( _signalId > 0 && _hookId > 0 )

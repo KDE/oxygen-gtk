@@ -41,6 +41,11 @@ if( NOT DEFINED OXYGEN_DEBUG )
     set( OXYGEN_DEBUG 0 )
 endif( NOT DEFINED OXYGEN_DEBUG )
 
+# Set to 1 to disable all signal hooks used for various features
+if( NOT DEFINED DISABLE_SIGNAL_HOOKS )
+    set( DISABLE_SIGNAL_HOOKS 0 )
+endif( NOT DEFINED DISABLE_SIGNAL_HOOKS )
+
 # Set to 1 to enable debug logs regarding inner shadows
 if( NOT DEFINED OXYGEN_DEBUG_INNERSHADOWS )
     set( OXYGEN_DEBUG_INNERSHADOWS 0 )
@@ -150,6 +155,7 @@ endif( ENABLE_INNER_SHADOWS_HACK AND GTK_VERSION VERSION_LESS 2.24.2 )
 #########
 message( "Flags: " )
 message( "  OXYGEN_DEBUG ${OXYGEN_DEBUG}" )
+message( "  DISABLE_SIGNAL_HOOKS ${DISABLE_SIGNAL_HOOKS}" )
 message( "  BUILD_DECO_TEST ${BUILD_DECO_TEST}" )
 message( "  OXYGEN_DEBUG_INNERSHADOWS ${OXYGEN_DEBUG_INNERSHADOWS}" )
 message( "  OXYGEN_ICON_HACK ${OXYGEN_ICON_HACK}" )
