@@ -667,6 +667,7 @@ namespace Oxygen
         _blackList.push_back( "MetaFrames" );
         _blackList.push_back( "SPHRuler" );
         _blackList.push_back( "SPVRuler" );
+        _blackList.push_back( "GtkPlug" );
     }
 
     //________________________________________________________________________________
