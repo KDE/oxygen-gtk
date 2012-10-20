@@ -2509,6 +2509,10 @@ namespace Oxygen
         // enable gradient if XID is not passed
         bool gradient=true;
 
+        const int buttonSpacing(WinDeco::getMetric(WinDeco::ButtonSpacing));
+        titleIndentLeft+=2*buttonSpacing;
+        titleIndentRight+=2*buttonSpacing;
+
         QtSettings::WindecoBlendType blendType(settings().windecoBlendType());
         if( blendType==QtSettings::SolidColor )
         {
