@@ -467,10 +467,8 @@ namespace Oxygen
                     Style::instance().settings().applicationName().isGoogleChrome() );
             if(Style::instance().settings().applicationName().isOpenOffice())
             {
-                x+=2;
-                w-=4;
-                y+=1;
-                h-=2;
+                x-=3;
+                w+=6;
             }
 
             StyleOptions options( widget, state, shadow );
