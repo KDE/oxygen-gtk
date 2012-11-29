@@ -164,6 +164,7 @@ namespace Oxygen
         protected:
 
         //! register widget
+        using BaseEngine::registerWidget;
         virtual bool registerWidget( GtkWidget*, AnimationModes, const StyleOptions& = StyleOptions() );
 
         //! register widget in given map
