@@ -55,10 +55,12 @@ namespace Oxygen
         { disconnect( _target ); }
 
         //! setup connections
-        void connect( GtkWidget* );
+        using FollowMouseData::connect;
+        virtual void connect( GtkWidget* );
 
         //! disconnect
-        void disconnect( GtkWidget* );
+        using FollowMouseData::disconnect;
+        virtual void disconnect( GtkWidget* );
 
         //! enable state
         void setAnimationsEnabled( bool value )

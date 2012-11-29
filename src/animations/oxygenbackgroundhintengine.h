@@ -61,7 +61,11 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget*, BackgroundHints = BackgroundGradient|BackgroundPixmap );
+        virtual bool registerWidget( GtkWidget* widget )
+        { return registerWidget( widget, BackgroundGradient|BackgroundPixmap ); }
+
+        //! register widget
+        virtual bool registerWidget( GtkWidget*, BackgroundHints );
 
         //! unregister widget
         virtual void unregisterWidget( GtkWidget* );

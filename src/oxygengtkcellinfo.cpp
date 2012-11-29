@@ -227,7 +227,7 @@ namespace Oxygen
         */
         _isLast = std::vector<bool>(_depth, false);
 
-        unsigned int index( _depth-1 );
+        int index( _depth-1 );
         for( CellInfo parent = cellInfo; parent.isValid() && parent.depth() > 0; parent = parent.parent() )
         {
             assert( index >= 0 );
