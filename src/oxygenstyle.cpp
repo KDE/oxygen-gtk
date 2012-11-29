@@ -2845,7 +2845,6 @@ namespace Oxygen
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
         const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
         // create context
         Cairo::Context context( window, clipRect );
@@ -3189,8 +3188,6 @@ namespace Oxygen
 
         // get color
         const ColorUtils::Rgba base( settings().palette().color( Palette::Window ) );
-        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
-        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
 
         // create context
         Cairo::Context context( window, clipRect );

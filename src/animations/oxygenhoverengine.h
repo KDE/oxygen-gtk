@@ -52,7 +52,11 @@ namespace Oxygen
         {}
 
         //! register widget
-        virtual bool registerWidget( GtkWidget* widget, bool updateOnHover = false )
+        virtual bool registerWidget( GtkWidget* widget )
+        { return registerWidget( widget, false ); }
+
+        //! register widget
+        virtual bool registerWidget( GtkWidget* widget, bool updateOnHover )
         {
             if( GenericEngine<HoverData>::registerWidget( widget ) )
             {

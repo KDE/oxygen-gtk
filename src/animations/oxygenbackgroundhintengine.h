@@ -61,6 +61,7 @@ namespace Oxygen
         {}
 
         //! register widget
+        using BaseEngine::registerWidget;
         virtual bool registerWidget( GtkWidget*, BackgroundHints = BackgroundGradient|BackgroundPixmap );
 
         //! unregister widget
