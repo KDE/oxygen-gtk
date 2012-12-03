@@ -3895,6 +3895,18 @@ namespace Oxygen
 
     }
 
+    void Style::renderTabCloseIcon(cairo_t* context, GdkRectangle* r) const
+    {
+        cairo_save(context);
+        cairo_translate(context,r->x,r->y);
+
+        cairo_move_to( context, 5.5, 5.5 ); cairo_line_to( context, 10.5, 10.5 );
+        cairo_move_to( context, 10.5, 5.5 ); cairo_line_to( context, 5.5, 10.5 );
+        cairo_stroke( context );
+
+        cairo_restore(context);
+    }
+
     //_________________________________________________________
     void Style::setWindowBlur(GdkWindow* window,bool enable)
     {

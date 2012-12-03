@@ -307,6 +307,9 @@ namespace Oxygen
         //! sanitize size
         void sanitizeSize( GdkWindow* window, gint& width, gint& height ) const;
 
+        //! draw tab close x icon
+        void renderTabCloseIcon(cairo_t* context, GdkRectangle* r) const;
+
         // get tiles for given tab orientation
         TileSet::Tiles tabTiles( GtkPositionType position ) const
         {
