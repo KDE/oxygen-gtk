@@ -118,14 +118,21 @@ namespace Oxygen
     Cairo::Surface Style::tabCloseButton( const StyleOptions& options )
     {
 
+        const int size(16);
+        GdkRectangle r={0,0,size,size};
+        const ColorUtils::Rgba base( Style::instance().settings().palette().color( Palette::Window ) );
+        ColorUtils::Rgba color( Style::instance().settings().palette().color( Palette::WindowText ) );
+
         // active tab
         if( options&Focus )
         {
             // create button
             if( !_tabCloseButtons.active )
             {
-                const std::string filename( std::string(GTK_THEME_DIR)+ "/special-icons/standardbutton-closetab-down-16.png" );
-                _tabCloseButtons.active = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
+                _tabCloseButtons.active= helper().createSurface(size,size);
+                Cairo::Context context(_tabCloseButtons.active);
+                color=ColorUtils::darkColor(Style::instance().settings().palette().color(Palette::NegativeText));
+                Style::instance().renderTabCloseButton(context,&r,base,color);
             }
 
             return _tabCloseButtons.active;
@@ -137,36 +144,38 @@ namespace Oxygen
             // create button
             if( !_tabCloseButtons.prelight )
             {
-                const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-hover-16.png" );
-                _tabCloseButtons.prelight = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
+                _tabCloseButtons.prelight= helper().createSurface(size,size);
+                Cairo::Context context(_tabCloseButtons.prelight);
+                color=Style::instance().settings().palette().color(Palette::NegativeText);
+                Style::instance().renderTabCloseButton(context,&r,base,color);
             }
 
             return _tabCloseButtons.prelight;
 
         }
 
-        // normal or inactive
-        if( !_tabCloseButtons.normal )
-        {
-            const std::string filename( std::string(GTK_THEME_DIR) + "/special-icons/standardbutton-closetab-16.png" );
-            _tabCloseButtons.normal = Cairo::Surface( cairo_image_surface_create_from_png( filename.c_str() ) );
-        }
-
         // inactive
-        if( (options&Disabled) && _tabCloseButtons.normal )
+        if( options&Disabled )
         {
 
             if( !_tabCloseButtons.inactive )
             {
-
-                // make deep copy of the normal image
-                _tabCloseButtons.inactive = Cairo::Surface( cairo_surface_copy( _tabCloseButtons.normal ) );
-                cairo_surface_add_alpha(  _tabCloseButtons.inactive, 0.5 );
-                cairo_image_surface_saturate( _tabCloseButtons.inactive, 0.1 );
-
+                _tabCloseButtons.inactive= helper().createSurface(size,size);
+                Cairo::Context context(_tabCloseButtons.inactive);
+                color=Style::instance().settings().palette().color(Palette::Disabled,Palette::WindowText);
+                Style::instance().renderTabCloseButton(context,&r,base,color);
             }
 
             return _tabCloseButtons.inactive;
+
+        }
+
+        // normal
+        if( !_tabCloseButtons.normal )
+        {
+            _tabCloseButtons.normal = helper().createSurface(size,size);
+            Cairo::Context context(_tabCloseButtons.normal);
+            Style::instance().renderTabCloseButton(context,&r,base,color);
 
         }
 
