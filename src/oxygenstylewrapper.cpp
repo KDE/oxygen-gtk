@@ -467,8 +467,16 @@ namespace Oxygen
                     Style::instance().settings().applicationName().isGoogleChrome() );
             if(Style::instance().settings().applicationName().isOpenOffice())
             {
+                // TODO: add some code to libreoffice to get its version at runtime, then put detection code here
+#if LIBREOFFICE_4
                 x-=3;
                 w+=6;
+#else
+                x+=2;
+                w-=4;
+                y+=1;
+                h-=2;
+#endif
             }
 
             StyleOptions options( widget, state, shadow );
