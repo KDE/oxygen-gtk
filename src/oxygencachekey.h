@@ -822,6 +822,41 @@ namespace Oxygen
     typedef WindecoBorderKey WindecoTopBorderKey;
     typedef WindecoBorderKey WindecoBottomBorderKey;
 
+    //! key for dock widget button
+    class DockWidgetButtonKey
+    {
+        public:
+
+        //! constructor
+        DockWidgetButtonKey( const ColorUtils::Rgba& base, bool pressed, int size ):
+            _base(base.toInt()),
+            _pressed(pressed),
+            _size(size)
+        {}
+
+        //! equal to operator
+        bool operator == (const DockWidgetButtonKey& other) const
+        {
+            return _base == other._base &&
+                _pressed == other._pressed &&
+                _size == other._size;
+        }
+
+        //! less than operator
+        bool operator < (const DockWidgetButtonKey& other) const
+        {
+            if( _base != other._base ) return _base < other._base;
+            else if( _pressed != other._pressed ) return _pressed < other._pressed;
+            else return _size < other._size;
+        }
+
+        private:
+
+        guint32  _base;
+        bool _pressed;
+        int _size;
+    };
+
 }
 
 #endif
