@@ -310,6 +310,9 @@ namespace Oxygen
         //! draw tab close x icon
         void renderTabCloseIcon(cairo_t* context, GdkRectangle* r) const;
 
+        //! draw tab close button
+        void renderTabCloseButton(cairo_t* context, GdkRectangle* r, const ColorUtils::Rgba& base, const ColorUtils::Rgba& color);
+
         // get tiles for given tab orientation
         TileSet::Tiles tabTiles( GtkPositionType position ) const
         {

@@ -3892,6 +3892,7 @@ namespace Oxygen
 
     }
 
+    //_______________________________________________________________________
     void Style::renderTabCloseIcon(cairo_t* context, GdkRectangle* r) const
     {
         cairo_save(context);
@@ -3900,6 +3901,35 @@ namespace Oxygen
         cairo_move_to( context, 5.5, 5.5 ); cairo_line_to( context, 10.5, 10.5 );
         cairo_move_to( context, 10.5, 5.5 ); cairo_line_to( context, 5.5, 10.5 );
         cairo_stroke( context );
+
+        cairo_restore(context);
+    }
+
+    //_______________________________________________________________________________
+    void Style::renderTabCloseButton(cairo_t* context, GdkRectangle* r, const ColorUtils::Rgba& base, const ColorUtils::Rgba& color)
+    {
+        cairo_save(context);
+
+        cairo_set_source_surface(context,helper().dockWidgetButton(base,true,r->width),0,0);
+        cairo_rectangle(context,r->x,r->y,r->width,r->height);
+        cairo_fill(context);
+
+        const double width(1.1);
+
+        // contrast
+        cairo_translate(context,0,0.5);
+        cairo_set_line_cap( context, CAIRO_LINE_CAP_ROUND );
+        cairo_set_line_join( context, CAIRO_LINE_JOIN_ROUND );
+        cairo_set_line_width(context,width);
+        cairo_set_source(context,ColorUtils::lightColor( base ));
+
+        renderTabCloseIcon(context,r);
+
+        // main icon painting
+        cairo_translate(context,0,-1);
+        cairo_set_source(context,color);
+
+        renderTabCloseIcon(context,r);
 
         cairo_restore(context);
     }
