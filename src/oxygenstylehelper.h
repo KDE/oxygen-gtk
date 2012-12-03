@@ -201,6 +201,9 @@ namespace Oxygen
 
         //@}
 
+        //! window decorations button for MDI windows from oxygen-qt, used as tab close button in oxygen-gtk
+        const Cairo::Surface& dockWidgetButton(const ColorUtils::Rgba& base, bool pressed, int size);
+
         protected:
 
         //! access reference surface
@@ -302,6 +305,9 @@ namespace Oxygen
 
         //! window backgound radial gradient
         CairoSurfaceCache<RadialGradientKey> _radialGradientCache;
+
+        //! dock widget button
+        CairoSurfaceCache<DockWidgetButtonKey> _dockWidgetButtonCache;
 
         //@}
 

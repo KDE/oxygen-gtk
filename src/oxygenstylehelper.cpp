@@ -1522,4 +1522,43 @@ namespace Oxygen
     }
 
 
+    //________________________________________________________________________________________________________
+    const Cairo::Surface& StyleHelper::dockWidgetButton(const ColorUtils::Rgba& base, bool pressed, int size)
+    {
+        const DockWidgetButtonKey key( base, pressed, size );
+
+        // try find in cache and return
+        if( const Cairo::Surface& surface = _dockWidgetButtonCache.value(key) )
+        { return surface; }
+
+        // cached not found, create new
+        Cairo::Surface surface( createSurface( size, size ) );
+
+        Cairo::Context context( surface );
+        cairo_set_source( context, ColorUtils::Rgba::transparent( base ) );
+        cairo_paint( context );
+
+        const ColorUtils::Rgba light( ColorUtils::lightColor( base ) );
+        const ColorUtils::Rgba dark( ColorUtils::darkColor( base ) );
+
+        const double u( size/18.0 );
+        cairo_translate( context, 0.5*u, ( 0.5-0.668 )*u );
+
+        {
+            // outline circle
+            double penWidth = 1.2;
+            Cairo::Pattern lg( cairo_pattern_create_linear( 0, u*( 1.665-penWidth ), 0, u*( 12.33+1.665-penWidth ) ) );
+
+            cairo_pattern_add_color_stop( lg, 0, dark );
+            cairo_pattern_add_color_stop( lg, 1, light );
+            cairo_set_source( context, lg );
+            cairo_set_line_width( context, penWidth*u );
+            cairo_ellipse( context, u*0.5*( 17-12.33+penWidth ), u*( 1.665+penWidth ), u*( 12.33-penWidth ), u*( 12.33-penWidth ) );
+            cairo_stroke( context );
+        }
+
+        return _dockWidgetButtonCache.insert(key, surface);
+    }
+
+
 }
