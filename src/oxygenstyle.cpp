@@ -2681,14 +2681,13 @@ namespace Oxygen
 
                         cairo_save( context );
 
-                        ColorUtils::Rgba titleTextColor(settings().palette().color( group, Palette::WindowText ));
-                        ColorUtils::Rgba titleContrastColor(ColorUtils::lightColor(settings().palette().color( Palette::Active, Palette::WindowText )));
-
+                        ColorUtils::Rgba titleContrastColor(ColorUtils::lightColor(settings().palette().color( Palette::Disabled, Palette::Window )));
                         cairo_set_source( context, titleContrastColor );
                         cairo_translate( context, x+titleIndentLeft, y+(H-textHeight)/2.+1 );
                         pango_cairo_update_layout( context, layout );
                         pango_cairo_show_layout( context, layout );
 
+                        ColorUtils::Rgba titleTextColor(settings().palette().color( group, Palette::WindowText ));
                         cairo_set_source( context, titleTextColor );
                         cairo_translate( context, 0, -1 );
                         pango_cairo_update_layout( context, layout );
