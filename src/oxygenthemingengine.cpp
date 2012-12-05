@@ -211,6 +211,19 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
+        // if widget is invalid, use parent class
+        if( !( widget && GTK_IS_WIDGET( widget ) ) )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+            #endif
+
+            ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+            return;
+
+        }
+
         GtkWidget* toplevel=gtk_widget_get_toplevel(widget);
         if(GTK_IS_DIALOG(toplevel))
         { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
@@ -278,7 +291,7 @@ namespace Oxygen
             {
                 // if valid background image is found, fallback to parent style
                 #if OXYGEN_DEBUG
-                std::cerr << "Calling parentClass()->render_background()\n";
+                std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
                 #endif
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
@@ -539,7 +552,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_background()\n";
+            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
             #endif
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
@@ -1571,7 +1584,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_frame_gap()\n";
+            std::cerr << "Oxygen::render_frame_gap - Calling parentClass()->render_frame_gap()\n";
             #endif
             ThemingEngine::parentClass()->render_frame_gap( engine, context, x, y, w, h, position, xy0_gap, xy1_gap );
 
@@ -1787,7 +1800,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_check()\n";
+            std::cerr << "Oxygen::render_check - Calling parentClass()->render_check()\n";
             #endif
             ThemingEngine::parentClass()->render_check( engine, context, x, y, w, h );
 
@@ -1874,7 +1887,7 @@ namespace Oxygen
 
             // parent
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_option()\n";
+            std::cerr << "Oxygen::render_option - Calling parentClass()->render_option()\n";
             #endif
             ThemingEngine::parentClass()->render_option( engine, context, x, y, w, h );
 
@@ -2209,7 +2222,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_layout()\n";
+            std::cerr << "Oxygen::render_layout - Calling parentClass()->render_layout()\n";
             #endif
             ThemingEngine::parentClass()->render_layout( engine, context, x, y, layout );
 
@@ -2342,7 +2355,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_slider()\n";
+            std::cerr << "Oxygen::render_slider - Calling parentClass()->render_slider()\n";
             #endif
             ThemingEngine::parentClass()->render_slider( engine, context, x, y, w, h, orientation );
 
@@ -2403,7 +2416,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_handle()\n";
+            std::cerr << "Oxygen::render_handle - Calling parentClass()->render_handle()\n";
             #endif
             ThemingEngine::parentClass()->render_handle( engine, context, x, y, w, h );
 
@@ -2458,7 +2471,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Calling parentClass()->render_activity()\n";
+            std::cerr << "Oxygen::render_activity - Calling parentClass()->render_activity()\n";
             #endif
             ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
 
