@@ -58,9 +58,6 @@ INFO: css border and padding ordering is either:
     -GtkCalendar-horizontal-separation: 0px;
     -GtkComboBox-appears-as-list: 1px;
 
-
-    -GtkMenu-horizontal-padding: 3px;
-    -GtkMenu-vertical-padding: 5px;
     -GtkMenu-horizontal-offset: -7px;
     -GtkMenuBar-internal-padding: 0px;
 
@@ -111,8 +108,6 @@ GtkMenuBar {
 }
 
 GtkMenuBar>GtkMenuItem { padding: 2px 5px; }
-GtkMenu>GtkMenuItem { padding: 5px 1px; }
-GtkMenu>GtkSeparatorMenuItem { padding: 1px 1px; }
 
 /* menu toolbutton */
 GtkMenuToolButton, GtkMenuToolButton * {
