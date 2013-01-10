@@ -1129,6 +1129,14 @@ namespace Oxygen
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
+            #if GTK_CHECK_VERSION( 3, 7, 0 )
+            // for gtk 3.7 and above, menu item rect is called even in not PRELIGHT mode
+            // we need to draw nothing for it
+            // bug: 312988
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+            if( !( state & GTK_STATE_FLAG_PRELIGHT ) ) return;
+            #endif
+
             if( GTK_IS_MENU_ITEM( widget ) )
             {
                 GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
