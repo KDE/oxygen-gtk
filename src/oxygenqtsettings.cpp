@@ -180,7 +180,7 @@ namespace Oxygen
             generateGtkColors();
         }
 
-        // apply extra programatically set metrics metrics
+        // apply extra programatically set metrics
         loadExtraOptions();
 
         // print generated Gtkrc and commit
@@ -1151,6 +1151,36 @@ namespace Oxygen
         // entries
         _css.addSection( "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "2px 5px" ) );
+
+        #endif
+
+        #if GTK_CHECK_VERSION( 3, 7, 0 )
+
+        // menu
+        // since gtk 3.7.0, GtkMenu-horizontal-padding and vertical-padding (from gtk.css) are ignored
+        // need to use css padding and border-width instead
+        _css.addSection( "GtkMenu" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "5px 3px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0px" ) );
+
+        _css.addSection( "GtkMenu>GtkMenuItem" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "5px 4px" ) );
+
+        _css.addSection( "GtkMenu>GtkSeparatorMenuItem" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "1px 4px" ) );
+
+        #else
+
+        // menu padding
+        _css.setCurrentSection( Gtk::CSS::defaultSection() );
+        _css.addToCurrentSection( "  -GtkMenu-horizontal-padding: 3px;" );
+        _css.addToCurrentSection( "  -GtkMenu-vertical-padding: 5px;" );
+
+        _css.addSection( "GtkMenu>GtkMenuItem" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "5px 1px" ) );
+
+        _css.addSection( "GtkMenu>GtkSeparatorMenuItem" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "1px 1px" ) );
 
         #endif
 
