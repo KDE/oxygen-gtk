@@ -55,7 +55,8 @@ namespace Oxygen
 
         //! constructor
         ApplicationName( AppName name = Unknown ):
-            _name( name )
+            _name( name ),
+            _version( NULL )
         {}
 
         //! assignment
@@ -68,6 +69,9 @@ namespace Oxygen
         //! cast
         operator const AppName& ( void ) const
         { return _name; }
+
+        const char* versionString( void ) const
+        { return _version; }
 
         //! initialize
         /*! try derive AppName from gtk program name */
@@ -115,6 +119,8 @@ namespace Oxygen
 
         //! name
         AppName _name;
+
+        const char* _version;
 
         //! streamer (for debugging)
         friend std::ostream& operator << ( std::ostream&, const ApplicationName& );
