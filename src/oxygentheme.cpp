@@ -45,18 +45,12 @@
 void theme_init( GTypeModule* module )
 {
 
+    #if OXYGEN_DEBUG
+    std::cerr << "Oxygen::theme_init" << std::endl;
+    #endif
+
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
-
-    // disable all animations for openoffice
-    if(
-        Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
-    {
-        Oxygen::Style::instance().animations().setEnabled( false );
-        Oxygen::Style::instance().animations().setInnerShadowsEnabled( false );
-        // re-enable combobox animations
-        Oxygen::Style::instance().animations().comboBoxEngine().setEnabled( true );
-    }
 
 }
 
@@ -127,7 +121,4 @@ gint getWindecoButtonSize(unsigned long buttonType)
 
 //_________________________________________________
 unsigned long getWindecoABIVersion(void)
-{
-    return 0x3;
-}
-
+{ return 0x3; }

@@ -3736,27 +3736,42 @@ namespace Oxygen
     void StyleWrapper::instanceInit( OxygenStyle* self )
     {
 
-        // animations hooks
-        Style::instance().animations().initializeHooks();
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleWrapper::classInit" << std::endl;
+        #endif
 
-        // shadow hooks
+        // style initialization
+        Style::instance().initialize();
+
+        // hooks
+        Style::instance().animations().initializeHooks();
         Style::instance().shadowHelper().initializeHooks();
 
-        // window manager hooks
         if( !Style::instance().settings().applicationName().isEclipse() )
         { Style::instance().windowManager().initializeHooks(); }
 
-        // argb hooks
-        if(
-            Style::instance().settings().argbEnabled() &&
+        if( Style::instance().settings().argbEnabled() &&
             !Style::instance().settings().applicationName().isXul() )
         { Style::instance().argbHelper().initializeHooks(); }
+
+        // disable all animations for openoffice
+        // and re-enable combobox animations
+        if( Oxygen::Style::instance().settings().applicationName().isOpenOffice() )
+        {
+            Oxygen::Style::instance().animations().setEnabled( false );
+            Oxygen::Style::instance().animations().setInnerShadowsEnabled( false );
+            Oxygen::Style::instance().animations().comboBoxEngine().setEnabled( true );
+        }
 
     }
 
     //_______________________________________________________________________________________________________________
     void StyleWrapper::classInit( OxygenStyleClass* klass )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleWrapper::classInit" << std::endl;
+        #endif
 
         GtkStyleClass* style_class( GTK_STYLE_CLASS( klass ) );
 
@@ -3815,6 +3830,10 @@ namespace Oxygen
 
         _typeInfo = info;
         _type = g_type_module_register_type( module, GTK_TYPE_STYLE, "OxygenStyle", &_typeInfo, GTypeFlags(0 ) );
+
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::StyleWrapper::registerType - done" << std::endl;
+        #endif
 
     }
 

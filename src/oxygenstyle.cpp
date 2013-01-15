@@ -45,8 +45,11 @@ namespace Oxygen
     {
         if( !_instance )
         {
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::Style::instance - creating new style." << std::endl;
+            #endif
+
             _instance = new Style();
-            _instance->initialize();
         }
 
         return *_instance;
