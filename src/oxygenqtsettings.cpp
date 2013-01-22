@@ -103,7 +103,7 @@ namespace Oxygen
         const bool forced( flags&Forced );
 
         if( _initialized && !forced ) return false;
-        _initialized = true;
+        else if( !forced ) _initialized = true;
 
         if( g_getenv( "KDE_FULL_SESSION" ) )
         { _KDESession = true; }
@@ -138,12 +138,15 @@ namespace Oxygen
         const bool oxygenChanged = loadOxygen();
 
         // do nothing if settings not changed
-        if( !(changed||kdeGlobalsChanged||oxygenChanged) ) return false;
+        if( forced && !(changed||kdeGlobalsChanged||oxygenChanged) ) return false;
 
         // dialog button ordering
         /* TODO: in principle this should be needed only once */
-        GtkSettings* settings( gtk_settings_get_default() );
-        gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+        if( flags & Extra )
+        {
+            GtkSettings* settings( gtk_settings_get_default() );
+            gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+        }
 
         // clear gtkrc
         _rc.clear();
@@ -182,7 +185,8 @@ namespace Oxygen
         }
 
         // apply extra programatically set metrics metrics
-        loadExtraOptions();
+        if( flags & Extra )
+        { loadExtraOptions(); }
 
         // print generated Gtkrc and commit
         #if OXYGEN_DEBUG

@@ -57,7 +57,7 @@ void theme_init( GTypeModule* module )
     Oxygen::ApplicationName applicationName;
     applicationName.initialize();
     if( applicationName.isXul() )
-    { Oxygen::Style::instance().initialize(); }
+    { Oxygen::Style::instance().initialize( Oxygen::QtSettings::Forced | Oxygen::QtSettings::Colors ); }
 
 }
 
