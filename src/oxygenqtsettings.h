@@ -66,7 +66,8 @@ namespace Oxygen
             KdeGlobals = 1<<3,
             Oxygen = 1<<4,
             Colors = 1<<5,
-            All = AppName|Icons|Fonts|KdeGlobals|Oxygen|Colors,
+            Extra = 1<<7,
+            All = AppName|Icons|Fonts|KdeGlobals|Oxygen|Colors|Extra,
             Forced = 1<<6
         };
 
