@@ -102,6 +102,9 @@ namespace Oxygen
 
         const bool forced( flags&Forced );
 
+        // no attempt at initializing if gtk settings is not yet set
+        if( !gtk_settings_get_default() ) return false;
+
         if( _initialized && !forced ) return false;
         else if( !forced ) _initialized = true;
 

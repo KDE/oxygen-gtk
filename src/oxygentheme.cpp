@@ -52,12 +52,8 @@ void theme_init( GTypeModule* module )
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
 
-    // initialize oxygen here, for XUL applications
-    // special care is taken to not initialize everything
-    Oxygen::ApplicationName applicationName;
-    applicationName.initialize();
-    if( applicationName.isXul() )
-    { Oxygen::Style::instance().initialize( Oxygen::QtSettings::Forced | Oxygen::QtSettings::Colors ); }
+    // style initialization
+    Oxygen::Style::instance().initialize();
 
 }
 

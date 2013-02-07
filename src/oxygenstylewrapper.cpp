@@ -3741,6 +3741,10 @@ namespace Oxygen
         #endif
 
         // style initialization
+        /*
+        this is normally achieved in theme_init, but is somehow not working with gnome shell
+        so that it is redone here, since duplication is avoided when initialization is called twice without modifications
+        */
         Style::instance().initialize();
 
         // hooks
