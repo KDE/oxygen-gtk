@@ -3737,7 +3737,7 @@ namespace Oxygen
     {
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::StyleWrapper::classInit" << std::endl;
+        std::cerr << "Oxygen::StyleWrapper::instanceInit" << std::endl;
         #endif
 
         // style initialization
