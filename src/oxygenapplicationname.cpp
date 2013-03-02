@@ -90,6 +90,7 @@ namespace Oxygen
                 "icedove",
                 "xulrunner",
                 "komodo",
+                "aurora",
                 ""
             };
 
