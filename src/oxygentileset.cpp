@@ -95,9 +95,6 @@ namespace Oxygen
         initSurface( _surfaces, surface, w, _h3, x1, y2, w2, _h3 );
         initSurface( _surfaces, surface, _w3, _h3, x2, y2, _w3, _h3 );
 
-        if(!isValid())
-            std::cerr << "oxygen-gtk: BUG: created tileset looks invalid, expect resource leaks ("<<__FILE__<<":"<<__LINE__<<")\n";
-
     }
 
     //______________________________________________________________
