@@ -74,6 +74,7 @@ namespace Oxygen
         else if( gtkAppName == "soffice" ) _name = OpenOffice;
         else if( gtkAppName == "gimp" ) _name = Gimp;
         else if(
+            gtkAppName == "chrome" ||
             gtkAppName == "chromium" ||
             gtkAppName == "chromium-browser" ||
             gtkAppName == "google-chrome" ) _name = GoogleChrome;
