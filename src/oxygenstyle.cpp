@@ -3951,7 +3951,7 @@ namespace Oxygen
         gdk_drawable_get_size(window,&w,&h);
         GdkDisplay* gdkDisplay=gdk_drawable_get_display(window);
 #endif
-        const guint32 rects[4]={0,0,w,h};
+        const guint32 rects[4]={0,0, (guint32)w, (guint32)h};
         const XID id( GDK_WINDOW_XID( window ) );
         Display* dpy(GDK_DISPLAY_XDISPLAY(gdkDisplay));
 
