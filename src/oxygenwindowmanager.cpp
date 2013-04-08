@@ -632,14 +632,20 @@ namespace Oxygen
             if( !( event && withinWidget( childWidget, event ) ) )
             { continue; }
 
+            // do not propagate if widget's cursor is currently modified,
+            // since it is usually indicative of mouse action
+            GdkCursor* cursor = gdk_window_get_cursor( window );
+            if( cursor && gdk_cursor_get_cursor_type( cursor ) != GDK_ARROW )
+            { usable = false; }
+
             // check special cases for which grab should not be enabled
-            if(
-                ( widgetIsBlackListed( childWidget ) ) ||
+            if( usable && (
+                widgetIsBlackListed( childWidget ) ||
                 ( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) ||
                 ( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) ||
                 ( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) ||
                 ( GTK_IS_MENU_ITEM( childWidget ) ) ||
-                ( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) )
+                ( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) ) )
             { usable = false; }
 
             // if child is a container and event has been accepted so far, also check it, recursively
