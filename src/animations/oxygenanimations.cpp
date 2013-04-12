@@ -164,7 +164,7 @@ namespace Oxygen
         if( _allWidgets.find( widget ) != _allWidgets.end() ) return false;
 
         #if OXYGEN_DEBUG
-        std::cerr << "Oxygen::Animations::registerWidget - " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        std::cerr << "Oxygen::Animations::registerWidget - " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"0x0") << ")" << std::endl;
         #endif
 
         Signal destroyId;
