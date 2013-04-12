@@ -84,7 +84,8 @@ namespace Oxygen
         {
 
             // convert to hex number
-            std::istringstream in( g_match_info_fetch( matchInfo, 1 ) );
+            gchar* matchedString( g_match_info_fetch( matchInfo, 1 ) );
+            std::istringstream in( matchedString );
             int colorValue = 0;
             in >> std::hex >> colorValue;
 
@@ -92,12 +93,15 @@ namespace Oxygen
             out.setGreen( double( (colorValue>>=8)&0xff)/255 );
             out.setRed( double( (colorValue>>=8)&0xff)/255 );
 
+            g_free( matchedString );
+
         } else if( matchCount >= 5 ) {
 
             for( int index = 0; index < matchCount-2; ++index )
             {
 
-                std::istringstream in( g_match_info_fetch( matchInfo, index+2 ) );
+                gchar* matchedString( g_match_info_fetch( matchInfo, index+2 ) );
+                std::istringstream in( matchedString );
                 int colorValue;
                 if( !(in >> colorValue) ) break;
 
@@ -105,6 +109,8 @@ namespace Oxygen
                 else if( index == 1 ) out.setGreen( double(colorValue)/255 );
                 else if( index == 2 ) out.setBlue( double(colorValue)/255 );
                 else if( index == 3 ) out.setAlpha( double(colorValue)/255 );
+
+                g_free( matchedString );
 
             }
 
