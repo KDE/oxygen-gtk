@@ -184,7 +184,6 @@ namespace Oxygen
 
         #if ENABLE_INNER_SHADOWS_HACK
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-        GdkWindow* window( gtk_widget_get_window( widget ) );
         GdkWindow* childWindow( gtk_widget_get_window( child ) );
 
         #if OXYGEN_DEBUG
