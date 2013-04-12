@@ -109,7 +109,7 @@ namespace Oxygen
 
         //! is valid
         bool isValid( void ) const
-        { return width() > 0  && height() > 0 && _surfaces.size() == 9; }
+        { return _surfaces.size() == 9; }
 
         /*!
         Fills the specified rect with tiled chunks. Corners are never tiled,
