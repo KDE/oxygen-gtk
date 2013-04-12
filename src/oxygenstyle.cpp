@@ -3821,8 +3821,8 @@ namespace Oxygen
     {
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
-        int w=gdk_window_get_width(window);
-        int h=gdk_window_get_height(window);
+        guint32 w=gdk_window_get_width(window);
+        guint32 h=gdk_window_get_height(window);
         const guint32 rects[4]={0,0,w,h};
         const XID id( GDK_WINDOW_XID( window ) );
         Display* dpy(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)));
