@@ -229,6 +229,7 @@ namespace Oxygen
 
                 // add source to iconSet
                 gtk_icon_set_add_source( iconSet, iconSource );
+                gtk_icon_source_free( iconSource );
                 break;
 
             }
