@@ -268,11 +268,12 @@ namespace Oxygen
         PathList out;
 
         // load icon install prefix
-        char* path = 0L;
+        gchar* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
         {
 
             out.split( path );
+            g_free( path );
 
         } else {
 
@@ -299,7 +300,10 @@ namespace Oxygen
         PathList out;
         char* path = 0L;
         if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
-        { out.split( path ); }
+        {
+            out.split( path );
+            g_free( path );
+        }
 
         // make sure defaultKdeIconPath is included in the list
         if( std::find( out.begin(), out.end(), _defaultKdeIconPath ) == out.end() )
