@@ -210,6 +210,22 @@ namespace Oxygen
     }
 
     //_________________________________________________________
+    bool QtSettings::runCommand( const char* cmd, char*& result ) const
+    {
+        FILE* fp=popen(cmd,"r");
+        if(!fp)
+            return false;
+
+        const gulong size=4096;
+        result=(char*)g_malloc(size);
+
+        fgets(result,size,fp);
+
+        pclose(fp);
+        return true;
+    }
+
+    //_________________________________________________________
     bool QtSettings::loadKdeGlobals( void )
     {
 
@@ -269,7 +285,7 @@ namespace Oxygen
 
         // load icon install prefix
         gchar* path = 0L;
-        if( g_spawn_command_line_sync( "kde4-config --path config", &path, 0L, 0L, 0L ) && path )
+        if( runCommand( "kde4-config --path config", path ) && path )
         {
 
             out.split( path );
@@ -299,7 +315,7 @@ namespace Oxygen
         // load icon install prefix
         PathList out;
         char* path = 0L;
-        if( g_spawn_command_line_sync( "kde4-config --path icon", &path, 0L, 0L, 0L ) && path )
+        if( runCommand( "kde4-config --path icon", path ) && path )
         {
             out.split( path );
             g_free( path );
