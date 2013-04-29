@@ -345,6 +345,9 @@ namespace Oxygen
 
         protected:
 
+        //! read output from a command - replacement for not always working g_spawn_command_line_sync()
+        bool runCommand( const char* cmd, char*& result ) const;
+
         //! kdeglobals settings
         /*! returns true if changed */
         bool loadKdeGlobals( void );
