@@ -207,19 +207,29 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    bool QtSettings::runCommand( const char* cmd, char*& result ) const
+    bool QtSettings::runCommand( const std::string& command, char*& result ) const
     {
-        FILE* fp=popen(cmd,"r");
-        if(!fp)
-            return false;
 
-        const gulong size=4096;
-        result=(char*)g_malloc(size);
+        if( FILE* fp = popen( command.c_str(), "r" ) )
+        {
 
-        fgets(result,size,fp);
+            // read command output. Make sure that the buffer is large enough to read the entire
+            // output, by multiplying its initial size by two as long as the last character is not '\n'
+            // note that the allocated string must be freed by the calling method
+            gulong size=4096;
+            result= static_cast<char*>(g_malloc(size));
+            while( fgets(result,size,fp) && result[strlen(result)-1] != '\n' )
+            {
+                size *= 2;
+                result = static_cast<char*>(g_realloc( result, size ));
+                fgets(result + size/2 - 1, size/2 + 1, fp );
+            }
 
-        pclose(fp);
-        return true;
+            pclose(fp);
+            return true;
+
+        } else return false;
+
     }
 
     //_________________________________________________________
