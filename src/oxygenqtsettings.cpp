@@ -216,15 +216,14 @@ namespace Oxygen
             // read command output. Make sure that the buffer is large enough to read the entire
             // output, by multiplying its initial size by two as long as the last character is not '\n'
             // note that the allocated string must be freed by the calling method
-            const gulong readSize=512;
-            gulong bufSize=readSize;
+            gulong bufSize=512;
             size_t currentOffset=0;
             result= static_cast<char*>(g_malloc(bufSize));
-            while( fgets(result+currentOffset,readSize,fp) && result[strlen(result)-1] != '\n' )
+            while( fgets( result+currentOffset, bufSize-currentOffset, fp ) && result[strlen(result)-1] != '\n' )
             {
-                currentOffset+=readSize-1;
-                bufSize+=readSize-1;
-                result = static_cast<char*>(g_realloc( result, bufSize ));
+                currentOffset = bufSize-1;
+                bufSize *= 2;
+                result = static_cast<char*>( g_realloc( result, bufSize ) );
             }
 
             pclose(fp);
