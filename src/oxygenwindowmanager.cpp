@@ -124,9 +124,9 @@ namespace Oxygen
         in which case we should not use them for grabbing
         */
         if(
-            std::string( G_OBJECT_TYPE_NAME( widget ) ) == "GtkWindow" &&
-            (gtk_widget_get_events ( widget ) &
-            (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) )
+            ( GTK_IS_WINDOW( widget ) || GTK_IS_VIEWPORT( widget ) ) &&
+            ( gtk_widget_get_events ( widget ) &
+            ( GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK ) ) )
         {
             registerBlackListWidget( widget );
             return false;
