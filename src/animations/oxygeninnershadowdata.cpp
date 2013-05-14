@@ -46,11 +46,8 @@ namespace Oxygen
         // store target
         _target = widget;
 
-        if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) && G_OBJECT_TYPE_NAME(widget) != std::string("GtkPizza") )
-        {
-            _compositeEnabled = true;
-            _exposeId.connect( G_OBJECT(_target), "draw", G_CALLBACK( targetExposeEvent ), this, true );
-        }
+        if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) )
+        { _exposeId.connect( G_OBJECT(_target), "draw", G_CALLBACK( targetExposeEvent ), this, true ); }
 
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
