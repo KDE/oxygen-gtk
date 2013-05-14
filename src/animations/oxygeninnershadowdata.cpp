@@ -47,10 +47,7 @@ namespace Oxygen
         _target = widget;
 
         if( gdk_display_supports_composite( gtk_widget_get_display( widget ) ) )
-        {
-            _compositeEnabled = true;
-            _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true );
-        }
+        { _exposeId.connect( G_OBJECT(_target), "expose-event", G_CALLBACK( targetExposeEvent ), this, true ); }
 
         // check child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
