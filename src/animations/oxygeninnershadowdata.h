@@ -37,8 +37,7 @@ namespace Oxygen
 
         //! constructor
         InnerShadowData( void ):
-            _target(0),
-            _compositeEnabled(false)
+            _target(0)
         {}
 
         //! destructor
@@ -70,7 +69,8 @@ namespace Oxygen
 
         //! target widget
         GtkWidget* _target;
-        bool _compositeEnabled;
+
+        //! expose
         Signal _exposeId;
 
         //! child data
