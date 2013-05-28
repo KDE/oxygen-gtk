@@ -36,7 +36,7 @@ namespace Oxygen
 
         // create background gradient atom
         GdkDisplay *display( gdk_display_get_default () );
-        if( display )
+        if( display && GDK_IS_X11_DISPLAY( display ) )
         {
 
             _backgroundGradientAtom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);

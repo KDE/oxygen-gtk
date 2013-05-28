@@ -245,8 +245,8 @@ namespace Oxygen
             }
 
             // get display and check
-            Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-            if( !display )
+            GdkDisplay *display( gdk_screen_get_display( screen ) );
+            if( !( display && GDK_IS_X11_DISPLAY( display ) ) )
             {
 
                 #if OXYGEN_DEBUG
@@ -256,7 +256,8 @@ namespace Oxygen
                 return;
             }
 
-           _atom = XInternAtom( display, "_KDE_NET_WM_SHADOW", False);
+           _atom = XInternAtom( GDK_DISPLAY_XDISPLAY( display ), "_KDE_NET_WM_SHADOW", False);
+
         }
 
         // make sure size is valid
@@ -372,6 +373,9 @@ namespace Oxygen
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
 
+        // do nothing if display is invalid
+        if( !GDK_IS_X11_DISPLAY( display ) ) return;
+
         std::vector<unsigned long> data;
         const bool isMenu( this->isMenu( widget ) );
 
@@ -413,7 +417,8 @@ namespace Oxygen
 
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
-        XDeleteProperty( GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom);
+        if( GDK_IS_X11_DISPLAY( display ) )
+        { XDeleteProperty( GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom); }
 
     }
 

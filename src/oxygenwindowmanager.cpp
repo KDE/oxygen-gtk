@@ -403,29 +403,32 @@ namespace Oxygen
         GdkDisplay *display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
         GdkWindow  *root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
 
-        xev.xclient.type = ClientMessage;
-        xev.xclient.message_type = gdk_x11_get_xatom_by_name_for_display(display, "_NET_WM_MOVERESIZE");
-        xev.xclient.display = GDK_DISPLAY_XDISPLAY(display);
-        xev.xclient.window = GDK_WINDOW_XID(window);
-        xev.xclient.format = 32;
-        xev.xclient.data.l[0] = x;
-        xev.xclient.data.l[1] = y;
-        xev.xclient.data.l[2] = 8; // NET::Move
-        xev.xclient.data.l[3] = Button1;
-        xev.xclient.data.l[4] = 0;
-        XUngrabPointer(GDK_DISPLAY_XDISPLAY(display), CurrentTime);
+        if( GDK_IS_X11_DISPLAY( display ) )
+        {
 
-        XSendEvent(
-            GDK_DISPLAY_XDISPLAY(display),
-            GDK_WINDOW_XID(root),
-            False,
-            SubstructureRedirectMask | SubstructureNotifyMask,
-            &xev);
+            xev.xclient.type = ClientMessage;
+            xev.xclient.message_type = gdk_x11_get_xatom_by_name_for_display(display, "_NET_WM_MOVERESIZE");
+            xev.xclient.display = GDK_DISPLAY_XDISPLAY(display);
+            xev.xclient.window = GDK_WINDOW_XID(window);
+            xev.xclient.format = 32;
+            xev.xclient.data.l[0] = x;
+            xev.xclient.data.l[1] = y;
+            xev.xclient.data.l[2] = 8; // NET::Move
+            xev.xclient.data.l[3] = Button1;
+            xev.xclient.data.l[4] = 0;
+            XUngrabPointer(GDK_DISPLAY_XDISPLAY(display), CurrentTime);
+
+            XSendEvent(
+                GDK_DISPLAY_XDISPLAY(display),
+                GDK_WINDOW_XID(root),
+                False,
+                SubstructureRedirectMask | SubstructureNotifyMask,
+                &xev);
+
+        }
 
         // force a release as some widgets miss it...
         finishDrag();
-
-        // wmButtonRelease( widget, 0L, this );
 
         return true;
     }

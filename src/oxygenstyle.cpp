@@ -104,7 +104,7 @@ namespace Oxygen
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
         GdkDisplay *display( gdk_display_get_default () );
-        if(display)
+        if( display && GDK_IS_X11_DISPLAY( display ) )
             blurAtom=XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
         else
             blurAtom=None;
