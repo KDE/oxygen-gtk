@@ -28,7 +28,7 @@
 #include "oxygenrgba.h"
 
 #include <algorithm>
-#include <cmath>
+#include <math.h>
 #include <map>
 #include <sstream>
 
