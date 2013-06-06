@@ -21,7 +21,10 @@
 #include "oxygencairoutils.h"
 #include "oxygencairocontext.h"
 #include "oxygenrgba.h"
+
+#ifdef GDK_WINDOWING_X11
 #include <cairo/cairo-xlib.h>
+#endif
 
 #include <cmath>
 namespace Oxygen
@@ -223,13 +226,14 @@ namespace Oxygen
             case CAIRO_SURFACE_TYPE_IMAGE:
             return cairo_image_surface_get_width( surface );
 
+            #if CAIRO_HAS_XLIB_SURFACE
             case CAIRO_SURFACE_TYPE_XLIB:
             return cairo_xlib_surface_get_width( surface );
+            #endif
 
             default:
             {
                 // This is less efficient, still makes rendering correct
-                std::cerr << "Oxygen::cairo_surface_get_width: warning: using cairo_clip_extents to determine surface width. Surface type: " << type << std::endl;
                 Cairo::Context context(surface);
                 double x1,x2,dummy;
                 cairo_clip_extents(context,&x1,&dummy,&x2,&dummy);
@@ -248,13 +252,14 @@ namespace Oxygen
             case CAIRO_SURFACE_TYPE_IMAGE:
             return cairo_image_surface_get_height( surface );
 
+            #if CAIRO_HAS_XLIB_SURFACE
             case CAIRO_SURFACE_TYPE_XLIB:
             return cairo_xlib_surface_get_height( surface );
+            #endif
 
             default:
             {
                 // This is less efficient, still makes rendering correct
-                std::cerr << "Oxygen::cairo_surface_get_height: warning: using cairo_clip_extents to determine surface height. Surface type: " << type << std::endl;
                 Cairo::Context context(surface);
                 double y1,y2,dummy;
                 cairo_clip_extents(context,&dummy,&y1,&dummy,&y2);
@@ -268,6 +273,7 @@ namespace Oxygen
     //_____________________________________________________
     void cairo_surface_get_size( cairo_surface_t* surface, int& width, int& height )
     {
+
         const cairo_surface_type_t type( cairo_surface_get_type( surface ) );
         switch( type )
         {
@@ -276,20 +282,21 @@ namespace Oxygen
             height = cairo_image_surface_get_height( surface );
             return;
 
+            #if CAIRO_HAS_XLIB_SURFACE
             case CAIRO_SURFACE_TYPE_XLIB:
             width = cairo_xlib_surface_get_width( surface );
             height = cairo_xlib_surface_get_height( surface );
             return;
+            #endif
 
             default:
             {
                 // This is less efficient, still makes rendering correct
-                std::cerr << "Oxygen::cairo_surface_get_size: warning: using cairo_clip_extents to determine surface height. Surface type: " << type << std::endl;
                 Cairo::Context context(surface);
                 double x1, x2, y1, y2;
                 cairo_clip_extents( context, &x1, &y1, &x2, &y2 );
-                width = int( x1-x1 );
-                height = int( y2-y1 );
+                width = int(  x2 - x1 );
+                height = int( y2 - y1 );
                 return;
             }
         }
