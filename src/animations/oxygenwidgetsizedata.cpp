@@ -33,25 +33,27 @@ namespace Oxygen
 
         if(GTK_IS_MENU(widget))
         {
-            window=gtk_widget_get_parent_window(widget);
+
+            window = gtk_widget_get_parent_window(widget);
             verticalMaskOffset=Oxygen::Menu_VerticalOffset;
-        }
-        else if(Gtk::gtk_is_tooltip(widget))
-        {
+
+        } else if(Gtk::gtk_is_tooltip(widget)) {
+
+            window = gtk_widget_get_window(widget);
+
+        } else if(Gtk::gtk_combobox_is_popup(widget)) {
+
             window=gtk_widget_get_window(widget);
-        }
-        else if(Gtk::gtk_combobox_is_popup(widget))
-        {
+
+        } else if(Gtk::gtk_combo_is_popup(widget)) {
+
             window=gtk_widget_get_window(widget);
-        }
-        else if(Gtk::gtk_combo_is_popup(widget))
-        {
-            window=gtk_widget_get_window(widget);
-        }
-        else
-        {
+
+        } else {
+
             std::cerr << "FIXME: Oxygen::WidgetSizeData: unknown window type: \""<< Gtk::gtk_widget_path(widget)<<"\"\n";
             return false;
+
         }
 
         const bool wasAlpha(_alpha);
@@ -63,32 +65,34 @@ namespace Oxygen
         const bool sizeChanged( width != _width || height != _height );
         const bool alphaChanged( alpha != wasAlpha );
 
-        if( !sizeChanged && !alphaChanged )
-            return false;
+        if( !sizeChanged && !alphaChanged ) return false;
 
         if(!alpha)
         {
+
             // make menus/tooltips/combo lists appear rounded using XShape extension if screen isn't composited
             GdkPixmap* mask( Style::instance().helper().roundMask( width, height - 2*verticalMaskOffset) );
             gdk_window_shape_combine_mask( window, mask, 0, verticalMaskOffset );
             gdk_pixmap_unref(mask);
-        }
-        else
-        {
+
+        } else {
+
             // reset mask if compositing has appeared after we had set a mask
             gdk_window_shape_combine_mask( window, NULL, 0, 0);
 
             // TODO: move to size allocation hook
-            if( Gtk::gtk_is_tooltip(widget) && (sizeChanged||!wasAlpha) )
+            if( Gtk::gtk_is_tooltip(widget) && ( sizeChanged || !wasAlpha ) )
             {
                 Style::instance().setWindowBlur(window,true);
             }
 
-            if(Style::instance().settings().backgroundOpacity()<255)
+            if( Style::instance().settings().backgroundOpacity() < 255 )
             {
-                if(GTK_IS_MENU(widget))
-                    Style::instance().setWindowBlur(window,true);
+
+                if(GTK_IS_MENU(widget)) Style::instance().setWindowBlur(window,true);
+
             }
+
         }
 
         // Update widget properties

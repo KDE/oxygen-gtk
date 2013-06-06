@@ -516,7 +516,7 @@ namespace Oxygen
         TabCloseButtons _tabCloseButtons;
 
         //! Atom to show kwin what regions of translucent windows should be blurred
-        Atom blurAtom;
+        Atom _blurAtom;
 
         //! singleton
         static Style* _instance;
