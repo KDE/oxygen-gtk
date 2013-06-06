@@ -111,9 +111,11 @@ find_package(PkgConfig REQUIRED )
 
 # GTK
 pkg_check_modules( GTK REQUIRED gtk+-2.0 )
+add_definitions( ${GTK_CFLAGS_OTHER} )
 
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
+add_definitions( ${CAIRO_CFLAGS_OTHER} )
 
 ##########################
 # installation directories
