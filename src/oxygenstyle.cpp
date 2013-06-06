@@ -108,10 +108,15 @@ namespace Oxygen
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
         GdkDisplay *display( gdk_display_get_default () );
-        if(display)
-            blurAtom=XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
-        else
-            blurAtom=None;
+        if( display )
+        {
+            _blurAtom = XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
+
+        } else {
+
+            _blurAtom=None;
+
+        }
 
         return true;
 
@@ -3939,25 +3944,29 @@ namespace Oxygen
     //_________________________________________________________
     void Style::setWindowBlur(GdkWindow* window,bool enable)
     {
+
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
-#if GTK_CHECK_VERSION(2,24,0)
-        int w=gdk_window_get_width(window);
-        int h=gdk_window_get_height(window);
+        #if GTK_CHECK_VERSION(2,24,0)
+        int w = gdk_window_get_width(window);
+        int h = gdk_window_get_height(window);
         GdkDisplay* gdkDisplay=gdk_window_get_display(window);
-#else
+        #else
         int w,h;
         gdk_drawable_get_size(window,&w,&h);
         GdkDisplay* gdkDisplay=gdk_drawable_get_display(window);
-#endif
+        #endif
+
         const guint32 rects[4]={0,0, (guint32)w, (guint32)h};
         const XID id( GDK_WINDOW_XID( window ) );
-        Display* dpy(GDK_DISPLAY_XDISPLAY(gdkDisplay));
+        Display* display( GDK_DISPLAY_XDISPLAY( gdkDisplay ) );
 
         if(enable)
-            XChangeProperty(dpy,id,blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
-        else
-            XDeleteProperty(dpy,id,blurAtom);
+        {
+
+            XChangeProperty( display, id, _blurAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<const unsigned char*>(rects), 4 );
+
+        } else XDeleteProperty( display, id, _blurAtom );
     }
 
 
