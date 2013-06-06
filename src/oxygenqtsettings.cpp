@@ -38,6 +38,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 
 namespace Oxygen
 {
@@ -350,7 +351,14 @@ namespace Oxygen
         // make sure that corresponding directory does exist
         struct stat st;
         if( stat( _userConfigDir.c_str(), &st ) != 0 )
-        { mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO ); }
+        {
+
+            #if _POSIX_C_SOURCE
+            mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO );
+            #else
+            mkdir( _userConfigDir.c_str() );
+            #endif
+        }
 
         // note: in some cases, the target might exist and not be a directory
         // nothing we can do about it. We won't overwrite the file to prevent dataloss
