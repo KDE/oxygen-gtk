@@ -57,8 +57,8 @@ namespace Oxygen
         const ShadowConfiguration& shadowConfiguration( active ? activeShadowConfiguration_ : inactiveShadowConfiguration_ );
 
         static const double fixedSize=25.5;
-        double size( shadowSize() );
-        double shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize() : 0 );
+        const double size( shadowSize() );
+        const double shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize() : 0 );
 
         Cairo::Surface shadow( helper().createSurface( int(size*2), int(size*2) ) );
         Cairo::Context p(shadow);

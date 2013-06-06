@@ -41,9 +41,14 @@ namespace Oxygen
     TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w2, int h2 ):
         _w1(w1), _h1(h1), _w3(0), _h3(0)
     {
+
+        int sw(0);
+        int sh(0);
+        cairo_surface_get_size( surface, sw, sh );
+
         // set metrics
-        _w3 = cairo_surface_get_width( surface ) - (w1 + w2);
-        _h3 = cairo_surface_get_height( surface ) - (h1 + h2);
+        _w3 = sw - (w1 + w2);
+        _h3 = sh - (h1 + h2);
 
         int w = w2; while (w < 32 && w2 > 0) w += w2;
         int h = h2; while (h < 32 && h2 > 0) h += h2;
@@ -73,9 +78,14 @@ namespace Oxygen
     TileSet::TileSet( const Cairo::Surface& surface, int w1, int h1, int w3, int h3, int x1, int y1, int w2, int h2):
         _w1(w1), _h1(h1), _w3(w3), _h3(h3)
     {
+
+        int sw(0);
+        int sh(0);
+        cairo_surface_get_size( surface, sw, sh );
+
         // set metrics
-        int x2 = cairo_surface_get_width( surface ) - _w3;
-        int y2 = cairo_surface_get_height( surface ) - _h3;
+        int x2 = sw - _w3;
+        int y2 = sh - _h3;
         int w = w2; while (w < 32 && w2 > 0) w += w2;
         int h = h2; while (h < 32 && h2 > 0) h += h2;
 
