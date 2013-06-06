@@ -999,7 +999,7 @@ namespace Oxygen
             // get surface
             const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h-1 ) );
             cairo_translate( context, x, y );
-            cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+            cairo_rectangle( context, 0, 0, w, h-1 );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_fill( context );
         }
@@ -1095,8 +1095,7 @@ namespace Oxygen
         else if( options&Hover ) glow = hovered;
         else glow = shadow;
 
-        helper().scrollHandle( color, glow ).
-            render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
+        helper().scrollHandle( color, glow ).render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
 
         // contents
         const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
