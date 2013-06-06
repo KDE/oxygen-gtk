@@ -34,7 +34,9 @@
 #include <algorithm>
 #include <cmath>
 
+#ifdef GDK_WINDOWING_X11
 #include <X11/Xatom.h>
+#endif
 
 namespace Oxygen
 {
@@ -107,6 +109,7 @@ namespace Oxygen
         shadowHelper().setApplicationName( settings().applicationName() );
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
+        #ifdef GDK_WINDOWING_X11
         GdkDisplay *display( gdk_display_get_default () );
         if( display )
         {
@@ -117,6 +120,7 @@ namespace Oxygen
             _blurAtom=None;
 
         }
+        #endif
 
         return true;
 
@@ -2498,6 +2502,8 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, const gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
     {
+
+        #ifdef GDK_WINDOWING_X11
         /*
            (any element of windowStrings[] may be NULL - will be understood as "")
            windowStrings may also be NULL
@@ -2742,6 +2748,9 @@ namespace Oxygen
                 cairo_fill(context);
             }
         }
+
+        #endif
+
     }
 
     //__________________________________________________________________
@@ -3945,6 +3954,8 @@ namespace Oxygen
     void Style::setWindowBlur(GdkWindow* window,bool enable)
     {
 
+        #ifdef GDK_WINDOWING_X11
+
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
         #if GTK_CHECK_VERSION(2,24,0)
@@ -3967,7 +3978,9 @@ namespace Oxygen
             XChangeProperty( display, id, _blurAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<const unsigned char*>(rects), 4 );
 
         } else XDeleteProperty( display, id, _blurAtom );
-    }
 
+        #endif
+
+    }
 
 }

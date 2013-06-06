@@ -27,10 +27,11 @@
 #include "oxygengtkutils.h"
 #include "config.h"
 
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <cstdlib>
+#include <unistd.h>
 
 namespace Oxygen
 {

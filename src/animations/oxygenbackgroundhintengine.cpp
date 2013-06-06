@@ -23,8 +23,10 @@
 
 #include <iostream>
 
+#ifdef GDK_WINDOWING_X11
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#endif
 
 namespace Oxygen
 {
@@ -35,6 +37,7 @@ namespace Oxygen
     {
 
         // create background gradient atom
+        #ifdef GDK_WINDOWING_X11
         GdkDisplay *display( gdk_display_get_default () );
         if( display )
         {
@@ -48,11 +51,14 @@ namespace Oxygen
             _backgroundPixmapAtom = None;
 
         }
+        #endif
     }
 
     //_________________________________________________________
     bool BackgroundHintEngine::registerWidget( GtkWidget* widget, BackgroundHints hints )
     {
+
+        #ifdef GDK_WINDOWING_X11
 
         // get associated top level widget
         GtkWidget* topLevel( gtk_widget_get_toplevel( widget ) );
@@ -97,11 +103,19 @@ namespace Oxygen
         // call base class
         BaseEngine::registerWidget( topLevel );
         return true;
+
+        #else
+
+        return false;
+
+        #endif
     }
 
     //_________________________________________________________
     void BackgroundHintEngine::unregisterWidget( GtkWidget* widget )
     {
+
+        #ifdef GDK_WINDOWING_X11
         SameWidgetFTor ftor( widget );
         for( std::set<Data>::iterator iter = _data.begin(); iter != _data.end(); )
         {
@@ -118,6 +132,21 @@ namespace Oxygen
             } else ++iter;
 
         }
+        #endif
+
+    }
+
+
+    //____________________________________________________________________
+    bool BackgroundHintEngine::contains( GtkWidget* widget ) const
+    {
+
+        #ifdef GDK_WINDOWING_X11
+        return std::find_if( _data.begin(), _data.end(), SameWidgetFTor( widget ) ) != _data.end();
+        #else
+        return false;
+        #endif
+
     }
 
 }

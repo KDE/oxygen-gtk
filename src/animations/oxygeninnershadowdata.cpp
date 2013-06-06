@@ -19,7 +19,6 @@
 * MA 02110-1301, USA.
 */
 
-#include <gtk/gtk.h>
 #include "oxygeninnershadowdata.h"
 #include "../oxygengtkutils.h"
 #include "../config.h"
@@ -28,7 +27,9 @@
 #include "oxygenanimations.h"
 #include "../oxygenstyle.h"
 #include "../oxygenmetrics.h"
-#include <stdlib.h>
+
+#include <gtk/gtk.h>
+#include <cstdlib>
 
 #include <cassert>
 #include <iostream>

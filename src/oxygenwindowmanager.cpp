@@ -30,7 +30,9 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
+#ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
+#endif
 
 namespace Oxygen
 {
@@ -395,6 +397,8 @@ namespace Oxygen
     //_________________________________________________________________
     bool WindowManager::startDrag( GtkWidget* widget, int x, int y )
     {
+
+        #ifdef GDK_WINDOWING_X11
         // create xevent and send.
         XEvent     xev;
         GtkWindow  *topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
@@ -423,10 +427,14 @@ namespace Oxygen
 
         // force a release as some widgets miss it...
         finishDrag();
-
-        // wmButtonRelease( widget, 0L, this );
-
         return true;
+
+        #else
+
+        return false;
+
+        #endif
+
     }
 
     //_________________________________________________
@@ -444,7 +452,10 @@ namespace Oxygen
         if( _drag )
         {
 
+            #ifdef GDK_WINDOWING_X11
             gdk_pointer_ungrab( CurrentTime );
+            #endif
+
             _drag = false;
             return true;
 

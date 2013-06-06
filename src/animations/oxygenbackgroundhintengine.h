@@ -23,12 +23,14 @@
 #include "../oxygenflags.h"
 #include "oxygenbaseengine.h"
 
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <set>
 #include <algorithm>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
 #include <X11/Xdefs.h>
+#endif
 
 namespace Oxygen
 {
@@ -71,10 +73,11 @@ namespace Oxygen
         virtual void unregisterWidget( GtkWidget* );
 
         //! returns true if widget is registered
-        inline bool contains( GtkWidget* widget ) const;
+        bool contains( GtkWidget* widget ) const;
 
         protected:
 
+        #ifdef GDK_WINDOWING_X11
         //! argb hint atom
         Atom _backgroundGradientAtom;
 
@@ -145,11 +148,9 @@ namespace Oxygen
         //! store registered widgets
         std::set<Data> _data;
 
-    };
+        #endif
 
-    //____________________________________________________________________
-    bool BackgroundHintEngine::contains( GtkWidget* widget ) const
-    { return std::find_if( _data.begin(), _data.end(), SameWidgetFTor( widget ) ) != _data.end(); }
+    };
 
 }
 
