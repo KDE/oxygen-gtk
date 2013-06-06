@@ -400,11 +400,11 @@ namespace Oxygen
 
         #ifdef GDK_WINDOWING_X11
         // create xevent and send.
-        XEvent     xev;
-        GtkWindow  *topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
-        GdkWindow  *window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
-        GdkDisplay *display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
-        GdkWindow  *root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
+        XEvent xev;
+        GtkWindow* topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
+        GdkWindow* window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
+        GdkDisplay* display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
+        GdkWindow* root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
 
         xev.xclient.type = ClientMessage;
         xev.xclient.message_type = gdk_x11_get_xatom_by_name_for_display(display, "_NET_WM_MOVERESIZE");
