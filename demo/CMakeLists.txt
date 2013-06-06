@@ -16,7 +16,12 @@ set( oxygen_gtk_demo_SOURCES
     oxygengtkdemo_main.cpp
  )
 
-add_executable( oxygen-gtk-demo ${oxygen_gtk_demo_SOURCES} )
+IF( WIN32 )
+    add_executable( oxygen-gtk-demo WIN32 ${oxygen_gtk_demo_SOURCES} )
+ELSE( WIN32 )
+    add_executable( oxygen-gtk-demo ${oxygen_gtk_demo_SOURCES} )
+ENDIF( WIN32 )
+
 target_link_libraries( oxygen-gtk-demo ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} )
 install( TARGETS oxygen-gtk-demo DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 
