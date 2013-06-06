@@ -30,8 +30,10 @@
 #include <vector>
 #include <map>
 
+#ifdef GDK_WINDOWING_X11
 #include <X11/Xdefs.h>
 #include <X11/Xlib.h>
+#endif
 
 namespace Oxygen
 {
@@ -82,7 +84,9 @@ namespace Oxygen
         void createPixmapHandles( void );
 
         //! create Pixmap for given surface
+        #ifdef GDK_WINDOWING_X11
         Pixmap createPixmap( const Cairo::Surface&, int opacity = 255 ) const;
+        #endif
 
         //! install shadow X11 property on given widget
         /*!
@@ -114,8 +118,10 @@ namespace Oxygen
         //! application name
         ApplicationName _applicationName;
 
+        #ifdef GDK_WINDOWING_X11
         //! shadow atom
         Atom _atom;
+        #endif
 
         //! number of pixmaps
         enum { numPixmaps = 8 };

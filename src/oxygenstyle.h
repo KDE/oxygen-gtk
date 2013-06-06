@@ -40,7 +40,12 @@
 #include "oxygenwindecooptions.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowmanager.h"
+
 #include <gdk/gdk.h>
+
+#ifdef GDK_WINDOWING_X11
+#include <X11/Xdefs.h>
+#endif
 
 namespace Oxygen
 {
@@ -515,8 +520,10 @@ namespace Oxygen
         //! Tab close buttons
         TabCloseButtons _tabCloseButtons;
 
+        #ifdef GDK_WINDOWING_X11
         //! Atom to show kwin what regions of translucent windows should be blurred
         Atom _blurAtom;
+        #endif
 
         //! singleton
         static Style* _instance;

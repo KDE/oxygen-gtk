@@ -26,7 +26,6 @@
 
 #include <cmath>
 #include <gdk/gdk.h>
-#include <gdk/gdkx.h>
 
 namespace Oxygen
 {
