@@ -293,7 +293,7 @@ namespace Oxygen
 
         // load icon install prefix
         gchar* path = 0L;
-        if( runCommand( "kde4-config --path config", path ) && path )
+        if( runCommand( "kde4-config --path config 2>/dev/null", path ) && path )
         {
 
             out.split( path );
@@ -323,7 +323,7 @@ namespace Oxygen
         // load icon install prefix
         PathList out;
         char* path = 0L;
-        if( runCommand( "kde4-config --path icon", path ) && path )
+        if( runCommand( "kde4-config --path icon 2>/dev/null", path ) && path )
         {
             out.split( path );
             g_free( path );
