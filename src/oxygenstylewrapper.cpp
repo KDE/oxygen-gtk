@@ -138,6 +138,14 @@ namespace Oxygen
                 return;
             }
 
+            // for opera, render flat background, always
+            // (using renderwindowbackground will at best fall back to flat, at worse, render garbage)
+            if( Style::instance().settings().applicationName().isOpera() )
+            {
+                Style::instance().fill( window, clipRect, x, y, w, h, Palette::Window );
+                return;
+            }
+
             // do nothing for mozilla, acrobat, gnome applets, and other hint-specific windows
             if(
                 Style::instance().settings().applicationName().useFlatBackground( widget ) ||
