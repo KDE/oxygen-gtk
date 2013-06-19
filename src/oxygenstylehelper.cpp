@@ -26,7 +26,6 @@
 
 #include <cmath>
 #include <gdk/gdk.h>
-#include <gdk/gdkx.h>
 
 namespace Oxygen
 {
@@ -110,10 +109,19 @@ namespace Oxygen
 
         // translate
         cairo_save( context );
-        if( vertical ) cairo_translate( context, x+w/2-1, y );
-        else cairo_translate( context, x, y+h/2 );
+        if( vertical )
+        {
 
-        cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+            cairo_translate( context, x+w/2-1, y );
+            cairo_rectangle( context, 0, 0, 3, h );
+
+        } else {
+
+            cairo_translate( context, x, y+h/2 );
+            cairo_rectangle( context, 0, 0, w, 2 );
+
+        }
+
         cairo_set_source_surface( context, surface, 0, 0 );
         cairo_fill( context );
         cairo_restore( context );

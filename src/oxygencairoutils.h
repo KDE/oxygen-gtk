@@ -155,6 +155,9 @@ namespace Oxygen
     //! get height for surface
     int cairo_surface_get_height( cairo_surface_t* );
 
+    //! get size for surface
+    void cairo_surface_get_size( cairo_surface_t*, int& width, int& height );
+
     //! deep copy
     cairo_surface_t* cairo_surface_copy( cairo_surface_t* );
 

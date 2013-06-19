@@ -34,7 +34,9 @@
 #include <algorithm>
 #include <cmath>
 
+#ifdef GDK_WINDOWING_X11
 #include <X11/Xatom.h>
+#endif
 
 namespace Oxygen
 {
@@ -103,11 +105,19 @@ namespace Oxygen
         WindowShadow shadow( settings(), helper() );
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
+        #ifdef GDK_WINDOWING_X11
         GdkDisplay *display( gdk_display_get_default () );
         if( display && GDK_IS_X11_DISPLAY( display ) )
+        {
+
             blurAtom=XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
-        else
+
+        } else {
+
             blurAtom=None;
+
+        }
+        #endif
 
         return true;
 
@@ -918,7 +928,7 @@ namespace Oxygen
             // get surface
             const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h+1 ) );
             cairo_translate( context, x, y-1 );
-            cairo_rectangle( context, 0, 0, cairo_surface_get_width( surface ), cairo_surface_get_height( surface ) );
+            cairo_rectangle( context, 0, 0, w,  h+1 );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_fill( context );
         }
@@ -991,11 +1001,6 @@ namespace Oxygen
         const double wf( vertical ? w-6 : w-8 );
         const double hf( vertical ? h-6 : h-5 );
 
-//         const double xf( vertical ? x+2 : x+3 );
-//         const double yf( vertical ? y+2 : y+1 );
-//         const double wf( vertical ? w-4 : w-6 );
-//         const double hf( vertical ? h-4 : h-3 );
-
         if( wf <= 0 || hf <= 0 ) return;
 
         // context
@@ -1015,8 +1020,7 @@ namespace Oxygen
         else if( options&Hover ) glow = hovered;
         else glow = shadow;
 
-        helper().scrollHandle( color, glow ).
-            render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
+        helper().scrollHandle( color, glow ).render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
 
         // contents
         const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
@@ -2406,6 +2410,8 @@ namespace Oxygen
     //__________________________________________________________________
     void Style::drawWindowDecoration( cairo_t* context, WinDeco::Options wopt, gint x, gint y, gint w, gint h, const gchar** windowStrings, gint titleIndentLeft, gint titleIndentRight )
     {
+        #ifdef GDK_WINDOWING_X11
+
         /*
            (any element of windowStrings[] may be NULL - will be understood as "")
            windowStrings may also be NULL
@@ -2639,6 +2645,9 @@ namespace Oxygen
                 cairo_fill(context);
             }
         }
+
+        #endif
+
     }
 
     //__________________________________________________________________
@@ -3819,6 +3828,9 @@ namespace Oxygen
     //_________________________________________________________
     void Style::setWindowBlur(GdkWindow* window,bool enable)
     {
+
+        #ifdef GDK_WINDOWING_X11
+
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
         guint32 w=gdk_window_get_width(window);
@@ -3827,11 +3839,19 @@ namespace Oxygen
         const XID id( GDK_WINDOW_XID( window ) );
         Display* dpy(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)));
 
-        if(enable)
-            XChangeProperty(dpy,id,blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
-        else
-            XDeleteProperty(dpy,id,blurAtom);
-    }
+        if( enable )
+        {
 
+            XChangeProperty(dpy,id,blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
+
+        } else {
+
+            XDeleteProperty(dpy,id,blurAtom);
+
+        }
+
+    #endif
+
+    }
 
 }

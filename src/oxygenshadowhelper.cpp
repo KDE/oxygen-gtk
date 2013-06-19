@@ -31,9 +31,12 @@
 
 #include <iostream>
 #include <cairo/cairo.h>
+
+#ifdef GDK_WINDOWING_X11
 #include <cairo/cairo-xlib.h>
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
+#endif
 
 namespace Oxygen
 {
@@ -41,9 +44,13 @@ namespace Oxygen
     //______________________________________________
     ShadowHelper::ShadowHelper( void ):
         _size(0),
-        _atom(0),
         _hooksInitialized( false )
     {
+
+        #ifdef GDK_WINDOWING_X11
+        _atom = None;
+        #endif
+
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::ShadowHelper::ShadowHelper" << std::endl;
         #endif
@@ -69,19 +76,27 @@ namespace Oxygen
         std::cerr << "Oxygen::ShadowHelper::reset" << std::endl;
         #endif
 
+        #ifdef GDK_WINDOWING_X11
         GdkScreen* screen = gdk_screen_get_default();
         if( !screen ) return;
 
-        Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
+        GdkDisplay *display( gdk_screen_get_display( screen ) );
+        if( display && GDK_IS_X11_DISPLAY( display )  )
+        {
 
-        // round pixmaps
-        for( PixmapList::const_iterator iter = _roundPixmaps.begin(); iter != _roundPixmaps.end(); ++iter )
-        { XFreePixmap(display, *iter); }
+            // round pixmaps
+            for( PixmapList::const_iterator iter = _roundPixmaps.begin(); iter != _roundPixmaps.end(); ++iter )
+            { XFreePixmap(GDK_DISPLAY_XDISPLAY( display ), *iter); }
+
+            // square pixmaps
+            for( PixmapList::const_iterator iter = _squarePixmaps.begin(); iter != _squarePixmaps.end(); ++iter )
+            { XFreePixmap(GDK_DISPLAY_XDISPLAY( display ), *iter); }
+
+        }
+
+        #endif
+
         _roundPixmaps.clear();
-
-        // square pixmaps
-        for( PixmapList::const_iterator iter = _squarePixmaps.begin(); iter != _squarePixmaps.end(); ++iter )
-        { XFreePixmap(display, *iter); }
         _squarePixmaps.clear();
 
         // reset size
@@ -229,6 +244,7 @@ namespace Oxygen
         #endif
 
         // create atom
+        #ifdef GDK_WINDOWING_X11
         if( !_atom )
         {
 
@@ -312,9 +328,12 @@ namespace Oxygen
 
         }
 
+        #endif
+
     }
 
     //______________________________________________
+    #ifdef GDK_WINDOWING_X11
     Pixmap ShadowHelper::createPixmap( const Cairo::Surface& surface, int opacity ) const
     {
         assert( surface.isValid() );
@@ -351,10 +370,13 @@ namespace Oxygen
         return pixmap;
 
     }
+    #endif
 
     //______________________________________________
     void ShadowHelper::installX11Shadows( GtkWidget* widget )
     {
+
+        #ifdef GDK_WINDOWING_X11
 
         #if OXYGEN_DEBUG
         std::cerr
@@ -407,6 +429,8 @@ namespace Oxygen
             GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom, XA_CARDINAL, 32, PropModeReplace,
             reinterpret_cast<const unsigned char *>(&data[0]), data.size() );
 
+        #endif
+
     }
 
     //_______________________________________________________
@@ -415,10 +439,12 @@ namespace Oxygen
 
         if( !GTK_IS_WIDGET( widget ) ) return;
 
+        #ifdef GDK_WINDOWING_X11
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
         if( GDK_IS_X11_DISPLAY( display ) )
         { XDeleteProperty( GDK_DISPLAY_XDISPLAY( display ), GDK_WINDOW_XID(window), _atom); }
+        #endif
 
     }
 

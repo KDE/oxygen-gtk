@@ -30,7 +30,9 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
+#ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
+#endif
 
 namespace Oxygen
 {
@@ -396,12 +398,14 @@ namespace Oxygen
     //_________________________________________________________________
     bool WindowManager::startDrag( GtkWidget* widget, int x, int y )
     {
+
+        #ifdef GDK_WINDOWING_X11
         // create xevent and send.
         XEvent     xev;
-        GtkWindow  *topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
-        GdkWindow  *window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
-        GdkDisplay *display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
-        GdkWindow  *root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
+        GtkWindow* topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
+        GdkWindow* window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
+        GdkDisplay* display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
+        GdkWindow* root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
 
         if( GDK_IS_X11_DISPLAY( display ) )
         {
@@ -429,8 +433,14 @@ namespace Oxygen
 
         // force a release as some widgets miss it...
         finishDrag();
-
         return true;
+
+        #else
+
+        return false;
+
+        #endif
+
     }
 
     //_________________________________________________
@@ -448,6 +458,7 @@ namespace Oxygen
         if( _drag )
         {
 
+            #ifdef GDK_WINDOWING_X11
             // get device manager
             GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
 
@@ -456,6 +467,7 @@ namespace Oxygen
 
             // ungrab
             if( pointer ) gdk_device_ungrab( pointer, GDK_CURRENT_TIME );
+            #endif
 
             _drag = false;
             return true;

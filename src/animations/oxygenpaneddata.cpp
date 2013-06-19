@@ -20,8 +20,11 @@
 
 #include "oxygenpaneddata.h"
 
-#include <cassert>
+#ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
+#endif
+
+#include <cassert>
 
 namespace Oxygen
 {
@@ -49,10 +52,10 @@ namespace Oxygen
         if( !GTK_IS_PANED( widget ) ) return;
 
         // load cursor if needed
+        #ifdef GDK_WINDOWING_X11
         if( !_cursorLoaded )
         {
             assert( !_cursor );
-
             GdkDisplay *display( gtk_widget_get_display( widget ) );
             if( GDK_IS_X11_DISPLAY( display ) )
             {
@@ -62,6 +65,7 @@ namespace Oxygen
             }
 
         }
+        #endif
 
         // assign to widget
         if( _cursor )
