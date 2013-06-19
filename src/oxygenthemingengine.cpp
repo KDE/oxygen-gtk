@@ -962,8 +962,9 @@ namespace Oxygen
                     { gtk_widget_hide(image); }
 
                     // center the button image
-                    const int height( cairo_surface_get_height( surface ) );
-                    const int width( cairo_surface_get_width( surface ) );
+                    int width(0);
+                    int height(0);
+                    cairo_surface_get_size( surface, width, height );
                     x=x+(w-width)/2;
                     y=y+(h-height)/2;
 

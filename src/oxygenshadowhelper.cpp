@@ -337,8 +337,9 @@ namespace Oxygen
     Pixmap ShadowHelper::createPixmap( const Cairo::Surface& surface, int opacity ) const
     {
         assert( surface.isValid() );
-        const int width( cairo_surface_get_width( surface ) );
-        const int height( cairo_surface_get_height( surface ) );
+        int width(0);
+        int height(0);
+        cairo_surface_get_size( surface, width, height );
 
         GdkScreen* screen = gdk_screen_get_default();
         Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
