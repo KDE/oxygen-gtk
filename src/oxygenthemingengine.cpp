@@ -228,6 +228,10 @@ namespace Oxygen
         if(GTK_IS_DIALOG(toplevel))
         { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
 
+//         // since version 3.8.2, a background is rendered for FRAME, which we do not want.
+//         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) )
+//         { return; }
+
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
 
@@ -534,6 +538,7 @@ namespace Oxygen
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCALE ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_LABEL ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) ||
