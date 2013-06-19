@@ -211,30 +211,7 @@ namespace Oxygen
 
     //_________________________________________________________
     bool QtSettings::runCommand( const std::string& command, char*& result ) const
-    {
-
-        if( FILE* fp = popen( command.c_str(), "r" ) )
-        {
-
-            // read command output. Make sure that the buffer is large enough to read the entire
-            // output, by multiplying its initial size by two as long as the last character is not '\n'
-            // note that the allocated string must be freed by the calling method
-            gulong bufSize=512;
-            size_t currentOffset=0;
-            result= static_cast<char*>(g_malloc(bufSize));
-            while( fgets( result+currentOffset, bufSize-currentOffset, fp ) && result[strlen(result)-1] != '\n' )
-            {
-                currentOffset = bufSize-1;
-                bufSize *= 2;
-                result = static_cast<char*>( g_realloc( result, bufSize ) );
-            }
-
-            pclose(fp);
-            return true;
-
-        } else return false;
-
-    }
+    { return g_spawn_command_line_sync( command.c_str(), &result, 0L, 0L, 0L ) && result; }
 
     //_________________________________________________________
     bool QtSettings::loadKdeGlobals( void )
@@ -296,7 +273,7 @@ namespace Oxygen
 
         // load icon install prefix
         gchar* path = 0L;
-        if( runCommand( "kde4-config --path config 2>/dev/null", path ) && path )
+        if( runCommand( "kde4-config --path config", path ) && path )
         {
 
             out.split( path );
@@ -326,7 +303,7 @@ namespace Oxygen
         // load icon install prefix
         PathList out;
         char* path = 0L;
-        if( runCommand( "kde4-config --path icon 2>/dev/null", path ) && path )
+        if( runCommand( "kde4-config --path icon", path ) && path )
         {
             out.split( path );
             g_free( path );
