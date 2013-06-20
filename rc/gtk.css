@@ -77,6 +77,10 @@ INFO: css border and padding ordering is either:
     -GtkWindow-resize-grip-height: 0px;
     -GtkWindow-resize-grip-width: 0px;
 
+    -GtkWidget-wide-separators: 1;
+    -GtkWidget-separator-width: 3;
+    -GtkWidget-separator-height: 3;
+
     engine: oxygen-gtk;
 }
 
