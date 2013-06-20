@@ -182,10 +182,7 @@ namespace Oxygen
             { options |= Menu; }
 
             // get orientation
-            // TODO: is there a better way ?
-            const bool vertical( abs( y1 - y0 ) > abs( x1 - x0 ) );
-            if( vertical ) options |= Vertical;
-
+            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
             Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
         }
