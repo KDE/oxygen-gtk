@@ -198,7 +198,7 @@ namespace Oxygen
             if( !engine ) return false;
 
             #if GTK_CHECK_VERSION( 3, 8, 0 )
-            return (gtk_theming_engine_get_state( engine ) & GTK_STATE_FLAG_DIR_RTL) || !(gtk_theming_engine_get_state( engine ) & GTK_STATE_FLAG_DIR_LTR);
+            return gtk_theming_engine_get_state( engine ) & GTK_STATE_FLAG_DIR_RTL;
 
             #else
             return gtk_theming_engine_get_direction( engine ) == GTK_TEXT_DIR_RTL;
