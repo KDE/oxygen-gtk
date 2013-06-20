@@ -661,6 +661,12 @@ namespace Oxygen
 
         }
 
+        // separators, the same code is used as in render_line
+        // this code is called when gtkwidget-wide-separators option is set to 1.
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SEPARATOR ) )
+        { return render_line( engine, context, x, y, x+w, y+h ); }
+
+        //
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) )
         {
 
