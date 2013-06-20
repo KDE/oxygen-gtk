@@ -148,7 +148,9 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) && !Style::instance().settings().toolBarDrawItemSeparator() )
+        const bool isToolBarSeparator( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) );
+
+        if( isToolBarSeparator && !Style::instance().settings().toolBarDrawItemSeparator() )
         {
             // no separators in toolbars, if requested accordingly
             return;
@@ -182,7 +184,8 @@ namespace Oxygen
             { options |= Menu; }
 
             // get orientation
-            if( Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+            if( isToolBarSeparator || Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+
             Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
         }
