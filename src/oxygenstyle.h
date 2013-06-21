@@ -338,8 +338,7 @@ namespace Oxygen
         protected:
 
         //! constructor
-        explicit Style( void )
-        {}
+        Style( void );
 
         //! get color matching role from either style option or default palette
         const ColorUtils::Rgba& color( Palette::Role role, const StyleOptions& option ) const

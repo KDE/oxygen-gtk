@@ -58,6 +58,14 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    Style::Style( void )
+    {
+        #ifdef GDK_WINDOWING_X11
+        _blurAtom = None;
+        #endif
+    }
+
+    //__________________________________________________________________
     bool Style::initialize( unsigned int flags )
     {
 
@@ -110,16 +118,15 @@ namespace Oxygen
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
         #ifdef GDK_WINDOWING_X11
-        GdkDisplay *display( gdk_display_get_default () );
-        if( display )
+        if( _blurAtom == None )
         {
-            _blurAtom = XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
 
-        } else {
-
-            _blurAtom=None;
+            GdkDisplay *display( gdk_display_get_default() );
+            if( display )
+            { _blurAtom = XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False); }
 
         }
+
         #endif
 
         return true;
