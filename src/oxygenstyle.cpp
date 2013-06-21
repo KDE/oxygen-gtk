@@ -2443,19 +2443,18 @@ namespace Oxygen
 
             Window window((Window)windowStrings[2]);
             Display* display( GDK_DISPLAY_XDISPLAY(gdk_display_get_default()) );
-            Atom _backgroundGradientAtom = XInternAtom( display, "_KDE_OXYGEN_BACKGROUND_GRADIENT", False);
-            if(_backgroundGradientAtom)
+            if( _animations.backgroundHintEngine().backgroundGradientAtom() != None )
             {
-                Atom type_ret;
-                int format_ret;
-                unsigned long items_ret;
-                unsigned long after_ret;
-                unsigned char *prop_data = 0;
+                Atom typeRet;
+                int formatRet;
+                unsigned long itemsRet;
+                unsigned long afterRet;
+                unsigned char *data = 0;
 
-                if( !(XGetWindowProperty(display, window, _backgroundGradientAtom, 0, G_MAXLONG, False,
-                        XA_CARDINAL, &type_ret, &format_ret, &items_ret, &after_ret, &prop_data) == Success
-                            && items_ret == 1
-                            && format_ret == 32) )
+                if( !( XGetWindowProperty(display, window, _animations.backgroundHintEngine().backgroundGradientAtom(), 0, G_MAXLONG, False,
+                    XA_CARDINAL, &typeRet, &formatRet, &itemsRet, &afterRet, &data) == Success
+                    && itemsRet == 1
+                    && formatRet == 32) )
                 {
                     // if the window doesn't have this property set, it's likely
                     // non-oxygenized, thus shouldn't have windeco bg gradient
