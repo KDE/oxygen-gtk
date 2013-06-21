@@ -55,6 +55,14 @@ namespace Oxygen
     }
 
     //__________________________________________________________________
+    Style::Style( void )
+    {
+        #ifdef GDK_WINDOWING_X11
+        _blurAtom = None;
+        #endif
+    }
+
+    //__________________________________________________________________
     bool Style::initialize( unsigned int flags )
     {
 
@@ -106,16 +114,11 @@ namespace Oxygen
         shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
 
         #ifdef GDK_WINDOWING_X11
-        GdkDisplay *display( gdk_display_get_default () );
-        if( display && GDK_IS_X11_DISPLAY( display ) )
+        if( _blurAtom == None )
         {
-
-            blurAtom=XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False);
-
-        } else {
-
-            blurAtom=None;
-
+            GdkDisplay *display( gdk_display_get_default () );
+            if( display && GDK_IS_X11_DISPLAY( display ) )
+            { _blurAtom = XInternAtom(GDK_DISPLAY_XDISPLAY( display ),"_KDE_NET_WM_BLUR_BEHIND_REGION",False); }
         }
         #endif
 
@@ -3842,11 +3845,11 @@ namespace Oxygen
         if( enable )
         {
 
-            XChangeProperty(dpy,id,blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
+            XChangeProperty(dpy,id,_blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
 
         } else {
 
-            XDeleteProperty(dpy,id,blurAtom);
+            XDeleteProperty(dpy,id,_blurAtom);
 
         }
 

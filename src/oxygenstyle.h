@@ -358,8 +358,7 @@ namespace Oxygen
         protected:
 
         //! constructor
-        explicit Style( void )
-        {}
+        Style( void );
 
         //! get color matching role from either style option or default palette
         const ColorUtils::Rgba& color( Palette::Role role, const StyleOptions& option ) const
@@ -545,7 +544,7 @@ namespace Oxygen
 
         #ifdef GDK_WINDOWING_X11
         //! Atom to show kwin what regions of translucent windows should be blurred
-        Atom blurAtom;
+        Atom _blurAtom;
         #endif
 
         //! singleton
