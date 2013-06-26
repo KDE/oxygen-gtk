@@ -30,10 +30,6 @@
 #include "oxygenstyle.h"
 #include "config.h"
 
-#ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
-#endif
-
 namespace Oxygen
 {
 
@@ -48,7 +44,8 @@ namespace Oxygen
         _widget( 0L ),
         _lastRejectedEvent( 0L ),
         _x(-1),
-        _y(-1)
+        _y(-1),
+        _time(0)
     {
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::WindowManager::WindowManager" << std::endl;
@@ -178,6 +175,7 @@ namespace Oxygen
             _widget = 0L;
             _x = -1;
             _y = -1;
+            _time = 0;
             _drag = false;
         }
 
@@ -391,55 +389,19 @@ namespace Oxygen
         if( distance < _dragDistance ) return false;
 
         // start drag from current position
-        return startDrag( widget, int(event->x_root), int(event->y_root) );
+        return startDrag( widget, int(event->x_root), int(event->y_root), event->time );
 
     }
 
     //_________________________________________________________________
-    bool WindowManager::startDrag( GtkWidget* widget, int x, int y )
+    bool WindowManager::startDrag( GtkWidget* widget, int x, int y, guint32 time )
     {
 
-        #ifdef GDK_WINDOWING_X11
         // create xevent and send.
-        XEvent     xev;
         GtkWindow* topLevel = GTK_WINDOW( gtk_widget_get_toplevel( widget ) );
-        GdkWindow* window = gtk_widget_get_window( GTK_WIDGET( topLevel ) );
-        GdkDisplay* display = gtk_widget_get_display( GTK_WIDGET( topLevel ) );
-        GdkWindow* root = gdk_screen_get_root_window( gtk_window_get_screen( topLevel ) );
-
-        if( GDK_IS_X11_DISPLAY( display ) )
-        {
-
-            xev.xclient.type = ClientMessage;
-            xev.xclient.message_type = gdk_x11_get_xatom_by_name_for_display(display, "_NET_WM_MOVERESIZE");
-            xev.xclient.display = GDK_DISPLAY_XDISPLAY(display);
-            xev.xclient.window = GDK_WINDOW_XID(window);
-            xev.xclient.format = 32;
-            xev.xclient.data.l[0] = x;
-            xev.xclient.data.l[1] = y;
-            xev.xclient.data.l[2] = 8; // NET::Move
-            xev.xclient.data.l[3] = Button1;
-            xev.xclient.data.l[4] = 0;
-            XUngrabPointer(GDK_DISPLAY_XDISPLAY(display), CurrentTime);
-
-            XSendEvent(
-                GDK_DISPLAY_XDISPLAY(display),
-                GDK_WINDOW_XID(root),
-                False,
-                SubstructureRedirectMask | SubstructureNotifyMask,
-                &xev);
-
-        }
-
-        // force a release as some widgets miss it...
+        gtk_window_begin_move_drag( topLevel, Gtk::LeftButton, x, y, time );
         finishDrag();
         return true;
-
-        #else
-
-        return false;
-
-        #endif
 
     }
 
@@ -451,23 +413,13 @@ namespace Oxygen
         _lastRejectedEvent = 0L;
         _x = -1;
         _y = -1;
+        _time = 0;
 
         // stop timer
         if( _timer.isRunning() ) _timer.stop();
 
         if( _drag )
         {
-
-            #ifdef GDK_WINDOWING_X11
-            // get device manager
-            GdkDeviceManager* manager( gdk_display_get_device_manager( gdk_display_get_default() ) );
-
-            // get pointer
-            GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
-
-            // ungrab
-            if( pointer ) gdk_device_ungrab( pointer, GDK_CURRENT_TIME );
-            #endif
 
             _drag = false;
             return true;
@@ -488,6 +440,7 @@ namespace Oxygen
             _widget = widget;
             _x = int(event->x_root);
             _y = int(event->y_root);
+            _time = event->time;
 
             // start timer
             if( _timer.isRunning() ) _timer.stop();

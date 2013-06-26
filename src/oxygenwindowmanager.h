@@ -124,11 +124,11 @@ namespace Oxygen
         bool startDrag( GtkWidget*, GdkEventMotion* );
 
         //! start dragging widget
-        bool startDrag( GtkWidget*, int, int );
+        bool startDrag( GtkWidget*, int, int, guint32 );
 
         //! start dragging widget
         void startDrag( void )
-        { if( _drag && _widget ) startDrag( _widget, _x, _y ); }
+        { if( _drag && _widget ) startDrag( _widget, _x, _y, _time ); }
 
         //! finish dragging widget
         bool finishDrag( void );
@@ -251,6 +251,9 @@ namespace Oxygen
         //! drag position
         int _x;
         int _y;
+
+        //! drag time
+        guint32 _time;
 
         //! widget typenames black-list
         std::vector<std::string> _blackList;
