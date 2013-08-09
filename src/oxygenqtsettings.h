@@ -192,6 +192,10 @@ namespace Oxygen
         WindowDragMode windowDragMode( void ) const
         { return _windowDragMode; }
 
+        //! use window manager to handle move-resize
+        bool useWMMoveResize( void ) const
+        { return _useWMMoveResize; }
+
         //! drag distance
         int startDragDist( void ) const
         { return _startDragDist; }
@@ -509,6 +513,9 @@ namespace Oxygen
 
         //! window drag mode
         WindowDragMode _windowDragMode;
+
+        //! use window manager to handle window grab
+        bool _useWMMoveResize;
 
         //! drag distance
         int _startDragDist;
