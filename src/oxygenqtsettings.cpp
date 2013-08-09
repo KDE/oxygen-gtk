@@ -72,6 +72,7 @@ namespace Oxygen
         _menuHighlightMode( MM_DARK ),
         _windowDragEnabled( true ),
         _windowDragMode( WD_FULL ),
+        _useWMMoveResize( true ),
         _startDragDist( 4 ),
         _startDragTime( 500 ),
         _animationsEnabled( true ),
@@ -989,6 +990,9 @@ namespace Oxygen
         std::string windowDragMode( _oxygen.getOption( "[Style]", "WindowDragMode" ).toVariant<std::string>("WD_FULL") );
         if( windowDragMode == "WD_MINIMAL" ) _windowDragMode = WD_MINIMAL;
         else _windowDragMode = WD_FULL;
+
+        // use window manager to handle window drag
+        _useWMMoveResize = _oxygen.getOption( "[Style]", "UseWMMoveResize" ).toVariant<std::string>("true") == "true";
 
         // animations
         _animationsEnabled = ( _oxygen.getOption( "[Style]", "AnimationsEnabled" ).toVariant<std::string>("true") == "true" );

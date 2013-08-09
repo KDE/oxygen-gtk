@@ -96,9 +96,12 @@ namespace Oxygen
         if( flags&QtSettings::Oxygen )
         {
             // pass window drag mode to window manager
-            if( !settings().windowDragEnabled() ) windowManager().setMode( WindowManager::Disabled );
-            else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setMode( WindowManager::Minimal );
-            else windowManager().setMode( WindowManager::Full );
+            if( !settings().windowDragEnabled() ) windowManager().setDragMode( WindowManager::Disabled );
+            else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setDragMode( WindowManager::Minimal );
+            else windowManager().setDragMode( WindowManager::Full );
+
+            // use window manager to handle window drag
+            windowManager().setUseWMMoveResize( settings().useWMMoveResize() );
 
         }
 
