@@ -86,7 +86,7 @@ namespace Oxygen
     {
 
         if( _hooksInitialized ) return;
-        if(_dragMode!=Disabled)
+        if( _dragMode!=Disabled )
         {
             _styleSetHook.connect( "style-set", (GSignalEmissionHook)styleSetHook, this );
             _buttonReleaseHook.connect( "button-release-event", (GSignalEmissionHook)buttonReleaseHook, this );
