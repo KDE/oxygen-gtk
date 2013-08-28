@@ -38,7 +38,7 @@ namespace Oxygen
         std::cerr << "Oxygen::HoverData::connect - " << widget << " (" << (widget ? G_OBJECT_TYPE_NAME( widget ):"null") << ")" << std::endl;
         #endif
 
-        const bool enabled( gtk_widget_get_state( widget ) != GTK_STATE_INSENSITIVE );
+        const bool enabled( !(gtk_widget_get_state_flags( widget )&GTK_STATE_FLAG_INSENSITIVE) );
 
         // on connection, needs to check whether mouse pointer is in widget or not
         // to have the proper initial value of the hover flag

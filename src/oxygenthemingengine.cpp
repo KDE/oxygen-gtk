@@ -105,7 +105,7 @@ namespace Oxygen
 
             Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, Flat|Hover );
 
-        } else if( engine.isLocked( widget ) && gtk_widget_get_state( engine.widget( widget, AnimationCurrent ) ) != GTK_STATE_ACTIVE ) {
+        } else if( engine.isLocked( widget ) && !(gtk_widget_get_state_flags( engine.widget( widget, AnimationCurrent ) )&GTK_STATE_FLAG_ACTIVE ) ) {
 
             // TODO: see if offsetting is robust, and can be moved upstream
             GdkRectangle rect( engine.rectangle( widget, AnimationCurrent ) );
@@ -115,7 +115,7 @@ namespace Oxygen
 
             Style::instance().renderButtonSlab( context, rect.x, rect.y, rect.width, rect.height, Flat|Hover );
 
-        } else if( engine.isAnimated( widget, AnimationPrevious ) && gtk_widget_get_state( engine.widget( widget, AnimationPrevious ) ) != GTK_STATE_ACTIVE ) {
+        } else if( engine.isAnimated( widget, AnimationPrevious ) && !( gtk_widget_get_state_flags( engine.widget( widget, AnimationPrevious ) )&GTK_STATE_FLAG_ACTIVE ) ) {
 
             // TODO: see if offsetting is robust, and can be moved upstream
             GdkRectangle rect( engine.rectangle( widget, AnimationPrevious ) );
@@ -1971,7 +1971,7 @@ namespace Oxygen
         if( gtk_widget_path_is_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) )
         {
             if( widget &&
-                gtk_widget_get_state( widget ) != GTK_STATE_PRELIGHT &&
+                !(gtk_widget_get_state_flags( widget )&GTK_STATE_FLAG_PRELIGHT) &&
                 GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
                 gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
             {
