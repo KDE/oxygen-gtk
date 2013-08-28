@@ -222,7 +222,7 @@ namespace Oxygen
         // Render rounded combobox list child
         if(Gtk::gtk_combobox_is_tree_view( child ))
         {
-            StyleOptions options(widget,gtk_widget_get_state(widget));
+            StyleOptions options( widget, gtk_widget_get_state_flags( widget ) );
             Corners corners(CornersAll);
             if(gtk_widget_get_visible(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(widget))))
             {
@@ -321,7 +321,7 @@ namespace Oxygen
             }
         }
 
-        StyleOptions options(widget,gtk_widget_get_state(widget));
+        StyleOptions options( widget, gtk_widget_get_state_flags( widget ) );
         options|=NoFill;
         options &= ~(Hover|Focus);
         if( Style::instance().animations().scrolledWindowEngine().contains( widget ) )

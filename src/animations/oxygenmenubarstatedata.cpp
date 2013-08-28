@@ -97,23 +97,23 @@ namespace Oxygen
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
 
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
-            const GtkStateType state( gtk_widget_get_state( childWidget ) );
+            const GtkStateFlags state( gtk_widget_get_state_flags( childWidget ) );
 
             // do nothing for disabled child
-            if( state == GTK_STATE_INSENSITIVE ) continue;
+            if( state&GTK_STATE_FLAG_INSENSITIVE ) continue;
 
             const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( childWidget ) );
             if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
             {
 
                 activeFound = true;
-                if( state != GTK_STATE_PRELIGHT )
+                if( !(state&GTK_STATE_FLAG_PRELIGHT) )
                 {
                     updateState( childWidget, allocation, true );
-                    if( !isLeaveEvent ) gtk_widget_set_state( childWidget, GTK_STATE_PRELIGHT );
+                    if( !isLeaveEvent ) gtk_widget_set_state_flags( childWidget, GTK_STATE_FLAG_PRELIGHT, true );
                 }
 
-            } else if( state != GTK_STATE_NORMAL ) {
+            } else if( !(state&GTK_STATE_FLAG_NORMAL) ) {
 
                 activeWidget = childWidget;
 
@@ -128,7 +128,7 @@ namespace Oxygen
 
         // disable previous active widget, if either another active widget was found, or this one is not active
         if( activeWidget && (activeFound || !menuItemIsActive( activeWidget ) ) )
-        { gtk_widget_set_state( activeWidget, GTK_STATE_NORMAL ); }
+        { gtk_widget_set_state_flags( activeWidget, GTK_STATE_FLAG_NORMAL, true ); }
 
         return;
 
@@ -206,7 +206,7 @@ namespace Oxygen
             // move current to previous; clear current, and animate
             _previous.copy( _current );
             _current.clear();
-            if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT ) _previous._timeLine.start();
+            if( _previous.isValid() && gtk_widget_get_state_flags( _previous._widget )&GTK_STATE_FLAG_PRELIGHT ) _previous._timeLine.start();
 
             return true;
 

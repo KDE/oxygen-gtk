@@ -76,8 +76,9 @@ namespace Oxygen
 
             if( !(x>0 && y>0 &&
                 x < allocation.width &&
-                y < allocation.height) && gtk_widget_get_state(button)==GTK_STATE_ACTIVE )
-            { gtk_widget_set_state(button,GTK_STATE_NORMAL); }
+                y < allocation.height) &&
+                (gtk_widget_get_state_flags( button )&GTK_STATE_FLAG_ACTIVE) )
+            { gtk_widget_set_state_flags( button, GTK_STATE_FLAG_NORMAL, true ); }
 
             gtk_button_set_relief(GTK_BUTTON(button),GTK_RELIEF_NORMAL);
             gtk_widget_set_size_request(button,16,16);
@@ -265,8 +266,7 @@ namespace Oxygen
 
         if(GTK_IS_WIDGET(widget))
         {
-            gchar* widgetPath;
-            gtk_widget_path( widget, 0L, &widgetPath, 0L);
+            char* widgetPath( gtk_widget_path_to_string( gtk_widget_get_path( widget ) ) );
             const std::string  out( widgetPath );
             g_free( widgetPath );
             return out;

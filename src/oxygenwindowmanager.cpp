@@ -663,7 +663,7 @@ namespace Oxygen
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
 
             // check widget state and type
-            if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT )
+            if( gtk_widget_get_state_flags( childWidget )&GTK_STATE_FLAG_PRELIGHT )
             {
 
                 // if widget is prelight, we don't need to check where event happen,
@@ -692,7 +692,7 @@ namespace Oxygen
             if( usable && (
                 widgetIsBlackListed( childWidget ) ||
                 ( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) ||
-                ( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) ||
+                ( GTK_IS_BUTTON( childWidget ) && !(gtk_widget_get_state_flags( childWidget )&GTK_STATE_FLAG_INSENSITIVE) ) ||
                 ( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) ||
                 ( GTK_IS_MENU_ITEM( childWidget ) ) ||
                 ( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) ) )

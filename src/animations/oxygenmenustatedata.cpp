@@ -113,10 +113,10 @@ namespace Oxygen
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
 
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
-            const GtkStateType state( gtk_widget_get_state( childWidget ) );
+            const GtkStateFlags state( gtk_widget_get_state_flags( childWidget ) );
 
             // do nothing for disabled child
-            const bool active( state != GTK_STATE_INSENSITIVE && !GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) );
+            const bool active( !( state&GTK_STATE_FLAG_INSENSITIVE || GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) );
 
             // update offsets
             if( childWindow != gtk_widget_get_window( childWidget ) )
@@ -139,7 +139,7 @@ namespace Oxygen
                 {
 
                     activeFound = true;
-                    if( state != GTK_STATE_PRELIGHT )
+                    if( !(state&GTK_STATE_FLAG_PRELIGHT) )
                     { updateState( childWidget, Gtk::gtk_widget_get_allocation( childWidget ), xOffset, yOffset, true ); }
 
                 } else delayed = true;
@@ -224,7 +224,7 @@ namespace Oxygen
 
             return true;
 
-        } else if( (!state) && widget == _current._widget ) {
+        } else if( !state && widget == _current._widget ) {
 
             // stop current animation if running
             if( _current._timeLine.isRunning() ) _current._timeLine.stop();
@@ -250,7 +250,7 @@ namespace Oxygen
                 if( _timer.isRunning() ) _timer.stop();
                 _previous.copy( _current );
                 _current.clear();
-                if( _previous.isValid() && gtk_widget_get_state( _previous._widget ) == GTK_STATE_PRELIGHT )
+                if( _previous.isValid() && gtk_widget_get_state_flags( _previous._widget )&GTK_STATE_FLAG_PRELIGHT )
                 { _previous._timeLine.start(); }
 
             }
