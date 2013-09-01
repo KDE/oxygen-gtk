@@ -26,6 +26,8 @@
 #include "oxygentimeline.h"
 #include "config.h"
 
+#include <glib.h>
+#include <glib/gstdio.h>
 #include <gtk/gtk.h>
 
 #include <algorithm>
@@ -36,7 +38,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <unistd.h>
 
 namespace Oxygen
 {
@@ -327,10 +328,12 @@ namespace Oxygen
         struct stat st;
         if( stat( _userConfigDir.c_str(), &st ) != 0 )
         {
-            #if _POSIX_C_SOURCE
-            mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO );
+            #ifdef G_OS_WIN32
+            // S_IRWXG and S_IRWXO are undefined on Windows, and g_mkdir()
+            // ignores its second parameter on Windows anyway.
+            g_mkdir( _userConfigDir.c_str(), 0 );
             #else
-            mkdir( _userConfigDir.c_str() );
+            g_mkdir( _userConfigDir.c_str(), S_IRWXU|S_IRWXG|S_IRWXO );
             #endif
         }
 
