@@ -93,6 +93,7 @@ namespace Oxygen
                 "xulrunner",
                 "komodo",
                 "aurora",
+                "zotero",
                 ""
             };
 
