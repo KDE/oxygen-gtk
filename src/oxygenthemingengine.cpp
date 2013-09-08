@@ -525,8 +525,8 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
 
-            // need to render background if there is a parent GtkPaned
-            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_PANED ) )
+            // need to render background if there is a parent scrolled window, or paned
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_SCROLLED_WINDOW ) || Gtk::gtk_widget_path_has_type( path, GTK_TYPE_PANED ) )
             { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
 
             // do nothing otherwise
