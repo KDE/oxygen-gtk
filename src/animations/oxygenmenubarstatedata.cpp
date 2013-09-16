@@ -113,7 +113,7 @@ namespace Oxygen
                     if( !isLeaveEvent ) gtk_widget_set_state_flags( childWidget, GTK_STATE_FLAG_PRELIGHT, true );
                 }
 
-            } else if( !(state&GTK_STATE_FLAG_NORMAL) ) {
+            } else if( state&GTK_STATE_FLAG_PRELIGHT ) {
 
                 activeWidget = childWidget;
 
