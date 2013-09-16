@@ -79,6 +79,7 @@ namespace Oxygen
             gtk_icon_view_set_text_column( GTK_ICON_VIEW( iconView ), 1 );
             gtk_icon_view_set_columns( GTK_ICON_VIEW( iconView ), 1 );
 
+
             gtk_icon_view_set_item_width( GTK_ICON_VIEW( iconView ), 108 );
             gtk_icon_view_set_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_margin( GTK_ICON_VIEW( iconView ), 0 );
@@ -151,7 +152,8 @@ namespace Oxygen
             gtk_widget_show( buttonBox );
 
             // close button
-            button = gtk_button_new_from_stock( GTK_STOCK_OK );
+            button = gtk_button_new_with_label( "OK" );
+            gtk_button_set_image( GTK_BUTTON( button ), gtk_image_new_from_icon_name( "dialog-ok", GTK_ICON_SIZE_BUTTON ) );
             gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
 
