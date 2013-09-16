@@ -63,8 +63,8 @@ namespace Oxygen
     {
 
         // retrieve widget style and check
-        GtkStyle* style( gtk_widget_get_style( widget ) );
-        if( !style ) return;
+        GtkStyleContext* context( gtk_widget_get_style_context( widget ) );
+        if( !context ) return;
 
         #if OXYGEN_DEBUG
         std::cerr
