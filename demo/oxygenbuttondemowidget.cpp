@@ -239,7 +239,7 @@ namespace Oxygen
             gtk_widget_set_tooltip_markup( GTK_WIDGET( toolButton ), "Paste clipboard" );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
 
-            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_tool_button_new( 0, 0 ), 6 );
+            gtk_toolbar_insert( GTK_TOOLBAR( _toolbar ), toolButton = gtk_toggle_tool_button_new(), 6 );
             gtk_tool_button_set_icon_name(  GTK_TOOL_BUTTON( toolButton ), "dialog-password" );
             gtk_toggle_tool_button_set_active( GTK_TOGGLE_TOOL_BUTTON( toolButton ), true );
             gtk_widget_show( GTK_WIDGET( toolButton ) );
