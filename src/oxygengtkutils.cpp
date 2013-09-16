@@ -1026,14 +1026,6 @@ namespace Oxygen
         if( x ) *x = xView - xBin;
         if( y ) *y = yView - yBin;
 
-        // also correct from widget thickness
-        GtkStyle* style( gtk_widget_get_style( GTK_WIDGET( viewport ) ) );
-        if( style )
-        {
-            if( x ) *x -= style->xthickness;
-            if( y ) *y -= style->ythickness;
-        }
-
         return;
 
     }
