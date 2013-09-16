@@ -266,7 +266,8 @@ namespace Oxygen
 
         if(GTK_IS_WIDGET(widget))
         {
-            char* widgetPath( gtk_widget_path_to_string( gtk_widget_get_path( widget ) ) );
+            GtkWidgetPath* path( gtk_widget_get_path( widget ) );
+            char* widgetPath( gtk_widget_path_to_string( path ) );
             const std::string  out( widgetPath );
             g_free( widgetPath );
             return out;
@@ -434,17 +435,25 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
     {
-        // check types and path
-        if( !widget && GTK_IS_TREE_VIEW( widget ) && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( widget ) ) ) return false;
-        return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow.GtkTreeView";
+        return
+            widget &&
+            GTK_IS_TREE_VIEW( widget ) &&
+            gtk_combobox_is_scrolled_window( gtk_widget_get_parent( widget ) );
     }
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
-        // check types and path
-        if( !GTK_IS_SCROLLED_WINDOW(widget) ) return false;
-        return Gtk::gtk_widget_path( widget ) == "gtk-combobox-popup-window.GtkScrolledWindow";
+        // check type
+        if( !( widget && GTK_IS_SCROLLED_WINDOW(widget) ) ) return false;
+
+        // retrieve parent and type
+        GtkWidget* parent( gtk_widget_get_parent( widget ) );
+        if( !parent ) return false;
+
+        // retrieve parent name
+        const gchar* name( gtk_widget_get_name( parent ) );
+        return ( name && std::string( name ) == "gtk-combobox-popup-window" );
     }
 
     //________________________________________________________
