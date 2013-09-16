@@ -80,7 +80,14 @@ namespace Oxygen
             gtk_icon_view_set_columns( GTK_ICON_VIEW( iconView ), 1 );
 
 
+            #if GTK_CHECK_VERSION( 3, 9, 0 )
+            // for some reason, item width is screwed up for gtk 3.9 and above
+            // you need to set a size of 71 to get 108 in the end.
+            gtk_icon_view_set_item_width( GTK_ICON_VIEW( iconView ), 71 );
+            #else
             gtk_icon_view_set_item_width( GTK_ICON_VIEW( iconView ), 108 );
+            #endif
+
             gtk_icon_view_set_spacing( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_margin( GTK_ICON_VIEW( iconView ), 0 );
             gtk_icon_view_set_column_spacing( GTK_ICON_VIEW( iconView ), 0 );
