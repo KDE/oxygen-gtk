@@ -161,6 +161,7 @@ namespace Oxygen
             /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
             return;
 
+        #if !GTK_CHECK_VERSION( 3, 9, 0 )
         } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) ) {
 
             // separators
@@ -176,6 +177,7 @@ namespace Oxygen
             if( accepted )
             { Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, Blend|Menu ); }
 
+        #endif
         } else {
 
             StyleOptions options( Blend );
@@ -1076,6 +1078,8 @@ namespace Oxygen
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
 
+
+            #if !GTK_CHECK_VERSION( 3, 9, 0 )
             if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
             {
 
@@ -1085,7 +1089,9 @@ namespace Oxygen
 
                 Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
 
-            } else {
+            } else
+            #endif
+            {
 
                 StyleOptions options( Menu|Round );
 
@@ -1968,6 +1974,7 @@ namespace Oxygen
         bool useWidgetStateEngine( true );
 
         GtkWidget* parent( 0L );
+        #if !GTK_CHECK_VERSION( 3, 9, 0 )
         if( gtk_widget_path_is_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) )
         {
             if( widget &&
@@ -1984,7 +1991,9 @@ namespace Oxygen
 
             useWidgetStateEngine = false;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+        } else
+        #endif
+        if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
             /* note: can't use gtk_theming_engine_has_class here, cause MENUITEM is not passed */
             // disable highlight in menus, for consistancy with oxygen qt style
