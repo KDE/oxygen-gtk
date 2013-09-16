@@ -2566,12 +2566,9 @@ namespace Oxygen
         GdkPixbuf* base_pixbuf( gtk_icon_source_get_pixbuf( source ) );
         g_return_val_if_fail( base_pixbuf != 0L, 0L );
 
-        GdkScreen *screen( gtk_theming_engine_get_screen( engine ) );
-        GtkSettings *settings( gtk_settings_get_for_screen( screen ) );
-
         int width = 1;
         int height = 1;
-        if( size != (GtkIconSize)-1 && !gtk_icon_size_lookup_for_settings( settings, size, &width, &height ) )
+        if( size != (GtkIconSize)-1 && !gtk_icon_size_lookup( size, &width, &height ) )
         {
             g_warning (G_STRLOC ": invalid icon size '%d'", size);
             return 0L;
