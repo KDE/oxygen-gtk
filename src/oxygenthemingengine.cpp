@@ -2152,7 +2152,7 @@ namespace Oxygen
         TabWidgetState engine.
         */
         AnimationData data;
-        if( isTreeView )
+        if( isTreeView && GTK_IS_TREE_VIEW( widget ) )
         {
             GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
             const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
