@@ -1097,8 +1097,6 @@ namespace Oxygen
                 if( GTK_IS_MENU(widget) )
                 {
 
-                    std::cerr << "Oxygen::render_frame - rendering menu background" << std::endl;
-
                     Style::instance().animations().menuItemEngine().registerMenu( widget );
 
                     GdkWindow* window( gtk_widget_get_parent_window(widget) );
