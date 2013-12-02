@@ -228,10 +228,6 @@ namespace Oxygen
         if(GTK_IS_DIALOG(toplevel))
         { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
 
-//         // since version 3.8.2, a background is rendered for FRAME, which we do not want.
-//         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) )
-//         { return; }
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
 
@@ -239,7 +235,7 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
             GdkWindow* window( gtk_widget_get_window( widget ) );
-            if( GDK_IS_WINDOW( window ) )
+            if( GDK_IS_WINDOW( window ) && Style::instance().shadowHelper().isToolTip( widget ) )
             {
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
                 static bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
@@ -1100,6 +1096,8 @@ namespace Oxygen
                 // add mask if needed
                 if( GTK_IS_MENU(widget) )
                 {
+
+                    std::cerr << "Oxygen::render_frame - rendering menu background" << std::endl;
 
                     Style::instance().animations().menuItemEngine().registerMenu( widget );
 
