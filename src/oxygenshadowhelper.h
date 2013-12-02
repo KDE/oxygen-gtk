@@ -64,13 +64,13 @@ namespace Oxygen
         //! unregister widget
         void unregisterWidget( GtkWidget* );
 
-        protected:
-
         //! true if widget is menu
         bool isMenu( GtkWidget* ) const;
 
         //! true if widget is menu
         bool isToolTip( GtkWidget* ) const;
+
+        protected:
 
         //! true if shadow should be installed on widget
         bool acceptWidget( GtkWidget* ) const;
