@@ -69,6 +69,7 @@ namespace Oxygen
     {
 
         Rgba out;
+        out.setAlpha( 1 );
 
         // parse using regular expression
         // two formats are supported: html style (#rrggbb), and KDE style (r,g,b).
