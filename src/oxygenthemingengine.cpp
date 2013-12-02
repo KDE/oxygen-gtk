@@ -1778,7 +1778,7 @@ namespace Oxygen
             AnimationData data;
 
             // check widget type
-            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
+            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) && GTK_IS_TREE_VIEW( widget ) )
             {
 
                 // TreeView checkboxes
@@ -1862,7 +1862,7 @@ namespace Oxygen
             AnimationData data;
 
             // check widget type
-            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
+            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) && GTK_IS_TREE_VIEW( widget ) )
             {
                 options &= ~(Focus|Hover);
                 GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
