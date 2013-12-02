@@ -688,22 +688,17 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
 
         // transparent widgets
-        _css.addSection( "GtkOverlay" );
+        _css.addSection(
+            "GtkOverlay, "
+            "GtkRevealer" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
 
-        _css.addSection( "GtkLabel, GtkLabel:insensitive, GtkLabel:hover" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection( "GtkMenuItem, GtkMenuItem:insensitive, GtkMenuItem:hover" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection( "GtkImage, GtkImage:insensitive, GtkImage:hover" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection( "GtkExpander, GtkExpander:insensitive, GtkExpander:hover" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection( "GtkSwitch, GtkSwitch:insensitive, GtkSwitch:hover" );
+        _css.addSection(
+            "GtkLabel, GtkLabel:insensitive, GtkLabel:hover, "
+            "GtkMenuItem, GtkMenuItem:insensitive, GtkMenuItem:hover, "
+            "GtkImage, GtkImage:insensitive, GtkImage:hover, "
+            "GtkExpander, GtkExpander:insensitive, GtkExpander:hover, "
+            "GtkSwitch, GtkSwitch:insensitive, GtkSwitch:hover" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
 
         _css.addSection(
