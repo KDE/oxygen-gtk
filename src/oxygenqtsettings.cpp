@@ -665,48 +665,38 @@ namespace Oxygen
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
-        // default
+        // default text color
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
         addLinkColors( "[Colors:Window]" );
 
+        // default insensitive text color
+        _css.addSection( "*:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
+
+        // default background color
+        _css.addSection( ".background" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
+
+        // default insensitive background color
+        _css.addSection( ".background:insensitive" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Window ) ) );
+
+        // hover and focus color
+        /*
+        border color is used in order not to interfere with widgets that have custom background set.
+        Also, even if the css is actually not used, it is needed to set different colors (either foreground, background or text) if one wants to have the
+        proper style rendering method called, on, e.g. hover
+        */
         _css.addSection( "*:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_COLOR, _palette.color( Palette::Selected ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
         _css.addSection( "*:hover" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_COLOR, _palette.color( Palette::Hover ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
 
         _css.addSection( ".highlight" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Focus ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
-
-        _css.addSection( "*:insensitive" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Window ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
-
-        // transparent widgets
-        _css.addSection(
-            "GtkOverlay, "
-            "GtkRevealer" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection(
-            "GtkLabel, GtkLabel:insensitive, GtkLabel:hover, "
-            "GtkMenuItem, GtkMenuItem:insensitive, GtkMenuItem:hover, "
-            "GtkImage, GtkImage:insensitive, GtkImage:hover, "
-            "GtkExpander, GtkExpander:insensitive, GtkExpander:hover, "
-            "GtkSwitch, GtkSwitch:insensitive, GtkSwitch:hover" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
-
-        _css.addSection(
-            ".through, "
-            ".scale, "
-            ".frame, "
-            ".check");
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_COLOR, _palette.color( Palette::Focus ) ) );
 
         // entries
         _css.addSection(
