@@ -527,6 +527,7 @@ namespace Oxygen
 
         {
             Cairo::Context context( surface );
+            cairo_set_antialias( context, CAIRO_ANTIALIAS_SUBPIXEL );
 
             cairo_save( context );
             cairo_scale( context, 3.0*size/23, 3.0*size/23 );
