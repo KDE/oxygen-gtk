@@ -78,6 +78,16 @@ namespace Oxygen
                     _blue == other._blue;
             }
 
+            //! different operator
+            bool operator != (const Rgba& other ) const
+            {
+                return
+                    _mask != other._mask ||
+                    _red != other._red ||
+                    _green != other._green ||
+                    _blue != other._blue;
+            }
+
             // convert to integer
             guint32 toInt( void ) const
             {
