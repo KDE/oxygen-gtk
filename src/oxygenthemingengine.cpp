@@ -982,10 +982,7 @@ namespace Oxygen
             GdkRGBA background;
             gtk_theming_engine_get_background_color( engine, state, &background );
             const ColorUtils::Rgba backgroundRgba( Gtk::gdk_get_color( background ) );
-            if(
-                (options&Hover && backgroundRgba != Style::instance().settings().palette().color( Palette::Hover ) ) ||
-                (!(options&Hover) && backgroundRgba != Style::instance().settings().palette().color( Palette::Button ) ) )
-            { options._customColors.insert( options&Flat ? Palette::Window : Palette::Button, backgroundRgba ); }
+            options._customColors.insert( options&Flat ? Palette::Window : Palette::Button, backgroundRgba );
 
             // flat buttons
             bool useWidgetState( true );
