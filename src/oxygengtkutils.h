@@ -191,6 +191,16 @@ namespace Oxygen
         inline bool gtk_widget_layout_is_reversed( GtkWidget* widget )
         { return widget ? gtk_widget_get_direction( widget ) == GTK_TEXT_DIR_RTL : false; }
 
+        //! returns true if widget has non zero margins
+        inline bool gtk_widget_has_margins( GtkWidget* widget )
+        {
+            return widget && (
+                gtk_widget_get_margin_left( widget ) ||
+                gtk_widget_get_margin_right( widget ) ||
+                gtk_widget_get_margin_top( widget ) ||
+                gtk_widget_get_margin_bottom( widget ) );
+        }
+
         //! set all buttons in the container to state NORMAL
         void gtk_container_adjust_buttons_state( GtkContainer*, gpointer=0L );
 
