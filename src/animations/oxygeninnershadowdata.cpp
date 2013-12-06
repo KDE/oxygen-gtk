@@ -88,6 +88,9 @@ namespace Oxygen
         // make sure widget is not already in map
         if( _childrenData.find( widget ) != _childrenData.end() ) return;
 
+        if( gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( _target ) ) != GTK_SHADOW_IN )
+        { return; }
+
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::InnerShadowData::registerChild -"
@@ -253,73 +256,18 @@ namespace Oxygen
             return FALSE;
         }
 
-        // draw the shadow
-        /*
-        TODO: here child widget's allocation is used instead of window geometry.
-        I think this is the correct thing to do (unlike above), but this is to be double check
-        HUGO: commenting unless proven that necessary
-        allocation = Gtk::gtk_widget_get_allocation( child );
-        */
-        int basicOffset=2;
-
         // we only draw SHADOW_IN here
-        if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
+        if( gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) != GTK_SHADOW_IN )
         {
-            if( GTK_IS_VIEWPORT(child) && gtk_viewport_get_shadow_type(GTK_VIEWPORT(child)) == GTK_SHADOW_IN )
-            {
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
+            #endif
+            return FALSE;
 
-                basicOffset=0;
-
-            } else {
-
-                // FIXME: do we need this special case?
-                // special_case {
-                // we still want to draw shadow on GtkFrames with shadow containing GtkScrolledWindow without shadow
-                GtkWidget* box=gtk_widget_get_parent(widget);
-                GtkWidget* frame=0;
-                if(GTK_IS_BOX(box) && GTK_IS_FRAME(frame=gtk_widget_get_parent(box)) &&
-                       gtk_frame_get_shadow_type(GTK_FRAME(frame))==GTK_SHADOW_IN)
-                {
-                    #if OXYGEN_DEBUG
-                    std::cerr << "Oxygen::InnerShadowData::targetExposeEvent: Box children: " << GTK_CONTAINER(box) << std::endl;
-                    #endif
-                    // make sure GtkScrolledWindow is the only visible child
-                    GList* children=gtk_container_get_children(GTK_CONTAINER(box));
-                    for(GList* child=g_list_first(children); child; child=g_list_next(child))
-                    {
-                        GtkWidget* childWidget(GTK_WIDGET(child->data));
-                        if(gtk_widget_get_visible(childWidget) && !GTK_IS_SCROLLED_WINDOW(childWidget))
-                        {
-                            g_list_free(children);
-                            return FALSE;
-                        }
-                    }
-                    int frameX, frameY;
-                    GtkAllocation frameAlloc;
-                    if(gtk_widget_translate_coordinates(frame,widget,0,0,&frameX,&frameY))
-                    {
-                        #if OXYGEN_DEBUG
-                        std::cerr << "coords translation: x=" << frameX << "; y=" << frameY << std::endl;
-                        #endif
-                        gtk_widget_get_allocation(frame,&frameAlloc);
-                        allocation.x+=frameX;
-                        allocation.y+=frameY;
-                        allocation.width=frameAlloc.width;
-                        allocation.height=frameAlloc.height;
-                        basicOffset=0;
-                    }
-
-                } else {
-
-                    #if OXYGEN_DEBUG
-                    std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";
-                    #endif
-                    return FALSE;
-
-                }
-
-            }
         }
+
+        // draw the shadow
+        int basicOffset=2;
 
         StyleOptions options( widget, gtk_widget_get_state_flags( widget ) );
         options|=NoFill;

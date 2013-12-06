@@ -218,7 +218,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+            std::cerr << "Oxygen::render_background - invalid widget - Calling parentClass()->render_background()\n";
             #endif
 
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
@@ -293,7 +293,7 @@ namespace Oxygen
             {
                 // if valid background image is found, fallback to parent style
                 #if OXYGEN_DEBUG
-                std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+                std::cerr << "Oxygen::render_background - using pattern - Calling parentClass()->render_background()\n";
                 #endif
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
@@ -408,7 +408,6 @@ namespace Oxygen
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
-                    // if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
 
                     const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
                     if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
@@ -501,6 +500,13 @@ namespace Oxygen
 
             }
 
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_LIST_ROW ) ) {
+
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+            StyleOptions options( widget, state );
+            if( options & (Selected|Hover) )
+            { Style::instance().renderSelection( context, x, y, w, h, TileSet::Horizontal, options ); }
+
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) &&
             !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) )
@@ -508,7 +514,10 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_HEADER_BAR ) )
+            {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -547,7 +556,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+            std::cerr << "Oxygen::render_background - no match found - Calling parentClass()->render_background()\n";
             #endif
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
@@ -715,6 +724,7 @@ namespace Oxygen
             // make sure that scrolled windows containing a treeView have sunken frame
             borderStyle = GTK_BORDER_STYLE_INSET;
             gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+            Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
 
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
@@ -1328,8 +1338,9 @@ namespace Oxygen
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
                 // FIXME: having anything other than shadow_in here looks like a bug, but we still do for GtkIconView case
-                if(!Style::instance().animations().innerShadowEngine().contains(widget) ||
-                       (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
+                if(
+                    !Style::instance().animations().innerShadowEngine().contains(widget) ||
+                    (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
                 {
 
                     Style::instance().renderHole( context, x, y, w, h, options, data );
@@ -1409,7 +1420,7 @@ namespace Oxygen
             /*
             check for scrolled windows embedded in frames, that contain a treeview.
             if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
-            this should improve rendering of most mandriva drake tools
+            this should improve rendering of most mageia drake tools
             */
             GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
             if( GTK_IS_SCROLLED_WINDOW( child ) &&
@@ -1423,7 +1434,10 @@ namespace Oxygen
                 // also change scrolled window shadow if needed
                 GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
                 if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
-                { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
+                {
+                    gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
+                    Style::instance().animations().innerShadowEngine().registerChild( child, gtk_bin_get_child( GTK_BIN( child ) ) );
+                }
 
                 return;
 
