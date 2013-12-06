@@ -30,8 +30,6 @@
 
 #include <cmath>
 
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
