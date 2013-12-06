@@ -667,8 +667,8 @@ namespace Oxygen
 
         // default text color
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
-        // _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
+        // _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
         addLinkColors( "[Colors:Window]" );
 
@@ -698,6 +698,8 @@ namespace Oxygen
             "GtkLabel, "
             "GtkMenuItem, "
             "GtkInfoBar, "
+            "GtkViewport, "
+            "GtkScrolledWindow, "
             "GtkOverlay ");
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
 
