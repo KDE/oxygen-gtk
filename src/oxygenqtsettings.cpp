@@ -667,6 +667,7 @@ namespace Oxygen
 
         // default text color
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
+        // _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
         addLinkColors( "[Colors:Window]" );
@@ -684,6 +685,22 @@ namespace Oxygen
         // default insensitive background color
         _css.addSection( ".background:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Window ) ) );
+
+        // transparent widgets
+        _css.addSection(
+            ".check, "
+            ".scale, "
+            ".info, "
+            ".through, "
+            ".frame, "
+            "GtkSwitch, "
+            "GtkImage, "
+            "GtkLabel, "
+            "GtkMenuItem, "
+            "GtkInfoBar, "
+            "GtkOverlay ");
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
+
 
         // hover and focus color
         /*
