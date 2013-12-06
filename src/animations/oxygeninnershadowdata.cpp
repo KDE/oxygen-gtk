@@ -88,6 +88,9 @@ namespace Oxygen
         // make sure widget is not already in map
         if( _childrenData.find( widget ) != _childrenData.end() ) return;
 
+        if( gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( _target ) ) != GTK_SHADOW_IN )
+        { return; }
+
         #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::InnerShadowData::registerChild -"
@@ -254,7 +257,7 @@ namespace Oxygen
         }
 
         // we only draw SHADOW_IN here
-        if(gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget)) != GTK_SHADOW_IN )
+        if( gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) != GTK_SHADOW_IN )
         {
             #if OXYGEN_DEBUG
             std::cerr << "Oxygen::InnerShadowData::targetExposeEvent - Shadow type isn't GTK_SHADOW_IN, so not drawing the shadow in expose-event handler\n";

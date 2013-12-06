@@ -724,6 +724,7 @@ namespace Oxygen
             // make sure that scrolled windows containing a treeView have sunken frame
             borderStyle = GTK_BORDER_STYLE_INSET;
             gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+            Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
 
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
@@ -1433,7 +1434,10 @@ namespace Oxygen
                 // also change scrolled window shadow if needed
                 GtkScrolledWindow* scrolledWindow(GTK_SCROLLED_WINDOW( child ) );
                 if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
-                { gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN ); }
+                {
+                    gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
+                    Style::instance().animations().innerShadowEngine().registerChild( child, gtk_bin_get_child( GTK_BIN( child ) ) );
+                }
 
                 return;
 
