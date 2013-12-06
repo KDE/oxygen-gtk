@@ -342,10 +342,10 @@ namespace Oxygen
             } else {
 
                 // get background color
-                GdkRGBA background_gtk;
-                gtk_theming_engine_get_background_color( engine, state, &background_gtk );
+                GdkRGBA backgroundGtk;
+                gtk_theming_engine_get_background_color( engine, state, &backgroundGtk );
                 StyleOptions options;
-                options._customColors.insert( Palette::Window, Gtk::gdk_get_color( background_gtk ) );
+                options._customColors.insert( Palette::Window, Gtk::gdk_get_color( backgroundGtk ) );
 
                 // render background
                 Style::instance().renderWindowBackground( context, window, x, y, w, h, options );
@@ -584,6 +584,10 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
+
+        // do nothing for scrollbar junctions
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBARS_JUNCTION ) )
+        { return; }
 
         // load border style
         GtkBorderStyle borderStyle;
@@ -1318,21 +1322,33 @@ namespace Oxygen
 
                 }
 
+                if( GTK_IS_SCROLLED_WINDOW( widget ) )
+                {
 
-                // basic adjustments
-                x-=1; y-=1;
-                w+=2; h+=2;
-
-                Style::instance().renderHoleBackground( context, 0L, widget, x, y, w, h );
+                    GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
+                    if( ( GTK_IS_TREE_VIEW( child ) || GTK_IS_TEXT_VIEW( child ) ) && Gtk::gtk_widget_has_margins( child ) )
+                    {
+                        Palette::Group group( (options & Disabled) ? Palette::Disabled : Palette::Active );
+                        Style::instance().fill( context, x, y+2, w, h-4, Style::instance().settings().palette().color( group, Palette::Base ) );
+                    }
+                }
 
                 // shrink entry by 3px at each side
                 if( GTK_IS_ENTRY( widget ) )
                 {
 
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-1, y-1, w+2, h+2 );
                     x += Oxygen::Entry_SideMargin;
                     w -= 2*Oxygen::Entry_SideMargin;
 
+                } else {
+
+                    Style::instance().renderHoleBackground( context, 0L, widget, x-3, y, w+6, h );
+
                 }
+
+                x-=1; w+=2;
+                y-=1; h+=2;
 
                 // animation
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
