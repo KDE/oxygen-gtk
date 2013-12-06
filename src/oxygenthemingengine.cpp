@@ -408,7 +408,6 @@ namespace Oxygen
                     Gtk::CellInfo cellInfo( treeView, x, y, w, h );
 
                     Style::instance().animations().treeViewEngine().registerWidget( widget );
-                    // if( options & Hover ) Style::instance().animations().treeViewEngine().setHoveredCell( widget, cellInfo );
 
                     const bool showExpanders( gtk_tree_view_get_show_expanders( treeView ) );
                     if( showExpanders && cellInfo.isValid() && cellInfo.isExpanderColumn( treeView ))
@@ -500,6 +499,13 @@ namespace Oxygen
                 }
 
             }
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_LIST_ROW ) ) {
+
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+            StyleOptions options( widget, state );
+            if( options & (Selected|Hover) )
+            { Style::instance().renderSelection( context, x, y, w, h, TileSet::Horizontal, options ); }
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) &&
@@ -1409,7 +1415,7 @@ namespace Oxygen
             /*
             check for scrolled windows embedded in frames, that contain a treeview.
             if found, change the shadowtypes for consistency with normal -sunken- scrolled windows.
-            this should improve rendering of most mandriva drake tools
+            this should improve rendering of most mageia drake tools
             */
             GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
             if( GTK_IS_SCROLLED_WINDOW( child ) &&

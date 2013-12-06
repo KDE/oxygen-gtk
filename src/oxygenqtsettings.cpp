@@ -704,6 +704,7 @@ namespace Oxygen
         _css.addSection(
             ".view, "
             ".entry, "
+            ".list, "
             "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
@@ -771,7 +772,7 @@ namespace Oxygen
 
         // rubber band selection (at least for nautilus)
         // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
-        _css.addSection( ".view.rubberband,.rubberband" );
+        _css.addSection( ".view.rubberband, .rubberband" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_COLOR, _palette.color( Palette::Selected ) ) );
         {
             std::ostringstream color;
