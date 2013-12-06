@@ -277,8 +277,7 @@ namespace Oxygen
                 // we still want to draw shadow on GtkFrames with shadow containing GtkScrolledWindow without shadow
                 GtkWidget* box=gtk_widget_get_parent(widget);
                 GtkWidget* frame=0;
-                if(GTK_IS_BOX(box) && GTK_IS_FRAME(frame=gtk_widget_get_parent(box)) &&
-                       gtk_frame_get_shadow_type(GTK_FRAME(frame))==GTK_SHADOW_IN)
+                if( GTK_IS_BOX(box) && GTK_IS_FRAME(frame=gtk_widget_get_parent(box)) && gtk_frame_get_shadow_type(GTK_FRAME(frame))==GTK_SHADOW_IN )
                 {
                     #if OXYGEN_DEBUG
                     std::cerr << "Oxygen::InnerShadowData::targetExposeEvent: Box children: " << GTK_CONTAINER(box) << std::endl;

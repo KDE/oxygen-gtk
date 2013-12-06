@@ -30,6 +30,8 @@
 
 #include <cmath>
 
+#define OXYGEN_DEBUG 1
+
 namespace Oxygen
 {
 
@@ -216,7 +218,7 @@ namespace Oxygen
         {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+            std::cerr << "Oxygen::render_background - invalid widget - Calling parentClass()->render_background()\n";
             #endif
 
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
@@ -291,7 +293,7 @@ namespace Oxygen
             {
                 // if valid background image is found, fallback to parent style
                 #if OXYGEN_DEBUG
-                std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+                std::cerr << "Oxygen::render_background - using pattern - Calling parentClass()->render_background()\n";
                 #endif
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
@@ -553,7 +555,7 @@ namespace Oxygen
         } else {
 
             #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_background - Calling parentClass()->render_background()\n";
+            std::cerr << "Oxygen::render_background - no match found - Calling parentClass()->render_background()\n";
             #endif
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
 
@@ -1333,8 +1335,9 @@ namespace Oxygen
                 const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
                 // FIXME: having anything other than shadow_in here looks like a bug, but we still do for GtkIconView case
-                if(!Style::instance().animations().innerShadowEngine().contains(widget) ||
-                       (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
+                if(
+                    !Style::instance().animations().innerShadowEngine().contains(widget) ||
+                    (GTK_IS_SCROLLED_WINDOW(widget) && gtk_scrolled_window_get_shadow_type(GTK_SCROLLED_WINDOW(widget))!=GTK_SHADOW_IN))
                 {
 
                     Style::instance().renderHole( context, x, y, w, h, options, data );
