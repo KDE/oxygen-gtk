@@ -582,6 +582,10 @@ namespace Oxygen
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
         GtkWidget* parent( 0L );
 
+        // do nothing for scrollbar junctions
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBARS_JUNCTION ) )
+        { return; }
+
         // load border style
         GtkBorderStyle borderStyle;
         gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_STYLE, &borderStyle, NULL );
