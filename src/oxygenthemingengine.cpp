@@ -30,8 +30,6 @@
 
 #include <cmath>
 
-#define OXYGEN_DEBUG 1
-
 namespace Oxygen
 {
 
@@ -516,7 +514,10 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_HEADER_BAR ) )
+            {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
