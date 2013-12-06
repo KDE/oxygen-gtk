@@ -700,6 +700,7 @@ namespace Oxygen
             "GtkInfoBar, "
             "GtkViewport, "
             "GtkScrolledWindow, "
+            "GtkHandleBox, "
             "GtkOverlay, "
             "GtkRevealer ");
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
