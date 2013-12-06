@@ -280,18 +280,30 @@ namespace Oxygen
 
         const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options, AnimationHover|AnimationFocus, AnimationFocus ) );
 
-        int offsetX=basicOffset+Entry_SideMargin;
-        int offsetY=basicOffset;
+        int offsetX = basicOffset+Entry_SideMargin;
+        int offsetY = basicOffset;
+
+        // also need to correct from widget's margins
+        const int marginX = gtk_widget_get_margin_left( child );
+        const int marginY = gtk_widget_get_margin_top( child );
+        const int marginW = marginX + gtk_widget_get_margin_right( child );
+        const int marginH = marginY + gtk_widget_get_margin_bottom( child );
 
         // hole background
         Style::instance().renderHoleBackground( context,
             gtk_widget_get_window(widget), widget,
-            allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2 );
+            allocation.x - offsetX - marginX,
+            allocation.y - offsetY - marginY,
+            allocation.width + offsetX*2 + marginW,
+            allocation.height + offsetY*2 + marginH );
 
         // adjust offset and render hole
         offsetX -= Entry_SideMargin;
         Style::instance().renderHole( context,
-            allocation.x-offsetX, allocation.y-offsetY, allocation.width+offsetX*2, allocation.height+offsetY*2,
+            allocation.x - offsetX - marginX,
+            allocation.y - offsetY - marginY,
+            allocation.width + offsetX*2 + marginW,
+            allocation.height + offsetY*2 + marginH,
             options, data );
 
         #endif // enable inner shadows hack
