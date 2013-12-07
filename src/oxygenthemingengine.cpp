@@ -717,15 +717,26 @@ namespace Oxygen
         }
 
         // adjust shadow type for some known widgets
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) &&
-            borderStyle !=  GTK_BORDER_STYLE_INSET &&
-            Gtk::gtk_scrolled_window_force_sunken( widget ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) )
         {
+            if( borderStyle !=  GTK_BORDER_STYLE_INSET && Gtk::gtk_scrolled_window_force_sunken( widget ) )
+            {
 
-            // make sure that scrolled windows containing a treeView have sunken frame
-            borderStyle = GTK_BORDER_STYLE_INSET;
-            gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
-            Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
+                // make sure that scrolled windows containing a treeView have sunken frame
+                borderStyle = GTK_BORDER_STYLE_INSET;
+                gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+                Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
+
+            } else if( borderStyle ==  GTK_BORDER_STYLE_INSET && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) != GTK_SHADOW_IN ) {
+
+                /*
+                change scrolled window shadow type based on borderStyle,
+                and make sure it's child is registered to inner shadow engine
+                */
+                gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
+                Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
+
+            }
 
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
