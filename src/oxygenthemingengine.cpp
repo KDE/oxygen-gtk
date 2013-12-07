@@ -1827,23 +1827,25 @@ namespace Oxygen
             AnimationData data;
 
             // check widget type
-            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) && GTK_IS_TREE_VIEW( widget ) )
+            if( gtk_widget_path_is_type( path, GTK_TYPE_TREE_VIEW ) )
             {
 
                 // TreeView checkboxes
-                options &= ~(Focus|Hover);
-                GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
-                const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
-                if( cellInfo.isValid() &&
-                    Style::instance().animations().treeViewEngine().contains( widget ) &&
-                    Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
-                { options |= Hover; }
+                options &= ~(Focus|Hover|Active);
 
-                // disable active flag, which is not set properly for listviews
-                options &= ~Active;
+                if( GTK_IS_TREE_VIEW( widget ) )
+                {
+                    GtkTreeView* treeView( GTK_TREE_VIEW( widget ) );
+                    const Gtk::CellInfo cellInfo( treeView, x, y, w, h );
+                    if( cellInfo.isValid() &&
+                        Style::instance().animations().treeViewEngine().contains( widget ) &&
+                        Style::instance().animations().treeViewEngine().isCellHovered( widget, cellInfo, false ) )
+                    { options |= Hover; }
 
-                // retrieve animation state
-                data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+                    // retrieve animation state
+                    data = Style::instance().animations().treeViewStateEngine().get( widget, cellInfo, options );
+
+                }
 
             } else if( gtk_widget_path_is_type( path, GTK_TYPE_CHECK_MENU_ITEM ) ) {
 
