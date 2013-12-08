@@ -67,7 +67,7 @@ namespace Oxygen
     {
 
         // initialize ref surface
-        helper().initializeRefSurface();
+        _helper.initializeRefSurface();
 
         // reinitialize settings
         if( !_settings.initialize( flags ) ) return false;
@@ -75,7 +75,7 @@ namespace Oxygen
         // reset caches if colors have changed
         if( flags&QtSettings::Colors )
         {
-            helper().clearCaches();
+            _helper.clearCaches();
             ColorUtils::clearCaches();
         }
 
@@ -92,29 +92,33 @@ namespace Oxygen
 
         if( flags&QtSettings::Oxygen )
         {
+
+            // widget explorer
+            _widgetExplorer.setEnabled( _settings.widgetExplorerEnabled() );
+
             // pass window drag mode to window manager
-            if( !settings().windowDragEnabled() ) windowManager().setDragMode( WindowManager::Disabled );
-            else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) windowManager().setDragMode( WindowManager::Minimal );
-            else windowManager().setDragMode( WindowManager::Full );
+            if( !settings().windowDragEnabled() ) _windowManager.setDragMode( WindowManager::Disabled );
+            else if( settings().windowDragMode() == QtSettings::WD_MINIMAL ) _windowManager.setDragMode( WindowManager::Minimal );
+            else _windowManager.setDragMode( WindowManager::Full );
 
             // use window manager to handle window drag
-            windowManager().setUseWMMoveResize( settings().useWMMoveResize() );
+            _windowManager.setUseWMMoveResize( settings().useWMMoveResize() );
 
         }
 
         if( flags&QtSettings::KdeGlobals )
         {
             // pass drag distance and delay to window manager
-            windowManager().setDragDistance( settings().startDragDist() );
-            windowManager().setDragDelay( settings().startDragTime() );
+            _windowManager.setDragDistance( settings().startDragDist() );
+            _windowManager.setDragDelay( settings().startDragTime() );
         }
 
         // background surface
         if( !settings().backgroundPixmap().empty() ) setBackgroundSurface( settings().backgroundPixmap() );
 
         // create window shadow
-        WindowShadow shadow( settings(), helper() );
-        shadowHelper().initialize( settings().palette().color(Palette::Window), shadow );
+        WindowShadow shadow( settings(), _helper );
+        _shadowHelper.initialize( settings().palette().color(Palette::Window), shadow );
 
         #ifdef GDK_WINDOWING_X11
         if( _blurAtom == None )
@@ -250,7 +254,7 @@ namespace Oxygen
         }
 
         cairo_save( context );
-        helper().drawSeparator( context, base, x, y, w, h, (options&Vertical) );
+        _helper.drawSeparator( context, base, x, y, w, h, (options&Vertical) );
         cairo_restore( context );
 
     }
@@ -345,7 +349,7 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
         {
 
-            const Cairo::Surface& surface( helper().verticalGradient( base, splitY ) );
+            const Cairo::Surface& surface( _helper.verticalGradient( base, splitY ) );
             cairo_set_source_surface( context, surface, 0, 0 );
             cairo_pattern_set_extend( cairo_get_source( context ), CAIRO_EXTEND_REPEAT );
             gdk_cairo_rectangle( context, &upperRect );
@@ -373,7 +377,7 @@ namespace Oxygen
         if( gdk_rectangle_intersect( &rect, &radialRect, &radialRect ) )
         {
 
-            const Cairo::Surface& surface( helper().radialGradient( base, 64 ) );
+            const Cairo::Surface& surface( _helper.radialGradient( base, 64 ) );
             cairo_set_source_surface( context, surface, 0, 0 );
 
             // add matrix transformation
@@ -426,7 +430,7 @@ namespace Oxygen
 
         // find groupbox parent
         GtkWidget* parent( Gtk::gtk_parent_groupbox( widget ) );
-        if( !( parent && animations().groupBoxEngine().contains( parent ) ) ) return false;
+        if( !( parent && _animations.groupBoxEngine().contains( parent ) ) ) return false;
 
         // toplevel window information and relative positioning
         gint ww(0), wh(0);
@@ -609,9 +613,9 @@ namespace Oxygen
         // render side dots
         int yCenter( y + h/2 );
         int xDots( x + w - 1 );
-        helper().renderDot( context, base, xDots, yCenter - 3 );
-        helper().renderDot( context, base, xDots, yCenter );
-        helper().renderDot( context, base, xDots, yCenter + 3 );
+        _helper.renderDot( context, base, xDots, yCenter - 3 );
+        _helper.renderDot( context, base, xDots, yCenter );
+        _helper.renderDot( context, base, xDots, yCenter + 3 );
 
     }
 
@@ -871,9 +875,9 @@ namespace Oxygen
             int center = ( w-( ngroups-1 )*250 )/2 + x;
             for( int k = 0; k < ngroups; k++, center += 250 )
             {
-                helper().renderDot( context, base, center-3, y );
-                helper().renderDot( context, base, center, y );
-                helper().renderDot( context, base, center+3, y );
+                _helper.renderDot( context, base, center-3, y );
+                _helper.renderDot( context, base, center, y );
+                _helper.renderDot( context, base, center+3, y );
             }
 
         } else {
@@ -883,9 +887,9 @@ namespace Oxygen
             int center = ( h-( ngroups-1 )*250 )/2 + y;
             for( int k = 0; k < ngroups; k++, center += 250 )
             {
-                helper().renderDot( context, base, x, center-3 );
-                helper().renderDot( context, base, x, center );
-                helper().renderDot( context, base, x, center+3 );
+                _helper.renderDot( context, base, x, center-3 );
+                _helper.renderDot( context, base, x, center );
+                _helper.renderDot( context, base, x, center+3 );
             }
 
         }
@@ -932,7 +936,7 @@ namespace Oxygen
         if( indicatorSize >= 3 && w > 0 && h > 1 )
         {
             // get surface
-            const Cairo::Surface& surface( helper().progressBarIndicator( base, glow, w, h+1 ) );
+            const Cairo::Surface& surface( _helper.progressBarIndicator( base, glow, w, h+1 ) );
             cairo_translate( context, x, y-1 );
             cairo_rectangle( context, 0, 0, w,  h+1 );
             cairo_set_source_surface( context, surface, 0, 0 );
@@ -1026,7 +1030,7 @@ namespace Oxygen
         else if( options&Hover ) glow = hovered;
         else glow = shadow;
 
-        helper().scrollHandle( color, glow ).render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
+        _helper.scrollHandle( color, glow ).render( context, xf-3, yf-3, wf+6, hf+6, TileSet::Full );
 
         // contents
         const ColorUtils::Rgba mid( ColorUtils::midColor( color ) );
@@ -1076,8 +1080,8 @@ namespace Oxygen
             const int xcenter( x+w/2 );
             for( int ycenter = y+2; ycenter <= y+h-3; ycenter+=3, ++counter )
             {
-                if( counter%2 == 0 ) helper().renderDot( context, base, xcenter+1, ycenter );
-                else helper().renderDot( context, base, xcenter-2, ycenter );
+                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter+1, ycenter );
+                else _helper.renderDot( context, base, xcenter-2, ycenter );
             }
 
         } else {
@@ -1085,8 +1089,8 @@ namespace Oxygen
             const int ycenter( y + h/2 );
             for( int xcenter = x+2; xcenter < x+w-3; xcenter+=3, ++counter )
             {
-                if( counter%2 == 0 ) helper().renderDot( context, base, xcenter, ycenter+1 );
-                else helper().renderDot( context, base, xcenter, ycenter-2 );
+                if( counter%2 == 0 ) _helper.renderDot( context, base, xcenter, ycenter+1 );
+                else _helper.renderDot( context, base, xcenter, ycenter-2 );
             }
 
         }
@@ -1280,12 +1284,12 @@ namespace Oxygen
                 cairo_fill( context );
                 cairo_restore( context );
 
-                if( glow.isValid() ) helper().holeFocused( base, glow, 7, true ).render( context, x, y, w, h );
-                else helper().hole( base, 7, true ).render( context, x, y, w, h );
+                if( glow.isValid() ) _helper.holeFocused( base, glow, 7, true ).render( context, x, y, w, h );
+                else _helper.hole( base, 7, true ).render( context, x, y, w, h );
 
             } else if( glow.isValid() ) {
 
-                helper().slitFocused( glow ).render( context, x, y, w, h, tiles );
+                _helper.slitFocused( glow ).render( context, x, y, w, h, tiles );
 
             }
 
@@ -1340,17 +1344,17 @@ namespace Oxygen
         }
 
         cairo_set_source( context, pattern );
-        helper().fillSlab( context, x, y, w, h+1, tiles );
+        _helper.fillSlab( context, x, y, w, h+1, tiles );
         cairo_restore( context );
 
         if( options&Sunken )
         {
 
-            helper().slabSunken( base ).render( context, x, y, w, h, tiles );
+            _helper.slabSunken( base ).render( context, x, y, w, h, tiles );
 
         } else {
 
-            helper().slab( base, glow, 0 ).render( context, x, y, w, h, tiles );
+            _helper.slab( base, glow, 0 ).render( context, x, y, w, h, tiles );
 
         }
 
@@ -1457,7 +1461,7 @@ namespace Oxygen
         if( options & Flat )
         {
 
-            helper().holeFlat( base, 0, false ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
+            _helper.holeFlat( base, 0, false ).render( context, child.x+1, child.y-1, child.width, child.height, TileSet::Full );
             cairo_translate( context, 0, -2 );
 
         } else {
@@ -1616,7 +1620,7 @@ namespace Oxygen
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
 
         // get the pixmap
-        const Cairo::Surface& surface( helper().roundSlab( base, glow, 0, tileSize ) );
+        const Cairo::Surface& surface( _helper.roundSlab( base, glow, 0, tileSize ) );
 
         // create context
         cairo_save( context );
@@ -1722,8 +1726,8 @@ namespace Oxygen
         if( fill.isValid() ) tiles |= TileSet::Center;
 
         const ColorUtils::Rgba glow( holeShadowColor( options, animationData ) );
-        if( glow.isValid() ) helper().holeFocused( base, fill, glow ).render( context, x, y, w, h, tiles );
-        else helper().hole( base, fill ).render( context, x, y, w, h, tiles );
+        if( glow.isValid() ) _helper.holeFocused( base, fill, glow ).render( context, x, y, w, h, tiles );
+        else _helper.hole( base, fill ).render( context, x, y, w, h, tiles );
 
         // restore
         cairo_restore( context );
@@ -1761,7 +1765,7 @@ namespace Oxygen
         // create context, add mask, and render
         cairo_save( context );
         generateGapMask( context, x, y, w, h, gap );
-        helper().dockFrame( top, bottom ).render( context, x, y, w, h );
+        _helper.dockFrame( top, bottom ).render( context, x, y, w, h );
         cairo_restore( context );
 
     }
@@ -1775,7 +1779,7 @@ namespace Oxygen
 
         // register
         if( widget )
-        { animations().groupBoxEngine().registerWidget( widget ); }
+        { _animations.groupBoxEngine().registerWidget( widget ); }
 
         // define colors
         ColorUtils::Rgba base;
@@ -1883,7 +1887,7 @@ namespace Oxygen
 
             // draw item rect in a group
             cairo_push_group( context );
-            helper().holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full );
+            _helper.holeFlat( color, 0 ).render( context, 0, 0, w, h, TileSet::Full );
             cairo_pop_group_to_source( context );
 
             // generate linear gradient for masking
@@ -1906,7 +1910,7 @@ namespace Oxygen
 
         } else {
 
-            helper().holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
+            _helper.holeFlat( color, 0 ).render( context, x, y, w, h, TileSet::Full  );
 
         }
 
@@ -1939,7 +1943,7 @@ namespace Oxygen
 
         if( !(tiles&TileSet::Left) ) { x -= 8; w+=8; }
         if( !(tiles&TileSet::Right) ) { w += 8; }
-        helper().selection( base, h, false ).render( context, x, y, w, h, tiles );
+        _helper.selection( base, h, false ).render( context, x, y, w, h, tiles );
 
         cairo_restore( context );
 
@@ -2082,7 +2086,7 @@ namespace Oxygen
         }
 
         cairo_save( context );
-        helper().scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, tiles );
+        _helper.scrollHole( base, vertical, true ).render( context, child.x, child.y, child.width, child.height, tiles );
         cairo_restore( context );
 
     }
@@ -2124,7 +2128,7 @@ namespace Oxygen
         y = child.y;
 
         const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
-        const Cairo::Surface& surface( helper().sliderSlab( base, glow, (options&Sunken), 0 ) );
+        const Cairo::Surface& surface( _helper.sliderSlab( base, glow, (options&Sunken), 0 ) );
         cairo_translate( context, x, y );
         cairo_rectangle( context, 0, 0, child.width, child.height );
         cairo_set_source_surface( context, surface, 0, 0 );
@@ -2289,7 +2293,7 @@ namespace Oxygen
         }
 
         // render
-        helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
         cairo_restore( context );
 
         return;
@@ -2470,7 +2474,7 @@ namespace Oxygen
 
         {
             // draw left border with cache
-            Cairo::Surface left( helper().windecoLeftBorderCache().value(key) );
+            Cairo::Surface left( _helper.windecoLeftBorderCache().value(key) );
             int sw=WinDeco::getMetric(WinDeco::BorderLeft);
             if(sw)
             {
@@ -2481,12 +2485,12 @@ namespace Oxygen
                     #if OXYGEN_DEBUG
                     std::cerr<<"drawWindowDecoration: drawing left border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
                     #endif
-                    left=helper().createSurface(sw,h);
+                    left=_helper.createSurface(sw,h);
 
                     Cairo::Context context(left);
                     renderWindowDecoration( context, wopt, 0, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient);
 
-                    helper().windecoLeftBorderCache().insert(key,left);
+                    _helper.windecoLeftBorderCache().insert(key,left);
 
                 } else {
 
@@ -2504,7 +2508,7 @@ namespace Oxygen
 
         {
             // draw right border with cache
-            Cairo::Surface right( helper().windecoRightBorderCache().value(key) );
+            Cairo::Surface right( _helper.windecoRightBorderCache().value(key) );
             int sw=WinDeco::getMetric(WinDeco::BorderRight);
             if(sw)
             {
@@ -2516,12 +2520,12 @@ namespace Oxygen
                     std::cerr<<"drawWindowDecoration: drawing right border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
                     #endif
 
-                    right=helper().createSurface(sw,h);
+                    right=_helper.createSurface(sw,h);
 
                     Cairo::Context context(right);
                     renderWindowDecoration( context, wopt, -(w-sw), 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-                    helper().windecoRightBorderCache().insert(key,right);
+                    _helper.windecoRightBorderCache().insert(key,right);
 
                 } else {
 
@@ -2539,7 +2543,7 @@ namespace Oxygen
 
         {
             // draw top border with cache
-            Cairo::Surface top( helper().windecoTopBorderCache().value(key) );
+            Cairo::Surface top( _helper.windecoTopBorderCache().value(key) );
             int left=WinDeco::getMetric(WinDeco::BorderLeft);
             int right=WinDeco::getMetric(WinDeco::BorderRight);
             int sh=WinDeco::getMetric(WinDeco::BorderTop);
@@ -2552,12 +2556,12 @@ namespace Oxygen
                     #if OXYGEN_DEBUG
                     std::cerr<<"drawWindowDecoration: drawing top border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
                     #endif
-                    top=helper().createSurface(sw,sh);
+                    top=_helper.createSurface(sw,sh);
 
                     Cairo::Context context(top);
                     renderWindowDecoration( context, wopt, -left, 0, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-                    helper().windecoTopBorderCache().insert(key,top);
+                    _helper.windecoTopBorderCache().insert(key,top);
 
                 } else {
 
@@ -2616,7 +2620,7 @@ namespace Oxygen
 
         {
             // draw bottom border with cache
-            Cairo::Surface bottom( helper().windecoBottomBorderCache().value(key) );
+            Cairo::Surface bottom( _helper.windecoBottomBorderCache().value(key) );
             int left=WinDeco::getMetric(WinDeco::BorderLeft);
             int right=WinDeco::getMetric(WinDeco::BorderRight);
             int sh=WinDeco::getMetric(WinDeco::BorderBottom);
@@ -2630,12 +2634,12 @@ namespace Oxygen
                     #if OXYGEN_DEBUG
                     std::cerr<<"drawWindowDecoration: drawing bottom border; width: " << w << "; height: " << h << "; wopt: " << wopt << std::endl;
                     #endif
-                    bottom=helper().createSurface(sw,sh);
+                    bottom=_helper.createSurface(sw,sh);
 
                     Cairo::Context context(bottom);
                     renderWindowDecoration( context, wopt, -left, y-Y, w, h, windowStrings, titleIndentLeft, titleIndentRight, gradient );
 
-                    helper().windecoBottomBorderCache().insert(key,bottom);
+                    _helper.windecoBottomBorderCache().insert(key,bottom);
 
                 } else {
 
@@ -2663,7 +2667,7 @@ namespace Oxygen
         cairo_paint( context );
         cairo_set_operator( context, CAIRO_OPERATOR_OVER );
 
-        WindowShadow shadow(settings(), helper());
+        WindowShadow shadow(settings(), _helper);
         shadow.setWindowState(wopt);
         shadow.render(context, x,y,w,h);
     }
@@ -2683,7 +2687,7 @@ namespace Oxygen
         if( !(windowState & WinDeco::Alpha) && !(windowState & WinDeco::Maximized) )
         { y++; }
 
-        WinDeco::Button button( settings(), helper(), type );
+        WinDeco::Button button( settings(), _helper, type );
         button.setState(buttonState);
         int buttonSize=settings().buttonSize();
         button.render( context, x+(w-buttonSize)/2+1,y+(h-buttonSize)/2+1, buttonSize, buttonSize );
@@ -2852,7 +2856,7 @@ namespace Oxygen
         }
 
         // render tab
-        helper().slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        _helper.slab( base, 0 ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         // adjust rect for filling
         SlabRect fillSlab( tabSlab );
@@ -2914,7 +2918,7 @@ namespace Oxygen
 
         // render connections to frame
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        { helper().slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        { _helper.slab(base, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
         // restore
         cairo_restore( context );
@@ -3026,7 +3030,7 @@ namespace Oxygen
         if( data._mode == AnimationHover ) glow = ColorUtils::alphaColor( settings().palette().color( Palette::Hover ), data._opacity );
         else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
 
-        helper().slab( base, glow ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
+        _helper.slab( base, glow ).render( context, tabSlab._x, tabSlab._y, tabSlab._w, tabSlab._h, tabSlab._tiles );
 
         // adjust rect for filling
         SlabRect fillSlab( tabSlab );
@@ -3083,11 +3087,11 @@ namespace Oxygen
             if( (iter->_options&Hover) && glow.isValid() )
             {
 
-                helper().slab(base, glow).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+                _helper.slab(base, glow).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
 
             } else {
 
-                helper().slab(base).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
+                _helper.slab(base).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles );
 
             }
         }
@@ -3459,7 +3463,7 @@ namespace Oxygen
         else if( options&Hover ) glow = settings().palette().color( Palette::Hover );
 
         for( SlabRect::List::const_iterator iter = slabs.begin(); iter != slabs.end(); ++iter )
-        { helper().slab(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
+        { _helper.slab(base, glow, 0).render( context, iter->_x, iter->_y, iter->_w, iter->_h, iter->_tiles ); }
 
         // restore
         cairo_restore( context );
@@ -3577,10 +3581,10 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
         cairo_set_source( context, pattern );
 
-        helper().fillSlab( context, x, y, w, h );
+        _helper.fillSlab( context, x, y, w, h );
 
         if( !(options&NoFill) )
-        { helper().slope( base, 0.0 ).render( context, x, y, w, h ); }
+        { _helper.slope( base, 0.0 ).render( context, x, y, w, h ); }
 
         cairo_pop_group_to_source( context );
 
@@ -3639,7 +3643,7 @@ namespace Oxygen
             }
 
             cairo_set_source( context, pattern );
-            helper().fillSlab( context, x, y, w, h, tiles );
+            _helper.fillSlab( context, x, y, w, h, tiles );
 
         }
 
@@ -3648,14 +3652,14 @@ namespace Oxygen
             // calculate glow color
             const TileSet* tile;
             const ColorUtils::Rgba glow( slabShadowColor( options, animationData ) );
-            if( glow.isValid() || base.isValid() ) tile = &helper().slab( base, glow , 0);
+            if( glow.isValid() || base.isValid() ) tile = &_helper.slab( base, glow , 0);
             else return;
 
             if( tile ) tile->render( context, x, y, w, h );
 
         } else if( base.isValid() ) {
 
-            helper().slabSunken( base ).render( context, x, y, w, h );
+            _helper.slabSunken( base ).render( context, x, y, w, h );
 
         }
 
@@ -3666,7 +3670,7 @@ namespace Oxygen
     {
 
         // use tileset from helper
-        helper().scrollHole( base, vertical ).render( context, x, y, w, h, tiles );
+        _helper.scrollHole( base, vertical ).render( context, x, y, w, h, tiles );
 
     }
 
@@ -3733,9 +3737,9 @@ namespace Oxygen
                 // Draw right side 3-dots resize handles
                 int cenY = int(h/2+y);
                 int posX = int(w+x-3) + 1;
-                helper().renderDot(context,color,posX+offset, cenY-3);
-                helper().renderDot(context,color,posX+offset, cenY);
-                helper().renderDot(context,color,posX+offset, cenY+3);
+                _helper.renderDot(context,color,posX+offset, cenY-3);
+                _helper.renderDot(context,color,posX+offset, cenY);
+                _helper.renderDot(context,color,posX+offset, cenY+3);
             }
 
             // Draw bottom-right corner 3-dots resize handles
@@ -3743,9 +3747,9 @@ namespace Oxygen
             {
                 cairo_save(context);
                 cairo_translate(context,x+w-8,y+h-8);
-                helper().renderDot(context,color,2+offset,6+offset);
-                helper().renderDot(context,color,5+offset,5+offset);
-                helper().renderDot(context,color,6+offset,2+offset);
+                _helper.renderDot(context,color,2+offset,6+offset);
+                _helper.renderDot(context,color,5+offset,5+offset);
+                _helper.renderDot(context,color,6+offset,2+offset);
                 cairo_restore(context);
             }
         }

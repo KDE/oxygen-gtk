@@ -38,6 +38,7 @@
 #include "oxygentaboptions.h"
 #include "oxygentileset.h"
 #include "oxygenwidgetlookup.h"
+#include "oxygenwidgetexplorer.h"
 #include "oxygenwindecooptions.h"
 #include "oxygenwindecobutton.h"
 #include "oxygenwindowmanager.h"
@@ -101,6 +102,10 @@ namespace Oxygen
         //! shadow helper
         ShadowHelper& shadowHelper( void )
         { return _shadowHelper; }
+
+        //! window manager
+        WidgetExplorer& widgetExplorer( void )
+        { return _widgetExplorer; }
 
         //! window manager
         WindowManager& windowManager( void )
@@ -506,6 +511,9 @@ namespace Oxygen
 
         //! shadow helper
         ShadowHelper _shadowHelper;
+
+        //! widget explorer
+        WidgetExplorer _widgetExplorer;
 
         //! window manager
         WindowManager _windowManager;

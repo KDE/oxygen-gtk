@@ -91,6 +91,7 @@ namespace Oxygen
         _activeShadowConfiguration( Palette::Active ),
         _inactiveShadowConfiguration( Palette::Inactive ),
         _argbEnabled( true ),
+        _widgetExplorerEnabled( true ),
         _initialized( false ),
         _kdeColorsInitialized( false ),
         _gtkColorsInitialized( false ),
@@ -1045,6 +1046,9 @@ namespace Oxygen
         // animation steps
         TimeLine::setSteps( _oxygen.getOption( "[Style]", "AnimationSteps" ).toVariant<int>( 10 ) );
 
+        // widget explorer
+        _widgetExplorerEnabled = _oxygen.getOption( "[Style]", "WidgetExplorerEnabled" ).toVariant<std::string>("false") == "true";
+
         // window decoration button size
         std::string buttonSize( _oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
         if( buttonSize == "Small" ) _buttonSize = ButtonSmall;
@@ -1072,7 +1076,7 @@ namespace Oxygen
         else if( titleAlign == "Right" ) _titleAlignment = PANGO_ALIGN_RIGHT;
         else _titleAlignment = PANGO_ALIGN_CENTER;
 
-        // Windeco radial gradient enable option
+        // window decoration radial gradient enable option
         std::string wdBlendType( _oxygen.getValue( "[Windeco]", "BlendColor", "Follow Style Hint" ) );
         if( wdBlendType == "Follow Style Hint" ) _windecoBlendType=FollowStyleHint;
         else if( wdBlendType == "Radial Gradient" ) _windecoBlendType=RadialGradient;

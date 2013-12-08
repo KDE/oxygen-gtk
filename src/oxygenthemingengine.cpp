@@ -2741,9 +2741,10 @@ namespace Oxygen
 
         // hooks
         Style::instance().animations().initializeHooks();
+        Style::instance().shadowHelper().initializeHooks();
         Style::instance().widgetLookup().initializeHooks();
         Style::instance().windowManager().initializeHooks();
-        Style::instance().shadowHelper().initializeHooks();
+        Style::instance().widgetExplorer().initializeHooks();
 
         // initialize argb hooks
         if( Style::instance().settings().argbEnabled() )
