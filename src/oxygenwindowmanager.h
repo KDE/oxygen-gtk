@@ -35,7 +35,6 @@
 #include "oxygentimer.h"
 
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
 #include <algorithm>
 #include <string>
 #include <vector>
