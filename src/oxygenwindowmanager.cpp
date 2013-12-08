@@ -320,7 +320,6 @@ namespace Oxygen
         // cast data to window manager
         WindowManager &manager( *static_cast<WindowManager*>(data ) );
 
-
         bool registered( false );
         if( GTK_IS_WINDOW( widget ) ||
             GTK_IS_VIEWPORT( widget ) ||
@@ -368,7 +367,7 @@ namespace Oxygen
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
 
         // cast data to window manager
-        WindowManager &manager( *static_cast<WindowManager*>(data ) );
+        WindowManager &manager( *static_cast<WindowManager*>(data) );
 
         // check mode
         if( manager._dragMode == Disabled ) return TRUE;

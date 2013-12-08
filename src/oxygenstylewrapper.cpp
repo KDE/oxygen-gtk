@@ -39,6 +39,7 @@
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
 #include "oxygenstyle.h"
+#include "oxygenwidgetexplorer.h"
 #include "oxygenwindowmanager.h"
 #include "oxygencolorutils.h"
 
@@ -3692,6 +3693,7 @@ namespace Oxygen
         // hooks
         Style::instance().animations().initializeHooks();
         Style::instance().shadowHelper().initializeHooks();
+        Style::instance().widgetExplorer().initializeHooks();
 
         if( !Style::instance().settings().applicationName().isEclipse() )
         { Style::instance().windowManager().initializeHooks(); }

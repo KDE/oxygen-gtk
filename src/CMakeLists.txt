@@ -1,5 +1,5 @@
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} )
-include_directories( animations )
+include_directories( animations debug )
 
 # Sources
 # please keep this list alphabetically sorted for clarity
@@ -38,6 +38,7 @@ set( oxygen_gtk_SOURCES
     animations/oxygenwidgetsizedata.cpp
     animations/oxygenwidgetstatedata.cpp
     animations/oxygenwidgetstateengine.cpp
+    debug/oxygenwidgetexplorer.cpp
     oxygenapplicationname.cpp
     oxygenargbhelper.cpp
     oxygencairocontext.cpp
