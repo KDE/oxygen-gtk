@@ -1031,7 +1031,9 @@ namespace Oxygen
         TimeLine::setSteps( _oxygen.getOption( "[Style]", "AnimationSteps" ).toVariant<int>( 10 ) );
 
         // widget explorer
-        _widgetExplorerEnabled = _oxygen.getOption( "[Style]", "WidgetExplorerEnabled" ).toVariant<std::string>("false") == "true";
+        _widgetExplorerEnabled =
+            _oxygen.getOption( "[Style]", "WidgetExplorerEnabled" ).toVariant<std::string>("false") == "true" ||
+            _oxygen.getOption( "[Style]", "WidgetExplorerGtkEnabled" ).toVariant<std::string>("false") == "true";
 
         // window decoration button size
         std::string buttonSize( _oxygen.getValue( "[Windeco]", "ButtonSize", "Normal") );
