@@ -785,7 +785,6 @@ namespace Oxygen
         // tooltips
         _css.addSection( "GtkWindow#gtk-tooltip" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Tooltip ) ) );
-        _css.addToCurrentSection( "  padding: 3px;" );
 
         _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );

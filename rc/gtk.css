@@ -274,6 +274,9 @@ GtkSwitch { padding: 0px; }
 GtkComboBox { padding: 0px 0px; }
 GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
 
+/* tooltips */
+GtkWindow#gtk-tooltip { padding: 3px; }
+
 /* headers */
 GtkTreeView>GtkButton {
     border-width: 0px 2px;
