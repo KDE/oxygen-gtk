@@ -323,6 +323,10 @@ namespace Oxygen
         bool argbEnabled( void ) const
         { return _argbEnabled; }
 
+        //! true if argb is enabled
+        bool widgetExplorerEnabled( void ) const
+        { return _widgetExplorerEnabled; }
+
         //! file monitor structure
         class FileMonitor
         {
@@ -591,6 +595,9 @@ namespace Oxygen
 
         //! true if argb is enabled
         bool _argbEnabled;
+
+        //! widget explorer
+        bool _widgetExplorerEnabled;
 
         //! initialization flags
         bool _initialized;
