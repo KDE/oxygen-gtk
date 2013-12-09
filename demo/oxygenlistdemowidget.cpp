@@ -142,6 +142,13 @@ namespace Oxygen
                     gtk_tree_store_append( model, &subiter, &iter );
                     gtk_tree_store_set( model, &subiter, 0, subTitleColumns[2], 1, subDescriptionColumns[2], -1 );
 
+                    for( unsigned int i=0; i<2; i++ )
+                    {
+                        GtkTreeIter thirditer;
+                        gtk_tree_store_append( model, &thirditer, &subiter );
+                        gtk_tree_store_set( model, &thirditer, 0, subTitleColumns[i], 1, subDescriptionColumns[i], -1 );
+                    }
+
                 }
 
             }
