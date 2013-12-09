@@ -93,7 +93,7 @@ namespace Oxygen
             if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
 
             // TODO: check whether one should use this, or gtk_widget_has_focus
-            if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
+            if( GTK_IS_WIDGET( widget ) && gtk_widget_has_focus(widget) ) (*this)|=Focus;
 
         }
 
@@ -105,7 +105,7 @@ namespace Oxygen
             else if( state == GTK_STATE_SELECTED ) (*this) |= Selected;
             else if( state == GTK_STATE_ACTIVE ) (*this) |= Active;
 
-            if( widget && gtk_widget_has_focus(widget) ) (*this)|=Focus;
+            if( GTK_IS_WIDGET( widget ) && gtk_widget_has_focus(widget) ) (*this)|=Focus;
         }
 
 
