@@ -435,8 +435,7 @@ namespace Oxygen
                             int depth( cellInfo.depth() );
                             int expanderSize(0);
                             gtk_widget_style_get( widget, "expander-size", &expanderSize, NULL );
-
-                            int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
+                            int offset( 3 + expanderSize * depth + ( gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
 
                             if( reversed ) w-= offset;
                             else {
