@@ -227,15 +227,17 @@ namespace Oxygen
         {
             StyleOptions options( widget, gtk_widget_get_state_flags( widget ) );
             Corners corners(CornersAll);
-            if(gtk_widget_get_visible(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(widget))))
+
+            // check scrollbar visibility to decide corners
+            GtkScrolledWindow* scrolledWindow( GTK_SCROLLED_WINDOW( widget ) );
+            if( gtk_widget_get_mapped( gtk_scrolled_window_get_vscrollbar( scrolledWindow ) ) )
             {
-                if(Gtk::gtk_widget_layout_is_reversed( widget ))
-                    corners &= ~CornersLeft;
-                else
-                    corners &= ~CornersRight;
+                if(Gtk::gtk_widget_layout_is_reversed( widget )) corners &= ~CornersLeft;
+                else corners &= ~CornersRight;
             }
-            if(gtk_widget_get_visible(gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(widget))))
-                corners &= ~CornersBottom;
+
+            if( gtk_widget_get_mapped( gtk_scrolled_window_get_hscrollbar( scrolledWindow ) ) )
+            { corners &= ~CornersBottom; }
 
             int x(allocation.x),y(allocation.y),w(allocation.width),h(allocation.height);
             cairo_rectangle(context,x,y,w,h);
