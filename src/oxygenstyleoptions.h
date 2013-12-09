@@ -91,10 +91,8 @@ namespace Oxygen
             if( flags & GTK_STATE_FLAG_PRELIGHT ) (*this) |= Hover;
             if( flags & GTK_STATE_FLAG_SELECTED ) (*this) |= (Selected|Active);
             if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
-
-            // TODO: check whether one should use this, or gtk_widget_has_focus
-            if( GTK_IS_WIDGET( widget ) && gtk_widget_has_focus(widget) ) (*this)|=Focus;
-
+            if( flags & GTK_STATE_FLAG_FOCUSED ) (*this) |= Focus;
+            else if( GTK_IS_WIDGET( widget ) && gtk_widget_has_focus(widget) ) (*this)|=Focus;
         }
 
         //! constructor from widget with GtkStateType state
