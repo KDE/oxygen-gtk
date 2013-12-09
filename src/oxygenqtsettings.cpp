@@ -147,6 +147,7 @@ namespace Oxygen
         /* TODO: in principle this should be needed only once */
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+        gtk_settings_set_long_property( settings, "gtk-primary-button-warps-slider", 0, "oxygen-gtk" );
 
         // clear gtkrc
         _css.clear();
