@@ -147,6 +147,7 @@ namespace Oxygen
         /* TODO: in principle this should be needed only once */
         GtkSettings* settings( gtk_settings_get_default() );
         gtk_settings_set_long_property( settings, "gtk-alternative-button-order", 1, "oxygen-gtk" );
+        gtk_settings_set_long_property( settings, "gtk-primary-button-warps-slider", 0, "oxygen-gtk" );
 
         // clear gtkrc
         _css.clear();
@@ -732,6 +733,7 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
         addLinkColors( "[Colors:View]" );
 
+        // text selection
         _css.addSection(
             ".view:insensitive, "
             ".entry:insensitive, "
@@ -743,13 +745,22 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::Text ) ) );
 
         _css.addSection(
+            ".view:selected:focus, "
+            ".entry:selected:focus, "
+            "GtkEntry:selected:focus, "
+            "GtkTreeView:selected:focus, "
+            "GtkTextView:selected:focus" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Active, Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Active, Palette::SelectedText ) ) );
+
+        _css.addSection(
             ".view:selected, "
             ".entry:selected, "
             "GtkEntry:selected, "
             "GtkTreeView:selected, "
             "GtkTextView:selected" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::SelectedText ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Inactive, Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Active, Palette::Text ) ) );
 
         // sidebars
         _css.addSection( "GtkAssistant .sidebar" );

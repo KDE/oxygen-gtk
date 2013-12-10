@@ -55,6 +55,9 @@ namespace Oxygen
     //! GtkContainer streamer
     inline std::ostream& operator << (std::ostream& out, GtkContainer* container)
     {
+
+        if( !GTK_IS_CONTAINER( container ) ) return out;
+
         GList* children=gtk_container_get_children(container);
         for(GList* child=g_list_first(children); child; child=g_list_next(child))
         {
@@ -114,7 +117,7 @@ namespace Oxygen
         //! map window/widget origin to top level
         inline bool gdk_map_to_toplevel( GdkWindow* window, GtkWidget* widget, gint* x, gint* y, gint* w, gint* h, bool frame = false )
         {
-            if( window && GDK_IS_WINDOW( window ) ) return gdk_window_map_to_toplevel( window, x, y, w, h, frame );
+            if( GDK_IS_WINDOW( window ) ) return gdk_window_map_to_toplevel( window, x, y, w, h, frame );
             else return gtk_widget_map_to_toplevel( widget, x, y, w, h, frame );
         }
 
@@ -189,12 +192,12 @@ namespace Oxygen
 
         //! returns true if widget's layout is reversed
         inline bool gtk_widget_layout_is_reversed( GtkWidget* widget )
-        { return widget ? gtk_widget_get_direction( widget ) == GTK_TEXT_DIR_RTL : false; }
+        { return GTK_IS_WIDGET( widget ) ? gtk_widget_get_direction( widget ) == GTK_TEXT_DIR_RTL : false; }
 
         //! returns true if widget has non zero margins
         inline bool gtk_widget_has_margins( GtkWidget* widget )
         {
-            return widget && (
+            return GTK_IS_WIDGET( widget ) && (
                 gtk_widget_get_margin_left( widget ) ||
                 gtk_widget_get_margin_right( widget ) ||
                 gtk_widget_get_margin_top( widget ) ||

@@ -25,6 +25,8 @@
 */
 
 #include "oxygenwidgetexplorer.h"
+
+#include "../oxygengtkutils.h"
 #include "config.h"
 
 #include <iostream>
@@ -81,16 +83,7 @@ namespace Oxygen
         GtkWidget* widget( GTK_WIDGET( g_value_get_object( params ) ) );
         if( !GTK_IS_WIDGET( widget ) ) return TRUE;
 
-        std::cerr << "Oxygen::WidgetExplorer::buttonPressHook -";
-        int row( 0 );
-        for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
-        {
-
-            if( row ) std::cerr << " parent:";
-            std::cerr << " " << parent<< " (" << G_OBJECT_TYPE_NAME( parent ) << ")" << std::endl;
-            ++row;
-        }
-        if( row > 1 ) std::cerr << std::endl;
+        Gtk::gtk_widget_print_tree( widget );
         return TRUE;
 
     }

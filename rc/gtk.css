@@ -37,8 +37,6 @@ TODO: use the same colors as KDE's message boxes
 @define-color error_fg_color white;
 @define-color error_bg_color rgb (237, 54, 54);
 
-
-
 /*
 INFO: css border and padding ordering is either:
    - all-sides;

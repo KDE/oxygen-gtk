@@ -81,7 +81,7 @@ namespace Oxygen
     {
 
         // check widget
-        if( !widget ) return;
+        if( !GTK_IS_WIDGET( widget ) ) return;
 
         #if OXYGEN_DEBUG
         std::cerr
@@ -213,68 +213,62 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
-        // if widget is invalid, use parent class
-        if( !( widget && GTK_IS_WIDGET( widget ) ) )
+        if( GTK_IS_WIDGET( widget ) )
         {
 
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_background - invalid widget - Calling parentClass()->render_background()\n";
-            #endif
-
-            ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
-            return;
+            // check top level, and register dialogs
+            GtkWidget* toplevel=gtk_widget_get_toplevel(widget);
+            if(GTK_IS_DIALOG(toplevel))
+            { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
 
         }
 
-        GtkWidget* toplevel=gtk_widget_get_toplevel(widget);
-        if(GTK_IS_DIALOG(toplevel))
-        { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
 
-            StyleOptions options( Round );
-            if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-
-            GdkWindow* window( gtk_widget_get_window( widget ) );
-            if( GDK_IS_WINDOW( window ) && Style::instance().shadowHelper().isToolTip( widget ) )
+            StyleOptions options;
+            if( GTK_IS_WIDGET( widget ) )
             {
-                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                static bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
-                if( !(options&Alpha) )
+                options |= Round;
+                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+                GdkWindow* window( gtk_widget_get_window( widget ) );
+                if( GDK_IS_WINDOW( window ) && Style::instance().shadowHelper().isToolTip( widget ) )
                 {
-                    // make tooltips appear rounded using XShape extension if screen isn't composited
-                    if( ( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) ) || wasAlpha )
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    static bool wasAlpha(Style::instance().animations().widgetSizeEngine().wasAlpha(widget));
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) );
+                    if( !(options&Alpha) )
                     {
-                        Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
-                        gdk_window_shape_combine_region( window, mask, x, y );
-                    }
-                    wasAlpha=false;
+                        // make tooltips appear rounded using XShape extension if screen isn't composited
+                        if( ( sizeChanged && ( gtk_widget_is_toplevel(widget) || GTK_IS_WINDOW(widget) ) ) || wasAlpha )
+                        {
+                            Cairo::Region mask( Style::instance().helper().roundMask( allocation.width, allocation.height ) );
+                            gdk_window_shape_combine_region( window, mask, x, y );
+                        }
+                        wasAlpha=false;
 
+                    } else {
+
+                        if( !wasAlpha )
+                        {
+                            gdk_window_shape_combine_region( window, NULL, 0, 0 );
+                            wasAlpha=true;
+                        }
+
+                        if(sizeChanged||!wasAlpha)
+                        { Style::instance().setWindowBlur(window,true); }
+                    }
                 }
-                else
-                {
-                    if( !wasAlpha )
-                    {
-                        gdk_window_shape_combine_region( window, NULL, 0, 0 );
 
-                        wasAlpha=true;
-                    }
-
-                    if(sizeChanged||!wasAlpha)
-                    {
-                        Style::instance().setWindowBlur(window,true);
-                    }
-                }
             }
-
 
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
-        } else if( widget && (
+        } else if( GTK_IS_WIDGET( widget ) && (
             gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
@@ -441,8 +435,7 @@ namespace Oxygen
                             int depth( cellInfo.depth() );
                             int expanderSize(0);
                             gtk_widget_style_get( widget, "expander-size", &expanderSize, NULL );
-
-                            int offset( 3 + expanderSize * depth + ( 4 + gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
+                            int offset( 3 + expanderSize * depth + ( gtk_tree_view_get_level_indentation( treeView ) )*(depth-1) );
 
                             if( reversed ) w-= offset;
                             else {
@@ -517,7 +510,7 @@ namespace Oxygen
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_HEADER_BAR ) )
-            {
+         {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -720,26 +713,26 @@ namespace Oxygen
         }
 
         // adjust shadow type for some known widgets
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) && GTK_IS_SCROLLED_WINDOW( widget ) )
         {
+
             if( borderStyle !=  GTK_BORDER_STYLE_INSET && Gtk::gtk_scrolled_window_force_sunken( widget ) )
             {
 
                 // make sure that scrolled windows containing a treeView have sunken frame
                 borderStyle = GTK_BORDER_STYLE_INSET;
                 gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
-                Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
 
             } else if( borderStyle ==  GTK_BORDER_STYLE_INSET && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) != GTK_SHADOW_IN ) {
 
-                /*
-                change scrolled window shadow type based on borderStyle,
-                and make sure it's child is registered to inner shadow engine
-                */
+                // change scrolled window shadow type based on borderStyle,
                 gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( widget ), GTK_SHADOW_IN );
-                Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) );
 
             }
+
+            // make sure child is registered
+            if( borderStyle ==  GTK_BORDER_STYLE_INSET && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) == GTK_SHADOW_IN )
+            { Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) ); }
 
         } else if(
             gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
@@ -750,7 +743,8 @@ namespace Oxygen
 
             // make sure that entry shadows are drawn
             borderStyle = GTK_BORDER_STYLE_INSET;
-            gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN );
+            if( GTK_IS_FRAME( widget ) )
+            { gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN ); }
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
 

@@ -80,6 +80,9 @@ namespace Oxygen
         //! store current context
         cairo_t* _context;
 
+        //! store last added widget for speed up
+        GtkWidget* _widget;
+
         //! store list of associated widgets, to keep track of destruction
         typedef std::list<GtkWidget*> WidgetList;
         WidgetList _widgets;

@@ -63,7 +63,7 @@ namespace Oxygen
     //____________________________________________________________
     void Gtk::gtk_container_adjust_buttons_state(GtkContainer* container,gpointer data)
     {
-        if(GTK_IS_BUTTON(container))
+        if( GTK_IS_BUTTON( container ) )
         {
 
             int x(0),y(0);
@@ -85,10 +85,11 @@ namespace Oxygen
 
             return;
 
-        }
+        } else if( GTK_IS_CONTAINER( container ) ) {
 
-        if(GTK_IS_CONTAINER(container))
-        { gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,0L); }
+            gtk_container_foreach(container,(GtkCallback)gtk_container_adjust_buttons_state,0L);
+
+        }
 
     }
 
@@ -111,7 +112,7 @@ namespace Oxygen
     //____________________________________________________________
     bool Gtk::gtk_widget_is_applet( GtkWidget* widget )
     {
-        if( !widget ) return false;
+        if( !GTK_IS_WIDGET( widget ) ) return false;
 
         #if OXYGEN_DEBUG
         std::cerr << "Gtk::gtk_widget_is_applet(): " << Gtk::gtk_widget_path(widget) << std::endl;
@@ -158,10 +159,18 @@ namespace Oxygen
     void Gtk::gtk_widget_print_tree( GtkWidget* widget )
     {
 
-        if( !widget ) return;
+        if( !GTK_IS_WIDGET( widget ) ) return;
+
         std::cerr << "Oxygen::Gtk::gtk_widget_print_tree - widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+
+        bool first( true );
         while( ( widget = gtk_widget_get_parent( widget ) ) )
-        { std::cerr << "    parent: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl; }
+        {
+            first = false;
+            std::cerr << "    parent: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")" << std::endl;
+        }
+
+        if( !first ) std::cerr << std::endl;
 
     }
 
@@ -176,7 +185,7 @@ namespace Oxygen
     bool Gtk::gtk_widget_has_rgba( GtkWidget* widget )
     {
 
-        if( !widget ) return false;
+        if( !GTK_IS_WIDGET( widget ) ) return false;
         if( !gdk_default_screen_is_composited() ) return false;
         return gdk_visual_has_rgba( gtk_widget_get_visual (widget) );
 
@@ -214,7 +223,7 @@ namespace Oxygen
     bool Gtk::gdk_window_has_rgba( GdkWindow* window )
     {
 
-        if( !window ) return false;
+        if( !GDK_IS_WINDOW( window ) ) return false;
 
         if( !gdk_default_screen_is_composited() ) return false;
         return gdk_visual_has_rgba( gdk_window_get_visual( window ) );
@@ -224,6 +233,10 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gdk_visual_has_rgba( GdkVisual* visual )
     {
+
+        // check visual
+        if( !GDK_IS_VISUAL( visual ) ) return false;
+
         // check depth
         if( gdk_visual_get_depth( visual ) != 32 ) return false;
 
@@ -272,7 +285,7 @@ namespace Oxygen
             g_free( widgetPath );
             return out;
         }
-        return std::string("not-widget");
+        return std::string("not a widget");
 
     }
 
@@ -280,6 +293,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_widget_find_parent( GtkWidget* widget, GType type )
     {
 
+        if( !GTK_IS_WIDGET( widget ) ) return 0L;
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
         { if( G_TYPE_CHECK_INSTANCE_TYPE( parent, type ) ) return parent; }
 
@@ -290,6 +304,7 @@ namespace Oxygen
     GtkWidget* Gtk::gtk_parent_groupbox( GtkWidget* widget )
     {
 
+        if( !GTK_IS_WIDGET( widget ) ) return 0L;
         for( GtkWidget* parent = widget; parent; parent = gtk_widget_get_parent( parent ) )
         { if( gtk_widget_is_groupbox( parent ) ) return parent; }
 
@@ -300,6 +315,7 @@ namespace Oxygen
     bool Gtk::gtk_widget_is_parent( GtkWidget* widget, GtkWidget* potentialParent )
     {
 
+        if( !GTK_IS_WIDGET( widget ) ) return false;
         for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         { if( potentialParent==parent ) return true; }
 
@@ -309,6 +325,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_parent_is_shadow_in( GtkWidget* widget )
     {
+        if( !GTK_IS_WIDGET( widget ) ) return false;
         for( GtkWidget* parent = gtk_widget_get_parent( widget ); parent; parent = gtk_widget_get_parent( parent ) )
         {
             if( GTK_IS_FRAME( parent ) && gtk_frame_get_shadow_type( GTK_FRAME( parent ) ) == GTK_SHADOW_IN ) return true;
@@ -342,6 +359,7 @@ namespace Oxygen
     bool Gtk::gtk_path_bar_button_is_last( GtkWidget* widget )
     {
 
+        if( !GTK_IS_BUTTON( widget ) ) return false;
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
 
         // get parent and check type
@@ -425,6 +443,9 @@ namespace Oxygen
     bool Gtk::gtk_combobox_has_frame( GtkWidget* widget )
     {
 
+        if( !GTK_IS_WIDGET( widget ) ) return false;
+
+        // get has-frame value
         GValue val = { 0, };
         g_value_init(&val, G_TYPE_BOOLEAN);
         g_object_get_property( G_OBJECT( widget ), "has-frame", &val );
@@ -434,18 +455,13 @@ namespace Oxygen
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_tree_view( GtkWidget* widget )
-    {
-        return
-            widget &&
-            GTK_IS_TREE_VIEW( widget ) &&
-            gtk_combobox_is_scrolled_window( gtk_widget_get_parent( widget ) );
-    }
+    { return GTK_IS_TREE_VIEW( widget ) && gtk_combobox_is_scrolled_window( gtk_widget_get_parent( widget ) ); }
 
     //________________________________________________________
     bool Gtk::gtk_combobox_is_scrolled_window( GtkWidget* widget )
     {
         // check type
-        if( !( widget && GTK_IS_SCROLLED_WINDOW(widget) ) ) return false;
+        if( !GTK_IS_SCROLLED_WINDOW( widget ) ) return false;
 
         // retrieve parent and type
         GtkWidget* parent( gtk_widget_get_parent( widget ) );
@@ -475,6 +491,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_combobox_appears_as_list( GtkWidget* widget )
     {
+        if( !GTK_IS_WIDGET( widget ) ) return false;
         gboolean appearsAsList;
         gtk_widget_style_get( widget, "appears-as-list", &appearsAsList, NULL );
         return (bool) appearsAsList;
@@ -558,6 +575,7 @@ namespace Oxygen
     bool Gtk::gtk_notebook_is_tab_label(GtkNotebook* notebook, GtkWidget* widget )
     {
 
+        if( !GTK_IS_NOTEBOOK( notebook ) ) return false;
         for( int i = 0; i <  gtk_notebook_get_n_pages( notebook ); ++i )
         {
             // retrieve page and tab label
@@ -577,7 +595,7 @@ namespace Oxygen
     void Gtk::gtk_notebook_get_tabbar_rect( GtkNotebook* notebook, GdkRectangle* rect )
     {
         // check notebook and rect
-        if( !( notebook && rect ) ) return;
+        if( !( GTK_IS_NOTEBOOK( notebook ) && rect ) ) return;
 
         // check tab visibility
         GList* children( gtk_container_get_children( GTK_CONTAINER( notebook ) ) );
@@ -647,6 +665,7 @@ namespace Oxygen
     bool Gtk::gtk_notebook_has_visible_arrows( GtkNotebook* notebook )
     {
 
+        if( !GTK_IS_NOTEBOOK( notebook ) ) return false;
         if( !gtk_notebook_get_show_tabs( notebook ) ) return false;
 
         // loop over pages
@@ -668,6 +687,8 @@ namespace Oxygen
     //____________________________________________________________
     bool Gtk::gtk_notebook_update_close_buttons(GtkNotebook* notebook)
     {
+        if( !GTK_IS_NOTEBOOK( notebook ) ) return false;
+
         int numPages=gtk_notebook_get_n_pages( notebook );
         for( int i = 0; i < numPages; ++i )
         {
@@ -688,6 +709,7 @@ namespace Oxygen
     //________________________________________________________
     bool Gtk::gtk_notebook_is_close_button(GtkWidget* widget)
     {
+
         if( GtkNotebook* nb=GTK_NOTEBOOK(gtk_parent_notebook(widget) ) )
         {
             // check if the button resides on tab label, not anywhere on the tab
@@ -714,11 +736,13 @@ namespace Oxygen
                 {
                     gtk_widget_hide( label );
                     return true;
-                } else return false;
+                }
 
-            } else return false;
+            }
 
-        } else return false;
+        }
+
+        return false;
 
     }
 
@@ -770,7 +794,7 @@ namespace Oxygen
         if( w ) *w = -1;
         if( h ) *h = -1;
 
-        if( !widget ) return false;
+        if( !GTK_IS_WIDGET( widget ) ) return false;
 
         // get window
         GdkWindow* window( gtk_widget_get_parent_window( widget ) );
@@ -803,7 +827,7 @@ namespace Oxygen
         if( w ) *w = -1;
         if( h ) *h = -1;
 
-        if( !( widget && parent ) ) return false;
+        if( !( GTK_IS_WIDGET( widget ) && GTK_IS_WIDGET( parent ) ) ) return false;
 
         const GtkAllocation allocation( gtk_widget_get_allocation(  parent ) );
         if( w ) *w = allocation.width;
@@ -828,7 +852,7 @@ namespace Oxygen
     {
         if( x ) *x = 0;
         if( y ) *y = 0;
-        if( !( parent && child ) ) return false;
+        if( !( GTK_IS_WIDGET( parent ) && GTK_IS_WIDGET( child ) ) ) return false;
         while( child && GDK_IS_WINDOW( child ) &&
             child != parent &&
             gdk_window_get_window_type( child ) == GDK_WINDOW_CHILD )
@@ -849,7 +873,7 @@ namespace Oxygen
     void Gtk::gdk_toplevel_get_size( GdkWindow* window, gint* w, gint* h )
     {
 
-        if( !( window && GDK_IS_WINDOW( window ) ) )
+        if( !GDK_IS_WINDOW( window ) )
         {
             if( w ) *w = -1;
             if( h ) *h = -1;
@@ -877,7 +901,7 @@ namespace Oxygen
     void Gtk::gdk_toplevel_get_frame_size( GdkWindow* window, gint* w, gint* h )
     {
 
-        if( !( window && GDK_IS_WINDOW( window ) ) )
+        if( !GDK_IS_WINDOW( window ) )
         {
             if( w ) *w = -1;
             if( h ) *h = -1;
@@ -913,8 +937,7 @@ namespace Oxygen
     {
         if( x ) *x = 0;
         if( y ) *y = 0;
-        if( !window ) return;
-        while( window && GDK_IS_WINDOW( window ) && gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD )
+        while( GDK_IS_WINDOW( window ) && gdk_window_get_window_type( window ) == GDK_WINDOW_CHILD )
         {
             gint xloc;
             gint yloc;
@@ -931,8 +954,7 @@ namespace Oxygen
     GdkPixbuf* Gtk::gdk_pixbuf_set_alpha( const GdkPixbuf *pixbuf, double alpha )
     {
 
-        g_return_val_if_fail( pixbuf != 0L, 0L);
-        g_return_val_if_fail( GDK_IS_PIXBUF( pixbuf ), 0L );
+        if( !GDK_IS_PIXBUF( pixbuf ) ) return 0L;
 
         /* Returns a copy of pixbuf with it's non-completely-transparent pixels to
         have an alpha level "alpha" of their original value. */
@@ -963,6 +985,8 @@ namespace Oxygen
     //_________________________________________________________
     bool Gtk::gdk_pixbuf_to_gamma(GdkPixbuf* pixbuf, double value)
     {
+
+        if( !GDK_IS_PIXBUF( pixbuf ) ) return false;
         if(gdk_pixbuf_get_colorspace(pixbuf)==GDK_COLORSPACE_RGB &&
             gdk_pixbuf_get_bits_per_sample(pixbuf)==8 &&
             gdk_pixbuf_get_has_alpha(pixbuf) &&
@@ -994,6 +1018,8 @@ namespace Oxygen
     //___________________________________________________________
     GdkPixbuf* Gtk::gdk_pixbuf_resize( GdkPixbuf* src, int width, int height )
     {
+
+        if( !GDK_IS_PIXBUF( src ) ) return 0L;
         if( width == gdk_pixbuf_get_width( src ) &&  height == gdk_pixbuf_get_height( src ) )
         {
 
@@ -1010,6 +1036,8 @@ namespace Oxygen
     //___________________________________________________________
     void Gtk::gtk_viewport_get_position( GtkViewport* viewport, gint* x, gint* y )
     {
+
+        if( !GTK_IS_VIEWPORT( viewport ) ) return;
 
         // initialize
         if( x ) *x = 0;
@@ -1033,6 +1061,8 @@ namespace Oxygen
     //___________________________________________________________
     GtkWidget* Gtk::gtk_dialog_find_button(GtkDialog* dialog,gint response_id)
     {
+
+        if( !GTK_IS_DIALOG( dialog ) ) return 0L;
 
         // get children of dialog's action area
         GList* children( gtk_container_get_children( GTK_CONTAINER( gtk_dialog_get_action_area( dialog ) ) ) );

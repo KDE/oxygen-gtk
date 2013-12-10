@@ -50,7 +50,7 @@ namespace Oxygen
 
         //! register child
         void registerChild( GtkWidget* widget, GtkWidget* child )
-        { data().value( widget ).registerChild( child ); }
+        { if( contains( widget ) ) data().value( widget ).registerChild( child ); }
 
     };
 

@@ -88,15 +88,30 @@ namespace Oxygen
         // check context
         if( context != _context )
         {
-            #if OXYGEN_DEBUG
-            std::cerr
-                << "Oxygen::WidgetLookup::find -"
-                << " context: " << context
-                << " type: " << g_type_name( type )
-                << " invalid context."
-                << std::endl;
-            #endif
-            return 0L;
+
+            if( GTK_IS_WIDGET( _widget ) && G_OBJECT_TYPE( _widget ) == type && GTK_IS_SCROLLED_WINDOW( gtk_widget_get_parent( _widget ) ) )
+            {
+
+                // FIXME: this is very fragile
+                // in latest gtk3 versions, scrolled window children do not get the right context passed when drawn, with respect to what is
+                // sent by the "draw" signal. Hence the context does not match.
+                // Assuming this is the case here, we return the latest widget nonetheless
+                return _widget;
+
+            } else {
+
+                #if OXYGEN_DEBUG
+                std::cerr
+                    << "Oxygen::WidgetLookup::find -"
+                    << " context: " << context
+                    << " type: " << g_type_name( type )
+                    << " invalid context."
+                    << std::endl;
+                #endif
+                return 0L;
+
+            }
+
         }
 
         #if OXYGEN_DEBUG
@@ -159,6 +174,7 @@ namespace Oxygen
         }
 
         _widgets.push_back( widget );
+        _widget = widget;
 
         // add to all widgets map
         if( _allWidgets.find( widget ) == _allWidgets.end() )
@@ -188,6 +204,9 @@ namespace Oxygen
         // erase from lists
         _allWidgets.erase( widget );
         _widgets.remove( widget );
+
+        // also clean direct widget
+        if( _widget == widget ) { _widget = 0L; }
 
     }
 
