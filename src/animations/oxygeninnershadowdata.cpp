@@ -85,6 +85,9 @@ namespace Oxygen
 
         #if ENABLE_INNER_SHADOWS_HACK
 
+        // check widget
+        if( !GTK_IS_WIDGET( widget ) ) return;
+
         // make sure widget is not already in map
         if( _childrenData.find( widget ) != _childrenData.end() ) return;
 
