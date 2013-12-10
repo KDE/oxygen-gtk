@@ -743,7 +743,8 @@ namespace Oxygen
 
             // make sure that entry shadows are drawn
             borderStyle = GTK_BORDER_STYLE_INSET;
-            gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN );
+            if( GTK_IS_FRAME( widget ) )
+            { gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN ); }
 
         } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
 
