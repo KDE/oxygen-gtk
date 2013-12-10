@@ -713,7 +713,7 @@ namespace Oxygen
         }
 
         // adjust shadow type for some known widgets
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) )
+        if( gtk_widget_path_is_type( path, GTK_TYPE_SCROLLED_WINDOW ) && GTK_IS_SCROLLED_WINDOW( widget ) )
         {
             if( borderStyle !=  GTK_BORDER_STYLE_INSET && Gtk::gtk_scrolled_window_force_sunken( widget ) )
             {
