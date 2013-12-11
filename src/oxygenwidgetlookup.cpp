@@ -33,7 +33,8 @@ namespace Oxygen
     //__________________________________________________________________
     WidgetLookup::WidgetLookup( void ):
         _hooksInitialized( false ),
-        _context( 0L )
+        _context( 0L ),
+        _widget( 0L )
     {}
 
 
