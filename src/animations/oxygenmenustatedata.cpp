@@ -332,7 +332,14 @@ namespace Oxygen
 
         if( data._target )
         {
-            const GdkRectangle rect( data.dirtyRect() );
+            GdkRectangle rect( data.dirtyRect() );
+
+            const int margin( 2 );
+            rect.x -= margin;
+            rect.y -= margin;
+            rect.width += 2*margin;
+            rect.height += 2*margin;
+
             Gtk::gtk_widget_queue_draw( data._target, &rect );
         }
 
@@ -350,7 +357,14 @@ namespace Oxygen
         {
 
             data.updateAnimatedRect();
-            const GdkRectangle rect( data.dirtyRect() );
+            GdkRectangle rect( data.dirtyRect() );
+
+            const int margin( 2 );
+            rect.x -= margin;
+            rect.y -= margin;
+            rect.width += 2*margin;
+            rect.height += 2*margin;
+
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
         }
