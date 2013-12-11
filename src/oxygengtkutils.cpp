@@ -187,7 +187,7 @@ namespace Oxygen
 
         if( !GTK_IS_WIDGET( widget ) ) return false;
         if( !gdk_default_screen_is_composited() ) return false;
-        return gdk_visual_has_rgba( gtk_widget_get_visual (widget) );
+        return gdk_visual_has_rgba( gtk_widget_get_visual( widget ) );
 
     }
 
