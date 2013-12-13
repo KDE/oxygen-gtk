@@ -268,6 +268,13 @@ namespace Oxygen
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
+        } else if( gtk_theming_engine_has_class( engine, "window-frame") ) {
+
+            // window frame corresponds to the shadow in clien-side decoration mode
+            // this is handled by the parent class
+            ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+            return;
+
         } else if( GTK_IS_WIDGET( widget ) && (
             gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
