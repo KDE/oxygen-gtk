@@ -158,6 +158,12 @@ namespace Oxygen
         bool renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
         { return renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
 
+        // render background gradient
+        bool renderBackgroundGradient( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center, bool isMaximized=false );
+
+        // render background pixmap
+        bool renderBackgroundPixmap( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, bool isMaximized=false );
+
         //! groupbox background
         bool renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 

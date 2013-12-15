@@ -267,14 +267,28 @@ namespace Oxygen
         bool isMaximized )
     {
 
+        // gradient
+        if( !renderBackgroundGradient( context, window, widget, x, y, w, h, options, tiles, isMaximized ) )
+        { return false; }
+
+        // pixmap
+        renderBackgroundPixmap( context, window, widget, x, y, w, h, isMaximized );
+        return true;
+    }
+
+    //__________________________________________________________________
+    bool Style::renderBackgroundGradient(
+        cairo_t* context, GdkWindow* window, GtkWidget* widget,
+        gint x, gint y, gint w, gint h,
+        const StyleOptions& options, TileSet::Tiles tiles,
+        bool isMaximized )
+    {
 
         // always save context
         cairo_save(context);
 
         // define colors
-        ColorUtils::Rgba base( color( Palette::Window, options ) );
-
-        bool renderingWindeco(context && !window);
+        const ColorUtils::Rgba base( color( Palette::Window, options ) );
 
         // the hard-coded metrics are copied for
         // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
@@ -329,21 +343,6 @@ namespace Oxygen
         // store rectangle
         GdkRectangle rect = { x, y, w, h };
 
-// TODO: see if should be re-implemented for gtk+3
-//         /*
-//         if there is a valid clipRect,
-//         intersects it with painting Rect, for performances
-//         */
-//         if( clipRect )
-//         {
-//
-//             GdkRectangle localClip( *clipRect );
-//             localClip.x += wx;
-//             localClip.y += wy;
-//             gdk_rectangle_intersect( &rect, &localClip, &rect );
-//
-//         }
-
         // upper rect
         GdkRectangle upperRect = { 0, 0, ww, splitY };
         if( gdk_rectangle_intersect( &rect, &upperRect, &upperRect ) )
@@ -392,26 +391,80 @@ namespace Oxygen
 
         }
 
-        if( hasBackgroundSurface() )
+        // restore context
+        cairo_restore(context);
+
+        return true;
+
+    }
+
+    //__________________________________________________________________
+    bool Style::renderBackgroundPixmap(
+        cairo_t* context, GdkWindow* window, GtkWidget* widget,
+        gint x, gint y, gint w, gint h,
+        bool isMaximized )
+    {
+
+        // do nothing if no background surface
+        if( !hasBackgroundSurface() ) return false;
+
+        // always save context
+        cairo_save(context);
+
+        bool renderingWindeco(context && !window);
+
+        // the hard-coded metrics are copied for
+        // kdebase/workspace/libs/oxygen/oxygenhelper.cpp
+        // vertical shift to account for window decoration
+        const int yShift = 23;
+
+        // toplevel window information and relative positioning
+        gint ww(0), wh(0);
+        gint wx(0), wy(0);
+
+        // TODO: make sure this new test (on window) does not break Ruslan's decorations
+        if( window || widget )
         {
-            // Additional clip constraint so that no extra space is filled (important for LibreOffice)
-            cairo_rectangle(context,x,y,w,h);
-            cairo_clip(context);
+            // get window dimension and position
+            if( !Gtk::gdk_map_to_toplevel( window, widget, &wx, &wy, &ww, &wh, true ) )
+            { return false; }
 
-            if(renderingWindeco)
-            {
-                // Take border sizes into account
-                int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
-                int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
-                cairo_translate(context,bgShiftX,bgShiftY);
-            }
+            // translate to toplevel coordinates
+            wy += yShift;
+            x+=wx;
+            y+=wy;
 
-            // no sense in context saving since it will be either destroyed or restored to earlier state
-            cairo_translate( context, -40, -(48-20) );
-            cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
-            cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
-            cairo_fill( context );
+            // no sense in context saving since it will be destroyed
+            cairo_translate( context, -wx, -wy );
+
+        } else {
+
+            // drawing window decorations, so logic is simplified
+            ww=w;
+            wh=h;
+            cairo_translate(context,x,y);
+            x=0;
+            y=0;
+
         }
+
+        // Additional clip constraint so that no extra space is filled (important for LibreOffice)
+        cairo_rectangle(context,x,y,w,h);
+        cairo_clip(context);
+
+        if(renderingWindeco)
+        {
+            // Take border sizes into account
+            int bgShiftX=isMaximized?0:WinDeco::getMetric(WinDeco::BorderLeft);
+            int bgShiftY=WinDeco::getMetric(WinDeco::BorderTop)-yShift;
+            cairo_translate(context,bgShiftX,bgShiftY);
+        }
+
+        // no sense in context saving since it will be either destroyed or restored to earlier state
+        cairo_translate( context, -40, -(48-20) );
+        cairo_set_source_surface( context, _backgroundSurface, 0, 0 );
+        cairo_rectangle( context, 0, 0, ww + wx + 40, wh + wy + 48 - 20 );
+        cairo_fill( context );
 
         // restore context
         cairo_restore(context);
