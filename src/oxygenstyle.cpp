@@ -265,7 +265,7 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         GdkRectangle* clipRect, gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles,
+        const StyleOptions& options,
         bool isMaximized )
     {
 
@@ -2481,8 +2481,7 @@ namespace Oxygen
         if(drawAlphaChannel)
             options|=DrawAlphaChannel;
 
-        if( gradient )
-            renderWindowBackground( context, x, y, w, h, isMaximized, options );
+        if( gradient ) renderWindowBackground( context, x, y, w, h, options, isMaximized );
         else
         {
             cairo_set_source( context, settings().palette().color( Palette::Active, Palette::Window ) );
