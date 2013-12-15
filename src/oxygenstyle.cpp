@@ -263,12 +263,12 @@ namespace Oxygen
     bool Style::renderWindowBackground(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles,
+        const StyleOptions& options,
         bool isMaximized )
     {
 
         // gradient
-        if( !renderBackgroundGradient( context, window, widget, x, y, w, h, options, tiles, isMaximized ) )
+        if( !renderBackgroundGradient( context, window, widget, x, y, w, h, options, isMaximized ) )
         { return false; }
 
         // pixmap
@@ -280,7 +280,7 @@ namespace Oxygen
     bool Style::renderBackgroundGradient(
         cairo_t* context, GdkWindow* window, GtkWidget* widget,
         gint x, gint y, gint w, gint h,
-        const StyleOptions& options, TileSet::Tiles tiles,
+        const StyleOptions& options,
         bool isMaximized )
     {
 
@@ -318,6 +318,7 @@ namespace Oxygen
                 cairo_restore( context );
                 return false;
             }
+
             // translate to toplevel coordinates
             wy += yShift;
             x+=wx;
