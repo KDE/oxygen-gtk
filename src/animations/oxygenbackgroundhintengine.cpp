@@ -33,7 +33,8 @@ namespace Oxygen
 
     //_________________________________________________________
     BackgroundHintEngine::BackgroundHintEngine( Animations* animations ):
-        BaseEngine( animations )
+        BaseEngine( animations ),
+        _useBackgroundGradient( true )
     {
 
         #ifdef GDK_WINDOWING_X11
@@ -58,6 +59,9 @@ namespace Oxygen
     bool BackgroundHintEngine::registerWidget( GtkWidget* widget, BackgroundHints hints )
     {
 
+        // check enable state
+        if( !enabled() ) return false;
+
         #ifdef GDK_WINDOWING_X11
 
         // get associated top level widget
@@ -76,7 +80,7 @@ namespace Oxygen
 
         // set hint
         GdkDisplay *display( gtk_widget_get_display( topLevel ) );
-        if( display && _backgroundGradientAtom && (hints&BackgroundGradient) )
+        if( _useBackgroundGradient && display && _backgroundGradientAtom && (hints&BackgroundGradient) )
         {
             unsigned long uLongValue( true );
             XChangeProperty(

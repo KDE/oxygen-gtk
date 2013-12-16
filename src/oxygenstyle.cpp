@@ -267,13 +267,29 @@ namespace Oxygen
         bool isMaximized )
     {
 
-        // gradient
-        if( !renderBackgroundGradient( context, window, widget, x, y, w, h, options, isMaximized ) )
-        { return false; }
+        if( settings().useBackgroundGradient() )
+        {
+
+            // gradient
+            if( !renderBackgroundGradient( context, window, widget, x, y, w, h, options, isMaximized ) )
+            { return false; }
+
+        } else {
+
+            // flat background
+            cairo_save( context );
+            const ColorUtils::Rgba base( color( Palette::Window, options ) );
+            cairo_set_source(context,base);
+            cairo_rectangle(context,x,y,w,h);
+            cairo_fill(context);
+            cairo_restore( context );
+
+        }
 
         // pixmap
         renderBackgroundPixmap( context, window, widget, x, y, w, h, isMaximized );
         return true;
+
     }
 
     //__________________________________________________________________
