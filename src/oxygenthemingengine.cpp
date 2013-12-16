@@ -22,6 +22,7 @@
 #include "oxygenthemingengine.h"
 
 #include "oxygencairoutils.h"
+#include "oxygengtkdefines.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
@@ -251,7 +252,7 @@ namespace Oxygen
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, "window-frame") ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_WINDOW_FRAME) ) {
 
             // window frame corresponds to the shadow in clien-side decoration mode
             // this is handled by the parent class
@@ -338,7 +339,7 @@ namespace Oxygen
 
             }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) ) {
 
             // no need to render anything for notebook gradient
 
@@ -501,7 +502,7 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_HEADER_BAR ) )
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
          {
 
             // render background
@@ -722,7 +723,7 @@ namespace Oxygen
             { Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) ); }
 
         } else if(
-            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) &&
             borderStyle == GTK_BORDER_STYLE_SOLID &&
             Gtk::gtk_scrolled_window_force_sunken( widget )
             )
@@ -733,14 +734,19 @@ namespace Oxygen
             if( GTK_IS_FRAME( widget ) )
             { gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN ); }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
 
             // make sure that entry shadows are drawn
             borderStyle = GTK_BORDER_STYLE_INSET;
 
         }
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
+        if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_WARNING ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ERROR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_QUESTION )
+            )
         {
 
             // get background color
@@ -1345,7 +1351,7 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) ) {
 
             return;
 
@@ -1404,7 +1410,7 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && GTK_IS_FRAME( widget ) ) {
 
 
             /*
@@ -1994,7 +2000,7 @@ namespace Oxygen
         bool useWidgetStateEngine( true );
 
         GtkWidget* parent( 0L );
-        if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
             /* note: can't use gtk_theming_engine_has_class here, cause MENUITEM is not passed */
             // disable highlight in menus, for consistancy with oxygen qt style
@@ -2062,7 +2068,7 @@ namespace Oxygen
             data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
             role = Palette::WindowText;
 
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
 
 
             if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
@@ -2364,7 +2370,9 @@ namespace Oxygen
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
             Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) ) {
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) ) {
 
             StyleOptions options( widget, stateFlags );
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
@@ -2617,7 +2625,7 @@ namespace Oxygen
         // get state and path
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) )
         {
 
             // need to apply state effect on pixbuf because it is not done by Gtk
@@ -2638,7 +2646,7 @@ namespace Oxygen
             if( stated != pixbuf ) g_object_unref( stated );
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) ) {
 
             // call parent method with extra vertical offset due to gtk3 bug
             ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y-2 );
