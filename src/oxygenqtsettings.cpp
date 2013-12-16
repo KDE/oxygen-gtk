@@ -58,6 +58,7 @@ namespace Oxygen
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
         _useIconEffect( true ),
+        _useBackgroundGradient( true ),
         _checkBoxStyle( CS_CHECK ),
         _tabStyle( TS_SINGLE ),
         _scrollBarAddLineButtons( 2 ),
@@ -945,6 +946,9 @@ namespace Oxygen
 
         // background pixmap
         _backgroundPixmap = _oxygen.getValue( "[Common]", "BackgroundPixmap", "" );
+
+        // background gradient
+        _useBackgroundGradient = ( _oxygen.getValue( "[Common]", "UseBackgroundGradient", "true" ) == "true" );
 
         // checkbox style
         _checkBoxStyle = (_oxygen.getValue( "[Style]", "CheckBoxStyle", "CS_CHECK" ) == "CS_CHECK") ? CS_CHECK:CS_X;

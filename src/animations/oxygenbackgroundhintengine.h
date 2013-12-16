@@ -75,12 +75,19 @@ namespace Oxygen
         //! returns true if widget is registered
         bool contains( GtkWidget* widget ) const;
 
+        //! true if background gradient is used
+        void setUseBackgroundGradient( bool value )
+        { _useBackgroundGradient = value; }
+
         #ifdef GDK_WINDOWING_X11
         Atom backgroundGradientAtom( void ) const
         { return _backgroundGradientAtom; }
         #endif
 
         protected:
+
+        // true if background gradient is used
+        bool _useBackgroundGradient;
 
         #ifdef GDK_WINDOWING_X11
         //! argb hint atom

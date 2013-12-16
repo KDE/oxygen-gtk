@@ -138,6 +138,9 @@ namespace Oxygen
         toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
         toolBarStateEngine().setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
 
+        // background hint engine
+        backgroundHintEngine().setUseBackgroundGradient( settings.useBackgroundGradient() );
+
     }
 
     //____________________________________________________________________________________________
