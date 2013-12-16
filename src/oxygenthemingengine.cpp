@@ -58,11 +58,11 @@ namespace Oxygen
         else {
 
             // check if our button is on active page and if not, make it gray
-            GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
-            GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+            GtkNotebook* notebook( GTK_NOTEBOOK( Gtk::gtk_parent_notebook(widget) ) );
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, gtk_notebook_get_current_page( notebook ) ) );
             if( !page ) return 0L;
 
-            GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label(notebook,page) );
             if( !tabLabel ) return 0L;
 
             if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) ) return Style::instance().tabCloseButton( Disabled );
