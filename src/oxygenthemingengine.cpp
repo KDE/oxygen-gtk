@@ -149,32 +149,25 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
+        // no separators in toolbars, if requested accordingly
+        /* note: can't use gkt_theming_engine_has_class, because toolbar is not passed as the style class */
         const bool isToolBarSeparator( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) );
-
         if( isToolBarSeparator && !Style::instance().settings().toolBarDrawItemSeparator() )
-        {
-            // no separators in toolbars, if requested accordingly
-            return;
+        { return; }
 
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+        // no separators in buttons
+        /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
+        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) )
+        { return; }
 
-            // no separators in buttons
-            /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
-            return;
+        StyleOptions options( Blend );
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) &&
+            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
+        { options |= Menu; }
 
-        } else {
-
-            StyleOptions options( Blend );
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) &&
-                !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
-            { options |= Menu; }
-
-            // get orientation
-            if( isToolBarSeparator || Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
-
-            Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
-
-        }
+        // get orientation
+        if( isToolBarSeparator || Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+        Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
         return;
 
