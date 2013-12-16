@@ -1065,7 +1065,7 @@ namespace Oxygen
             Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUBAR ) ) {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -1094,62 +1094,45 @@ namespace Oxygen
             }
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) ) {
 
+            StyleOptions options( Menu|Round );
 
-            #if !GTK_CHECK_VERSION( 3, 9, 0 )
-            if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
+            // this is not working.
+            if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+            // add mask if needed
+            if( GTK_IS_MENU(widget) )
             {
 
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                if( Gtk::gdk_window_is_base( window ) )
-                { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
+                Style::instance().animations().menuItemEngine().registerMenu( widget );
 
-                Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
-
-            } else
-            #endif
-            {
-
-                StyleOptions options( Menu|Round );
-
-                // this is not working.
-                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-
-                // add mask if needed
-                if( GTK_IS_MENU(widget) )
+                GdkWindow* window( gtk_widget_get_parent_window(widget) );
+                if( !(options&Alpha) )
                 {
 
-                    Style::instance().animations().menuItemEngine().registerMenu( widget );
-
-                    GdkWindow* window( gtk_widget_get_parent_window(widget) );
-                    if( !(options&Alpha) )
+                    // make menus appear rounded using XShape extension if screen isn't composited
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                     {
-
-                        // make menus appear rounded using XShape extension if screen isn't composited
-                        Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
-                        {
-                            Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
-                            gdk_window_shape_combine_region( window, mask, 0, Oxygen::Menu_VerticalOffset );
-                        }
-
-                    } else {
-
-                        // reset mask if compositing has appeared after we had set a mask
-                        gdk_window_shape_combine_region( window, 0L, 0, 0);
-
+                        Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
+                        gdk_window_shape_combine_region( window, mask, 0, Oxygen::Menu_VerticalOffset );
                     }
+
+                } else {
+
+                    // reset mask if compositing has appeared after we had set a mask
+                    gdk_window_shape_combine_region( window, 0L, 0, 0);
+
                 }
-
-                // if rendering of menu background fails, assume square window
-                if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )
-                { options &= ~Round; }
-
-                Style::instance().drawFloatFrame( context, x, y, w, h, options );
-
             }
+
+            // if rendering of menu background fails, assume square window
+            if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )
+            { options &= ~Round; }
+
+            Style::instance().drawFloatFrame( context, x, y, w, h, options );
 
             // TODO: this check is probably not necessary
             if( GTK_IS_MENU( widget ) )
@@ -1170,18 +1153,19 @@ namespace Oxygen
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
                     Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover );
 
-               } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
                     Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, Hover, data );
 
-                 }
+                }
 
             }
+
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
             #if GTK_CHECK_VERSION( 3, 7, 0 )
             // for gtk 3.7 and above, menu item rect is called even in not PRELIGHT mode
