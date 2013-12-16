@@ -207,7 +207,6 @@ namespace Oxygen
 
         }
 
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
 
@@ -2416,15 +2415,16 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup widget and state
-        GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
-        GtkStateFlags state(gtk_theming_engine_get_state(engine));
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PANE_SEPARATOR) )
         {
 
-            Style::instance().animations().panedEngine().registerWidget( widget );
+            // lookup widget and state
+            GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
 
+            if( GTK_IS_WIDGET( widget ) )
+            { Style::instance().animations().panedEngine().registerWidget( widget ); }
+
+            GtkStateFlags state(gtk_theming_engine_get_state(engine));
             StyleOptions options( widget, state );
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )  options |= Vertical;
 
@@ -2465,12 +2465,13 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup widget and state
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
-        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
+
+            // lookup widget and state
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
             StyleOptions options( widget, state);
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
             { options |= Vertical; }
@@ -2624,7 +2625,6 @@ namespace Oxygen
 
         // get state and path
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) )
         {
 
