@@ -105,7 +105,7 @@ find_package( X11 REQUIRED )
 find_package( PkgConfig REQUIRED )
 
 # GTK
-pkg_check_modules( GTK REQUIRED gtk+-3.0>=3.2.0 )
+pkg_check_modules( GTK REQUIRED gtk+-3.0>=3.10.0 )
 
 # Cairo
 pkg_check_modules( CAIRO REQUIRED cairo )
