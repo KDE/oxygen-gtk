@@ -161,23 +161,6 @@ namespace Oxygen
             /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
             return;
 
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) ) {
-
-            // separators
-            bool accepted( true );
-            if( widget )
-            {
-                // do not draw side hlines because they conflict with selection rect
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                if( x0 <= allocation.x + 5 || x1 >= allocation.x + allocation.width - 5 )
-                { accepted = false; }
-            }
-
-            if( accepted )
-            { Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, Blend|Menu ); }
-
-        #endif
         } else {
 
             StyleOptions options( Blend );
@@ -699,17 +682,12 @@ namespace Oxygen
                 const int offset( 6 );
                 TileSet::Tiles tiles( TileSet::Full );
 
-                #if GTK_CHECK_VERSION( 3, 3, 0 )
                 if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_LEFT ) ) { tiles &= ~TileSet::Right; x += offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_RIGHT ) ) { tiles &= ~TileSet::Left; w -= offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOP ) ) { tiles &= ~TileSet::Bottom; y += offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BOTTOM ) ) { tiles &= ~TileSet::Top; h -= offset; }
                 else if( vertical ) { y += offset; h -= 2*offset; }
                 else { x+= offset; w -= 2*offset; }
-                #else
-                if( vertical ) { y += offset; h -= 2*offset; }
-                else { x+= offset; w -= 2*offset; }
-                #endif
 
                 // render
                 Style::instance().renderSliderGroove( context, x, y, w, h, vertical ? Vertical:StyleOptions(), tiles );
@@ -1167,13 +1145,11 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
-            #if GTK_CHECK_VERSION( 3, 7, 0 )
             // for gtk 3.7 and above, menu item rect is called even in not PRELIGHT mode
             // we need to draw nothing for it
             // bug: 312988
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
             if( !( state & GTK_STATE_FLAG_PRELIGHT ) ) return;
-            #endif
 
             if( GTK_IS_MENU_ITEM( widget ) )
             {
@@ -2018,25 +1994,6 @@ namespace Oxygen
         bool useWidgetStateEngine( true );
 
         GtkWidget* parent( 0L );
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        if( gtk_widget_path_is_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) )
-        {
-            if( widget &&
-                !(gtk_widget_get_state_flags( widget )&GTK_STATE_FLAG_PRELIGHT) &&
-                GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
-                gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
-            {
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                Style::instance().renderWindowBackground( context, window, widget, x-8, y-8, w+16, h+16);
-            }
-
-            // disable highlight in menus, for consistancy with oxygen qt style
-            options &= ~( Focus|Hover );
-
-            useWidgetStateEngine = false;
-
-        } else
-        #endif
         if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
 
             /* note: can't use gtk_theming_engine_has_class here, cause MENUITEM is not passed */
@@ -2474,19 +2431,6 @@ namespace Oxygen
                 options, AnimationHover ) );
             Style::instance().renderSplitter( context, x, y, w, h, options, data );
 
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        } else if( gtk_widget_path_is_type( gtk_theming_engine_get_path(engine), GTK_TYPE_HANDLE_BOX ) ) {
-
-            // render background
-            if( !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
-
-            // handles
-            StyleOptions options( widget, state );
-            if(h>w) options|=Vertical;
-            Style::instance().renderToolBarHandle( context, x, y, w, h, options );
-        #endif
-
         } else {
 
             #if OXYGEN_DEBUG
@@ -2530,13 +2474,8 @@ namespace Oxygen
 
             } else if( GTK_IS_ENTRY( widget ) ) {
 
-                #if GTK_CHECK_VERSION( 3, 3, 0 )
                 y+=1; h-=2;
                 x+=3; w-=6;
-                #else
-                y-=1; h+=2;
-                x-=2; w+=4;
-                #endif
 
             }
 
