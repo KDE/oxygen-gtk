@@ -124,11 +124,11 @@ namespace Oxygen
 
         //! fill given rectangle with flat color
         void fill( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Role role ) const
-        { fill( window, r, x, y, w, h, settings().palette().color( Palette::Active, role ) ); }
+        { fill( window, r, x, y, w, h, _settings.palette().color( Palette::Active, role ) ); }
 
         //! fill given rectangle with flat color
         void fill( GdkWindow* window, GdkRectangle* r, gint x, gint y, gint w, gint h, Palette::Group group, Palette::Role role ) const
-        { fill( window, r, x, y, w, h, settings().palette().color( group, role ) ); }
+        { fill( window, r, x, y, w, h, _settings.palette().color( group, role ) ); }
 
         //! fill given rectangle with flat color
         void fill( GdkWindow*, GdkRectangle*, gint, gint, gint, gint, const ColorUtils::Rgba& color ) const;
@@ -359,7 +359,7 @@ namespace Oxygen
         const ColorUtils::Rgba& color( Palette::Group group, Palette::Role role, const StyleOptions& option ) const
         {
             Palette::ColorSet::const_iterator iter( option._customColors.find( role ) );
-            return iter == option._customColors.end() ? settings().palette().color( group, role ) : iter->second;
+            return iter == option._customColors.end() ? _settings.palette().color( group, role ) : iter->second;
         }
 
         //! set background surface
