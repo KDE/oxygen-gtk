@@ -3792,7 +3792,7 @@ namespace Oxygen
         cairo_pattern_add_color_stop( pattern, 1, ColorUtils::Rgba::transparent( light ) );
         cairo_set_source( context, pattern );
 
-        if( !_settings.applicationName().useFlatBackground( 0 ) )
+        if( !_settings.applicationName().useFlatBackground( 0L ) )
             _helper.fillSlab( context, x, y, w, h );
 
         if( !(options&NoFill) )
