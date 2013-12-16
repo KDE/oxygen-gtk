@@ -93,6 +93,10 @@ namespace Oxygen
         bool useIconEffect( void ) const
         { return _useIconEffect; }
 
+        //! background gradient
+        bool useBackgroundGradient( void ) const
+        { return _useBackgroundGradient; }
+
         //! background pixmap
         const std::string& backgroundPixmap( void ) const
         { return _backgroundPixmap; }
@@ -475,6 +479,9 @@ namespace Oxygen
 
         //! active icon effect
         bool _useIconEffect;
+
+        //! background gradient
+        bool _useBackgroundGradient;
 
         //! background pixmap
         std::string _backgroundPixmap;
