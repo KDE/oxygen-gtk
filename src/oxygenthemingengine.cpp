@@ -275,11 +275,13 @@ namespace Oxygen
             ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
             return;
 
-        } else if( GTK_IS_WIDGET( widget ) && (
-            gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX )
+        } else if(
+            GTK_IS_WIDGET( widget ) && ( (
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BACKGROUND ) &&
+            ( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) )) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
             ) )
         {
 
