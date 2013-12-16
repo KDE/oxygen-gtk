@@ -99,39 +99,39 @@ namespace Oxygen
         const bool animationsEnabled( settings.animationsEnabled() );
 
         // pass animations configuration to engines
-        widgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
-        widgetStateEngine().setDuration( settings.genericAnimationsDuration() );
+        _widgetStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
+        _widgetStateEngine->setDuration( settings.genericAnimationsDuration() );
 
-        arrowStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
-        arrowStateEngine().setDuration( settings.genericAnimationsDuration() );
+        _arrowStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
+        _arrowStateEngine->setDuration( settings.genericAnimationsDuration() );
 
-        scrollBarStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
-        scrollBarStateEngine().setDuration( settings.genericAnimationsDuration() );
+        _scrollBarStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
+        _scrollBarStateEngine->setDuration( settings.genericAnimationsDuration() );
 
-        tabWidgetStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
-        tabWidgetStateEngine().setDuration( settings.genericAnimationsDuration() );
+        _tabWidgetStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
+        _tabWidgetStateEngine->setDuration( settings.genericAnimationsDuration() );
 
-        treeViewStateEngine().setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
-        treeViewStateEngine().setDuration( settings.genericAnimationsDuration() );
+        _treeViewStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
+        _treeViewStateEngine->setDuration( settings.genericAnimationsDuration() );
 
-        menuBarStateEngine().setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != None) );
-        menuBarStateEngine().setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
-        menuBarStateEngine().setDuration( settings.menuBarAnimationsDuration() );
-        menuBarStateEngine().setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
+        _menuBarStateEngine->setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != None) );
+        _menuBarStateEngine->setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
+        _menuBarStateEngine->setDuration( settings.menuBarAnimationsDuration() );
+        _menuBarStateEngine->setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
-        menuStateEngine().setEnabled( animationsEnabled && (settings.menuAnimationType() != None) );
-        menuStateEngine().setFollowMouse( settings.menuAnimationType() == FollowMouse );
-        menuStateEngine().setDuration( settings.menuAnimationsDuration() );
-        menuStateEngine().setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
+        _menuStateEngine->setEnabled( animationsEnabled && (settings.menuAnimationType() != None) );
+        _menuStateEngine->setFollowMouse( settings.menuAnimationType() == FollowMouse );
+        _menuStateEngine->setDuration( settings.menuAnimationsDuration() );
+        _menuStateEngine->setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
 
         // for now, only Fade animations mode is supported for toolbar animations
-        toolBarStateEngine().setEnabled( animationsEnabled && (settings.toolBarAnimationType() != None) );
-        toolBarStateEngine().setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
-        toolBarStateEngine().setDuration( settings.genericAnimationsDuration() );
-        toolBarStateEngine().setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
+        _toolBarStateEngine->setEnabled( animationsEnabled && (settings.toolBarAnimationType() != None) );
+        _toolBarStateEngine->setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
+        _toolBarStateEngine->setDuration( settings.genericAnimationsDuration() );
+        _toolBarStateEngine->setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
 
         // background hint engine
-        backgroundHintEngine().setUseBackgroundGradient( settings.useBackgroundGradient() );
+        _backgroundHintEngine->setUseBackgroundGradient( settings.useBackgroundGradient() );
 
     }
 
@@ -251,11 +251,14 @@ namespace Oxygen
         }
         #endif
 
+        // cast data
+        Animations& animations( *static_cast<Animations*>(data) );
+
         // groupbox labels
         #if ENABLE_GROUPBOX_HACK
-        if( static_cast<Animations*>( data )->groupBoxLabelEngine().contains( widget ) )
+        if( animations.groupBoxLabelEngine().contains( widget ) )
         {
-            static_cast<Animations*>( data )->groupBoxLabelEngine().adjustSize( widget );
+            animations.groupBoxLabelEngine().adjustSize( widget );
             return TRUE;
         }
         #endif
@@ -267,7 +270,6 @@ namespace Oxygen
         GtkWindow* window( GTK_WINDOW( widget ) );
         if( gtk_window_get_type_hint( window ) != GDK_WINDOW_TYPE_HINT_COMBO ) return TRUE;
 
-        Animations& animations( *static_cast<Animations*>(data) );
         GtkWidget* combobox = animations.comboBoxEngine().find( widget );
         if( !combobox ) combobox = animations.comboBoxEntryEngine().find( widget );
         if( !combobox ) return true;
@@ -338,7 +340,7 @@ namespace Oxygen
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
         Animations& animations( *static_cast<Animations*>(data) );
-        animations.backgroundHintEngine().registerWidget( widget );
+        animations._backgroundHintEngine->registerWidget( widget );
 
         return TRUE;
     }
@@ -419,8 +421,9 @@ namespace Oxygen
                 gtk_frame_set_shadow_type( frame, GTK_SHADOW_OUT );
 
                 // register to engine
-                static_cast<Animations*>( data )->groupBoxLabelEngine().registerWidget( widget );
-                static_cast<Animations*>( data )->groupBoxLabelEngine().adjustSize( widget );
+                Animations& animations( *static_cast<Animations*>(data) );
+                animations.groupBoxLabelEngine().registerWidget( widget );
+                animations.groupBoxLabelEngine().adjustSize( widget );
 
             }
 
