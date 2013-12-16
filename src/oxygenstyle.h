@@ -148,15 +148,21 @@ namespace Oxygen
 
         //! window background
         /*! returns true if window gradient could be rendered */
-        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), TileSet::Tiles = TileSet::Center, bool isMaximized=false );
+        bool renderWindowBackground( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), bool isMaximized=false );
         bool renderWindowBackground( cairo_t* c, gint x, gint y, gint w, gint h, bool maximized )
-        { return renderWindowBackground( c, 0, 0, x, y, w, h, StyleOptions(), TileSet::Center, maximized );}
+        { return renderWindowBackground( c, 0, 0, x, y, w, h, StyleOptions(), maximized );}
 
-        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center )
-        { return renderWindowBackground( 0L, window, widget, x, y, w, h, o, tiles ); }
+        bool renderWindowBackground( GdkWindow* window, GtkWidget* widget, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions() )
+        { return renderWindowBackground( 0L, window, widget, x, y, w, h, o ); }
 
-        bool renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions(), TileSet::Tiles tiles= TileSet::Center)
-        { return renderWindowBackground( context, window, 0L, x, y, w, h, o, tiles ); }
+        bool renderWindowBackground( cairo_t* context, GdkWindow* window, gint x, gint y, gint w, gint h, const StyleOptions& o = StyleOptions() )
+        { return renderWindowBackground( context, window, 0L, x, y, w, h, o ); }
+
+        // render background gradient
+        bool renderBackgroundGradient( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, const StyleOptions& = StyleOptions(), bool isMaximized=false );
+
+        // render background pixmap
+        bool renderBackgroundPixmap( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, bool isMaximized=false );
 
         //! groupbox background
         bool renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
