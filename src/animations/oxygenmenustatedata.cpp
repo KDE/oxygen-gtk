@@ -34,15 +34,6 @@ namespace Oxygen
 
         _target = widget;
 
-        // save paddings
-        if( GTK_IS_MENU( widget ) )
-        {
-            gtk_widget_style_get( _target,
-                "vertical-padding", &_yPadding,
-                "horizontal-padding", &_xPadding,
-                NULL );
-        }
-
         // connect timeLines
         _current._timeLine.connect( (GSourceFunc)delayedUpdate, this );
         _previous._timeLine.connect( (GSourceFunc)delayedUpdate, this );
@@ -203,10 +194,6 @@ namespace Oxygen
 
                 // no valid offset found. Add full allocation
                 followMouseRect = Gtk::gtk_widget_get_allocation( _target );
-                followMouseRect.x += _xPadding;
-                followMouseRect.y += _yPadding;
-                followMouseRect.width -= 2*_xPadding;
-                followMouseRect.height -= 2*_yPadding;
 
             }
 
