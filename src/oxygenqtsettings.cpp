@@ -1172,10 +1172,6 @@ namespace Oxygen
     void QtSettings::loadExtraOptions( void )
     {
 
-        // button padding
-        _css.setCurrentSection( "GtkButton" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "3px 4px 2px" ) );
-
         // pathbar button margins
         _css.addSection( "GtkPathBar>GtkToggleButton" );
         _css.addToCurrentSection(
@@ -1195,23 +1191,6 @@ namespace Oxygen
         _css.addToCurrentSection( ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
-
-        // entries
-        _css.addSection( "GtkEntry" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "4px 7px" ) );
-
-        // menu
-        // since gtk 3.7.0, GtkMenu-horizontal-padding and vertical-padding (from gtk.css) are ignored
-        // need to use css padding and border-width instead
-        _css.addSection( "GtkMenu" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "5px 3px" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0px" ) );
-
-        _css.addSection( "GtkMenu>GtkMenuItem" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "5px 4px" ) );
-
-        _css.addSection( "GtkMenu>GtkSeparatorMenuItem" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "1px 4px" ) );
 
     }
 

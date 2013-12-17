@@ -161,7 +161,11 @@ GtkComboBox>GtkFrame { padding: 0px 0px 0px 4px; }
 /* tooltips */
 GtkWindow#gtk-tooltip { padding: 3px; }
 
-/* headers */
+/* buttons */
+GtkButton { padding: 3px 4px 2px; }
+
+
+/* header buttons */
 GtkTreeView>GtkButton {
     border-width: 0px 2px;
     border-style: solid;
@@ -171,6 +175,20 @@ GtkList>GtkButton {
     border-width: 0px 2px;
     border-style: solid;
 }
+
+/* entry */
+GtkEntry { padding: 4px 7px; }
+
+/* menu */
+GtkMenu
+{
+    padding: 5px 3px;
+    border-width: 0px;
+    border-style: none;
+}
+
+GtkMenu>GtkMenuItem { padding: 5px 4px; }
+GtkMenu>GtkSeparatorMenuItem { padding: 1px 4px; }
 
 /* import spinner code */
 @import url("gtk-spinner.css");
