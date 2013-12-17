@@ -105,7 +105,7 @@ namespace Oxygen
         for( GList* child = g_list_first(children); child; child = g_list_next(child) )
         {
 
-            if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
+            if( !GTK_IS_MENU_ITEM( child->data ) ) continue;
 
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
             const GtkStateFlags state( gtk_widget_get_state_flags( childWidget ) );
