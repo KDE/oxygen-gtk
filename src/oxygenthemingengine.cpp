@@ -1143,11 +1143,8 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
-            // for gtk 3.7 and above, menu item rect is called even in not PRELIGHT mode
-            // we need to draw nothing for it
-            // bug: 312988
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-            if( !( state & GTK_STATE_FLAG_PRELIGHT ) ) return;
+            bool prelight( state & GTK_STATE_FLAG_PRELIGHT );
 
             if( GTK_IS_MENU_ITEM( widget ) )
             {
@@ -1159,6 +1156,9 @@ namespace Oxygen
             AnimationData data;
             if( GTK_IS_MENU_BAR( parent ) )
             {
+
+                // do nothing if not prelight
+                if( !prelight ) return;
 
                 MenuBarStateEngine& engine = Style::instance().animations().menuBarStateEngine();
                 engine.registerWidget( parent );
@@ -1176,7 +1176,7 @@ namespace Oxygen
 
                 MenuStateEngine& engine = Style::instance().animations().menuStateEngine();
                 engine.registerWidget( parent );
-
+                prelight |= engine.updateState( parent, widget, prelight, !prelight );
                 if( engine.animatedRectangleIsValid( parent ) ) {
 
                     return;
@@ -1189,10 +1189,13 @@ namespace Oxygen
 
             }
 
-            StyleOptions options( widget, state );
-            options |= Blend;
+            if( prelight )
+            {
+                StyleOptions options( widget, state );
+                options |= Blend;
+                Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
+            }
 
-            Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
             return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ) {

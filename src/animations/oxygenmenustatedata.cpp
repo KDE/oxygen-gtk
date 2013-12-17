@@ -43,10 +43,6 @@ namespace Oxygen
                 NULL );
         }
 
-        // connect signals
-        _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
-        _leaveId.connect( G_OBJECT(widget), "leave-notify-event", G_CALLBACK( leaveNotifyEvent ), this );
-
         // connect timeLines
         _current._timeLine.connect( (GSourceFunc)delayedUpdate, this );
         _previous._timeLine.connect( (GSourceFunc)delayedUpdate, this );
@@ -66,10 +62,6 @@ namespace Oxygen
 
         _target = 0L;
 
-        // disconnect signal
-        _motionId.disconnect();
-        _leaveId.disconnect();
-
         // disconnect timelines
         _current._timeLine.disconnect();
         _previous._timeLine.disconnect();
@@ -81,106 +73,21 @@ namespace Oxygen
    }
 
     //________________________________________________________________________________
-    void MenuStateData::updateItems( void )
-    {
-
-        if( !_target ) return;
-
-        GdkWindow* window( gtk_widget_get_window( _target ) );
-        GdkWindow* childWindow( 0L );
-
-        // get mouse pointer position
-        gint xPointer(0), yPointer(0);
-        GdkDeviceManager* manager( gdk_display_get_device_manager( gtk_widget_get_display( _target ) ) );
-        GdkDevice* pointer( gdk_device_manager_get_client_pointer( manager ) );
-        gdk_window_get_device_position( window, pointer, &xPointer, &yPointer, 0L);
-
-        // reset offset
-        int xOffset(0);
-        int yOffset(0);
-
-        bool delayed( false );
-        bool activeFound( false );
-        GList *children( gtk_container_get_children( GTK_CONTAINER( _target ) ) );
-        for( GList* child = g_list_first(children); child; child = g_list_next(child) )
-        {
-
-            if( !GTK_IS_MENU_ITEM( child->data ) ) continue;
-
-            GtkWidget* childWidget( GTK_WIDGET( child->data ) );
-            const GtkStateFlags state( gtk_widget_get_state_flags( childWidget ) );
-
-            // do nothing for disabled child
-            const bool active( !( state&GTK_STATE_FLAG_INSENSITIVE || GTK_IS_SEPARATOR_MENU_ITEM( childWidget ) ) );
-
-            // update offsets
-            if( childWindow != gtk_widget_get_window( childWidget ) )
-            {
-
-                childWindow = gtk_widget_get_window( childWidget );
-                Gtk::gdk_window_translate_origin( window, childWindow, &xOffset, &yOffset );
-
-            }
-
-            // get allocation and add offsets
-            GtkAllocation allocation( Gtk::gtk_widget_get_allocation( childWidget ) );
-            allocation.x += xOffset;
-            allocation.y += yOffset;
-
-            if( Gtk::gdk_rectangle_contains( &allocation, xPointer, yPointer ) )
-            {
-
-                if( active )
-                {
-
-                    activeFound = true;
-                    if( !(state&GTK_STATE_FLAG_PRELIGHT) )
-                    { updateState( childWidget, Gtk::gtk_widget_get_allocation( childWidget ), xOffset, yOffset, true ); }
-
-                } else delayed = true;
-
-                break;
-
-            }
-
-        }
-
-        if( children ) g_list_free( children );
-
-        // fade-out current
-        if( _current.isValid() && !activeFound && !menuItemIsActive( _current._widget ) )
-        { updateState( _current._widget, _current._rect, _current._xOffset, _current._yOffset, false, delayed ); }
-
-        return;
-
-    }
-
-    //________________________________________________________________________________
-    bool MenuStateData::menuItemIsActive( GtkWidget* widget ) const
-    {
-
-        // check argument
-        if( !GTK_IS_MENU_ITEM( widget ) ) return false;
-
-        // check menu
-        GtkWidget* menu( gtk_menu_item_get_submenu( GTK_MENU_ITEM( widget ) ) );
-        if( !GTK_IS_MENU( menu ) ) return false;
-
-        GtkWidget* topLevel( gtk_widget_get_toplevel( menu ) );
-        if( !topLevel ) return false;
-
-        return
-            gtk_widget_get_visible( menu ) &&
-            gtk_widget_get_realized( topLevel ) &&
-            gtk_widget_get_visible( topLevel );
-    }
-
-    //________________________________________________________________________________
-    bool MenuStateData::updateState( GtkWidget* widget, const GdkRectangle& rect, int xOffset, int yOffset, bool state, bool delayed )
+    bool MenuStateData::updateState( GtkWidget* widget, bool state, bool delayed )
     {
 
         if( state && widget != _current._widget )
         {
+
+            // get window offset
+            GdkWindow* window( gtk_widget_get_window( _target ) );
+            GdkWindow* childWindow( gtk_widget_get_window( widget ) );
+            int xOffset(0);
+            int yOffset(0);
+            Gtk::gdk_window_translate_origin( window, childWindow, &xOffset, &yOffset );
+
+            // get allocation
+            const GdkRectangle rect( Gtk::gtk_widget_get_allocation( widget ) );
 
             // stop timer
             if( _timer.isRunning() ) _timer.stop();
@@ -217,7 +124,7 @@ namespace Oxygen
                 else delayedUpdate( this );
             }
 
-            return true;
+            return false;
 
         } else if( !state && widget == _current._widget ) {
 
@@ -240,6 +147,8 @@ namespace Oxygen
                 if( !_timer.isRunning() )
                 { _timer.start( _timeOut, (GSourceFunc)delayedAnimate, this ); }
 
+                return true;
+
             } else {
 
                 if( _timer.isRunning() ) _timer.stop();
@@ -248,9 +157,10 @@ namespace Oxygen
                 if( _previous.isValid() && gtk_widget_get_state_flags( _previous._widget )&GTK_STATE_FLAG_PRELIGHT )
                 { _previous._timeLine.start(); }
 
+                return false;
+
             }
 
-            return true;
 
         } else return false;
 
@@ -310,20 +220,6 @@ namespace Oxygen
 
     }
 
-    //________________________________________________________________________________
-    gboolean MenuStateData::motionNotifyEvent(GtkWidget*, GdkEventMotion*, gpointer pointer )
-    {
-        static_cast<MenuStateData*>( pointer )->updateItems();
-        return FALSE;
-    }
-
-    //________________________________________________________________________________
-    gboolean MenuStateData::leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer pointer )
-    {
-        static_cast<MenuStateData*>( pointer )->updateItems();
-        return FALSE;
-    }
-
     //_____________________________________________
     gboolean MenuStateData::delayedUpdate( gpointer pointer )
     {
@@ -334,7 +230,7 @@ namespace Oxygen
         {
             GdkRectangle rect( data.dirtyRect() );
 
-            const int margin( 2 );
+            const int margin( 3 );
             rect.x -= margin;
             rect.y -= margin;
             rect.width += 2*margin;
@@ -359,7 +255,7 @@ namespace Oxygen
             data.updateAnimatedRect();
             GdkRectangle rect( data.dirtyRect() );
 
-            const int margin( 2 );
+            const int margin( 3 );
             rect.x -= margin;
             rect.y -= margin;
             rect.width += 2*margin;
