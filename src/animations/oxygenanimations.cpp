@@ -235,7 +235,6 @@ namespace Oxygen
             return TRUE;
         }
 
-        #if GTK_CHECK_VERSION( 3, 5, 0 )
         /*
         HACK: Somehow, style_updated method for GtkRange widgets is not called anymore
         as soon as we (oxygen-gtk) install our hooks. This prevents some settings to be
@@ -249,7 +248,6 @@ namespace Oxygen
             if( widgetClass && widgetClass->style_updated )
             { (*widgetClass->style_updated)(widget); }
         }
-        #endif
 
         // cast data
         Animations& animations( *static_cast<Animations*>(data) );

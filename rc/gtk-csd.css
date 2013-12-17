@@ -1,0 +1,49 @@
+
+/*******
+ * CSD *
+ *******/
+.titlebar {
+    border-radius: 7px 7px 0px 0px;
+}
+
+.tiled .titlebar {
+    border-radius: 0;
+}
+
+.maximized .titlebar {
+    border-radius: 0;
+}
+
+/* this is the default titlebar that is added by GTK
+ * when client-side decorations are in use and the application
+ * did not set a custom titlebar.
+ */
+.titlebar.default-decoration {
+    border: none;
+    box-shadow: none;
+}
+
+.titlebar .titlebutton {
+    background: none;
+    padding: 5px 5px 6px 5px;
+    border-radius: 3px;
+}
+
+.window-frame {
+    border-radius: 4px;
+    border-width: 1px;
+    border-style: solid;
+
+    box-shadow: 0 2px 8px 3px black;
+
+    /* this is used for the resize cursor area */
+    margin: 10px;
+}
+
+.window-frame.tiled {
+    border-radius: 0;
+}
+
+.window-frame:backdrop {
+    box-shadow: 0 2px 5px 1px black;
+}

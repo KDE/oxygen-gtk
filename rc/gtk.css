@@ -174,3 +174,4 @@ GtkList>GtkButton {
 
 /* import spinner code */
 @import url("gtk-spinner.css");
+@import url("gtk-csd.css");

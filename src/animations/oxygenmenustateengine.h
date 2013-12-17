@@ -116,6 +116,10 @@ namespace Oxygen
             return true;
         }
 
+        //! update state for given widget
+        bool updateState( GtkWidget* parent, GtkWidget* child, bool state, bool delayed = false )
+        { return data().value( parent ).updateState( child, state, delayed ); }
+
         //@}
 
         //!@name accessors

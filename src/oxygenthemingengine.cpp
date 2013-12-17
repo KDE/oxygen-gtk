@@ -22,6 +22,7 @@
 #include "oxygenthemingengine.h"
 
 #include "oxygencairoutils.h"
+#include "oxygengtkdefines.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
 #include "oxygenmetrics.h"
@@ -58,11 +59,11 @@ namespace Oxygen
         else {
 
             // check if our button is on active page and if not, make it gray
-            GtkNotebook* notebook=GTK_NOTEBOOK(Gtk::gtk_parent_notebook(widget));
-            GtkWidget* page=gtk_notebook_get_nth_page(notebook,gtk_notebook_get_current_page(notebook));
+            GtkNotebook* notebook( GTK_NOTEBOOK( Gtk::gtk_parent_notebook(widget) ) );
+            GtkWidget* page( gtk_notebook_get_nth_page( notebook, gtk_notebook_get_current_page( notebook ) ) );
             if( !page ) return 0L;
 
-            GtkWidget* tabLabel=gtk_notebook_get_tab_label(notebook,page);
+            GtkWidget* tabLabel( gtk_notebook_get_tab_label(notebook,page) );
             if( !tabLabel ) return 0L;
 
             if( !Gtk::gtk_widget_is_parent( widget, tabLabel ) ) return Style::instance().tabCloseButton( Disabled );
@@ -148,49 +149,25 @@ namespace Oxygen
         const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
         GtkWidget* widget( Style::instance().widgetLookup().find( context, path ) );
 
+        // no separators in toolbars, if requested accordingly
+        /* note: can't use gkt_theming_engine_has_class, because toolbar is not passed as the style class */
         const bool isToolBarSeparator( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TOOLBAR ) );
-
         if( isToolBarSeparator && !Style::instance().settings().toolBarDrawItemSeparator() )
-        {
-            // no separators in toolbars, if requested accordingly
-            return;
+        { return; }
 
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+        // no separators in buttons
+        /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
+        if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) )
+        { return; }
 
-            // no separators in buttons
-            /* note: can't use gkt_theming_engine_has_class, because it does not work for e.g. font buttons */
-            return;
+        StyleOptions options( Blend );
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) &&
+            !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
+        { options |= Menu; }
 
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) ) {
-
-            // separators
-            bool accepted( true );
-            if( widget )
-            {
-                // do not draw side hlines because they conflict with selection rect
-                const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                if( x0 <= allocation.x + 5 || x1 >= allocation.x + allocation.width - 5 )
-                { accepted = false; }
-            }
-
-            if( accepted )
-            { Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, Blend|Menu ); }
-
-        #endif
-        } else {
-
-            StyleOptions options( Blend );
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) &&
-                !gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VIEW ) )
-            { options |= Menu; }
-
-            // get orientation
-            if( isToolBarSeparator || Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
-
-            Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
-
-        }
+        // get orientation
+        if( isToolBarSeparator || Gtk::gtk_widget_is_vertical( widget ) ) options |= Vertical;
+        Style::instance().drawSeparator( widget, context, x0, y0, x1-x0, y1-y0, options );
 
         return;
 
@@ -222,7 +199,6 @@ namespace Oxygen
             { Style::instance().animations().dialogEngine().registerWidget(toplevel); }
 
         }
-
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
         {
@@ -268,11 +244,20 @@ namespace Oxygen
             Style::instance().renderTooltipBackground( context, x, y, w, h, options );
             return;
 
-        } else if( GTK_IS_WIDGET( widget ) && (
-            gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX )
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_WINDOW_FRAME) ) {
+
+            // window frame corresponds to the shadow in clien-side decoration mode
+            // this is handled by the parent class
+            ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+            return;
+
+        } else if(
+            GTK_IS_WIDGET( widget ) && ( (
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BACKGROUND ) &&
+            ( gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX ) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_WINDOW ) )) ||
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
             ) )
         {
 
@@ -346,7 +331,7 @@ namespace Oxygen
 
             }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_NOTEBOOK ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) ) {
 
             // no need to render anything for notebook gradient
 
@@ -509,7 +494,7 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_HEADER_BAR ) )
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
          {
 
             // render background
@@ -690,17 +675,12 @@ namespace Oxygen
                 const int offset( 6 );
                 TileSet::Tiles tiles( TileSet::Full );
 
-                #if GTK_CHECK_VERSION( 3, 3, 0 )
                 if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_LEFT ) ) { tiles &= ~TileSet::Right; x += offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_RIGHT ) ) { tiles &= ~TileSet::Left; w -= offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOP ) ) { tiles &= ~TileSet::Bottom; y += offset; }
                 else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BOTTOM ) ) { tiles &= ~TileSet::Top; h -= offset; }
                 else if( vertical ) { y += offset; h -= 2*offset; }
                 else { x+= offset; w -= 2*offset; }
-                #else
-                if( vertical ) { y += offset; h -= 2*offset; }
-                else { x+= offset; w -= 2*offset; }
-                #endif
 
                 // render
                 Style::instance().renderSliderGroove( context, x, y, w, h, vertical ? Vertical:StyleOptions(), tiles );
@@ -735,7 +715,7 @@ namespace Oxygen
             { Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) ); }
 
         } else if(
-            gtk_widget_path_is_type( path, GTK_TYPE_FRAME ) &&
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) &&
             borderStyle == GTK_BORDER_STYLE_SOLID &&
             Gtk::gtk_scrolled_window_force_sunken( widget )
             )
@@ -746,14 +726,19 @@ namespace Oxygen
             if( GTK_IS_FRAME( widget ) )
             { gtk_frame_set_shadow_type( GTK_FRAME( widget ), GTK_SHADOW_IN ); }
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) && borderStyle !=  GTK_BORDER_STYLE_INSET ) {
 
             // make sure that entry shadows are drawn
             borderStyle = GTK_BORDER_STYLE_INSET;
 
         }
 
-        if( gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) )
+        if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_WARNING ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ERROR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_QUESTION )
+            )
         {
 
             // get background color
@@ -1056,7 +1041,7 @@ namespace Oxygen
             Style::instance().renderButtonSlab( widget, context, x, y, w, h, options, data );
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_BAR ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUBAR ) ) {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -1085,62 +1070,45 @@ namespace Oxygen
             }
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) ) {
 
+            StyleOptions options( Menu|Round );
 
-            #if !GTK_CHECK_VERSION( 3, 9, 0 )
-            if( GTK_IS_MENU( widget ) && gtk_menu_get_tearoff_state( GTK_MENU( widget ) ) )
+            // this is not working.
+            if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
+
+            // add mask if needed
+            if( GTK_IS_MENU(widget) )
             {
 
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                if( Gtk::gdk_window_is_base( window ) )
-                { Style::instance().animations().backgroundHintEngine().registerWidget( widget ); }
+                Style::instance().animations().menuItemEngine().registerMenu( widget );
 
-                Style::instance().renderWindowBackground( context, window, widget, x, y, w, h );
-
-            } else
-            #endif
-            {
-
-                StyleOptions options( Menu|Round );
-
-                // this is not working.
-                if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
-
-                // add mask if needed
-                if( GTK_IS_MENU(widget) )
+                GdkWindow* window( gtk_widget_get_parent_window(widget) );
+                if( !(options&Alpha) )
                 {
 
-                    Style::instance().animations().menuItemEngine().registerMenu( widget );
-
-                    GdkWindow* window( gtk_widget_get_parent_window(widget) );
-                    if( !(options&Alpha) )
+                    // make menus appear rounded using XShape extension if screen isn't composited
+                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
+                    const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
+                    if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
                     {
-
-                        // make menus appear rounded using XShape extension if screen isn't composited
-                        Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-                        if( Style::instance().animations().widgetSizeEngine().updateSize( widget, allocation.width, allocation.height ) )
-                        {
-                            Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
-                            gdk_window_shape_combine_region( window, mask, 0, Oxygen::Menu_VerticalOffset );
-                        }
-
-                    } else {
-
-                        // reset mask if compositing has appeared after we had set a mask
-                        gdk_window_shape_combine_region( window, 0L, 0, 0);
-
+                        Cairo::Region mask( Style::instance().helper().roundMask( w, h - 2*Oxygen::Menu_VerticalOffset ) );
+                        gdk_window_shape_combine_region( window, mask, 0, Oxygen::Menu_VerticalOffset );
                     }
+
+                } else {
+
+                    // reset mask if compositing has appeared after we had set a mask
+                    gdk_window_shape_combine_region( window, 0L, 0, 0);
+
                 }
-
-                // if rendering of menu background fails, assume square window
-                if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )
-                { options &= ~Round; }
-
-                Style::instance().drawFloatFrame( context, x, y, w, h, options );
-
             }
+
+            // if rendering of menu background fails, assume square window
+            if( !Style::instance().renderMenuBackground( context, x, y, w, h, options ) )
+            { options &= ~Round; }
+
+            Style::instance().drawFloatFrame( context, x, y, w, h, options );
 
             // TODO: this check is probably not necessary
             if( GTK_IS_MENU( widget ) )
@@ -1161,26 +1129,22 @@ namespace Oxygen
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationCurrent ) );
                     Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover );
 
-               } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                     const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                     const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
                     Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, Hover, data );
 
-                 }
+                }
 
             }
+
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
-            #if GTK_CHECK_VERSION( 3, 7, 0 )
-            // for gtk 3.7 and above, menu item rect is called even in not PRELIGHT mode
-            // we need to draw nothing for it
-            // bug: 312988
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-            if( !( state & GTK_STATE_FLAG_PRELIGHT ) ) return;
-            #endif
+            bool prelight( state & GTK_STATE_FLAG_PRELIGHT );
 
             if( GTK_IS_MENU_ITEM( widget ) )
             {
@@ -1192,6 +1156,9 @@ namespace Oxygen
             AnimationData data;
             if( GTK_IS_MENU_BAR( parent ) )
             {
+
+                // do nothing if not prelight
+                if( !prelight ) return;
 
                 MenuBarStateEngine& engine = Style::instance().animations().menuBarStateEngine();
                 engine.registerWidget( parent );
@@ -1209,7 +1176,7 @@ namespace Oxygen
 
                 MenuStateEngine& engine = Style::instance().animations().menuStateEngine();
                 engine.registerWidget( parent );
-
+                prelight |= engine.updateState( parent, widget, prelight, !prelight );
                 if( engine.animatedRectangleIsValid( parent ) ) {
 
                     return;
@@ -1222,10 +1189,13 @@ namespace Oxygen
 
             }
 
-            StyleOptions options( widget, state );
-            options |= Blend;
+            if( prelight )
+            {
+                StyleOptions options( widget, state );
+                options |= Blend;
+                Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
+            }
 
-            Style::instance().renderMenuItemRect( context, 0L, widget, x, y, w, h, options, data );
             return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TROUGH ) ) {
@@ -1376,7 +1346,7 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) ) {
 
             return;
 
@@ -1435,7 +1405,7 @@ namespace Oxygen
 
             return;
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && widget && GTK_IS_FRAME( widget ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_FRAME ) && GTK_IS_FRAME( widget ) ) {
 
 
             /*
@@ -2025,26 +1995,7 @@ namespace Oxygen
         bool useWidgetStateEngine( true );
 
         GtkWidget* parent( 0L );
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        if( gtk_widget_path_is_type( path, GTK_TYPE_TEAROFF_MENU_ITEM ) )
-        {
-            if( widget &&
-                !(gtk_widget_get_state_flags( widget )&GTK_STATE_FLAG_PRELIGHT) &&
-                GTK_IS_MENU( gtk_widget_get_parent( widget ) ) &&
-                gtk_menu_get_tearoff_state( GTK_MENU( gtk_widget_get_parent( widget ) ) ) )
-            {
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                Style::instance().renderWindowBackground( context, window, widget, x-8, y-8, w+16, h+16);
-            }
-
-            // disable highlight in menus, for consistancy with oxygen qt style
-            options &= ~( Focus|Hover );
-
-            useWidgetStateEngine = false;
-
-        } else
-        #endif
-        if( gtk_widget_path_is_type( path, GTK_TYPE_MENU_ITEM ) ) {
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUITEM ) ) {
 
             /* note: can't use gtk_theming_engine_has_class here, cause MENUITEM is not passed */
             // disable highlight in menus, for consistancy with oxygen qt style
@@ -2112,7 +2063,7 @@ namespace Oxygen
             data = Style::instance().animations().scrollBarStateEngine().get( widget, Gtk::gdk_rectangle( x, y, w, h ), arrow, options );
             role = Palette::WindowText;
 
-        } else if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_BUTTON ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
 
 
             if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
@@ -2414,7 +2365,9 @@ namespace Oxygen
             const AnimationData data( Style::instance().animations().widgetStateEngine().get( widget, options ) );
             Style::instance().renderSliderHandle( context, x, y, w, h, options, data );
 
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) || gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) ) {
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SLIDER ) ) {
 
             StyleOptions options( widget, stateFlags );
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
@@ -2458,15 +2411,16 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup widget and state
-        GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
-        GtkStateFlags state(gtk_theming_engine_get_state(engine));
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PANE_SEPARATOR) )
         {
 
-            Style::instance().animations().panedEngine().registerWidget( widget );
+            // lookup widget and state
+            GtkWidget* widget(Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path(engine) ));
 
+            if( GTK_IS_WIDGET( widget ) )
+            { Style::instance().animations().panedEngine().registerWidget( widget ); }
+
+            GtkStateFlags state(gtk_theming_engine_get_state(engine));
             StyleOptions options( widget, state );
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )  options |= Vertical;
 
@@ -2480,19 +2434,6 @@ namespace Oxygen
                 Gtk::gdk_rectangle( x + allocation.x, y + allocation.y, w, h ),
                 options, AnimationHover ) );
             Style::instance().renderSplitter( context, x, y, w, h, options, data );
-
-        #if !GTK_CHECK_VERSION( 3, 9, 0 )
-        } else if( gtk_widget_path_is_type( gtk_theming_engine_get_path(engine), GTK_TYPE_HANDLE_BOX ) ) {
-
-            // render background
-            if( !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
-
-            // handles
-            StyleOptions options( widget, state );
-            if(h>w) options|=Vertical;
-            Style::instance().renderToolBarHandle( context, x, y, w, h, options );
-        #endif
 
         } else {
 
@@ -2520,12 +2461,13 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // lookup widget and state
-        GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
-        GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
+
+            // lookup widget and state
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
             StyleOptions options( widget, state);
             if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
             { options |= Vertical; }
@@ -2537,13 +2479,8 @@ namespace Oxygen
 
             } else if( GTK_IS_ENTRY( widget ) ) {
 
-                #if GTK_CHECK_VERSION( 3, 3, 0 )
                 y+=1; h-=2;
                 x+=3; w-=6;
-                #else
-                y-=1; h+=2;
-                x-=2; w+=4;
-                #endif
 
             }
 
@@ -2684,8 +2621,7 @@ namespace Oxygen
 
         // get state and path
         GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-        const GtkWidgetPath* path( gtk_theming_engine_get_path( engine ) );
-        if( gtk_widget_path_is_type( path, GTK_TYPE_SPIN_BUTTON ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SPINBUTTON ) )
         {
 
             // need to apply state effect on pixbuf because it is not done by Gtk
@@ -2706,7 +2642,7 @@ namespace Oxygen
             if( stated != pixbuf ) g_object_unref( stated );
             return;
 
-        } else if( gtk_widget_path_is_type( path, GTK_TYPE_ENTRY ) ) {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_ENTRY ) ) {
 
             // call parent method with extra vertical offset due to gtk3 bug
             ThemingEngine::parentClass()->render_icon( engine, context, pixbuf, x, y-2 );

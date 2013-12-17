@@ -86,6 +86,9 @@ namespace Oxygen
             _previous._timeLine.setDuration( value );
         }
 
+        //! update state for given widget
+        bool updateState( GtkWidget*, bool state, bool delayed = false );
+
         //@}
 
         //!@name accessors
@@ -123,15 +126,6 @@ namespace Oxygen
         //@}
 
         protected:
-
-        //! update items
-        void updateItems( void );
-
-        //! update state for given widget
-        bool updateState( GtkWidget*, const GdkRectangle&, int, int, bool state, bool delayed = false );
-
-        //! true if menu item is active (pressed down)
-        bool menuItemIsActive( GtkWidget* ) const;
 
         //! return dirty rect (for update)
         GdkRectangle dirtyRect( void );
@@ -230,12 +224,6 @@ namespace Oxygen
         //!@name callbacks
         //@{
 
-        //! mouse motion events
-        static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
-
-        //! mouse leave events
-        static gboolean leaveNotifyEvent( GtkWidget*, GdkEventCrossing*, gpointer);
-
         //! update widget for fade-in/fade-out animation
         static gboolean delayedUpdate( gpointer );
 
@@ -251,12 +239,6 @@ namespace Oxygen
 
         //! target
         GtkWidget* _target;
-
-        //!@name signals
-        //@{
-        Signal _motionId;
-        Signal _leaveId;
-        //@}
 
         //!@name animation data
         //@{
