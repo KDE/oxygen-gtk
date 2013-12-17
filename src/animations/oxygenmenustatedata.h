@@ -41,9 +41,7 @@ namespace Oxygen
         //! constructor
         MenuStateData( void ):
             _target( 0L ),
-            _dirtyRect( Gtk::gdk_rectangle() ),
-            _xPadding(0),
-            _yPadding(0)
+            _dirtyRect( Gtk::gdk_rectangle() )
             {}
 
         //! destructor
@@ -253,10 +251,6 @@ namespace Oxygen
 
         //!@name follow mouse animated data
         //@{
-
-        //! padding
-        gint _xPadding;
-        gint _yPadding;
 
         //! delayed animation timeOut
         static const int _timeOut;

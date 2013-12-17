@@ -40,7 +40,10 @@ namespace Oxygen
         Slider_GrooveWidth = 7,
 
         // menu vertical offset
-        Menu_VerticalOffset = 1,
+        Menu_VerticalOffset = 0,
+
+        // menu item vertical margin
+        MenuItem_Margin = 2,
 
         /*
         entries size margins. Do not change, unless
