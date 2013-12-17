@@ -105,11 +105,11 @@ GtkScrollbar {
 
 /* menuitems padding */
 GtkMenuBar {
-    padding: 1px;
+    padding: 0px;
     border-width: 0px;
 }
 
-GtkMenuBar>GtkMenuItem { padding: 2px 5px; }
+GtkMenuBar>GtkMenuItem { padding: 4px 5px; }
 
 /* menu toolbutton */
 GtkMenuToolButton, GtkMenuToolButton * {
@@ -182,9 +182,8 @@ GtkEntry { padding: 4px 7px; }
 /* menu */
 GtkMenu
 {
-    padding: 5px 3px;
+    padding: 5px 5px;
     border-width: 0px;
-    border-style: none;
 }
 
 GtkMenu>GtkMenuItem { padding: 5px 4px; }

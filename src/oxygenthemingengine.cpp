@@ -1059,13 +1059,13 @@ namespace Oxygen
             {
 
                 const GdkRectangle& rect( engine.animatedRectangle( widget ) );
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y, rect.width, rect.height, Hover|Blend );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend );
 
             } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
 
                 const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
                 const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y, rect.width, rect.height, Hover|Blend, data );
+                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend, data );
 
             }
             return;
@@ -1171,6 +1171,9 @@ namespace Oxygen
                     data = engine.animationData( parent, AnimationCurrent );
 
                 }
+
+                y+=MenuItem_Margin;
+                h-=2*MenuItem_Margin;
 
             } else if( GTK_IS_MENU( parent ) ) {
 

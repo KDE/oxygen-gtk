@@ -217,7 +217,7 @@ namespace Oxygen
         {
             GdkRectangle rect( data.dirtyRect() );
 
-            const int margin( 3 );
+            const int margin( 4 );
             rect.x -= margin;
             rect.y -= margin;
             rect.width += 2*margin;
@@ -242,7 +242,7 @@ namespace Oxygen
             data.updateAnimatedRect();
             GdkRectangle rect( data.dirtyRect() );
 
-            const int margin( 3 );
+            const int margin( 4 );
             rect.x -= margin;
             rect.y -= margin;
             rect.width += 2*margin;
