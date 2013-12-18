@@ -1,6 +1,6 @@
 /*
 * this file is part of the oxygen gtk engine
-* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 * Copyright (c) 2012 Ruslan Kabatsayev <b7.10110111@gmail.com>
 *
 * inspired notably from kdelibs/kdeui/color/kcolorutils.h
