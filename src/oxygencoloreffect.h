@@ -2,7 +2,7 @@
 #define oxygencoloreffect_h
 /*
 * this file is part of the oxygen gtk engine
-* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
 * inspired notably from kdelibs/kdeui/colors/kcolorscheme.h
 * Copyright (c) 2007 Matthew Woehlke <mw_triad@users.sourceforge.net>

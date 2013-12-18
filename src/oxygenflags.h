@@ -2,7 +2,7 @@
 #define oxygenflags_h
 /*
 * this file is part of the oxygen gtk engine
-* Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
 * largely inspired from Flags
 * Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
