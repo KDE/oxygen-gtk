@@ -1,6 +1,6 @@
 /*
 * this file is part of the oxygen gtk engine
-* Copyright 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+* Copyright 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
