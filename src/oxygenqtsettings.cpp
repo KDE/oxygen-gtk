@@ -695,6 +695,8 @@ namespace Oxygen
             ".info, "
             ".scale, "
             ".through, "
+            "GtkCalendar, "
+            "GtkDrawingArea, "
             "GtkExpander, "
             "GtkHandleBox, "
             "GtkImage, "
@@ -758,6 +760,7 @@ namespace Oxygen
             ".view:selected, "
             ".entry:selected, "
             "GtkEntry:selected, "
+            "GtkCalendar:selected, "
             "GtkTreeView:selected, "
             "GtkTextView:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Inactive, Palette::Selected ) ) );
