@@ -36,6 +36,8 @@
 
 #include <gtk/gtk.h>
 
+#include <map>
+
 namespace Oxygen
 {
     class MenuBarStateData: public FollowMouseData
@@ -119,6 +121,12 @@ namespace Oxygen
         //@}
 
         protected:
+
+        //! register child
+        void registerChild( GtkWidget* );
+
+        //! disconnect child
+        void unregisterChild( GtkWidget* );
 
         //! update items
         void updateItems( GdkEventType );
@@ -208,6 +216,9 @@ namespace Oxygen
         //!@name callbacks
         //@{
 
+        //! child is destroyed
+        static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
+
         //! mouse motion events
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer);
 
@@ -246,6 +257,10 @@ namespace Oxygen
         Data _current;
 
         //@}
+
+        //! map children to destroy signal
+        typedef std::map<GtkWidget*, Signal> ChildrenMap;
+        ChildrenMap _children;
 
     };
 

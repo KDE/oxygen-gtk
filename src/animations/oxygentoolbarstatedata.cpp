@@ -137,6 +137,19 @@ namespace Oxygen
             _hoverData.erase( iter );
         }
 
+        // disconnect previous and current
+        if( widget == _previous._widget )
+        {
+            _previous._widget = 0L;
+            _previous._timeLine.disconnect();
+        }
+
+        if( widget == _current._widget )
+        {
+            _current._widget = 0L;
+            _current._timeLine.disconnect();
+        }
+
     }
 
     //________________________________________________________________________________
