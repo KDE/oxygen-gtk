@@ -20,6 +20,7 @@
 
 #include "oxygenmenustatedata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <cassert>
 #include <gtk/gtk.h>
@@ -31,6 +32,13 @@ namespace Oxygen
     const int MenuStateData::_timeOut = 50;
     void MenuStateData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuStateData::connect - "
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
 
         _target = widget;
 
@@ -51,6 +59,13 @@ namespace Oxygen
     void MenuStateData::disconnect( GtkWidget* widget )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuStateData::disconnect - "
+            << " " << _target << " (" << (_target ? G_OBJECT_TYPE_NAME( _target ) : "0x0") << ")"
+            << std::endl;
+        #endif
+
         _target = 0L;
 
         // disconnect timelines
@@ -58,15 +73,77 @@ namespace Oxygen
         _previous._timeLine.disconnect();
         _timer.stop();
 
+        // disconnect all children
+        for( ChildrenMap::iterator iter = _children.begin(); iter != _children.end(); ++iter )
+        { iter->second.disconnect(); }
+
+        _children.clear();
+
         // base class
         FollowMouseData::disconnect();
 
    }
 
     //________________________________________________________________________________
+    void MenuStateData::registerChild( GtkWidget* widget )
+    {
+        if( widget && _children.find( widget ) == _children.end() )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::MenuStateData::registerChild -"
+                << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << std::endl;
+            #endif
+
+            Signal destroyId;
+            destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            _children.insert( std::make_pair( widget, destroyId ) );
+        }
+
+    }
+
+    //________________________________________________________________________________
+    void MenuStateData::unregisterChild( GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuStateData::unregisterChild -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
+        ChildrenMap::iterator iter( _children.find( widget ) );
+
+        // erase from children map
+        if( iter != _children.end() )
+        {
+            iter->second.disconnect();
+            _children.erase( iter );
+        }
+
+        // reset corresponding data, if matches
+        if( widget == _previous._widget )
+        {
+            _previous._widget = 0L;
+            _previous._timeLine.disconnect();
+        }
+
+        if( widget == _current._widget )
+        {
+            _current._widget = 0L;
+            _current._timeLine.disconnect();
+        }
+
+    }
+
+    //________________________________________________________________________________
     bool MenuStateData::updateState( GtkWidget* widget, bool state, bool delayed )
     {
 
+        registerChild( widget );
         if( state && widget != _current._widget )
         {
 
@@ -205,6 +282,19 @@ namespace Oxygen
 
         return rect;
 
+    }
+
+    //____________________________________________________________________________________________
+    gboolean MenuStateData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuStateData::childDestroyNotifyEvent -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+        static_cast<MenuStateData*>(data)->unregisterChild( widget );
+        return FALSE;
     }
 
     //_____________________________________________
