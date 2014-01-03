@@ -761,6 +761,7 @@ namespace Oxygen
             ".entry:selected, "
             "GtkEntry:selected, "
             "GtkCalendar:selected, "
+            "GtkLabel:selected, "
             "GtkTreeView:selected, "
             "GtkTextView:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Inactive, Palette::Selected ) ) );
