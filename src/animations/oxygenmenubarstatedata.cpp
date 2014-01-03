@@ -29,6 +29,7 @@
 
 #include "oxygenmenubarstatedata.h"
 #include "../oxygengtkutils.h"
+#include "../config.h"
 
 #include <gtk/gtk.h>
 
@@ -38,6 +39,13 @@ namespace Oxygen
     //________________________________________________________________________________
     void MenuBarStateData::connect( GtkWidget* widget )
     {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuBarStateData::connect - "
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
 
         _target = widget;
         _motionId.connect( G_OBJECT(widget), "motion-notify-event", G_CALLBACK( motionNotifyEvent ), this );
@@ -60,6 +68,13 @@ namespace Oxygen
     void MenuBarStateData::disconnect( GtkWidget* )
     {
 
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuBarStateData::disconnect - "
+            << " " << _target << " (" << (_target ? G_OBJECT_TYPE_NAME( _target ) : "0x0") << ")"
+            << std::endl;
+        #endif
+
         _target = 0L;
 
         // disconnect signal
@@ -70,7 +85,69 @@ namespace Oxygen
         _current._timeLine.disconnect();
         _previous._timeLine.disconnect();
 
+        // disconnect all children
+        for( ChildrenMap::iterator iter = _children.begin(); iter != _children.end(); ++iter )
+        { iter->second.disconnect(); }
+
+        _children.clear();
+
         FollowMouseData::disconnect();
+
+    }
+
+
+    //________________________________________________________________________________
+    void MenuBarStateData::registerChild( GtkWidget* widget )
+    {
+        if( widget && _children.find( widget ) == _children.end() )
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::MenuBarStateData::registerChild -"
+                << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << std::endl;
+            #endif
+
+            Signal destroyId;
+            destroyId.connect( G_OBJECT( widget ), "destroy", G_CALLBACK( childDestroyNotifyEvent ), this );
+            _children.insert( std::make_pair( widget, destroyId ) );
+        }
+
+    }
+
+    //________________________________________________________________________________
+    void MenuBarStateData::unregisterChild( GtkWidget* widget )
+    {
+
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuBarStateData::unregisterChild -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+
+        ChildrenMap::iterator iter( _children.find( widget ) );
+
+        // erase from children map
+        if( iter != _children.end() )
+        {
+            iter->second.disconnect();
+            _children.erase( iter );
+        }
+
+        // reset corresponding data, if matches
+        if( widget == _previous._widget )
+        {
+            _previous._widget = 0L;
+            _previous._timeLine.disconnect();
+        }
+
+        if( widget == _current._widget )
+        {
+            _current._widget = 0L;
+            _current._timeLine.disconnect();
+        }
 
     }
 
@@ -97,6 +174,7 @@ namespace Oxygen
             if( !( child->data && GTK_IS_MENU_ITEM( child->data ) ) ) continue;
 
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
+            registerChild( childWidget );
             const GtkStateFlags state( gtk_widget_get_state_flags( childWidget ) );
 
             // do nothing for disabled child
@@ -237,6 +315,19 @@ namespace Oxygen
 
         return rect;
 
+    }
+
+    //____________________________________________________________________________________________
+    gboolean MenuBarStateData::childDestroyNotifyEvent( GtkWidget* widget, gpointer data )
+    {
+        #if OXYGEN_DEBUG
+        std::cerr
+            << "Oxygen::MenuBarStateData::childDestroyNotifyEvent -"
+            << " " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+            << std::endl;
+        #endif
+        static_cast<MenuBarStateData*>(data)->unregisterChild( widget );
+        return FALSE;
     }
 
     //________________________________________________________________________________
