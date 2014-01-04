@@ -7,6 +7,7 @@ set( oxygen_gtk_demo_SOURCES
     oxygendemodialog.cpp
     oxygendemowidget.cpp
     oxygenframedemowidget.cpp
+    oxygeninfowidget.cpp
     oxygeninputdemowidget.cpp
     oxygenlistdemowidget.cpp
     oxygensignal.cpp
