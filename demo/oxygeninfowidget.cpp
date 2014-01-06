@@ -36,7 +36,7 @@ namespace Oxygen
     {
 
         // main widget
-        GtkWidget* mainWidget( gtk_vbox_new( false, 0 ) );
+        GtkWidget* mainWidget( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
         gtk_box_set_spacing( GTK_BOX( mainWidget ), 5 );
         setWidget( mainWidget );
 
@@ -53,7 +53,7 @@ namespace Oxygen
             gtk_widget_show( frame );
 
             // vbox
-            GtkWidget* box( gtk_vbox_new( false, 0 ) );
+            GtkWidget* box( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_box_set_spacing( GTK_BOX( box ), 5 );
             gtk_container_add( GTK_CONTAINER( frame ), box );
             gtk_container_set_border_width( GTK_CONTAINER( box ), 10 );
@@ -62,7 +62,7 @@ namespace Oxygen
             // application name
             GtkWidget* label;
             label = boldLabel();
-            gtk_label_set_text( GTK_LABEL( label ), "oxygen-gtk-demo" );
+            gtk_label_set_text( GTK_LABEL( label ), "oxygen-gtk3-demo" );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
@@ -126,7 +126,7 @@ namespace Oxygen
             gtk_widget_show( frame );
 
             // vbox
-            GtkWidget* box( gtk_vbox_new( false, 0 ) );
+            GtkWidget* box( gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 ) );
             gtk_box_set_spacing( GTK_BOX( box ), 5 );
             gtk_container_add( GTK_CONTAINER( frame ), box );
             gtk_container_set_border_width( GTK_CONTAINER( box ), 10 );
@@ -142,22 +142,22 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
 
-            // table
-            GtkWidget* table( gtk_table_new( 3, 3, false ) );
-            gtk_box_pack_start( GTK_BOX( box ), table, false, false, 0 );
-            gtk_container_set_border_width( GTK_CONTAINER( table ), 0 );
-            gtk_table_set_row_spacings( GTK_TABLE( table ), 5 );
-            gtk_table_set_col_spacings( GTK_TABLE( table ), 5 );
-            gtk_widget_show( table );
+            // grid
+            GtkWidget* grid( gtk_grid_new() );
+            gtk_box_pack_start( GTK_BOX( box ), grid, false, false, 0 );
+            gtk_container_set_border_width( GTK_CONTAINER( grid ), 0 );
+            gtk_grid_set_row_spacing( GTK_GRID( grid ), 5 );
+            gtk_grid_set_column_spacing( GTK_GRID( grid ), 5 );
+            gtk_widget_show( grid );
 
             // spacing
             GtkWidget* spacing( gtk_label_new( "" ) );
-            gtk_table_attach( GTK_TABLE( table ), spacing, 2, 3, 0, 1, GTK_EXPAND, GTK_FILL, 2, 0  );
+            gtk_grid_attach( GTK_GRID( grid ), spacing, 2, 0, 1, 1  );
             gtk_widget_show( spacing );
 
-            addAuthor( table, 0, "<a href=\"mailto:hugo.pereira@free.fr\">Hugo Pereira Da Costa</a>", "Maintainer and developer" );
-            addAuthor( table, 1, "<a href=\"mailto:b7.10110111@gmail.com\">Ruslan Kabatsayev</a>", "Maintainer and developer" );
-            addAuthor( table, 2, "<a href=\"mailto:cedric.bellegarde@ensat.fr\">Cédric Bellegarde</a>", "Developer" );
+            addAuthor( grid, 0, "<a href=\"mailto:hugo.pereira@free.fr\">Hugo Pereira Da Costa</a>", "Maintainer and developer" );
+            addAuthor( grid, 1, "<a href=\"mailto:b7.10110111@gmail.com\">Ruslan Kabatsayev</a>", "Maintainer and developer" );
+            addAuthor( grid, 2, "<a href=\"mailto:cedric.bellegarde@ensat.fr\">Cédric Bellegarde</a>", "Developer" );
 
         }
 
@@ -187,20 +187,20 @@ namespace Oxygen
     }
 
     //____________________________________________________
-    void InfoWidget::addAuthor( GtkWidget* table, int row, const std::string& author, const std::string& comment ) const
+    void InfoWidget::addAuthor( GtkWidget* grid, int row, const std::string& author, const std::string& comment ) const
     {
 
         GtkWidget* label;
         label = gtk_label_new( 0L );
         gtk_label_set_markup( GTK_LABEL( label ), author.c_str() );
         gtk_misc_set_alignment( GTK_MISC( label ), 1, 0.5 );
-        gtk_table_attach( GTK_TABLE( table ), label, 0, 1, row, row+1, GTK_FILL, GTK_FILL, 0, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), label, 0, row, 1, 1 );
         gtk_widget_show( label );
 
         label = gtk_label_new( 0L );
         gtk_label_set_markup( GTK_LABEL( label ), comment.c_str() );
         gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
-        gtk_table_attach( GTK_TABLE( table ), label, 1, 2, row, row+1, GTK_FILL, GTK_FILL, 0, 0 );
+        gtk_grid_attach( GTK_GRID( grid ), label, 1, row, 1, 1 );
         gtk_widget_show( label );
 
         return;
