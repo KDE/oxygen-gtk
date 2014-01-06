@@ -150,6 +150,9 @@ namespace Oxygen
         //! return true if window is dragable
         bool canDrag( GtkWidget*, GdkEventButton* );
 
+        //! check cursor
+        bool checkCursor( GdkWindow* ) const;
+
         //! return true if event happen in widget
         bool withinWidget( GtkWidget*, GdkEventButton* ) const;
 
