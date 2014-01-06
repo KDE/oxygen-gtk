@@ -55,6 +55,10 @@ namespace Oxygen
     void Gtk::CSS::merge( const Gtk::CSS& other )
     {
 
+        // merge color definitions in other
+        for( CSS::ColorDefinition::Set::const_iterator iter = other._colorDefinitions.begin(); iter != other._colorDefinitions.end(); ++iter )
+        { _colorDefinitions.insert( *iter ); }
+
         // loop over sections in other
         for( Section::List::const_iterator iter = other._sections.begin(); iter != other._sections.end(); ++iter )
         {
@@ -133,6 +137,13 @@ namespace Oxygen
     namespace Gtk
     {
         //_______________________________________________________________________
+        std::ostream& operator << (std::ostream& out, const CSS::ColorDefinition& colorDefinition )
+        {
+            out << "@define-color " << colorDefinition._name << " " << colorDefinition._value << ";";
+            return out;
+        }
+
+        //_______________________________________________________________________
         std::ostream& operator << (std::ostream& out, const CSS::Section& section )
         {
 
@@ -151,6 +162,12 @@ namespace Oxygen
         //_______________________________________________________________________
         std::ostream& operator << (std::ostream& out, const CSS& rc )
         {
+
+            // dump color definitions
+            for( CSS::ColorDefinition::Set::const_iterator iter = rc._colorDefinitions.begin(); iter != rc._colorDefinitions.end(); ++iter )
+            { out << *iter << std::endl; }
+
+            out << std::endl;
 
             // dump all sections
             for( CSS::Section::List::const_iterator iter = rc._sections.begin(); iter != rc._sections.end(); ++iter )
