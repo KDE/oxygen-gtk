@@ -659,16 +659,10 @@ namespace Oxygen
         std::cerr << "Oxygen::QtSettings::generateGtkColors" << std::endl;
         #endif
 
-        /*
-        TODO:
-        look at default values from GtkCssProvider for better style definitions
-        (class based, rather than widget based)
-        */
-
-        // customize gtk palette
+        // set default palette group
         _palette.setGroup( Palette::Active );
 
-        // color definitions
+        // add color definitions to css
         _css.addColorDefinition( "theme_base_color", _palette.color( Palette::Base ) );
         _css.addColorDefinition( "theme_bg_color", _palette.color( Palette::Window ) );
         _css.addColorDefinition( "theme_selected_bg_color", _palette.color( Palette::Selected ) );
@@ -684,6 +678,16 @@ namespace Oxygen
         _css.addColorDefinition( "theme_unfocused_selected_bg_color", _palette.color( Palette::Inactive, Palette::Selected ) );
         _css.addColorDefinition( "theme_unfocused_selected_fg_color", _palette.color( Palette::Active, Palette::Text ) );
 
+        // definitions needed to get valid buttons when using Adwaita window decoration
+        _css.addColorDefinition( "button_gradient_color_a", "shade(@theme_bg_color, 1.05)" );
+        _css.addColorDefinition( "button_gradient_color_b", "@theme_bg_color" );
+        _css.addColorDefinition( "button_gradient_color_c", "shade(@theme_bg_color, 0.92)" );
+        _css.addColorDefinition( "borders", "#a7aba7" );
+
+        _css.addColorDefinition( "button_hover_gradient_color_a", "@theme_base_color" );
+        _css.addColorDefinition( "button_hover_gradient_color_b", "shade (@button_gradient_color_a, 0.94)" );
+
+        // customize widget colors
         // default text color
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
