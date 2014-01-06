@@ -512,7 +512,7 @@ namespace Oxygen
     {
 
         if( _dragMode == Disabled ) return false;
-        else if( !_dragAboutToStart && withinWidget(widget, event ) && useEvent( widget, event ) )
+        else if( !_dragAboutToStart && checkCursor( event->window ) && withinWidget(widget, event ) && useEvent( widget, event ) )
         {
 
             // store widget and event position
@@ -537,6 +537,18 @@ namespace Oxygen
             _lastRejectedEvent = event;
             return false;
         }
+
+    }
+
+    //_________________________________________________
+    bool WindowManager::checkCursor( GdkWindow* window ) const
+    {
+        if( !window ) return true;
+        GdkCursor* cursor = gdk_window_get_cursor( window );
+
+        // do not propagate if widget's cursor is currently modified,
+        // since it is usually indicative of mouse action
+        return !cursor || gdk_cursor_get_cursor_type( cursor ) == GDK_ARROW;
 
     }
 
@@ -680,12 +692,6 @@ namespace Oxygen
 
             if( !( event && withinWidget( childWidget, event ) ) )
             { continue; }
-
-            // do not propagate if widget's cursor is currently modified,
-            // since it is usually indicative of mouse action
-            GdkCursor* cursor = gdk_window_get_cursor( window );
-            if( cursor && gdk_cursor_get_cursor_type( cursor ) != GDK_ARROW )
-            { usable = false; }
 
             // check special cases for which grab should not be enabled
             if( usable && (
