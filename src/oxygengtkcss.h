@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <list>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -34,8 +35,7 @@ namespace Oxygen
     {
 
         //! convenience class to generate GtkCSS option
-        template< typename T>
-            class CSSOption
+        template< typename T> class CSSOption
         {
             public:
 
@@ -88,6 +88,10 @@ namespace Oxygen
             //! merge
             void merge( const CSS& );
 
+            //! add color definition
+            void addColorDefinition( const std::string& name, const std::string& value )
+            { _colorDefinitions.insert( ColorDefinition( name, value ) ); }
+
             //! create new section and set as current
             void addSection( const std::string& name );
 
@@ -118,6 +122,37 @@ namespace Oxygen
             //! initialize default sections
             void init( void )
             { addSection( _defaultSectionName ); }
+
+            //! color definition
+            class ColorDefinition
+            {
+
+                public:
+
+                //! list
+                typedef std::set<ColorDefinition> Set;
+
+                //! constructor
+                ColorDefinition( const std::string& name, const std::string& value ):
+                    _name( name ),
+                    _value( value )
+                {}
+
+                //! equal to operator
+                bool operator == (const ColorDefinition& other ) const
+                { return _name == other._name; }
+
+                //! less than operator
+                bool operator < (const ColorDefinition& other ) const
+                { return _name < other._name; }
+
+                //! color name
+                std::string _name;
+
+                //! color value
+                std::string _value;
+
+            };
 
             //! describes each style section in resource list
             class Section
@@ -197,11 +232,17 @@ namespace Oxygen
             //! default section
             static const std::string _defaultSectionName;
 
+            //! color defintions
+            ColorDefinition::Set _colorDefinitions;
+
             //! list of sections
             Section::List _sections;
 
             //! current section
             std::string _currentSection;
+
+            //! streamer
+            friend std::ostream& operator << ( std::ostream&, const ColorDefinition& );
 
             //! streamer
             friend std::ostream& operator << ( std::ostream&, const Section& );
