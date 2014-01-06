@@ -668,6 +668,22 @@ namespace Oxygen
         // customize gtk palette
         _palette.setGroup( Palette::Active );
 
+        // color definitions
+        _css.addColorDefinition( "theme_base_color", _palette.color( Palette::Base ) );
+        _css.addColorDefinition( "theme_bg_color", _palette.color( Palette::Window ) );
+        _css.addColorDefinition( "theme_selected_bg_color", _palette.color( Palette::Selected ) );
+
+        _css.addColorDefinition( "theme_text_color", _palette.color( Palette::Text ) );
+        _css.addColorDefinition( "theme_fg_color", _palette.color( Palette::WindowText ) );
+        _css.addColorDefinition( "theme_selected_fg_color", _palette.color( Palette::SelectedText ) );
+
+        _css.addColorDefinition( "theme_unfocused_base_color", _palette.color( Palette::Inactive, Palette::Base ) );
+        _css.addColorDefinition( "theme_unfocused_text_color", _palette.color( Palette::Inactive, Palette::Text ) );
+        _css.addColorDefinition( "theme_unfocused_fg_color", _palette.color( Palette::Inactive, Palette::WindowText ) );
+        _css.addColorDefinition( "theme_unfocused_bg_color", _palette.color( Palette::Inactive, Palette::Window ) );
+        _css.addColorDefinition( "theme_unfocused_selected_bg_color", _palette.color( Palette::Inactive, Palette::Selected ) );
+        _css.addColorDefinition( "theme_unfocused_selected_fg_color", _palette.color( Palette::Active, Palette::Text ) );
+
         // default text color
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
@@ -766,6 +782,12 @@ namespace Oxygen
             "GtkTextView:selected" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Inactive, Palette::Selected ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Active, Palette::Text ) ) );
+
+        // FIXME: this is an evince bug: for content-view.view, selected is used for selected+focus.
+        // We need to adjust the colors accordingly.
+        _css.addSection( ".content-view.view:selected" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Selected ) ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Active, Palette::SelectedText ) ) );
 
         // sidebars
         _css.addSection( "GtkAssistant .sidebar" );
