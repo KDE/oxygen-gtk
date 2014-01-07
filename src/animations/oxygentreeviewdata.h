@@ -24,6 +24,7 @@
 #include "../oxygengtkutils.h"
 #include "oxygenhoverdata.h"
 #include "oxygensignal.h"
+#include "oxygentimer.h"
 
 #include <gtk/gtk.h>
 #include <algorithm>
@@ -36,17 +37,10 @@ namespace Oxygen
         public:
 
         //! constructor
-        TreeViewData( void ):
-            _target(0L),
-            _fullWidth( true ),
-            _x(-1),
-            _y(-1),
-            _dirty( false )
-        {}
+        TreeViewData( void );
 
         //! destructor
-        virtual ~TreeViewData( void )
-        { disconnect( _target ); }
+        virtual ~TreeViewData( void );
 
         //! setup connections
         void connect( GtkWidget* );
@@ -97,9 +91,6 @@ namespace Oxygen
         //! update pointer position
         void clearPosition( GtkWidget* = 0L );
 
-        //! repaint selection
-        void triggerRepaint( void );
-
         //! handles scrollbar value change
         class ScrollBarData
         {
@@ -134,12 +125,27 @@ namespace Oxygen
         static gboolean childDestroyNotifyEvent( GtkWidget*, gpointer );
         static void childValueChanged( GtkRange*, gpointer );
         static gboolean motionNotifyEvent( GtkWidget*, GdkEventMotion*, gpointer );
+
+        //! delayed update
+        static gboolean delayedUpdate( gpointer );
         //@}
 
         private:
 
         //! target widget
         GtkWidget* _target;
+
+        //! true if updates are delayed
+        bool _updatesDelayed;
+
+        //! update delay
+        int _delay;
+
+        //! timer
+        Timer _timer;
+
+        //! true if next update must be delayed
+        bool _locked;
 
         //!@name callbacks ids
         Signal _motionId;
