@@ -111,7 +111,8 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
 
-            label = gtk_label_new( "License: GNU Lesser General Public License Version 2" );
+            label = gtk_label_new( 0L );
+            gtk_label_set_markup( GTK_LABEL( label ), "License: <a href=\"http://www.gnu.org/licenses/lgpl-2.1.html\">GNU Lesser General Public License Version 2</a>" );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
