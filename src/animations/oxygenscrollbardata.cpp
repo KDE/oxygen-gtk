@@ -27,11 +27,20 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
+    ScrollBarData::ScrollBarData( void ):
+        _target( 0L ),
+        _updatesDelayed( true ),
+        _delay( 2 ),
+        _locked( false )
+    {}
+
+    //________________________________________________________________________________
+    ScrollBarData::~ScrollBarData( void )
+    { disconnect( _target ); }
+
+    //________________________________________________________________________________
     void ScrollBarData::connect( GtkWidget* widget )
     {
-
-        _updatesDelayed = true;
-        _delay = 2;
 
         _target = widget;
         _locked = false;
