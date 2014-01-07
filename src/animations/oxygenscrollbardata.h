@@ -34,30 +34,16 @@ namespace Oxygen
         public:
 
         //! constructor
-        ScrollBarData( void ):
-            _target( 0L ),
-            _updatesDelayed( false ),
-            _delay( 10 ),
-            _locked( false )
-        {}
+        ScrollBarData( void );
 
         //! destructor
-        virtual ~ScrollBarData( void )
-        { disconnect( _target ); }
+        virtual ~ScrollBarData( void );
 
         //! setup connections
         void connect( GtkWidget* );
 
         //! disconnect
         void disconnect( GtkWidget* );
-
-        //! toggle delayed updates
-        void setUpdatesDelayed( bool value )
-        { _updatesDelayed = value; }
-
-        //! set delay
-        void setDelay( int value )
-        { _delay = value; }
 
         protected:
 

@@ -31,6 +31,22 @@ namespace Oxygen
 {
 
     //________________________________________________________________________________
+    TreeViewData::TreeViewData( void ):
+        _target(0L),
+        _updatesDelayed( true ),
+        _delay( 2 ),
+        _locked( false ),
+        _fullWidth( true ),
+        _x(-1),
+        _y(-1),
+        _dirty( false )
+    {}
+
+    //________________________________________________________________________________
+    TreeViewData::~TreeViewData( void )
+    { disconnect( _target ); }
+
+    //________________________________________________________________________________
     void TreeViewData::connect( GtkWidget* widget )
     {
 
@@ -85,6 +101,10 @@ namespace Oxygen
 
         // reset target
         _target = 0L;
+
+        // reset timeout and locked flag
+        _timer.stop();
+        _locked = false;
 
         _motionId.disconnect();
 
@@ -192,13 +212,6 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void TreeViewData::triggerRepaint( void )
-    {
-        if( !( _target && hovered() ) ) return;
-        setDirty( true );
-    }
-
-    //________________________________________________________________________________
     void TreeViewData::registerScrollBars( GtkWidget* widget )
     {
 
@@ -249,9 +262,23 @@ namespace Oxygen
     }
 
     //________________________________________________________________________________
-    void TreeViewData::childValueChanged( GtkRange* widget, gpointer data )
+    void TreeViewData::childValueChanged( GtkRange* widget, gpointer pointer )
     {
-        static_cast<TreeViewData*>(data)->triggerRepaint();
+
+        TreeViewData& data( *static_cast<TreeViewData*>(pointer) );
+
+        // set data as dirty to update hovered cell on next paint
+        if( data._target && data.hovered() )  data.setDirty( true );
+
+        // trigger repaint
+        if( !data._timer.isRunning() )
+        {
+
+            data._timer.start( data._delay, (GSourceFunc)delayedUpdate, &data );
+            data._locked = false;
+
+        } else data._locked = true;
+
         return;
     }
 
@@ -267,6 +294,38 @@ namespace Oxygen
         { static_cast<TreeViewData*>( data )->updatePosition( widget, (int)event->x, (int)event->y ); }
 
         return FALSE;
+    }
+
+    //________________________________________________________________________________
+    gboolean TreeViewData::delayedUpdate( gpointer pointer )
+    {
+
+        TreeViewData& data( *static_cast<TreeViewData*>(pointer) );
+        if( !data._target )
+        {
+
+            // if target is invalid, reset timeout and return
+            data._locked = false;
+            return FALSE;
+
+        } else if( data._locked ) {
+
+            // if locked, reset the flag and re-run timer
+            data._locked = false;
+            return TRUE;
+
+        } else {
+
+            // otherwise, trigger update
+            gtk_widget_queue_draw( data._target );
+            return FALSE;
+
+        }
+
+        // if everything fails, unlock and do nothing
+        data._locked = false;
+        return FALSE;
+
     }
 
     //____________________________________________________________________________________________
