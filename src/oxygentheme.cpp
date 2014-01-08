@@ -41,6 +41,7 @@
 #include <vector>
 #include <sys/stat.h>
 
+
 //_________________________________________________
 void theme_init( GTypeModule* module )
 {
@@ -51,6 +52,7 @@ void theme_init( GTypeModule* module )
 
     Oxygen::RCStyle::registerType( module );
     Oxygen::StyleWrapper::registerType( module );
+    Oxygen::StyleWrapper::registerVersionType();
 
     // style initialization
     Oxygen::Style::instance().initialize();
