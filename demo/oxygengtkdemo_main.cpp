@@ -21,7 +21,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygen_version.h"
+#include "oxygenversion.h"
 #include "oxygendemodialog.h"
 
 //___________________________________________________________________
@@ -31,15 +31,20 @@ int main(int argc, char** argv)
     // initialize gtk
     gtk_init(&argc, &argv);
 
-    processCommandLine(argc,argv);
+    // parse command line
+    if( Oxygen::Version::processCommandLine(argc,argv) )
+    { return 0; }
 
     // dialog
     Oxygen::DemoDialog demoDialog;
 
+    // connect demo dialog destruction to quit
     g_signal_connect( G_OBJECT( demoDialog.mainWidget() ), "destroy", G_CALLBACK(gtk_main_quit), 0L);
     gtk_widget_show( demoDialog.mainWidget() );
 
+    // run main loop
     gtk_main();
+
     return 0;
 
 }

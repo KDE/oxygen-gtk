@@ -14,6 +14,7 @@ set( oxygen_gtk_demo_SOURCES
     oxygensliderdemowidget.cpp
     oxygentimer.cpp
     oxygentabdemowidget.cpp
+    oxygenversion.cpp
     oxygengtkdemo_main.cpp
  )
 
