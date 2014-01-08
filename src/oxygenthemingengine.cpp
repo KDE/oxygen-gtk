@@ -95,6 +95,7 @@ namespace Oxygen
         ToolBarStateEngine& engine( Style::instance().animations().toolBarStateEngine() );
         engine.registerWidget(widget);
 
+
         if( engine.animatedRectangleIsValid( widget ) )
         {
 
@@ -495,7 +496,8 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER ) )
          {
 
             // render background
@@ -505,6 +507,10 @@ namespace Oxygen
             // possible groupbox background
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
             { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
+
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_CALENDAR ) )
+            { Style::instance().renderHole( context, x-1, y-1, w+2, h+8, NoFill, TileSet::Left|TileSet::Right|TileSet::Top ); }
+
 
             render_animated_button( context, widget );
             return;
@@ -2077,7 +2083,6 @@ namespace Oxygen
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_CALENDAR  ) )
             {
 
-                /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
                 useWidgetStateEngine = false;
                 options &= ~( Focus|Hover );
 
@@ -2085,7 +2090,7 @@ namespace Oxygen
 
             } else if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
 
-                /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
+                /* note: can't use gtk_theming_engine_has_class above, cause tree view is not passed */
                 useWidgetStateEngine = false;
                 options &= ~( Focus|Hover );
 
