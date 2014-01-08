@@ -151,6 +151,8 @@ GtkInfoBar {
     border-width: 8px;
 }
 
+GtkCalendar.view { border-style: inset; }
+
 /* switchs */
 GtkSwitch { padding: 0px; }
 
@@ -163,7 +165,6 @@ GtkWindow#gtk-tooltip { padding: 3px; }
 
 /* buttons */
 GtkButton { padding: 3px 4px 2px; }
-
 
 /* header buttons */
 GtkTreeView>GtkButton {
