@@ -22,6 +22,7 @@
 */
 
 #include "oxygeninfowidget.h"
+#include "oxygenversion.h"
 #include "config.h"
 
 #include <iostream>
@@ -68,11 +69,29 @@ namespace Oxygen
             gtk_widget_show( label );
 
             // version
-            std::ostringstream stream;
-            stream << "version " << OXYGEN_VERSION;
-            label = boldLabel();
-            gtk_label_set_text( GTK_LABEL( label ), stream.str().c_str() );
-            gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
+            {
+                std::ostringstream stream;
+                stream << "version " << OXYGEN_VERSION;
+                label = boldLabel();
+                gtk_label_set_text( GTK_LABEL( label ), stream.str().c_str() );
+                gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
+                gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
+                gtk_widget_show( label );
+            }
+
+            // library version
+            const std::string libVersion( Version::libVersion() );
+            if( !libVersion.empty() )
+            {
+                std::ostringstream stream;
+                stream << "using oxygen-gtk version " << libVersion;
+                label = gtk_label_new( stream.str().c_str() );
+                gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
+                gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
+                gtk_widget_show( label );
+            }
+
+            label = gtk_label_new( "" );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
 
