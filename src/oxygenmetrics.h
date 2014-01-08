@@ -46,9 +46,14 @@ namespace Oxygen
         MenuItem_Margin = 2,
 
         /*
+        menu padding.Do not change unless
+        changing the corresponding value in gtk.css
+        */
+        Menu_Margin = 5,
+
+        /*
         entries size margins. Do not change, unless
-        changing the corresponding oxygen-entry-margins style
-        in gtkrc
+        changing the corresponding value in gtk.css
         */
         Entry_SideMargin = 3
 
