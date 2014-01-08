@@ -24,15 +24,24 @@
 #include "config.h"
 
 #include <iostream>
+#include <sstream>
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 namespace Oxygen
 {
 
     //____________________________________________
+    std::string Version::gtkVersion( void )
+    {
+        std::ostringstream buffer;
+        buffer << gtk_major_version<< "." << gtk_minor_version << "." << gtk_micro_version;
+        return buffer.str();
+    }
+
+    //____________________________________________
     std::string Version::libVersion( void )
     {
-
         // load type for oxygen version container
         GType type( g_type_from_name( OXYGEN_VERSION_TYPE_NAME ) );
         if( !type ) return std::string();
@@ -50,10 +59,14 @@ namespace Oxygen
     //____________________________________________
     void Version::print( void )
     {
-        std::cout << "oxygen-gtk-demo version " << OXYGEN_VERSION << std::endl;
+
+        std::cout << "gtk: " << gtkVersion() << std::endl;
 
         const std::string libraryVersion( libVersion() );
         if( !libraryVersion.empty() )
-        { std::cout << "using oxygen-gtk version " << libraryVersion << std::endl; }
+        { std::cout << "oxygen-gtk: " << libraryVersion << std::endl; }
+
+        std::cout << "oxygen-gtk-demo: " << OXYGEN_VERSION << std::endl;
+
     }
 }
