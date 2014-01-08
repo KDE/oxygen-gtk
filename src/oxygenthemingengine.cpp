@@ -2074,9 +2074,17 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ) {
 
-
-            if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) )
+            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_CALENDAR  ) )
             {
+
+                /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
+                useWidgetStateEngine = false;
+                options &= ~( Focus|Hover );
+
+                if( state & GTK_STATE_FLAG_PRELIGHT ) options |= Hover;
+
+            } else if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
+
                 /* note: can't use gtk_theming_engine_has_class above, cause BUTTON is not passed */
                 useWidgetStateEngine = false;
                 options &= ~( Focus|Hover );
@@ -2095,23 +2103,6 @@ namespace Oxygen
                 || gtk_theming_engine_has_region( engine, GTK_STYLE_REGION_COLUMN_HEADER, 0L ) ) &&
                 Style::instance().settings().viewInvertSortIndicator() )
             { arrow = (arrow == GTK_ARROW_UP ) ? GTK_ARROW_DOWN:GTK_ARROW_UP; }
-
-        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CALENDAR ) ) {
-
-            // FIXME: needs dedicated engine to
-            // handle smooth animations
-            useWidgetStateEngine = false;
-
-            if( !Gtk::gtk_widget_is_applet( widget ) )
-            {
-
-                // need to render background behind arrows from calendar
-                // offsets are empirical
-                GdkWindow* window( gtk_widget_get_window( widget ) );
-                Style::instance().renderWindowBackground( context, window, widget, x-2, y-3, w+4, h+6 );
-                role = Palette::WindowText;
-
-            }
 
         }
 
