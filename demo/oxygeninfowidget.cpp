@@ -64,6 +64,7 @@ namespace Oxygen
             GtkWidget* label;
             label = boldLabel();
             gtk_label_set_text( GTK_LABEL( label ), "oxygen-gtk3-demo" );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
@@ -73,7 +74,19 @@ namespace Oxygen
                 std::ostringstream stream;
                 stream << "version " << OXYGEN_VERSION;
                 label = boldLabel();
+                gtk_label_set_selectable( GTK_LABEL( label ), true );
                 gtk_label_set_text( GTK_LABEL( label ), stream.str().c_str() );
+                gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
+                gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
+                gtk_widget_show( label );
+            }
+
+            // gtk version
+            {
+                std::ostringstream stream;
+                stream << "using gtk version " << Version::gtkVersion();
+                gtk_label_set_selectable( GTK_LABEL( label ), true );
+                label = gtk_label_new( stream.str().c_str() );
                 gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
                 gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
                 gtk_widget_show( label );
@@ -85,6 +98,7 @@ namespace Oxygen
             {
                 std::ostringstream stream;
                 stream << "using oxygen-gtk version " << libVersion;
+                gtk_label_set_selectable( GTK_LABEL( label ), true );
                 label = gtk_label_new( stream.str().c_str() );
                 gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
                 gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
@@ -97,6 +111,7 @@ namespace Oxygen
 
             // description
             label = gtk_label_new( "Gtk+ widgets preview for Oxygen" );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
@@ -106,6 +121,7 @@ namespace Oxygen
             gtk_widget_show( label );
 
             label = gtk_label_new( "(C) 2010 Hugo Pereira Da Costa, Ruslan Kabatsayev, Cédric Bellegarde" );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
@@ -116,12 +132,14 @@ namespace Oxygen
 
             label = gtk_label_new( 0L );
             gtk_label_set_markup( GTK_LABEL( label ), "<a href=\"https://projects.kde.org/projects/playground/artwork/oxygen-gtk\">https://projects.kde.org/projects/playground/artwork/oxygen-gtk</a>" );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
 
             label = gtk_label_new( 0L );
             gtk_label_set_markup( GTK_LABEL( label ), "<a href=\"http://kde-look.org/content/show.php/?content=136216\">http://kde-look.org/content/show.php/?content=136216</a>" );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );
             gtk_widget_show( label );
@@ -131,6 +149,7 @@ namespace Oxygen
             gtk_widget_show( label );
 
             label = gtk_label_new( 0L );
+            gtk_label_set_selectable( GTK_LABEL( label ), true );
             gtk_label_set_markup( GTK_LABEL( label ), "License: <a href=\"http://www.gnu.org/licenses/lgpl-2.1.html\">GNU Lesser General Public License Version 2</a>" );
             gtk_misc_set_alignment( GTK_MISC( label ), 0, 0.5 );
             gtk_box_pack_start( GTK_BOX( box ), label, true, true, 0 );

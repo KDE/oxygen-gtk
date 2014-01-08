@@ -66,7 +66,7 @@ namespace Oxygen
         if( !libraryVersion.empty() )
         { std::cout << "oxygen-gtk: " << libraryVersion << std::endl; }
 
-        std::cout << "oxygen-gtk-demo: " << OXYGEN_VERSION << std::endl;
+        std::cout << "oxygen-gtk3-demo: " << OXYGEN_VERSION << std::endl;
 
     }
 }
