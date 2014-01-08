@@ -182,7 +182,7 @@ GtkEntry { padding: 4px 7px; }
 /* menu */
 GtkMenu
 {
-    padding: 5px 5px;
+    padding: 5px;
     border-width: 0px;
 }
 

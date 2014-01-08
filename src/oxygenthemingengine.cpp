@@ -608,7 +608,8 @@ namespace Oxygen
 
                     Style::instance().animations().widgetSizeEngine().setAlpha(parent, true);
                 }
-#if !ENABLE_INNER_SHADOWS_HACK
+
+                #if !ENABLE_INNER_SHADOWS_HACK
                 // also sets inner list mask
                 if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
                 {
@@ -625,7 +626,8 @@ namespace Oxygen
                     gdk_window_shape_combine_region( gtk_widget_get_window( child ), mask, offset, offset );
 
                 }
-#endif
+                #endif
+
             }
 
             // menu background and float frame
@@ -1111,8 +1113,11 @@ namespace Oxygen
 
             Style::instance().drawFloatFrame( context, x, y, w, h, options );
 
-            // TODO: this check is probably not necessary
-            if( GTK_IS_MENU( widget ) )
+
+            // in gtk3 > 3.9, render_frame is called twice, inside and outside menu padding (menu_margin)
+            // animation should be called only for outside menu margin, when x and y are negative
+            // check x, y and widget
+            if( GTK_IS_MENU( widget ) && x == -Menu_Margin && y == -Menu_Margin )
             {
 
                 // check animation state
