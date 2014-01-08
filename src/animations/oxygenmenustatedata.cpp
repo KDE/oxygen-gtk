@@ -20,6 +20,7 @@
 
 #include "oxygenmenustatedata.h"
 #include "../oxygengtkutils.h"
+#include "../oxygenmetrics.h"
 #include "../config.h"
 
 #include <cassert>
@@ -302,17 +303,15 @@ namespace Oxygen
     {
 
         MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
-
         if( data._target )
         {
             GdkRectangle rect( data.dirtyRect() );
 
-            // padding must match gtk.css file
-            const int padding( 5 );
-            rect.x -= padding;
-            rect.y -= padding;
-            rect.width += 2*padding;
-            rect.height += 2*padding;
+            // enlarge rect by margin
+            rect.x -= Menu_Margin;
+            rect.y -= Menu_Margin;
+            rect.width += 2*Menu_Margin;
+            rect.height += 2*Menu_Margin;
 
             Gtk::gtk_widget_queue_draw( data._target, &rect );
         }
@@ -326,19 +325,24 @@ namespace Oxygen
     {
 
         MenuStateData& data( *static_cast<MenuStateData*>( pointer ) );
-
         if( data._target && data.followMouse() )
         {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::MenuStateData::followMouseUpdate -"
+                << " " << data._target << " (" << G_OBJECT_TYPE_NAME( data._target ) << ")"
+                << std::endl;
+            #endif
 
             data.updateAnimatedRect();
             GdkRectangle rect( data.dirtyRect() );
 
             // padding must match gtk.css file
-            const int padding( 5 );
-            rect.x -= padding;
-            rect.y -= padding;
-            rect.width += 2*padding;
-            rect.height += 2*padding;
+            rect.x -= Menu_Margin;
+            rect.y -= Menu_Margin;
+            rect.width += 2*Menu_Margin;
+            rect.height += 2*Menu_Margin;
 
             Gtk::gtk_widget_queue_draw( data._target, &rect );
 
