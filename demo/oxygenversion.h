@@ -31,6 +31,9 @@ namespace Oxygen
     {
         public:
 
+        //! gtk version
+        static std::string gtkVersion( void );
+
         //! lib version
         static std::string libVersion( void );
 
