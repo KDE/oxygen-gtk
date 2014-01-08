@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <dlfcn.h>
 #include <string>
-#include "oxygen_version.h"
+#include "oxygenversion.h"
 
 enum WinDecoOptions
 {
@@ -232,7 +232,7 @@ gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
             int buttonSize=getWindecoButtonSize(type);
             int buttonSpacing=getWindecoMetric(ButtonSpacing);
             int dbut=buttonSize+buttonSpacing;
-            drawWindecoButton(cr, type, status, opt, 
+            drawWindecoButton(cr, type, status, opt,
                     mw0->allocation.width-shadowRight-borderRight-buttonSize-buttonSize*type,
                     status*dbut+shadowTop+(borderTop-buttonSize)/2,
                     buttonSize, buttonSize);
@@ -310,7 +310,7 @@ gboolean on_press0(GtkWindow* window, GdkEventButton* event, GdkWindowEdge edge)
 }
 
 //___________________________________________________________________
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
 
     // load methods from style library
@@ -319,7 +319,25 @@ int main(int argc, char** argv)
     // initialize gtk
     gtk_init(&argc, &argv);
 
-    processCommandLine(argc,argv);
+    // command line arguments
+    gboolean version( FALSE );
+    GOptionEntry entries[] =
+    {
+        { "version", 'v', 0, G_OPTION_ARG_NONE, &version, "Show the application's version", 0L },
+        { 0L }
+    };
+
+    GError *error = 0L;
+    GOptionContext* context( g_option_context_new( "- Gtk+ widgets preview for oxygen" ) );
+    g_option_context_add_main_entries(context, entries, 0L );
+    g_option_context_add_group (context, gtk_get_option_group( TRUE ) );
+    g_option_context_parse( context, &argc, &argv, &error );
+
+    if( version )
+    {
+        Oxygen::Version::print();
+        return 0;
+    }
 
     // draw
     mw0=gtk_window_new(GTK_WINDOW_TOPLEVEL);

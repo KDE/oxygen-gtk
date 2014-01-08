@@ -48,24 +48,12 @@ namespace Oxygen
     }
 
     //____________________________________________
-    bool Version::processCommandLine( int argc, char** argv )
+    void Version::print( void )
     {
+        std::cout << "oxygen-gtk-demo version " << OXYGEN_VERSION << std::endl;
 
-        // this is not robust at all
-        if(argc>1)
-        {
-            if(std::string(argv[1])=="--version")
-            {
-                std::cout << "oxygen-gtk-demo version:    " << OXYGEN_VERSION << std::endl;
-
-                const std::string libraryVersion( libVersion() );
-                if( !libraryVersion.empty() )
-                { std::cout << "oxygen-gtk library version: " << libraryVersion << std::endl; }
-
-                return true;
-            }
-        }
-
-        return false;
+        const std::string libraryVersion( libVersion() );
+        if( !libraryVersion.empty() )
+        { std::cout << "using oxygen-gtk version " << libraryVersion << std::endl; }
     }
 }
