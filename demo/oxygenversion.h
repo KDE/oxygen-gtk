@@ -34,8 +34,8 @@ namespace Oxygen
         //! lib version
         static std::string libVersion( void );
 
-        //! process  command line
-        static bool processCommandLine(int, char**);
+        //! print options
+        static void print( void );
 
     };
 

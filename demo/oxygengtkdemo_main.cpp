@@ -25,15 +25,31 @@
 #include "oxygendemodialog.h"
 
 //___________________________________________________________________
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
 
     // initialize gtk
     gtk_init(&argc, &argv);
 
-    // parse command line
-    if( Oxygen::Version::processCommandLine(argc,argv) )
-    { return 0; }
+    // command line arguments
+    gboolean version( FALSE );
+    GOptionEntry entries[] =
+    {
+        { "version", 'v', 0, G_OPTION_ARG_NONE, &version, "Show the application's version", 0L },
+        { 0L }
+    };
+
+    GError *error = 0L;
+    GOptionContext* context( g_option_context_new( "- Gtk+ widgets preview for oxygen" ) );
+    g_option_context_add_main_entries(context, entries, 0L );
+    g_option_context_add_group (context, gtk_get_option_group( TRUE ) );
+    g_option_context_parse( context, &argc, &argv, &error );
+
+    if( version )
+    {
+        Oxygen::Version::print();
+        return 0;
+    }
 
     // dialog
     Oxygen::DemoDialog demoDialog;
