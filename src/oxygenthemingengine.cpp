@@ -496,8 +496,7 @@ namespace Oxygen
 
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER ) )
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
          {
 
             // render background
@@ -508,12 +507,14 @@ namespace Oxygen
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
             { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
 
-            if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_CALENDAR ) )
-            { Style::instance().renderHole( context, x-1, y-1, w+2, h+8, NoFill, TileSet::Left|TileSet::Right|TileSet::Top ); }
-
-
             render_animated_button( context, widget );
             return;
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADER ) && Gtk::gtk_widget_path_has_type( path, GTK_TYPE_CALENDAR ) ) {
+
+            Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h );
+            Style::instance().renderHeaderLines( context, x, y, w, h );
+            Style::instance().renderHole( context, x-1, y-1, w+2, h+8, NoFill, TileSet::Left|TileSet::Right|TileSet::Top );
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_SCROLLBAR ) ) {
 
