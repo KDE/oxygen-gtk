@@ -211,6 +211,7 @@ void getMetrics()
 gboolean on_expose(GtkWidget* mw0, GdkEventExpose* event, gpointer user_data)
 {
     cairo_t* cr=gdk_cairo_create( gtk_widget_get_window( mw0 ) );
+    cairo_set_antialias( cr, CAIRO_ANTIALIAS_SUBPIXEL );
 
     // define options
     int opt( WinIsResizable|DrawAlphaChannel );
