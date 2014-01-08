@@ -40,6 +40,7 @@
 #include <vector>
 #include <sys/stat.h>
 
+
 //_________________________________________________
 void theme_init( GTypeModule* module )
 {
@@ -49,6 +50,7 @@ void theme_init( GTypeModule* module )
     #endif
 
     Oxygen::ThemingEngine::registerType( module );
+    Oxygen::ThemingEngine::registerVersionType();
 
 }
 

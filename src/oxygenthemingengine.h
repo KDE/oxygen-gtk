@@ -40,6 +40,13 @@ namespace Oxygen
         //! type registration
         static void registerType( GTypeModule* );
 
+        //! version type registration
+        /*!
+        it is used to let an external program retrieve
+        the oxygen-gtk version that it uses, if any
+        */
+        static void registerVersionType( void );
+
         //! registered type
         static GType type( void );
 
