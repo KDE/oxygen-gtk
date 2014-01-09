@@ -843,6 +843,11 @@ namespace Oxygen
             _css.addToCurrentSection( color.str() );
         }
 
+        /* calendar */
+        _css.addSection( "GtkCalendar.highlight" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Inactive, Palette::Selected ) ) );
+
+
         /*
         this is stupid. Setting the color to all widgets, like above, erases the .info, warning, etc. colors.
         Need to reset them here. This is copied from gtkcssprovider.c
