@@ -169,19 +169,23 @@ namespace Oxygen
         // try read file
         std::ifstream in( filename.str().c_str() );
         if( !in ) return std::string();
+        std::string line;
+        std::getline( in, line, '\0' );
+        const size_t pos( line.rfind( '/' ) );
+        return ( pos == std::string::npos ) ? line:line.substr( pos+1 );
 
-        /*
-        somehow std::getline gets some extra crap (non char) from the procfile
-        one has to use ifstream::getline, and pass it a fixed size line
-        */
-        char lineC[1024];
-        in.getline( lineC, 1024, '\n' );
-        std::string line( lineC );
-
-        // get position of last "/" character, and truncate accordingly
-        const size_t pos = line.rfind( '/' );
-        if( pos == std::string::npos ) return line;
-        else return line.substr( pos+1 );
+//         /*
+//         somehow std::getline gets some extra crap (non char) from the procfile
+//         one has to use ifstream::getline, and pass it a fixed size line
+//         */
+//         char lineC[1024];
+//         in.getline( lineC, 1024, '\n' );
+//         std::string line( lineC );
+//
+//         // get position of last "/" character, and truncate accordingly
+//         const size_t pos = line.rfind( '/' );
+//         if( pos == std::string::npos ) return line;
+//         else return line.substr( pos+1 );
 
     }
 
