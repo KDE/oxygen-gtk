@@ -22,6 +22,7 @@
 #include "oxygenthemingengine.h"
 
 #include "oxygencairoutils.h"
+#include "oxygendefines.h"
 #include "oxygengtkdefines.h"
 #include "oxygengtktypenames.h"
 #include "oxygengtkutils.h"
@@ -2745,6 +2746,26 @@ namespace Oxygen
         _typeInfo = info;
         _type = g_type_module_register_type( module, GTK_TYPE_THEMING_ENGINE, "OxygenThemingEngine", &_typeInfo, GTypeFlags(0 ) );
         return;
+
+    }
+
+    //_______________________________________________________________________________________________________________
+    void ThemingEngine::registerVersionType( void )
+    {
+
+        // register version type
+        GType type( g_type_register_static_simple(
+            G_TYPE_OBJECT,
+            OXYGEN_VERSION_TYPE_NAME,
+            (guint16)sizeof( GObjectClass ),
+            (GClassInitFunc) NULL,
+            (guint16)sizeof( GObject ),
+            (GInstanceInitFunc) NULL,
+            G_TYPE_FLAG_ABSTRACT ) );
+
+        // quark
+        GQuark quark( g_quark_from_string( OXYGEN_VERSION_QUARK_NAME ) );
+        g_type_set_qdata( type, quark, (gpointer) OXYGEN_VERSION );
 
     }
 

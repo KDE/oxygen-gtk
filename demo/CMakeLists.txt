@@ -7,12 +7,14 @@ set( oxygen_gtk_demo_SOURCES
     oxygendemodialog.cpp
     oxygendemowidget.cpp
     oxygenframedemowidget.cpp
+    oxygeninfowidget.cpp
     oxygeninputdemowidget.cpp
     oxygenlistdemowidget.cpp
     oxygensignal.cpp
     oxygensliderdemowidget.cpp
     oxygentimer.cpp
     oxygentabdemowidget.cpp
+    oxygenversion.cpp
     oxygengtkdemo_main.cpp
  )
 
@@ -26,7 +28,7 @@ target_link_libraries( oxygen-gtk3-demo ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X1
 install( TARGETS oxygen-gtk3-demo DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 
 # ########### next target ###############
-# set( deco_test_SOURCES oxygengtkdeco_main.cpp )
+# set( deco_test_SOURCES oxygenversion.cpp oxygengtkdeco_main.cpp )
 # add_executable( oxygen-gtk-deco ${deco_test_SOURCES} )
 # target_link_libraries( oxygen-gtk-deco ${GTK_LIBRARIES} ${CAIRO_LIBRARIES} ${X11_X11_LIB} ${CMAKE_DL_LIBS} )
 # install( TARGETS oxygen-gtk-deco DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
