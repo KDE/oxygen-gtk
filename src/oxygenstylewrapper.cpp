@@ -27,12 +27,11 @@
 
 #include "oxygenstylewrapper.h"
 
-#include "config.h"
-
 #include "oxygen.h"
 #include "oxygenanimations.h"
 #include "oxygenargbhelper.h"
 #include "oxygencairoutils.h"
+#include "oxygendefines.h"
 #include "oxygengtkcellinfo.h"
 #include "oxygengtkdetails.h"
 #include "oxygengtktypenames.h"
@@ -42,6 +41,7 @@
 #include "oxygenwidgetexplorer.h"
 #include "oxygenwindowmanager.h"
 #include "oxygencolorutils.h"
+#include "config.h"
 
 #include <iostream>
 namespace Oxygen
@@ -3782,6 +3782,26 @@ namespace Oxygen
         #if OXYGEN_DEBUG
         std::cerr << "Oxygen::StyleWrapper::registerType - done" << std::endl;
         #endif
+
+    }
+
+    //_______________________________________________________________________________________________________________
+    void StyleWrapper::registerVersionType( void )
+    {
+
+        // register version type
+        GType type( g_type_register_static_simple(
+            G_TYPE_OBJECT,
+            OXYGEN_VERSION_TYPE_NAME,
+            (guint16)sizeof( GObjectClass ),
+            (GClassInitFunc) NULL,
+            (guint16)sizeof( GObject ),
+            (GInstanceInitFunc) NULL,
+            G_TYPE_FLAG_ABSTRACT ) );
+
+        // quark
+        GQuark quark( g_quark_from_string( OXYGEN_VERSION_QUARK_NAME ) );
+        g_type_set_qdata( type, quark, (gpointer) OXYGEN_VERSION );
 
     }
 

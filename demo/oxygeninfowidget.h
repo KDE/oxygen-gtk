@@ -1,7 +1,9 @@
+#ifndef oxygeninfowidget_h
+#define oxygeninfowidget_h
+
 /*
 * this file is part of the oxygen gtk engine
-* Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
-* Copyright (c) 2010 Ruslan Kabatsayev <b7.10110111@gmail.com>
+* Copyright (c) 2014 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
 * based on the Null Theme Engine for Gtk+.
 * Copyright (c) 2008 Robert Staudinger <robert.staudinger@gmail.com>
@@ -22,18 +24,36 @@
 * MA 02110-1301, USA.
 */
 
-#include <iostream>
-#include <cstdlib>
-#include "config.h"
+#include "oxygendemowidget.h"
+#include "oxygensignal.h"
 
-inline void processCommandLine(int argc, char** argv)
+#include <gtk/gtk.h>
+#include <string>
+
+namespace Oxygen
 {
-    if(argc>1)
+
+    class InfoWidget: public DemoWidget
     {
-        if(std::string(argv[1])=="--version")
-        {
-            std::cout << OXYGEN_VERSION << std::endl;
-            exit(0);
-        }
-    }
+
+        public:
+
+        //! constructor
+        InfoWidget( void );
+
+        //! destructor
+        virtual ~InfoWidget( void );
+
+        protected:
+
+        // bold label
+        GtkWidget* boldLabel( void ) const;
+
+        //! add author
+        void addAuthor( GtkWidget*, int, const std::string&, const std::string& ) const;
+
+    };
+
 }
+
+#endif

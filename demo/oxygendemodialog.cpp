@@ -23,6 +23,7 @@
 
 #include "oxygendemodialog.h"
 #include "oxygeninputdemowidget.h"
+#include "oxygeninfowidget.h"
 #include "oxygenbuttondemowidget.h"
 #include "oxygenframedemowidget.h"
 #include "oxygenlistdemowidget.h"
@@ -169,6 +170,7 @@ namespace Oxygen
         addPage( new ListDemoWidget() );
         addPage( new FrameDemoWidget() );
         addPage( _sliderDemoWidget = new SliderDemoWidget() );
+        addPage( new InfoWidget() );
 
         // select first raw
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
