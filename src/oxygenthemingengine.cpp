@@ -2089,6 +2089,7 @@ namespace Oxygen
 
                 if( state & GTK_STATE_FLAG_PRELIGHT ) options |= Hover;
 
+                y += 1;
             } else if( !Gtk::gtk_widget_path_has_type( path, GTK_TYPE_TREE_VIEW ) ) {
 
                 /* note: can't use gtk_theming_engine_has_class above, cause tree view is not passed */
