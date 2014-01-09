@@ -47,6 +47,13 @@ int main( int argc, char** argv )
 
     if( version )
     {
+        /*
+        HACK: need to create (and destroy immediatly) a dummy window
+        in order to make sure that the widget style is initialized properly
+        */
+        GtkWidget* window = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+        gtk_widget_destroy( window );
+
         Oxygen::Version::print();
         return 0;
     }
