@@ -99,7 +99,7 @@ namespace Oxygen
 
             for( unsigned int index = 0; !XulAppNames[index].empty(); ++index )
             {
-                if( gtkAppName.find( XulAppNames[index] ) == 0 )
+                if( gtkAppName.find( XulAppNames[index] ) == 0 || pidAppName.find( XulAppNames[index] ) == 0 )
                 {
                     _name = XUL;
                     break;
