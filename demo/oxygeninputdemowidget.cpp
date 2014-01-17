@@ -197,7 +197,13 @@ namespace Oxygen
 
     //____________________________________________________
     InputDemoWidget::~InputDemoWidget( void )
-    {}
+    {
+
+        // disconnect signals
+        _flatModeChangedId.disconnect();
+        _wrapModeChangedId.disconnect();
+
+    }
 
     //____________________________________________________
     void InputDemoWidget::flatModeChanged( GtkToggleButton* button, gpointer data )

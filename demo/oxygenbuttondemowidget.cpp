@@ -394,7 +394,11 @@ namespace Oxygen
 
     //____________________________________________________
     ButtonDemoWidget::~ButtonDemoWidget( void )
-    {}
+    {
+        // disconnect signals
+        _toolBarStyleChangedId.disconnect();
+        _iconSizeChangedId.disconnect();
+    }
 
     //____________________________________________________
     void ButtonDemoWidget::toolBarStyleChanged( GtkComboBox* comboBox, gpointer data )
