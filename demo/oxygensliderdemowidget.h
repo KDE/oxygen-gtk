@@ -75,13 +75,6 @@ namespace Oxygen
                 _progressEntry( 0 )
             {}
 
-            //! connection
-            void connect( GCallback function, gpointer data )
-            {
-                _scaleValueChangedId.connect( G_OBJECT( _scale ), "value-changed", function, data );
-                _scrollValueChangedId.connect( G_OBJECT( _scrollBar ), "value-changed", function, data );
-            }
-
             //! change value
             void setValue( const double& value ) const;
 
@@ -89,10 +82,6 @@ namespace Oxygen
             GtkWidget* _progressBar;
             GtkWidget* _scrollBar;
             GtkWidget* _progressEntry;
-
-            //! ids
-            Signal _scaleValueChangedId;
-            Signal _scrollValueChangedId;
         };
 
         //! horizontal sliders

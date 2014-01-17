@@ -113,7 +113,7 @@ namespace Oxygen
             if( cells ) g_list_free( cells );
 
             // connect signals
-            _selectionChangedId.connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
+            connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
 
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), iconView );
             gtk_widget_show( iconView );
@@ -138,7 +138,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( statusBar ), _stateButton, false, false, 0 );
             gtk_widget_show( _stateButton );
 
-            _toggleEnableStateId.connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
+            connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
 
             // widget direction checkbox
             GtkWidget* button( gtk_check_button_new_with_label( "Right to left layout" ) );
@@ -146,7 +146,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( statusBar ), button, false, false, 0 );
             gtk_widget_show( button );
 
-            _toggleWidgetDirectionId.connect( G_OBJECT(button), "toggled", G_CALLBACK( toggleWidgetDirection ), 0L );
+            connect( G_OBJECT(button), "toggled", G_CALLBACK( toggleWidgetDirection ), 0L );
 
             // button box
             GtkWidget* buttonBox( gtk_button_box_new( GTK_ORIENTATION_HORIZONTAL) );
@@ -161,7 +161,7 @@ namespace Oxygen
             gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
 
-            g_signal_connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
+            connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
 
         }
 
@@ -179,7 +179,7 @@ namespace Oxygen
         gtk_tree_path_free( path );
 
         // keypress signals
-        _keyPressId.connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
+        connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
 
     }
 

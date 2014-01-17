@@ -133,8 +133,12 @@ namespace Oxygen
 
         }
 
-        _horizontalSliders.connect( GCallback( valueChanged ), this );
-        _verticalSliders.connect( GCallback( valueChanged ), this );
+        // connections
+        connect( G_OBJECT( _horizontalSliders._scale ), "value-changed", GCallback( valueChanged ), this );
+        connect( G_OBJECT( _horizontalSliders._scrollBar ), "value-changed", GCallback( valueChanged ), this );
+
+        connect( G_OBJECT( _verticalSliders._scale ), "value-changed", GCallback( valueChanged ), this );
+        connect( G_OBJECT( _verticalSliders._scrollBar ), "value-changed", GCallback( valueChanged ), this );
 
         // Initialize all
         gtk_range_set_value( GTK_RANGE( _verticalSliders._scale ), 25 );

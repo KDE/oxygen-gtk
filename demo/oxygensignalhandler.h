@@ -1,17 +1,14 @@
-#ifndef oxygenbuttondemowidget_h
-#define oxygenbuttondemowidget_h
+#ifndef oxygensignalhandler_h
+#define oxygensignalhandler_h
 
 /*
 * this file is part of the oxygen gtk engine
 * Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
-* based on the Null Theme Engine for Gtk+.
-* Copyright (c) 2008 Robert Staudinger <robert.staudinger@gmail.com>
-*
 * This  library is free  software; you can  redistribute it and/or
 * modify it  under  the terms  of the  GNU Lesser  General  Public
 * License  as published  by the Free  Software  Foundation; either
-* version 2 of the License, or( at your option ) any later version.
+* version 2 of the License, or(at your option ) any later version.
 *
 * This library is distributed  in the hope that it will be useful,
 * but  WITHOUT ANY WARRANTY; without even  the implied warranty of
@@ -24,37 +21,42 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygendemowidget.h"
 #include "oxygensignal.h"
 
 #include <gtk/gtk.h>
+#include <set>
+#include <vector>
 
 namespace Oxygen
 {
 
-    class ButtonDemoWidget: public DemoWidget
+    class SignalHandler
     {
 
         public:
 
         //! constructor
-        ButtonDemoWidget( void );
+        SignalHandler( void )
+        {}
 
         //! destructor
-        virtual ~ButtonDemoWidget( void );
+        virtual ~SignalHandler( void );
+
+        //! connect
+        void connect( GObject*, const std::string&, GCallback, gpointer );
 
         protected:
 
-        //! toolbar styla changed
-        static void toolBarStyleChanged( GtkComboBox*, gpointer );
-
-        //! icon size changed
-        static void iconSizeChanged( GtkComboBox*, gpointer );
+        //! destruction callback
+        static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
         private:
 
-        //! toolbar
-        GtkWidget* _toolbar;
+        //! registered widgets
+        std::set<GObject*> _objects;
+
+        //! registered signals
+        std::vector<Signal> _signals;
 
     };
 
