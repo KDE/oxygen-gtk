@@ -78,7 +78,8 @@ namespace Oxygen
         GtkListStore* _model;
 
         //! map page index and page widget
-        std::map<int, DemoWidget*> _pages;
+        typedef std::map<int, DemoWidget*> PageMap;
+        PageMap _pages;
         SliderDemoWidget* _sliderDemoWidget;
 
         //! enable state button
