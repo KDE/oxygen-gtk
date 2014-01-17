@@ -82,6 +82,13 @@ namespace Oxygen
                 _scrollValueChangedId.connect( G_OBJECT( _scrollBar ), "value-changed", function, data );
             }
 
+            //! disconnect
+            void disconnect( void )
+            {
+                _scaleValueChangedId.disconnect();
+                _scrollValueChangedId.disconnect();
+            }
+
             //! change value
             void setValue( const double& value ) const;
 
