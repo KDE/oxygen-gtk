@@ -228,6 +228,11 @@ namespace Oxygen
         GtkTreePath* path( static_cast<GtkTreePath*>( g_list_first( selection )->data ) );
         const int page( gtk_tree_path_get_indices( path )[0] );
         gtk_notebook_set_current_page( GTK_NOTEBOOK( dialog._notebook ), page );
+
+        // explicitly free path contained in list to avoir mem leak, before calling g_list_free
+        for( GList *child = g_list_first( selection ); child; child = g_list_next( child ) )
+        { gtk_tree_path_free( static_cast<GtkTreePath*>( child->data ) ); }
+
         g_list_free( selection );
 
         // store enable state
