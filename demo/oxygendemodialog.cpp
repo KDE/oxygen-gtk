@@ -181,7 +181,11 @@ namespace Oxygen
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {}
+    {
+        // delete pages
+        for( PageMap::iterator iter = _pages.begin(); iter != _pages.end(); ++iter )
+        { delete iter->second; }
+    }
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
