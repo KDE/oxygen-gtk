@@ -62,9 +62,11 @@ namespace Oxygen
         std::cerr << "Oxygen::ShadowHelper::~ShadowHelper" << std::endl;
         #endif
 
+        for( WidgetMap::iterator iter = _widgets.begin(); iter != _widgets.end(); ++iter )
+        { iter->second._destroyId.disconnect(); }
+
         reset();
         _realizeHook.disconnect();
-
     }
 
     //______________________________________________
