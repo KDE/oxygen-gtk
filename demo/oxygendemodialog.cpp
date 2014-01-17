@@ -173,6 +173,7 @@ namespace Oxygen
         // select first raw
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
         gtk_icon_view_select_path( GTK_ICON_VIEW( iconView ), path );
+        gtk_tree_path_free( path );
 
         // keypress signals
         _keyPressId.connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
