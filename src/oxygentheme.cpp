@@ -42,6 +42,13 @@
 #include <sys/stat.h>
 
 //_________________________________________________
+int theme_exit_callback( gpointer )
+{
+    theme_exit();
+    return false;
+}
+
+//_________________________________________________
 void theme_init( GTypeModule* module )
 {
 
@@ -54,6 +61,9 @@ void theme_init( GTypeModule* module )
 
     // style initialization
     Oxygen::Style::instance().initialize();
+
+    // add quit function to make sure theme is de-allocated properly
+    gtk_quit_add( gtk_main_level(), theme_exit_callback, 0x0 );
 
 }
 
