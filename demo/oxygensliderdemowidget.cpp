@@ -155,7 +155,10 @@ namespace Oxygen
 
     //____________________________________________________
     SliderDemoWidget::~SliderDemoWidget( void )
-    {}
+    {
+        _horizontalSliders.disconnect();
+        _verticalSliders.disconnect();
+    }
 
     //____________________________________________________
     gboolean SliderDemoWidget::pulseProgressBar( gpointer pointer )

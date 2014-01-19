@@ -175,6 +175,7 @@ namespace Oxygen
         // select first raw
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
         gtk_icon_view_select_path( GTK_ICON_VIEW( iconView ), path );
+        gtk_tree_path_free( path );
 
         // keypress signals
         _keyPressId.connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
@@ -183,7 +184,17 @@ namespace Oxygen
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {}
+    {
+        // delete pages
+        for( PageMap::iterator iter = _pages.begin(); iter != _pages.end(); ++iter )
+        { delete iter->second; }
+
+        // disconnect signals
+        _selectionChangedId.disconnect();
+        _toggleEnableStateId.disconnect();
+        _toggleWidgetDirectionId.disconnect();
+        _keyPressId.disconnect();
+    }
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
@@ -225,6 +236,11 @@ namespace Oxygen
         GtkTreePath* path( static_cast<GtkTreePath*>( g_list_first( selection )->data ) );
         const int page( gtk_tree_path_get_indices( path )[0] );
         gtk_notebook_set_current_page( GTK_NOTEBOOK( dialog._notebook ), page );
+
+        // explicitly free path contained in list to avoir mem leak, before calling g_list_free
+        for( GList *child = g_list_first( selection ); child; child = g_list_next( child ) )
+        { gtk_tree_path_free( static_cast<GtkTreePath*>( child->data ) ); }
+
         g_list_free( selection );
 
         // store enable state
