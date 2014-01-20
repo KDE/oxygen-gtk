@@ -88,7 +88,7 @@ namespace Oxygen
             gtk_widget_show( comboBox );
 
             // connection
-            _changedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( orientationChanged ), this );
+            connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( orientationChanged ), this );
 
         }
 
@@ -145,9 +145,7 @@ namespace Oxygen
 
     //____________________________________________________
     TabDemoWidget::~TabDemoWidget( void )
-    {
-        // _changedId.disconnect();
-    }
+    {}
 
     //____________________________________________________
     void TabDemoWidget::addPage( const std::string& title, GtkWidget* widget ) const

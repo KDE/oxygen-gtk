@@ -24,6 +24,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygensignalhandler.h"
+
 #include <gtk/gtk.h>
 #include <cassert>
 #include <string>
@@ -31,7 +33,7 @@
 namespace Oxygen
 {
 
-    class DemoWidget
+    class DemoWidget: public SignalHandler
     {
 
         public:
