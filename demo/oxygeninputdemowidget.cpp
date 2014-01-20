@@ -199,9 +199,9 @@ namespace Oxygen
     InputDemoWidget::~InputDemoWidget( void )
     {
 
-        // disconnect signals
-        _flatModeChangedId.disconnect();
-        _wrapModeChangedId.disconnect();
+//         // disconnect signals
+//         _flatModeChangedId.disconnect();
+//         _wrapModeChangedId.disconnect();
 
     }
 

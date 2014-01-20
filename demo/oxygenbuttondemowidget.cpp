@@ -395,9 +395,9 @@ namespace Oxygen
     //____________________________________________________
     ButtonDemoWidget::~ButtonDemoWidget( void )
     {
-        // disconnect signals
-        _toolBarStyleChangedId.disconnect();
-        _iconSizeChangedId.disconnect();
+//         // disconnect signals
+//         _toolBarStyleChangedId.disconnect();
+//         _iconSizeChangedId.disconnect();
     }
 
     //____________________________________________________

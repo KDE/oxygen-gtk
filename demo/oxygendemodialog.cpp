@@ -189,11 +189,11 @@ namespace Oxygen
         for( PageMap::iterator iter = _pages.begin(); iter != _pages.end(); ++iter )
         { delete iter->second; }
 
-        // disconnect signals
-        _selectionChangedId.disconnect();
-        _toggleEnableStateId.disconnect();
-        _toggleWidgetDirectionId.disconnect();
-        _keyPressId.disconnect();
+//         // disconnect signals
+//         _selectionChangedId.disconnect();
+//         _toggleEnableStateId.disconnect();
+//         _toggleWidgetDirectionId.disconnect();
+//         _keyPressId.disconnect();
     }
 
     //_____________________________________________
