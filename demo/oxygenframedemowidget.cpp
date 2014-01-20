@@ -161,7 +161,9 @@ namespace Oxygen
 
     //____________________________________________________
     FrameDemoWidget::~FrameDemoWidget( void )
-    { _changedId.disconnect(); }
+    {
+        // _changedId.disconnect();
+    }
 
     //____________________________________________________
     void FrameDemoWidget::shadowChanged( GtkToggleButton* button, gpointer pointer )

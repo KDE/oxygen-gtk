@@ -156,8 +156,8 @@ namespace Oxygen
     //____________________________________________________
     SliderDemoWidget::~SliderDemoWidget( void )
     {
-        _horizontalSliders.disconnect();
-        _verticalSliders.disconnect();
+//         _horizontalSliders.disconnect();
+//         _verticalSliders.disconnect();
     }
 
     //____________________________________________________
