@@ -284,7 +284,7 @@ namespace Oxygen
                 gtk_widget_show( comboBox );
 
                 // connection
-                _toolBarStyleChangedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( toolBarStyleChanged ), this );
+                connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( toolBarStyleChanged ), this );
 
             }
 
@@ -328,7 +328,7 @@ namespace Oxygen
                 gtk_widget_show( comboBox );
 
                 // connection
-                _iconSizeChangedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( iconSizeChanged ), this );
+                connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( iconSizeChanged ), this );
 
             }
 
@@ -394,11 +394,7 @@ namespace Oxygen
 
     //____________________________________________________
     ButtonDemoWidget::~ButtonDemoWidget( void )
-    {
-//         // disconnect signals
-//         _toolBarStyleChangedId.disconnect();
-//         _iconSizeChangedId.disconnect();
-    }
+    {}
 
     //____________________________________________________
     void ButtonDemoWidget::toolBarStyleChanged( GtkComboBox* comboBox, gpointer data )

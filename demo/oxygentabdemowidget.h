@@ -56,9 +56,6 @@ namespace Oxygen
         //! tab widget
         GtkWidget *_notebook;
 
-        //! selection change
-        Signal _changedId;
-
     };
 
 }

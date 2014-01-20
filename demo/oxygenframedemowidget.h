@@ -60,9 +60,6 @@ namespace Oxygen
         //! frame
         GtkWidget* _frame;
 
-        //! selection change
-        Signal _changedId;
-
         //! map widget to frame shadow style
         typedef std::map<GtkWidget*, GtkShadowType> WidgetMap;
         WidgetMap _widgets;

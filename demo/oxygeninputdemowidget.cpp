@@ -135,7 +135,7 @@ namespace Oxygen
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), false );
         gtk_widget_show( checkbutton );
 
-        _flatModeChangedId.connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( flatModeChanged ), this );
+        connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( flatModeChanged ), this );
 
 
         // separator
@@ -191,19 +191,13 @@ namespace Oxygen
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( checkbutton ), true );
         gtk_widget_show( checkbutton );
 
-        _wrapModeChangedId.connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( wrapModeChanged ), this );
+        connect( G_OBJECT( checkbutton ), "toggled", G_CALLBACK( wrapModeChanged ), this );
 
     }
 
     //____________________________________________________
     InputDemoWidget::~InputDemoWidget( void )
-    {
-
-//         // disconnect signals
-//         _flatModeChangedId.disconnect();
-//         _wrapModeChangedId.disconnect();
-
-    }
+    {}
 
     //____________________________________________________
     void InputDemoWidget::flatModeChanged( GtkToggleButton* button, gpointer data )
