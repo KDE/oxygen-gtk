@@ -61,12 +61,6 @@ namespace Oxygen
         //! text editor
         GtkWidget* _textView;
 
-        //! flat mode changed
-        Signal _flatModeChangedId;
-
-        //! toggle wrap mode
-        Signal _wrapModeChangedId;
-
     };
 
 }

@@ -48,6 +48,10 @@ namespace Oxygen
         //! disconnect
         void disconnect( void );
 
+        //! check if signal belongs to given object
+        bool belongsTo( GObject* object ) const
+        { return object == _object; }
+
         private:
 
         //! signal id

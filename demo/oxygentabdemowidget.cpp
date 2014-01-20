@@ -88,7 +88,7 @@ namespace Oxygen
             gtk_widget_show( comboBox );
 
             // connection
-            _changedId.connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( orientationChanged ), this );
+            connect( G_OBJECT( comboBox ), "changed", G_CALLBACK( orientationChanged ), this );
 
         }
 

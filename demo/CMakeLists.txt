@@ -11,6 +11,7 @@ set( oxygen_gtk_demo_SOURCES
     oxygeninputdemowidget.cpp
     oxygenlistdemowidget.cpp
     oxygensignal.cpp
+    oxygensignalhandler.cpp
     oxygensliderdemowidget.cpp
     oxygentimer.cpp
     oxygentabdemowidget.cpp

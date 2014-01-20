@@ -332,6 +332,7 @@ int main( int argc, char** argv )
     g_option_context_add_main_entries(context, entries, 0L );
     g_option_context_add_group (context, gtk_get_option_group( TRUE ) );
     g_option_context_parse( context, &argc, &argv, &error );
+    g_option_context_free( context );
 
     if( version )
     {

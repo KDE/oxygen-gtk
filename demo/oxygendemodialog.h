@@ -24,7 +24,7 @@
 * MA 02110-1301, USA.
 */
 
-#include "oxygensignal.h"
+#include "oxygensignalhandler.h"
 #include "oxygensliderdemowidget.h"
 
 #include <gtk/gtk.h>
@@ -37,7 +37,7 @@ namespace Oxygen
     class DemoWidget;
 
     // main demo dialog
-    class DemoDialog
+    class DemoDialog: public SignalHandler
     {
 
         public:
@@ -78,28 +78,12 @@ namespace Oxygen
         GtkListStore* _model;
 
         //! map page index and page widget
-        std::map<int, DemoWidget*> _pages;
+        typedef std::map<int, DemoWidget*> PageMap;
+        PageMap _pages;
         SliderDemoWidget* _sliderDemoWidget;
 
         //! enable state button
         GtkWidget* _stateButton;
-
-        //!@name signals
-        //@{
-
-        //! selection change
-        Signal _selectionChangedId;
-
-        //! enable state toggles
-        Signal _toggleEnableStateId;
-
-        //! toggle widget direction
-        Signal _toggleWidgetDirectionId;
-
-        //! key press
-        Signal _keyPressId;
-
-        //@}
 
     };
 

@@ -113,7 +113,7 @@ namespace Oxygen
             if( cells ) g_list_free( cells );
 
             // connect signals
-            _selectionChangedId.connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
+            connect( G_OBJECT(iconView), "selection-changed", G_CALLBACK( selectionChanged ), this );
 
             gtk_container_add( GTK_CONTAINER( scrolledWindow ), iconView );
             gtk_widget_show( iconView );
@@ -138,7 +138,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( statusBar ), _stateButton, false, false, 0 );
             gtk_widget_show( _stateButton );
 
-            _toggleEnableStateId.connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
+            connect( G_OBJECT(_stateButton), "toggled", G_CALLBACK( toggleEnableState ), this );
 
             // widget direction checkbox
             GtkWidget* button( gtk_check_button_new_with_label( "Right to left layout" ) );
@@ -146,7 +146,7 @@ namespace Oxygen
             gtk_box_pack_start( GTK_BOX( statusBar ), button, false, false, 0 );
             gtk_widget_show( button );
 
-            _toggleWidgetDirectionId.connect( G_OBJECT(button), "toggled", G_CALLBACK( toggleWidgetDirection ), 0L );
+            connect( G_OBJECT(button), "toggled", G_CALLBACK( toggleWidgetDirection ), 0L );
 
             // button box
             GtkWidget* buttonBox( gtk_button_box_new( GTK_ORIENTATION_HORIZONTAL) );
@@ -161,7 +161,7 @@ namespace Oxygen
             gtk_box_pack_end( GTK_BOX( buttonBox ), button, false, true, 0 );
             gtk_widget_show( button );
 
-            g_signal_connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
+            connect( G_OBJECT(button), "clicked", G_CALLBACK( gtk_main_quit ), 0L );
 
         }
 
@@ -176,15 +176,20 @@ namespace Oxygen
         // select first raw
         GtkTreePath *path( gtk_tree_path_new_from_indices(0, -1 ) );
         gtk_icon_view_select_path( GTK_ICON_VIEW( iconView ), path );
+        gtk_tree_path_free( path );
 
         // keypress signals
-        _keyPressId.connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
+        connect( G_OBJECT(_mainWidget), "key-press-event", G_CALLBACK( keyPress ), 0L );
 
     }
 
     //_____________________________________________
     DemoDialog::~DemoDialog( void )
-    {}
+    {
+        // delete pages
+        for( PageMap::iterator iter = _pages.begin(); iter != _pages.end(); ++iter )
+        { delete iter->second; }
+    }
 
     //_____________________________________________
     void DemoDialog::addPage( DemoWidget* page )
@@ -226,6 +231,11 @@ namespace Oxygen
         GtkTreePath* path( static_cast<GtkTreePath*>( g_list_first( selection )->data ) );
         const int page( gtk_tree_path_get_indices( path )[0] );
         gtk_notebook_set_current_page( GTK_NOTEBOOK( dialog._notebook ), page );
+
+        // explicitly free path contained in list to avoir mem leak, before calling g_list_free
+        for( GList *child = g_list_first( selection ); child; child = g_list_next( child ) )
+        { gtk_tree_path_free( static_cast<GtkTreePath*>( child->data ) ); }
+
         g_list_free( selection );
 
         // store enable state
