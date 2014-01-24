@@ -67,6 +67,7 @@ namespace Oxygen
 
         // remove from objects
         data._objects.erase( G_OBJECT( widget ) );
+        return FALSE;
 
     }
 
