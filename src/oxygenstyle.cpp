@@ -274,8 +274,20 @@ namespace Oxygen
 
             ColorUtils::Rgba base( color( Palette::Window, options ) );
             const bool needToDestroyContext( !context );
-            if( !context ) context = gdk_cairo_create(window);
-            else cairo_save( context );
+            if( !context )
+            {
+
+                // create context
+                context = gdk_cairo_create(window);
+
+                // set clip rect
+                if( clipRect )
+                {
+                    cairo_rectangle(context,clipRect->x,clipRect->y,clipRect->width,clipRect->height);
+                    cairo_clip(context);
+                }
+
+            } else cairo_save( context );
 
             cairo_set_source(context,base);
             cairo_rectangle(context,x,y,w,h);
