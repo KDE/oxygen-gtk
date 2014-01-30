@@ -3709,7 +3709,8 @@ namespace Oxygen
             Oxygen::Style::instance().animations().setEnabled( false );
             Oxygen::Style::instance().animations().setInnerShadowsEnabled( false );
             Oxygen::Style::instance().animations().comboBoxEngine().setEnabled( true );
-        }
+            Oxygen::Style::instance().animations().backgroundHintEngine().setEnabled( true );
+       }
 
     }
 
