@@ -158,9 +158,26 @@ namespace Oxygen
         //! return true if event is a usable drag event
         bool useEvent( GtkWidget*, GdkEventButton* );
 
-        //! return true if event is a usable drag event
+        //! drag status
+        enum DragStatus
+        {
+            Accepted = 0,
+            BlackListed,
+            WidgetIsPrelight,
+            WidgetIsButton,
+            WidgetIsMenuItem,
+            WidgetIsScrolledWindow,
+            WidgetIsTabLabel,
+            InvalidWindow,
+            InvalidEventMask
+        };
+
+        //! return string matching drag status, for debugging
+        std::string dragStatusString( DragStatus ) const;
+
+        //! return whether event is a usable drag event
         /*! for containers, children are also checked. The method is recursive */
-        bool childrenUseEvent( GtkWidget*, GdkEventButton*, bool ) const;
+        DragStatus childrenUseEvent( GtkWidget*, GdkEventButton*, bool ) const;
 
         //! used to decide whether a widget is black-listed
         class BlackListFTor
@@ -188,8 +205,7 @@ namespace Oxygen
         void initializeBlackList( void );
 
         //! return true if widget is black listed for grabbing
-        bool widgetIsBlackListed( GtkWidget* widget ) const
-        { return std::find_if( _blackList.begin(), _blackList.end(), BlackListFTor( G_OBJECT( widget ) ) ) != _blackList.end(); }
+        bool widgetIsBlackListed( GtkWidget* widget ) const;
 
         //! return true if widget has a black listed parent
         bool widgetHasBlackListedParent( GtkWidget* widget ) const;
@@ -284,7 +300,8 @@ namespace Oxygen
         guint32 _time;
 
         //! widget typenames black-list
-        std::vector<std::string> _blackList;
+        typedef std::vector<std::string> BlackList;
+        BlackList _blackList;
 
         //! widget black-list
         typedef std::map< GtkWidget*, Signal > WidgetMap;

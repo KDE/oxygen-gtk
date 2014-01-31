@@ -113,6 +113,15 @@ namespace Oxygen
         // check against black listed typenames
         if( widgetIsBlackListed( widget ) )
         {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WindowManager::registerWidget -"
+                << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " is black listed"
+                << std::endl;
+            #endif
+
             registerBlackListWidget( widget );
             return false;
         }
@@ -120,6 +129,15 @@ namespace Oxygen
         // check blocking property
         if( g_object_get_data( G_OBJECT( widget ), PropertyNames::noWindowGrab ) )
         {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WindowManager::registerWidget -"
+                << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " requests no grab"
+                << std::endl;
+            #endif
+
             registerBlackListWidget( widget );
             return false;
         }
@@ -127,6 +145,15 @@ namespace Oxygen
         // Window with no decorations (set by app), let window manage it self
         if( GTK_IS_WINDOW( widget ) && !gtk_window_get_decorated( GTK_WINDOW( widget ) ) )
         {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WindowManager::registerWidget -"
+                << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " is not decorated"
+                << std::endl;
+            #endif
+
             registerBlackListWidget( widget );
             return false;
         }
@@ -147,13 +174,30 @@ namespace Oxygen
             ( gtk_widget_get_events ( widget ) &
             ( GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK ) ) )
         {
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WindowManager::registerWidget -"
+                << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " has invalid event mask"
+                << std::endl;
+            #endif
             registerBlackListWidget( widget );
             return false;
         }
 
         // check for blacklisted parent
         if( widgetHasBlackListedParent( widget ) )
-        { return false; }
+        {
+
+            #if OXYGEN_DEBUG
+            std::cerr
+                << "Oxygen::WindowManager::registerWidget -"
+                << " widget: " << widget << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " has black listed parent"
+                << std::endl;
+            #endif
+            return false;
+        }
 
         #if OXYGEN_DEBUG
         std::cerr
@@ -604,107 +648,166 @@ namespace Oxygen
 
         // check against mode
         if( _dragMode == Disabled ) return false;
-        if( _dragMode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
-        if( _lastRejectedEvent && event == _lastRejectedEvent ) return false;
+        else if( _dragMode == Minimal && !( GTK_IS_TOOLBAR( widget ) || GTK_IS_MENU_BAR( widget ) ) ) return false;
+        else if( _lastRejectedEvent && event == _lastRejectedEvent ) return false;
+        else {
 
-        // always accept if widget is not a container
-        if( !GTK_IS_CONTAINER( widget ) ) return true;
+            const DragStatus status( childrenUseEvent( widget, event, false ) );
 
-        // if widget is a notebook, accept if there is no hovered tab
-        bool useEvent( true );
-        if( GTK_IS_NOTEBOOK( widget ) )
-        {
+            #if OXYGEN_DEBUG
+            std::cerr << "Oxygen::WindowManager::useEvent -"
+                << " event: " << event
+                << " widget: " << widget
+                << " (" << G_OBJECT_TYPE_NAME( widget ) << ")"
+                << " " << gtk_widget_get_name( widget )
+                << " status: " << dragStatusString(status)
+                << std::endl;
+            #endif
 
-            useEvent =
-                ( !Gtk::gtk_notebook_has_visible_arrows( GTK_NOTEBOOK( widget ) ) ) &&
-                Style::instance().animations().tabWidgetEngine().contains( widget ) &&
-                Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) == -1 &&
-                childrenUseEvent( widget, event, false );
-
-        } else {
-
-            if( GTK_IS_WINDOW( widget ) )
-            {
-
-                // check hint
-                const GdkWindowTypeHint hint( gtk_window_get_type_hint( GTK_WINDOW( widget ) ) );
-                if( hint == GDK_WINDOW_TYPE_HINT_UTILITY ) return false;
-
-            }
-
-            useEvent = childrenUseEvent( widget, event, false );
+            return status == Accepted;
 
         }
-
-        return useEvent;
 
     }
 
     //_________________________________________________
-    bool WindowManager::childrenUseEvent( GtkWidget* widget, GdkEventButton* event, bool inNoteBook ) const
+    std::string WindowManager::dragStatusString( DragStatus status ) const
     {
-        // accept, by default
-        bool usable = true;
 
-        // get children and check
+        switch( status )
+        {
+            case Accepted: return "accepted";
+            case BlackListed: return "widget is black-listed";
+            case WidgetIsPrelight: return "widget is prelit";
+            case WidgetIsButton: return "widget is a button";
+            case WidgetIsMenuItem: return "widget is a menu item";
+            case WidgetIsScrolledWindow: return "widget is a scrolled window with focus";
+            case WidgetIsTabLabel: return "widget is a notebook's tab label";
+            case InvalidWindow: return "widget's window is hidden";
+            case InvalidEventMask: return "invalid event mask";
+            default: return "unknown";
+        }
+    }
+
+    //_________________________________________________
+    WindowManager::DragStatus WindowManager::childrenUseEvent( GtkWidget* widget, GdkEventButton* event, bool inNoteBook ) const
+    {
+
+        /*
+        always reject if
+        - widget is black listed
+        - widget is prelit
+        - widget is an active button
+        - widget is a menu item
+        - widget event mask is explicitly set to GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK
+        */
+        if( widgetIsBlackListed( widget ) ) return BlackListed;
+        else if( gtk_widget_get_state( widget ) == GTK_STATE_PRELIGHT ) return WidgetIsPrelight;
+        else if( GTK_IS_BUTTON( widget ) ) return WidgetIsButton;
+        else if( GTK_IS_MENU_ITEM( widget ) ) return WidgetIsMenuItem;
+        else if( GTK_IS_SCROLLED_WINDOW( widget ) && ( !inNoteBook || gtk_widget_is_focus( widget ) ) ) return WidgetIsScrolledWindow;
+
+        // check window
+        GdkWindow *window = gtk_widget_get_window( widget );
+        if( !( window && gdk_window_is_visible( window ) ) ) return InvalidWindow;
+
+        // accept if widget is not a container and we got this far,
+        if( !GTK_IS_CONTAINER( widget ) ) return Accepted;
+
+        // check notebook
+        if( GTK_IS_NOTEBOOK( widget ) )
+        {
+
+            /*
+            always reject if
+            - Notebook has visible scroll arrows
+            - there is an hovered tab
+            - notebook is not registered
+            */
+            if( Gtk::gtk_notebook_has_visible_arrows( GTK_NOTEBOOK( widget ) ) ||
+                !Style::instance().animations().tabWidgetEngine().contains( widget ) ||
+                Style::instance().animations().tabWidgetEngine().hoveredTab( widget ) != -1 )
+            { return WidgetIsPrelight; }
+
+            // keep track on whether we are in a notebook
+            inNoteBook = true;
+        }
+
+        // loop over children and check
+        DragStatus status = Accepted;
         GList *children = gtk_container_get_children( GTK_CONTAINER( widget ) );
-        for( GList *child = g_list_first( children ); child && usable ; child = g_list_next( child ) )
+        for( GList *child = g_list_first( children ); child; child = g_list_next( child ) )
         {
 
             // cast child to GtkWidget
             if( !GTK_IS_WIDGET( child->data ) ) continue;
             GtkWidget* childWidget( GTK_WIDGET( child->data ) );
 
-            // check widget state and type
-            if( gtk_widget_get_state( childWidget ) == GTK_STATE_PRELIGHT )
+            // check that widget contains event
+            if( withinWidget( childWidget, event ) )
             {
 
-                // if widget is prelight, we don't need to check where event happen,
-                // any prelight widget indicate we can't do a move
-                usable = false;
-                continue;
+                /*
+                following checks must not be moved upstream, as they are not to be applied
+                to the first parent widget (the one that recieved the mouse press event
+                */
+
+                // always reject if child explicitly accepts button press and button release events
+                if( gtk_widget_get_events( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) )
+                {
+
+                    status = InvalidEventMask;
+
+                } else if( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) {
+
+                    // always disable on tabbar label
+                    status = WidgetIsTabLabel;
+
+                } else {
+
+                    // recursive check
+                    status = childrenUseEvent( childWidget, event, inNoteBook );
+
+                }
+
+
+                #if OXYGEN_DEBUG
+                std::cerr << "Oxygen::WindowManager::childrenUseEvent -"
+                    << " event: " << event
+                    << " widget: " << childWidget
+                    << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
+                    << " " << gtk_widget_get_name( childWidget )
+                    << " status: " << dragStatusString(status)
+                    << std::endl;
+                #endif
+
+                break;
 
             }
-
-            GdkWindow *window = gtk_widget_get_window( childWidget );
-            if( !( window && gdk_window_is_visible( window ) ) )
-            { continue; }
-
-            if( GTK_IS_NOTEBOOK( childWidget ) ) inNoteBook = true;
-
-            if( !( event && withinWidget( childWidget, event ) ) )
-            { continue; }
-
-            // check special cases for which grab should not be enabled
-            if( usable && (
-                widgetIsBlackListed( childWidget ) ||
-                ( GTK_IS_NOTEBOOK( widget ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( widget ), childWidget ) ) ||
-                ( GTK_IS_BUTTON( childWidget ) && gtk_widget_get_state( childWidget ) != GTK_STATE_INSENSITIVE ) ||
-                ( gtk_widget_get_events ( childWidget ) & (GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK) ) ||
-                ( GTK_IS_MENU_ITEM( childWidget ) ) ||
-                ( GTK_IS_SCROLLED_WINDOW( childWidget ) && ( !inNoteBook || gtk_widget_is_focus( childWidget ) ) ) ) )
-            { usable = false; }
-
-            // if child is a container and event has been accepted so far, also check it, recursively
-            if( usable && GTK_IS_CONTAINER( childWidget ) )
-            { usable = childrenUseEvent( childWidget, event, inNoteBook); }
-
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::WindowManager::childrenUseEvent -"
-                << " event: " << event
-                << " widget: " << childWidget
-                << " (" << G_OBJECT_TYPE_NAME( childWidget ) << ")"
-                << " " << gtk_widget_get_name( childWidget )
-                << " usable: " << usable
-                << std::endl;
-            #endif
 
         }
 
         // free list
         if( children ) g_list_free( children );
+        return status;
 
-        return usable;
+    }
+
+    //_________________________________________________
+    bool WindowManager::widgetIsBlackListed( GtkWidget* widget ) const
+    {
+        BlackList::const_iterator iter( std::find_if( _blackList.begin(), _blackList.end(), BlackListFTor( G_OBJECT( widget ) ) ) );
+        #if OXYGEN_DEBUG
+        if( iter == _blackList.end() ) return false;
+        else {
+
+            std::cerr << "Oxygen::WindowManager::widgetIsBlackListed - widget: " << widget << " type: " << *iter << std::endl;
+            return true;
+
+        }
+        #else
+        return iter != _blackList.end();
+        #endif
     }
 
     //_________________________________________________
