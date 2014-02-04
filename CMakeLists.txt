@@ -16,19 +16,17 @@ set( CPACK_PACKAGE_VERSION_MINOR "4" )
 set( CPACK_PACKAGE_VERSION_PATCH "50" )
 set( CPACK_SOURCE_IGNORE_FILES "build" "^${PROJECT_SOURCE_DIR}.*/.git/" )
 
-##################################
-# Define oxygen-gtk version string
-##################################
-if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-    execute_process(COMMAND sh -c "cd ${CMAKE_SOURCE_DIR} && git describe 2>/dev/null"
-        OUTPUT_VARIABLE OXYGEN_VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE)
-endif( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-STRING(COMPARE NOTEQUAL "${OXYGEN_VERSION}" "" OXYGEN_VERSION_DETECTED )
-if( NOT OXYGEN_VERSION_DETECTED )
-    set( OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
-endif( NOT OXYGEN_VERSION_DETECTED )
-message( "Detected oxygen version string: ${OXYGEN_VERSION}" )
+###########################################
+# Define oxygen-gtk version detector target
+###########################################
+set( PACKAGE_OXYGEN_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
+
+# Create a dummy version.cpp to prevent cmake error when it'll search for sources of subprojects
+execute_process(COMMAND sh -c "[ ! -e ${CMAKE_BINARY_DIR}/version.cpp ] && echo '#error \"Oxygen version has not been set\"' > ${CMAKE_BINARY_DIR}/version.cpp")
+
+add_custom_target(version ALL
+        COMMAND "${CMAKE_SOURCE_DIR}/version.sh" "${CMAKE_BINARY_DIR}"
+        )
 
 set( CPACK_SOURCE_PACKAGE_FILE_NAME "oxygen-gtk2-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}" )
 include( CPack )

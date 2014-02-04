@@ -75,6 +75,7 @@ set( oxygen_gtk_SOURCES
     oxygenwindecooptions.cpp
     oxygenwindowmanager.cpp
     oxygenwindowshadow.cpp
+    ${CMAKE_BINARY_DIR}/version.cpp
 )
 
 add_library( oxygen-gtk SHARED ${oxygen_gtk_SOURCES} )
