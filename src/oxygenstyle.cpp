@@ -4113,16 +4113,16 @@ namespace Oxygen
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
         #if GTK_CHECK_VERSION(2,24,0)
-        int w = gdk_window_get_width(window);
-        int h = gdk_window_get_height(window);
-        GdkDisplay* gdkDisplay=gdk_window_get_display(window);
+        int w = gdk_window_get_width( window );
+        int h = gdk_window_get_height( window );
+        GdkDisplay* gdkDisplay = gdk_window_get_display( window );
         #else
         int w,h;
-        gdk_drawable_get_size(window,&w,&h);
-        GdkDisplay* gdkDisplay=gdk_drawable_get_display(window);
+        gdk_drawable_get_size( window, &w, &h );
+        GdkDisplay* gdkDisplay = gdk_drawable_get_display( window );
         #endif
 
-        const guint32 rects[4]={0,0, (guint32)w, (guint32)h};
+        const unsigned long rects[4]={0,0, (unsigned long)w, (unsigned long)h};
         const XID id( GDK_WINDOW_XID( window ) );
         Display* display( GDK_DISPLAY_XDISPLAY( gdkDisplay ) );
 

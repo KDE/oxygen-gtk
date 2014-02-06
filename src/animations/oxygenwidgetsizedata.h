@@ -33,7 +33,7 @@ namespace Oxygen
 
         //! constructor
         WidgetSizeData( void ):
-            _widget(NULL),
+            _target(NULL),
             _width(-1),
             _height(-1),
             _alpha(false)
@@ -45,20 +45,18 @@ namespace Oxygen
 
         //! setup connections
         void connect( GtkWidget* widget )
-        {
-            _widget=widget;
-        }
+        { _target = widget; }
 
         //! disconnect
-        void disconnect( GtkWidget* ) const
-        {}
+        void disconnect( GtkWidget* )
+        { _target = 0L; }
 
         //! update XShape, return true if size has changed
-        bool updateXShape();
+        bool updateMask();
 
         private:
         //! target widget
-        GtkWidget* _widget;
+        GtkWidget* _target;
 
         //! old width
         int _width;
