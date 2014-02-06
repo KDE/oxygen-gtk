@@ -1750,7 +1750,7 @@ namespace Oxygen
 
             // make background window rounded
             Style::instance().animations().widgetSizeEngine().registerWidget(parent);
-            if( Style::instance().animations().widgetSizeEngine().updateXShape(parent))
+            Style::instance().animations().widgetSizeEngine().updateXShape(parent);
 
             // menu background and float frame
             Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
