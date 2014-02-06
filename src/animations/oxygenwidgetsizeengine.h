@@ -52,8 +52,8 @@ namespace Oxygen
         {}
 
         //! update window XShape for given widget
-        bool updateXShape( GtkWidget* widget )
-        { return data().value( widget ).updateXShape(); }
+        bool updateMask( GtkWidget* widget )
+        { return data().value( widget ).updateMask(); }
     };
 
 }

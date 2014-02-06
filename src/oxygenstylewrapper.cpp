@@ -283,7 +283,7 @@ namespace Oxygen
             if( GDK_IS_WINDOW( window ) )
             {
                 Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                Style::instance().animations().widgetSizeEngine().updateXShape(widget);
+                Style::instance().animations().widgetSizeEngine().updateMask(widget);
             }
 
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
@@ -1258,7 +1258,7 @@ namespace Oxygen
                     Style::instance().animations().menuItemEngine().registerMenu( widget );
 
                     Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                    Style::instance().animations().widgetSizeEngine().updateXShape( widget );
+                    Style::instance().animations().widgetSizeEngine().updateMask( widget );
                 }
 
                 // if render
@@ -1696,7 +1696,7 @@ namespace Oxygen
 
             // always register to widget size engine
             Style::instance().animations().widgetSizeEngine().registerWidget( parent );
-            const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateXShape(parent) );
+            const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateMask(parent) );
             if( sizeChanged )
             {
 #if !ENABLE_INNER_SHADOWS_HACK
@@ -1750,7 +1750,7 @@ namespace Oxygen
 
             // make background window rounded
             Style::instance().animations().widgetSizeEngine().registerWidget(parent);
-            Style::instance().animations().widgetSizeEngine().updateXShape(parent);
+            Style::instance().animations().widgetSizeEngine().updateMask(parent);
 
             // menu background and float frame
             Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );

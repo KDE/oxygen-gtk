@@ -25,47 +25,43 @@
 
 namespace Oxygen
 {
-    bool WidgetSizeData::updateXShape()
+
+    //___________________________________________________________________________________________________________
+    bool WidgetSizeData::updateMask()
     {
-        GtkWidget* widget(_widget);
+
+        /* check widget type, store window and offset */
         GdkWindow* window(0);
         int verticalMaskOffset(0);
-
-        if(GTK_IS_MENU(widget))
+        if( GTK_IS_MENU( _target ) )
         {
 
-            window = gtk_widget_get_parent_window(widget);
+            window = gtk_widget_get_parent_window( _target );
             verticalMaskOffset=Oxygen::Menu_VerticalOffset;
 
-        } else if(Gtk::gtk_is_tooltip(widget)) {
+        } else if(
+            Gtk::gtk_is_tooltip( _target ) ||
+            Gtk::gtk_combobox_is_popup( _target ) ||
+            Gtk::gtk_combo_is_popup( _target ) ) {
 
-            window = gtk_widget_get_window(widget);
-
-        } else if(Gtk::gtk_combobox_is_popup(widget)) {
-
-            window=gtk_widget_get_window(widget);
-
-        } else if(Gtk::gtk_combo_is_popup(widget)) {
-
-            window=gtk_widget_get_window(widget);
+            window=gtk_widget_get_window( _target );
 
         } else {
 
-            std::cerr << "FIXME: Oxygen::WidgetSizeData: unknown window type: \""<< Gtk::gtk_widget_path(widget)<<"\"\n";
+            std::cerr << "FIXME: Oxygen::WidgetSizeData: unknown window type: \""<< Gtk::gtk_widget_path( _target )<<"\"\n";
             return false;
 
         }
 
-        const bool wasAlpha(_alpha);
-        const bool alpha(Gtk::gtk_widget_has_rgba( widget ));
+        const bool alpha( Gtk::gtk_widget_has_rgba( _target ) );
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( _target ) );
+        const int &width(allocation.width);
+        const int &height(allocation.height);
 
-        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
-        const int &width(allocation.width), &height(allocation.height);
-
+        // check modifications
         const bool sizeChanged( width != _width || height != _height );
-        const bool alphaChanged( alpha != wasAlpha );
-
-        if( !sizeChanged && !alphaChanged ) return false;
+        const bool alphaChanged( alpha != _alpha );
+        if( !( sizeChanged || alphaChanged ) ) return false;
 
         if(!alpha)
         {
@@ -80,20 +76,13 @@ namespace Oxygen
             // reset mask if compositing has appeared after we had set a mask
             gdk_window_shape_combine_mask( window, NULL, 0, 0);
 
-            // TODO: move to size allocation hook
-            if( Gtk::gtk_is_tooltip(widget) && ( sizeChanged || !wasAlpha ) )
-            {
-                Style::instance().setWindowBlur(window,true);
-            }
-
-            if( Style::instance().settings().backgroundOpacity() < 255 )
-            {
-
-                if(GTK_IS_MENU(widget)) Style::instance().setWindowBlur(window,true);
-
-            }
-
         }
+
+        // adjust blur region
+        if( sizeChanged && alpha &&
+            ( Gtk::gtk_is_tooltip( _target ) ||
+            ( Style::instance().settings().backgroundOpacity() < 255 && GTK_IS_MENU( _target ) ) ) )
+        { Style::instance().setWindowBlur(window,true); }
 
         // Update widget properties
         _width=width;
