@@ -3905,10 +3905,55 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void Style::setWindowBlur(GdkWindow* window,bool enable)
+    void Style::adjustMask( GtkWidget* widget, int width, int height, bool alpha )
+    {
+
+        // get window and decide offset
+        GdkWindow* window(0);
+        int verticalMaskOffset(0);
+        if( GTK_IS_MENU( widget ) )
+        {
+
+            window = gtk_widget_get_parent_window( widget );
+            verticalMaskOffset=Oxygen::Menu_VerticalOffset;
+
+        } else {
+
+            window=gtk_widget_get_window( widget );
+
+        }
+
+        // adjust mask
+        if(!alpha)
+        {
+
+            Cairo::Region mask( Style::instance().helper().roundMask( width, height - 2*verticalMaskOffset ) );
+            gdk_window_shape_combine_region( window, mask, 0, verticalMaskOffset );
+
+        } else {
+
+            gdk_window_shape_combine_region( window, NULL, 0, 0 );
+
+        }
+
+    }
+
+    //_________________________________________________________
+    void Style::setWindowBlur( GtkWidget* widget, bool enable )
     {
 
         #ifdef GDK_WINDOWING_X11
+        GdkWindow* window( 0L );
+        if( GTK_IS_MENU( widget ) )
+        {
+
+            window = gtk_widget_get_parent_window( widget );
+
+        } else {
+
+            window=gtk_widget_get_window( widget );
+
+        }
 
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
