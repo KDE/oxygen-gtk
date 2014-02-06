@@ -283,8 +283,13 @@ namespace Oxygen
 
             if( GDK_IS_WINDOW( window ) )
             {
-                Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                Style::instance().animations().widgetSizeEngine().updateMask(widget);
+                WidgetSizeEngine& engine( Style::instance().animations().widgetSizeEngine() );
+                engine.registerWidget( widget );
+                if( engine.update(widget) )
+                {
+                    Style::instance().adjustMask( widget, engine.width( widget ), engine.height( widget ), engine.alpha( widget ) );
+                    Style::instance().setWindowBlur( widget, engine.alpha( widget ) );
+                }
             }
 
             Style::instance().renderTooltipBackground( window, clipRect, x, y, w, h, options );
@@ -1258,8 +1263,14 @@ namespace Oxygen
                 {
                     Style::instance().animations().menuItemEngine().registerMenu( widget );
 
-                    Style::instance().animations().widgetSizeEngine().registerWidget( widget );
-                    Style::instance().animations().widgetSizeEngine().updateMask( widget );
+                    WidgetSizeEngine& engine( Style::instance().animations().widgetSizeEngine() );
+                    engine.registerWidget( widget );
+                    if( engine.update( widget ) )
+                    {
+                        Style::instance().adjustMask( widget, engine.width( widget ), engine.height( widget ), engine.alpha( widget ) );
+                        if( Style::instance().settings().backgroundOpacity() < 255 )
+                        { Style::instance().setWindowBlur( widget, engine.alpha( widget ) ); }
+                    }
                 }
 
                 // if render
@@ -1702,11 +1713,14 @@ namespace Oxygen
             const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( parent ) );
 
             // always register to widget size engine
-            Style::instance().animations().widgetSizeEngine().registerWidget( parent );
-            const bool sizeChanged( Style::instance().animations().widgetSizeEngine().updateMask(parent) );
-            if( sizeChanged )
+            WidgetSizeEngine& engine( Style::instance().animations().widgetSizeEngine() );
+            engine.registerWidget( parent );
+            const WidgetSizeData::ChangedFlags changedFlags( engine.update( parent ) );
+            if( changedFlags ) Style::instance().adjustMask( parent, engine.width( parent ), engine.height( parent ), engine.alpha( parent ) );
+
+            #if !ENABLE_INNER_SHADOWS_HACK
+            if( changedFlags & WidgetSizeData::SizeChanged )
             {
-#if !ENABLE_INNER_SHADOWS_HACK
                 // also sets inner list mask
                 if( GtkWidget* child = gtk_bin_get_child( GTK_BIN( widget ) ) )
                 {
@@ -1723,8 +1737,8 @@ namespace Oxygen
                     gdk_window_shape_combine_mask( gtk_widget_get_window( child ), mask, offset, offset );
                     gdk_pixmap_unref( mask );
                 }
-#endif
             }
+            #endif
 
             // menu background and float frame
             GdkWindow* parentWindow( gtk_widget_get_window( parent ) );
@@ -1756,8 +1770,10 @@ namespace Oxygen
             if( Gtk::gtk_widget_has_rgba(parent) ) options|=Alpha;
 
             // make background window rounded
-            Style::instance().animations().widgetSizeEngine().registerWidget(parent);
-            Style::instance().animations().widgetSizeEngine().updateMask(parent);
+            WidgetSizeEngine& engine( Style::instance().animations().widgetSizeEngine() );
+            engine.registerWidget( parent );
+            if( engine.update(parent) )
+            { Style::instance().adjustMask( parent, engine.width( parent ), engine.height( parent ), engine.alpha( parent ) ); }
 
             // menu background and float frame
             Style::instance().renderMenuBackground( window, clipRect, x, y, w, h, options );
