@@ -21,6 +21,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "../oxygenflags.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -33,6 +35,7 @@ namespace Oxygen
 
         //! constructor
         WidgetSizeData( void ):
+            _target(0L),
             _width(-1),
             _height(-1),
             _alpha(false)
@@ -43,31 +46,42 @@ namespace Oxygen
         {}
 
         //! setup connections
-        void connect( GtkWidget* ) const
-        {}
+        void connect( GtkWidget* widget )
+        { _target = widget; }
 
         //! disconnect
-        void disconnect( GtkWidget* ) const
-        {}
+        void disconnect( GtkWidget* widget )
+        { _target = 0L; }
 
-        //! update size, returns true if changed
-        virtual bool updateSize( int width, int height )
+        //! changed flags
+        enum ChangedFlag
         {
-            if( width == _width && height == _height ) return false;
-            _width = width;
-            _height = height;
-            return true;
-        }
+            SizeChanged = 1<<0,
+            AlphaChanged = 1<<1
+        };
 
-        //! update alpha channel presence
-        void setAlpha( bool isAlpha )
-        { _alpha=isAlpha; }
+        OX_DECLARE_FLAGS( ChangedFlags, ChangedFlag )
 
-        //! determine if the widget had alpha channel on latest update
-        bool wasAlpha()
+        //! update widget size and alpha
+        /*! return bitmask on what was changed */
+        ChangedFlags update( void );
+
+        //! width
+        int width( void ) const
+        { return _width; }
+
+        //! height
+        int height( void ) const
+        { return _height; }
+
+        //! alpha
+        bool alpha( void ) const
         { return _alpha; }
 
         private:
+
+        //! target widget
+        GtkWidget* _target;
 
         //! old width
         int _width;
@@ -79,6 +93,8 @@ namespace Oxygen
         bool _alpha;
 
     };
+
+    OX_DECLARE_OPERATORS_FOR_FLAGS( WidgetSizeData::ChangedFlags )
 
 }
 

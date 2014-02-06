@@ -121,8 +121,11 @@ namespace Oxygen
         //! background surface
         bool hasBackgroundSurface( void ) const;
 
+        //! update widget mask
+        void adjustMask( GtkWidget*, int width, int height, bool alpha );
+
         //! update kwin blur region
-        void setWindowBlur(GdkWindow* window,bool enable);
+        void setWindowBlur( GtkWidget*, bool enable );
 
         //!@name primitives
         //@{
