@@ -3912,24 +3912,26 @@ namespace Oxygen
 
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?
-        guint32 w=gdk_window_get_width(window);
-        guint32 h=gdk_window_get_height(window);
-        const guint32 rects[4]={0,0,w,h};
+        const int w( gdk_window_get_width( window ) );
+        const int h( gdk_window_get_height( window ) );
+        const unsigned long rects[4] = { 0, 0, (unsigned long)w, (unsigned long)h };
         const XID id( GDK_WINDOW_XID( window ) );
-        Display* dpy(GDK_DISPLAY_XDISPLAY(gdk_window_get_display(window)));
 
-        if( enable )
+        // get display and check backend
+        GdkDisplay *display( gdk_window_get_display( window ) );
+        if( display && GDK_IS_X11_DISPLAY( display )  )
         {
 
-            XChangeProperty(dpy,id,_blurAtom,XA_CARDINAL,32,PropModeReplace,reinterpret_cast<const unsigned char*>(rects), 4);
+            if(enable)
+            {
 
-        } else {
+                XChangeProperty( GDK_DISPLAY_XDISPLAY( display ), id, _blurAtom, XA_CARDINAL, 32, PropModeReplace, reinterpret_cast<const unsigned char*>(rects), 4 );
 
-            XDeleteProperty(dpy,id,_blurAtom);
+            } else XDeleteProperty( GDK_DISPLAY_XDISPLAY( display ), id, _blurAtom );
 
         }
 
-    #endif
+        #endif
 
     }
 
