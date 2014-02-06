@@ -4101,10 +4101,69 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void Style::setWindowBlur(GdkWindow* window,bool enable)
+    void Style::adjustMask( GtkWidget* widget, int width, int height, bool alpha )
+    {
+
+        // get window and decide offset
+        GdkWindow* window(0);
+        int verticalMaskOffset(0);
+        if( GTK_IS_MENU( widget ) )
+        {
+
+            window = gtk_widget_get_parent_window( widget );
+            verticalMaskOffset=Oxygen::Menu_VerticalOffset;
+
+        } else if(
+            Gtk::gtk_is_tooltip( widget ) ||
+            Gtk::gtk_combobox_is_popup( widget ) ||
+            Gtk::gtk_combo_is_popup( widget ) ) {
+
+            window=gtk_widget_get_window( widget );
+
+        } else {
+
+            std::cerr << "FIXME: Oxygen::WidgetSizeData: unknown window type: \""<< Gtk::gtk_widget_path( widget )<<"\"\n";
+            return;
+
+        }
+
+        // adjust mask
+        if(!alpha)
+        {
+
+            // make menus/tooltips/combo lists appear rounded using XShape extension if screen isn't composited
+            GdkPixmap* mask( _helper.roundMask( width, height - 2*verticalMaskOffset) );
+            gdk_window_shape_combine_mask( window, mask, 0, verticalMaskOffset );
+            gdk_pixmap_unref(mask);
+
+        } else {
+
+            // reset mask if compositing has appeared after we had set a mask
+            gdk_window_shape_combine_mask( window, NULL, 0, 0);
+
+        }
+
+    }
+
+    //_________________________________________________________
+    void Style::setWindowBlur( GtkWidget* widget, bool enable )
     {
 
         #ifdef GDK_WINDOWING_X11
+        GdkWindow* window( 0L );
+        if( GTK_IS_MENU( widget ) )
+        {
+
+            window = gtk_widget_get_parent_window( widget );
+
+        } else if(
+            Gtk::gtk_is_tooltip( widget ) ||
+            Gtk::gtk_combobox_is_popup( widget ) ||
+            Gtk::gtk_combo_is_popup( widget ) ) {
+
+            window=gtk_widget_get_window( widget );
+
+        } else return;
 
         // Make whole window blurred
         // FIXME: should roundedness be taken into account?

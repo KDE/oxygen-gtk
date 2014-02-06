@@ -21,6 +21,8 @@
 * MA 02110-1301, USA.
 */
 
+#include "../oxygenflags.h"
+
 #include <gtk/gtk.h>
 
 namespace Oxygen
@@ -51,10 +53,33 @@ namespace Oxygen
         void disconnect( GtkWidget* )
         { _target = 0L; }
 
-        //! update XShape, return true if size has changed
-        bool updateMask();
+        //! changed flags
+        enum ChangedFlag
+        {
+            SizeChanged = 1<<0,
+            AlphaChanged = 1<<1
+        };
+
+        OX_DECLARE_FLAGS( ChangedFlags, ChangedFlag )
+
+        //! update widget size and alpha
+        /*! return bitmask on what was changed */
+        ChangedFlags update();
+
+        //! width
+        int width( void ) const
+        { return _width; }
+
+        //! height
+        int height( void ) const
+        { return _height; }
+
+        //! alpha
+        bool alpha( void ) const
+        { return _alpha; }
 
         private:
+
         //! target widget
         GtkWidget* _target;
 
@@ -68,6 +93,8 @@ namespace Oxygen
         bool _alpha;
 
     };
+
+    OX_DECLARE_OPERATORS_FOR_FLAGS( WidgetSizeData::ChangedFlags )
 
 }
 

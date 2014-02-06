@@ -20,76 +20,36 @@
 */
 
 #include "oxygenwidgetsizedata.h"
-#include "../oxygenstyle.h"
 #include "../oxygengtkutils.h"
 
 namespace Oxygen
 {
 
     //___________________________________________________________________________________________________________
-    bool WidgetSizeData::updateMask()
+    WidgetSizeData::ChangedFlags WidgetSizeData::update()
     {
 
-        /* check widget type, store window and offset */
-        GdkWindow* window(0);
-        int verticalMaskOffset(0);
-        if( GTK_IS_MENU( _target ) )
+        ChangedFlags changed;
+
+        // get size and check
+        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( _target ) );
+        const int& width( allocation.width );
+        const int& height( allocation.height );
+        if( width != _width || height != _height )
         {
-
-            window = gtk_widget_get_parent_window( _target );
-            verticalMaskOffset=Oxygen::Menu_VerticalOffset;
-
-        } else if(
-            Gtk::gtk_is_tooltip( _target ) ||
-            Gtk::gtk_combobox_is_popup( _target ) ||
-            Gtk::gtk_combo_is_popup( _target ) ) {
-
-            window=gtk_widget_get_window( _target );
-
-        } else {
-
-            std::cerr << "FIXME: Oxygen::WidgetSizeData: unknown window type: \""<< Gtk::gtk_widget_path( _target )<<"\"\n";
-            return false;
-
+            _width = width;
+            _height = height;
+            changed |= SizeChanged;
         }
 
         const bool alpha( Gtk::gtk_widget_has_rgba( _target ) );
-        const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( _target ) );
-        const int &width(allocation.width);
-        const int &height(allocation.height);
-
-        // check modifications
-        const bool sizeChanged( width != _width || height != _height );
-        const bool alphaChanged( alpha != _alpha );
-        if( !( sizeChanged || alphaChanged ) ) return false;
-
-        if(!alpha)
+        if( alpha != _alpha )
         {
-
-            // make menus/tooltips/combo lists appear rounded using XShape extension if screen isn't composited
-            GdkPixmap* mask( Style::instance().helper().roundMask( width, height - 2*verticalMaskOffset) );
-            gdk_window_shape_combine_mask( window, mask, 0, verticalMaskOffset );
-            gdk_pixmap_unref(mask);
-
-        } else {
-
-            // reset mask if compositing has appeared after we had set a mask
-            gdk_window_shape_combine_mask( window, NULL, 0, 0);
-
+            _alpha = alpha;
+            changed |= AlphaChanged;
         }
 
-        // adjust blur region
-        if( sizeChanged && alpha &&
-            ( Gtk::gtk_is_tooltip( _target ) ||
-            ( Style::instance().settings().backgroundOpacity() < 255 && GTK_IS_MENU( _target ) ) ) )
-        { Style::instance().setWindowBlur(window,true); }
-
-        // Update widget properties
-        _width=width;
-        _height=height;
-        _alpha=alpha;
-
-        return sizeChanged;
+        return changed;
     }
 
 }
