@@ -1027,23 +1027,30 @@ namespace Oxygen
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
             { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
 
-            MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
-            engine.registerWidget(widget);
-
-            // draw animated or fade-out rect
-            if( engine.animatedRectangleIsValid( widget ) )
+            if( widget )
             {
 
-                const GdkRectangle& rect( engine.animatedRectangle( widget ) );
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend );
+                // animation
+                MenuBarStateEngine& engine( Style::instance().animations().menuBarStateEngine() );
+                engine.registerWidget(widget);
 
-            } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+                // draw animated or fade-out rect
+                if( engine.animatedRectangleIsValid( widget ) )
+                {
 
-                const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
-                const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
-                Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend, data );
+                    const GdkRectangle& rect( engine.animatedRectangle( widget ) );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationCurrent ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend );
+
+                } else if( engine.isAnimated( widget, AnimationPrevious ) ) {
+
+                    const AnimationData data( engine.animationData( widget, AnimationPrevious ) );
+                    const GdkRectangle& rect( engine.rectangle( widget, AnimationPrevious ) );
+                    Style::instance().renderMenuItemRect( context, 0L, engine.widget( widget, AnimationPrevious ), rect.x, rect.y+MenuItem_Margin, rect.width, rect.height-2*MenuItem_Margin, Hover|Blend, data );
+
+                }
 
             }
+
             return;
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) ) {
