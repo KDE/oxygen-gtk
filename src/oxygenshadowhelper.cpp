@@ -403,27 +403,41 @@ namespace Oxygen
 
         std::vector<unsigned long> data;
         const bool isMenu( this->isMenu( widget ) );
+        const bool isToolTip( this->isToolTip( widget ) );
 
-        data = _roundPixmaps;
-        if( isMenu )
+        if( (isMenu||isToolTip) && _applicationName.isXul( widget ) )
         {
 
-            /*
-            for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
-            in painting method (Oxygen::Style::renderMenuBackground)
-            */
-            data.push_back( _size - Menu_VerticalOffset );
+            data = _squarePixmaps;
             data.push_back( _size );
-            data.push_back( _size - Menu_VerticalOffset );
+            data.push_back( _size );
+            data.push_back( _size );
             data.push_back( _size );
 
         } else {
 
-            // all sides have same sizz
-            data.push_back( _size );
-            data.push_back( _size );
-            data.push_back( _size );
-            data.push_back( _size );
+            data = _roundPixmaps;
+            if( isMenu )
+            {
+
+                /*
+                for menus, need to shrink top and bottom shadow size, since body is done likely with respect to real size
+                in painting method (Oxygen::Style::renderMenuBackground)
+                */
+                data.push_back( _size - Menu_VerticalOffset );
+                data.push_back( _size );
+                data.push_back( _size - Menu_VerticalOffset );
+                data.push_back( _size );
+
+            } else {
+
+                // all sides have same sizz
+                data.push_back( _size );
+                data.push_back( _size );
+                data.push_back( _size );
+                data.push_back( _size );
+
+            }
 
         }
 
