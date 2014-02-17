@@ -692,7 +692,7 @@ namespace Oxygen
         _css.setCurrentSection( Gtk::CSS::defaultSection() );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Window ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::WindowText ) ) );
-        addLinkColors( "[Colors:Window]" );
+        addLinkColors( Gtk::CSS::defaultSection(), "[Colors:Window]" );
 
         // default insensitive text color
         _css.addSection( "*:insensitive" );
@@ -757,7 +757,10 @@ namespace Oxygen
             "GtkEntry" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Base ) ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Text ) ) );
-        addLinkColors( "[Colors:View]" );
+        addLinkColors( ".view", "[Colors:View]" );
+        addLinkColors( ".entry", "[Colors:View]" );
+        addLinkColors( ".list", "[Colors:View]" );
+        addLinkColors( "GtkEntry", "[Colors:View]" );
 
         // text selection
         _css.addSection(
@@ -804,7 +807,7 @@ namespace Oxygen
          // buttons and comboboxes
         _css.addSection( "GtkButton" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Button ) ) );
-        addLinkColors( "[Colors:Button]" );
+        addLinkColors( "GtkButton", "[Colors:Button]" );
 
         _css.addSection( "GtkButton:insensitive" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Disabled, Palette::Button ) ) );
@@ -834,7 +837,7 @@ namespace Oxygen
 
         _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
-        addLinkColors( "[Colors:Tooltip]" );
+        addLinkColors( "GtkWindow#gtk-tooltip GtkLabel", "[Colors:Tooltip]" );
 
         // rubber band selection (at least for nautilus)
         // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
@@ -874,16 +877,26 @@ namespace Oxygen
     }
 
     //_________________________________________________________
-    void QtSettings::addLinkColors( const std::string& section )
+    void QtSettings::addLinkColors( const std::string& cssSection, const std::string& paletteSection )
     {
 
-        // link colors
-        const ColorUtils::Rgba linkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundLink" ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "-GtkWidget-link-color", linkColor ) );
+        // get colors from options
+        const ColorUtils::Rgba linkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( paletteSection, "ForegroundLink" ) ) );
+        _css.addToSection( cssSection, Gtk::CSSOption<std::string>( "-GtkWidget-link-color", linkColor ) );
 
-        // visited link colors
-        const ColorUtils::Rgba visitedLinkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( section, "ForegroundVisited" ) ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "-GtkWidget-visited-link-color", visitedLinkColor ) );
+        const ColorUtils::Rgba visitedLinkColor( ColorUtils::Rgba::fromKdeOption( _kdeGlobals.getValue( paletteSection, "ForegroundVisited" ) ) );
+        _css.addToSection( cssSection, Gtk::CSSOption<std::string>( "-GtkWidget-visited-link-color", visitedLinkColor ) );
+
+        #if GTK_CHECK_VERSION( 3, 11, 0 )
+
+        // get current css section
+        const std::string linkSection( cssSection + ":link" );
+        _css.addToSection( linkSection, Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, linkColor ) );
+
+        const std::string visitedLinkSection( cssSection + ":visited" );
+        _css.addToSection( visitedLinkSection, Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, visitedLinkColor ) );
+
+        #endif
 
     }
 

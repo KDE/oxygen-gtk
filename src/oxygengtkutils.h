@@ -198,8 +198,14 @@ namespace Oxygen
         inline bool gtk_widget_has_margins( GtkWidget* widget )
         {
             return GTK_IS_WIDGET( widget ) && (
+
+                #if GTK_CHECK_VERSION( 3, 11, 0 )
+                gtk_widget_get_margin_start( widget ) ||
+                gtk_widget_get_margin_end( widget ) ||
+                #else
                 gtk_widget_get_margin_left( widget ) ||
                 gtk_widget_get_margin_right( widget ) ||
+                #endif
                 gtk_widget_get_margin_top( widget ) ||
                 gtk_widget_get_margin_bottom( widget ) );
         }

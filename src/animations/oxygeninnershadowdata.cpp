@@ -289,9 +289,15 @@ namespace Oxygen
         int offsetY = basicOffset;
 
         // also need to correct from widget's margins
+        #if GTK_CHECK_VERSION( 3, 11, 0 )
+        const int marginX = gtk_widget_get_margin_start( child );
+        const int marginW = marginX + gtk_widget_get_margin_end( child );
+        #else
         const int marginX = gtk_widget_get_margin_left( child );
-        const int marginY = gtk_widget_get_margin_top( child );
         const int marginW = marginX + gtk_widget_get_margin_right( child );
+        #endif
+
+        const int marginY = gtk_widget_get_margin_top( child );
         const int marginH = marginY + gtk_widget_get_margin_bottom( child );
 
         // hole background
