@@ -86,24 +86,19 @@ INFO: css border and padding ordering is either:
 .menubar { border-style: none; }
 GtkStatusBar { border-style: none; }
 
-/*
-    TODO:
-    look at default values from GtkCssProvider for better style definitions
-    (class based, rather than widget based)
-*/
-
-GtkScale {
+/* sliders and scrollbars */
+.scale {
     -GtkRange-slider-width: 23px;
     -GtkScale-slider-length: 21px;
 }
 
-GtkScrollbar {
+.scrollbar {
     -GtkRange-stepper-size: 12px;
     -GtkRange-trough-border: 0px;
 }
 
 /* menuitems padding */
-GtkMenuBar {
+.menubar {
     padding: 0px;
     border-width: 0px;
 }
@@ -131,21 +126,21 @@ GtkMenuToolButton, GtkMenuToolButton * {
 GtkOptionMenu { padding: 0px 4px; }
 
 /* separators */
-GtkSeparator {
+.separator {
     border-style: solid;
     border-width: 3px;
 }
 
 /* frames */
-GtkScrolledWindow {
+.frame { padding: 4px; }
+GtkScrolledWindow.frame {
     border-style: inset;
     border-width: 1px;
     padding: 1px;
 }
 
-GtkFrame { padding: 4px; }
+.progressbar { padding: 0px; }
 GtkViewport { padding: 0px; }
-GtkProgressBar { padding: 0px; }
 GtkAssistant .sidebar { padding: 4px; }
 
 GtkInfoBar {
@@ -169,21 +164,16 @@ GtkWindow#gtk-tooltip { padding: 3px; }
 GtkButton { padding: 3px 4px 2px; }
 
 /* header buttons */
-GtkTreeView>GtkButton {
-    border-width: 0px 2px;
-    border-style: solid;
-}
-
-GtkList>GtkButton {
+column-header.button {
     border-width: 0px 2px;
     border-style: solid;
 }
 
 /* entry */
-GtkEntry { padding: 4px 7px; }
+.entry { padding: 4px 7px; }
 
 /* menu */
-GtkMenu
+.menu
 {
     padding: 5px;
     border-width: 0px;
