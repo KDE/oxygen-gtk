@@ -401,7 +401,7 @@ namespace Oxygen
         void generateGtkColors( void );
 
         //! add Html link colors to RC's current section
-        void addLinkColors( const std::string& );
+        void addLinkColors( const std::string&, const std::string& );
 
         //! load fonts from kdeglobals and pass to gtk
         void loadKdeFonts( void );

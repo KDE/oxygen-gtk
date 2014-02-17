@@ -95,6 +95,10 @@ namespace Oxygen
             //! create new section and set as current
             void addSection( const std::string& name );
 
+            //! get current section
+            std::string currentSection( void ) const
+            { return _currentSection; }
+
             //! set current section
             void setCurrentSection( const std::string& name );
 

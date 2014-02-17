@@ -98,12 +98,7 @@ namespace Oxygen
     void Gtk::CSS::addToSection( const std::string& name, const std::string& content )
     {
         Section::List::iterator iter( std::find( _sections.begin(), _sections.end(), name ) );
-        if( iter == _sections.end() )
-        {
-            std::cerr << "Gtk::CSS::addToSection - unable to find section named " << name << std::endl;
-            return;
-        }
-
+        if( iter == _sections.end() ) iter = _sections.insert( _sections.end(), Section( name ) );
         iter->add( content );
     }
 
