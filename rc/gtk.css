@@ -118,11 +118,14 @@ GtkMenuToolButton, GtkMenuToolButton * {
 }
 
 /* notebooks */
-GtkNotebook {
+.notebook {
     padding: 4px 6px 0px 6px;
     border-width: 2px 0px 6px 0px;
     border-style: outset;
 }
+
+/* notebooks */
+.notebook.header { border-style: none; }
 
 /* option menu */
 GtkOptionMenu { padding: 0px 4px; }
