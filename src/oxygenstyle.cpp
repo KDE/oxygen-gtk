@@ -374,7 +374,7 @@ namespace Oxygen
         }
 
         // fill lower rect
-        GdkRectangle lowerRect = { 0, splitY, ww, wh - splitY + yShift };
+        GdkRectangle lowerRect = { 0, splitY, ww, std::max(wh,h) - splitY + yShift };
         if( gdk_rectangle_intersect( &rect, &lowerRect, &lowerRect ) )
         {
 
