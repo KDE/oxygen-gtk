@@ -79,7 +79,7 @@ namespace Oxygen
 
         } else if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( GTK_WIDGET( widget ) ) ) {
 
-            gtk_widget_queue_draw( parent );
+            gtk_widget_queue_draw( gtk_bin_get_child( GTK_BIN( parent ) ) );
 
         }
 
@@ -108,7 +108,8 @@ namespace Oxygen
         } else if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( GTK_WIDGET( data._target ) ) ) {
 
             // otherwise, trigger update
-            gtk_widget_queue_draw( parent );
+            gtk_widget_queue_draw( gtk_bin_get_child( GTK_BIN( parent ) ) );
+
             return FALSE;
 
         }
