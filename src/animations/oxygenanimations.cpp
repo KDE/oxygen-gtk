@@ -379,6 +379,10 @@ namespace Oxygen
             << std::endl;
         #endif
 
+        // force shadow type on known windows
+        if( Gtk::gtk_scrolled_window_force_sunken( parent ) )
+        { gtk_scrolled_window_set_shadow_type( GTK_SCROLLED_WINDOW( parent ), GTK_SHADOW_IN ); }
+
         animations.innerShadowEngine().registerWidget( parent );
         animations.innerShadowEngine().registerChild( parent, widget );
 
