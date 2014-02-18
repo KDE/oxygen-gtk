@@ -763,7 +763,7 @@ namespace Oxygen
 
         // retrieve child
         GtkWidget* child( gtk_bin_get_child( GTK_BIN( widget ) ) );
-        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_ICON_VIEW( child ) ) return true;
+        if( GTK_IS_TREE_VIEW( child ) || GTK_IS_ICON_VIEW( child ) || GTK_IS_TEXT_VIEW( child ) ) return true;
         else return false;
 
     }
