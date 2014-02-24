@@ -89,10 +89,17 @@ namespace Oxygen
             { return (bool) _pattern; }
 
             //! cast to cairo_pattern_t
+            operator cairo_pattern_t*& (void)
+            { return _pattern; }
+
+            //! cast to cairo_pattern_t
             operator cairo_pattern_t* (void) const
             { return _pattern; }
 
             private:
+
+            //! equal to operator is private
+            Pattern& operator = (cairo_pattern_t* );
 
             //! pattern
             cairo_pattern_t* _pattern;
