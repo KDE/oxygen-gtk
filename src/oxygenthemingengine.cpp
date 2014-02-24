@@ -252,7 +252,7 @@ namespace Oxygen
             // check if background image is present
             Cairo::Pattern pattern;
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
-            gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BACKGROUND_IMAGE, &pattern, NULL );
+            gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BACKGROUND_IMAGE, &((cairo_pattern_t*&)pattern), NULL );
             if( pattern.isValid() )
             {
                 // if valid background image is found, fallback to parent style
