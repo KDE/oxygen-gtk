@@ -95,11 +95,7 @@ namespace Oxygen
             private:
 
             //! equal to operator is private
-            Surface& operator = (cairo_surface_t* other )
-            {
-                assert( false );
-                return *this;
-            }
+            Surface& operator = (cairo_surface_t* );
 
             //! surface
             cairo_surface_t* _surface;

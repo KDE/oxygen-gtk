@@ -56,10 +56,6 @@ namespace Oxygen
             operator cairo_t* (void) const
             { return _cr; }
 
-            //! context accessor
-            cairo_t* cr( void ) const
-            { return _cr; }
-
             //! set clipping
             void setClipping( GdkRectangle* ) const;
 
@@ -71,24 +67,13 @@ namespace Oxygen
             { assert( false ); }
 
             //! copy constructor is private
-            Context( const Context& other ):
-                _cr( 0L )
-            { assert( false ); }
+            Context( const Context& );
 
             //! equal to operator is private
-            Context& operator = (const Context& other )
-            {
-                _cr = other._cr;
-                assert( false );
-                return *this;
-            }
+            Context& operator = (const Context& );
 
             //! equal to operator is private
-            Context& operator = (cairo_t* other )
-            {
-                assert( false );
-                return *this;
-            }
+            Context& operator = (cairo_t* );
 
             //! cairo contect
             cairo_t* _cr;

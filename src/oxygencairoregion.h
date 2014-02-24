@@ -90,6 +90,9 @@ namespace Oxygen
 
             private:
 
+            //! equal to operator is private
+            Region& operator = (cairo_region_t* );
+
             //! region
             cairo_region_t* _region;
 
