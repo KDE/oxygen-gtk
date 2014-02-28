@@ -589,21 +589,21 @@ namespace Oxygen
         switch( gtk_notebook_get_tab_pos( notebook ) )
         {
             case GTK_POS_BOTTOM:
-            rect->y += pageAllocation.height;
-            rect->height -= pageAllocation.height;
+            rect->height += rect->y - (pageAllocation.y + pageAllocation.height);
+            rect->y = pageAllocation.y + pageAllocation.height;
             break;
 
             case GTK_POS_TOP:
-            rect->height -= pageAllocation.height;
+            rect->height = pageAllocation.y - rect->y;
             break;
 
             case GTK_POS_RIGHT:
-            rect->x += pageAllocation.width;
-            rect->width -= pageAllocation.width;
+            rect->width += rect->x - (pageAllocation.x + pageAllocation.width);
+            rect->x = pageAllocation.x + pageAllocation.width;
             break;
 
             case GTK_POS_LEFT:
-            rect->width -= pageAllocation.width;
+            rect->width = pageAllocation.x - rect->x;
             break;
         }
 
