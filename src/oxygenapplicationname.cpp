@@ -103,6 +103,11 @@ namespace Oxygen
     //__________________________________________________________________________
     bool ApplicationName::isGtkDialogWidget( GtkWidget* widget ) const
     {
+
+        // check widget
+        if( !GTK_IS_WIDGET( widget ) ) return false;
+
+        // get parent
         GtkWidget* parent( gtk_widget_get_toplevel( widget ) );
 
         // check parent
