@@ -98,6 +98,9 @@ namespace Oxygen
 
         const bool animationsEnabled( settings.animationsEnabled() );
 
+        // store application name
+        _applicationName = settings.applicationName();
+
         // pass animations configuration to engines
         _widgetStateEngine->setEnabled( animationsEnabled && settings.genericAnimationsEnabled() );
         _widgetStateEngine->setDuration( settings.genericAnimationsDuration() );
@@ -335,9 +338,15 @@ namespace Oxygen
 
         // check type
         if( !GTK_IS_WIDGET( widget ) ) return FALSE;
+
+        // make sure that widget is a window
         if( !GTK_IS_WINDOW( widget ) ) return TRUE;
 
+        // get animations
         Animations& animations( *static_cast<Animations*>(data) );
+
+        // check against application name
+        if( animations._applicationName.useFlatBackground( widget ) ) return TRUE;
         animations._backgroundHintEngine->registerWidget( widget );
 
         return TRUE;
