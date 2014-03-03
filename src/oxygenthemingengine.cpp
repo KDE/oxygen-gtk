@@ -255,9 +255,6 @@ namespace Oxygen
             ) )
         {
 
-            // register to engines
-            Style::instance().animations().mainWindowEngine().registerWidget( widget );
-
             // check if background image is present
             Cairo::Pattern pattern;
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
@@ -271,6 +268,16 @@ namespace Oxygen
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
             }
+
+            // call parent class rendering for applications that require a flat backgroudn
+            if( Style::instance().settings().applicationName().useFlatBackground( widget ) )
+            {
+                ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+                return;
+            }
+
+            // register to engines
+            Style::instance().animations().mainWindowEngine().registerWidget( widget );
 
             if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
             { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
@@ -1029,7 +1036,8 @@ namespace Oxygen
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUBAR ) ) {
 
             // render background
-            if( !Gtk::gtk_widget_is_applet( widget ) )
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
+                !Gtk::gtk_widget_is_applet( widget ) )
             { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
 
             // possible groupbox background
