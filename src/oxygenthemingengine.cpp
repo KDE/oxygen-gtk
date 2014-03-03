@@ -1073,6 +1073,7 @@ namespace Oxygen
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) ) {
 
             StyleOptions options( Menu );
+
             // set alpha flag. Special handling is needed for mozilla and openoffice.
             if( Style::instance().settings().applicationName().isXul( widget ) )
             {
