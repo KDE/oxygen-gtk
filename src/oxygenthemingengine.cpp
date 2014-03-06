@@ -1730,7 +1730,7 @@ namespace Oxygen
             Style::instance().renderTab( context, x, y, w, h, position, options, tabOptions, data );
 
             // render tabbar base if current tab
-            if( drawTabBarBase )
+            if( drawTabBarBase && GTK_IS_WIDGET( widget ) )
             {
 
                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
