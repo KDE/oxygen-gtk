@@ -983,7 +983,7 @@ namespace Oxygen
             // flat buttons
             bool useWidgetState( true );
             AnimationData data;
-            if( widget && Gtk::gtk_button_is_flat( widget ) )
+            if( backgroundRgba.alpha() == 0 || ( widget && Gtk::gtk_button_is_flat( widget ) ) )
             {
 
                 // set button as flat and disable focus
