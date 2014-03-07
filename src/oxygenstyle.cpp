@@ -118,6 +118,7 @@ namespace Oxygen
 
         // create window shadow
         WindowShadow shadow( _settings, _helper );
+        _shadowHelper.setApplicationName( _settings.applicationName() );
         _shadowHelper.initialize( _settings.palette().color(Palette::Window), shadow );
 
         #ifdef GDK_WINDOWING_X11

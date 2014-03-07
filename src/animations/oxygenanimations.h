@@ -22,6 +22,7 @@
 */
 
 #include "oxygenarrowstateengine.h"
+#include "../oxygenapplicationname.h"
 #include "oxygenbackgroundhintengine.h"
 #include "oxygenbaseengine.h"
 #include "oxygencomboboxengine.h"
@@ -220,6 +221,9 @@ namespace Oxygen
 
         //! inner shadow enabled state
         bool _innerShadowsEnabled;
+
+        //! application name
+        ApplicationName _applicationName;
 
         //! list of engines
         BaseEngine::List _engines;

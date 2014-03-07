@@ -34,10 +34,12 @@ namespace Oxygen
         // strange: all tabs but the current one are painted with the active flag
         if( state&GTK_STATE_ACTIVE ) (*this) |= CurrentTab;
 
+        // do nothing if invalid widget
+        if( !GTK_IS_WIDGET( widget ) ) return;
+
         // get allocated size
         const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );
         int borderWidth( GTK_IS_CONTAINER( widget ) ? gtk_container_get_border_width( GTK_CONTAINER( widget ) ):0 );
-
 
         // this simple comparison seems robust enough and much simpler
         // than any other implementation

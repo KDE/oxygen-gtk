@@ -21,6 +21,7 @@
 */
 
 #include "oxygenanimationmodes.h"
+#include "oxygenapplicationname.h"
 #include "oxygengtkcss.h"
 #include "oxygengtkicons.h"
 #include "oxygenoption.h"
@@ -82,6 +83,10 @@ namespace Oxygen
         //! palette
         const Palette& palette( void ) const
         { return _palette; }
+
+        //! application name
+        const ApplicationName& applicationName( void ) const
+        { return _applicationName; }
 
         //!@name oxygen style options
         //@{
@@ -382,7 +387,7 @@ namespace Oxygen
 
         //! init application name
         void initApplicationName( void )
-        {}
+        { _applicationName.initialize(); }
 
         //! init argb support
         void initArgb( void );
@@ -425,6 +430,10 @@ namespace Oxygen
         void clearMonitoredFiles( void );
 
         private:
+
+        //! application
+        /*! this is needed to deal with some application hacks */
+        ApplicationName _applicationName;
 
         //! kde global options
         OptionMap _kdeGlobals;

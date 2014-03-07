@@ -202,10 +202,19 @@ namespace Oxygen
 
         }
 
-        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) )
+        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLTIP ) && Style::instance().settings().tooltipDrawStyledFrames() )
         {
 
+            // empty style options
             StyleOptions options;
+
+            // mozilla get square non Argb tooltips no matter what
+            if( Style::instance().settings().applicationName().isXul() )
+            {
+                Style::instance().renderTooltipBackground( context, x, y, w, h, options );
+                return;
+            }
+
             if( GTK_IS_WIDGET( widget ) )
             {
                 options |= Round;
@@ -246,9 +255,6 @@ namespace Oxygen
             ) )
         {
 
-            // register to engines
-            Style::instance().animations().mainWindowEngine().registerWidget( widget );
-
             // check if background image is present
             Cairo::Pattern pattern;
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
@@ -262,6 +268,16 @@ namespace Oxygen
                 ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
                 return;
             }
+
+            // call parent class rendering for applications that require a flat backgroudn
+            if( Style::instance().settings().applicationName().useFlatBackground( widget ) )
+            {
+                ThemingEngine::parentClass()->render_background( engine, context, x, y, w, h );
+                return;
+            }
+
+            // register to engines
+            Style::instance().animations().mainWindowEngine().registerWidget( widget );
 
             if( GtkWidget* parent = Gtk::gtk_parent_scrolled_window( widget ) )
             { Style::instance().animations().scrollBarEngine().registerScrolledWindow( parent ); }
@@ -1020,7 +1036,8 @@ namespace Oxygen
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENUBAR ) ) {
 
             // render background
-            if( !Gtk::gtk_widget_is_applet( widget ) )
+            if( !Style::instance().settings().applicationName().useFlatBackground( widget ) &&
+                !Gtk::gtk_widget_is_applet( widget ) )
             { Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ); }
 
             // possible groupbox background
@@ -1055,9 +1072,22 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_MENU ) ) {
 
-            StyleOptions options( Menu|Round );
+            StyleOptions options( Menu );
 
-            // this is not working.
+            // set alpha flag. Special handling is needed for mozilla and openoffice.
+            if( Style::instance().settings().applicationName().isXul( widget ) )
+            {
+
+                Style::instance().renderMenuBackground( context, x, y, w, h, options );
+
+                // since menus are rendered square anyway, we can set the alpha channel
+                // based on the screen properties only, in order to prevent ugly shadow to be drawn
+                if( Gtk::gdk_default_screen_is_composited() ) options |= Alpha;
+                Style::instance().drawFloatFrame( context, x, y, w, h, options );
+                return;
+            }
+
+            options |= Round;
             if( Gtk::gtk_widget_has_rgba( widget ) ) options |= Alpha;
 
             // add mask if needed
@@ -1700,7 +1730,7 @@ namespace Oxygen
             Style::instance().renderTab( context, x, y, w, h, position, options, tabOptions, data );
 
             // render tabbar base if current tab
-            if( drawTabBarBase )
+            if( drawTabBarBase && GTK_IS_WIDGET( widget ) )
             {
 
                 const GtkAllocation allocation( Gtk::gtk_widget_get_allocation( widget ) );

@@ -20,6 +20,7 @@
 * MA 02110-1301, USA.
 */
 
+#include "oxygenapplicationname.h"
 #include "oxygencairosurface.h"
 #include "oxygenhook.h"
 #include "oxygensignal.h"
@@ -54,6 +55,10 @@ namespace Oxygen
 
         //! initialize hooks
         void initializeHooks( void );
+
+        //! application name
+        void setApplicationName( const ApplicationName& applicationName )
+        { _applicationName = applicationName; }
 
         //! initialize
         void initialize( const ColorUtils::Rgba&, const WindowShadow& );
@@ -109,6 +114,9 @@ namespace Oxygen
 
         //! shadow tileset
         TileSet _squareTiles;
+
+        //! application name
+        ApplicationName _applicationName;
 
         #ifdef GDK_WINDOWING_X11
         //! shadow atom
