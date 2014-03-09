@@ -1669,7 +1669,10 @@ namespace Oxygen
             }
 
             // register to inner shadow engine
-            if( shadow == GTK_SHADOW_IN && gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) == GTK_SHADOW_IN )
+            if(
+                shadow == GTK_SHADOW_IN &&
+                gtk_scrolled_window_get_shadow_type( GTK_SCROLLED_WINDOW( widget ) ) == GTK_SHADOW_IN &&
+                Style::instance().animations().innerShadowEngine().contains( widget ) )
             { Style::instance().animations().innerShadowEngine().registerChild( widget, gtk_bin_get_child( GTK_BIN( widget ) ) ); }
 
         } else if(
@@ -2074,7 +2077,8 @@ namespace Oxygen
                     if( gtk_scrolled_window_get_shadow_type( scrolledWindow ) != GTK_SHADOW_IN )
                     {
                         gtk_scrolled_window_set_shadow_type( scrolledWindow, GTK_SHADOW_IN );
-                        Style::instance().animations().innerShadowEngine().registerChild( child, gtk_bin_get_child( GTK_BIN( child ) ) );
+                        if( Style::instance().animations().innerShadowEngine().contains( child ) )
+                        { Style::instance().animations().innerShadowEngine().registerChild( child, gtk_bin_get_child( GTK_BIN( child ) ) ); }
                     }
 
                     return;
