@@ -251,7 +251,8 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_LIST_BOX ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
+            Gtk::g_object_is_a( G_OBJECT( widget ), "GdlDockItemGrip" )
             ) )
         {
 
