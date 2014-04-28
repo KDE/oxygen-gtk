@@ -725,6 +725,7 @@ namespace Oxygen
             "GtkImage, "
             "GtkInfoBar, "
             "GtkLabel, "
+            "GtkLayout, "
             "GtkMenuItem, "
             "GtkOverlay, "
             "GtkRevealer, "
