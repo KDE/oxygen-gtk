@@ -167,10 +167,13 @@ namespace Oxygen
         // render background pixmap
         bool renderBackgroundPixmap( cairo_t*, GdkWindow*, GtkWidget*, gint, gint, gint, gint, bool isMaximized=false );
 
+        //! titlebar background
+        bool renderTitleBarBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint );
+
         //! groupbox background
         bool renderGroupBoxBackground( cairo_t*, GtkWidget*, gint, gint, gint, gint, const StyleOptions&, TileSet::Tiles = TileSet::Center );
 
-        //! window background
+        //! menu background
         bool renderMenuBackground( cairo_t*, gint, gint, gint, gint, const StyleOptions& ) const;
 
         //! tooltip background

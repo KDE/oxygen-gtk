@@ -71,7 +71,7 @@ namespace Oxygen
 
         // pass window manager shadow support to settings, since it is needed to setup CSD shadows
         _settings.setWMShadowsSupported( _shadowHelper.checkSupported() );
-        
+
         // reinitialize settings
         if( !_settings.initialize( flags ) ) return false;
 
@@ -491,6 +491,29 @@ namespace Oxygen
         cairo_restore(context);
 
         return true;
+
+    }
+
+
+    //__________________________________________________________________
+    bool Style::renderTitleBarBackground(
+        cairo_t* context, GtkWidget* widget,
+        gint x, gint y, gint w, gint h )
+    {
+        cairo_push_group( context );
+        const bool success( Style::instance().renderWindowBackground( context, 0L, widget, x, y, w, h ) );
+        cairo_pop_group_to_source( context );
+
+        Cairo::Surface localSurface( Style::instance().helper().createSurface( w, h ) );
+
+        Cairo::Context localContext( localSurface );
+        cairo_set_source( localContext, ColorUtils::Rgba::black() );
+        cairo_rounded_rectangle( localContext, 0, 0, w, h, 4, CornersTopLeft|CornersTopRight );
+        cairo_fill( localContext );
+
+        cairo_mask_surface( context, localSurface, x, y );
+
+        return success;
 
     }
 

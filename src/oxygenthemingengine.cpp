@@ -494,10 +494,7 @@ namespace Oxygen
 
             return;
 
-        } else if(
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
-         {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -506,6 +503,18 @@ namespace Oxygen
             // possible groupbox background
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
             { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
+
+            render_animated_button( context, widget );
+            return;
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TITLEBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
+         {
+
+            // render background
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { Style::instance().renderTitleBarBackground( context, widget, x, y, w, h ); }
 
             render_animated_button( context, widget );
             return;
@@ -2470,8 +2479,8 @@ namespace Oxygen
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
             StyleOptions options( widget, state);
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
-            { options |= Vertical; }
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
+
             if( GTK_IS_PROGRESS_BAR(widget) )
             {
 
