@@ -834,12 +834,16 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
 
         // tooltips
-        _css.addSection( "GtkWindow#gtk-tooltip" );
+        _css.addSection( ".tooltip" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Tooltip ) ) );
-
-        _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
-        addLinkColors( "GtkWindow#gtk-tooltip GtkLabel", "[Colors:Tooltip]" );
+
+        _css.addSection( ".tooltip *" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "inherit" ) );
+
+        addLinkColors( ".tooltip", "[Colors:Tooltip]" );
+        addLinkColors( ".tooltip *", "[Colors:Tooltip]" );
 
         // rubber band selection (at least for nautilus)
         // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
@@ -1246,16 +1250,16 @@ namespace Oxygen
         _css.addToCurrentSection( ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
-        
-        // CSD titlebar and shadows        
+
+        // CSD titlebar and shadows
         _css.addSection( ".window-frame" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "4px" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "1px" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "solid" ) );
-        
+
         if( !_wmShadowsSupported )
         {
-            
+
             // copied from Adwaita
             _css.setCurrentSection( ".window-frame" );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
@@ -1265,7 +1269,7 @@ namespace Oxygen
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
 
         }
-        
+
         // tiled windows radius is set to zero
         _css.addSection( ".window-frame.tiled" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
@@ -1279,7 +1283,7 @@ namespace Oxygen
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "none" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
         }
-        
+
     }
 
     //_________________________________________________________
