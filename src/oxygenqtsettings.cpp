@@ -1252,31 +1252,33 @@ namespace Oxygen
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
 
         // CSD titlebar and shadows
+        // default shadows (copied from Adwaita)
         _css.addSection( ".window-frame" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "4px" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "1px" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "solid" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "4px 4px 0 0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "margin", "10px" ) );
 
-        if( !_wmShadowsSupported )
-        {
+        _css.addSection( ".window-frame:backdrop" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
 
-            // copied from Adwaita
-            _css.setCurrentSection( ".window-frame" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
-
-            _css.addSection( ".window-frame:backdrop" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
-
-        }
-
-        // tiled windows radius is set to zero
-        _css.addSection( ".window-frame.tiled" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
-
-        // tooltips get no shadows nor rounding no matter what
+        /* when window manager shadows are supported, we disable CSD shadows for menus and tooltips */
         if( _wmShadowsSupported )
         {
+            std::cerr << "disabling shadows" << std::endl;
+            
+            // menus
+            _css.addSection( ".window-frame.csd.popup" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "margin", "0" ) );
+
+            _css.addSection( ".window-frame.csd.popup:backdrop" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+            
+            // tooltips
             _css.addSection( ".window-frame.csd.tooltip" );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
