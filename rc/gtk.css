@@ -124,7 +124,7 @@ GtkMenuToolButton, GtkMenuToolButton *
 /* notebooks */
 .notebook
 {
-    padding: 4px 6px 0px 6px;
+    padding: 6px 8px 2px 8px;
     border-width: 2px 0px 6px 0px;
     border-style: outset;
 }
