@@ -44,12 +44,21 @@ namespace Oxygen
 
         public:
 
+        //!@name property names
+        //@{
+        static const char* const netWMShadowAtomName;
+        //@}
+
         //! constructor
         ShadowHelper( void );
 
         //! destructor
         virtual ~ShadowHelper( void );
 
+        //! true if supported
+        bool isSupported( void ) const
+        { return _supported; }
+        
         //! reset
         void reset( void );
 
@@ -76,6 +85,9 @@ namespace Oxygen
         bool isToolTip( GtkWidget* ) const;
 
         protected:
+
+        //! true if shadows are supported
+        bool checkSupported( void ) const;
 
         //! true if shadow should be installed on widget
         bool acceptWidget( GtkWidget* ) const;
@@ -105,6 +117,9 @@ namespace Oxygen
         static gboolean destroyNotifyEvent( GtkWidget*, gpointer );
 
         private:
+
+        //! true if shadows are supported
+        bool _supported;
 
         //! shadow size
         int _size;
