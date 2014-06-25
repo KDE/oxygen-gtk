@@ -78,6 +78,9 @@ namespace Oxygen
         //! unregister widget
         void unregisterWidget( GtkWidget* );
 
+        //! true if shadows are supported
+        bool checkSupported( void ) const;
+
         //! true if widget is menu
         bool isMenu( GtkWidget* ) const;
 
@@ -85,9 +88,6 @@ namespace Oxygen
         bool isToolTip( GtkWidget* ) const;
 
         protected:
-
-        //! true if shadows are supported
-        bool checkSupported( void ) const;
 
         //! true if shadow should be installed on widget
         bool acceptWidget( GtkWidget* ) const;

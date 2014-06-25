@@ -52,6 +52,7 @@ namespace Oxygen
     from the oxygenrc file provided with oxygen-gtk
     */
     QtSettings::QtSettings( void ):
+        _wmShadowsSupported( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
@@ -1245,7 +1246,40 @@ namespace Oxygen
         _css.addToCurrentSection( ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
+        
+        // CSD titlebar and shadows        
+        _css.addSection( ".window-frame" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "4px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "1px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "solid" ) );
+        
+        if( !_wmShadowsSupported )
+        {
+            
+            // copied from Adwaita
+            _css.setCurrentSection( ".window-frame" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
 
+            _css.addSection( ".window-frame:backdrop" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
+
+        }
+        
+        // tiled windows radius is set to zero
+        _css.addSection( ".window-frame.tiled" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
+
+        // tooltips get no shadows nor rounding no matter what
+        if( _wmShadowsSupported )
+        {
+            _css.addSection( ".window-frame.csd.tooltip" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+        }
+        
     }
 
     //_________________________________________________________

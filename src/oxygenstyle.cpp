@@ -69,6 +69,9 @@ namespace Oxygen
         // initialize ref surface
         _helper.initializeRefSurface();
 
+        // pass window manager shadow support to settings, since it is needed to setup CSD shadows
+        _settings.setWMShadowsSupported( _shadowHelper.checkSupported() );
+        
         // reinitialize settings
         if( !_settings.initialize( flags ) ) return false;
 
