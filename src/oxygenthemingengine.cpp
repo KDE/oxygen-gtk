@@ -1360,9 +1360,9 @@ namespace Oxygen
             return;
 
         } else if(
+            GTK_IS_FRAME( widget ) &&
             (parent = Gtk::gtk_parent_combobox( widget )) &&
-            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) &&
-            !GTK_IS_CELL_VIEW( widget ) )
+            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) )
         {
 
             Style::instance().animations().comboBoxEngine().registerWidget( parent );
