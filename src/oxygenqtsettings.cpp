@@ -1254,10 +1254,10 @@ namespace Oxygen
         // CSD titlebar and shadows
         // default shadows (copied from Adwaita)
         _css.addSection( ".window-frame" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "4px 4px 0 0" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "4px 4px 0 0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "margin", "10px" ) );
 
         _css.addSection( ".window-frame:backdrop" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );

@@ -92,18 +92,21 @@ GtkStatusBar { border-style: none; }
     (class based, rather than widget based)
 */
 
-GtkScale {
+GtkScale 
+{
     -GtkRange-slider-width: 23px;
     -GtkScale-slider-length: 21px;
 }
 
-GtkScrollbar {
+GtkScrollbar 
+{
     -GtkRange-stepper-size: 12px;
     -GtkRange-trough-border: 0px;
 }
 
 /* menuitems padding */
-GtkMenuBar {
+GtkMenuBar 
+{
     padding: 0px;
     border-width: 0px;
 }
@@ -111,14 +114,16 @@ GtkMenuBar {
 GtkMenuBar>GtkMenuItem { padding: 4px 5px; }
 
 /* menu toolbutton */
-GtkMenuToolButton, GtkMenuToolButton * {
+GtkMenuToolButton, GtkMenuToolButton * 
+{
     border-width: 0px;
     -GtkButton-focus-padding: 0px;
     -GtkWidget-focus-line-width: 0px;
 }
 
 /* notebooks */
-.notebook {
+.notebook 
+{
     padding: 4px 6px 0px 6px;
     border-width: 2px 0px 6px 0px;
     border-style: outset;
@@ -131,13 +136,15 @@ GtkMenuToolButton, GtkMenuToolButton * {
 GtkOptionMenu { padding: 0px 4px; }
 
 /* separators */
-GtkSeparator {
+GtkSeparator 
+{
     border-style: solid;
     border-width: 3px;
 }
 
 /* frames */
-GtkScrolledWindow {
+GtkScrolledWindow 
+{
     border-style: inset;
     border-width: 1px;
     padding: 1px;
@@ -148,7 +155,8 @@ GtkViewport { padding: 0px; }
 GtkProgressBar { padding: 0px; }
 GtkAssistant .sidebar { padding: 4px; }
 
-GtkInfoBar {
+GtkInfoBar 
+{
     border-style: solid;
     border-width: 8px;
 }
@@ -169,12 +177,14 @@ GtkWindow#gtk-tooltip { padding: 3px; }
 GtkButton { padding: 3px 4px 2px; }
 
 /* header buttons */
-GtkTreeView>GtkButton {
+GtkTreeView>GtkButton 
+{
     border-width: 0px 2px;
     border-style: solid;
 }
 
-GtkList>GtkButton {
+GtkList>GtkButton 
+{
     border-width: 0px 2px;
     border-style: solid;
 }

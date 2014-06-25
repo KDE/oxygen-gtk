@@ -2,28 +2,32 @@
 /*******
  * CSD *
  *******/
-.titlebar {
-    border-radius: 7px 7px 0px 0px;
+.titlebar, .headerbar
+{
+    border-radius: 4px 4px 0px 0px;
 }
 
-.tiled .titlebar {
+.tiled .titlebar,
+.tiled .headerbar,
+.maximized .titlebar,
+.maximized .headerbar
+{
     border-radius: 0;
 }
 
-.maximized .titlebar {
-    border-radius: 0;
-}
 
 /* this is the default titlebar that is added by GTK
  * when client-side decorations are in use and the application
  * did not set a custom titlebar.
  */
-.titlebar.default-decoration {
+.titlebar.default-decoration
+{
     border: none;
     box-shadow: none;
 }
 
-.titlebar .titlebutton {
+.titlebar .titlebutton
+{
     background: none;
     padding: 5px 5px 6px 5px;
     border-radius: 3px;

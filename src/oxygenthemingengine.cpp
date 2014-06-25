@@ -514,7 +514,16 @@ namespace Oxygen
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
-            { Style::instance().renderTitleBarBackground( context, widget, x, y, w, h ); }
+            { 
+                #if OXYGEN_DEBUG
+                int r;
+                const GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+                gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_RADIUS, &r, NULL );
+                std::cerr << "Oxygen::ThemingEngine::render_background - radius: " << r << std::endl;
+                #endif 
+                
+                Style::instance().renderTitleBarBackground( context, widget, x, y, w, h ); 
+            }
 
             render_animated_button( context, widget );
             return;

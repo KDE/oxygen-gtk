@@ -494,7 +494,6 @@ namespace Oxygen
 
     }
 
-
     //__________________________________________________________________
     bool Style::renderTitleBarBackground(
         cairo_t* context, GtkWidget* widget,
