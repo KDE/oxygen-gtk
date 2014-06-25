@@ -1265,24 +1265,22 @@ namespace Oxygen
         /* when window manager shadows are supported, we disable CSD shadows for menus and tooltips */
         if( _wmShadowsSupported )
         {
-            std::cerr << "disabling shadows" << std::endl;
-            
             // menus
             _css.addSection( ".window-frame.csd.popup" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "0" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "margin", "0" ) );
 
             _css.addSection( ".window-frame.csd.popup:backdrop" );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
-            
+
             // tooltips
             _css.addSection( ".window-frame.csd.tooltip" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-radius", "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-width", "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "border-style", "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
         }
 
