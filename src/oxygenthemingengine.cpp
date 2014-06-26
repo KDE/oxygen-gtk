@@ -251,7 +251,8 @@ namespace Oxygen
             gtk_widget_path_is_type( path, GTK_TYPE_LIST_BOX ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_VIEWPORT ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_EVENT_BOX ) ||
-            gtk_widget_path_is_type( path, GTK_TYPE_PANED )
+            gtk_widget_path_is_type( path, GTK_TYPE_PANED ) ||
+            Gtk::g_object_is_a( G_OBJECT( widget ), "GdlDockItemGrip" )
             ) )
         {
 
@@ -493,10 +494,7 @@ namespace Oxygen
 
             return;
 
-        } else if(
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ||
-            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
-         {
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TOOLBAR ) ) {
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
@@ -505,6 +503,27 @@ namespace Oxygen
             // possible groupbox background
             if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_FRAME ) )
             { Style::instance().renderGroupBoxBackground( context, widget, x, y, w, h, Blend ); }
+
+            render_animated_button( context, widget );
+            return;
+
+        } else if(
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_TITLEBAR ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_HEADERBAR ) )
+         {
+
+            // render background
+            if( !Gtk::gtk_widget_is_applet( widget ) )
+            { 
+                #if OXYGEN_DEBUG
+                int r;
+                const GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+                gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_RADIUS, &r, NULL );
+                std::cerr << "Oxygen::ThemingEngine::render_background - radius: " << r << std::endl;
+                #endif 
+                
+                Style::instance().renderTitleBarBackground( context, widget, x, y, w, h ); 
+            }
 
             render_animated_button( context, widget );
             return;
@@ -1359,9 +1378,9 @@ namespace Oxygen
             return;
 
         } else if(
+            GTK_IS_FRAME( widget ) &&
             (parent = Gtk::gtk_parent_combobox( widget )) &&
-            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) &&
-            !GTK_IS_CELL_VIEW( widget ) )
+            !gtk_combo_box_get_has_entry( GTK_COMBO_BOX( parent ) ) )
         {
 
             Style::instance().animations().comboBoxEngine().registerWidget( parent );
@@ -2279,19 +2298,19 @@ namespace Oxygen
             << std::endl;
         #endif
 
-        // draw progressbar text white if above indicator, black if not
-        if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
-        {
-
-            cairo_save( context );
-            const ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::SelectedText ) );
-            cairo_set_source( context, selection );
-            cairo_translate(context,x,y);
-            pango_cairo_show_layout(context,layout);
-            cairo_restore( context );
-            return;
-
-        }
+//         // draw progressbar text white if above indicator, black if not
+//         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
+//         {
+//
+//             cairo_save( context );
+//             const ColorUtils::Rgba selection( Style::instance().settings().palette().color( Palette::Active, Palette::SelectedText ) );
+//             cairo_set_source( context, selection );
+//             cairo_translate(context,x,y);
+//             pango_cairo_show_layout(context,layout);
+//             cairo_restore( context );
+//             return;
+//
+//         }
 
         const GtkWidgetPath* path( gtk_theming_engine_get_path(engine) );
         if( Gtk::gtk_widget_path_has_type( path, GTK_TYPE_LABEL ) )
@@ -2469,8 +2488,8 @@ namespace Oxygen
             GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
 
             StyleOptions options( widget, state);
-            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) )
-            { options |= Vertical; }
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
+
             if( GTK_IS_PROGRESS_BAR(widget) )
             {
 

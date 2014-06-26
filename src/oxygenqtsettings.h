@@ -73,6 +73,10 @@ namespace Oxygen
             Forced = 1<<6
         };
 
+        //! sets whether wm shadows are supported
+        void setWMShadowsSupported( bool value )
+        { _wmShadowsSupported = value; }
+        
         //! returns user config dir
         std::string userConfigDir( void ) const
         { return _userConfigDir; }
@@ -435,6 +439,10 @@ namespace Oxygen
         /*! this is needed to deal with some application hacks */
         ApplicationName _applicationName;
 
+        //! true if window manager shadows are supported
+        /*! if true, disable CSD shadows */
+        bool _wmShadowsSupported;
+        
         //! kde global options
         OptionMap _kdeGlobals;
 

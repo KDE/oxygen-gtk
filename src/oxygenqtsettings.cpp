@@ -52,6 +52,7 @@ namespace Oxygen
     from the oxygenrc file provided with oxygen-gtk
     */
     QtSettings::QtSettings( void ):
+        _wmShadowsSupported( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
@@ -725,6 +726,7 @@ namespace Oxygen
             "GtkImage, "
             "GtkInfoBar, "
             "GtkLabel, "
+            "GtkLayout, "
             "GtkMenuItem, "
             "GtkOverlay, "
             "GtkRevealer, "
@@ -832,12 +834,16 @@ namespace Oxygen
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::Disabled, Palette::WindowText ) ) );
 
         // tooltips
-        _css.addSection( "GtkWindow#gtk-tooltip" );
+        _css.addSection( ".tooltip" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, _palette.color( Palette::Tooltip ) ) );
-
-        _css.addSection( "GtkWindow#gtk-tooltip GtkLabel" );
         _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, _palette.color( Palette::TooltipText ) ) );
-        addLinkColors( "GtkWindow#gtk-tooltip GtkLabel", "[Colors:Tooltip]" );
+
+        _css.addSection( ".tooltip *" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BACKGROUND_COLOR, "transparent" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_COLOR, "inherit" ) );
+
+        addLinkColors( ".tooltip", "[Colors:Tooltip]" );
+        addLinkColors( ".tooltip *", "[Colors:Tooltip]" );
 
         // rubber band selection (at least for nautilus)
         // FIXME: is Palette::Selected the proper color? Is 0.35 the proper alpha?
@@ -1244,6 +1250,39 @@ namespace Oxygen
         _css.addToCurrentSection( ( gtk_widget_get_default_direction() == GTK_TEXT_DIR_RTL ) ?
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
+
+        // CSD titlebar and shadows
+        // default shadows (copied from Adwaita)
+        _css.addSection( ".window-frame" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "4px 4px 0 0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
+
+        _css.addSection( ".window-frame:backdrop" );
+        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
+
+        /* when window manager shadows are supported, we disable CSD shadows for menus and tooltips */
+        if( _wmShadowsSupported )
+        {
+            // menus
+            _css.addSection( ".window-frame.csd.popup" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+
+            _css.addSection( ".window-frame.csd.popup:backdrop" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+
+            // tooltips
+            _css.addSection( ".window-frame.csd.tooltip" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
+        }
 
     }
 
