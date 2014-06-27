@@ -722,6 +722,7 @@ namespace Oxygen
         if( widgetIsBlackListed( widget ) ) return BlackListed;
         else if( gtk_widget_get_state_flags( widget )&GTK_STATE_FLAG_PRELIGHT ) return WidgetIsPrelight;
         else if( GTK_IS_BUTTON( widget ) ) return WidgetIsButton;
+        else if( GTK_IS_SCALE( widget ) ) return WidgetIsButton;
         else if( GTK_IS_MENU_ITEM( widget ) ) return WidgetIsMenuItem;
         else if( GTK_IS_SCROLLED_WINDOW( widget ) && ( !inNoteBook || gtk_widget_is_focus( widget ) ) ) return WidgetIsScrolledWindow;
 
