@@ -169,7 +169,7 @@ GtkComboBox>GtkFrame { padding: 0 0 0 4px; }
 .tooltip { padding: 0; }
 
 /* buttons */
-.button { padding: 5px 6px 4px; }
+.button { padding: 6px 6px 4px; }
 
 /* header buttons */
 column-header.button
