@@ -121,20 +121,20 @@ namespace Oxygen
         _treeViewStateEngine->setDuration( settings.genericAnimationsDuration() );
 
         _menuBarStateEngine->setApplicationName( settings.applicationName() );
-        _menuBarStateEngine->setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != None) );
+        _menuBarStateEngine->setAnimationsEnabled( animationsEnabled && (settings.menuBarAnimationType() != NoAnimation) );
         _menuBarStateEngine->setFollowMouse( settings.menuBarAnimationType() == FollowMouse );
         _menuBarStateEngine->setDuration( settings.menuBarAnimationsDuration() );
         _menuBarStateEngine->setFollowMouseAnimationsDuration( settings.menuBarFollowMouseAnimationsDuration() );
 
         _menuStateEngine->setApplicationName( settings.applicationName() );
-        _menuStateEngine->setEnabled( animationsEnabled && (settings.menuAnimationType() != None) );
+        _menuStateEngine->setEnabled( animationsEnabled && (settings.menuAnimationType() != NoAnimation) );
         _menuStateEngine->setFollowMouse( settings.menuAnimationType() == FollowMouse );
         _menuStateEngine->setDuration( settings.menuAnimationsDuration() );
         _menuStateEngine->setFollowMouseAnimationsDuration( settings.menuFollowMouseAnimationsDuration() );
 
         // for now, only Fade animations mode is supported for toolbar animations
         _toolBarStateEngine->setApplicationName( settings.applicationName() );
-        _toolBarStateEngine->setEnabled( animationsEnabled && (settings.toolBarAnimationType() != None) );
+        _toolBarStateEngine->setEnabled( animationsEnabled && (settings.toolBarAnimationType() != NoAnimation) );
         _toolBarStateEngine->setFollowMouse(  settings.toolBarAnimationType() == FollowMouse );
         _toolBarStateEngine->setDuration( settings.genericAnimationsDuration() );
         _toolBarStateEngine->setFollowMouseAnimationsDuration( settings.toolBarAnimationsDuration() );
