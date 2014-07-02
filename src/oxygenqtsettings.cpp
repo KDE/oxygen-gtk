@@ -1347,7 +1347,7 @@ namespace Oxygen
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
 
         // CSD titlebar and shadow
-        setupCssShadows( ".window-frame", true );
+        setupCssShadows( ".window-frame", _wmClientSideDecorationSupported );
         setupCssShadows( ".window-frame.csd.popup", !_wmShadowsSupported );
 
         // always disable tooltips because it appears broken
