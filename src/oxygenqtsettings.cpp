@@ -25,6 +25,7 @@
 #include "oxygenfontinfo.h"
 #include "oxygengtkicons.h"
 #include "oxygengtkrc.h"
+#include "oxygenshadowhelper.h"
 #include "oxygentimeline.h"
 #include "config.h"
 
@@ -41,6 +42,11 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#include <X11/Xatom.h>
+#endif
+
 namespace Oxygen
 {
 
@@ -54,6 +60,7 @@ namespace Oxygen
     from the oxygenrc file provided with oxygen-gtk
     */
     QtSettings::QtSettings( void ):
+        _wmShadowsSupported( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
@@ -127,6 +134,16 @@ namespace Oxygen
 
         // keep track of whats changed
         bool changed( false );
+
+        // support for wm shadows
+        {
+            const bool wmShadowsSupported( isAtomSupported( ShadowHelper::netWMShadowAtomName ) );
+            if( wmShadowsSupported != _wmShadowsSupported )
+            {
+                _wmShadowsSupported = wmShadowsSupported;
+                changed |= true;
+            }
+        }
 
         // configuration path
         {
@@ -241,6 +258,73 @@ namespace Oxygen
 
         // check change
         return old != _kdeGlobals;
+
+    }
+
+    //_______________________________________________________
+    bool QtSettings::isAtomSupported( const std::string& atomNameQuery ) const
+    {
+
+        // create atom
+        #ifdef GDK_WINDOWING_X11
+
+        // get screen and check
+        GdkScreen* screen = gdk_screen_get_default();
+        if( !screen ) return false;
+
+        // get display and check
+        GdkDisplay *gdkDisplay( gdk_screen_get_display( screen ) );
+        Display* display( GDK_DISPLAY_XDISPLAY( gdkDisplay ) );
+
+        // create atom
+        Atom netSupportedAtom( XInternAtom( display, "_NET_SUPPORTED", False) );
+        if( !netSupportedAtom ) return false;
+
+        // root window
+        Window root( GDK_WINDOW_XID( gdk_screen_get_root_window( screen ) ) );
+        if( !root ) return false;
+
+        Atom type;
+        int format;
+        unsigned char *data;
+        unsigned long count;
+        unsigned long after;
+        int length = 32768;
+
+        while( true )
+        {
+
+            // get atom property on root window
+            // length is incremented until after is zero
+            if( XGetWindowProperty(
+                display, root,
+                netSupportedAtom, 0l, length,
+                false, XA_ATOM, &type,
+                &format, &count, &after, &data) != Success ) return false;
+
+            if( after == 0 ) break;
+
+            // free data, increase length
+            XFree( data );
+            length *= 2;
+            continue;
+
+        }
+
+        Atom* atoms = reinterpret_cast<Atom*>( data );
+        bool found( false );
+        for( unsigned long i = 0; i<count && !found; i++ )
+        {
+            char* atomName = XGetAtomName( display, atoms[i]);
+            if( strcmp( atomName, atomNameQuery.c_str() ) == 0 ) found = true;
+            XFree( atomName );
+        }
+
+        return found;
+
+        #else
+        return false;
+        #endif
 
     }
 

@@ -71,6 +71,10 @@ namespace Oxygen
             Forced = 1<<6
         };
 
+        //! sets whether wm shadows are supported
+        bool isWMShadowsSupported( void ) const
+        { return _wmShadowsSupported; }
+
         //! returns user config dir
         std::string userConfigDir( void ) const
         { return _userConfigDir; }
@@ -368,6 +372,9 @@ namespace Oxygen
         //! read output from a command - replacement for not always working g_spawn_command_line_sync()
         bool runCommand( const std::string& command, char*& result ) const;
 
+        //! returns true if a given atom is supported
+        bool isAtomSupported( const std::string& ) const;
+
         //! kdeglobals settings
         /*! returns true if changed */
         bool loadKdeGlobals( void );
@@ -423,6 +430,9 @@ namespace Oxygen
         //! extra metrics options
         void loadExtraOptions( void );
 
+        //! css shadows
+        void setupCssShadows( const std::string&, bool enabled );
+
         //! sanitize path
         std::string sanitizePath( const std::string& ) const;
 
@@ -437,6 +447,10 @@ namespace Oxygen
         //! application
         /*! this is needed to deal with some application hacks */
         ApplicationName _applicationName;
+
+        //! true if window manager shadows are supported
+        /*! if true, disable CSD shadows */
+        bool _wmShadowsSupported;
 
         //! kde global options
         OptionMap _kdeGlobals;

@@ -55,10 +55,14 @@ namespace Oxygen
         //! destructor
         virtual ~ShadowHelper( void );
 
+        //! true is supported
+        void setSupported( bool value )
+        { _supported = value; }
+
         //! true if supported
         bool isSupported( void ) const
         { return _supported; }
-        
+
         //! reset
         void reset( void );
 
@@ -77,11 +81,6 @@ namespace Oxygen
 
         //! unregister widget
         void unregisterWidget( GtkWidget* );
-
-        protected:
-
-        //! true if shadows are supported
-        bool checkSupported( void ) const;
 
         //! true if widget is menu
         bool isMenu( GtkWidget* ) const;

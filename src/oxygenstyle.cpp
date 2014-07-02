@@ -121,6 +121,7 @@ namespace Oxygen
 
         // create window shadow
         WindowShadow shadow( _settings, _helper );
+        _shadowHelper.setSupported( _settings.isWMShadowsSupported() );
         _shadowHelper.setApplicationName( _settings.applicationName() );
         _shadowHelper.initialize( _settings.palette().color(Palette::Window), shadow );
 

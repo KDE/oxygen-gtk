@@ -129,7 +129,6 @@ namespace Oxygen
         #endif
 
         reset();
-        _supported = checkSupported();
         _size = int(shadow.shadowSize()) - WindowShadow::Overlap;
 
         // round tiles
@@ -152,10 +151,10 @@ namespace Oxygen
     //______________________________________________
     bool ShadowHelper::registerWidget( GtkWidget* widget )
     {
-    
+
         // do nothing if not supported
         if( !_supported ) return false;
-        
+
         // check widget
         if( !( widget && GTK_IS_WINDOW( widget ) ) ) return false;
 
@@ -191,73 +190,6 @@ namespace Oxygen
         _widgets.erase( iter );
     }
 
-    //_______________________________________________________
-    bool ShadowHelper::checkSupported( void ) const
-    {
-                
-        // create atom
-        #ifdef GDK_WINDOWING_X11
-        
-        // get screen and check
-        GdkScreen* screen = gdk_screen_get_default();
-        if( !screen ) return false;
-        
-        // get display and check
-        Display* display( GDK_DISPLAY_XDISPLAY( gdk_screen_get_display( screen ) ) );
-        if( !display ) return false;
-        
-        // create atom
-        Atom netSupportedAtom( XInternAtom( display, "_NET_SUPPORTED", False) );
-        if( !netSupportedAtom ) return false;
-        
-        // root window
-        Window root( GDK_WINDOW_XID( gdk_screen_get_root_window( screen ) ) );
-        if( !root ) return false;
-        
-        Atom type;
-        int format;
-        unsigned char *data;
-        unsigned long count;
-        unsigned long after;
-        int length = 32768;
-        
-        while( true )
-        {
-
-            // get atom property on root window
-            // length is incremented until after is zero
-            if( XGetWindowProperty(
-                display, root,
-                netSupportedAtom, 0l, length,
-                false, XA_ATOM, &type,
-                &format, &count, &after, &data) != Success ) return false;
- 
-            if( after == 0 ) break;
-        
-            // free data, increase length
-            XFree( data );
-            length *= 2;
-            continue;
-
-        }       
-        
-        Atom* atoms = reinterpret_cast<Atom*>( data );
-        bool found( false );
-        for( unsigned long i = 0; i<count && !found; i++ )
-        {
-            char* atomName = XGetAtomName( display, atoms[i]);
-            if( strcmp( atomName, netWMShadowAtomName ) == 0 ) found = true;
-            XFree( atomName );
-        }
-        
-        return found;
-        
-        #else
-        return false;
-        #endif
-        
-    }
-    
     //______________________________________________
     bool ShadowHelper::isMenu( GtkWidget* widget ) const
     {
@@ -516,7 +448,7 @@ namespace Oxygen
 
         // do nothing if not supported
         if( !_supported ) return;
-        
+
         if( !GTK_IS_WIDGET( widget ) ) return;
         GdkWindow  *window = gtk_widget_get_window( widget );
         GdkDisplay *display = gtk_widget_get_display( widget );
