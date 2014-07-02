@@ -23,6 +23,7 @@
 #include "oxygencoloreffect.h"
 #include "oxygencolorutils.h"
 #include "oxygenfontinfo.h"
+#include "oxygenshadowhelper.h"
 #include "oxygentimeline.h"
 #include "config.h"
 
@@ -39,6 +40,11 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#include <X11/Xatom.h>
+#endif
+
 namespace Oxygen
 {
 
@@ -53,6 +59,7 @@ namespace Oxygen
     */
     QtSettings::QtSettings( void ):
         _wmShadowsSupported( false ),
+        _wmClientSideDecorationSupported( false ),
         _kdeIconTheme( "oxygen" ),
         _kdeFallbackIconTheme( "gnome" ),
         _inactiveChangeSelectionColor( false ),
@@ -123,6 +130,26 @@ namespace Oxygen
 
         // keep track of whats changed
         bool changed( false );
+
+        // support for wm shadows
+        {
+            const bool wmShadowsSupported( isAtomSupported( ShadowHelper::netWMShadowAtomName ) );
+            if( wmShadowsSupported != _wmShadowsSupported )
+            {
+                _wmShadowsSupported = wmShadowsSupported;
+                changed |= true;
+            }
+        }
+
+        // support for client side decoratiosn
+        {
+            const bool wmClientSideDecorationSupported( isAtomSupported( "_GTK_FRAME_EXTENTS" ) );
+            if( wmClientSideDecorationSupported != _wmClientSideDecorationSupported )
+            {
+                _wmClientSideDecorationSupported = wmClientSideDecorationSupported;
+                changed |= true;
+            }
+        }
 
         // configuration path
         {
@@ -240,6 +267,74 @@ namespace Oxygen
 
         // check change
         return old != _kdeGlobals;
+
+    }
+
+    //_______________________________________________________
+    bool QtSettings::isAtomSupported( const std::string& atomNameQuery ) const
+    {
+
+        // create atom
+        #ifdef GDK_WINDOWING_X11
+
+        // get screen and check
+        GdkScreen* screen = gdk_screen_get_default();
+        if( !screen ) return false;
+
+        // get display and check
+        GdkDisplay *gdkDisplay( gdk_screen_get_display( screen ) );
+        if( !( gdkDisplay && GDK_IS_X11_DISPLAY( gdkDisplay ) ) ) return false;
+        Display* display( GDK_DISPLAY_XDISPLAY( gdkDisplay ) );
+
+        // create atom
+        Atom netSupportedAtom( XInternAtom( display, "_NET_SUPPORTED", False) );
+        if( !netSupportedAtom ) return false;
+
+        // root window
+        Window root( GDK_WINDOW_XID( gdk_screen_get_root_window( screen ) ) );
+        if( !root ) return false;
+
+        Atom type;
+        int format;
+        unsigned char *data;
+        unsigned long count;
+        unsigned long after;
+        int length = 32768;
+
+        while( true )
+        {
+
+            // get atom property on root window
+            // length is incremented until after is zero
+            if( XGetWindowProperty(
+                display, root,
+                netSupportedAtom, 0l, length,
+                false, XA_ATOM, &type,
+                &format, &count, &after, &data) != Success ) return false;
+
+            if( after == 0 ) break;
+
+            // free data, increase length
+            XFree( data );
+            length *= 2;
+            continue;
+
+        }
+
+        Atom* atoms = reinterpret_cast<Atom*>( data );
+        bool found( false );
+        for( unsigned long i = 0; i<count && !found; i++ )
+        {
+            char* atomName = XGetAtomName( display, atoms[i]);
+            if( strcmp( atomName, atomNameQuery.c_str() ) == 0 ) found = true;
+            XFree( atomName );
+        }
+
+        return found;
+
+        #else
+        return false;
+        #endif
 
     }
 
@@ -1251,37 +1346,44 @@ namespace Oxygen
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 12px 0px 0px" ):
             Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_PADDING, "0px 0px 0px 12px" ) );
 
+        // CSD titlebar and shadow
+        setupCssShadows( ".window-frame", true );
+        setupCssShadows( ".window-frame.csd.popup", !_wmShadowsSupported );
+
+        // always disable tooltips because it appears broken
+        setupCssShadows( ".window-frame.csd.tooltip", false );
+
+    }
+
+    //_________________________________________________________
+    void QtSettings::setupCssShadows( const std::string& section, bool enabled )
+    {
+
         // CSD titlebar and shadows
-        // default shadows (copied from Adwaita)
-        _css.addSection( ".window-frame" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "4px 4px 0 0" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
-
-        _css.addSection( ".window-frame:backdrop" );
-        _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
-
-        /* when window manager shadows are supported, we disable CSD shadows for menus and tooltips */
-        if( _wmShadowsSupported )
+        if( enabled )
         {
-            // menus
-            _css.addSection( ".window-frame.csd.popup" );
+            // default shadows (copied from Adwaita)
+            _css.addSection( section );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "4px 4px 0 0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "10px" ) );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 3px 9px 1px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.23);" ) );
+
+            _css.addSection( section + ":backdrop" );
+            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "0 2px 6px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.18);" ) );
+
+        } else {
+
+            _css.addSection( section );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_MARGIN, "0" ) );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
 
-            _css.addSection( ".window-frame.csd.popup:backdrop" );
+            _css.addSection( section + ":backdrop" );
             _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
 
-            // tooltips
-            _css.addSection( ".window-frame.csd.tooltip" );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_RADIUS, "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_WIDTH, "0" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( GTK_STYLE_PROPERTY_BORDER_STYLE, "none" ) );
-            _css.addToCurrentSection( Gtk::CSSOption<std::string>( "box-shadow", "none" ) );
         }
 
     }
