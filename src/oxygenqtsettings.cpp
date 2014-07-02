@@ -1006,19 +1006,19 @@ namespace Oxygen
 
         // menubar animation type
         std::string menuBarAnimationType( _oxygen.getValue( "[Style]", "MenuBarAnimationType", "MB_FADE") );
-        if( menuBarAnimationType == "MB_NONE" ) _menuBarAnimationType = None;
+        if( menuBarAnimationType == "MB_NONE" ) _menuBarAnimationType = NoAnimation;
         else if( menuBarAnimationType == "MB_FADE" ) _menuBarAnimationType = Fade;
         else if( menuBarAnimationType == "MB_FOLLOW_MOUSE" ) _menuBarAnimationType = FollowMouse;
 
         // menubar animation type
         std::string menuAnimationType( _oxygen.getValue( "[Style]", "MenuAnimationType", "ME_FADE") );
-        if( menuAnimationType == "ME_NONE" ) _menuAnimationType = None;
+        if( menuAnimationType == "ME_NONE" ) _menuAnimationType = NoAnimation;
         else if( menuAnimationType == "ME_FADE" ) _menuAnimationType = Fade;
         else if( menuAnimationType == "ME_FOLLOW_MOUSE" ) _menuAnimationType = FollowMouse;
 
         // toolbar animation type
         std::string toolBarAnimationType( _oxygen.getValue( "[Style]", "ToolBarAnimationType", "TB_FADE") );
-        if( toolBarAnimationType == "TB_NONE" ) _toolBarAnimationType = None;
+        if( toolBarAnimationType == "TB_NONE" ) _toolBarAnimationType = NoAnimation;
         else if( toolBarAnimationType == "TB_FADE" ) _toolBarAnimationType = Fade;
         else if( toolBarAnimationType == "TB_FOLLOW_MOUSE" ) _toolBarAnimationType = FollowMouse;
 
