@@ -36,7 +36,7 @@ namespace Oxygen
     /*! used for menubars, toolbars and menus */
     enum AnimationType
     {
-        None,
+        NoAnimation,
         Fade,
         FollowMouse
     };
