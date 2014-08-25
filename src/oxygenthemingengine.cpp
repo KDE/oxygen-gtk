@@ -335,7 +335,7 @@ namespace Oxygen
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_NOTEBOOK ) ) {
 
-            // no need to render anything for notebook gradient
+            // no need to render anything for notebook background
 
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_CELL ) ) {
 
@@ -514,15 +514,15 @@ namespace Oxygen
 
             // render background
             if( !Gtk::gtk_widget_is_applet( widget ) )
-            { 
+            {
                 #if OXYGEN_DEBUG
                 int r;
                 const GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
                 gtk_theming_engine_get( engine, state, GTK_STYLE_PROPERTY_BORDER_RADIUS, &r, NULL );
                 std::cerr << "Oxygen::ThemingEngine::render_background - radius: " << r << std::endl;
-                #endif 
-                
-                Style::instance().renderTitleBarBackground( context, widget, x, y, w, h ); 
+                #endif
+
+                Style::instance().renderTitleBarBackground( context, widget, x, y, w, h );
             }
 
             render_animated_button( context, widget );
@@ -546,6 +546,7 @@ namespace Oxygen
         } else if(
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_BUTTON ) ||
             gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_INFO ) ||
+            gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_INFO_BAR ) ||
             gtk_widget_path_is_type( path, GTK_TYPE_BUTTON ) )
         {
@@ -700,6 +701,31 @@ namespace Oxygen
 
             }
 
+
+        } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ) {
+
+            // lookup widget and state
+            GtkWidget* widget( Style::instance().widgetLookup().find( context, gtk_theming_engine_get_path( engine ) ) );
+            GtkStateFlags state( gtk_theming_engine_get_state( engine ) );
+
+            StyleOptions options( widget, state);
+            if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_VERTICAL ) ) options |= Vertical;
+
+            if( GTK_IS_PROGRESS_BAR(widget) )
+            {
+
+                y+=1; h-=2;
+                x+=1; w-=2;
+
+            } else if( GTK_IS_ENTRY( widget ) ) {
+
+                y+=1; h-=2;
+                x+=3; w-=6;
+
+            }
+
+            Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
+            return;
 
         }
 
@@ -2471,14 +2497,14 @@ namespace Oxygen
     void render_activity(  GtkThemingEngine* engine, cairo_t* context, gdouble x, gdouble y, gdouble w, gdouble h )
     {
 
-        #if OXYGEN_DEBUG
+        // #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_activity-"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
-        #endif
+        // #endif
 
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
