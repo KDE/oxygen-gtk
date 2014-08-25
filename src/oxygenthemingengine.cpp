@@ -1868,7 +1868,7 @@ namespace Oxygen
             // shadow type defines checkmark presence and type
             GtkShadowType shadow( GTK_SHADOW_OUT );
             if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
-            else if( state&GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
+            else if( state&(GTK_STATE_FLAG_ACTIVE|GTK_STATE_FLAG_CHECKED) ) shadow = GTK_SHADOW_IN;
 
             Style::instance().renderCheckBox( widget, context, x, y, w, h, shadow, options, data );
 
@@ -1955,7 +1955,7 @@ namespace Oxygen
             // shadow type defines checkmark presence and type
             GtkShadowType shadow( GTK_SHADOW_OUT );
             if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
-            else if( state&GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
+            else if( state&(GTK_STATE_FLAG_ACTIVE|GTK_STATE_FLAG_CHECKED) ) shadow = GTK_SHADOW_IN;
             Style::instance().renderRadioButton( widget, context, x, y, w, h, shadow, options, data );
 
         } else {
