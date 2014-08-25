@@ -166,6 +166,8 @@ namespace Oxygen
         if( GTK_IS_NOTEBOOK( parent ) && Gtk::gtk_notebook_is_tab_label( GTK_NOTEBOOK( parent ), widget ) )
         { return false; }
 
+
+        #if GTK_CHECK_VERSION( 3, 13, 7 )
         /*
         check event mask (for now we only need to do that for GtkWindow)
         The idea is that if the window has been set to receive button_press and button_release events
@@ -173,9 +175,13 @@ namespace Oxygen
         in which case we should not use them for grabbing
         */
         if(
+            ( GTK_IS_VIEWPORT( widget ) ) &&
+            ( gtk_widget_get_events ( widget ) & ( GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK ) ) )
+        #else
+        if(
             ( GTK_IS_WINDOW( widget ) || GTK_IS_VIEWPORT( widget ) ) &&
-            ( gtk_widget_get_events ( widget ) &
-            ( GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK ) ) )
+            ( gtk_widget_get_events ( widget ) & ( GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK ) ) )
+        #endif
         {
             #if OXYGEN_DEBUG
             std::cerr
