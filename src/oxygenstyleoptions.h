@@ -76,7 +76,11 @@ namespace Oxygen
             if( flags & GTK_STATE_FLAG_INSENSITIVE ) (*this) |= Disabled;
             if( flags & GTK_STATE_FLAG_PRELIGHT ) (*this) |= Hover;
             if( flags & GTK_STATE_FLAG_SELECTED ) (*this) |= (Selected|Active);
-            if( flags & ( GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_CHECKED ) ) (*this) |= Sunken;
+            if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
+
+            #if GTK_CHECK_VERSION( 3, 13, 7 )
+            if( flags & GTK_STATE_FLAG_CHECKED ) (*this) |= Sunken;
+            #endif
 
             // TODO: check whether one should use this, or gtk_widget_has_focus
             if( flags & GTK_STATE_FLAG_FOCUSED ) (*this) |= Focus;
@@ -90,7 +94,12 @@ namespace Oxygen
             if( flags & GTK_STATE_FLAG_INSENSITIVE ) (*this) |= Disabled;
             if( flags & GTK_STATE_FLAG_PRELIGHT ) (*this) |= Hover;
             if( flags & GTK_STATE_FLAG_SELECTED ) (*this) |= (Selected|Active);
-            if( flags & ( GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_CHECKED ) ) (*this) |= Sunken;
+            if( flags & GTK_STATE_FLAG_ACTIVE ) (*this) |= Sunken;
+
+            #if GTK_CHECK_VERSION( 3, 13, 7 )
+            if( flags & GTK_STATE_FLAG_CHECKED ) (*this) |= Sunken;
+            #endif
+
             if( flags & GTK_STATE_FLAG_FOCUSED ) (*this) |= Focus;
             else if( GTK_IS_WIDGET( widget ) && gtk_widget_has_focus(widget) ) (*this)|=Focus;
         }

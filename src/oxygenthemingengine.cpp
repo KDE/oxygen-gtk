@@ -702,6 +702,7 @@ namespace Oxygen
             }
 
 
+        #if GTK_CHECK_VERSION( 3, 13, 7 )
         } else if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) ) {
 
             // lookup widget and state
@@ -726,7 +727,7 @@ namespace Oxygen
 
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
             return;
-
+        #endif
         }
 
         // adjust shadow type for some known widgets
@@ -1893,9 +1894,13 @@ namespace Oxygen
 
             // shadow type defines checkmark presence and type
             GtkShadowType shadow( GTK_SHADOW_OUT );
-            if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
-            else if( state&(GTK_STATE_FLAG_ACTIVE|GTK_STATE_FLAG_CHECKED) ) shadow = GTK_SHADOW_IN;
+            if( state & GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
+            else if( state & GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
+            #if GTK_CHECK_VERSION( 3, 13, 7 )
+            else if( state & GTK_STATE_FLAG_CHECKED ) shadow = GTK_SHADOW_IN;
+            #endif
 
+            // render
             Style::instance().renderCheckBox( widget, context, x, y, w, h, shadow, options, data );
 
         } else {
@@ -1981,7 +1986,12 @@ namespace Oxygen
             // shadow type defines checkmark presence and type
             GtkShadowType shadow( GTK_SHADOW_OUT );
             if( state&GTK_STATE_FLAG_INCONSISTENT ) shadow = GTK_SHADOW_ETCHED_IN;
-            else if( state&(GTK_STATE_FLAG_ACTIVE|GTK_STATE_FLAG_CHECKED) ) shadow = GTK_SHADOW_IN;
+            else if( state & GTK_STATE_FLAG_ACTIVE ) shadow = GTK_SHADOW_IN;
+            #if GTK_CHECK_VERSION( 3, 13, 7 )
+            else if( state & GTK_STATE_FLAG_CHECKED ) shadow = GTK_SHADOW_IN;
+            #endif
+
+            // render
             Style::instance().renderRadioButton( widget, context, x, y, w, h, shadow, options, data );
 
         } else {
@@ -2497,15 +2507,16 @@ namespace Oxygen
     void render_activity(  GtkThemingEngine* engine, cairo_t* context, gdouble x, gdouble y, gdouble w, gdouble h )
     {
 
-        // #if OXYGEN_DEBUG
+        #if OXYGEN_DEBUG
         std::cerr
             << "Oxygen::render_activity-"
             << " context: " << context
             << " rect: " << Gtk::gdk_rectangle( x, y, w, h )
             << " path: " << gtk_theming_engine_get_path(engine)
             << std::endl;
-        // #endif
+        #endif
 
+        #if !GTK_CHECK_VERSION( 3, 13, 7 )
         if( gtk_theming_engine_has_class( engine, GTK_STYLE_CLASS_PROGRESSBAR ) )
         {
 
@@ -2530,15 +2541,16 @@ namespace Oxygen
             }
 
             Style::instance().renderProgressBarHandle( context, x, y, w, h, options );
-
-        } else {
-
-            #if OXYGEN_DEBUG
-            std::cerr << "Oxygen::render_activity - Calling parentClass()->render_activity()\n";
-            #endif
-            ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
+            return;
 
         }
+        #endif
+
+        // fallback to parent theme in all other cases
+        #if OXYGEN_DEBUG
+        std::cerr << "Oxygen::render_activity - Calling parentClass()->render_activity()\n";
+        #endif
+        ThemingEngine::parentClass()->render_activity( engine, context, x, y, w, h );
 
         return;
 
