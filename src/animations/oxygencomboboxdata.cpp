@@ -84,7 +84,13 @@ namespace Oxygen
     void ComboBoxData::setButton( GtkWidget* widget )
     {
         if( _button._widget == widget ) return;
-        assert( !_button._widget );
+
+        if( _button._widget )
+        {
+            std::cerr << "Oxygen::WindowManager::wmButtonPress - warning: a button was already set for this combobox" << std::endl;
+            _button._toggledId.disconnect();
+            _button._sizeAllocateId.disconnect();
+        }
 
         _button._toggledId.connect( G_OBJECT(widget), "toggled", G_CALLBACK( childToggledEvent ), this );
         _button._sizeAllocateId.connect( G_OBJECT(widget), "size-allocate", G_CALLBACK( childSizeAllocateEvent ), this );
