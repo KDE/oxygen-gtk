@@ -242,7 +242,7 @@ namespace Oxygen
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::decoColor( const ColorUtils::Rgba& background, const ColorUtils::Rgba& color )
-    { return mix( background, color, 0.4 + 0.8*contrast() ); }
+    { return mix( background, color, 0.8*(1.0 + contrast() ) ); }
 
     //_________________________________________________________________________
     ColorUtils::Rgba ColorUtils::alphaColor( const ColorUtils::Rgba& color, double alpha )
