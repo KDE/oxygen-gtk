@@ -1,6 +1,6 @@
 project( oxygen-gtk )
 
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.6)
 
 ###########################
 # Define package generation
@@ -86,15 +86,15 @@ endif( NOT DEFINED ENABLE_GROUPBOX_HACK )
 ##############
 
 # install prefix
-include( UsePkgConfig )
+include( FindPkgConfig )
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
     exec_program(
-        ${PKGCONFIG_EXECUTABLE}
+        ${PKG_CONFIG_EXECUTABLE}
         ARGS --variable=prefix gtk+-3.0
         OUTPUT_VARIABLE GTK_PREFIX )
 
-    message( "Info: using PKGCONFIG_EXECUTABLE to set the installation prefix" )
+    message( "Info: using PKG_CONFIG_EXECUTABLE to set the installation prefix" )
     set(CMAKE_INSTALL_PREFIX
         ${GTK_PREFIX} CACHE PATH "GTK install prefix" FORCE
         )
@@ -116,7 +116,7 @@ pkg_check_modules( CAIRO REQUIRED cairo )
 # installation directories
 ##########################
 exec_program(
-    ${PKGCONFIG_EXECUTABLE}
+    ${PKG_CONFIG_EXECUTABLE}
     ARGS --variable=gtk_binary_version gtk+-3.0
     OUTPUT_VARIABLE GTK_BIN_VERSION )
 
@@ -128,11 +128,11 @@ if( DEFINED LIB_SUFFIX OR NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 else()
 
     exec_program(
-        ${PKGCONFIG_EXECUTABLE}
+        ${PKG_CONFIG_EXECUTABLE}
         ARGS --variable=libdir gtk+-3.0
         OUTPUT_VARIABLE GTK_LIBDIR_PREFIX )
 
-    message( "Info: using PKGCONFIG_EXECUTABLE to set the theme engine installation path" )
+    message( "Info: using PKG_CONFIG_EXECUTABLE to set the theme engine installation path" )
     set( INSTALL_PATH_GTK_ENGINES "${GTK_LIBDIR_PREFIX}/gtk-3.0/${GTK_BIN_VERSION}/theming-engines" CACHE PATH "The directory in which to install the theme engine library( eg. /usr/lib/gtk-3.0/3.0.0/engines )" )
 
 endif()
