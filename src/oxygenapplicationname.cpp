@@ -25,6 +25,7 @@
 
 #include "oxygenapplicationname.h"
 #include "oxygengtkutils.h"
+#include "oxygenxulapplicationnames.h"
 #include "config.h"
 
 #include <cstdlib>
@@ -79,23 +80,8 @@ namespace Oxygen
             gtkAppName == "chromium" ||
             gtkAppName == "chromium-browser" ||
             gtkAppName == "google-chrome" ) _name = GoogleChrome;
-        else {
 
-            // tag all mozilla-like applications (XUL)
-            static const std::string XulAppNames[] =
-            {
-                "firefox",
-                "thunderbird",
-                "seamonkey",
-                "iceweasel",
-                "icecat",
-                "icedove",
-                "xulrunner",
-                "komodo",
-                "aurora",
-                "zotero",
-                ""
-            };
+        else {
 
             for( unsigned int index = 0; !XulAppNames[index].empty(); ++index )
             {

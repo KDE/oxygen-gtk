@@ -36,6 +36,8 @@ include( CPack )
 # Package specific flags
 ########################
 
+option(ENABLE_DEMO "Build the demo." ON)
+
 # Set to 1 to enable debugging information
 if( NOT DEFINED OXYGEN_DEBUG )
     set( OXYGEN_DEBUG 0 )
@@ -200,5 +202,7 @@ configure_file( config.h.cmake ${CMAKE_BINARY_DIR}/config.h )
 add_subdirectory( src )
 add_subdirectory( rc )
 add_subdirectory( special-icons )
-add_subdirectory( demo )
+if( ENABLE_DEMO )
+    add_subdirectory( demo )
+endif( ENABLE_DEMO )
 
