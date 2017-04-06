@@ -47,7 +47,7 @@ namespace Oxygen
             //! empty constructor
             explicit CellInfo( void ):
                 _path( 0L ),
-                _column( 0L )
+                _column( -1 )
             {}
 
             //! copy constructor
@@ -60,8 +60,12 @@ namespace Oxygen
             /*! unfortunately the path retrieval does not always work because x and y must be positive */
             explicit CellInfo( GtkTreeView* treeView, int x, int y ):
                 _path(0L),
-                _column(0L)
-            { gtk_tree_view_get_path_at_pos( treeView, x, y, &_path, &_column, 0L, 0L ); }
+                _column(-1)
+            {
+                GtkTreeViewColumn *column( 0L );
+                gtk_tree_view_get_path_at_pos( treeView, x, y, &_path, &column, 0L, 0L );
+                _column = indexOfColumn( treeView, column );
+            }
 
             //! construct from tree view and rectangle
             explicit CellInfo( GtkTreeView* treeView, int x, int y, int w, int h );
@@ -92,7 +96,7 @@ namespace Oxygen
             {
                 if( _path ) gtk_tree_path_free( _path );
                 _path = 0L;
-                _column = 0L;
+                _column = -1;
             }
 
             //!@name accessors
@@ -100,7 +104,7 @@ namespace Oxygen
 
             //! true if valid
             bool isValid( void ) const
-            { return _path && _column; }
+            { return _path && _column >= 0; }
 
             //! returns true if column is the last one
             bool isLastVisibleColumn( GtkTreeView* ) const;
@@ -110,7 +114,7 @@ namespace Oxygen
 
             //! returns true if column is the one that contains expander
             bool isExpanderColumn( GtkTreeView* treeView ) const
-            { return _column == gtk_tree_view_get_expander_column( treeView ); }
+            { return _column >= 0 && _column == indexOfColumn( treeView, gtk_tree_view_get_expander_column( treeView ) ); }
 
             //! returs true if column is let of expander column
             bool isLeftOfExpanderColumn( GtkTreeView* ) const;
@@ -152,8 +156,8 @@ namespace Oxygen
             //! path
             GtkTreePath* _path;
 
-            //! column
-            GtkTreeViewColumn* _column;
+            //! column index
+            gint _column;
 
             //! streamer
             friend std::ostream& operator << (std::ostream& out, const CellInfo& info )
@@ -167,6 +171,8 @@ namespace Oxygen
                 } else out << "invalid";
                 return out;
             }
+
+            static gint indexOfColumn( GtkTreeView*, GtkTreeViewColumn* );
 
         };
 
