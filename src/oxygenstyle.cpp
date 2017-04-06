@@ -2171,7 +2171,7 @@ namespace Oxygen
     {
 
         // do nothing if not selected nor hovered
-        if( !options & (Hover|Selected ) ) return;
+        if( !(options & (Hover|Selected )) ) return;
 
         Palette::Group group( (options & Focus) ? Palette::Active : Palette::Inactive );
         ColorUtils::Rgba base( _settings.palette().color( group, Palette::Selected ) );
