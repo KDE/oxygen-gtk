@@ -5,7 +5,7 @@
 * SPDX-FileCopyrightText: 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 *
 * largely inspired from Flags
-* SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies).
+* SPDX-FileCopyrightText: 2010 Nokia Corporation and/or its subsidiary(-ies).
 *
 * SPDX-License-Identifier: LGPL-2.0-or-later
 */
