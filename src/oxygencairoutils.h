@@ -153,7 +153,7 @@ namespace Oxygen
 
     //! saturation
     /*! Inspired from gdk-pixbuf-util.c
-    SPDX-FileCopyrightText: 1999 The Free Software Foundation
+    Copyright (C) 1999 The Free Software Foundation
     Authors: Federico Mena-Quintero <federico@gimp.org>
              Cody Russell  <bratsche@gnome.org>
     */
