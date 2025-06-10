@@ -242,9 +242,6 @@ namespace Oxygen
         typedef std::map<GtkWidget*, HoverData> HoverDataMap;
         HoverDataMap _hoverData;
 
-        //! true if cell layout has been initialized
-        bool _cellLayoutInitialized;
-
         //! cell data
         ChildData _cell;
 
